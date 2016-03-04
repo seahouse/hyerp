@@ -31,7 +31,16 @@ Route::get('app', function() {
     return view('app');
 });
 
+Route::get('app2', function() {
+    return view('app2');
+});
+
+Route::get('mapproval', function() {
+    return view('mapproval');
+});
+
 Route::resource('dingtalk', 'DingTalkController');
+Route::resource('reimbursements', 'ReimbursementsController');
 
 Route::group(['middleware' => ['web', 'auth']], function () {
     //
@@ -52,6 +61,14 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     Route::resource('custinfos', 'CustinfosController');
 
     Route::get('api/dropdown', 'Addr\ProvincesController@getIndex');
+});
+
+Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' => ['web']], function() {    
+    Route::group(['prefix' => 'reimbursements'], function() {
+        Route::get('mindex', 'ReimbursementsController@mindex');
+        Route::get('mcreate', 'ReimbursementsController@mcreate');
+    });
+    Route::resource('reimbursements', 'ReimbursementsController');
 });
 
 Route::group(['prefix' => 'addr', 'namespace' => 'Addr', 'middleware' => ['web', 'auth']], function() {

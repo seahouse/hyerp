@@ -24,7 +24,7 @@ class CreateReimbursementsTable extends Migration
             $table->string('contacts');                     // 客户联系人
             $table->string('contactspost');                 // 客户联系人职务
             $table->integer('order_id');                    // 对应订单
-            $table->integer('status');                      // 报销状态: 0:初始状态, 1:初审通过, 2: 复审通过, 10:终审通过, -1:审核失败
+            $table->integer('status');                      // 报销状态: 0:初始状态, 1:初审通过, 2: 复审通过, 10:终审通过, -1:初审失败, -2: 复审失败, -10:终审失败
             $table->string('statusdescrip');                // 状态描述
             $table->string('descrip');                      // 明细说明
             $table->date('datego');                         // 出差去日
