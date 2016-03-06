@@ -29,19 +29,68 @@
 
 @section('script')
 	<script src="https://g.alicdn.com/ilw/ding/0.7.5/scripts/dingtalk.js"></script>
-
+	
 	<script type="text/javascript">
+		// var _config = {
+  //           agentId: document.getElementById("agentid").value,
+  //           corpId: document.getElementById("corpid").value,
+  //           timeStamp: document.getElementById("timestamp").value,
+  //           nonceStr: document.getElementById("noncestr").value,
+  //           signature: document.getElementById("signature").value,
+  //       };
+		
+		// dd.config({
+  //           agentId: _config.agentId,
+  //           corpId: _config.corpId,
+  //           timeStamp: _config.timeStamp,
+  //           nonceStr: _config.nonceStr,
+  //           signature: _config.signature,
+  //           jsApiList: ['runtime.info',
+  //               'biz.contact.choose',
+  //               'device.notification.confirm',
+  //               'device.notification.alert',
+  //               'device.notification.prompt',
+  //               'biz.ding.post']
+  //       });
+		
 		jQuery(document).ready(function(e) {
 			dd.ready(function() {
+				alert('dd.ready.');
+				
+				dd.runtime.info({
+					onSuccess: function(info) {
+						alert('runtime info: ' + JSON.stringify(info));
+					},
+					onFail: function(err) {
+						alert('fail: ' + JSON.stringify(err));
+					}
+				});
+	
 				dd.runtime.permission.requestAuthCode({
-				    corpId: "ding8414637331385d36",
-				    onSuccess: function(result) {
-				    	alert(result.code);
-				    /*{
-				        code: 'hYLK98jkf0m' //string authCode
-				    }*/
+				    corpId: "ding6ed55e00b5328f39",
+				    onSuccess: function(info) {
+				    	alert(info.code);
+
+			     	    $.ajax({
+			         	    type:"GET",
+			         	    url:"{{ url('dingtalk/getuserinfo') }}" + "/" + info.code,
+			         	    error:function(xhr, ajaxOptions, thrownError){
+			             	    alert($("form#formCharass").serialize());
+			             	    alert('error');
+								alert(xhr.status);
+								alert(xhr.responseText);
+								alert(ajaxOptions);
+								alert(thrownError);
+			             	},
+			             	success:function(msg){
+			             	    alert('userid: ' + msg.userid);
+
+			                },
+			         	});
 				    },
-				    onFail : function(err) {}
+				    onFail : function(err) {
+						alert('requestAuthCode fail: ' + JSON.stringify(err));
+					}
 				});
 			});
 		});

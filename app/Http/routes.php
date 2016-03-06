@@ -39,8 +39,9 @@ Route::get('mapproval', function() {
     return view('mapproval');
 });
 
-Route::resource('dingtalk', 'DingTalkController');
-Route::resource('reimbursements', 'ReimbursementsController');
+Route::group(['middleware' => ['web']], function () {
+	Route::get('dingtalk/getuserinfo/{code}', 'DingTalkController@getuserinfo');
+});
 
 Route::group(['middleware' => ['web', 'auth']], function () {
     //
@@ -53,7 +54,6 @@ Route::group(['middleware' => ['web', 'auth']], function () {
 //         Route::get('mindex', 'ItemsController@mindex');
 //     });
 //     Route::resource('items', 'ItemsController');
-    Route::resource('accountingorder1s', 'Accountingorder1sController');
 //     Route::resource('boms', 'BomsController');
 //     Route::get('bomitems/{id}/createitem', 'BomitemsController@createitem');
 //     Route::resource('bomitems', 'BomitemsController');
@@ -171,5 +171,5 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
 Route::group(['middleware' => 'web'], function () {
     Route::auth();
 
-    Route::get('/home', 'HomeController@index');
+//    Route::get('/home', 'HomeController@index');
 });
