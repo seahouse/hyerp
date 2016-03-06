@@ -11,6 +11,7 @@ use Cache;
 
 class DingTalkController extends Controller
 {
+
     public function getuserinfo($code)
     {
         $corpid = 'ding6ed55e00b5328f39';
@@ -47,67 +48,7 @@ class DingTalkController extends Controller
     
     public function index()
     {
-//         $response = "";
-        
-//         try {
-//             if (Request()->has('error')) {
-//                 $response = response(Request()->get('error'));
-//             }
-//             else if (Request()->has('code')) {
-//                 // Get user ID by auth code
-//                 $code = Request()->get('code');
-//                 $url = 'https://oapi.dingtalk.com/user/getuserinfo';
-//                 $params = ['access_token' => self::$access_token, 'code' => $code];
-//                 $reply = $this->get($url, $params);
-//                 $userid = $reply->userid;
-//                 $deviceId = $reply->deviceId;
-//                 $is_sys = $reply->is_sys;
-//                 $sys_level = $reply->sys_level;
-        
-//                 // Get user information
-//                 $url = 'https://oapi.dingtalk.com/user/get';
-//                 $params = ['access_token' => self::$access_token, 'userid' => $userid];
-//                 $reply = $this->get($url, $params);
-//                 $name = $reply->name;
-//                 $mobile = $reply->mobile;
-//                 $isAdmin = $reply->isAdmin;
-//                 $isBoss = $reply->isBoss;
-//                 $dingId = $reply->dingId;
-        
-//                 $response = response('userid:' . $userid . '<br>'
-//                     .'deviceId: ' . $deviceId . '<br>'
-//                     .'is_sys: ' . $is_sys . '<br>'
-//                     .'sys_level: ' . $sys_level . '<br>'
-//                     .'name: ' . $name . '<br>'
-//                     .'mobile: ' . $mobile . '<br>'
-//                     .'isAdmin: ' . $isAdmin . '<br>'
-//                     .'isBoss: ' . $isBoss . '<br>'
-//                     .'dingId: ' . $dingId . '<br>'
-//                 );
-//             }
-//             else {
-//                 // Calc signature
-//                 $corpid = self::CORP_ID;
-//                 $access_token = self::$access_token;
-//                 $jsapi_ticket = self::$jsapi_ticket;
-//                 $url = Request()->url();
-//                 $timestamp  = time();
-//                 $noncestr   = substr(md5(time()), 0, 16);
-//                 $array = compact('jsapi_ticket', 'url', 'timestamp', 'noncestr');
-//                 ksort($array);
-//                 $rawstring  = urldecode(http_build_query($array));
-//                 $signature = sha1($rawstring);
-        
-//                 $ddconfig = compact('corpid', 'timestamp', 'noncestr', 'signature', 'access_token', 'rawstring');
-        
-//                 $response = response()->view('dingtalk', compact('ddconfig'));
-//             }
-//         }
-//         catch (\Exception $e) {
-//             dd($e);
-//         }
-        
-//         return $response;
+
     }
     
     /**

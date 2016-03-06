@@ -25,6 +25,10 @@
     {!! Form::input('password', 'password_confirmation', null, ['class' => 'form-control']) !!}
 </div>
 
+<div class="form-group">
+    {!! Form::label('dtuserid', '钉钉员工号:') !!}
+    {!! Form::text('dtuserid', null, ['class' => 'form-control']) !!}
+</div>
 
 <div class="form-group">
     {!! Form::submit($submitButtonText, ['class' => 'btn btn-primary form-control']) !!}

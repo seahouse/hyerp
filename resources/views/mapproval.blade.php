@@ -55,11 +55,10 @@
 		
 		jQuery(document).ready(function(e) {
 			dd.ready(function() {
-				alert('dd.ready.');
 				
 				dd.runtime.info({
 					onSuccess: function(info) {
-						alert('runtime info: ' + JSON.stringify(info));
+						// alert('runtime info: ' + JSON.stringify(info));
 					},
 					onFail: function(err) {
 						alert('fail: ' + JSON.stringify(err));
@@ -69,8 +68,6 @@
 				dd.runtime.permission.requestAuthCode({
 				    corpId: "ding6ed55e00b5328f39",
 				    onSuccess: function(info) {
-				    	alert(info.code);
-
 			     	    $.ajax({
 			         	    type:"GET",
 			         	    url:"{{ url('dingtalk/getuserinfo') }}" + "/" + info.code,

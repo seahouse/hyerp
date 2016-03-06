@@ -105,6 +105,7 @@ class UsersController extends Controller
         $user = User::findOrFail($id);
         $user->name = $request->input('name');
         $user->password = bcrypt($request->input('password'));
+		$user->dtuserid = $request->input('dtuserid');
         $user->update();
         return redirect('system/users');
     }
