@@ -11,7 +11,6 @@ use Cache;
 
 class DingTalkController extends Controller
 {
-
     public function getuserinfo($code)
     {
         $corpid = 'ding6ed55e00b5328f39';
@@ -31,7 +30,7 @@ class DingTalkController extends Controller
         $reply = $this->get($url, $params);
         $access_token = $reply->access_token;
 
-        // Get unser info
+        // Get user info
         $url = 'https://oapi.dingtalk.com/user/getuserinfo';
         $params = compact('access_token', 'code');
         $userInfo = $this->get($url, $params);
