@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\User;
+use App\Models\System\User;
 use App\Http\Requests\System\UserRequest;
 // use Request;
 use App\Http\Requests\System\UpdateUserRequest;
@@ -118,6 +118,9 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
+        if (\Gate::denies('delete-user')) {
+            return "You have no permission to do this!";
+        }
         //
         User::destroy($id);
         return redirect('system/users');
