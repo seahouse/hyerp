@@ -32,9 +32,9 @@ class ReimbursementsController extends Controller
     {
     	$dingtalk = new DingTalkController();
     	$input = $request->all();
-    	if ($request->session()->has('userid'))
+    	if (session()->has('userid'))
     	{
-    		$input->applicant_id = $request->session()->get('userid');
+    		$input->applicant_id = session()->get('userid');
     		$reimbursement = Reimbursement::create($input);
     		dd($reimbursement);
     		return redirect('approval/reimbursements/mindex');
