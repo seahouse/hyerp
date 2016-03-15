@@ -81,7 +81,7 @@
 			             	},
 			             	success:function(msg){
 			             	    alert('userid: ' + msg.userid);
-
+			             	    alert('userid_erp: ' + msg.userid_erp);
 			                },
 			         	});
 				    },

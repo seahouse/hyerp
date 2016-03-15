@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Cache;
+use DB;
 
 class DingTalkController extends Controller
 {
@@ -34,6 +35,11 @@ class DingTalkController extends Controller
         $url = 'https://oapi.dingtalk.com/user/getuserinfo';
         $params = compact('access_token', 'code');
         $userInfo = $this->get($url, $params);
+
+        // get erp user info and set session userid
+        $user_erp = DB::table('users')->where('dtuserid', $userInfo->userid)->first();
+        $userid_erp = user_erp->id;
+
         $user = [
             'deviceId' => $userInfo->deviceId,
             'errcode' => $userInfo->errcode,
@@ -41,6 +47,7 @@ class DingTalkController extends Controller
             'is_sys' => $userInfo->is_sys,
             'sys_level' => $userInfo->sys_level,
             'userid' => $userInfo->userid,
+            'userid_erp' => $userInfo->userid_erp,
         ];
         return response()->json($user);
     }
