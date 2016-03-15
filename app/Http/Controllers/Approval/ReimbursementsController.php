@@ -32,7 +32,14 @@ class ReimbursementsController extends Controller
     {
     	$dingtalk = new DingTalkController();
     	$input = $request->all();
-    	$reimbursement = Reimbursement::create($input);
-    	dd($reimbursement);
+    	if ($request->session()->has('userid'))
+    	{
+    		$input->applicant_id = $request->session()->get('userid');
+    		$reimbursement = Reimbursement::create($input);
+    		dd($reimbursement);
+    		return redirect('approval/reimbursements/mindex');
+    	}
+    	else
+    		return '您的账号未与后台系统绑定，无法执行此操作.';
     }
 }
