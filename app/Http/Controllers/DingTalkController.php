@@ -47,7 +47,7 @@ class DingTalkController extends Controller
             'is_sys' => $userInfo->is_sys,
             'sys_level' => $userInfo->sys_level,
             'userid' => $userInfo->userid,
-            'userid_erp' => $userInfo->userid_erp,
+            'userid_erp' => $userid_erp,
         ];
         return response()->json($user);
     }
