@@ -42,7 +42,7 @@ class DingTalkController extends Controller
         if (!is_null($user_erp))
         {
             $userid_erp = $user_erp->id;
-            $request->session()->put('userid', $userid_erp);
+            session()->put('userid', $userid_erp);
         }
 
         $user = [
