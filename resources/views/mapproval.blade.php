@@ -72,7 +72,6 @@
 			         	    type:"GET",
 			         	    url:"{{ url('dingtalk/getuserinfo') }}" + "/" + info.code,
 			         	    error:function(xhr, ajaxOptions, thrownError){
-			             	    alert($("form#formCharass").serialize());
 			             	    alert('error');
 								alert(xhr.status);
 								alert(xhr.responseText);

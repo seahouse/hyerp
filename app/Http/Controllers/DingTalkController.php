@@ -38,7 +38,7 @@ class DingTalkController extends Controller
 
         // get erp user info and set session userid
         $user_erp = DB::table('users')->where('dtuserid', $userInfo->userid)->first();
-        $userid_erp = user_erp->id;
+        $userid_erp = $user_erp->id;
 
         $user = [
             'deviceId' => $userInfo->deviceId,
