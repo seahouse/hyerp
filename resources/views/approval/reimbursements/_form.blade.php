@@ -96,7 +96,7 @@
     </div>
 </div>
 
-
+{!! Form::hidden('applicant_id', null, ['class' => 'form-control']) !!}
 
 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
