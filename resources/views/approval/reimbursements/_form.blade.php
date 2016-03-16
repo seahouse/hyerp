@@ -1,7 +1,7 @@
 <div class="form-group">
     {!! Form::label('date', '申请日期:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    <input type="date" name="date" />
+    {!! Form::text('date', null, ['class' => 'form-control', 'onclick' => 'f()']) !!}
     </div>
 </div>
 
