@@ -28,7 +28,8 @@
 					    format: 'yyyy-MM-dd',
 					    value: '2015-04-17', //默认显示日期
 					    onSuccess : function(result) {
-					    	alert(result);
+					    	alert(value);
+					    	$("#date").val(value);
 					        //onSuccess将在点击完成之后回调
 					        /*{
 					            value: "2015-02-10"
