@@ -34,7 +34,7 @@ class ReimbursementsController extends Controller
     	$input = $request->all();
     	if (session()->has('userid'))
     	{
-    		$input->applicant_id = session()->get('userid');
+    		$input['applicant_id'] = session()->get('userid');
     		$reimbursement = Reimbursement::create($input);
     		dd($reimbursement);
     		return redirect('approval/reimbursements/mindex');
