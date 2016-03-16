@@ -35,15 +35,18 @@ Route::get('app2', function() {
     return view('app2');
 });
 
-Route::get('mddauth', function() {
-    return view('mddauth');
-});
+// Route::get('mddauth', function() {
+//     return view('mddauth');
+// });
 
-Route::get('mapproval', function() {
-    return view('mapproval');
-});
+// Route::get('mapproval', function() {
+//     return view('mapproval');
+// });
 
 Route::group(['middleware' => ['web']], function () {
+    Route::get('mddauth', function() { return view('mddauth'); });
+    Route::get('mapproval', function() { return view('mapproval'); });
+
 	Route::get('dingtalk/getuserinfo/{code}', 'DingTalkController@getuserinfo');
 });
 
