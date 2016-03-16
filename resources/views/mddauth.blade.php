@@ -1,7 +1,12 @@
 @extends('app')
 
+@section('title')
+身份验证
+@endsection
+
 @section('main')
-	<p>
+	<h1>身份验证中，请稍后....</h1>
+<!-- 	<p>
 		<div class="btn-group btn-group-justified" role="group" aria-label="...">
 			<div class="btn-group" role="group">
 				<a href="#"><button type="button" class="btn btn-default">待我审批</button></a>
@@ -24,7 +29,7 @@
 				<a href="#"><button type="button" class="btn btn-default">请假</button></a>
 			</div>
 		</div>
-	</p>
+	</p> -->
 @endsection
 
 @section('script')

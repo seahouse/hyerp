@@ -35,6 +35,10 @@ Route::get('app2', function() {
     return view('app2');
 });
 
+Route::get('mddauth', function() {
+    return view('mddauth');
+});
+
 Route::get('mapproval', function() {
     return view('mapproval');
 });
