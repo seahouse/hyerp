@@ -24,12 +24,49 @@
 				});
 
 				$("#date").click(function() {
+					var mydate = new Date();
 					dd.biz.util.datepicker({
 					    format: 'yyyy-MM-dd',
-					    value: '2015-04-17', //默认显示日期
+					    value: mydate.toLocaleString(),  //'2015-04-17', //默认显示日期
 					    onSuccess : function(result) {
 					    	alert(result.value);
 					    	$("#date").val(result.value);
+					        //onSuccess将在点击完成之后回调
+					        /*{
+					            value: "2015-02-10"
+					        }
+					        */
+					    },
+					    onFail : function() {}
+					});
+				});
+
+				$("#datego").click(function() {
+					var mydate = new Date();
+					dd.biz.util.datepicker({
+					    format: 'yyyy-MM-dd',
+					    value: mydate.toLocaleString(),  //'2015-04-17', //默认显示日期
+					    onSuccess : function(result) {
+					    	alert(result.value);
+					    	$("#datego").val(result.value);
+					        //onSuccess将在点击完成之后回调
+					        /*{
+					            value: "2015-02-10"
+					        }
+					        */
+					    },
+					    onFail : function() {}
+					});
+				});
+
+				$("#dateback").click(function() {
+					var mydate = new Date();
+					dd.biz.util.datepicker({
+					    format: 'yyyy-MM-dd',
+					    value: mydate.toLocaleString(),  //'2015-04-17', //默认显示日期
+					    onSuccess : function(result) {
+					    	alert(result.value);
+					    	$("#dateback").val(result.value);
 					        //onSuccess将在点击完成之后回调
 					        /*{
 					            value: "2015-02-10"
