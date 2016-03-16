@@ -5,7 +5,9 @@
 @endsection
 
 @section('main')
-	<h1>身份验证中，请稍后....</h1>
+	<p>
+		<h3>身份验证中，请稍后....</h3>		
+	</p>
 <!-- 	<p>
 		<div class="btn-group btn-group-justified" role="group" aria-label="...">
 			<div class="btn-group" role="group">
@@ -67,6 +69,10 @@
 			             	    alert('userid_erp: ' + msg.userid_erp);
 			             	    if (msg.userid_erp == -1)
 			             	    	alert('您的账号未与后台绑定，无法使用此应用.');
+			             	    else
+			             	    {
+			             	    	location.href = "{{ url('/mapproval') }}";
+			             	    }
 			                },
 			         	});
 				    },
