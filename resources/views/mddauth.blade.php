@@ -6,7 +6,7 @@
 
 @section('main')
 	<p>
-		<h3>身份验证中，请稍后....</h3>		
+		<h4>身份验证中，请稍后....</h4>		
 	</p>
 <!-- 	<p>
 		<div class="btn-group btn-group-justified" role="group" aria-label="...">

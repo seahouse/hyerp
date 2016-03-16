@@ -23,7 +23,7 @@
 					}
 				});
 
-				function f() {
+				$("#date").click(function() {
 					dd.biz.util.datepicker({
 					    format: 'yyyy-MM-dd',
 					    value: '2015-04-17', //默认显示日期
@@ -37,8 +37,7 @@
 					    },
 					    onFail : function() {}
 					});
-				}
-
+				});
 
 			});
 		});
