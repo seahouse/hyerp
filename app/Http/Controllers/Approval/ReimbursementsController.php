@@ -34,9 +34,9 @@ class ReimbursementsController extends Controller
     	$dingtalk = new DingTalkController();
     	$input = $request->all();
 
-		$input['applicant_id'] = 1;
-		$reimbursement = Reimbursement::create($input);
-		return redirect('approval/reimbursements');
+		// $input['applicant_id'] = 1;
+		// $reimbursement = Reimbursement::create($input);
+		// return redirect('approval/reimbursements');
 
     	if (session()->has('userid'))
     	{
