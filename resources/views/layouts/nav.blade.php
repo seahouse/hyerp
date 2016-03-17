@@ -68,6 +68,12 @@
                     </ul>
                 </li>
                 <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">审批<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/approval/reimbursements">报销</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">系统<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="/system/employees">员工</a></li>

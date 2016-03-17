@@ -68,7 +68,6 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('mindex', 'ReimbursementsController@mindex');
         Route::get('mcreate', 'ReimbursementsController@mcreate');
     });
-    Route::resource('reimbursements', 'ReimbursementsController');
 });
 
 Route::group(['prefix' => 'addr', 'namespace' => 'Addr', 'middleware' => ['web', 'auth']], function() {
@@ -142,6 +141,10 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
 Route::group(['prefix' => 'accounting', 'namespace' => 'Accounting', 'middleware' => ['web', 'auth']], function() {
     Route::resource('receivables', 'ReceivablesController');
     Route::resource('payables', 'PayablesController');
+});
+
+Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' => ['web', 'auth']], function() {
+    Route::resource('reimbursements', 'ReimbursementsController');
 });
 
 Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['web', 'auth']], function() {

@@ -57,14 +57,14 @@
 <div class="form-group">
     {!! Form::label('datego', '出差去日:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::date('datego', null, ['class' => 'form-control']) !!}
+    {!! Form::date('datego', $datego, ['class' => 'form-control']) !!}
     </div>
 </div>
 
 <div class="form-group">
     {!! Form::label('dateback', '出差回日:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::date('dateback', null, ['class' => 'form-control']) !!}
+    {!! Form::date('dateback', $dateback, ['class' => 'form-control']) !!}
     </div>
 </div>
 

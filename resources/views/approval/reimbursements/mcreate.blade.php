@@ -9,6 +9,8 @@
         		'customer_id' => '0', 
         		'amount' => '0.0', 
         		'order_id' => '0',
+        		'datego' => date('Y-m-d'),
+        		'dateback' => date('Y-m-d'),
         		'mealamount' => '0.0',
         		'ticketamount' => '0.0',
         		'stayamount' => '0.0',
@@ -23,8 +25,7 @@
 	<script type="text/javascript">
 		
 		jQuery(document).ready(function(e) {
-			dd.ready(function() {
-				
+			dd.ready(function() {				
 
 				dd.device.base.getUUID({
 				    onSuccess : function(data) {
@@ -37,7 +38,7 @@
 				    },
 				    onFail : function(err) {
 				    	alert("dd.device.base.getUUID");
-				    	alert(err);
+				    	alert(JSON.stringify(err));
 				    }
 				});
 
