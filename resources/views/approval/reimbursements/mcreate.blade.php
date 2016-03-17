@@ -14,13 +14,19 @@
 		jQuery(document).ready(function(e) {
 			dd.ready(function() {
 				
-				dd.runtime.info({
-					onSuccess: function(info) {
-						// alert('runtime info: ' + JSON.stringify(info));
-					},
-					onFail: function(err) {
-						alert('fail: ' + JSON.stringify(err));
-					}
+
+				dd.device.base.getUUID({
+				    onSuccess : function(data) {
+				    	alert(data.uuid);
+				        /*
+				        {
+				            uuid: '3udbhg98ddlljokkkl' //
+				        }
+				        */
+				    },
+				    onFail : function(err) {
+				    	alert("dd.device.base.getUUID failed.");
+				    }
 				});
 
 				$("#date").click(function() {
@@ -29,7 +35,6 @@
 					    format: 'yyyy-MM-dd',
 					    value: mydate.toLocaleString(),  //'2015-04-17', //默认显示日期
 					    onSuccess : function(result) {
-					    	alert(result.value);
 					    	$("#date").val(result.value);
 					        //onSuccess将在点击完成之后回调
 					        /*{
@@ -47,7 +52,6 @@
 					    format: 'yyyy-MM-dd',
 					    value: mydate.toLocaleString(),  //'2015-04-17', //默认显示日期
 					    onSuccess : function(result) {
-					    	alert(result.value);
 					    	$("#datego").val(result.value);
 					        //onSuccess将在点击完成之后回调
 					        /*{
@@ -65,7 +69,6 @@
 					    format: 'yyyy-MM-dd',
 					    value: mydate.toLocaleString(),  //'2015-04-17', //默认显示日期
 					    onSuccess : function(result) {
-					    	alert(result.value);
 					    	$("#dateback").val(result.value);
 					        //onSuccess将在点击完成之后回调
 					        /*{
