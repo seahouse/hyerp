@@ -67,6 +67,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::group(['prefix' => 'reimbursements'], function() {
         Route::get('mindex', 'ReimbursementsController@mindex');
         Route::get('mcreate', 'ReimbursementsController@mcreate');
+        Route::post('mstore', 'ReimbursementsController@mstore');
     });
 });
 

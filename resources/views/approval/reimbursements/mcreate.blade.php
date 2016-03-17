@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('main')
-    {!! Form::open(array('url' => 'approval/reimbursements', 'class' => 'form-horizontal')) !!}
+    {!! Form::open(array('url' => 'approval/reimbursements/mstore', 'class' => 'form-horizontal')) !!}
         @include('approval.reimbursements._form', 
         	[
         		'submitButtonText' => '添加', 

@@ -21,7 +21,8 @@ class ReimbursementsController extends Controller
 
 	public function mindex()
 	{
-		return view('approval/reimbursements/mindex');
+        $reimbursements = Reimbursement::latest('created_at')->paginate(10);
+        return view('approval.reimbursements.mindex', compact('reimbursements'));
 	}
 
 	public function mcreate()
@@ -46,6 +47,21 @@ class ReimbursementsController extends Controller
     	}
     	else
     		return '您的账号未与后台系统绑定，无法执行此操作.';
+    }
+
+    public function mstore(Request $request)
+    {
+        $dingtalk = new DingTalkController();
+        $input = $request->all();
+
+        if (session()->has('userid'))
+        {
+            $input['applicant_id'] = session()->get('userid');
+            $reimbursement = Reimbursement::create($input);
+            return redirect('approval/reimbursements/mindex');
+        }
+        else
+            return '您的账号未与后台系统绑定，无法执行此操作.';
     }
 
     /**
