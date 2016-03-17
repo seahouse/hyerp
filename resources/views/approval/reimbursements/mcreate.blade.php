@@ -2,7 +2,18 @@
 
 @section('main')
     {!! Form::open(array('url' => 'approval/reimbursements', 'class' => 'form-horizontal')) !!}
-        @include('approval.reimbursements._form', ['submitButtonText' => '添加', 'marketprice' => '0.0'])
+        @include('approval.reimbursements._form', 
+        	[
+        		'submitButtonText' => '添加', 
+        		'date' => date('Y-m-d'),
+        		'customer_id' => '0', 
+        		'amount' => '0.0', 
+        		'order_id' => '0',
+        		'mealamount' => '0.0',
+        		'ticketamount' => '0.0',
+        		'stayamount' => '0.0',
+        		'otheramount' => '0.0',
+        	])
     {!! Form::close() !!}
 @endsection
 
@@ -25,7 +36,8 @@
 				        */
 				    },
 				    onFail : function(err) {
-				    	alert("dd.device.base.getUUID failed.");
+				    	alert("dd.device.base.getUUID");
+				    	alert(err);
 				    }
 				});
 

@@ -1,7 +1,7 @@
 <div class="form-group">
     {!! Form::label('date', '申请日期:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::date('date', null, ['class' => 'form-control']) !!}
+    {!! Form::date('date', $date, ['class' => 'form-control']) !!}
     </div>
 </div>
 
@@ -15,14 +15,14 @@
 <div class="form-group">
     {!! Form::label('amount', '报销金额:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::text('amount', null, ['class' => 'form-control']) !!}
+    {!! Form::text('amount', $amount, ['class' => 'form-control']) !!}
     </div>
 </div>
 
 <div class="form-group">
     {!! Form::label('customer_id', '客户:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::text('customer_id', null, ['class' => 'form-control']) !!}
+    {!! Form::text('customer_id', $customer_id, ['class' => 'form-control']) !!}
     </div>
 </div>
 
@@ -43,7 +43,7 @@
 <div class="form-group">
     {!! Form::label('order_id', '对应订单:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::text('order_id', null, ['class' => 'form-control']) !!}
+    {!! Form::text('order_id', $order_id, ['class' => 'form-control']) !!}
     </div>
 </div>
 
@@ -71,28 +71,28 @@
 <div class="form-group">
     {!! Form::label('mealamount', '伙食补贴:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::text('mealamount', null, ['class' => 'form-control']) !!}
+    {!! Form::text('mealamount', $mealamount, ['class' => 'form-control']) !!}
     </div>
 </div>
 
 <div class="form-group">
     {!! Form::label('ticketamount', '车船费:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::text('ticketamount', null, ['class' => 'form-control']) !!}
+    {!! Form::text('ticketamount', $ticketamount, ['class' => 'form-control']) !!}
     </div>
 </div>
 
 <div class="form-group">
     {!! Form::label('stayamount', '住宿费:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::text('stayamount', null, ['class' => 'form-control']) !!}
+    {!! Form::text('stayamount', $stayamount, ['class' => 'form-control']) !!}
     </div>
 </div>
 
 <div class="form-group">
     {!! Form::label('otheramount', '其他费用:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::text('otheramount', null, ['class' => 'form-control']) !!}
+    {!! Form::text('otheramount', $otheramount, ['class' => 'form-control']) !!}
     </div>
 </div>
 
