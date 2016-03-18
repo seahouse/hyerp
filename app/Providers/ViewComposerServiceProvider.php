@@ -16,17 +16,17 @@ class ViewComposerServiceProvider extends ServiceProvider
     {
         // itemList
         view()->composer(array('product.bomitems.createitem', 'product.bomitems.edit', 'sales.soitems.create', 'sales.soitems.edit'), function($view) {
-            $view->with('itemList', \App\models\Product\Item::orderby('id', 'asc')->lists('item_number', 'id'));
+            $view->with('itemList', \App\Models\Product\Item::orderby('id', 'asc')->lists('item_number', 'id'));
         });
         
         // itemclassList
         view()->composer(array('items.create', 'items.edit', 'product.items.create', 'product.items.edit'), function($view) {
-            $view->with('itemclassList', \App\models\Product\Itemclass::orderby('id', 'asc')->lists('name', 'id'));
+            $view->with('itemclassList', \App\Models\Product\Itemclass::orderby('id', 'asc')->lists('name', 'id'));
         });
         
         // itemtypeList
         view()->composer(array('items.create', 'items.edit', 'product.items.create', 'product.items.edit'), function($view) {
-            $view->with('itemtypeList', \App\Itemtype::orderby('id', 'asc')->lists('name', 'id'));
+            $view->with('itemtypeList', \App\Models\Product\Itemtype::orderby('id', 'asc')->lists('name', 'id'));
         });
         
         // provinceList
@@ -42,13 +42,13 @@ class ViewComposerServiceProvider extends ServiceProvider
         // addrList
         view()->composer(array('contacts.create', 'contacts.edit', 'inventory.warehouses.create', 'inventory.warehouses.edit',
             'purchase.vendinfos.create', 'purchase.vendinfos.edit'), function($view) {
-            $view->with('addrList', \App\Addr::orderby('id', 'asc')->lists('line1', 'id'));
+            $view->with('addrList', \App\Models\Crm\Addr::orderby('id', 'asc')->lists('line1', 'id'));
         });
         
         // contactList
         view()->composer(array('custinfos.create', 'custinfos.edit', 'inventory.warehouses.create', 'inventory.warehouses.edit',
             'purchase.vendinfos.create', 'purchase.vendinfos.edit', 'purchase.purchaseorders.create', 'purchase.purchaseorders.edit'), function($view) {
-            $view->with('contactList', \App\Contact::orderby('id', 'asc')->lists('name', 'id'));
+            $view->with('contactList', \App\Models\Crm\Contact::orderby('id', 'asc')->lists('name', 'id'));
         });
         
         // deptList
@@ -63,12 +63,12 @@ class ViewComposerServiceProvider extends ServiceProvider
         
         // custinfoList
         view()->composer(array('sales.salesorders.create', 'sales.salesorders.edit'), function($view) {
-            $view->with('custinfoList', \App\Custinfo::orderby('id', 'asc')->lists('name', 'id'));
+            $view->with('custinfoList', \App\Models\Crm\Custinfo::orderby('id', 'asc')->lists('name', 'id'));
         });
         
         // salesrepList
         view()->composer(array('sales.salesorders.create', 'sales.salesorders.edit'), function($view) {
-            $view->with('salesrepList', \App\Sales\Salesrep::orderby('id', 'asc')->lists('name', 'id'));
+            $view->with('salesrepList', \App\Models\Sales\Salesrep::orderby('id', 'asc')->lists('name', 'id'));
         });
         
         // termList
@@ -106,7 +106,7 @@ class ViewComposerServiceProvider extends ServiceProvider
         
         // charIList: item char list
         view()->composer(array('items.create', 'items.edit', 'product.items.create', 'product.items.edit'), function($view) {
-            $view->with('charIList', \App\Product\Characteristic::orderby('id', 'asc')->where('bitems', true)->lists('name', 'id'));
+            $view->with('charIList', \App\Models\Product\Characteristic::orderby('id', 'asc')->where('bitems', true)->lists('name', 'id'));
         });
     }
 

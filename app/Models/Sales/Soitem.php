@@ -23,10 +23,10 @@ class Soitem extends Model
     }
     
     public function item() {
-        return $this->hasOne('App\Item', 'id', 'item_id');
+        return $this->hasOne('App\Models\Product\Item', 'id', 'item_id');
     }
     
     public function itemsite() {
-        return $this->hasOne('App\Inventory\Itemsite', 'item_id', 'item_id');
+        return $this->hasOne('App\Models\Inventory\Itemsite', 'item_id', 'item_id');
     }
 }

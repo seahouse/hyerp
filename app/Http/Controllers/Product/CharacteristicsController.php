@@ -6,7 +6,7 @@ namespace App\Http\Controllers\Product;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Product\Characteristic;
+use App\Models\Product\Characteristic;
 use App\Http\Requests\Product\CharacteristicRequest;
 use Request;
 

@@ -39,7 +39,7 @@
                         {{ $item->created_at }}
                     </td>
                     <td>
-                        <a href="{{ URL::to('/items/'.$item->id.'/edit') }}" class="btn btn-success btn-mini pull-left">编辑</a>
+                        <a href="{{ URL::to('/product/boms/'.$item->id.'/edit') }}" class="btn btn-success btn-mini pull-left">编辑</a>
                         {!! Form::open(array('route' => array('product.items.destroy', $item->id), 'method' => 'delete', 'data-confirm' => 'Are you sure?')) !!}
                             {!! Form::submit('删除', ['class' => 'btn btn-danger']) !!}
                         {!! Form::close() !!}

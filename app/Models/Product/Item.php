@@ -29,7 +29,7 @@ class Item extends Model
     }    
     
     public function itemtype() {
-        return $this->hasOne('App\Models\Product\Itemtype', 'itemtype_id', 'id');
+        return $this->hasOne('App\Models\Product\Itemtype', 'id', 'itemtype_id');
     }
     
     public function itemsite() {
@@ -41,6 +41,6 @@ class Item extends Model
     }
     
     public function charasses() {
-        return $this->hasMany('App\Product\Charass', 'target_id', 'id');
+        return $this->hasMany('App\Models\Product\Charass', 'target_id', 'id');
     }
 }

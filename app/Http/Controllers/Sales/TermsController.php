@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Sales;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Sales\Term;
+use App\Models\Sales\Term;
 use App\Http\Requests\Sales\TermRequest;
 use Request;
 

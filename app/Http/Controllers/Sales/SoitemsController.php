@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Sales;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Sales\Soitem;
+use App\Models\Sales\Soitem;
 use App\Http\Requests\Sales\SoitemRequest;
 use Request;
 

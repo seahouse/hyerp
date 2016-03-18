@@ -10,8 +10,8 @@
 
 <div class="form-group">
     {!! Form::label('orderdate', '订单日期:') !!}
-{{--    {!! Form::text('orderdate', null, ['class' => 'form-control datepicker']) !!} --}}
-    {!! Form::input('date', 'orderdate', $orderdate, ['class' => 'form-control']) !!} 
+    {!! Form::date('orderdate', null, ['class' => 'form-control datepicker']) !!} 
+{{--    {!! Form::input('date', 'orderdate', $orderdate, ['class' => 'form-control']) !!}  --}}
 </div>
 
 <div class="form-group">

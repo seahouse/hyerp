@@ -37,6 +37,6 @@ class Salesorder extends Model
     }
     
     public function soitems() {
-        return $this->hasMany('App\Sales\Soitem', 'sohead_id');
+        return $this->hasMany('App\Models\Sales\Soitem', 'sohead_id');
     }
 }

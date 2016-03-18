@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Product;
+namespace App\Models\Product;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +17,6 @@ class Charass extends Model
     ];
     
     public function char() {
-        return $this->hasOne('App\Product\Characteristic', 'id', 'char_id');
+        return $this->hasOne('App\Models\Product\Characteristic', 'id', 'char_id');
     }
 }
