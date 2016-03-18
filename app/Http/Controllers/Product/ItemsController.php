@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Product;
 
-use App\models\Product\Item;
+use App\Models\Product\Item;
 use Illuminate\Http\Request;
 //use Request;
 use App\Http\Requests\ItemRequest;
@@ -10,7 +10,7 @@ use DB;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\models\Product\Itemclass;
+use App\Models\Product\Itemclass;
 use App\Itemtype;
 use App\Inventory\Warehouse;
 use App\Inventory\Itemsite;

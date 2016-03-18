@@ -19,7 +19,7 @@ class ReimbursementsController extends Controller
         return view('approval.reimbursements.index', compact('reimbursements'));
 	}
 
-	public function mindex()
+	public function mindex($id)
 	{
         $reimbursements = Reimbursement::latest('created_at')->paginate(10);
         return view('approval.reimbursements.mindex', compact('reimbursements'));

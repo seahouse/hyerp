@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Product;
 
-use App\models\Product\Itemclass;
+use App\Models\Product\Itemclass;
 use App\Http\Requests\ItemclassRequest;
 use Request;
 //use Illuminate\Http\Request;

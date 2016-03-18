@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\models\Product\Item;
-use App\models\Product\Bomhead;
-use App\models\Product\Bomitem;
+use App\Models\Product\Item;
+use App\Models\Product\Bomhead;
+use App\Models\Product\Bomitem;
 use DB;
 
 class BomsController extends Controller

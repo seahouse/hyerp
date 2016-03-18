@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Product;
 //use App\Http\Requests;
 use Request;
 use App\Http\Controllers\Controller;
-use App\models\Product\Bomitem;
+use App\Models\Product\Bomitem;
 use App\Http\Requests\BomitemRequest;
 
 class BomitemsController extends Controller

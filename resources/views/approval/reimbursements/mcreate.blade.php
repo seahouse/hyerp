@@ -4,7 +4,7 @@
     {!! Form::open(array('url' => 'approval/reimbursements/mstore', 'class' => 'form-horizontal')) !!}
         @include('approval.reimbursements._form', 
         	[
-        		'submitButtonText' => '添加', 
+        		'submitButtonText' => '提交', 
         		'date' => date('Y-m-d'),
         		'customer_id' => '0', 
         		'amount' => '0.0', 
