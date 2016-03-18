@@ -43,6 +43,11 @@ class DingTalkController extends Controller
         {
             $userid_erp = $user_erp->id;
             session()->put('userid', $userid_erp);
+            // login 
+            if (!Auth::check())
+            {
+                Auth::login($user_erp);
+            }
         }
 
         $user = [

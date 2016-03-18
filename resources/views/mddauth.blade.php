@@ -65,8 +65,8 @@
 								alert(thrownError);
 			             	},
 			             	success:function(msg){
-			             	    alert('userid: ' + msg.userid);
-			             	    alert('userid_erp: ' + msg.userid_erp);
+			             	    // alert('userid: ' + msg.userid);
+			             	    // alert('userid_erp: ' + msg.userid_erp);
 			             	    if (msg.userid_erp == -1)
 			             	    	alert('您的账号未与后台绑定，无法使用此应用.');
 			             	    else if ("{{ request('app') }}" == "approval")

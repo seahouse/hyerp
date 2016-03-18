@@ -64,11 +64,11 @@ Route::group(['middleware' => ['web', 'auth']], function () {
 });
 
 Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' => ['web']], function() {    
-    Route::group(['prefix' => 'reimbursements'], function() {
-        Route::get('mindex', 'ReimbursementsController@mindex');
-        Route::get('mcreate', 'ReimbursementsController@mcreate');
-        Route::post('mstore', 'ReimbursementsController@mstore');
-    });
+    // Route::group(['prefix' => 'reimbursements'], function() {
+    //     Route::get('mindex', 'ReimbursementsController@mindex');
+    //     Route::get('mcreate', 'ReimbursementsController@mcreate');
+    //     Route::post('mstore', 'ReimbursementsController@mstore');
+    // });
 });
 
 Route::group(['prefix' => 'addr', 'namespace' => 'Addr', 'middleware' => ['web', 'auth']], function() {
@@ -145,6 +145,11 @@ Route::group(['prefix' => 'accounting', 'namespace' => 'Accounting', 'middleware
 });
 
 Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' => ['web', 'auth']], function() {
+    Route::group(['prefix' => 'reimbursements'], function() {
+        Route::get('mindex', 'ReimbursementsController@mindex');
+        Route::get('mcreate', 'ReimbursementsController@mcreate');
+        Route::post('mstore', 'ReimbursementsController@mstore');
+    });
     Route::resource('reimbursements', 'ReimbursementsController');
 });
 
