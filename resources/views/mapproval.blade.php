@@ -7,7 +7,7 @@
 				<a href="#"><button type="button" class="btn btn-default">待我审批</button></a>
 			</div>
 			<div class="btn-group" role="group">
-				<a href="/approval/reimbursements/mindex"><button type="button" class="btn btn-default">我发起的</button></a>
+				<a href="/approval/reimbursements/mindexmy"><button type="button" class="btn btn-default">我发起的</button></a>
 			</div>
 		</div>
 	</p>
