@@ -46,7 +46,7 @@ class DingTalkController extends Controller
             // login 
             if (!Auth::check())
             {
-                Auth::login($user_erp);
+                Auth::loginUsingId($userid_erp);
             }
         }
 
