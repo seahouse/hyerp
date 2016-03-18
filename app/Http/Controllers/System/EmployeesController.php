@@ -8,7 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\System\EmployeeRequest;
-use App\System\Employee;
+use App\Models\System\Employee;
 use Request;
 
 class EmployeesController extends Controller

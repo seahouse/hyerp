@@ -77,7 +77,7 @@
                         {{ $item->item_name }}
                     </td>
                     <td>
-                        {{ $item->itemtype->name }}
+                        {{-- {{ $item->itemtype->name }} --}}       {{-- 为什么报 Class 'App\models\Product\Itemclass' not found  --}}
                     </td>
                     <td>
                         {{ $item->index }}
@@ -86,11 +86,11 @@
                         {{ $item->created_at }}
                     </td>
                     <td>
-                        @if ($item->itemtype->name == '生产' || $item->itemtype->name == '采购')
+{{--                        @if ($item->itemtype->name == '生产' || $item->itemtype->name == '采购')
                             <a href="{{ URL::to('product/boms/' . $item->id . '/edit') }}" target="_blank">编辑</a>
                         @else
                             --
-                        @endif
+                        @endif --}}
                     </td>
                     <td>
                         <a href="{{ URL::to('/product/items/'.$item->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>

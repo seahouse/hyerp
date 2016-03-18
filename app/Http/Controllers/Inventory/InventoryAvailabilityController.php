@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Sales\Soitem;
-use App\Item;
+use App\Models\Sales\Soitem;
+use App\Models\Product\Item;
 
 class InventoryAvailabilityController extends Controller
 {

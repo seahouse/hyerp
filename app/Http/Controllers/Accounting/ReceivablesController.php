@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Accounting\Receivable;
-use App\Custinfo;
+use App\Models\Crm\Custinfo;
 use DB;
 use App\Sales\Soitem;
 

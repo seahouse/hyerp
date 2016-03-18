@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Inventory;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Inventory\Warehouse;
+use App\Models\Inventory\Warehouse;
 use App\Http\Requests\Inventory\WarehouseRequest;
 use Request;
 

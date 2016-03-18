@@ -7,7 +7,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Custinfo;
+use App\Models\Crm\Custinfo;
 use App\Http\Requests\CustinfoRequest;
 use Request;
 

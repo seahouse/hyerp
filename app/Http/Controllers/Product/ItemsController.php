@@ -11,7 +11,7 @@ use DB;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Product\Itemclass;
-use App\Itemtype;
+use App\Models\Product\Itemtype;
 use App\Inventory\Warehouse;
 use App\Inventory\Itemsite;
 
@@ -26,7 +26,7 @@ class ItemsController extends Controller
     {
         //
 //         $items = Item::latest('created_at')->get();
-        $items = Item::latest('created_at')->with('itemclass')->with('itemtype')->paginate(10);
+        $items = Item::latest('created_at')->paginate(10);
 //         $itemclass = Item::find($id)->itemclass;
 //         $items = Item::paginate(5);
         return view('product.items.index', compact('items'));

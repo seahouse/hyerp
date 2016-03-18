@@ -7,7 +7,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Contact;
+use App\Models\Crm\Contact;
 use App\Http\Requests\ContactRequest;
 use Request;
 

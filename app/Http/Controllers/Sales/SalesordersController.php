@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Sales;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Sales\Salesorder;
+use App\Models\Sales\Salesorder;
 use App\Http\Requests\Sales\SalesorderRequest;
 use Request;
 use App\Inventory\Itemsite;

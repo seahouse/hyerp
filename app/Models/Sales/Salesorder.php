@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Sales;
+namespace App\Models\Sales;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,7 +21,7 @@ class Salesorder extends Model
     ];
     
     public function custinfo() {
-        return $this->hasOne('App\Custinfo', 'id', 'custinfo_id');
+        return $this->hasOne('App\Models\Crm\Custinfo', 'id', 'custinfo_id');
     }
     
     public function warehouse() {
@@ -29,7 +29,7 @@ class Salesorder extends Model
     }
     
     public function salesrep() {
-        return $this->hasOne('App\Sales\Salesrep', 'id', 'salesrep_id');
+        return $this->hasOne('App\Models\Sales\Salesrep', 'id', 'salesrep_id');
     }
     
     public function term() {

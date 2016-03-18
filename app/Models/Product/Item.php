@@ -1,6 +1,6 @@
 <?php
 
-namespace App\models\Product;
+namespace App\Models\Product;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -25,19 +25,19 @@ class Item extends Model
 //     protected $with = ['itemcalss'];
 
     public function itemclass() {
-        return $this->hasOne('App\models\Product\Itemclass', 'id', 'itemclass_id');
+        return $this->hasOne('App\Models\Product\Itemclass', 'id', 'itemclass_id');
     }    
     
     public function itemtype() {
-        return $this->hasOne('App\Itemtype', 'id', 'itemtype_id');
+        return $this->hasOne('App\Models\Product\Itemtype', 'itemtype_id', 'id');
     }
     
     public function itemsite() {
-        return $this->hasOne('App\Inventory\Itemsite', 'item_id', 'id');
+        return $this->hasOne('App\Models\Inventory\Itemsite', 'item_id', 'id');
     }
     
     public function soitems() {
-        return $this->hasMany('App\Sales\Soitem', 'item_id', 'id');
+        return $this->hasMany('App\Models\Sales\Soitem', 'item_id', 'id');
     }
     
     public function charasses() {
