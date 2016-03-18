@@ -147,6 +147,7 @@ Route::group(['prefix' => 'accounting', 'namespace' => 'Accounting', 'middleware
 Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' => ['web', 'auth']], function() {
     Route::group(['prefix' => 'reimbursements'], function() {
         Route::get('mindex', 'ReimbursementsController@mindex');
+        Route::get('mindexmy', 'ReimbursementsController@mindexmy');      // 我发起的
         Route::get('mcreate', 'ReimbursementsController@mcreate');
         Route::post('mstore', 'ReimbursementsController@mstore');
     });

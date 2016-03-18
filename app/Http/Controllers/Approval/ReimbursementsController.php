@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Approval\Reimbursement;
 use App\Http\Controllers\DingTalkController;
+use Auth;
 
 class ReimbursementsController extends Controller
 {
@@ -19,10 +20,19 @@ class ReimbursementsController extends Controller
         return view('approval.reimbursements.index', compact('reimbursements'));
 	}
 
-	public function mindex($id)
+	public function mindex()
 	{
-        $reimbursements = Reimbursement::latest('created_at')->paginate(10);
+		$reimbursements = Reimbursement::latest('created_at')->paginate(10);
         return view('approval.reimbursements.mindex', compact('reimbursements'));
+	}
+
+	// 我发起的
+	public function mindexmy()
+	{
+		$userid = Auth::user()->id;
+		$reimbursements = Reimbursement::latest('created_at')->where('applicant_id', $userid)->paginate(10);
+
+        return view('approval.reimbursements.mindexmy', compact('reimbursements'));
 	}
 
 	public function mcreate()
