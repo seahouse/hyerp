@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Addr;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Province;
+use App\Models\Crm\Province;
 use App\Http\Requests\Addr\ProvinceRequest;
 use Request;
 use App\City;

@@ -7,7 +7,7 @@ namespace App\Http\Controllers\System;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Role;
+use App\Models\System\Role;
 use App\Http\Requests\System\RoleRequest;
 use Request;
 

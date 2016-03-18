@@ -31,12 +31,12 @@ class ViewComposerServiceProvider extends ServiceProvider
         
         // provinceList
         view()->composer(array('addr.citys.create', 'addr.citys.edit', 'addr.addrs.create', 'addr.addrs.edit'), function($view) {
-            $view->with('provinceList', \App\Province::orderby('id', 'asc')->lists('name', 'id'));
+            $view->with('provinceList', \App\Models\Crm\Province::orderby('id', 'asc')->lists('name', 'id'));
         });
         
         // cityList
         view()->composer(array('addr.addrs.create', 'addr.addrs.edit'), function($view) {
-            $view->with('cityList', \App\City::orderby('id', 'asc')->lists('name', 'id'));
+            $view->with('cityList', \App\Models\Crm\City::orderby('id', 'asc')->lists('name', 'id'));
         });
         
         // addrList
@@ -53,12 +53,12 @@ class ViewComposerServiceProvider extends ServiceProvider
         
         // deptList
         view()->composer(array('system.employees.create', 'system.employees.edit'), function($view) {
-            $view->with('deptList', \App\System\Dept::orderby('id', 'asc')->lists('name', 'id'));
+            $view->with('deptList', \App\Models\System\Dept::orderby('id', 'asc')->lists('name', 'id'));
         });
         
         // imageList
         view()->composer(array('system.employees.create', 'system.employees.edit'), function($view) {
-            $view->with('imageList', \App\System\Image::orderby('id', 'asc')->lists('name', 'id'));
+            $view->with('imageList', \App\Models\System\Image::orderby('id', 'asc')->lists('name', 'id'));
         });
         
         // custinfoList
@@ -73,28 +73,28 @@ class ViewComposerServiceProvider extends ServiceProvider
         
         // termList
         view()->composer(array('purchase.vendinfos.create', 'purchase.vendinfos.edit', 'purchase.purchaseorders.create', 'purchase.purchaseorders.edit'), function($view) {
-            $view->with('termList', \App\Sales\Term::orderby('id', 'asc')->lists('code', 'id'));
+            $view->with('termList', \App\Models\Sales\Term::orderby('id', 'asc')->lists('code', 'id'));
         });
         
         // vendtypeList
         view()->composer(array('purchase.vendinfos.create', 'purchase.vendinfos.edit'), function($view) {
-            $view->with('vendtypeList', \App\Purchase\Vendtype::orderby('id', 'asc')->lists('code', 'id'));
+            $view->with('vendtypeList', \App\Models\Purchase\Vendtype::orderby('id', 'asc')->lists('code', 'id'));
         });
         
         // vendinfoList
         view()->composer(array('purchase.purchaseorders.create', 'purchase.purchaseorders.edit'), function($view) {
-            $view->with('vendinfoList', \App\Purchase\Vendinfo::orderby('id', 'asc')->lists('number', 'id'));
+            $view->with('vendinfoList', \App\Models\Purchase\Vendinfo::orderby('id', 'asc')->lists('number', 'id'));
         });
         
         // soheadList
         view()->composer(array('purchase.purchaseorders.create', 'purchase.purchaseorders.edit'), function($view) {
-            $view->with('soheadList', \App\Sales\Salesorder::orderby('id', 'asc')->lists('number', 'id'));
+            $view->with('soheadList', \App\Models\Sales\Salesorder::orderby('id', 'asc')->lists('number', 'id'));
         });
         
         // itemsiteList
         view()->composer(array('purchase.poitems.create', 'purchase.poitems.edit'), function($view) {
 //             $items = \App\Inventory\Itemsite::orderby('itemsites.id', 'asc')->leftJoin('items', 'itemsites.item_id', '=', 'items.id')->select('item_number', 'itemsites.id')->get();
-            $view->with('itemsiteList', \App\Inventory\Itemsite::orderby('itemsites.id', 'asc')->leftJoin('items', 'itemsites.item_id', '=', 'items.id')->select('item_number', 'itemsites.id')->lists('item_number', 'id'));
+            $view->with('itemsiteList', \App\Models\Inventory\Itemsite::orderby('itemsites.id', 'asc')->leftJoin('items', 'itemsites.item_id', '=', 'items.id')->select('item_number', 'itemsites.id')->lists('item_number', 'id'));
 //             $view->with('itemsiteList', DB::table('itemsites')->leftJoin('items', 'itemsites.item_id', '=', 'items.id')->select('item_number', 'itemsites.id')->lists('item_number', 'itemsites.id'));
 //             $view->with('itemsiteList', \App\Inventory\Itemsite::orderby('itemsites.id', 'asc')->lists('item_id', 'id'));
         });

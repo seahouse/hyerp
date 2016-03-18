@@ -6,8 +6,8 @@ namespace App\Http\Controllers\Purchase;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Purchase\Payment;
-use App\Purchase\Purchaseorder;
+use App\Models\Purchase\Payment;
+use App\Models\Purchase\Purchaseorder;
 use App\Http\Requests\Purchase\PaymentRequest;
 use Request;
 

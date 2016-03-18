@@ -7,7 +7,7 @@ namespace App\Http\Controllers\purchase;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Purchase\Vendtype;
+use App\Models\Purchase\Vendtype;
 use App\Http\Requests\purchase\VendtypeRequest;
 use Request;
 

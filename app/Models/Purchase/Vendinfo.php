@@ -22,10 +22,10 @@ class Vendinfo extends Model
     ];
     
     public function poitems() {
-        return $this->hasManyThrough('App\Purchase\Poitem', 'App\Purchase\Purchaseorder', 'vendinfo_id', 'pohead_id');
+        return $this->hasManyThrough('App\Models\Purchase\Poitem', 'App\Models\Purchase\Purchaseorder', 'vendinfo_id', 'pohead_id');
     }
     
     public function payments() {
-        return $this->hasManyThrough('App\Purchase\Payment', 'App\Purchase\Purchaseorder', 'vendinfo_id', 'pohead_id');
+        return $this->hasManyThrough('App\Models\Purchase\Payment', 'App\Models\Purchase\Purchaseorder', 'vendinfo_id', 'pohead_id');
     }
 }

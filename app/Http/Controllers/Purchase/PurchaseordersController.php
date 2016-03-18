@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Purchase\Purchaseorder;
 use App\Http\Requests\Purchase\PurchaseorderRequest;
 use Request;
-use App\Purchase\Poitem;
+use App\Models\Purchase\Poitem;
 use Carbon\Carbon;
 use App\Inventory\Recvitem;
 

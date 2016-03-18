@@ -7,7 +7,7 @@ namespace App\Http\Controllers\System;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\System\Image;
+use App\Models\System\Image;
 use App\Http\Requests\System\ImageRequest;
 use Request;
 use Illuminate\Support\Facades\Storage;

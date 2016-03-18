@@ -8,7 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\System\DeptRequest;
-use App\System\Dept;
+use App\Models\System\Dept;
 use Request;
 
 class DeptsController extends Controller
