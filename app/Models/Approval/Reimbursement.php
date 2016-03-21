@@ -33,4 +33,8 @@ class Reimbursement extends Model
         'approvaldate3',
         'applicant_id',
     ];
+
+    public function applicant() {
+        return $this->hasOne('\App\Models\System\User', 'id', 'applicant_id');
+    }
 }

@@ -1,15 +1,15 @@
-@extends('navbarerp')
+@extends('app')
 
 @section('title', '报销')
 
 @section('main')
     <div class="panel-heading">
-        <div class="panel-title">审批 -- 报销
-{{--            <div class="pull-right">
+{{--        <div class="panel-title">审批 -- 报销
+            <div class="pull-right">
                 <a href="{{ URL::to('product/itemclasses') }}" target="_blank" class="btn btn-sm btn-success">{{'物料类型管理'}}</a>
                 <a href="{{ URL::to('product/characteristics') }}" target="_blank" class="btn btn-sm btn-success">{{'物料属性管理'}}</a>
-            </div> --}}
-        </div>
+            </div> 
+        </div> --}}
     </div>
     
 {{--    <div class="panel-body">
@@ -26,8 +26,18 @@
 
     </div> --}}
 
-    
     @if ($reimbursements->count())
+        @foreach($reimbursements as $reimbursement)
+        <div class="list-group">
+            <a href="#" class="list-group-item">
+                <span class="badge">{{ $reimbursement->created_at }}</span>
+                {{ $reimbursement->applicant->name }}的报销
+            </a>
+        </div>     
+        @endforeach
+    @endif
+
+{{--    @if ($reimbursements->count())    
     <table class="table table-striped table-hover table-condensed">
         <thead>
             <tr>
@@ -66,6 +76,6 @@
         <i class="fa fa-warning"></i>
         {{'无记录', [], 'layouts'}}
     </div>
-    @endif    
+    @endif    --}}
 
 @endsection

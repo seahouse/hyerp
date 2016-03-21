@@ -45,18 +45,9 @@ class ReimbursementsController extends Controller
     	$dingtalk = new DingTalkController();
     	$input = $request->all();
 
-		// $input['applicant_id'] = 1;
-		// $reimbursement = Reimbursement::create($input);
-		// return redirect('approval/reimbursements');
-
-    	if (session()->has('userid'))
-    	{
-    		$input['applicant_id'] = session()->get('userid');
-    		$reimbursement = Reimbursement::create($input);
-    		return redirect('approval/reimbursements/mindex');
-    	}
-    	else
-    		return '您的账号未与后台系统绑定，无法执行此操作.';
+        $input['applicant_id'] = Auth::user()->id;
+        $reimbursement = Reimbursement::create($input);
+        return redirect('approval/reimbursements/mindex');
     }
 
     public function mstore(Request $request)
@@ -64,14 +55,18 @@ class ReimbursementsController extends Controller
         $dingtalk = new DingTalkController();
         $input = $request->all();
 
-        if (session()->has('userid'))
-        {
-            $input['applicant_id'] = session()->get('userid');
-            $reimbursement = Reimbursement::create($input);
-            return redirect('approval/reimbursements/mindex');
-        }
-        else
-            return '您的账号未与后台系统绑定，无法执行此操作.';
+        $input['applicant_id'] = Auth::user()->id;
+        $reimbursement = Reimbursement::create($input);
+        return redirect('approval/reimbursements/mindexmy');
+
+        // if (session()->has('userid'))
+        // {
+        //     $input['applicant_id'] = session()->get('userid');
+        //     $reimbursement = Reimbursement::create($input);
+        //     return redirect('approval/reimbursements/mindex');
+        // }
+        // else
+        //     return '您的账号未与后台系统绑定，无法执行此操作.';
     }
 
     /**
