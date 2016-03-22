@@ -150,6 +150,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('mindexmy', 'ReimbursementsController@mindexmy');      // 我发起的
         Route::get('mcreate', 'ReimbursementsController@mcreate');
         Route::post('mstore', 'ReimbursementsController@mstore');
+        Route::get('mshow/{id}', 'ReimbursementsController@mshow');
     });
     Route::resource('reimbursements', 'ReimbursementsController');
 });

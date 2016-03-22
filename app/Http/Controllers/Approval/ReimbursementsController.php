@@ -79,4 +79,17 @@ class ReimbursementsController extends Controller
     {
         //
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function mshow($id)
+    {
+        //
+        $reimbursement = Reimbursement::findOrFail($id);
+        return view('approval.reimbursements.mshow', compact('reimbursement'));
+    }
 }
