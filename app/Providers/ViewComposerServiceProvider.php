@@ -49,17 +49,8 @@ class ViewComposerServiceProvider extends ServiceProvider
         view()->composer(array('custinfos.create', 'custinfos.edit', 'inventory.warehouses.create', 'inventory.warehouses.edit',
             'purchase.vendinfos.create', 'purchase.vendinfos.edit', 'purchase.purchaseorders.create', 'purchase.purchaseorders.edit'), function($view) {
             $view->with('contactList', \App\Models\Crm\Contact::orderby('id', 'asc')->lists('name', 'id'));
-        });
+        });      
         
-        // deptList
-        view()->composer(array('system.employees.create', 'system.employees.edit'), function($view) {
-            $view->with('deptList', \App\Models\System\Dept::orderby('id', 'asc')->lists('name', 'id'));
-        });
-        
-        // imageList
-        view()->composer(array('system.employees.create', 'system.employees.edit'), function($view) {
-            $view->with('imageList', \App\Models\System\Image::orderby('id', 'asc')->lists('name', 'id'));
-        });
         
         // custinfoList
         view()->composer(array('sales.salesorders.create', 'sales.salesorders.edit'), function($view) {
@@ -107,6 +98,26 @@ class ViewComposerServiceProvider extends ServiceProvider
         // charIList: item char list
         view()->composer(array('items.create', 'items.edit', 'product.items.create', 'product.items.edit'), function($view) {
             $view->with('charIList', \App\Models\Product\Characteristic::orderby('id', 'asc')->where('bitems', true)->lists('name', 'id'));
+        });
+
+        // approvaltypeList
+        view()->composer(array('approval.approversettings.create', 'approval.approversettings.edit'), function($view) {
+            $view->with('approvaltypeList', \App\Models\Approval\Approvaltype::orderby('id', 'asc')->lists('name', 'id'));
+        });
+
+        // deptList
+        view()->composer(array('system.employees.create', 'system.employees.edit'), function($view) {
+            $view->with('deptList', \App\Models\System\Dept::orderby('id', 'asc')->lists('name', 'id'));
+        });
+        
+        // imageList
+        view()->composer(array('system.employees.create', 'system.employees.edit'), function($view) {
+            $view->with('imageList', \App\Models\System\Image::orderby('id', 'asc')->lists('name', 'id'));
+        });
+
+        // userList
+        view()->composer(array('approval.approversettings.create', 'approval.approversettings.edit'), function($view) {
+            $view->with('userList', \App\Models\System\User::orderby('id', 'asc')->lists('name', 'id'));
         });
     }
 

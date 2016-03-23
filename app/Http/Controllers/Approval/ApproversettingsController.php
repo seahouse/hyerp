@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\Approval\Approversetting;
+use App\Http\Requests\Approval\ApproversettingRequest;
 
 class ApproversettingsController extends Controller
 {
@@ -16,7 +18,9 @@ class ApproversettingsController extends Controller
      */
     public function index()
     {
-        //
+        $approversettings = Approversetting::latest('created_at')->orderBy('approvaltype_id')->orderBy('level')->paginate(10);
+        // return view('approval.approversettings.index', compact('approversettings'));
+        return view('approval.approversettings.index', ['approversettings' => $approversettings]);
     }
 
     /**
@@ -27,6 +31,7 @@ class ApproversettingsController extends Controller
     public function create()
     {
         //
+        return view('approval.approversettings.create');
     }
 
     /**
@@ -35,9 +40,13 @@ class ApproversettingsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ApproversettingRequest $request)
     {
         //
+        $input = $request->all();
+        $approversetting = Approversetting::create($input);
+        
+        return redirect('/approval/approversettings');
     }
 
     /**
@@ -60,6 +69,8 @@ class ApproversettingsController extends Controller
     public function edit($id)
     {
         //
+        $approversetting = Approversetting::findOrFail($id);
+        return view('approval.approversettings.edit', compact('approversetting'));
     }
 
     /**
@@ -69,9 +80,14 @@ class ApproversettingsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ApproversettingRequest $request, $id)
     {
-        //
+        //        
+        $approversetting = Approversetting::findOrFail($id);
+        $approversetting->update($request->all());
+
+        
+        return redirect('approval/approversettings');
     }
 
     /**
@@ -82,6 +98,8 @@ class ApproversettingsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //       
+        Approversetting::destroy($id);
+        return redirect('approval/approversettings');
     }
 }

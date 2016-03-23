@@ -21,7 +21,7 @@ class CreateApproversettingsTable extends Migration
 
             $table->timestamps();
 
-            $table->unique('approvaltype_id', 'level');
+            $table->unique(['approvaltype_id', 'level']);
         });
     }
 
