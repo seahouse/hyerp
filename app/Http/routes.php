@@ -153,6 +153,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('mshow/{id}', 'ReimbursementsController@mshow');
     });
     Route::resource('reimbursements', 'ReimbursementsController');
+    Route::resource('approversettings', 'ApproversettingsController');
 });
 
 Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['web', 'auth']], function() {

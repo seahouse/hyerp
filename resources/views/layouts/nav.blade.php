@@ -71,6 +71,8 @@
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">审批<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="/approval/reimbursements">报销</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="/approval/approversettings">设置</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
