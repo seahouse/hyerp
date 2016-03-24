@@ -68,6 +68,7 @@ class ReimbursementsController extends Controller
         $reimbursements = Reimbursement::latest('created_at')->whereIn('id', $ids)->paginate(10);
 
         return view('approval.reimbursements.mindexmyapproval', compact('reimbursements'));
+        // return view('approval.reimbursementapprovals.create', compact('reimbursements'));
     }
 
 	public function mcreate()
