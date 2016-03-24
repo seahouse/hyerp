@@ -39,6 +39,7 @@ return array(
     'CreateReceiptpaymentsTable' => $baseDir . '/database/migrations/2015_09_14_161422_create_receiptpayments_table.php',
     'CreateRecvitemsTable' => $baseDir . '/database/migrations/2015_09_07_055048_create_recvitems_table.php',
     'CreateRegionsTable' => $baseDir . '/database/migrations/2015_08_14_025444_create_regions_table.php',
+    'CreateReimbursementapprovalsTable' => $baseDir . '/database/migrations/2016_03_24_093723_create_reimbursementapprovals_table.php',
     'CreateReimbursementsTable' => $baseDir . '/database/migrations/2016_02_29_141057_create_reimbursements_table.php',
     'CreateReimbursementtypesTable' => $baseDir . '/database/migrations/2016_02_29_140752_create_reimbursementtypes_table.php',
     'CreateSalesrepsTable' => $baseDir . '/database/migrations/2015_08_26_024300_create_salesreps_table.php',
