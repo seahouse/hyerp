@@ -55,9 +55,9 @@ class ReimbursementsController extends Controller
             // 获取需要我审批的报销id数组
             $reimbursementids = Reimbursement::leftJoin('reimbursementapprovals', 'reimbursements.id', '=', 'reimbursementapprovals.reimbursement_id')
                 ->select('reimbursements.id', DB::raw('coalesce(max(reimbursementapprovals.level), 0) as currentlevel'),
-                    DB::raw('coalesce((select level from approversettings where level>coalesce(max(reimbursementapprovals.level), 0) limit 1), 0) as nextlevel'))
+                    DB::raw('coalesce((select level from approversettings where level>coalesce(max(reimbursementapprovals.level), 0) order by level limit 1), 0) as nextlevel'))
                 ->groupBy('reimbursements.id')
-                ->havingRaw('coalesce((select level from approversettings where level>coalesce(max(reimbursementapprovals.level), 0) limit 1), 0) = ' . $mylevel)
+                ->havingRaw('coalesce((select level from approversettings where level>coalesce(max(reimbursementapprovals.level), 0) order by level limit 1), 0) = ' . $mylevel)
                 ->get();
 
             foreach ($reimbursementids as $reimbursementid) {
