@@ -70,7 +70,36 @@ class ReimbursementsController extends Controller
         $reimbursements = Reimbursement::latest('created_at')->whereIn('id', $ids)->paginate(10);
 
         return view('approval.reimbursements.mindexmyapproval', compact('reimbursements'));
-        // return view('approval.reimbursementapprovals.create', compact('reimbursements'));
+    }
+
+    /**
+     * 我已审批的.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function mindexmyapprovaled()
+    {
+        // 获取当前操作人员的报销审批层次
+        $userid = Auth::user()->id;        
+        $ids = [];      // 需要我审批的报销id数组
+
+         // 获取需要我审批的报销id数组
+        $reimbursementids = Reimbursement::leftJoin('reimbursementapprovals', 'reimbursements.id', '=', 'reimbursementapprovals.reimbursement_id')
+            ->select('reimbursements.id', 
+                DB::raw('(select count(approver_id) from reimbursementapprovals where reimbursements.id=reimbursementapprovals.reimbursement_id and reimbursementapprovals.approver_id=' . $userid . ' limit 1) as myapprovaled'))     // 最后一次审批的状态
+            // ->groupBy('reimbursements.id')
+            // ->havingRaw('coalesce((select level from approversettings where level>coalesce(max(reimbursementapprovals.level), 0) order by level limit 1), 0) = ' . $mylevel)
+            // ->havingRaw('coalesce((select status from reimbursementapprovals where reimbursements.id=reimbursementapprovals.reimbursement_id order by id desc limit 1), 0)>=0')     // 审批通过的情况
+            ->get();
+
+        foreach ($reimbursementids as $reimbursementid) {
+            if ($reimbursementid->myapprovaled > 0)
+                $ids = array_prepend($ids, $reimbursementid->id);
+        }
+
+        $reimbursements = Reimbursement::latest('created_at')->whereIn('id', $ids)->paginate(10);
+
+        return view('approval.reimbursements.mindexmyapprovaled', compact('reimbursements'));
     }
 
 	public function mcreate()
