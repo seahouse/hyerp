@@ -82,6 +82,7 @@
 					success: function(result) {
 						alert('操作完成.');
 						$('#acceptModal').modal('toggle');
+						location.href = "{{ url('approval/reimbursements/mindexmyapproval') }}";
 					},
 				});
 			});
@@ -103,6 +104,7 @@
 					success: function(result) {
 						alert('操作完成.');
 						$('#rejectModal').modal('toggle');
+						location.href = "{{ url('approval/reimbursements/mindexmyapproval') }}";
 					},
 				});
 			});
