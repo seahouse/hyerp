@@ -1,10 +1,48 @@
 @extends('app')
 
 @section('main')
-    {!! Form::open(array('url' => 'approval/reimbursements/mstore', 'class' => 'form-horizontal')) !!}
+	{!! Form::model($reimbursement, ['class' => 'form-horizontal']) !!}
         @include('approval.reimbursements._form', 
+            [
+                'submitButtonText' => '提交', 
+                'date' => null,
+                'customer_id' => null, 
+                'amount' => null, 
+                'order_id' => null,
+                'datego' => null,
+                'dateback' => null,
+                'mealamount' => null,
+                'ticketamount' => null,
+                'stayamount' => null,
+                'otheramount' => null,
+                'attr' => 'readonly',
+                'btnclass' => 'hidden',
+            ])
+    {!! Form::close() !!}
+
+    @include('approval.reimbursementapprovals._form', 
+    	[
+    		'acceptButtonText' => '同意', 
+    		'rejectButtonText' => '拒绝', 
+    		'date' => date('Y-m-d'),
+    		'customer_id' => '0', 
+    		'amount' => '0.0', 
+    		'order_id' => '0',
+    		'datego' => date('Y-m-d'),
+    		'dateback' => date('Y-m-d'),
+    		'mealamount' => '0.0',
+    		'ticketamount' => '0.0',
+    		'stayamount' => '0.0',
+    		'otheramount' => '0.0',
+			'attr' => '',
+			'btnclass' => 'btn btn-primary',
+    	])
+{{--
+    {!! Form::open(array('url' => 'approval/reimbursementapprovals/mstore', 'class' => 'form-horizontal')) !!}
+        @include('approval.reimbursementapprovals._form', 
         	[
-        		'submitButtonText' => '提交', 
+        		'acceptButtonText' => '同意', 
+        		'rejectButtonText' => '拒绝', 
         		'date' => date('Y-m-d'),
         		'customer_id' => '0', 
         		'amount' => '0.0', 
@@ -19,6 +57,8 @@
 				'btnclass' => 'btn btn-primary',
         	])
     {!! Form::close() !!}
+--}}
+
 @endsection
 
 

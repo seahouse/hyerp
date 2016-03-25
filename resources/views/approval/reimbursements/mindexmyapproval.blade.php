@@ -21,7 +21,7 @@
     @if ($reimbursements->count())
         @foreach($reimbursements as $reimbursement)
         <div class="list-group">
-            <a href="{{ url('/approval/reimbursements/mshow', $reimbursement->id) }}" class="list-group-item">
+            <a href="{{ url('/approval/reimbursementapprovals/' . $reimbursement->id . '/mcreate') }}" class="list-group-item">
                 <span class="badge">{{ $reimbursement->created_at }}</span>
                 {{ $reimbursement->applicant->name }}的报销
             </a>

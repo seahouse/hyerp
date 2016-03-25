@@ -1,6 +1,25 @@
 @extends('app')
 
 @section('main')
+    {!! Form::model($reimbursement, ['class' => 'form-horizontal']) !!}
+        @include('approval.reimbursements._form', 
+            [
+                'submitButtonText' => '提交', 
+                'date' => null,
+                'customer_id' => null, 
+                'amount' => null, 
+                'order_id' => null,
+                'datego' => null,
+                'dateback' => null,
+                'mealamount' => null,
+                'ticketamount' => null,
+                'stayamount' => null,
+                'otheramount' => null,
+                'attr' => 'readonly',
+                'btnclass' => 'hidden',
+            ])
+    {!! Form::close() !!}
+{{--
 {!! Form::model($reimbursement, ['class' => 'form-horizontal']) !!}
 <div class="form-group">
     {!! Form::label('date', '申请日期:', ['class' => 'col-sm-2 control-label']) !!}
@@ -101,7 +120,7 @@
 </div>
 
 {!! Form::hidden('applicant_id', null, ['class' => 'form-control', 'readonly']) !!}
-
+--}}
 {{-- 
 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
