@@ -62,86 +62,51 @@
 @endsection
 
 
-@section('script')
-
-<!--	<script src="https://g.alicdn.com/ilw/ding/0.7.5/scripts/dingtalk.js"></script>
-	
-	<script type="text/javascript">
-		
+@section('script')	
+	<script type="text/javascript">		
 		jQuery(document).ready(function(e) {
-			dd.ready(function() {
-				dd.config({
-				    agentId: '13231599', // 必填，微应用ID
-				    corpId: 'ding6ed55e00b5328f39',//必填，企业ID
-				    timeStamp: e.timeStamp, // 必填，生成签名的时间戳
-				    nonceStr: '12345', // 必填，生成签名的随机串
-				    signature: '', // 必填，签名
-				    jsApiList: ['device.notification.alert', 'device.notification.confirm'] // 必填，需要使用的jsapi列表
+			$("#btnAccept").bind("click", function() {
+				$.ajax({
+					type: "POST",
+					url: "{{ url('approval/reimbursementapprovals/mstore') }}",
+					data: $("form#formAccept").serialize(),
+					contentType:"application/x-www-form-urlencoded",
+					error: function(xhr, ajaxOptions, thrownError) {
+	             	    alert($("form#formAccept").serialize());
+	             	    alert('error');
+						alert(xhr.status);
+						alert(xhr.responseText);
+						alert(ajaxOptions);
+						alert(thrownError);
+					},
+					success: function(result) {
+						alert('操作完成.');
+						$('#acceptModal').modal('toggle');
+					},
 				});
+			});
 
-				dd.device.base.getUUID({
-				    onSuccess : function(data) {
-				    	alert(data.uuid);
-				    },
-				    onFail : function(err) {
-				    	alert("dd.device.base.getUUID");
-				    	alert(JSON.stringify(err));
-				    }
+			$("#btnReject").bind("click", function() {
+				$.ajax({
+					type: "POST",
+					url: "{{ url('approval/reimbursementapprovals/mstore') }}",
+					data: $("form#formReject").serialize(),
+					contentType:"application/x-www-form-urlencoded",
+					error: function(xhr, ajaxOptions, thrownError) {
+	             	    alert($("form#formReject").serialize());
+	             	    alert('error');
+						alert(xhr.status);
+						alert(xhr.responseText);
+						alert(ajaxOptions);
+						alert(thrownError);
+					},
+					success: function(result) {
+						alert('操作完成.');
+						$('#rejectModal').modal('toggle');
+					},
 				});
-
-				$("#date").click(function() {
-					var mydate = new Date();
-					dd.biz.util.datepicker({
-					    format: 'yyyy-MM-dd',
-					    value: mydate.toLocaleString(),  //'2015-04-17', //默认显示日期
-					    onSuccess : function(result) {
-					    	$("#date").val(result.value);
-					        //onSuccess将在点击完成之后回调
-					        /*{
-					            value: "2015-02-10"
-					        }
-					        */
-					    },
-					    onFail : function() {}
-					});
-				});
-
-				$("#datego").click(function() {
-					var mydate = new Date();
-					dd.biz.util.datepicker({
-					    format: 'yyyy-MM-dd',
-					    value: mydate.toLocaleString(),  //'2015-04-17', //默认显示日期
-					    onSuccess : function(result) {
-					    	$("#datego").val(result.value);
-					        //onSuccess将在点击完成之后回调
-					        /*{
-					            value: "2015-02-10"
-					        }
-					        */
-					    },
-					    onFail : function() {}
-					});
-				});
-
-				$("#dateback").click(function() {
-					var mydate = new Date();
-					dd.biz.util.datepicker({
-					    format: 'yyyy-MM-dd',
-					    value: mydate.toLocaleString(),  //'2015-04-17', //默认显示日期
-					    onSuccess : function(result) {
-					    	$("#dateback").val(result.value);
-					        //onSuccess将在点击完成之后回调
-					        /*{
-					            value: "2015-02-10"
-					        }
-					        */
-					    },
-					    onFail : function() {}
-					});
-				});
-
 			});
 		});
 	</script>
--->
+
 @endsection

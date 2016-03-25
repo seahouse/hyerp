@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Approval\Reimbursement;
+use App\Models\Approval\Approversetting;
+use App\Models\Approval\Reimbursementapprovals;
+use App\Http\Controllers\Approval\ReimbursementsController;
+use Auth;
 
 class ReimbursementapprovalsController extends Controller
 {
@@ -51,6 +55,30 @@ class ReimbursementapprovalsController extends Controller
     public function store(Request $request)
     {
         //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function mstore(Request $request)
+    {
+        //
+        $input = $request->all();
+        $userid = Auth::user()->id;
+        $myleveltable = Approversetting::where('approvaltype_id', ReimbursementsController::$approvaltype_id)->where('approver_id', $userid)->first();
+        if ($myleveltable)
+        {
+            $input['level'] = $myleveltable->level;
+            $input['approver_id'] = $userid;
+
+            $reimbursementapprovals = Reimbursementapprovals::create($input);
+            return 'success';
+        }
+
+        return 'error';
     }
 
     /**

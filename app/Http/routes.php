@@ -158,13 +158,8 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::resource('approversettings', 'ApproversettingsController');
 
     Route::group(['prefix' => 'reimbursementapprovals'], function() {
-        Route::get('mindex', 'ReimbursementsController@mindex');
-        Route::get('mindexmy', 'ReimbursementsController@mindexmy');      // 我发起的
         Route::get('{reimbursementid}/mcreate', 'ReimbursementapprovalsController@mcreate');
-        Route::post('mstore', 'ReimbursementsController@mstore');
-        Route::get('mshow/{id}', 'ReimbursementsController@mshow');
-        Route::get('mindexmyapproval', 'ReimbursementsController@mindexmyapproval');      // 待我审批的
-        Route::get('mindexmyapprovaled', 'ReimbursementsController@mindexmyapprovaled');      // 我已审批的
+        Route::post('mstore', 'ReimbursementapprovalsController@mstore');
     });
     Route::resource('reimbursementapprovals', 'ReimbursementapprovalsController');
 });
