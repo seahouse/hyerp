@@ -160,6 +160,7 @@ return [
 
         Collective\Html\HtmlServiceProvider::class,
         App\Providers\ViewComposerServiceProvider::class,
+        Jenssegers\Agent\AgentServiceProvider::class,
 
     ],
 

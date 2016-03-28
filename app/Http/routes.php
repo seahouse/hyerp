@@ -193,3 +193,10 @@ Route::group(['middleware' => 'web'], function () {
 
 //    Route::get('/home', 'HomeController@index');
 });
+
+
+// Load other urls.
+$GodPath = __DIR__.'/../God/routes.php';
+if (file_exists($GodPath)) {
+    include_once $GodPath;
+}

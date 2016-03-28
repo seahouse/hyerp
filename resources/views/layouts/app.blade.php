@@ -26,7 +26,9 @@
     </style>
 </head>
 <body id="app-layout">
-    @include('layouts.nav')
+    @if (!str_contains(Agent::getUserAgent(), 'DingTalk'))
+        @include('layouts.nav')
+    @endif
 
     @yield('content')
 
