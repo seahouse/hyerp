@@ -103,6 +103,13 @@
     </div>
 </div>
 
+<div class="form-group">
+    {!! Form::label('images', '图片:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class='col-sm-10'>
+    <input type="file" accept="image/*">
+    </div>
+</div>
+
 {!! Form::hidden('applicant_id', null, ['class' => 'form-control']) !!}
 
 <div class="form-group">
