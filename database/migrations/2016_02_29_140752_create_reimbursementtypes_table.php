@@ -15,8 +15,8 @@ class CreateReimbursementtypesTable extends Migration
     {
         Schema::create('reimbursementtypes', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');             // 名称
-            $table->string('descrip');          // 说明
+            $table->string('name');             	// 名称
+            $table->string('descrip')->nullable();	// 说明
             $table->timestamps();
         });
     }

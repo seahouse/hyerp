@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call('RoleSeeder');
         $this->call(ItemClassesTableSeeder::class);
         $this->call(CharacteristicTableSeeder::class);
+        $this->call(ReimbursementtypesTableSeeder::class);
         $this->call(ApprovaltypesTableSeeder::class);
 
         Model::reguard();

@@ -1,4 +1,11 @@
 <div class="form-group">
+    {!! Form::label('reimbursementtype_id', '报销类型:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class='col-sm-10'>
+    {!! Form::select('reimbursementtype_id', $reimbursementtypeList, null, ['class' => 'form-control', $attr]) !!}
+    </div>
+</div>
+
+<div class="form-group">
     {!! Form::label('date', '申请日期:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
     {!! Form::date('date', $date, ['class' => 'form-control', $attr]) !!}
@@ -55,14 +62,14 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('datego', '出差去日:', ['class' => 'col-sm-2 control-label']) !!}
+    {!! Form::label('datego', '出差去日:', ['class' => 'col-sm-2 control-label', 'id' => 'lbldatego']) !!}
     <div class='col-sm-10'>
     {!! Form::date('datego', $datego, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
 <div class="form-group">
-    {!! Form::label('dateback', '出差回日:', ['class' => 'col-sm-2 control-label']) !!}
+    {!! Form::label('dateback', '出差回日:', ['class' => 'col-sm-2 control-label', 'id' => 'lbldateback']) !!}
     <div class='col-sm-10'>
     {!! Form::date('dateback', $dateback, ['class' => 'form-control', $attr]) !!}
     </div>

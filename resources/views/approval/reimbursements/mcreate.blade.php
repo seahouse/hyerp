@@ -1,5 +1,7 @@
 @extends('app')
 
+@section('title', '创建报销单')
+
 @section('main')
     {!! Form::open(array('url' => 'approval/reimbursements/mstore', 'class' => 'form-horizontal')) !!}
         @include('approval.reimbursements._form', 
@@ -23,6 +25,24 @@
 
 
 @section('script')
+	<script type="text/javascript">
+		jQuery(document).ready(function(e) {
+			$("#reimbursementtype_id").change(function() {
+				if ($(this).children('option:selected').text() == "差旅费") {
+					$("#lbldatego").show();
+					$("#lbldateback").show();
+					$("#datego").show();
+					$("#dateback").show();
+				}
+				else {
+					$("#lbldatego").hide();
+					$("#lbldateback").hide();
+					$("#datego").hide();
+					$("#dateback").hide();
+				}
+			});
+		});
+	</script>
 
 <!--	<script src="https://g.alicdn.com/ilw/ding/0.7.5/scripts/dingtalk.js"></script>
 	

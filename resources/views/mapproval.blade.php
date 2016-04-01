@@ -1,5 +1,7 @@
 @extends('app')
 
+@section('title', '报销')
+
 @section('main')
 	<p>
 		<div class="btn-group btn-group-justified" role="group" aria-label="...">

@@ -1,6 +1,6 @@
 @extends('navbarerp')
 
-@section('title', '报销')
+@section('title', '报销单')
 
 @section('main')
     <div class="panel-heading">

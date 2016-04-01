@@ -100,6 +100,11 @@ class ViewComposerServiceProvider extends ServiceProvider
             $view->with('charIList', \App\Models\Product\Characteristic::orderby('id', 'asc')->where('bitems', true)->lists('name', 'id'));
         });
 
+        // reimbursementtypeList
+        view()->composer(array('approval.reimbursements.mcreate', 'approval.reimbursements.medit', 'approval.reimbursements.mshow'), function($view) {
+            $view->with('reimbursementtypeList', \App\Models\Approval\Reimbursementtype::orderby('id', 'asc')->lists('name', 'id'));
+        });
+
         // approvaltypeList
         view()->composer(array('approval.approversettings.create', 'approval.approversettings.edit'), function($view) {
             $view->with('approvaltypeList', \App\Models\Approval\Approvaltype::orderby('id', 'asc')->lists('name', 'id'));
