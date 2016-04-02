@@ -25,6 +25,8 @@
 
 
 @section('script')
+	<script src="https://g.alicdn.com/ilw/ding/0.7.5/scripts/dingtalk.js"></script>
+
 	<script type="text/javascript">
 		jQuery(document).ready(function(e) {
 			$("#reimbursementtype_id").change(function() {
@@ -40,6 +42,21 @@
 					$("#datego").hide();
 					$("#dateback").hide();
 				}
+			});
+
+			dd.ready(function() {
+				$("#btnSelectImage").click(function() {
+					dd.biz.util.uploadImage({
+						multiple: true,
+						max: 5,
+						onSuccess: function(result) {
+							alert('select image success.');
+						},
+						onFail: function() {
+							alert('select image failed.');
+						}
+					});
+				});
 			});
 		});
 	</script>

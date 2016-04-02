@@ -105,12 +105,13 @@
 
 <div class="form-group">
     {!! Form::label('images', '图片:', ['class' => 'col-sm-2 control-label']) !!}
+    {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
     <div class='col-sm-10'>
-    <input type="file" accept="image/*">
+    <!-- <input type="file" accept="image/*"> -->
     </div>
 </div>
 
-{!! Form::hidden('applicant_id', null, ['class' => 'form-control']) !!}
+{!! Form::hidden('applicant_id', null, ['class' => 'btn btn-sm']) !!}
 
 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
