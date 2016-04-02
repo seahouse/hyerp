@@ -45,6 +45,15 @@
 			});
 
 			dd.ready(function() {
+				dd.config({
+				    agentId: '13231599', // 必填，微应用ID
+				    corpId: 'ding6ed55e00b5328f39',//必填，企业ID
+				    timeStamp: e.timeStamp, // 必填，生成签名的时间戳
+				    nonceStr: '12345', // 必填，生成签名的随机串
+				    signature: '', // 必填，签名
+				    jsApiList: ['device.notification.alert', 'device.notification.confirm', 'biz.util.uploadImage'] // 必填，需要使用的jsapi列表
+				});
+
 				$("#btnSelectImage").click(function() {
 					dd.biz.util.uploadImage({
 						multiple: true,
