@@ -52,8 +52,8 @@
 						onSuccess: function(result) {
 							alert('select image success.');
 						},
-						onFail: function() {
-							alert('select image failed.');
+						onFail: function(err) {
+							alert('select image failed: ' + err);
 						}
 					});
 				});
