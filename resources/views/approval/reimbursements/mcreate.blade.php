@@ -53,7 +53,7 @@
 							alert('select image success.');
 						},
 						onFail: function(err) {
-							alert('select image failed: ' + err);
+							alert('select image failed: ' + JSON.stringify(err));
 						}
 					});
 				});
