@@ -40,8 +40,31 @@
 	<script type="text/javascript">
 		
 		jQuery(document).ready(function(e) {
-			dd.ready(function() {
-				
+			$.ajax({
+				type: "GET",
+				url: "{{ url('dingtalk/getconfig') }}",
+				error:function(xhr, ajaxOptions, thrownError){
+             		alert('getConfig failed.');
+             	    alert('error');
+					alert(xhr.status);
+					alert(xhr.responseText);
+					alert(ajaxOptions);
+					alert(thrownError);
+             	},
+             	success:function(result){
+             		alert('getConfig success.');
+             		dd.config({
+					    agentId: '13231599', // 必填，微应用ID
+					    corpId: 'ding6ed55e00b5328f39',//必填，企业ID
+					    timeStamp: result.timeStamp, // 必填，生成签名的时间戳
+					    nonceStr: result.nonceStr, // 必填，生成签名的随机串
+					    signature: result.signature, // 必填，签名
+					    jsApiList: ['device.notification.alert', 'device.notification.confirm', 'biz.util.uploadImage'] // 必填，需要使用的jsapi列表
+					});
+                },
+			});
+
+			dd.ready(function() {				
 				dd.runtime.info({
 					onSuccess: function(info) {
 						// alert('runtime info: ' + JSON.stringify(info));

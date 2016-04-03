@@ -41,6 +41,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('mapproval', function() { return view('mapproval'); });
 
 	Route::get('dingtalk/getuserinfo/{code}', 'DingTalkController@getuserinfo');
+    Route::get('dingtalk/getconfig', 'DingTalkController@getconfig');
 });
 
 Route::group(['middleware' => ['web', 'auth']], function () {

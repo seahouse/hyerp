@@ -12,6 +12,75 @@ use DB, Auth;
 
 class DingTalkController extends Controller
 {
+    const corpid = 'ding6ed55e00b5328f39';
+    const corpsecret = 'gdQvzBl7IW5f3YUSMIkfEIsivOVn8lcXUL_i1BIJvbP4kPJh8SU8B8JuNe8U9JIo';
+
+    public function getAccessToken() {
+        $accessToken = Cache::get('access_token', '');
+        if ($accessToken == '')
+        {            
+            $accessToken = Cache::remember('access_token', 7200/60, function() {
+                $url = 'https://oapi.dingtalk.com/gettoken';
+                $corpid = self::corpid;
+                $corpsecret = self::corpsecret;
+                $params = compact('corpid', 'corpsecret');
+                $reply = $this->get($url, $params);
+                $accessToken = $reply->access_token;
+                return $accessToken;
+            });
+        }
+        return $accessToken;
+    }
+
+    public function getTicket($access_token)
+    {
+        $jsticket = Cache::get('ticket', '');
+        if ($jsticket == '')
+        {            
+            $ticket = Cache::remember('ticket', 7200/60, function() use($access_token) {
+                $url = 'https://oapi.dingtalk.com/get_jsapi_ticket';
+                $params = compact('access_token');
+                $reply = $this->get($url, $params);
+                $jsticket = $reply->ticket;
+                return $jsticket;
+            });
+        }
+        return $jsticket;
+    }
+
+    public function sign($ticket, $nonceStr, $timeStamp, $url)
+    {   
+        $timestamp  = time();
+        $noncestr   = str_random(32);
+        $rawstring = 'jsapi_ticket=' . $ticket .
+                     '&noncestr=' . $noncestr .
+                     '&timestamp=' . $timestamp .
+                     '&url=' . $url;
+        $signature = sha1($rawstring);    
+        
+        return $signature;
+    }
+
+    public function getconfig()
+    {
+        $nonceStr = str_random(32);
+        $timeStamp = time();
+        $url = urldecode(request()->fullurl());
+        $corpAccessToken = self::getAccessToken();
+        $ticket = self::getTicket($corpAccessToken);
+        $signature = self::sign($ticket, $nonceStr, $timeStamp, $url);
+
+        $config = array(
+            'url' => $url,
+            'nonceStr' => $nonceStr,
+            'timeStamp' => $timeStamp,
+            'corpId' => self::corpid,
+            'signature' => $signature
+        );
+
+        return json_encode($config, JSON_UNESCAPED_SLASHES);
+    }
+
     public function getuserinfo($code)
     {
         $corpid = 'ding6ed55e00b5328f39';
