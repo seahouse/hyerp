@@ -52,7 +52,7 @@
 					alert(thrownError);
              	},
              	success:function(result){
-             		alert('getConfig success.');
+             		alert('getConfig success. signature:' + result.signature);
              		dd.config({
 					    agentId: '13231599', // 必填，微应用ID
 					    corpId: 'ding6ed55e00b5328f39',//必填，企业ID

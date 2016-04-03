@@ -78,7 +78,8 @@ class DingTalkController extends Controller
             'signature' => $signature
         );
 
-        return json_encode($config, JSON_UNESCAPED_SLASHES);
+        // return json_encode($config, JSON_UNESCAPED_SLASHES);
+        return response()->json($config);
     }
 
     public function getuserinfo($code)
