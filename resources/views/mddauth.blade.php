@@ -33,8 +33,7 @@
 		</div>
 	</p> -->
 	@foreach ($config as $key => $value)
-        <input type="hidden" id="{{$key}}" name="{{$key}}" value="{{$value}}">
-        {{$key}}: {{$value}}<br>
+		{!! Form::hidden($key, $value, ['id' => $key]) !!}
     @endforeach
 @endsection
 
