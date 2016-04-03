@@ -49,12 +49,10 @@ class DingTalkController extends Controller
     }
 
     public function sign($ticket, $nonceStr, $timeStamp, $url)
-    {   
-        $timestamp  = time();
-        $noncestr   = str_random(32);
+    {
         $rawstring = 'jsapi_ticket=' . $ticket .
-                     '&noncestr=' . $noncestr .
-                     '&timestamp=' . $timestamp .
+                     '&noncestr=' . $nonceStr .
+                     '&timestamp=' . $timeStamp .
                      '&url=' . $url;
         $signature = sha1($rawstring);    
         
