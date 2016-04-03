@@ -78,8 +78,9 @@ class DingTalkController extends Controller
             'signature' => $signature
         );
 
+        return $config;
         // return json_encode($config, JSON_UNESCAPED_SLASHES);
-        return response()->json($config);
+        // return response()->json($config);
     }
 
     public function getuserinfo($code)
@@ -130,6 +131,12 @@ class DingTalkController extends Controller
             'userid_erp' => $userid_erp,
         ];
         return response()->json($user);
+    }
+
+    public function mddauth()
+    {
+        $config = $this->getconfig();
+        return view('mddauth', compact('config'));
     }
     
     public function index()
