@@ -104,7 +104,9 @@ class ReimbursementsController extends Controller
 
 	public function mcreate()
 	{
-		return view('approval/reimbursements/mcreate');
+        $dingtalk = new DingTalkController();
+        $config = $dingtalk->getconfig();
+		return view('approval/reimbursements/mcreate', compact('config'));
 	}
 
     public function store(Request $request)
