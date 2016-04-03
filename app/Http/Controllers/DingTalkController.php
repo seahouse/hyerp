@@ -79,7 +79,6 @@ class DingTalkController extends Controller
             'ticket' => $ticket
         );
 
-        dd($corpAccessToken);
         return $config;
         // return json_encode($config, JSON_UNESCAPED_SLASHES);
         // return response()->json($config);
