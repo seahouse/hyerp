@@ -81,7 +81,7 @@
 			dd.ready(function() {
 				dd.runtime.info({
 					onSuccess: function(info) {
-						alert('runtime info: ' + JSON.stringify(info));
+						// alert('runtime info: ' + JSON.stringify(info));
 					},
 					onFail: function(err) {
 						alert('fail: ' + JSON.stringify(err));

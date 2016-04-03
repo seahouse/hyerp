@@ -16,7 +16,7 @@ class DingTalkController extends Controller
     const corpsecret = 'gdQvzBl7IW5f3YUSMIkfEIsivOVn8lcXUL_i1BIJvbP4kPJh8SU8B8JuNe8U9JIo';
 
     public function getAccessToken() {
-        $accessToken = '';  // Cache::get('access_token', '');
+        $accessToken = Cache::get('access_token', '');
         if ($accessToken == '')
         {            
             $accessToken = Cache::remember('access_token', 7200/60, function() {
@@ -34,7 +34,7 @@ class DingTalkController extends Controller
 
     public function getTicket($access_token)
     {
-        $ticket = '';       // Cache::get('ticket', '');
+        $ticket = Cache::get('ticket', '');
         if ($ticket == '')
         {            
             $ticket = Cache::remember('ticket', 7200/60, function() use($access_token) {
