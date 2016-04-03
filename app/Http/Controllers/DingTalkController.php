@@ -34,18 +34,18 @@ class DingTalkController extends Controller
 
     public function getTicket($access_token)
     {
-        $jsticket = Cache::get('ticket', '');
-        if ($jsticket == '')
+        $ticket = Cache::get('ticket', '');
+        if ($ticket == '')
         {            
             $ticket = Cache::remember('ticket', 7200/60, function() use($access_token) {
                 $url = 'https://oapi.dingtalk.com/get_jsapi_ticket';
                 $params = compact('access_token');
                 $reply = $this->get($url, $params);
-                $jsticket = $reply->ticket;
-                return $jsticket;
+                $ticket = $reply->ticket;
+                return $ticket;
             });
         }
-        return $jsticket;
+        return $ticket;
     }
 
     public function sign($ticket, $nonceStr, $timeStamp, $url)
