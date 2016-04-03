@@ -75,9 +75,11 @@ class DingTalkController extends Controller
             'nonceStr' => $nonceStr,
             'timeStamp' => $timeStamp,
             'corpId' => self::corpid,
-            'signature' => $signature
+            'signature' => $signature,
+            'ticket' => $ticket
         );
 
+        dd($corpAccessToken);
         return $config;
         // return json_encode($config, JSON_UNESCAPED_SLASHES);
         // return response()->json($config);
