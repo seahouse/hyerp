@@ -50,7 +50,10 @@
 			    timeStamp: $('#timeStamp').val(), // 必填，生成签名的时间戳
 			    nonceStr: $('#nonceStr').val(), // 必填，生成签名的随机串
 			    signature: $('#signature').val(), // 必填，签名
-			    jsApiList: ['device.notification.alert', 'device.notification.confirm', 'biz.util.uploadImage'] // 必填，需要使用的jsapi列表
+			    jsApiList: ['runtime.info',
+			    	'device.notification.alert', 
+			    	'device.notification.confirm', 
+			    	'biz.util.uploadImage'] // 必填，需要使用的jsapi列表
 			});
 
 			// $.ajax({
@@ -77,10 +80,11 @@
    //              },
 			// });
 
-			dd.ready(function() {				
+			dd.ready(function() {
+				alert('dd ready.');
 				dd.runtime.info({
 					onSuccess: function(info) {
-						// alert('runtime info: ' + JSON.stringify(info));
+						alert('runtime info: ' + JSON.stringify(info));
 					},
 					onFail: function(err) {
 						alert('fail: ' + JSON.stringify(err));
