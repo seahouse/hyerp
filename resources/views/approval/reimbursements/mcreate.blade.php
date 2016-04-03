@@ -79,6 +79,7 @@
 
 			dd.ready(function() {
 				$("#btnSelectImage").click(function() {
+					alert('select image');
 					dd.biz.util.uploadImage({
 						multiple: true,
 						max: 5,
@@ -90,6 +91,10 @@
 						}
 					});
 				});
+			});
+
+			dd.error(function(error) {
+				alert('dd.error: ' + JSON.stringify(error));
 			});
 		});
 	</script>
