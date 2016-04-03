@@ -42,18 +42,17 @@
 	
 	<script type="text/javascript">
 		jQuery(document).ready(function(e) {
-			alert($('#signature').val());
-			dd.config({
-			    agentId: '13231599', // 必填，微应用ID
-			    corpId: 'ding6ed55e00b5328f39',//必填，企业ID
-			    timeStamp: $('#timeStamp').val(), // 必填，生成签名的时间戳
-			    nonceStr: $('#nonceStr').val(), // 必填，生成签名的随机串
-			    signature: $('#signature').val(), // 必填，签名
-			    jsApiList: ['runtime.info',
-			    	'device.notification.alert', 
-			    	'device.notification.confirm', 
-			    	'biz.util.uploadImage'] // 必填，需要使用的jsapi列表
-			});
+			// dd.config({
+			//     agentId: '13231599', // 必填，微应用ID
+			//     corpId: 'ding6ed55e00b5328f39',//必填，企业ID
+			//     timeStamp: $('#timeStamp').val(), // 必填，生成签名的时间戳
+			//     nonceStr: $('#nonceStr').val(), // 必填，生成签名的随机串
+			//     signature: $('#signature').val(), // 必填，签名
+			//     jsApiList: ['runtime.info',
+			//     	'device.notification.alert', 
+			//     	'device.notification.confirm', 
+			//     	'biz.util.uploadImage'] // 必填，需要使用的jsapi列表
+			// });
 
 			// $.ajax({
 			// 	type: "GET",
