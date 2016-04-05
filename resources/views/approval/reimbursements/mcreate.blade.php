@@ -47,6 +47,21 @@
 				}
 			});
 
+			// $("#btnSelectImage").click(function() {
+			// 	var str = "/images/001.jpg,/images/002.jpg,/images/003.jpg";
+			// 	var images = str.split(',');
+			// 	var imageHtml = '';
+			// 	for (var i in images) {
+			// 		alert(images[i]);
+			// 		imageHtml += '<div class="col-xs-6 col-md-3">';
+			// 		imageHtml += '<div class="thumbnail">';
+			// 		imageHtml += '<img src=' + images[i] + ' />';
+			// 		imageHtml += '</div>';
+			// 		imageHtml += '</div>';
+			// 	}
+			// 	$("#previewimage").empty().append(imageHtml);
+			// });
+
 			dd.config({
 			    agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
 			    corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID
@@ -99,14 +114,14 @@
 							var images = result.split(',');
 							var imageHtml = '';
 							for (var i in images) {
-								alert(i);
+								alert(images[i]);
 								imageHtml += '<div class="col-xs-6 col-md-3">';
 								imageHtml += '<div class="thumbnail">';
-								imageHtml += '<img src=' + i + ' />';
+								imageHtml += '<img src=' + images[i] + ' />';
 								imageHtml += '</div>';
 								imageHtml += '</div>';
 							}
-							$("#previewimage").empty().append('<img src=' + result + ' />');
+							$("#previewimage").empty().append(imageHtml);
 						},
 						onFail: function(err) {
 							alert('select image failed: ' + JSON.stringify(err));
