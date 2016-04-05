@@ -106,7 +106,13 @@
 <div class="form-group">
     {!! Form::label('images', '图片:', ['class' => 'col-sm-2 control-label']) !!}
     {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
-    <div class='col-sm-10' id="previewimage">
+    <div class='col-sm-10'>
+        <div class="row">
+            <div class="col-xs-6 col-md-3">
+                <div class="thumbnail" id="previewimage">
+                </div>
+            </div>
+        </div>
     <!-- <input type="file" accept="image/*"> -->
 
     </div>
