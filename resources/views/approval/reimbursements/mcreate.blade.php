@@ -48,8 +48,9 @@
 			});
 
 			// $("#btnSelectImage").click(function() {
-			// 	var str = "http://static.dingtalk.com/media/lADODGPhgM0CHM0DwA_960_540.jpg,http://static.dingtalk.com/media/lALODL7StM0DwM0CHA_540_960.png";
-			// 	var images = str.split(',');
+			// 	var str = ['http://static.dingtalk.com/media/lADODGPhgM0CHM0DwA_960_540.jpg', 'http://static.dingtalk.com/media/lALODL7StM0DwM0CHA_540_960.png'];
+			// 	alert(str[0]);
+			// 	var images = ['http://static.dingtalk.com/media/lADODGPhgM0CHM0DwA_960_540.jpg', 'http://static.dingtalk.com/media/lALODL7StM0DwM0CHA_540_960.png'];
 			// 	var imageHtml = '';
 			// 	for (var i in images) {
 			// 		alert(images[i]);
@@ -112,7 +113,8 @@
 						onSuccess: function(result) {
 							alert(result);
 							$("#abcd").empty().append(result);
-							var images = result.split(',');
+							$("#abcd").html(result[0]);
+							var images = result;	// result.split(',');
 							var imageHtml = '';
 							for (var i in images) {
 								alert(images[i]);
