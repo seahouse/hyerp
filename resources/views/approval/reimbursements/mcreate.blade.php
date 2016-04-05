@@ -111,13 +111,13 @@
 						max: 5,
 						onSuccess: function(result) {
 							alert('select image success: ' + result);
-							var images = result.split(',');
+							// var images = result.split(',');
 							var imageHtml = '';
-							for (var i in images) {
-								alert(images[i]);
+							for (var i in result) {
+								alert(result[i]);
 								imageHtml += '<div class="col-xs-6 col-md-3">';
 								imageHtml += '<div class="thumbnail">';
-								imageHtml += '<img src=' + images[i] + ' />';
+								imageHtml += '<img src=' + result[i] + ' />';
 								imageHtml += '</div>';
 								imageHtml += '</div>';
 							}
