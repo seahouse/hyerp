@@ -95,7 +95,7 @@
 						multiple: true,
 						max: 5,
 						onSuccess: function(result) {
-							alert('select image success.');
+							alert('select image success: ' + result);
 						},
 						onFail: function(err) {
 							alert('select image failed: ' + JSON.stringify(err));
