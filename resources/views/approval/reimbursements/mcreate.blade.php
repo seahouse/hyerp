@@ -96,6 +96,16 @@
 						max: 5,
 						onSuccess: function(result) {
 							alert('select image success: ' + result);
+							var images = result.split(',');
+							var imageHtml = '';
+							for (var i in images) {
+								alert(i);
+								imageHtml += '<div class="col-xs-6 col-md-3">';
+								imageHtml += '<div class="thumbnail">';
+								imageHtml += '<img src=' + i + ' />';
+								imageHtml += '</div>';
+								imageHtml += '</div>';
+							}
 							$("#previewimage").empty().append('<img src=' + result + ' />');
 						},
 						onFail: function(err) {
