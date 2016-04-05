@@ -48,15 +48,13 @@
 			});
 
 			// $("#btnSelectImage").click(function() {
-			// 	var str = ['http://static.dingtalk.com/media/lADODGPhgM0CHM0DwA_960_540.jpg', 'http://static.dingtalk.com/media/lALODL7StM0DwM0CHA_540_960.png'];
-			// 	alert(str[0]);
 			// 	var images = ['http://static.dingtalk.com/media/lADODGPhgM0CHM0DwA_960_540.jpg', 'http://static.dingtalk.com/media/lALODL7StM0DwM0CHA_540_960.png'];
 			// 	var imageHtml = '';
 			// 	for (var i in images) {
-			// 		alert(images[i]);
 			// 		imageHtml += '<div class="col-xs-6 col-md-3">';
 			// 		imageHtml += '<div class="thumbnail">';
 			// 		imageHtml += '<img src=' + images[i] + ' />';
+			// 		imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
 			// 		imageHtml += '</div>';
 			// 		imageHtml += '</div>';
 			// 	}
@@ -96,14 +94,6 @@
    //              },
 			// });
 
-			// dd.config({
-			//     agentId: '13231599', // 必填，微应用ID
-			//     corpId: 'ding6ed55e00b5328f39',//必填，企业ID
-			//     timeStamp: e.timeStamp, // 必填，生成签名的时间戳
-			//     nonceStr: '12345', // 必填，生成签名的随机串
-			//     signature: '', // 必填，签名
-			//     jsApiList: ['device.notification.alert', 'device.notification.confirm', 'biz.util.uploadImage'] // 必填，需要使用的jsapi列表
-			// });
 
 			dd.ready(function() {
 				$("#btnSelectImage").click(function() {
@@ -111,13 +101,9 @@
 						multiple: true,
 						max: 5,
 						onSuccess: function(result) {
-							alert(result);
-							$("#abcd").empty().append(result);
-							$("#abcd").html(result[0]);
 							var images = result;	// result.split(',');
 							var imageHtml = '';
 							for (var i in images) {
-								alert(images[i]);
 								imageHtml += '<div class="col-xs-6 col-md-3">';
 								imageHtml += '<div class="thumbnail">';
 								imageHtml += '<img src=' + images[i] + ' />';

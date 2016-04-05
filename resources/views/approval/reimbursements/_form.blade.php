@@ -103,6 +103,10 @@
     </div>
 </div>
 
+{{-- 
+{!! Form::image('http://static.dingtalk.com/media/lADODGPhgM0CHM0DwA_960_540.jpg', 'image', ['id' => 'image']) !!}
+--}}
+
 <div class="form-group">
     {!! Form::label('images', '图片:', ['class' => 'col-sm-2 control-label']) !!}
     {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
@@ -129,10 +133,6 @@
     </div>
 </div>
 
-<div id="abcd">
-</div> 
-<div id="aaaa">
-</div> 
 
 {!! Form::hidden('applicant_id', null, ['class' => 'btn btn-sm']) !!}
 

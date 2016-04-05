@@ -121,8 +121,11 @@ class ReimbursementsController extends Controller
 
     public function mstore(Request $request)
     {
-        $dingtalk = new DingTalkController();
         $input = $request->all();
+        $images = array_where($input, function($key, $value) {
+            if (substr_compare($key, 'image_', 0, 6) == 0)
+                return $value;
+        });
 
         $input['applicant_id'] = Auth::user()->id;
         $reimbursement = Reimbursement::create($input);
