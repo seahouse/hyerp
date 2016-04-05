@@ -10,7 +10,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Approval\Reimbursement;
 use App\Http\Controllers\DingTalkController;
 use App\Models\Approval\Approversetting;
-use Auth, DB;
+use App\Models\Approval\Reimbursementimages;
+use Auth, DB, Storage;
 
 class ReimbursementsController extends Controller
 {
@@ -129,16 +130,26 @@ class ReimbursementsController extends Controller
 
         $input['applicant_id'] = Auth::user()->id;
         $reimbursement = Reimbursement::create($input);
-        return redirect('approval/reimbursements/mindexmy');
 
-        // if (session()->has('userid'))
-        // {
-        //     $input['applicant_id'] = session()->get('userid');
-        //     $reimbursement = Reimbursement::create($input);
-        //     return redirect('approval/reimbursements/mindex');
-        // }
-        // else
-        //     return '您的账号未与后台系统绑定，无法执行此操作.';
+        // create reimbursement images
+        if ($reimbursement)
+        {
+            foreach ($images as $key => $value) {
+                # code...
+                // save image file.
+                $sExtension = substr($value, strrpos($value, '.') + 1);
+                $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                Storage::disk('local')->put($sFilename, file_get_contents($value));
+
+                // add image record
+                $reimbursementimages = new Reimbursementimages;
+                $reimbursementimages->reimbursement_id = $reimbursement->id;
+                $reimbursementimages->path = $sFilename;
+                $reimbursementimages->save();
+            }
+        }
+
+        return redirect('approval/reimbursements/mindexmy');
     }
 
 
