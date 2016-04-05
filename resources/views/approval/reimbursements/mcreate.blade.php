@@ -96,7 +96,7 @@
 						max: 5,
 						onSuccess: function(result) {
 							alert('select image success: ' + result);
-							$("previewimage").empty().append('<img src=' + result + ' />');
+							$("#previewimage").empty().append('<img src=' + result + ' />');
 						},
 						onFail: function(err) {
 							alert('select image failed: ' + JSON.stringify(err));
