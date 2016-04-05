@@ -12,43 +12,41 @@ use DB, Auth;
 
 class DingTalkController extends Controller
 {
-    const corpid = 'ding6ed55e00b5328f39';
-    const corpsecret = 'gdQvzBl7IW5f3YUSMIkfEIsivOVn8lcXUL_i1BIJvbP4kPJh8SU8B8JuNe8U9JIo';
+    private static $CORPID = 'ding6ed55e00b5328f39';
+    private static $CORPSECRET = 'gdQvzBl7IW5f3YUSMIkfEIsivOVn8lcXUL_i1BIJvbP4kPJh8SU8B8JuNe8U9JIo';
+    private static $AGENTID = '';      // 在登录时进行确定（mddauth）
+    private static $AGENTIDS = ['approval' => '13231599'];
 
-    public function getAccessToken() {
-        $accessToken = Cache::get('access_token', '');
-        if ($accessToken == '')
-        {            
-            $accessToken = Cache::remember('access_token', 7200/60, function() {
-                $url = 'https://oapi.dingtalk.com/gettoken';
-                $corpid = self::corpid;
-                $corpsecret = self::corpsecret;
-                $params = compact('corpid', 'corpsecret');
-                $reply = $this->get($url, $params);
-                $accessToken = $reply->access_token;
-                return $accessToken;
-            });
-        }
+    // const corpid = 'ding6ed55e00b5328f39';
+    // const corpsecret = 'gdQvzBl7IW5f3YUSMIkfEIsivOVn8lcXUL_i1BIJvbP4kPJh8SU8B8JuNe8U9JIo';
+
+    public static function getAccessToken() {
+        $accessToken = Cache::remember('access_token', 7200/60 - 5, function() {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
+            $url = 'https://oapi.dingtalk.com/gettoken';
+            $corpid = self::$CORPID;
+            $corpsecret = self::$CORPSECRET;
+            $params = compact('corpid', 'corpsecret');
+            // $reply = $this->get($url, $params);
+            $reply = self::get($url, $params);
+            $accessToken = $reply->access_token;
+            return $accessToken;
+        });
         return $accessToken;
     }
 
-    public function getTicket($access_token)
+    public static function getTicket($access_token)
     {
-        $ticket = Cache::get('ticket', '');
-        if ($ticket == '')
-        {            
-            $ticket = Cache::remember('ticket', 7200/60, function() use($access_token) {
-                $url = 'https://oapi.dingtalk.com/get_jsapi_ticket';
-                $params = compact('access_token');
-                $reply = $this->get($url, $params);
-                $ticket = $reply->ticket;
-                return $ticket;
-            });
-        }
+        $ticket = Cache::remember('ticket', 7200/60 - 5, function() use($access_token) {
+            $url = 'https://oapi.dingtalk.com/get_jsapi_ticket';
+            $params = compact('access_token');
+            $reply = self::get($url, $params);
+            $ticket = $reply->ticket;
+            return $ticket;
+        });
         return $ticket;
     }
 
-    public function sign($ticket, $nonceStr, $timeStamp, $url)
+    public static function sign($ticket, $nonceStr, $timeStamp, $url)
     {
         $rawstring = 'jsapi_ticket=' . $ticket .
                      '&noncestr=' . $nonceStr .
@@ -59,7 +57,8 @@ class DingTalkController extends Controller
         return $signature;
     }
 
-    public function getconfig()
+
+    public static function getconfig()
     {
         $nonceStr = str_random(32);
         $timeStamp = time();
@@ -72,9 +71,10 @@ class DingTalkController extends Controller
             'url' => $url,
             'nonceStr' => $nonceStr,
             'timeStamp' => $timeStamp,
-            'corpId' => self::corpid,
+            'corpId' => self::$CORPID,
             'signature' => $signature,
-            'ticket' => $ticket
+            'ticket' => $ticket,
+            'agentId' => self::$AGENTID,
         );
 
         return $config;
@@ -87,19 +87,11 @@ class DingTalkController extends Controller
         $corpid = 'ding6ed55e00b5328f39';
         $corpsecret = 'gdQvzBl7IW5f3YUSMIkfEIsivOVn8lcXUL_i1BIJvbP4kPJh8SU8B8JuNe8U9JIo';
 
-        // Get access_token
-        // $access_token = Cache::remember('access_token', 7200/60, function() use($corpid, $corpsecret) {
-        //     $url = 'https://oapi.dingtalk.com/gettoken';
-        //     $params = compact('corpid', 'corpsecret');
-        //     $reply = $this->get($url, $params);
-        //     $access_token = $reply->access_token;
-        //     return $access_token;
-        // });
-
-        $url = 'https://oapi.dingtalk.com/gettoken';
-        $params = compact('corpid', 'corpsecret');
-        $reply = $this->get($url, $params);
-        $access_token = $reply->access_token;
+        // $url = 'https://oapi.dingtalk.com/gettoken';
+        // $params = compact('corpid', 'corpsecret');
+        // $reply = $this->get($url, $params);
+        // $access_token = $reply->access_token;
+        $access_token = self::getAccessToken();
 
         // Get user info
         $url = 'https://oapi.dingtalk.com/user/getuserinfo';
@@ -134,7 +126,11 @@ class DingTalkController extends Controller
 
     public function mddauth()
     {
+        // Cache::flush();
+        self::$AGENTID = array_get(self::$AGENTIDS, request('app'), '13231599');
+        // dd(self::$AGENTIDS[(request('app')]);
         $config = $this->getconfig();
+        // dd(compact('config'));
         return view('mddauth', compact('config'));
     }
     
@@ -209,7 +205,7 @@ class DingTalkController extends Controller
         //
     }
     
-    private function get($url, $params)
+    private static function get($url, $params)
     {
         $response = \Httpful\Request::get($url . '?' . http_build_query($params))->send();
         if ($response->hasErrors()) {

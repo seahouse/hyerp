@@ -32,6 +32,11 @@
 			</div>
 		</div>
 	</p> -->
+
+
+<!-- 	{{ $config['url'] }}
+	{{ array_get($config, 'url') }} -->
+
 	@foreach ($config as $key => $value)
 		{!! Form::hidden($key, $value, ['id' => $key]) !!}
     @endforeach
@@ -41,13 +46,19 @@
 	<script src="https://g.alicdn.com/ilw/ding/0.7.5/scripts/dingtalk.js"></script>
 	
 	<script type="text/javascript">
+		// alert(" {!! array_get($config, 'url') !!}");
 		jQuery(document).ready(function(e) {
 			dd.config({
-			    agentId: '13231599', // 必填，微应用ID
-			    corpId: 'ding6ed55e00b5328f39',//必填，企业ID
-			    timeStamp: $('#timeStamp').val(), // 必填，生成签名的时间戳
-			    nonceStr: $('#nonceStr').val(), // 必填，生成签名的随机串
-			    signature: $('#signature').val(), // 必填，签名
+			    // agentId: '13231599', // 必填，微应用ID
+			    // corpId: 'ding6ed55e00b5328f39',//必填，企业ID
+			    // timeStamp: $('#timeStamp').val(), // 必填，生成签名的时间戳
+			    // nonceStr: $('#nonceStr').val(), // 必填，生成签名的随机串
+			    // signature: $('#signature').val(), // 必填，签名
+			    agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
+			    corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID
+			    timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
+			    nonceStr: "{!! array_get($config, 'nonceStr') !!}", // 必填，生成签名的随机串
+			    signature: "{!! array_get($config, 'signature') !!}", // 必填，签名
 			    jsApiList: ['runtime.info',
 			    	'device.notification.alert', 
 			    	'device.notification.confirm', 
@@ -106,7 +117,7 @@
 			             	    // alert('userid_erp: ' + msg.userid_erp);
 			             	    if (msg.userid_erp == -1)
 			             	    	alert('您的账号未与后台绑定，无法使用此应用.');
-			             	    else	// if ("{{ request('app') }}" == "approval")
+			             	    else if ("{{ request('app') }}" == "approval")
 			             	    {
 			             	    	location.href = "{{ url('/mapproval') }}";
 			             	    }

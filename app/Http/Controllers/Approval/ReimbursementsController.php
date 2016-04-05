@@ -104,14 +104,14 @@ class ReimbursementsController extends Controller
 
 	public function mcreate()
 	{
-        $dingtalk = new DingTalkController();
-        $config = $dingtalk->getconfig();
+        // $dingtalk = new DingTalkController();
+        // $config = $dingtalk->getconfig();
+        $config = DingTalkController::getconfig();
 		return view('approval/reimbursements/mcreate', compact('config'));
 	}
 
     public function store(Request $request)
     {
-    	$dingtalk = new DingTalkController();
     	$input = $request->all();
 
         $input['applicant_id'] = Auth::user()->id;
