@@ -47,20 +47,20 @@
 				}
 			});
 
-			// $("#btnSelectImage").click(function() {
-			// 	var str = "/images/001.jpg,/images/002.jpg,/images/003.jpg";
-			// 	var images = str.split(',');
-			// 	var imageHtml = '';
-			// 	for (var i in images) {
-			// 		alert(images[i]);
-			// 		imageHtml += '<div class="col-xs-6 col-md-3">';
-			// 		imageHtml += '<div class="thumbnail">';
-			// 		imageHtml += '<img src=' + images[i] + ' />';
-			// 		imageHtml += '</div>';
-			// 		imageHtml += '</div>';
-			// 	}
-			// 	$("#previewimage").empty().append(imageHtml);
-			// });
+			$("#btnSelectImage").click(function() {
+				var str = "http://static.dingtalk.com/media/lADODGPhgM0CHM0DwA_960_540.jpg,http://static.dingtalk.com/media/lALODL7StM0DwM0CHA_540_960.png";
+				var images = str.split(',');
+				var imageHtml = '';
+				for (var i in images) {
+					alert(images[i]);
+					imageHtml += '<div class="col-xs-6 col-md-3">';
+					imageHtml += '<div class="thumbnail">';
+					imageHtml += '<img src=' + images[i] + ' />';
+					imageHtml += '</div>';
+					imageHtml += '</div>';
+				}
+				$("#previewimage").empty().append(imageHtml);
+			});
 
 			dd.config({
 			    agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
@@ -110,14 +110,15 @@
 						multiple: true,
 						max: 5,
 						onSuccess: function(result) {
-							alert('select image success: ' + result);
-							// var images = result.split(',');
+							alert(result);
+							$("#abcd").empty().append(result);
+							var images = result.split(',');
 							var imageHtml = '';
-							for (var i in result) {
-								alert(result[i]);
+							for (var i in images) {
+								alert(images[i]);
 								imageHtml += '<div class="col-xs-6 col-md-3">';
 								imageHtml += '<div class="thumbnail">';
-								imageHtml += '<img src=' + result[i] + ' />';
+								imageHtml += '<img src=' + images[i] + ' />';
 								imageHtml += '</div>';
 								imageHtml += '</div>';
 							}
