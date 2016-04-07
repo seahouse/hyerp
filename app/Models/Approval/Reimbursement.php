@@ -37,4 +37,8 @@ class Reimbursement extends Model
     public function applicant() {
         return $this->hasOne('\App\Models\System\User', 'id', 'applicant_id');
     }
+
+    public function reimbursementimages() {
+        return $this->hasMany('\App\Models\Approval\Reimbursementimages', 'reimbursement_id', 'id');
+    }
 }

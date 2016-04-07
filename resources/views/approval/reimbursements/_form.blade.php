@@ -107,11 +107,23 @@
 {!! Form::image('http://static.dingtalk.com/media/lADODGPhgM0CHM0DwA_960_540.jpg', 'image', ['id' => 'image']) !!}
 --}}
 
+<img src="/images/001.jpg" />
+<img src="/../001.jpg" />
+
 <div class="form-group">
     {!! Form::label('images', '图片:', ['class' => 'col-sm-2 control-label']) !!}
     {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
     <div class='col-sm-10'>
         <div class="row" id="previewimage">
+            @if (isset($reimbursement))
+                @foreach ($reimbursement->reimbursementimages as $reimbursementimage)
+                    <div class="col-xs-6 col-md-3">
+                        <div class="thumbnail">
+                            <img src="{!! $reimbursementimage->path !!}" />
+                        </div>
+                    </div>
+                @endforeach
+            @endif
 <!--             <div class="col-xs-6 col-md-3">
                 <div class="thumbnail">
                     <img src="/images/001.jpg" width="100" height="100" />

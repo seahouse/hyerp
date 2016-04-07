@@ -12,6 +12,7 @@ use App\Http\Controllers\DingTalkController;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Reimbursementimages;
 use Auth, DB, Storage;
+use Log;
 
 class ReimbursementsController extends Controller
 {
@@ -138,13 +139,32 @@ class ReimbursementsController extends Controller
                 # code...
                 // save image file.
                 $sExtension = substr($value, strrpos($value, '.') + 1);
-                $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
-                Storage::disk('local')->put($sFilename, file_get_contents($value));
+                // $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                // Storage::disk('local')->put($sFilename, file_get_contents($value));
+                // Storage::move($sFilename, '../abcd.jpg');
+                $dir = 'images/approval/reimbursement/' . $reimbursement->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                $parts = explode('/', $dir);
+                $filename = array_pop($parts);
+                $dir = '';
+                foreach ($parts as $part) {
+                    # code...
+                    $dir .= "$part/";
+                    if (!is_dir($dir)) {
+                        mkdir($dir);
+                    }
+                }                
+
+                file_put_contents("$dir/$filename", file_get_contents($value));
+                // file_put_contents('abcd.jpg', file_get_contents($value));
+
+                // response()->download($value);
+                // Storage::put('abcde.jpg', file_get_contents($value));
+                // copy(storage_path('app') . '/' . $sFilename, '/images/' . $sFilename);
 
                 // add image record
                 $reimbursementimages = new Reimbursementimages;
                 $reimbursementimages->reimbursement_id = $reimbursement->id;
-                $reimbursementimages->path = $sFilename;
+                $reimbursementimages->path = "/$dir/$filename";     // add a '/' in the head.
                 $reimbursementimages->save();
             }
         }
