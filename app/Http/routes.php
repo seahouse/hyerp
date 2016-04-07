@@ -65,7 +65,7 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('api/dropdown', 'Addr\ProvincesController@getIndex');
 });
 
-Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' => ['web']], function() {    
+Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' => ['web']], function() {
     // Route::group(['prefix' => 'reimbursements'], function() {
     //     Route::get('mindex', 'ReimbursementsController@mindex');
     //     Route::get('mcreate', 'ReimbursementsController@mcreate');
@@ -202,3 +202,7 @@ $GodPath = __DIR__.'/../God/routes.php';
 if (file_exists($GodPath)) {
     include_once $GodPath;
 }
+
+Route::get('gitpull', function() {
+    return view('gitpull');
+});
