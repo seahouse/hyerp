@@ -10,6 +10,7 @@
         		'date' => date('Y-m-d'),
         		'customer_id' => '0', 
         		'amount' => '0.0', 
+        		'order_number' => null,
         		'order_id' => '0',
         		'datego' => date('Y-m-d'),
         		'dateback' => date('Y-m-d'),
@@ -22,6 +23,39 @@
         	])
     {!! Form::close() !!}
 
+<!-- order selector -->
+<div class="modal fade" id="selectOrderModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">选择订单</h4>                
+            </div>
+            <div class="modal-body">
+            	<div class="input-group">
+            		{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '关键字', 'id' => 'key']) !!}
+            		<span class="input-group-btn">
+                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearch']) !!}
+                   	</span>
+            	</div>
+            	<p>
+            		<div class="list-group" id="listsalesorders">
+
+            		</div>
+            	</p>
+                <form id="formAccept">
+                    {!! csrf_field() !!}                   	
+                   	
+{{--                    {!! Form::hidden('reimbursement_id', $reimbursement->id, ['class' => 'form-control']) !!}
+                    {!! Form::hidden('status', 0, ['class' => 'form-control']) !!} --}}   
+                </form>                
+            </div>
+{{--            <div class="modal-footer">
+                {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
+                {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnAccept']) !!}
+            </div>--}}   
+        </div>
+    </div>
+</div>
 
 @endsection
 
@@ -46,6 +80,42 @@
 					$("#dateback").hide();
 				}
 			});
+
+			$("#btnSearch").click(function() {
+				$.ajax({
+					type: "GET",
+					url: "{!! url('/sales/salesorders/getitemsbykey/') !!}" + "/" + $("#key").val(),
+					success: function(result) {
+						var strhtml = '';
+						$.each(result.data, function(i, field) {
+							btnId = 'btnSelectOrder_' + String(i);
+							strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + field.number + "</button>"							
+						});
+						$("#listsalesorders").empty().append(strhtml);
+
+						$.each(result.data, function(i, field) {
+							btnId = 'btnSelectOrder_' + String(i);
+							addBtnClickEvent(btnId, field.id, field.number);
+						});
+						// addBtnClickEvent('btnSelectOrder_0');
+					},
+					error: function(xhr, ajaxOptions, thrownError) {
+						alert('error');
+					}
+				});
+			});
+
+			function addBtnClickEvent(btnId, salesorderid, number)
+			{
+				$("#" + btnId).bind("click", function() {
+					$('#selectOrderModal').modal('toggle');
+					$("#order_number").val(number);
+					$("#order_id").val(salesorderid);
+				});
+			}
+
+
+
 
 			// $("#btnSelectImage").click(function() {
 			// 	var images = ['http://static.dingtalk.com/media/lADODGPhgM0CHM0DwA_960_540.jpg', 'http://static.dingtalk.com/media/lALODL7StM0DwM0CHA_540_960.png'];

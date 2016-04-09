@@ -46,6 +46,12 @@ class SalesOrdersController extends Controller
         return view('sales.salesorders.index', compact('salesorders'));
     }
 
+    public function getitemsbykey($key)
+    {
+        $salesorders = Salesorder::latest('created_at')->where('number', 'like', '%' . $key . '%')->paginate(10);
+        return $salesorders;
+    }
+
     /**
      * Show the form for creating a new resource.
      *

@@ -110,6 +110,7 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
     Route::post('salesorders/search', 'SalesordersController@search');
     Route::group(['prefix' => 'salesorders'], function() {
         Route::get('mindex', 'SalesordersController@mindex');
+        Route::get('getitemsbykey/{key}', 'SalesordersController@getitemsbykey');
     });
     Route::resource('salesorders', 'SalesordersController');
     Route::group(['prefix' => 'salesorders/{salesorder}/receiptpayments'], function () {
@@ -155,6 +156,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('mshow/{id}', 'ReimbursementsController@mshow');
         Route::get('mindexmyapproval', 'ReimbursementsController@mindexmyapproval');      // 待我审批的
         Route::get('mindexmyapprovaled', 'ReimbursementsController@mindexmyapprovaled');      // 我已审批的
+        Route::get('search/{key}', 'ReimbursementsController@search');
     });
     Route::resource('reimbursements', 'ReimbursementsController');
     Route::resource('approversettings', 'ApproversettingsController');

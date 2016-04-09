@@ -34,6 +34,10 @@ class Reimbursement extends Model
         'applicant_id',
     ];
 
+    public function order() {
+        return $this->hasOne('\App\Models\Sales\Salesorder', 'id', 'order_id');
+    }
+
     public function applicant() {
         return $this->hasOne('\App\Models\System\User', 'id', 'applicant_id');
     }

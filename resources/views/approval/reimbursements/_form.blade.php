@@ -48,9 +48,15 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('order_id', '对应订单:', ['class' => 'col-sm-2 control-label']) !!}
+    {!! Form::label('order_number', '对应订单:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::text('order_id', $order_id, ['class' => 'form-control', $attr]) !!}
+    {!! Form::text('order_number', $order_number, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal']) !!}
+    {!! Form::hidden('order_id', 0, ['class' => 'btn btn-sm', 'id' => 'order_id']) !!}
+    @if (isset($reimbursement->order->number)) 
+        {!! Form::hidden('order_number2', $reimbursement->order->number, ['class' => 'btn btn-sm', 'id' => 'order_number2']) !!}
+    @else
+        {!! Form::hidden('order_number2', null, ['class' => 'btn btn-sm', 'id' => 'order_number2']) !!}
+    @endif
     </div>
 </div>
 

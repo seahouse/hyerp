@@ -172,6 +172,12 @@ class ReimbursementsController extends Controller
         return redirect('approval/reimbursements/mindexmy');
     }
 
+    public function search($key)
+    {
+        $reimbursements = Reimbursement::latest('created_at')->where('number', $key)->paginate(10);
+        return $reimbursements;
+    }
+
 
 
     /**
