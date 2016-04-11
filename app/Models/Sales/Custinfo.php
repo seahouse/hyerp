@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Crm;
+namespace App\Models\Sales;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +15,7 @@ class Custinfo extends Model
     ];
     
     public function contact() {
-        return $this->hasOne('App\Contact', 'id', 'contact_id');
+        return $this->hasOne('App\Models\Crm\Contact', 'id', 'contact_id');
     }
     
     public function soheads() {

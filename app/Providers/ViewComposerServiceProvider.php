@@ -46,7 +46,7 @@ class ViewComposerServiceProvider extends ServiceProvider
         });
         
         // contactList
-        view()->composer(array('custinfos.create', 'custinfos.edit', 'inventory.warehouses.create', 'inventory.warehouses.edit',
+        view()->composer(array('sales.custinfos.create', 'sales.custinfos.edit', 'inventory.warehouses.create', 'inventory.warehouses.edit',
             'purchase.vendinfos.create', 'purchase.vendinfos.edit', 'purchase.purchaseorders.create', 'purchase.purchaseorders.edit'), function($view) {
             $view->with('contactList', \App\Models\Crm\Contact::orderby('id', 'asc')->lists('name', 'id'));
         });      
@@ -54,7 +54,7 @@ class ViewComposerServiceProvider extends ServiceProvider
         
         // custinfoList
         view()->composer(array('sales.salesorders.create', 'sales.salesorders.edit'), function($view) {
-            $view->with('custinfoList', \App\Models\Crm\Custinfo::orderby('id', 'asc')->lists('name', 'id'));
+            $view->with('custinfoList', \App\Models\Sales\Custinfo::orderby('id', 'asc')->lists('name', 'id'));
         });
         
         // salesrepList

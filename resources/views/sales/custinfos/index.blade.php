@@ -5,7 +5,7 @@
 <!--        <div class="pull-right" style="padding-top: 4px;"> -->
 <!--             <a href="{{ URL::to('items/create') }}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> {{'新建', [], 'layouts'}}</a> -->
 <!--         </div> -->
-        <a href="{{ URL::to('custinfos/create') }}" class="btn btn-sm btn-success">新建</a>
+        <a href="{{ URL::to('sales/custinfos/create') }}" class="btn btn-sm btn-success">新建</a>
 <!--         <h2> -->
 <!--             {{ ('物料') }} -->
 <!--         </h2> -->
@@ -32,14 +32,14 @@
                         {{ $custinfo->name }}
                     </td>
                     <td>
-                        {{ $custinfo->contact->name }}
+                        @if (isset($custinfo->contact->name)) {{ $custinfo->contact->name }} @endif
                     </td>
                     <td>
                         {{ $custinfo->created_at }}
                     </td>
                     <td>
-                        <a href="{{ URL::to('/custinfos/'.$custinfo->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>
-                        {!! Form::open(array('route' => array('custinfos.destroy', $custinfo->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
+                        <a href="{{ URL::to('/sales/custinfos/'.$custinfo->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>
+                        {!! Form::open(array('route' => array('sales.custinfos.destroy', $custinfo->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
                             {!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}
                         {!! Form::close() !!}
                     </td>

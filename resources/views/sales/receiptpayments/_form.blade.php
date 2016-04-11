@@ -1,10 +1,10 @@
 <div class="form-group">
-    {!! Form::label('', '用户名称:') !!}
-    {!! Form::text('', $salesorder->number, ['class' => 'form-control', 'readonly' => 'true']) !!}
+    {!! Form::label('number', '订单编号:') !!}
+    {!! Form::text('number', $salesorder->number, ['class' => 'form-control', 'readonly' => 'true']) !!}
 </div>
 
 <div class="form-group">
-    {!! Form::label('', '姓名:') !!}
+    {!! Form::label('', '客户:') !!}
     {!! Form::text('', $salesorder->custinfo->name, ['class' => 'form-control', 'readonly' => 'true']) !!}
 </div>
 

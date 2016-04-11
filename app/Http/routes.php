@@ -59,8 +59,8 @@ Route::group(['middleware' => ['web', 'auth']], function () {
 //     Route::resource('boms', 'BomsController');
 //     Route::get('bomitems/{id}/createitem', 'BomitemsController@createitem');
 //     Route::resource('bomitems', 'BomitemsController');
-    Route::resource('contacts', 'ContactsController');
-    Route::resource('custinfos', 'CustinfosController');
+    // Route::resource('contacts', 'ContactsController');
+    // Route::resource('custinfos', 'CustinfosController');
 
     Route::get('api/dropdown', 'Addr\ProvincesController@getIndex');
 });
@@ -124,6 +124,7 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
     Route::get('soitems/{headId}/list', 'SoitemsController@listBySoheadId');
     Route::get('soitems/{headId}/create', 'SoitemsController@createBySoheadId');
     Route::resource('soitems', 'SoitemsController');
+    Route::resource('custinfos', 'CustinfosController');
 });
 
 Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' => ['web', 'auth']], function() {
@@ -140,6 +141,10 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
     Route::resource('purchaseorders', 'PurchaseordersController');
     Route::get('poitems/{headId}/create', 'PoitemsController@createByPoheadId');
     Route::resource('poitems', 'PoitemsController');
+});
+
+Route::group(['prefix' => 'crm', 'namespace' => 'Crm', 'middleware' => ['web', 'auth']], function() {
+    Route::resource('contacts', 'ContactsController');
 });
 
 Route::group(['prefix' => 'accounting', 'namespace' => 'Accounting', 'middleware' => ['web', 'auth']], function() {

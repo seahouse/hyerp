@@ -21,7 +21,7 @@ class Salesorder extends Model
     ];
     
     public function custinfo() {
-        return $this->hasOne('App\Models\Crm\Custinfo', 'id', 'custinfo_id');
+        return $this->hasOne('App\Models\Sales\Custinfo', 'id', 'custinfo_id');
     }
     
     public function warehouse() {
