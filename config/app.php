@@ -161,6 +161,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         App\Providers\ViewComposerServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
+        // Zizaco\Entrust\EntrustServiceProvider::class,
 
     ],
 
@@ -211,6 +212,7 @@ return [
         'Form'      => Collective\Html\FormFacade::class,
         'Html'      => Collective\Html\HtmlFacade::class,
         'Agent'     => Jenssegers\Agent\Facades\Agent::class,
+        // 'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
 
     ],
 

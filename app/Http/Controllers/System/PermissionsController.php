@@ -7,7 +7,7 @@ namespace App\Http\Controllers\System;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Permission;
+use App\Models\System\Permission;
 use App\Http\Requests\System\PermissionRequest;
 use Request;
 

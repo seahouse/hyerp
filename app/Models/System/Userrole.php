@@ -1,6 +1,6 @@
 <?php
 
-namespace App\System;
+namespace App\Models\System;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -8,6 +8,8 @@ class Userrole extends Model
 {
     protected $table = 'role_user';
     public $timestamps = false;
+    public $incrementing = false;
+    
     //
     protected $fillable = [
         'user_id',
@@ -15,10 +17,10 @@ class Userrole extends Model
     ];    
    
     public function user() {
-        return $this->hasOne('App\User', 'id', 'user_id');
+        return $this->hasOne('App\Models\System\User', 'id', 'user_id');
     }
     
     public function role() {
-        return $this->hasOne('App\Role', 'id', 'role_id');
+        return $this->hasOne('App\Models\System\Role', 'id', 'role_id');
     }
 }

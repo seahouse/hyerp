@@ -11,7 +11,7 @@ use App\Models\System\User;
 use App\Http\Requests\System\UserRequest;
 // use Request;
 use App\Http\Requests\System\UpdateUserRequest;
-use App\Role;
+use App\Models\System\Role;
 use Zizaco\Entrust\Entrust;
 use Illuminate\Support\Facades\Auth;
 

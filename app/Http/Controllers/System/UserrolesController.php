@@ -7,9 +7,9 @@ namespace App\Http\Controllers\System;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\System\Userrole;
-use App\User;
-use App\Role;
+use App\Models\System\Userrole;
+use App\Models\System\User;
+use App\Models\System\Role;
 use DB;
 use App\Http\Requests\System\UserroleRequest;
 use Request;
@@ -72,7 +72,14 @@ class UserrolesController extends Controller
         $user = User::findOrFail($request->input('user_id'));
         $role = Role::findOrFail($request->input('role_id'));
         if ($user != null && $role != null)
-            $user->attachRole($role);
+        {
+            // $user->attachRole($role);
+
+            $userrole = new Userrole;
+            $userrole->user_id = $user->id;
+            $userrole->role_id = $role->id;
+            $userrole->save();
+        }
         
         return redirect('system/users/' . $request->input('user_id') . '/roles');
     }

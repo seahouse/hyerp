@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\System\RolePermission;
-use App\Role;
-use App\Permission;
+use App\Models\System\RolePermission;
+use App\Models\System\Role;
+use App\Models\System\Permission;
 use DB;
 use App\Http\Requests\System\RolepermissionRequest;
 
@@ -58,7 +58,12 @@ class RolepermissionsController extends Controller
         if ($role != null && $permission != null)
         {
 //             $role->attachPermission($permission);   // another method
-            $role->perms()->sync(array($permission->id));
+            // $role->perms()->sync(array($permission->id));
+
+            $rolepermission = new RolePermission;
+            $rolepermission->permission_id = $permission->id;
+            $rolepermission->role_id = $role->id;
+            $rolepermission->save();
         }
         
         return redirect('system/roles/' . $request->input('role_id') . '/permissions');

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\System;
+namespace App\Models\System;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,6 +9,7 @@ class RolePermission extends Model
     //
     protected $table = 'permission_role';
     public $timestamps = false;
+	public $incrementing = false;
     
     protected $fillable = [
         'permission_id',
@@ -16,10 +17,10 @@ class RolePermission extends Model
     ];
     
     public function permission() {
-        return $this->hasOne('App\Permission', 'id', 'permission_id');
+        return $this->hasOne('App\Models\System\Permission', 'id', 'permission_id');
     }
     
     public function role() {
-        return $this->hasOne('App\Role', 'id', 'role_id');
+        return $this->hasOne('App\Models\System\Role', 'id', 'role_id');
     }
 }
