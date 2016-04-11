@@ -12,7 +12,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Product\Itemclass;
 use App\Models\Product\Itemtype;
-use App\Inventory\Warehouse;
+use App\Models\Inventory\Warehouse;
 use App\Inventory\Itemsite;
 
 class ItemsController extends Controller

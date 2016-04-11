@@ -38,7 +38,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">销售<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="/sales/salesorders">销售订单</a></li>
-                        <li><a href="/crm/custinfos">客户</a></li>
+                        <li><a href="/sales/custinfos">客户</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="/inventory/inventoryAvailabilityBySalesorder">库存可用量</a></li>
                     </ul>

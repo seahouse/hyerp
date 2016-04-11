@@ -72,6 +72,63 @@ class ReceiptpaymentsController extends Controller
     }
 
     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function store2(ReceiptpaymentsRequest $request, $soheadId)
+    {
+        //
+        dd($soheadId);
+        $input = Request::all();
+        dd($input);
+        $salesorder = Salesorder::findOrFail($soheadId);
+        $soitems = $salesorder->soitems;
+        $priceTotal = 0.0;
+        foreach ($soitems as $soitem)
+            $priceTotal += $soitem->price * $soitem->qty;
+        
+        $priceReceived = Receiptpayments::where('sohead_id', $soheadId)->sum('amount');
+        
+        if ($priceTotal <= $priceReceived)
+            return '已完成付款';
+        
+        $input = Request::all();
+        Receiptpayments::create($input);
+        return redirect('sales/salesorders/' . $request->get('sohead_id') . '/receiptpayments');        
+
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function store3(ReceiptpaymentsRequest $request, $soheadId)
+    {
+        //
+        $input = Request::all();
+        dd($input);
+        $salesorder = Salesorder::findOrFail($soheadId);
+        $soitems = $salesorder->soitems;
+        $priceTotal = 0.0;
+        foreach ($soitems as $soitem)
+            $priceTotal += $soitem->price * $soitem->qty;
+        
+        $priceReceived = Receiptpayments::where('sohead_id', $soheadId)->sum('amount');
+        
+        if ($priceTotal <= $priceReceived)
+            return '已完成付款';
+        
+        $input = Request::all();
+        Receiptpayments::create($input);
+        return redirect('sales/salesorders/' . $request->get('sohead_id') . '/receiptpayments');        
+
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  int  $id

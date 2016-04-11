@@ -117,6 +117,7 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
         Route::get('/', 'ReceiptpaymentsController@index');
         Route::get('create', 'ReceiptpaymentsController@create');
         Route::post('store', 'ReceiptpaymentsController@store');
+        Route::post('store2', 'ReceiptpaymentsController@store2');
         Route::delete('destroy/{receiptpayment}', 'ReceiptpaymentsController@destroy');
     });
     Route::resource('salesreps', 'SalesrepsController');
@@ -125,6 +126,19 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
     Route::get('soitems/{headId}/create', 'SoitemsController@createBySoheadId');
     Route::resource('soitems', 'SoitemsController');
     Route::resource('custinfos', 'CustinfosController');
+});
+
+Route::group(['prefix' => 'sales', 'namespace' => 'Sales'], function() {
+    Route::get('salesorders/{id}/ship', 'SalesordersController@ship');
+    Route::post('salesorders/search', 'SalesordersController@search');
+    Route::group(['prefix' => 'salesorders'], function() {
+        Route::get('mindex', 'SalesordersController@mindex');
+        Route::get('getitemsbykey/{key}', 'SalesordersController@getitemsbykey');
+    });
+    Route::resource('salesorders', 'SalesordersController');
+    Route::group(['prefix' => 'salesorders/{salesorder}/receiptpayments'], function () {
+        Route::post('store3', 'ReceiptpaymentsController@store3');
+    });
 });
 
 Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' => ['web', 'auth']], function() {
