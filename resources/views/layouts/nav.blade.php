@@ -79,7 +79,7 @@
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">系统<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="/system/employees">员工</a></li>
-                        @can('pt1')
+                        @can('usercontrol')
                         <li><a href="/system/users">用户管理</a></li>
                         @endcan
                         {{-- <li><a href="/system/permissions">权限管理</a></li> --}}

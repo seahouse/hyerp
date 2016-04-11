@@ -131,7 +131,10 @@ class UserrolesController extends Controller
         $user = User::findOrFail($userId);
         $role = Role::findOrFail($roleId);
         if ($user != null && $role != null)
-            $user->detachRole($role);
+        {
+            // $user->detachRole($role);
+            Userrole::where('user_id', $user->id)->where('role_id', $role->id)->delete();
+        }
         else 
             back();
         

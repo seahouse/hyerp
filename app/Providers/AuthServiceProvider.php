@@ -28,11 +28,11 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies($gate);
 
         //
-        // $user = Auth::user();
-        // $permissions = \App\Models\System\Permission::get();
-        // dd($permissions);
-        // $gate->define('aa', function($user) {
-        // });
+        $gate->before(function ($user, $ability) {
+            if ($user->isSuperAdmin()) {
+                return true;
+            }
+        });
 
         try {
             $permissions = \App\Models\System\Permission::with('roles')->get();

@@ -27,6 +27,11 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+    
     public function hasRole($role)
     {
         if (is_string($role)) {
@@ -39,5 +44,10 @@ class User extends Authenticatable
     public function hasPermission($permission)
     {
         return $this->hasRole($permission->roles);
+    }
+
+    public function isSuperAdmin()
+    {
+        return $this->hasRole('superadministrator');
     }
 }
