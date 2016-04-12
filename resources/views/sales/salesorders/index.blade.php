@@ -32,6 +32,7 @@
             <tr>
                 <th>编号</th>
                 <th>客户</th>
+                <th>工程名称</th>
                 <th>订单日期</th>
                 <th>销售代表</th>
                 <th>物料</th>
@@ -46,6 +47,9 @@
                     </td>
                     <td>
                         @if (isset($salesorder->custinfo->name)) {{ $salesorder->custinfo->name }} @endif
+                    </td>
+                    <td>
+                        {!! $salesorder->descrip !!}
                     </td>
                     <td>
                         {{ $salesorder->orderdate }}

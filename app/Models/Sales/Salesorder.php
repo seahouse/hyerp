@@ -11,6 +11,7 @@ class Salesorder extends Model
     //
     protected $fillable = [
         'number',
+        'descrip',
         'custinfo_id',
         'orderdate',
         'warehouse_id',

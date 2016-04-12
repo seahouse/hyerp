@@ -16,6 +16,7 @@ class CreateSoheadsTable extends Migration
             $table->increments('id');
             
             $table->string('number')->unique();
+            $table->string('descrip')->nullable();              // 工程名称
             $table->integer('custinfo_id')->nullable();
             $table->date('orderdate')->nullable();
             $table->integer('warehouse_id')->nullable();

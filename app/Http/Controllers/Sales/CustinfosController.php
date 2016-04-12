@@ -51,6 +51,20 @@ class CustinfosController extends Controller
     }
 
     /**
+     * Store a newly created resource in storage.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    // public static function create($customername)
+    // {
+    //     //
+    //     $input = Request::all();
+    //     Custinfo::create($input);
+    //     return redirect('sales/custinfos');
+    // }
+
+    /**
      * Display the specified resource.
      *
      * @param  int  $id

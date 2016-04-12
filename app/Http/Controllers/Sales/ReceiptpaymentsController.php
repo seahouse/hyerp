@@ -11,6 +11,7 @@ use App\Models\Sales\Salesorder;
 use App\Http\Requests\Sales\ReceiptpaymentsRequest;
 use Request;
 use App\Sales\Soitem;
+use App\Models\Sales\Custinfo;
 
 class ReceiptpaymentsController extends Controller
 {
@@ -70,6 +71,7 @@ class ReceiptpaymentsController extends Controller
         
 
     }
+    
 
     /**
      * Store a newly created resource in storage.
@@ -77,54 +79,57 @@ class ReceiptpaymentsController extends Controller
      * @param  Request  $request
      * @return Response
      */
-    public function store2(ReceiptpaymentsRequest $request, $soheadId)
-    {
-        //
-        dd($soheadId);
-        $input = Request::all();
-        dd($input);
-        $salesorder = Salesorder::findOrFail($soheadId);
-        $soitems = $salesorder->soitems;
-        $priceTotal = 0.0;
-        foreach ($soitems as $soitem)
-            $priceTotal += $soitem->price * $soitem->qty;
-        
-        $priceReceived = Receiptpayments::where('sohead_id', $soheadId)->sum('amount');
-        
-        if ($priceTotal <= $priceReceived)
-            return '已完成付款';
-        
-        $input = Request::all();
-        Receiptpayments::create($input);
-        return redirect('sales/salesorders/' . $request->get('sohead_id') . '/receiptpayments');        
-
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  Request  $request
-     * @return Response
-     */
-    public function store3(ReceiptpaymentsRequest $request, $soheadId)
+    public function storebync(ReceiptpaymentsRequest $request)
     {
         //
         $input = Request::all();
-        dd($input);
-        $salesorder = Salesorder::findOrFail($soheadId);
-        $soitems = $salesorder->soitems;
-        $priceTotal = 0.0;
-        foreach ($soitems as $soitem)
-            $priceTotal += $soitem->price * $soitem->qty;
+
+        // find customer by customer name
+        // 如果不存在，则创建
+        $customername = $input['CustomerName'];
+        $custinfo = Custinfo::firstOrNew(['name' => $customername]);
+        if (!$custinfo->number)
+        {
+            $custinfo->number = $customername;
+            $custinfo->save();
+        }
+
+        // 如果订单不存在，则根据客户名称和工程名称添加新订单
+        $projectname = $input['ProjectName'];
+        $salesorder = Salesorder::firstOrNew(['descrip' => $projectname]);
+        if (!$salesorder->number)
+        {
+            $salesorder->number = $projectname;
+            $salesorder->descrip = $projectname;
+            $salesorder->custinfo_id = $custinfo->id;
+            $salesorder->save();
+        }
+
+        // $soitems = $salesorder->soitems;
+        // $priceTotal = 0.0;
+        // foreach ($soitems as $soitem)
+        //     $priceTotal += $soitem->price * $soitem->qty;
         
-        $priceReceived = Receiptpayments::where('sohead_id', $soheadId)->sum('amount');
+        // $priceReceived = Receiptpayments::where('sohead_id', $soheadId)->sum('amount');
         
-        if ($priceTotal <= $priceReceived)
-            return '已完成付款';
+        // if ($priceTotal <= $priceReceived)
+        //     return '已完成付款';
         
-        $input = Request::all();
-        Receiptpayments::create($input);
-        return redirect('sales/salesorders/' . $request->get('sohead_id') . '/receiptpayments');        
+        $receiptpayment = new Receiptpayments;
+        $receiptpayment->sohead_id = $salesorder->id;
+        $receiptpayment->amount = $input['Amount'];
+        $receiptpayment->recvdate = $input['HappenDate'];
+        $receiptpayment->notes = $input['Remark'];
+        $receiptpayment->save();
+        // $input = Request::all();
+        // Receiptpayments::create($input);
+
+        $return = [
+            'Code' => 0,
+            'Description' => 'SUCCESS.'
+        ];
+        return json_encode($return);
+        // return redirect('sales/salesorders/' . $request->get('sohead_id') . '/receiptpayments');        
 
     }
 
