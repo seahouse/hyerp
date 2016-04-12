@@ -14,6 +14,6 @@ class Itemsite extends Model
     ];
     
     public function item() {
-        return $this->hasOne('App\Item', 'id', 'item_id');
+        return $this->hasOne('App\Models\Product\Item', 'id', 'item_id');
     }
 }

@@ -17,8 +17,9 @@ class CreatePoheadsTable extends Migration
             
             $table->integer('status')->default(0);
             $table->string('number');
-            $table->date('orderdate');
-            $table->integer('vendinfo_id');            
+            $table->string('descrip')->nullable();              // 工程名称
+            $table->integer('vendinfo_id');
+            $table->date('orderdate')->nullable();
             $table->string('fob')->nullable();      
             $table->string('shipvia')->nullable();     
             $table->string('comments')->nullable();

@@ -13,7 +13,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product\Itemclass;
 use App\Models\Product\Itemtype;
 use App\Models\Inventory\Warehouse;
-use App\Inventory\Itemsite;
+use App\Models\Inventory\Itemsite;
 
 class ItemsController extends Controller
 {

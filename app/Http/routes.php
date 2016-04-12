@@ -149,6 +149,12 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
     Route::resource('poitems', 'PoitemsController');
 });
 
+Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase'], function() {
+    Route::group(['prefix' => 'purchaseorders/payments'], function () {
+        Route::post('storebync', 'PaymentsController@storebync');
+    });
+});
+
 Route::group(['prefix' => 'crm', 'namespace' => 'Crm', 'middleware' => ['web', 'auth']], function() {
     Route::resource('contacts', 'ContactsController');
 });

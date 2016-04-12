@@ -1,5 +1,7 @@
 @extends('navbarerp')
 
+@section('title', '采购订单')
+
 @section('main')
     <div class="panel-heading">
         <a href="purchaseorders/create" class="btn btn-sm btn-success">新建</a>

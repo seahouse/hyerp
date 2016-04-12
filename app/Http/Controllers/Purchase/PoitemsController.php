@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests\Purchase\PoitemRequest;
 use Request;
-use App\Purchase\Poitem;
+use App\Models\Purchase\Poitem;
 
 class PoitemsController extends Controller
 {

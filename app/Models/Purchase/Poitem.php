@@ -19,10 +19,10 @@ class Poitem extends Model
     ];
     
     public function pohead() {
-        return $this->hasOne('App\Purchase\Purchaseorder', 'id', 'pohead_id');
+        return $this->hasOne('App\Models\Purchase\Purchaseorder', 'id', 'pohead_id');
     }
     
     public function itemsite() {
-        return $this->hasOne('App\Inventory\Itemsite', 'id', 'itemsite_id');
+        return $this->hasOne('App\Models\Inventory\Itemsite', 'id', 'itemsite_id');
     }
 }

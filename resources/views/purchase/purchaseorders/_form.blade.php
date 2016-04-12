@@ -9,6 +9,11 @@
 </div>
 
 <div class="form-group">
+    {!! Form::label('descrip', '工程名称:') !!}
+    {!! Form::text('descrip', null, ['class' => 'form-control']) !!}
+</div>
+
+<div class="form-group">
     {!! Form::label('status', '状态:') !!}
     {!! Form::select('status', array(0 => '打开', 1 => '关闭'), null, ['class' => 'form-control']) !!}
 </div>
