@@ -48,6 +48,10 @@ class User extends Authenticatable
 
     public function isSuperAdmin()
     {
+        // 系统初始的第一个用户为超级管理员
+        if ($this->email == 'admin@admin.com')
+            return true;
+
         return $this->hasRole('superadministrator');
     }
 }

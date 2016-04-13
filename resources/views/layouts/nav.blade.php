@@ -23,63 +23,77 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">基础资料<span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        @can('module_product')
                         <li><a href="/product/items">物料</a></li>
                         <li><a href="/product/itemclasses">物料类别</a></li>
                         <li><a href="/product/boms">物料清单</a></li>
+                        @endcan
                     </ul>
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">库存<span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        @can('module_inventory')
                         <li><a href="/inventory/warehouses">仓库</a></li>
+                        @endcan
                     </ul>
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">销售<span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        @can('module_sales')
                         <li><a href="/sales/salesorders">销售订单</a></li>
                         <li><a href="/sales/custinfos">客户</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="/inventory/inventoryAvailabilityBySalesorder">库存可用量</a></li>
+                        @endcan
                     </ul>
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">采购<span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        @can('module_purchase')
                         <li><a href="/purchase/purchaseorders">采购订单</a></li>
                         <li><a href="/purchase/vendinfos">供应商</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="/inventory/inventoryAvailability">库存可用量</a></li>
+                        @endcan
                     </ul>
                 </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">客户关系<span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        @can('module_crm')
                         {{-- <li><a href="/crmaddounts">账户</a></li> --}}
                         <li><a href="/contacts">联系人</a></li>
                         <li><a href="/addr/addrs">地址</a></li>
+                        @endcan
                     </ul>
                 </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">财务<span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        @can('module_accounting')
                         <li><a href="/accounting/receivables">应收</a></li>
                         <li><a href="/accounting/payables">应付</a></li>
+                        @endcan
                     </ul>
                 </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">审批<span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        @can('module_approval')
                         <li><a href="/approval/reimbursements">报销</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="/approval/approversettings">设置</a></li>
+                        @endcan
                     </ul>
                 </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">系统<span class="caret"></span></a>
                     <ul class="dropdown-menu">
+                        @can('module_system')
                         <li><a href="/system/employees">员工</a></li>
-                        @can('usercontrol')
                         <li><a href="/system/users">用户管理</a></li>
                         @endcan
                         {{-- <li><a href="/system/permissions">权限管理</a></li> --}}
