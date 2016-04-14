@@ -2,7 +2,7 @@
  <br>
  <p>----git pull start----</p>
  <?php
-   $output = system('E:\myproject\hyerp\gitpull.bat');
+   $output = system('E:\hyerp\gitpull.bat');
    echo "<pre>$output</pre>";
  ?>
  <p>-----git pull end-----</p>
