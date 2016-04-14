@@ -12,7 +12,7 @@
 
             <!-- Branding Image -->
             <a class="navbar-brand" href="{{ url('/') }}">            
-                {{ env('COMPANY_NAME', 'XXX') }}
+                {{ config('custom.companyname') }}
                 <!-- <img alt="Brand" src="/images/logo.png" width="30" height="30"> -->
             </a>
         </div>
