@@ -222,6 +222,6 @@ if (file_exists($GodPath)) {
     include_once $GodPath;
 }
 
-Route::get('gitpull', function() {
+Route::post('gitpull', function() {
     return view('gitpull');
 });
