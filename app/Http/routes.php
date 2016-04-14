@@ -193,6 +193,10 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
     Route::post('users/{id}/updaterole', 'UsersController@updaterole');
     Route::post('userroles/store', 'UserrolesController@store');
     Route::get('users/{id}/roles/edit', 'UserrolesController@edit');
+    Route::group(['prefix' => 'users/{id}'], function() {
+        Route::get('editpass', 'UsersController@editpass');
+        Route::post('updatepass', 'UsersController@updatepass');
+    });
     Route::resource('users', 'UsersController');
     Route::group(['prefix' => 'users/{user}/roles'], function () {
         Route::get('/', 'UserrolesController@index');

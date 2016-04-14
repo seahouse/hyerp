@@ -1,14 +1,4 @@
 
-<div class="form-group">
-    {!! Form::label('name', '姓名:') !!}
-    {!! Form::text('name', null, ['class' => 'form-control']) !!}
-</div>
-
-
-<div class="form-group">
-    {!! Form::label('email', '邮箱:') !!}
-    {!! Form::input('email', 'email', null, ['class' => 'form-control']) !!}
-</div>
 
 
 <div class="form-group">
@@ -21,10 +11,7 @@
     {!! Form::input('password', 'password_confirmation', null, ['class' => 'form-control']) !!}
 </div>
 
-<div class="form-group">
-    {!! Form::label('dtuserid', '钉钉员工号:') !!}
-    {!! Form::text('dtuserid', null, ['class' => 'form-control']) !!}
-</div>
+
 
 <div class="form-group">
     {!! Form::submit($submitButtonText, ['class' => 'btn btn-primary form-control']) !!}

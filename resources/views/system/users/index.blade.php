@@ -16,8 +16,8 @@
     <table class="table table-striped table-hover table-condensed">
         <thead>
             <tr>
-                <th>用户名</th>
                 <th>姓名</th>
+                <th>邮箱</th>
                 <th>钉钉员工号</th>
                 <th>角色</th>
                 <th>操作</th>
@@ -27,10 +27,10 @@
             @foreach($users as $user)
                 <tr>
                     <td>
-                        {{ $user->username }}
+                        {{ $user->name }}
                     </td>
                     <td>
-                        {{ $user->name }}
+                        {{ $user->email }}
                     </td>
                     <td>
                         {{ $user->dtuserid }}
@@ -41,6 +41,7 @@
                     </td>
                     <td>
                         <a href="{{ URL::to('/system/users/'.$user->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>
+                        <a href="{{ URL::to('/system/users/'.$user->id.'/editpass') }}" class="btn btn-success btn-sm pull-left">修改密码</a>
 {{--                        <a href="{{ URL::to('/system/users/'.$user->id.'/editrole') }}" class="btn btn-success btn-sm pull-left">编辑角色</a> --}}
                         {!! Form::open(array('route' => array('system.users.destroy', $user->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
                             {!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}

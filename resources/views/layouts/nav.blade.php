@@ -11,8 +11,9 @@
             </button>
 
             <!-- Branding Image -->
-            <a class="navbar-brand" href="{{ url('/') }}">
-            	AAA
+            <a class="navbar-brand" href="{{ url('/') }}">            
+                {{ env('COMPANY_NAME', 'XXX') }}
+                <!-- <img alt="Brand" src="/images/logo.png" width="30" height="30"> -->
             </a>
         </div>
 

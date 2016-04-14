@@ -4,7 +4,7 @@ namespace App\Http\Requests\System;
 
 use App\Http\Requests\Request;
 
-class UpdateUserRequest extends Request
+class UpdateUserPassRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,8 +25,7 @@ class UpdateUserRequest extends Request
     {
         return [
             //
-            'name' => 'required|max:255',
-            // 'password' => 'required|confirmed|min:3',
+            'password' => 'required|confirmed|min:3',
         ];
     }
 }

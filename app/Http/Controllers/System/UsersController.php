@@ -11,6 +11,7 @@ use App\Models\System\User;
 use App\Http\Requests\System\UserRequest;
 // use Request;
 use App\Http\Requests\System\UpdateUserRequest;
+use App\Http\Requests\System\UpdateUserPassRequest;
 use App\Models\System\Role;
 use Zizaco\Entrust\Entrust;
 use Illuminate\Support\Facades\Auth;
@@ -93,6 +94,19 @@ class UsersController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function editpass($id)
+    {
+        //
+        $user = User::findOrFail($id);
+        return view('system.users.editpass', compact('user'));
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  Request  $request
@@ -104,8 +118,24 @@ class UsersController extends Controller
         //
         $user = User::findOrFail($id);
         $user->name = $request->input('name');
-        $user->password = bcrypt($request->input('password'));
+        // $user->password = bcrypt($request->input('password'));
 		$user->dtuserid = $request->input('dtuserid');
+        $user->update();
+        return redirect('system/users');
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
+     */
+    public function updatepass(UpdateUserPassRequest $request, $id)
+    {
+        //
+        $user = User::findOrFail($id);
+        $user->password = bcrypt($request->input('password'));
         $user->update();
         return redirect('system/users');
     }
