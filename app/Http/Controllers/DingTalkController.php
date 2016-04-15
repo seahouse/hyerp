@@ -76,6 +76,7 @@ class DingTalkController extends Controller
             'signature' => $signature,
             'ticket' => $ticket,
             'agentId' => config('custom.dingtalk.agentidlist.' . $appname),       // such as: config('custom.dingtalk.agentidlist.approval')      // request('app')
+            'appname' => $appname,
         );
 
         return $config;
@@ -127,7 +128,7 @@ class DingTalkController extends Controller
 
     public function mddauth($appname = 'approval')
     {
-        Cache::flush();
+        // Cache::flush();
         // self::$AGENTID = array_get(self::$AGENTIDS, request('app'), '13231599');
         $config = $this->getconfig($appname);
         // dd(compact('config'));

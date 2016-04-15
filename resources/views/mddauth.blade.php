@@ -117,7 +117,7 @@
 			             	    // alert('userid_erp: ' + msg.userid_erp);
 			             	    if (msg.userid_erp == -1)
 			             	    	alert('您的账号未与后台绑定，无法使用此应用.');
-			             	    else if ("{{ request('app') }}" == "approval")
+			             	    else if ("{!! array_get($config, 'appname') !!}" == "approval")
 			             	    {
 			             	    	location.href = "{{ url('/mapproval') }}";
 			             	    }
