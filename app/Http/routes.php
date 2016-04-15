@@ -46,6 +46,8 @@ Route::group(['middleware' => ['web']], function () {
 
     // run .bat shell command to run git pull.
     Route::get('gitpullbybat', function() { return view('gitpullbybat'); });
+
+    Route::get('test', 'TestController@test');
 });
 
 Route::group(['middleware' => ['web', 'auth']], function () {
