@@ -100,7 +100,7 @@
 				});
 	
 				dd.runtime.permission.requestAuthCode({
-				    corpId: "ding6ed55e00b5328f39",
+				    corpId: "{!! array_get($config, 'corpId') !!}",
 				    onSuccess: function(info) {
 			     	    $.ajax({
 			         	    type:"GET",
