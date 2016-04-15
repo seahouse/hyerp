@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Input;
 use Cache;
 use DB, Auth, Config;
 
-class DingTalkController extends Controller
+class TestController extends Controller
 {
     public static function getAccessToken() {
         $accessToken = Cache::remember('access_token', 7200/60 - 5, function() {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
