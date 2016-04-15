@@ -59,7 +59,7 @@ class DingTalkController extends Controller
     }
 
 
-    public static function getconfig()
+    public static function getconfig($appname)
     {
         $nonceStr = str_random(32);
         $timeStamp = time();
@@ -75,7 +75,7 @@ class DingTalkController extends Controller
             'corpId' => config('custom.dingtalk.corpid'),
             'signature' => $signature,
             'ticket' => $ticket,
-            'agentId' => config('custom.dingtalk.agentidlist.' . request('app')),       // such as: config('custom.dingtalk.agentidlist.approval')
+            'agentId' => config('custom.dingtalk.agentidlist.' . $appname),       // such as: config('custom.dingtalk.agentidlist.approval')      // request('app')
         );
 
         return $config;
@@ -125,11 +125,11 @@ class DingTalkController extends Controller
         return response()->json($user);
     }
 
-    public function mddauth()
+    public function mddauth($appname)
     {
         // Cache::flush();
         // self::$AGENTID = array_get(self::$AGENTIDS, request('app'), '13231599');
-        $config = $this->getconfig();
+        $config = $this->getconfig($appname);
         // dd(compact('config'));
         return view('mddauth', compact('config'));
     }
