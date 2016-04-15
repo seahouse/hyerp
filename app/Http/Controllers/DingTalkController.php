@@ -8,14 +8,15 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Cache;
-use DB, Auth;
+use DB, Auth, Config;
 
 class DingTalkController extends Controller
 {
-    private static $CORPID = 'ding6ed55e00b5328f39';
-    private static $CORPSECRET = 'gdQvzBl7IW5f3YUSMIkfEIsivOVn8lcXUL_i1BIJvbP4kPJh8SU8B8JuNe8U9JIo';
-    private static $AGENTID = '';      // 在登录时进行确定（mddauth）
-    private static $AGENTIDS = ['approval' => '13231599'];
+
+    // private static $CORPID = 'ding6ed55e00b5328f39';
+    // private static $CORPSECRET = 'gdQvzBl7IW5f3YUSMIkfEIsivOVn8lcXUL_i1BIJvbP4kPJh8SU8B8JuNe8U9JIo';
+    // private static $AGENTID = '';      // 在登录时进行确定（mddauth）
+    // private static $AGENTIDS = ['approval' => '13231599'];
 
     // const corpid = 'ding6ed55e00b5328f39';
     // const corpsecret = 'gdQvzBl7IW5f3YUSMIkfEIsivOVn8lcXUL_i1BIJvbP4kPJh8SU8B8JuNe8U9JIo';
@@ -23,8 +24,8 @@ class DingTalkController extends Controller
     public static function getAccessToken() {
         $accessToken = Cache::remember('access_token', 7200/60 - 5, function() {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
             $url = 'https://oapi.dingtalk.com/gettoken';
-            $corpid = self::$CORPID;
-            $corpsecret = self::$CORPSECRET;
+            $corpid = config('custom.dingtalk.corpid');
+            $corpsecret = config('custom.dingtalk.corpsecret');
             $params = compact('corpid', 'corpsecret');
             // $reply = $this->get($url, $params);
             $reply = self::get($url, $params);
@@ -71,10 +72,10 @@ class DingTalkController extends Controller
             'url' => $url,
             'nonceStr' => $nonceStr,
             'timeStamp' => $timeStamp,
-            'corpId' => self::$CORPID,
+            'corpId' => config('custom.dingtalk.corpid'),
             'signature' => $signature,
             'ticket' => $ticket,
-            'agentId' => self::$AGENTID,
+            'agentId' => config('custom.dingtalk.agentidlist.' . request('app')),       // such as: config('custom.dingtalk.agentidlist.approval')
         );
 
         return $config;
@@ -127,8 +128,7 @@ class DingTalkController extends Controller
     public function mddauth()
     {
         // Cache::flush();
-        self::$AGENTID = array_get(self::$AGENTIDS, request('app'), '13231599');
-        // dd(self::$AGENTIDS[(request('app')]);
+        // self::$AGENTID = array_get(self::$AGENTIDS, request('app'), '13231599');
         $config = $this->getconfig();
         // dd(compact('config'));
         return view('mddauth', compact('config'));
