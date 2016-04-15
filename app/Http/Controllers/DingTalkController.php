@@ -18,6 +18,8 @@ class DingTalkController extends Controller
     // private static $AGENTID = '';      // 在登录时进行确定（mddauth）
     // private static $AGENTIDS = ['approval' => '13231599'];
 
+    private static $APPNAME = '';
+
     // const corpid = 'ding6ed55e00b5328f39';
     // const corpsecret = 'gdQvzBl7IW5f3YUSMIkfEIsivOVn8lcXUL_i1BIJvbP4kPJh8SU8B8JuNe8U9JIo';
 
@@ -59,7 +61,7 @@ class DingTalkController extends Controller
     }
 
 
-    public static function getconfig($appname)
+    public static function getconfig()
     {
         $nonceStr = str_random(32);
         $timeStamp = time();
@@ -76,8 +78,8 @@ class DingTalkController extends Controller
             'corpId' => config('custom.dingtalk.corpid'),
             'signature' => $signature,
             'ticket' => $ticket,
-            'agentId' => config('custom.dingtalk.agentidlist.' . $appname),       // such as: config('custom.dingtalk.agentidlist.approval')      // request('app')
-            'appname' => $appname,
+            'agentId' => config('custom.dingtalk.agentidlist.' . self::$APPNAME),       // such as: config('custom.dingtalk.agentidlist.approval')      // request('app')
+            'appname' => self::$APPNAME,
         );
 
         return $config;
@@ -131,7 +133,8 @@ class DingTalkController extends Controller
     {
         // Cache::flush();
         // self::$AGENTID = array_get(self::$AGENTIDS, request('app'), '13231599');
-        $config = $this->getconfig($appname);
+        self::$APPNAME = $appname;
+        $config = $this->getconfig();
         // dd(compact('config'));
         return view('mddauth', compact('config'));
     }
