@@ -100,7 +100,7 @@
 				});
 	
 				dd.runtime.permission.requestAuthCode({
-				    corpId: "ding6ed55e00b5328f39",
+				    corpId: "{!! array_get($config, 'corpId') !!}",
 				    onSuccess: function(info) {
 			     	    $.ajax({
 			         	    type:"GET",
@@ -117,7 +117,7 @@
 			             	    // alert('userid_erp: ' + msg.userid_erp);
 			             	    if (msg.userid_erp == -1)
 			             	    	alert('您的账号未与后台绑定，无法使用此应用.');
-			             	    else if ("{{ request('app') }}" == "approval")
+			             	    else if ("{!! array_get($config, 'appname') !!}" == "approval")
 			             	    {
 			             	    	location.href = "{{ url('/mapproval') }}";
 			             	    }

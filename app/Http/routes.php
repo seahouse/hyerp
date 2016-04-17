@@ -38,7 +38,7 @@ Route::get('app2', function() {
 
 Route::group(['middleware' => ['web']], function () {
     // Route::get('mddauth', function() { return view('mddauth'); });
-    Route::get('mddauth', 'DingTalkController@mddauth');
+    Route::get('mddauth/{appname?}', 'DingTalkController@mddauth');
     Route::get('mapproval', function() { return view('mapproval'); });
 
 	Route::get('dingtalk/getuserinfo/{code}', 'DingTalkController@getuserinfo');
@@ -46,6 +46,8 @@ Route::group(['middleware' => ['web']], function () {
 
     // run .bat shell command to run git pull.
     Route::get('gitpullbybat', function() { return view('gitpullbybat'); });
+
+    Route::get('test', 'TestController@test');
 });
 
 Route::group(['middleware' => ['web', 'auth']], function () {
