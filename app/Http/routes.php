@@ -114,6 +114,7 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
     Route::group(['prefix' => 'salesorders'], function() {
         Route::get('mindex', 'SalesordersController@mindex');
         Route::get('getitemsbykey/{key}', 'SalesordersController@getitemsbykey');
+        Route::get('getsohx', 'SalesordersController@getsohx');
     });
     Route::resource('salesorders', 'SalesordersController');
     Route::group(['prefix' => 'salesorders/{salesorder}/receiptpayments'], function () {

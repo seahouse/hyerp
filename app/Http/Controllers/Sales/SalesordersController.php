@@ -14,6 +14,7 @@ use App\Inventory\Itemsite;
 use Carbon\Carbon;
 use App\Inventory\Shipitem;
 use App\Sales\Soitem;
+use App\Models\Sales\Salesorder_hxold;
 
 class SalesOrdersController extends Controller
 {
@@ -49,7 +50,15 @@ class SalesOrdersController extends Controller
     public function getitemsbykey($key)
     {
         $salesorders = Salesorder::latest('created_at')->where('number', 'like', '%' . $key . '%')->paginate(10);
+        // $salesorders = Salesorderhx::where('number', 'like', '%' . $key . '%')->paginate(10);
         return $salesorders;
+    }
+
+    public function getsohx()
+    {
+        $salesorders = Salesorder_hxold::all();
+        // dd($salesorders);
+        return view('sales.salesorders.indexhx', compact('salesorders'));
     }
 
     /**

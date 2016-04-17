@@ -29,7 +29,7 @@
 <div class="form-group">
     {!! Form::label('customer_id', '客户:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::text('customer_id', $customer_id, ['class' => 'form-control', $attr]) !!}
+    {!! Form::select('customer_id', $custinfoList, null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
