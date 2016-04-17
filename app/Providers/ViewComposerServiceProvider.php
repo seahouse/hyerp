@@ -54,7 +54,7 @@ class ViewComposerServiceProvider extends ServiceProvider
         
         // custinfoList
         view()->composer(array('sales.salesorders.create', 'sales.salesorders.edit', 'approval.reimbursements.mcreate', 'approval.reimbursements.medit',
-                'approval.reimbursementapprovals.mcreate'), function($view) {
+                'approval.reimbursementapprovals.mcreate', 'approval.reimbursements.mshow'), function($view) {
             $view->with('custinfoList', \App\Models\Sales\Custinfo::orderby('id', 'asc')->lists('name', 'id'));
         });
         
