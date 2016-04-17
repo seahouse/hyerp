@@ -32,7 +32,7 @@
             </div>
             <div class="modal-body">
             	<div class="input-group">
-            		{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '关键字', 'id' => 'key']) !!}
+            		{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '订单编号或者工程名称', 'id' => 'key']) !!}
             		<span class="input-group-btn">
                    		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearch']) !!}
                    	</span>

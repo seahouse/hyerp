@@ -49,7 +49,8 @@ class SalesOrdersController extends Controller
 
     public function getitemsbykey($key)
     {
-        $salesorders = Salesorder::latest('created_at')->where('number', 'like', '%' . $key . '%')->paginate(10);
+        $salesorders = Salesorder::latest('created_at')->where('number', 'like', '%' . $key . '%')
+            ->orWhere('descrip', 'like', '%'.$key.'%')->paginate(10);
         // $salesorders = Salesorderhx::where('number', 'like', '%' . $key . '%')->paginate(10);
         return $salesorders;
     }
