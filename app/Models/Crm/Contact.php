@@ -17,6 +17,6 @@ class Contact extends Model
     ];
     
     public function addr() {
-        return $this->hasOne('App\Addr', 'id', 'addr_id');
+        return $this->hasOne('App\Models\Crm\Addr', 'id', 'addr_id');
     }
 }

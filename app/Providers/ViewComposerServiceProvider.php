@@ -40,7 +40,7 @@ class ViewComposerServiceProvider extends ServiceProvider
         });
         
         // addrList
-        view()->composer(array('contacts.create', 'contacts.edit', 'inventory.warehouses.create', 'inventory.warehouses.edit',
+        view()->composer(array('crm.contacts.create', 'crm.contacts.edit', 'inventory.warehouses.create', 'inventory.warehouses.edit',
             'purchase.vendinfos.create', 'purchase.vendinfos.edit'), function($view) {
             $view->with('addrList', \App\Models\Crm\Addr::orderby('id', 'asc')->lists('line1', 'id'));
         });

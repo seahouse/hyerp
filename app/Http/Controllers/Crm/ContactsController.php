@@ -22,7 +22,7 @@ class ContactsController extends Controller
     {
         //
         $contacts = Contact::latest('created_at')->with('addr')->paginate(10);
-        return view('contacts.index', compact('contacts'));
+        return view('crm.contacts.index', compact('contacts'));
     }
 
     /**
@@ -33,7 +33,7 @@ class ContactsController extends Controller
     public function create()
     {
         //
-        return view('contacts.create');
+        return view('crm.contacts.create');
     }
 
     /**
@@ -47,7 +47,7 @@ class ContactsController extends Controller
         //
         $input = Request::all();
         Contact::create($input);
-        return redirect('contacts');
+        return redirect('crm/contacts');
     }
 
     /**
@@ -71,7 +71,7 @@ class ContactsController extends Controller
     {
         //
         $contact = Contact::findOrFail($id);
-        return view('contacts.edit', compact('contact'));
+        return view('crm.contacts.edit', compact('contact'));
     }
 
     /**
@@ -86,7 +86,7 @@ class ContactsController extends Controller
         //
         $contact = Contact::findOrFail($id);
         $contact->update($request->all());
-        return redirect('contacts');
+        return redirect('crm/contacts');
     }
 
     /**
@@ -99,6 +99,6 @@ class ContactsController extends Controller
     {
         //
         Contact::destroy($id);
-        return redirect('contacts');
+        return redirect('crm/contacts');
     }
 }

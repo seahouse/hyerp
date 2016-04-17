@@ -15,10 +15,10 @@ class Addr extends Model
     
     public function province() {
 //         return $this->hasOne('App\Province', 'id', 'province_id');
-        return $this->belongsTo('App\Province');
+        return $this->belongsTo('App\Models\Crm\Province');
     }
     
     public function city() {
-        return $this->belongsTo('App\City');
+        return $this->belongsTo('App\Models\Crm\City');
     }
 }
