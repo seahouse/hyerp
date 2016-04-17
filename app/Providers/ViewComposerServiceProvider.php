@@ -53,7 +53,8 @@ class ViewComposerServiceProvider extends ServiceProvider
         
         
         // custinfoList
-        view()->composer(array('sales.salesorders.create', 'sales.salesorders.edit', 'approval.reimbursements.mcreate', 'approval.reimbursements.medit'), function($view) {
+        view()->composer(array('sales.salesorders.create', 'sales.salesorders.edit', 'approval.reimbursements.mcreate', 'approval.reimbursements.medit',
+                'approval.reimbursementapprovals.mcreate'), function($view) {
             $view->with('custinfoList', \App\Models\Sales\Custinfo::orderby('id', 'asc')->lists('name', 'id'));
         });
         
@@ -101,7 +102,8 @@ class ViewComposerServiceProvider extends ServiceProvider
         });
 
         // reimbursementtypeList
-        view()->composer(array('approval.reimbursements.mcreate', 'approval.reimbursements.medit', 'approval.reimbursements.mshow'), function($view) {
+        view()->composer(array('approval.reimbursements.mcreate', 'approval.reimbursements.medit', 'approval.reimbursements.mshow',
+                'approval.reimbursementapprovals.mcreate'), function($view) {
             $view->with('reimbursementtypeList', \App\Models\Approval\Reimbursementtype::orderby('id', 'asc')->lists('name', 'id'));
         });
 

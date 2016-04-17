@@ -8,6 +8,7 @@
                 'date' => null,
                 'customer_id' => null, 
                 'amount' => null, 
+                'order_number' => null,
                 'order_id' => null,
                 'datego' => null,
                 'dateback' => null,

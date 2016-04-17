@@ -66,7 +66,7 @@
                     <ul class="dropdown-menu">
                         @can('module_crm')
                         {{-- <li><a href="/crmaddounts">账户</a></li> --}}
-                        <li><a href="/contacts">联系人</a></li>
+                        <li><a href="/crm/contacts">联系人</a></li>
                         <li><a href="/addr/addrs">地址</a></li>
                         @endcan
                     </ul>
