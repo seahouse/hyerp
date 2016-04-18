@@ -66,7 +66,10 @@
 
 	<script type="text/javascript">
 		jQuery(document).ready(function(e) {
+			setNnumberPre();
+
 			$("#reimbursementtype_id").change(function() {
+				setNnumberPre();
 				if ($(this).children('option:selected').text() == "差旅费") {
 					$("#lbldatego").show();
 					$("#lbldateback").show();
@@ -80,6 +83,22 @@
 					$("#dateback").hide();
 				}
 			});
+
+			// set number pre
+			function setNnumberPre() {
+				if ($("#reimbursementtype_id").children('option:selected').text() == "业务费") {
+					$("#numberpre").val("Y");
+				}
+				else if ($("#reimbursementtype_id").children('option:selected').text() == "请客费") {
+					$("#numberpre").val("Q");
+				}
+				else if ($("#reimbursementtype_id").children('option:selected').text() == "差旅费") {
+					$("#numberpre").val("C");
+				}
+				else if ($("#reimbursementtype_id").children('option:selected').text() == "现场工程支出") {
+					$("#numberpre").val("X");
+				}
+			};
 
 			$("#btnSearch").click(function() {
 				$.ajax({

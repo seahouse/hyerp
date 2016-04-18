@@ -124,10 +124,20 @@ class ReimbursementsController extends Controller
     public function mstore(Request $request)
     {
         $input = $request->all();
-        $images = array_where($input, function($key, $value) {
-            if (substr_compare($key, 'image_', 0, 6) == 0)
-                return $value;
-        });
+        
+        $cPre = $input['numberpre'];
+        $lastReimbursement = Reimbursement::where('number', 'like', $cPre.date('Ymd').'%')->orderBy('id', 'desc')->first();
+        if ($lastReimbursement)
+        {
+            $lastNumber = $lastReimbursement->number;
+            $suffix = (string)((int)substr($lastNumber, -2) + 1);
+            $suffix = str_pad($suffix, 2, '0', STR_PAD_LEFT);
+            // dd($suffix);
+            $number = substr($lastNumber, 0, strlen($lastNumber) - 2) . $suffix;
+        }
+        else
+            $number = $cPre . date('Ymd') . '01';
+        $input['number'] = $number;        
 
         $input['applicant_id'] = Auth::user()->id;
         $reimbursement = Reimbursement::create($input);
@@ -135,6 +145,11 @@ class ReimbursementsController extends Controller
         // create reimbursement images
         if ($reimbursement)
         {
+            $images = array_where($input, function($key, $value) {
+                if (substr_compare($key, 'image_', 0, 6) == 0)
+                    return $value;
+            });
+
             foreach ($images as $key => $value) {
                 # code...
                 // save image file.

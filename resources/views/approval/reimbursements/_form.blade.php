@@ -2,6 +2,7 @@
     {!! Form::label('reimbursementtype_id', '报销类型:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
     {!! Form::select('reimbursementtype_id', $reimbursementtypeList, null, ['class' => 'form-control', $attr]) !!}
+    {!! Form::hidden('numberpre', 0, ['class' => 'btn btn-sm', 'id' => 'numberpre']) !!}
     </div>
 </div>
 
@@ -15,7 +16,7 @@
 <div class="form-group">
     {!! Form::label('number', '报销编号:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::text('number', null, ['class' => 'form-control', $attr]) !!}
+    {!! Form::text('number', null, ['class' => 'form-control', 'placeholder' => '自动生成，不用填写', $attr]) !!}
     </div>
 </div>
 
