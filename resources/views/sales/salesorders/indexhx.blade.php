@@ -32,6 +32,7 @@
             <tr>
                 <th>订单ID</th>
                 <th>订单编号</th>
+                <th>工程名称</th>
             </tr>
         </thead>
         <tbody>
@@ -43,11 +44,15 @@
                     <td>
                         {{ $salesorder->number }}
                     </td>
+                    <td>
+                        {{ str_limit($salesorder->descrip, 30) }}
+                    </td>
                 </tr>
             @endforeach
         </tbody>
 
     </table>
+    {!! $salesorders->render() !!}
     @else
     <div class="alert alert-warning alert-block">
         <i class="fa fa-warning"></i>

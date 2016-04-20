@@ -57,7 +57,7 @@ class SalesOrdersController extends Controller
 
     public function getsohx()
     {
-        $salesorders = Salesorder_hxold::all();
+        $salesorders = Salesorder_hxold::paginate(15);
         // dd($salesorders);
         return view('sales.salesorders.indexhx', compact('salesorders'));
     }
