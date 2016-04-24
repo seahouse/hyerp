@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'dtuserid'
+        'name', 'email', 'password', 'dtuserid', 'dept_id', 'position'
     ];
 
     /**
@@ -53,5 +53,9 @@ class User extends Authenticatable
             return true;
 
         return $this->hasRole('superadministrator');
+    }
+
+    public function dept() {
+        return $this->hasOne('App\Models\System\Dept', 'id', 'dept_id');
     }
 }

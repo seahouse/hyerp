@@ -40,6 +40,7 @@ class CreateReimbursementsTable extends Migration
             $table->integer('approvaler3_id')->nullable();  // 审批人3（总经理，终审）
             $table->date('approvaldate3')->nullable();      // 审批日期3
             $table->integer('applicant_id');                // 申请人
+            $table->integer('approversetting_id')->nullable();          // 下一个审批流程id, 0表示已经走完流程, -1表示没有流程可以走
             
             $table->timestamps();
         });

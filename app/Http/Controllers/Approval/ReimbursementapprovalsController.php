@@ -68,13 +68,49 @@ class ReimbursementapprovalsController extends Controller
         //
         $input = $request->all();
         $userid = Auth::user()->id;
-        $myleveltable = Approversetting::where('approvaltype_id', ReimbursementsController::$approvaltype_id)->where('approver_id', $userid)->first();
-        if ($myleveltable)
+        // $myleveltable = Approversetting::where('approvaltype_id', ReimbursementsController::$approvaltype_id)
+        //     ->where('approver_id', $userid)->first();
+        $reimbursement = Reimbursement::findOrFail($input['reimbursement_id']);
+        $approversetting = Approversetting::findOrFail($reimbursement->approversetting_id);
+        // if ($myleveltable)
         {
-            $input['level'] = $myleveltable->level;
+            // $input['level'] = $myleveltable->level;
+            $input['level'] = $approversetting->level;
             $input['approver_id'] = $userid;
 
             $reimbursementapprovals = Reimbursementapprovals::create($input);
+
+            if ($input['status'] == '0')
+            {
+                // 设置下一个审批人
+                if ($reimbursementapprovals)
+                {
+                    $approversettingNext = Approversetting::where('level', '>', $approversetting->level)->orderBy('level')->first();
+                    if ($approversettingNext)
+                        $reimbursement->approversetting_id = $approversettingNext->id;
+                    else
+                        $reimbursement->approversetting_id = 0; // 已走完
+
+                    $reimbursement->save();
+                }
+            }
+            elseif ($input['status'] == '-1') {
+                // 设置上一个审批人
+                if ($reimbursementapprovals)
+                {
+                    $reimbursement = Reimbursement::findOrFail($reimbursementapprovals->reimbursement_id);
+                    $approversetting = Approversetting::findOrFail($reimbursement->approversetting_id);
+                    $approversettingNext = Approversetting::where('level', '<', $approversetting->level)->orderBy('level', 'desc')->first();
+                    if ($approversettingNext)
+                        $reimbursement->approversetting_id = $approversettingNext->id;
+                    else
+                        $reimbursement->approversetting_id = 0; // 已走完
+
+                    $reimbursement->save();
+                }
+            }
+
+
             return 'success';
         }
 

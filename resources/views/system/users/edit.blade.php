@@ -5,7 +5,7 @@
     <hr/>
     
     {!! Form::model($user, ['method' => 'PATCH', 'action' => ['System\UsersController@update', $user->id]]) !!}
-        @include('system.users._form_edit', ['submitButtonText' => '保存'])
+        @include('system.users._form', ['submitButtonText' => '保存'])
     {!! Form::close() !!}
     
     @include('errors.list')

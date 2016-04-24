@@ -20,6 +20,6 @@ class Employee extends Model
     ];
     
     public function dept() {
-        return $this->hasOne('App\System\Dept', 'id');
+        return $this->hasOne('App\Models\System\Dept', 'id');
     }
 }

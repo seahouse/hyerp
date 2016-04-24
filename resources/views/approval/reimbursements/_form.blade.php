@@ -148,6 +148,7 @@
 
 
 {!! Form::hidden('applicant_id', null, ['class' => 'btn btn-sm']) !!}
+{!! Form::hidden('approversetting_id', null, ['class' => 'btn btn-sm']) !!}
 
 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">

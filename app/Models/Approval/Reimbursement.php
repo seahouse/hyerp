@@ -32,6 +32,7 @@ class Reimbursement extends Model
         'approvaler3_id',
         'approvaldate3',
         'applicant_id',
+        'approversetting_id',
     ];
 
     public function order() {

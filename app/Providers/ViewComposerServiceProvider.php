@@ -113,7 +113,8 @@ class ViewComposerServiceProvider extends ServiceProvider
         });
 
         // deptList
-        view()->composer(array('system.employees.create', 'system.employees.edit'), function($view) {
+        view()->composer(array('system.employees.create', 'system.employees.edit',
+                'system.users.edit', 'approval.approversettings.create', 'approval.approversettings.edit'), function($view) {
             $view->with('deptList', \App\Models\System\Dept::orderby('id', 'asc')->lists('name', 'id'));
         });
         

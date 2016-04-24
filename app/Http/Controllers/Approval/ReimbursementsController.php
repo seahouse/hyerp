@@ -11,6 +11,7 @@ use App\Models\Approval\Reimbursement;
 use App\Http\Controllers\DingTalkController;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Reimbursementimages;
+use App\Models\System\User;
 use Auth, DB, Storage;
 use Log;
 
@@ -41,35 +42,90 @@ class ReimbursementsController extends Controller
 
     /**
      * 待我审批的.
+     * 员工 财务出纳 部门主管  分管副总 总经理 财务主办
      *
      * @return \Illuminate\Http\Response
      */
     public function mindexmyapproval()
     {
-        // 获取当前操作人员的报销审批层次
+        // 登录人在审批流程中的位置
         $userid = Auth::user()->id;
-        $myleveltable = Approversetting::where('approvaltype_id', $this::$approvaltype_id)->where('approver_id', $userid)->first();
-        $ids = [];      // 需要我审批的报销id数组
-        if ($myleveltable)
-        {
-            $mylevel = $myleveltable->level;
-
-            // 获取需要我审批的报销id数组
-            $reimbursementids = Reimbursement::leftJoin('reimbursementapprovals', 'reimbursements.id', '=', 'reimbursementapprovals.reimbursement_id')
-                ->select('reimbursements.id', DB::raw('coalesce(max(reimbursementapprovals.level), 0) as currentlevel'),
-                    DB::raw('coalesce((select level from approversettings where level>coalesce(max(reimbursementapprovals.level), 0) order by level limit 1), 0) as nextlevel'),
-                    DB::raw('coalesce((select status from reimbursementapprovals where reimbursements.id=reimbursementapprovals.reimbursement_id order by id desc limit 1), 0) as status'))     // 最后一次审批的状态
-                ->groupBy('reimbursements.id')
-                ->havingRaw('coalesce((select level from approversettings where level>coalesce(max(reimbursementapprovals.level), 0) order by level limit 1), 0) = ' . $mylevel)
-                ->havingRaw('coalesce((select status from reimbursementapprovals where reimbursements.id=reimbursementapprovals.reimbursement_id order by id desc limit 1), 0)>=0')     // 审批通过的情况
-                ->get();
-
-            foreach ($reimbursementids as $reimbursementid) {
-                $ids = array_prepend($ids, $reimbursementid->id);
+        $approversettings = Approversetting::where('approvaltype_id', $this::$approvaltype_id)->orderBy('level')->get();
+        $approversetting_id_my = 0;
+        $approversetting_level = 0;
+        foreach ($approversettings as $approversetting) {
+            if ($approversetting->dept_id > 0 && strlen($approversetting->position) > 0)    // 设置了部门与职位才进行查找
+            {
+                $user = User::where('dept_id', $approversetting->dept_id)->where('position', $approversetting->position)->first();
+                if ($user->id == $userid)
+                {
+                    $approversetting_id_my = $approversetting->id;
+                    $approversetting_level = $approversetting->level;
+                    break;
+                }            
             }
+            elseif ($approversetting->level == 2)       // 第二层没有设置部门与职位，则找出部门经理的人来匹配当前用户
+            {
+                // 按照"部门经理"来查找用户组
+                $userids = User::where('position', $approversetting->position)->pluck('id');
+                if (in_array($userid, $userids->toArray()))
+                {
+                    $approversetting_id_my = $approversetting->id;
+                    $approversetting_level = $approversetting->level;
+                    break;                    
+                }
+            }
+            
+
+            // 如果是
+        }
+        
+        // 如果当前操作人员在审批流程中
+        // 先随意查询一个结果给$reimbursements赋值
+        $reimbursements = Reimbursement::where('id', -1)->paginate(10);
+        if ($approversetting_id_my > 0)
+        {           
+
+            if ($approversetting_level == 2)
+            {
+                $deptid = Auth::user()->dept_id;
+                if ($deptid > 0)
+                {
+                    $reimbursements = Reimbursement::leftJoin('users', 'reimbursements.applicant_id', '=', 'users.id')
+                        ->select('reimbursements.*')
+                        ->where('reimbursements.approversetting_id', $approversetting_id_my)
+                        ->where('users.dept_id', $deptid)->paginate(10);
+                }
+            }
+            else
+                $reimbursements = Reimbursement::latest('created_at')->where('approversetting_id', $approversetting_id_my)->paginate(10);
         }
 
-        $reimbursements = Reimbursement::latest('created_at')->whereIn('id', $ids)->paginate(10);
+
+        
+        // // 获取当前操作人员的报销审批层次
+        // $userid = Auth::user()->id;
+        // $myleveltable = Approversetting::where('approvaltype_id', $this::$approvaltype_id)->where('approver_id', $userid)->first();
+        // $ids = [];      // 需要我审批的报销id数组
+        // if ($myleveltable)
+        // {
+        //     $mylevel = $myleveltable->level;
+
+        //     // 获取需要我审批的报销id数组
+        //     $reimbursementids = Reimbursement::leftJoin('reimbursementapprovals', 'reimbursements.id', '=', 'reimbursementapprovals.reimbursement_id')
+        //         ->select('reimbursements.id', DB::raw('coalesce(max(reimbursementapprovals.level), 0) as currentlevel'),
+        //             DB::raw('coalesce((select level from approversettings where level>coalesce(max(reimbursementapprovals.level), 0) order by level limit 1), 0) as nextlevel'),
+        //             DB::raw('coalesce((select status from reimbursementapprovals where reimbursements.id=reimbursementapprovals.reimbursement_id order by id desc limit 1), 0) as status'))     // 最后一次审批的状态
+        //         ->groupBy('reimbursements.id')
+        //         ->havingRaw('coalesce((select level from approversettings where level>coalesce(max(reimbursementapprovals.level), 0) order by level limit 1), 0) = ' . $mylevel)
+        //         ->havingRaw('coalesce((select status from reimbursementapprovals where reimbursements.id=reimbursementapprovals.reimbursement_id order by id desc limit 1), 0)>=0')     // 审批通过的情况
+        //         ->get();
+
+        //     foreach ($reimbursementids as $reimbursementid) {
+        //         $ids = array_prepend($ids, $reimbursementid->id);
+        //     }
+        // }
+        // $reimbursements = Reimbursement::latest('created_at')->whereIn('id', $ids)->paginate(10);
 
         return view('approval.reimbursements.mindexmyapproval', compact('reimbursements'));
     }
@@ -125,6 +181,7 @@ class ReimbursementsController extends Controller
     {
         $input = $request->all();
         
+        // generation number
         $cPre = $input['numberpre'];
         $lastReimbursement = Reimbursement::where('number', 'like', $cPre.date('Ymd').'%')->orderBy('id', 'desc')->first();
         if ($lastReimbursement)
@@ -140,6 +197,14 @@ class ReimbursementsController extends Controller
         $input['number'] = $number;        
 
         $input['applicant_id'] = Auth::user()->id;
+
+        // set approversetting_id 
+        $approversettingFirst = Approversetting::where('approvaltype_id', $this::$approvaltype_id)->orderBy('level')->first();
+        if ($approversettingFirst)
+            $input['approversetting_id'] = $approversettingFirst->id;
+        else
+            $input['approversetting_id'] = -1;
+
         $reimbursement = Reimbursement::create($input);
 
         // create reimbursement images

@@ -19,6 +19,8 @@
                 <th>姓名</th>
                 <th>邮箱</th>
                 <th>钉钉员工号</th>
+                <th>部门</th>
+                <th>职位</th>
                 <th>角色</th>
                 <th>操作</th>
             </tr>
@@ -34,6 +36,12 @@
                     </td>
                     <td>
                         {{ $user->dtuserid }}
+                    </td>
+                    <td>
+                        @if (isset($user->dept->name)) {{ $user->dept->name }} @endif
+                    </td>
+                    <td>
+                        {{ $user->position }}
                     </td>
                     <td>
                         <a href="{{ URL::to('/system/users/'.$user->id.'/roles') }}">明细</a>

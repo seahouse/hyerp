@@ -81,7 +81,10 @@
 						alert(thrownError);
 					},
 					success: function(result) {
-						alert('操作完成.');
+						if (result == "success")
+							alert('操作成功.');
+						else
+							alert('操作失败.');
 						$('#acceptModal').modal('toggle');
 						location.href = "{{ url('approval/reimbursements/mindexmyapproval') }}";
 					},

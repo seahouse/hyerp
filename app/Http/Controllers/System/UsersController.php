@@ -120,6 +120,8 @@ class UsersController extends Controller
         $user->name = $request->input('name');
         // $user->password = bcrypt($request->input('password'));
 		$user->dtuserid = $request->input('dtuserid');
+        $user->dept_id = $request->input('dept_id');
+        $user->position = $request->input('position');
         $user->update();
         return redirect('system/users');
     }

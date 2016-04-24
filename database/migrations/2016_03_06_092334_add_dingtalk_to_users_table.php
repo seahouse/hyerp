@@ -15,6 +15,8 @@ class AddDingtalkToUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             //
             $table->string('dtuserid')->nullable();
+            $table->integer('dept_id')->nullable();             // 部门
+            $table->string('position')->nullable();             // 职位
         });
     }
 
