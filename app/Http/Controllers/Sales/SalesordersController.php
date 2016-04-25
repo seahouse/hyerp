@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use App\Inventory\Shipitem;
 use App\Sales\Soitem;
 use App\Models\Sales\Salesorder_hxold;
+use App\Models\Sales\Custinfo_hxold;
 
 class SalesOrdersController extends Controller
 {
@@ -49,9 +50,10 @@ class SalesOrdersController extends Controller
 
     public function getitemsbykey($key)
     {
-        $salesorders = Salesorder::latest('created_at')->where('number', 'like', '%' . $key . '%')
-            ->orWhere('descrip', 'like', '%'.$key.'%')->paginate(10);
-        // $salesorders = Salesorderhx::where('number', 'like', '%' . $key . '%')->paginate(10);
+        // $salesorders = Salesorder::latest('created_at')->where('number', 'like', '%' . $key . '%')
+        //     ->orWhere('descrip', 'like', '%'.$key.'%')->paginate(20);
+        $salesorders = Salesorder_hxold::where('number', 'like', '%' . $key . '%')
+            ->orWhere('descrip', 'like', '%'.$key.'%')->paginate(20);
         return $salesorders;
     }
 

@@ -53,8 +53,8 @@
     <div class='col-sm-10'>
     {!! Form::text('order_number', $order_number, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal']) !!}
     {!! Form::hidden('order_id', 0, ['class' => 'btn btn-sm', 'id' => 'order_id']) !!}
-    @if (isset($reimbursement->order->number)) 
-        {!! Form::hidden('order_number2', $reimbursement->order->number, ['class' => 'btn btn-sm', 'id' => 'order_number2']) !!}
+    @if (isset($reimbursement->order_hxold->number)) 
+        {!! Form::hidden('order_number2', $reimbursement->order_hxold->number, ['class' => 'btn btn-sm', 'id' => 'order_number2']) !!}
     @else
         {!! Form::hidden('order_number2', null, ['class' => 'btn btn-sm', 'id' => 'order_number2']) !!}
     @endif

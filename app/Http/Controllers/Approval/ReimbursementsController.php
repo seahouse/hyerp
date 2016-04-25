@@ -12,6 +12,7 @@ use App\Http\Controllers\DingTalkController;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Reimbursementimages;
 use App\Models\System\User;
+use App\Models\System\Dept;
 use Auth, DB, Storage;
 use Log;
 
@@ -67,7 +68,17 @@ class ReimbursementsController extends Controller
             elseif ($approversetting->level == 2)       // 第二层没有设置部门与职位，则找出部门经理的人来匹配当前用户
             {
                 // 按照"部门经理"来查找用户组
-                $userids = User::where('position', $approversetting->position)->pluck('id');
+                $userids = User::where('position', 'like', '%'.$approversetting->position.'%')->pluck('id');
+                if (in_array($userid, $userids->toArray()))
+                {
+                    $approversetting_id_my = $approversetting->id;
+                    $approversetting_level = $approversetting->level;
+                    break;                    
+                }
+            }
+            elseif ($approversetting->level == 3) {     // 第三层没有设置部门与职位，则根据实际情况来确定哪个副总
+                // 按照"副总经理"来查找用户组
+                $userids = User::where('position', 'like', '%'.$approversetting->position.'%')->pluck('id');
                 if (in_array($userid, $userids->toArray()))
                 {
                     $approversetting_id_my = $approversetting->id;
@@ -96,6 +107,21 @@ class ReimbursementsController extends Controller
                         ->where('reimbursements.approversetting_id', $approversetting_id_my)
                         ->where('users.dept_id', $deptid)->paginate(10);
                 }
+            }
+            elseif ($approversetting_level == 3) {
+                $dtuserid = Auth::user()->dtuserid;
+                $deptnames = config('custom.dingtalk.approversettings.reimbursement.level3.'.$dtuserid);
+                $deptids = [];
+                foreach ($deptnames as $deptname) {
+                    $dept = Dept::where('name', $deptname)->first();
+                    if ($dept)
+                        array_push($deptids, $dept->id);
+                }
+                
+                $reimbursements = Reimbursement::leftJoin('users', 'reimbursements.applicant_id', '=', 'users.id')
+                        ->select('reimbursements.*')
+                        ->where('reimbursements.approversetting_id', $approversetting_id_my)
+                        ->whereIn('users.dept_id', $deptids)->paginate(10);
             }
             else
                 $reimbursements = Reimbursement::latest('created_at')->where('approversetting_id', $approversetting_id_my)->paginate(10);

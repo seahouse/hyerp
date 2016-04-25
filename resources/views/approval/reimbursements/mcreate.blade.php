@@ -108,7 +108,7 @@
 						var strhtml = '';
 						$.each(result.data, function(i, field) {
 							btnId = 'btnSelectOrder_' + String(i);
-							strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + field.number + "</button>"							
+							strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.number + "</h4><p>" + field.descrip + "</p></button>"							
 						});
 						$("#listsalesorders").empty().append(strhtml);
 
