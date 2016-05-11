@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Models\Sales\Custinfo;
+use App\Models\Sales\Custinfo_hxold;
 use App\Http\Requests\CustinfoRequest;
 use Request;
 
@@ -23,6 +24,14 @@ class CustinfosController extends Controller
         //
         $custinfos = Custinfo::latest('created_at')->with('contact')->paginate(10);
         return view('sales.custinfos.index', compact('custinfos'));
+    }
+
+    public function getitemsbykey($key)
+    {
+        // $salesorders = Salesorder::latest('created_at')->where('number', 'like', '%' . $key . '%')
+        //     ->orWhere('descrip', 'like', '%'.$key.'%')->paginate(20);
+        $custinfos = Custinfo_hxold::where('name', 'like', '%' . $key . '%')->paginate(20);
+        return $custinfos;
     }
 
     /**

@@ -8,6 +8,7 @@
         	[
         		'submitButtonText' => '提交', 
         		'date' => date('Y-m-d'),
+        		'customer_name' => null,
         		'customer_id' => '0', 
         		'amount' => '0.0', 
         		'order_number' => null,
@@ -32,13 +33,47 @@
             </div>
             <div class="modal-body">
             	<div class="input-group">
-            		{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '订单编号或者工程名称', 'id' => 'key']) !!}
+            		{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '订单编号或者工程名称', 'id' => 'keyOrder']) !!}
             		<span class="input-group-btn">
-                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearch']) !!}
+                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchOrder']) !!}
                    	</span>
             	</div>
             	<p>
             		<div class="list-group" id="listsalesorders">
+
+            		</div>
+            	</p>
+                <form id="formAccept">
+                    {!! csrf_field() !!}                   	
+                   	
+{{--                    {!! Form::hidden('reimbursement_id', $reimbursement->id, ['class' => 'form-control']) !!}
+                    {!! Form::hidden('status', 0, ['class' => 'form-control']) !!} --}}   
+                </form>                
+            </div>
+{{--            <div class="modal-footer">
+                {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
+                {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnAccept']) !!}
+            </div>--}}   
+        </div>
+    </div>
+</div>
+
+<!-- customer selector -->
+<div class="modal fade" id="selectCustomerModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">选择客户</h4>                
+            </div>
+            <div class="modal-body">
+            	<div class="input-group">
+            		{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '客户名称', 'id' => 'keyCustomer']) !!}
+            		<span class="input-group-btn">
+                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchCustomer']) !!}
+                   	</span>
+            	</div>
+            	<p>
+            		<div class="list-group" id="listcustomers">
 
             		</div>
             	</p>
@@ -100,10 +135,10 @@
 				}
 			};
 
-			$("#btnSearch").click(function() {
+			$("#btnSearchOrder").click(function() {
 				$.ajax({
 					type: "GET",
-					url: "{!! url('/sales/salesorders/getitemsbykey/') !!}" + "/" + $("#key").val(),
+					url: "{!! url('/sales/salesorders/getitemsbykey/') !!}" + "/" + $("#keyOrder").val(),
 					success: function(result) {
 						var strhtml = '';
 						$.each(result.data, function(i, field) {
@@ -133,7 +168,38 @@
 				});
 			}
 
+			$("#btnSearchCustomer").click(function() {				
+				$.ajax({
+					type: "GET",
+					url: "{!! url('/sales/custinfos/getitemsbykey/') !!}" + "/" + $("#keyCustomer").val(),
+					success: function(result) {
+						var strhtml = '';
+						$.each(result.data, function(i, field) {
+							btnId = 'btnSelectCustomer_' + String(i);
+							strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.name + "</h4></button>"							
+						});
+						$("#listcustomers").empty().append(strhtml);
 
+						$.each(result.data, function(i, field) {
+							btnId = 'btnSelectCustomer_' + String(i);
+							addBtnClickEventCustomer(btnId, field.id, field.name);
+						});
+						// addBtnClickEvent('btnSelectOrder_0');
+					},
+					error: function(xhr, ajaxOptions, thrownError) {
+						alert('error');
+					}
+				});
+			});
+
+			function addBtnClickEventCustomer(btnId, customerid, name)
+			{
+				$("#" + btnId).bind("click", function() {
+					$('#selectCustomerModal').modal('toggle');
+					$("#customer_name").val(name);
+					$("#customer_id").val(customerid);
+				});
+			}
 
 
 			// $("#btnSelectImage").click(function() {

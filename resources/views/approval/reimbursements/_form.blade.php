@@ -28,9 +28,16 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('customer_id', '客户:', ['class' => 'col-sm-2 control-label']) !!}
+    {!! Form::label('customer_name', '客户:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::select('customer_id', array('0' => '--请选择--') + json_decode($custinfoList, true), null, ['class' => 'form-control', $attr]) !!}
+{{--    {!! Form::select('customer_name', array('0' => '--请选择--') + json_decode($custinfoList, true), null, ['class' => 'form-control', $attr]) !!} --}}
+    {!! Form::text('customer_name', $customer_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectCustomerModal']) !!}
+    {!! Form::hidden('customer_id', 0, ['class' => 'btn btn-sm', 'id' => 'customer_id']) !!}
+    @if (isset($reimbursement->customer_hxold->name)) 
+        {!! Form::hidden('customer_name2', $reimbursement->customer_hxold->name, ['class' => 'btn btn-sm', 'id' => 'customer_name2']) !!}
+    @else
+        {!! Form::hidden('customer_name2', null, ['class' => 'btn btn-sm', 'id' => 'customer_name2']) !!}
+    @endif
     </div>
 </div>
 
