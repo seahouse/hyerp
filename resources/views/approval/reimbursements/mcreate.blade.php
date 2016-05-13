@@ -13,6 +13,8 @@
         		'amount' => '0.0', 
         		'order_number' => null,
         		'order_id' => '0',
+        		'traveldatego_1' => date('Y-m-d'),
+        		'traveldateback_1' => date('Y-m-d'),
         		'datego' => date('Y-m-d'),
         		'dateback' => date('Y-m-d'),
         		'mealamount' => '0.0',
@@ -134,6 +136,15 @@
 					$("#numberpre").val("X");
 				}
 			};
+
+			$("#btnAddTravel").click(function() {
+				var itemTravel = '<p class="bg-info">出差时间段明细(1)</p>\
+					<div class="form-group">\
+						{!! Form::label("traveldatego_1", "出差去日:", ["class" => "col-sm-2 control-label"]) !!}\
+					</div>';
+				alert(itemTravel);
+				$("#travelMore").append(itemTravel);
+			});
 
 			$("#btnSearchOrder").click(function() {
 				$.ajax({

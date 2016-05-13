@@ -7,6 +7,8 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'AddDingtalkToUsersTable' => $baseDir . '/database/migrations/2016_03_06_092334_add_dingtalk_to_users_table.php',
+    'AddReimbursementtravelassesTable' => $baseDir . '/database/migrations/2016_05_13_100324_add_reimbursementtravelasses_table.php',
+    'AddReimbursementtravelsTable' => $baseDir . '/database/migrations/2016_05_13_092241_add_reimbursementtravels_table.php',
     'ApprovaltypesTableSeeder' => $baseDir . '/database/seeds/ApprovaltypesTableSeeder.php',
     'ApproversettingsTableSeeder' => $baseDir . '/database/seeds/ApproversettingsTableSeeder.php',
     'CharacteristicTableSeeder' => $baseDir . '/database/seeds/CharacteristicTableSeeder.php',
@@ -43,6 +45,7 @@ return array(
     'CreateReimbursementimagesTable' => $baseDir . '/database/migrations/2016_04_01_155807_create_reimbursementimages_table.php',
     'CreateReimbursementsTable' => $baseDir . '/database/migrations/2016_02_29_141057_create_reimbursements_table.php',
     'CreateReimbursementtypesTable' => $baseDir . '/database/migrations/2016_02_29_140752_create_reimbursementtypes_table.php',
+    'CreateRolesAndPermissionsTables' => $baseDir . '/database/migrations/2016_04_11_133951_create_roles_and_permissions_tables.php',
     'CreateSalesrepsTable' => $baseDir . '/database/migrations/2015_08_26_024300_create_salesreps_table.php',
     'CreateShipitemsTable' => $baseDir . '/database/migrations/2015_08_31_052239_create_shipitems_table.php',
     'CreateSoheadsTable' => $baseDir . '/database/migrations/2015_08_27_063450_create_soheads_table.php',
@@ -53,7 +56,6 @@ return array(
     'CreateVendtypesTable' => $baseDir . '/database/migrations/2015_09_01_085017_create_vendtypes_table.php',
     'CreateWarehousesTable' => $baseDir . '/database/migrations/2015_08_26_072428_create_warehouses_table.php',
     'DatabaseSeeder' => $baseDir . '/database/seeds/DatabaseSeeder.php',
-    'EntrustSetupTables' => $baseDir . '/database/migrations/2016_04_11_133951_entrust_setup_tables.php',
     'File_Iterator' => $vendorDir . '/phpunit/php-file-iterator/src/Iterator.php',
     'File_Iterator_Facade' => $vendorDir . '/phpunit/php-file-iterator/src/Facade.php',
     'File_Iterator_Factory' => $vendorDir . '/phpunit/php-file-iterator/src/Factory.php',

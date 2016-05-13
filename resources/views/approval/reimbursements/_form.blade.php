@@ -75,6 +75,34 @@
     </div>
 </div>
 
+<p class="bg-info">出差时间段明细(1)</p>
+
+<div class="form-group">
+    {!! Form::label('traveldatego_1', '出差去日:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class='col-sm-10'>
+    {!! Form::date('traveldatego_1', $traveldatego_1, ['class' => 'form-control', $attr]) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('traveldateback_1', '出差回日:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class='col-sm-10'>
+    {!! Form::date('traveldateback_1', $traveldateback_1, ['class' => 'form-control', $attr]) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('traveldescrip_1', '地点及事由:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class='col-sm-10'>
+    {!! Form::text('traveldescrip', null, ['class' => 'form-control', $attr]) !!}
+    </div>
+</div>
+
+<div id="travelMore">
+</div>
+
+{!! Form::button('+增加明细', ['class' => 'btn btn-sm', 'id' => 'btnAddTravel']) !!}
+
 <div class="form-group">
     {!! Form::label('datego', '出差去日:', ['class' => 'col-sm-2 control-label', 'id' => 'lbldatego']) !!}
     <div class='col-sm-10'>
