@@ -11,6 +11,7 @@ use App\Models\Approval\Reimbursement;
 use App\Http\Controllers\DingTalkController;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Reimbursementimages;
+use App\Models\Approval\Reimbursementtravel;
 use App\Models\System\User;
 use App\Models\System\Dept;
 use Auth, DB, Storage;
@@ -206,7 +207,8 @@ class ReimbursementsController extends Controller
     public function mstore(Request $request)
     {
         $input = $request->all();
-        
+        // dd($input);
+
         // generation number
         $cPre = $input['numberpre'];
         $lastReimbursement = Reimbursement::where('number', 'like', $cPre.date('Ymd').'%')->orderBy('id', 'desc')->first();
@@ -232,6 +234,33 @@ class ReimbursementsController extends Controller
             $input['approversetting_id'] = -1;
 
         $reimbursement = Reimbursement::create($input);
+
+        // create reimbursement travels
+        if ($reimbursement)
+        {
+            $travels = array_where($input, function($key, $value) {     
+                if (substr_compare($key, 'travel_', 0, 7) == 0)
+                    return $value;
+            });
+            $travelList = [];
+            foreach ($travels as $key => $value) {
+                $hh = substr($key, 0, 9);
+                $kk = substr($key, 9);
+                if (!array_has($travelList, $hh))
+                    $travelList[$hh] = array($kk => $value);
+                else
+                    $travelList[$hh] = array_add($travelList[$hh], $kk, $value);
+
+            }
+
+            $seq = 0;
+            foreach ($travelList as $key => $value) {
+                // add reimbursementtravels record
+                $value['reimbursement_id'] = $reimbursement->id;
+                $value['seq'] = ++$seq;
+                Reimbursementtravel::create($value);
+            }
+        }
 
         // create reimbursement images
         if ($reimbursement)

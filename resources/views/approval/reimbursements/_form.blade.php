@@ -75,26 +75,51 @@
     </div>
 </div>
 
+@if (isset($reimbursement))
+    @foreach ($reimbursement->reimbursementtravels as $reimbursementtravel)
+    <p class="bg-info">出差时间段明细({{$reimbursementtravel->seq}})</p>
+    <div class="form-group">
+        {!! Form::label('datego', '出差去日:', ['class' => 'col-sm-2 control-label']) !!}
+        <div class='col-sm-10'>
+        {!! Form::date('datego', $reimbursementtravel->datego, ['class' => 'form-control', $attr]) !!}
+        </div>
+    </div>
+
+    <div class="form-group">
+        {!! Form::label('dateback', '出差回日:', ['class' => 'col-sm-2 control-label']) !!}
+        <div class='col-sm-10'>
+        {!! Form::date('dateback', $reimbursementtravel->dateback, ['class' => 'form-control', $attr]) !!}
+        </div>
+    </div>
+
+    <div class="form-group">
+        {!! Form::label('descrip', '地点及事由:', ['class' => 'col-sm-2 control-label']) !!}
+        <div class='col-sm-10'>
+        {!! Form::text('descrip', $reimbursementtravel->descrip, ['class' => 'form-control', $attr]) !!}
+        </div>
+    </div>
+    @endforeach
+@else
 <p class="bg-info">出差时间段明细(1)</p>
 
 <div class="form-group">
-    {!! Form::label('traveldatego_1', '出差去日:', ['class' => 'col-sm-2 control-label']) !!}
+    {!! Form::label('travel_1_datego', '出差去日:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::date('traveldatego_1', $traveldatego_1, ['class' => 'form-control', $attr]) !!}
+    {!! Form::date('travel_1_datego', $travel_1_datego, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
 <div class="form-group">
-    {!! Form::label('traveldateback_1', '出差回日:', ['class' => 'col-sm-2 control-label']) !!}
+    {!! Form::label('travel_1_dateback', '出差回日:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::date('traveldateback_1', $traveldateback_1, ['class' => 'form-control', $attr]) !!}
+    {!! Form::date('travel_1_dateback', $travel_1_dateback, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
 <div class="form-group">
-    {!! Form::label('traveldescrip_1', '地点及事由:', ['class' => 'col-sm-2 control-label']) !!}
+    {!! Form::label('travel_1_descrip', '地点及事由:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::text('traveldescrip', null, ['class' => 'form-control', $attr]) !!}
+    {!! Form::text('travel_1_descrip', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
@@ -102,7 +127,9 @@
 </div>
 
 {!! Form::button('+增加明细', ['class' => 'btn btn-sm', 'id' => 'btnAddTravel']) !!}
+@endif
 
+{{--
 <div class="form-group">
     {!! Form::label('datego', '出差去日:', ['class' => 'col-sm-2 control-label', 'id' => 'lbldatego']) !!}
     <div class='col-sm-10'>
@@ -116,6 +143,7 @@
     {!! Form::date('dateback', $dateback, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
+--}}
 
 <div class="form-group">
     {!! Form::label('mealamount', '伙食补贴:', ['class' => 'col-sm-2 control-label']) !!}

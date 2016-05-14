@@ -54,4 +54,8 @@ class Reimbursement extends Model
     public function order_hxold() {
         return $this->hasOne('\App\Models\Sales\Salesorder_hxold', 'id', 'order_id');
     }
+
+    public function reimbursementtravels() {
+        return $this->hasMany('\App\Models\Approval\Reimbursementtravel', 'reimbursement_id', 'id');
+    }
 }

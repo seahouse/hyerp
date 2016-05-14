@@ -13,8 +13,8 @@
         		'amount' => '0.0', 
         		'order_number' => null,
         		'order_id' => '0',
-        		'traveldatego_1' => date('Y-m-d'),
-        		'traveldateback_1' => date('Y-m-d'),
+        		'travel_1_datego' => date('Y-m-d'),
+        		'travel_1_dateback' => date('Y-m-d'),
         		'datego' => date('Y-m-d'),
         		'dateback' => date('Y-m-d'),
         		'mealamount' => '0.0',
@@ -103,6 +103,7 @@
 
 	<script type="text/javascript">
 		jQuery(document).ready(function(e) {
+			var travelNum = 1;
 			setNnumberPre();
 
 			$("#reimbursementtype_id").change(function() {
@@ -138,13 +139,40 @@
 			};
 
 			$("#btnAddTravel").click(function() {
-				var itemTravel = '<p class="bg-info">出差时间段明细(1)</p>\
+				travelNum++;
+				var btnId = 'btnDeleteTravel_' + String(travelNum);
+				var divName = 'divClassTravel_' + String(travelNum);
+				var itemTravel = '<div class="' + divName + '"><p class="bg-info">出差时间段明细(' + String(travelNum) + ')<button class="btn btn-sm" id="' + btnId + '" type="button">删除</button></p>\
 					<div class="form-group">\
-						{!! Form::label("traveldatego_1", "出差去日:", ["class" => "col-sm-2 control-label"]) !!}\
+						<label for="travel_' + String(travelNum) + '_datego" class="col-sm-2 control-label">出差去日:</label>\
+						<div class="col-sm-10">\
+						<input class="form-control" name="travel_' + String(travelNum) + '_datego" type="date" value="2016-01-01" >\
+						</div>\
+					</div>\
+					<div class="form-group">\
+						<label for="traveldateback_' + String(travelNum) + '" class="col-sm-2 control-label">出差回日:</label>\
+						<div class="col-sm-10">\
+						<input class="form-control" name="travel_' + String(travelNum) + '_dateback" type="date" value="2016-01-01" >\
+						</div>\
+					</div>\
+					<div class="form-group">\
+						<label for="traveldescrip_' + String(travelNum) + '" class="col-sm-2 control-label">地点及事由:</label>\
+						<div class="col-sm-10">\
+						<input class="form-control" name="travel_' + String(travelNum) + '_descrip" type="text">\
+						</div>\
+					</div>\
 					</div>';
-				alert(itemTravel);
 				$("#travelMore").append(itemTravel);
+				addBtnDeleteTravelClickEvent(btnId, divName);
 			});
+
+			function addBtnDeleteTravelClickEvent(btnId, divName)
+			{
+				$("#" + btnId).bind("click", function() {
+					// travelNum--; 	// 不需要减法，否则在删除中间段的时候会导致有重复div
+					$("." + divName).remove();
+				});
+			}
 
 			$("#btnSearchOrder").click(function() {
 				$.ajax({

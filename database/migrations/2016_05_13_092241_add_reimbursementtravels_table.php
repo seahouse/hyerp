@@ -18,7 +18,8 @@ class AddReimbursementtravelsTable extends Migration
             $table->integer('reimbursement_id')->nullable();
             $table->date('datego');
             $table->date('dateback');
-            $table->string('descrip');
+            $table->string('descrip')->nullable();
+			$table->integer('seq')->default(0);
 
             $table->timestamps();
 
