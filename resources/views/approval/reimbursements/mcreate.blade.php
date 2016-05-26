@@ -3,7 +3,7 @@
 @section('title', '创建报销单')
 
 @section('main')
-    {!! Form::open(array('url' => 'approval/reimbursements/mstore', 'class' => 'form-horizontal')) !!}
+    {!! Form::open(array('url' => 'approval/reimbursements/mstore', 'class' => 'form-horizontal', 'id' => 'formMain')) !!}
         @include('approval.reimbursements._form', 
         	[
         		'submitButtonText' => '提交', 
@@ -19,6 +19,10 @@
         		'dateback' => date('Y-m-d'),
         		'mealamount' => '0.0',
         		'ticketamount' => '0.0',
+        		'amountAirfares' => '0.0',
+        		'amountTrain' => '0.0',
+        		'amountTaxi' => '0.0',
+        		'amountOtherTicket' => '0.0',
         		'stayamount' => '0.0',
         		'otheramount' => '0.0',
 				'attr' => '',
@@ -94,6 +98,31 @@
     </div>
 </div>
 
+<!-- before submit -->
+<div class="modal fade" id="submitModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">提交确定</h4>                
+            </div>
+            <div class="modal-body">
+            	<p>
+            		<div id="dataDefine">
+
+            		</div>
+            	</p>
+                <form id="formAccept">                	
+                   	
+                </form>                
+            </div>
+            <div class="modal-footer">
+                {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
+                {!! Form::button('继续提交', ['class' => 'btn btn-sm', 'id' => 'btnSubmitContinue']) !!}
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 
@@ -137,6 +166,40 @@
 					$("#numberpre").val("X");
 				}
 			};
+
+			$("#btnSubmit").click(function() {
+				$('#submitModal').modal('toggle');
+				return false;
+			});
+
+			$('#submitModal').on('shown.bs.modal', function (e) {
+				$("#btnSubmitContinue").attr('disabled',true);
+				$.ajax({
+					type: "POST",
+					url: "{{ url('approval/reimbursements/check') }}",
+					data: $("form#formMain").serialize(),
+					dataType: "json",
+					error:function(xhr, ajaxOptions, thrownError){
+						alert('error');
+					},
+					success:function(msg){
+						var strhtml = '';
+						strhtml += "生活补贴合计: " + String(msg.mealamount) + "<br />";
+						strhtml += "交通费合计: " + String(msg.ticketamount) + "<br />";
+						strhtml += "总费用: " + String(msg.amountTotal) + "<br />";
+						strhtml += "平均每日住宿费: " + String(msg.stayamountPer) + "<br />";
+						strhtml += "平均每日合计: " + String(msg.amountPer) + "<br />";
+						$("#dataDefine").empty().append(strhtml);
+
+						if (msg.status == "OK")
+							$("#btnSubmitContinue").attr('disabled', false);
+					},
+				});				
+			});
+
+			$("#btnSubmitContinue").click(function() {
+				$("form#formMain").submit();
+			});
 
 			$("#btnAddTravel").click(function() {
 				travelNum++;

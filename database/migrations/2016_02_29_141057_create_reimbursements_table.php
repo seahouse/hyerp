@@ -29,8 +29,12 @@ class CreateReimbursementsTable extends Migration
             $table->string('descrip');                      // 明细说明
             $table->date('datego')->nullable();             // 出差去日
             $table->date('dateback')->nullable();           // 出差回日
-            $table->decimal('mealamount', 18, 4);           // 伙食补贴
-            $table->decimal('ticketamount', 18, 4);         // 车船费
+            $table->decimal('mealamount', 18, 4)->default(0.0);                 // 伙食补贴，废弃
+            $table->decimal('ticketamount', 18, 4)->default(0.0);               // 车船费，废弃
+            $table->decimal('amountAirfares', 18, 4)->default(0.0);             // 飞机票金额
+            $table->decimal('amountTrain', 18, 4)->default(0.0);                // 火车票金额
+            $table->decimal('amountTaxi', 18, 4)->default(0.0);                 // 出租车金额
+            $table->decimal('amountOtherTicket', 18, 4)->default(0.0);          // 其他交通金额
             $table->decimal('stayamount', 18, 4);           // 住宿费
             $table->decimal('otheramount', 18, 4);          // 其他费用
             $table->integer('approvaler1_id')->nullable();  // 审批人1（出纳，初审）

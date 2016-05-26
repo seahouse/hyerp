@@ -178,6 +178,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('mindex', 'ReimbursementsController@mindex');
         Route::get('mindexmy', 'ReimbursementsController@mindexmy');      // 我发起的
         Route::get('mcreate', 'ReimbursementsController@mcreate');
+        Route::post('check', 'ReimbursementsController@check');
         Route::post('mstore', 'ReimbursementsController@mstore');
         Route::get('mshow/{id}', 'ReimbursementsController@mshow');
         Route::get('mindexmyapproval', 'ReimbursementsController@mindexmyapproval');      // 待我审批的

@@ -129,6 +129,8 @@
 {!! Form::button('+增加明细', ['class' => 'btn btn-sm', 'id' => 'btnAddTravel']) !!}
 @endif
 
+<hr>
+
 {{--
 <div class="form-group">
     {!! Form::label('datego', '出差去日:', ['class' => 'col-sm-2 control-label', 'id' => 'lbldatego']) !!}
@@ -145,17 +147,49 @@
 </div>
 --}}
 
+{{--
 <div class="form-group">
     {!! Form::label('mealamount', '伙食补贴:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
     {!! Form::text('mealamount', $mealamount, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
+--}}
 
+{{--
 <div class="form-group">
     {!! Form::label('ticketamount', '车船费:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
     {!! Form::text('ticketamount', $ticketamount, ['class' => 'form-control', $attr]) !!}
+    </div>
+</div>
+--}}
+
+<div class="form-group">
+    {!! Form::label('amountAirfares', '飞机票金额:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class='col-sm-10'>
+    {!! Form::text('amountAirfares', $amountAirfares, ['class' => 'form-control', $attr]) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('amountTrain', '火车票金额:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class='col-sm-10'>
+    {!! Form::text('amountTrain', $amountTrain, ['class' => 'form-control', $attr]) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('amountTaxi', '出租车金额:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class='col-sm-10'>
+    {!! Form::text('amountTaxi', $amountTaxi, ['class' => 'form-control', $attr]) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('amountOtherTicket', '其他交通金额:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class='col-sm-10'>
+    {!! Form::text('amountOtherTicket', $amountOtherTicket, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
@@ -215,11 +249,9 @@
 
 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
-    {!! Form::submit($submitButtonText, ['class' => $btnclass]) !!}
+    {!! Form::submit($submitButtonText, ['class' => $btnclass, 'id' => 'btnSubmit']) !!}
     </div>
 </div>
-
-
 
 
 

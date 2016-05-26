@@ -204,8 +204,54 @@ class ReimbursementsController extends Controller
         return redirect('approval/reimbursements/mindex');
     }
 
+    public function check(Request $request)
+    {
+        $input = $request->all();
+        $data = [];
+
+        // 天数
+        $travels = array_where($input, function($key, $value) {     
+            if (substr_compare($key, 'travel_', 0, 7) == 0)
+                return $value;
+        });
+        $travelList = [];
+        foreach ($travels as $key => $value) {
+            $hh = substr($key, 0, 9);
+            $kk = substr($key, 9);
+            if (!array_has($travelList, $hh))
+                $travelList[$hh] = array($kk => $value);
+            else
+                $travelList[$hh] = array_add($travelList[$hh], $kk, $value);
+        }
+        $daysTotal = 0;
+        foreach ($travelList as $key => $value) {
+            $d1 = date_create($value['datego']);
+            $d2 = date_create($value['dateback']);
+            $interval = date_diff($d1, $d2);
+            $daysTotal += $interval->days + 1;
+        }
+
+        $data['days'] = $daysTotal;
+        $data['mealamount'] = $daysTotal * 50;
+
+        // 交通费合计
+        $data['ticketamount'] = $request->input('amountAirfares', 0.0) + $request->input('amountTrain', 0.0) + $request->input('amountTaxi', 0.0) + $request->input('amountOtherTicket', 0.0);
+
+        // 总计
+        $data['amountTotal'] = $data['mealamount'] + $data['ticketamount'] + $request->input('stayamount', 0.0) + $request->input('otheramount', 0.0);
+
+        // 平均统计
+        $data['stayamountPer'] = $request->input('stayamount', 0.0) / $daysTotal;
+        $data['amountPer'] = $data['amountTotal'] / $daysTotal; 
+        $data['status'] = 'OK';
+
+        return json_encode($data);
+        // return $data;
+    }
+
     public function mstore(Request $request)
     {
+
         $input = $request->all();
         // dd($input);
 
