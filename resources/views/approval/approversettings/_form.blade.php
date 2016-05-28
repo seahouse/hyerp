@@ -15,7 +15,7 @@
 <div class="form-group">
     {!! Form::label('dept_id', '部门:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::select('dept_id', array_merge(array('0' => '--请选择--'), json_decode($deptList, true)), null, ['class' => 'form-control']) !!}
+    {!! Form::select('dept_id', $deptList, null, ['class' => 'form-control']) !!}
     </div>
 </div>
 
