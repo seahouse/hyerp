@@ -85,6 +85,7 @@ class ApproversettingsController extends Controller
         //        
         $approversetting = Approversetting::findOrFail($id);
         $approversetting->update($request->all());
+        dd($request->all());
 
         
         return redirect('approval/approversettings');
