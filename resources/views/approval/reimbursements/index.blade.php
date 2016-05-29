@@ -34,6 +34,7 @@
                 <th>申请日期</th>
                 <th>报销编号</th>
                 <th>报销金额</th>
+                <th>申请人</th>
                 <th style="width: 120px">操作</th>
             </tr>
         </thead>
@@ -48,6 +49,9 @@
                     </td>
                     <td>
                         {{ $reimbursement->amount }}
+                    </td>
+                    <td>
+                        {{ $reimbursement->applicant->name }}
                     </td>
                     <td>
 {{--                        <a href="{{ URL::to('/approval/reimbursements/'.$reimbursement->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>

@@ -119,7 +119,7 @@
 <div class="form-group">
     {!! Form::label('travel_1_descrip', '地点及事由:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::text('travel_1_descrip', null, ['class' => 'form-control', $attr]) !!}
+    {!! Form::text('travel_1_descrip', null, ['class' => 'form-control', 'placeholder' => '请输入这个时间段的出差地点（必填）', $attr]) !!}
     </div>
 </div>
 
