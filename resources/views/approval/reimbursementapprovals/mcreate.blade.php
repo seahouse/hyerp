@@ -6,6 +6,7 @@
             [
                 'submitButtonText' => '提交', 
                 'date' => null,
+                'customer_name' => null,
                 'customer_id' => null, 
                 'amount' => null, 
                 'order_number' => null,
@@ -14,6 +15,10 @@
                 'dateback' => null,
                 'mealamount' => null,
                 'ticketamount' => null,
+                'amountAirfares' => null,
+                'amountTrain' => null,
+                'amountTaxi' => null,
+                'amountOtherTicket' => null,
                 'stayamount' => null,
                 'otheramount' => null,
                 'attr' => 'readonly',
