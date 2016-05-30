@@ -15,6 +15,8 @@
         		'order_id' => '0',
         		'travel_1_datego' => date('Y-m-d'),
         		'travel_1_dateback' => date('Y-m-d'),
+        		'travel_1_customer_name' => null,
+        		'travel_1_order_number' => null,
         		'datego' => date('Y-m-d'),
         		'dateback' => date('Y-m-d'),
         		'mealamount' => '0.0',
@@ -79,6 +81,8 @@
                    		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchCustomer']) !!}
                    	</span>
             	</div>
+            	{!! Form::hidden('name', null, ['id' => 'name']) !!}
+            	{!! Form::hidden('reimbursement_id', null, ['class' => 'form-control']) !!}
             	<p>
             		<div class="list-group" id="listcustomers">
 
@@ -273,6 +277,17 @@
 					$("#order_id").val(salesorderid);
 				});
 			}
+
+			$('#selectCustomerModal').on('show.bs.modal', function (e) {
+				$("#listcustomers").empty();
+
+				var text = $(e.relatedTarget);
+				// alert(text.data('id'));
+
+				var modal = $(this);
+				// modal.find('name').val('1234');
+				// alert(modal.find('name').val());
+			});
 
 			$("#btnSearchCustomer").click(function() {				
 				$.ajax({

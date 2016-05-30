@@ -123,6 +123,37 @@
     </div>
 </div>
 
+<div class="form-group">
+    {!! Form::label('travel_1_customer_name', '客户:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class='col-sm-10'>
+{{--    {!! Form::select('customer_name', array('0' => '--请选择--') + json_decode($custinfoList, true), null, ['class' => 'form-control', $attr]) !!} --}}
+    {!! Form::text('travel_1_customer_name', $travel_1_customer_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectCustomerModal', 'data-name' => 'travel_1_customer_name', 'data-id' => 'travel_1_customer_id']) !!}
+    {!! Form::hidden('travel_1_customer_id', 0, ['class' => 'btn btn-sm', 'id' => 'travel_1_customer_id']) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('travel_1_contacts', '客户联系人:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class='col-sm-10'>
+    {!! Form::text('travel_1_contacts', null, ['class' => 'form-control', $attr]) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('travel_1_contactspost', '客户联系人职务:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class='col-sm-10'>
+    {!! Form::text('travel_1_contactspost', null, ['class' => 'form-control', $attr]) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('travel_1_order_number', '对应订单:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class='col-sm-10'>
+    {!! Form::text('travel_1_order_number', $travel_1_order_number, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal']) !!}
+    {!! Form::hidden('travel_1_order_id', 0, ['class' => 'btn btn-sm', 'id' => 'travel_1_order_id']) !!}
+    </div>
+</div>
+
 <div id="travelMore">
 </div>
 
