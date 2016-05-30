@@ -26,6 +26,7 @@
         		'stayamount' => '0.0',
         		'otheramount' => '0.0',
 				'attr' => '',
+				'attrdisable' => 'disabled',
 				'btnclass' => 'btn btn-primary',
         	])
     {!! Form::close() !!}
@@ -153,6 +154,9 @@
 
 			// set number pre
 			function setNnumberPre() {
+				// set fixed default: "差旅费"
+				$("#reimbursementtype_id option:contains('差旅费')").attr("selected", true);
+
 				if ($("#reimbursementtype_id").children('option:selected').text() == "业务费") {
 					$("#numberpre").val("Y");
 				}

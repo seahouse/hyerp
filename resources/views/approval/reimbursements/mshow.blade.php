@@ -22,9 +22,12 @@
                 'stayamount' => null,
                 'otheramount' => null,
                 'attr' => 'readonly',
+                'attrdisable' => 'disabled',
                 'btnclass' => 'hidden',
             ])
     {!! Form::close() !!}
+
+    @yield('for_reimbursementapprovals_create')
 @endsection
 
 @section('script')
@@ -36,4 +39,6 @@
             $("#customer_name").val($("#customer_name2").val());
         });
     </script>
+
+    @yield('for_reimbursementapprovals_create_script')
 @endsection
