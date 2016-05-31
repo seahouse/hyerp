@@ -115,7 +115,7 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
     Route::post('salesorders/search', 'SalesordersController@search');
     Route::group(['prefix' => 'salesorders'], function() {
         Route::get('mindex', 'SalesordersController@mindex');
-        Route::get('getitemsbykey/{key}', 'SalesordersController@getitemsbykey');
+        Route::get('getitemsbykey/{key}/{customerid?}', 'SalesordersController@getitemsbykey');
         Route::get('getsohx', 'SalesordersController@getsohx');
     });
     Route::resource('salesorders', 'SalesordersController');

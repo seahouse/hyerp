@@ -20,6 +20,7 @@
     </div>
 </div>
 
+{{--
 <div class="form-group">
     {!! Form::label('amount', '报销金额:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
@@ -30,7 +31,6 @@
 <div class="form-group">
     {!! Form::label('customer_name', '客户:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-{{--    {!! Form::select('customer_name', array('0' => '--请选择--') + json_decode($custinfoList, true), null, ['class' => 'form-control', $attr]) !!} --}}
     {!! Form::text('customer_name', $customer_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectCustomerModal']) !!}
     {!! Form::hidden('customer_id', 0, ['class' => 'btn btn-sm', 'id' => 'customer_id']) !!}
     @if (isset($reimbursement->customer_hxold->name)) 
@@ -67,9 +67,10 @@
     @endif
     </div>
 </div>
+--}}
 
 <div class="form-group">
-    {!! Form::label('descrip', '明细说明:', ['class' => 'col-sm-2 control-label']) !!}
+    {!! Form::label('descrip', '其他说明:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
     {!! Form::text('descrip', null, ['class' => 'form-control', $attr]) !!}
     </div>
@@ -96,6 +97,50 @@
         {!! Form::label('descrip', '地点及事由:', ['class' => 'col-sm-2 control-label']) !!}
         <div class='col-sm-10'>
         {!! Form::text('descrip', $reimbursementtravel->descrip, ['class' => 'form-control', $attr]) !!}
+        </div>
+    </div>
+
+    <div class="form-group">
+        {!! Form::label('customer_name', '客户:', ['class' => 'col-sm-2 control-label']) !!}
+        <div class='col-sm-10'>
+{{--        
+        {!! Form::text('customer_name', null, ['class' => 'form-control', $attr]) !!} 
+        {!! Form::hidden('customer_id', 0, ['class' => 'btn btn-sm', 'id' => 'customer_id']) !!}
+--}}
+        @if (isset($reimbursementtravel->customer_hxold->name))
+            {!! Form::text('customer_name', $reimbursementtravel->customer_hxold->name, ['class' => 'form-control', $attr]) !!}
+        @else
+            {!! Form::text('customer_name', null, ['class' => 'form-control', $attr]) !!}
+        @endif
+        </div>
+    </div>
+
+    <div class="form-group">
+        {!! Form::label('contacts', '客户联系人:', ['class' => 'col-sm-2 control-label']) !!}
+        <div class='col-sm-10'>
+        {!! Form::text('contacts', $reimbursementtravel->contacts, ['class' => 'form-control', $attr]) !!}
+        </div>
+    </div>
+
+    <div class="form-group">
+        {!! Form::label('contactspost', '客户联系人职务:', ['class' => 'col-sm-2 control-label']) !!}
+        <div class='col-sm-10'>
+        {!! Form::text('contactspost', $reimbursementtravel->contactspost, ['class' => 'form-control', $attr]) !!}
+        </div>
+    </div>
+
+    <div class="form-group">
+        {!! Form::label('order_number', '对应订单:', ['class' => 'col-sm-2 control-label']) !!}
+        <div class='col-sm-10'>
+{{--  
+        {!! Form::text('travel_1_order_number', null, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal', 'data-name' => 'travel_1_order_number', 'data-id' => 'travel_1_order_id']) !!}
+        {!! Form::hidden('travel_1_order_id', 0, ['class' => 'btn btn-sm', 'id' => 'travel_1_order_id']) !!}
+--}}
+        @if (isset($reimbursementtravel->order_hxold->number)) 
+             {!! Form::text('order_number', $reimbursementtravel->order_hxold->number, ['class' => 'form-control', $attr]) !!}
+        @else
+            {!! Form::text('order_number', null, ['class' => 'form-control', $attr]) !!}
+        @endif
         </div>
     </div>
     @endforeach
@@ -149,7 +194,7 @@
 <div class="form-group">
     {!! Form::label('travel_1_order_number', '对应订单:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::text('travel_1_order_number', $travel_1_order_number, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal']) !!}
+    {!! Form::text('travel_1_order_number', $travel_1_order_number, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal', 'data-name' => 'travel_1_order_number', 'data-id' => 'travel_1_order_id', 'data-customerid' => 'travel_1_customer_id']) !!}
     {!! Form::hidden('travel_1_order_id', 0, ['class' => 'btn btn-sm', 'id' => 'travel_1_order_id']) !!}
     </div>
 </div>

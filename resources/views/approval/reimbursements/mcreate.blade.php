@@ -47,6 +47,9 @@
                    		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchOrder']) !!}
                    	</span>
             	</div>
+            	{!! Form::hidden('name', null, ['id' => 'name']) !!}
+            	{!! Form::hidden('id', null, ['id' => 'id']) !!}
+            	{!! Form::hidden('customerid', 0, ['id' => 'customerid']) !!}
             	<p>
             		<div class="list-group" id="listsalesorders">
 
@@ -82,7 +85,7 @@
                    	</span>
             	</div>
             	{!! Form::hidden('name', null, ['id' => 'name']) !!}
-            	{!! Form::hidden('reimbursement_id', null, ['class' => 'form-control']) !!}
+            	{!! Form::hidden('id', null, ['id' => 'id']) !!}
             	<p>
             		<div class="list-group" id="listcustomers">
 
@@ -232,6 +235,32 @@
 						<input class="form-control" name="travel_' + String(travelNum) + '_descrip" type="text">\
 						</div>\
 					</div>\
+					<div class="form-group">\
+						<label for="travel_customer_name' + String(travelNum) + '" class="col-sm-2 control-label">客户:</label>\
+						<div class="col-sm-10">\
+						<input class="form-control" name="travel_' + String(travelNum) + '_customer_name" type="text" data-toggle="modal" data-target="#selectCustomerModal" data-name="travel_' + String(travelNum) + '_customer_name" data-id="travel_' + String(travelNum) + '_customer_id" type="text" id="travel_' + String(travelNum) + '_customer_name">\
+						<input name="travel_' + String(travelNum) + '_customer_id" id="travel_' + String(travelNum) + '_customer_id" type="hidden" value="0">\
+						</div>\
+					</div>\
+					<div class="form-group">\
+						<label for="travelcontacts_' + String(travelNum) + '" class="col-sm-2 control-label">客户联系人:</label>\
+						<div class="col-sm-10">\
+						<input class="form-control" name="travel_' + String(travelNum) + '_contacts" type="text">\
+						</div>\
+					</div>\
+					<div class="form-group">\
+						<label for="travelcontactspost_' + String(travelNum) + '" class="col-sm-2 control-label">客户联系人职务:</label>\
+						<div class="col-sm-10">\
+						<input class="form-control" name="travel_' + String(travelNum) + '_contactspost" type="text">\
+						</div>\
+					</div>\
+					<div class="form-group">\
+						<label for="travel_order_number' + String(travelNum) + '" class="col-sm-2 control-label">对应订单:</label>\
+						<div class="col-sm-10">\
+						<input class="form-control" name="travel_' + String(travelNum) + '_order_number" type="text" data-toggle="modal" data-target="#selectOrderModal" data-name="travel_' + String(travelNum) + '_order_number" data-id="travel_' + String(travelNum) + '_order_id" data-customerid="travel_' + String(travelNum) + '_customer_id" type="text" id="travel_' + String(travelNum) + '_order_number">\
+						<input name="travel_' + String(travelNum) + '_order_id" id="travel_' + String(travelNum) + '_order_id" type="hidden" value="0">\
+						</div>\
+					</div>\
 					</div>';
 				$("#travelMore").append(itemTravel);
 				addBtnDeleteTravelClickEvent(btnId, divName);
@@ -245,16 +274,29 @@
 				});
 			}
 
+			$('#selectOrderModal').on('show.bs.modal', function (e) {
+				$("#listsalesorders").empty();
+
+				var text = $(e.relatedTarget);
+				var modal = $(this);
+
+				modal.find('#name').val(text.data('name'));
+				modal.find('#id').val(text.data('id'));
+				modal.find('#customerid').val(text.data('customerid'));
+			});
+
 			$("#btnSearchOrder").click(function() {
 				$.ajax({
 					type: "GET",
-					url: "{!! url('/sales/salesorders/getitemsbykey/') !!}" + "/" + $("#keyOrder").val(),
+					url: "{!! url('/sales/salesorders/getitemsbykey/') !!}" + "/" + $("#keyOrder").val() + "/" + $("#" + $("#selectOrderModal").find('#customerid').val()).val(),
 					success: function(result) {
 						var strhtml = '';
 						$.each(result.data, function(i, field) {
 							btnId = 'btnSelectOrder_' + String(i);
 							strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.number + "</h4><p>" + field.descrip + "</p></button>"							
 						});
+						if (strhtml == '')
+							strhtml = '无记录。';
 						$("#listsalesorders").empty().append(strhtml);
 
 						$.each(result.data, function(i, field) {
@@ -273,8 +315,10 @@
 			{
 				$("#" + btnId).bind("click", function() {
 					$('#selectOrderModal').modal('toggle');
-					$("#order_number").val(number);
-					$("#order_id").val(salesorderid);
+					// $("#order_number").val(number);
+					// $("#order_id").val(salesorderid);
+					$("#" + $("#selectOrderModal").find('#name').val()).val(number);
+					$("#" + $("#selectOrderModal").find('#id').val()).val(salesorderid);
 				});
 			}
 
@@ -285,8 +329,11 @@
 				// alert(text.data('id'));
 
 				var modal = $(this);
-				// modal.find('name').val('1234');
-				// alert(modal.find('name').val());
+				// $("#selectCustomerModal#name").val('1111');
+				// alert(modal.find("#name").val());
+				modal.find('#name').val(text.data('name'));
+				modal.find('#id').val(text.data('id'));
+				// alert(modal.find('#id').val());
 			});
 
 			$("#btnSearchCustomer").click(function() {				
@@ -299,6 +346,8 @@
 							btnId = 'btnSelectCustomer_' + String(i);
 							strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.name + "</h4></button>"							
 						});
+						if (strhtml == '')
+							strhtml = '无记录。';
 						$("#listcustomers").empty().append(strhtml);
 
 						$.each(result.data, function(i, field) {
@@ -315,10 +364,11 @@
 
 			function addBtnClickEventCustomer(btnId, customerid, name)
 			{
+				// alert($("#selectCustomerModal").find('#id').val());
 				$("#" + btnId).bind("click", function() {
 					$('#selectCustomerModal').modal('toggle');
-					$("#customer_name").val(name);
-					$("#customer_id").val(customerid);
+					$("#" + $("#selectCustomerModal").find('#name').val()).val(name);
+					$("#" + $("#selectCustomerModal").find('#id').val()).val(customerid);
 				});
 			}
 

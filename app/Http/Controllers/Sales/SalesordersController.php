@@ -48,12 +48,16 @@ class SalesOrdersController extends Controller
         return view('sales.salesorders.index', compact('salesorders'));
     }
 
-    public function getitemsbykey($key)
+    public function getitemsbykey($key, $customerid=0)
     {
         // $salesorders = Salesorder::latest('created_at')->where('number', 'like', '%' . $key . '%')
         //     ->orWhere('descrip', 'like', '%'.$key.'%')->paginate(20);
-        $salesorders = Salesorder_hxold::where('number', 'like', '%' . $key . '%')
-            ->orWhere('descrip', 'like', '%'.$key.'%')->paginate(20);
+        $salesorders = Salesorder_hxold::where('custinfo_id', $customerid)
+            ->where(function ($query) use ($key) {
+                $query->where('number', 'like', '%'.$key.'%')
+                    ->orWhere('descrip', 'like', '%'.$key.'%');
+            })
+            ->paginate(20);        
         return $salesorders;
     }
 

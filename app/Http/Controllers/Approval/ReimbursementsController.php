@@ -251,7 +251,6 @@ class ReimbursementsController extends Controller
 
     public function mstore(Request $request)
     {
-
         $input = $request->all();
         // dd($input);
 
