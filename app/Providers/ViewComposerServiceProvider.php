@@ -102,7 +102,7 @@ class ViewComposerServiceProvider extends ServiceProvider
         });
 
         // reimbursementtypeList
-        view()->composer(array('approval.reimbursements.mcreate', 'approval.reimbursements.medit', 'approval.reimbursements.mshow',
+        view()->composer(array('approval.reimbursements.mcreate', 'approval.reimbursements.medit', 'approval.reimbursements.show', 'approval.reimbursements.mshow',
                 'approval.reimbursementapprovals.mcreate'), function($view) {
             $view->with('reimbursementtypeList', \App\Models\Approval\Reimbursementtype::orderby('id', 'asc')->lists('name', 'id'));
         });

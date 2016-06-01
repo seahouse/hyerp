@@ -33,7 +33,9 @@
             <tr>
                 <th>申请日期</th>
                 <th>报销编号</th>
+{{--
                 <th>报销金额</th>
+--}}
                 <th>申请人</th>
                 <th style="width: 120px">操作</th>
             </tr>
@@ -42,14 +44,16 @@
             @foreach($reimbursements as $reimbursement)
                 <tr>
                     <td>
-                        <a href="{{ url('/approval/reimbursements', $reimbursement->id) }}">{{ $reimbursement->date }}</a>
+                        <a href="{{ url('/approval/reimbursements', $reimbursement->id) }}" target="_blank">{{ $reimbursement->date }}</a>
                     </td>
                     <td>
                         {{ $reimbursement->number }}
                     </td>
+{{--
                     <td>
                         {{ $reimbursement->amount }}
                     </td>
+--}}
                     <td>
                         {{ $reimbursement->applicant->name }}
                     </td>

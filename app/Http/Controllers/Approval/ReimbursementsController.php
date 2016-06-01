@@ -369,6 +369,8 @@ class ReimbursementsController extends Controller
     public function show($id)
     {
         //
+        $reimbursement = Reimbursement::findOrFail($id);
+        return view('approval.reimbursements.show', compact('reimbursement'));
     }
 
     /**
