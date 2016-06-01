@@ -19,11 +19,11 @@ class CreateReimbursementsTable extends Migration
             $table->integer('reimbursementtype_id')->nullable();        // 报销类别
             $table->date('date');                           // 申请日期
             $table->string('number');                       // 报销编号
-            $table->decimal('amount', 18, 4);               // 报销金额
-            $table->integer('customer_id');                 // 客户
-            $table->string('contacts');                     // 客户联系人
-            $table->string('contactspost');                 // 客户联系人职务
-            $table->integer('order_id');                    // 对应订单
+            $table->decimal('amount', 18, 4)->default(0.0);               // 报销金额
+            $table->integer('customer_id')->nullable();                 // 客户
+            $table->string('contacts')->nullable();                     // 客户联系人
+            $table->string('contactspost')->nullable();                 // 客户联系人职务
+            $table->integer('order_id')->nullable();                    // 对应订单
             $table->integer('status')->default(0);          // 报销状态: 0:初始状态, 1:初审通过, 2: 复审通过, 10:终审通过, -1:初审失败, -2: 复审失败, -10:终审失败
             $table->string('statusdescrip')->nullable();    // 状态描述
             $table->string('descrip');                      // 明细说明

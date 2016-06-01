@@ -62,4 +62,8 @@ class Reimbursement extends Model
     public function reimbursementtravels() {
         return $this->hasMany('\App\Models\Approval\Reimbursementtravel', 'reimbursement_id', 'id');
     }
+
+    public function reimbursementapprovals() {
+        return $this->hasMany('\App\Models\Approval\Reimbursementapprovals', 'reimbursement_id', 'id');
+    }
 }

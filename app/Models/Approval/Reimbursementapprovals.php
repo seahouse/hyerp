@@ -14,4 +14,8 @@ class Reimbursementapprovals extends Model
         'status',
         'description',
     ];
+
+    public function approver() {
+        return $this->hasOne('\App\Models\System\User', 'id', 'approver_id');
+    }
 }
