@@ -1,5 +1,7 @@
 @if (isset($reimbursement))
+    @if ($reimbursement->reimbursementapprovals->count())
     <p class="bg-info">审批记录</p>
+    @endif
     @foreach ($reimbursement->reimbursementapprovals as $reimbursementapproval)
 
     <div class="form-group">
