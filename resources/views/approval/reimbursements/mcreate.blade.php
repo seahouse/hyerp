@@ -162,7 +162,9 @@
 			// set number pre
 			function setNnumberPre() {
 				// set fixed default: "差旅费"
-				$("#reimbursementtype_id option:contains('差旅费')").attr("selected", true);
+				// $("#reimbursementtype_id option:contains('差旅费')").attr("selected", true);
+				// $("#reimbursementtype_id option[text='差旅费']").attr("selected", true);
+				$("#reimbursementtype_id").get(0).selectedIndex = 2;
 
 				if ($("#reimbursementtype_id").children('option:selected').text() == "业务费") {
 					$("#numberpre").val("Y");
