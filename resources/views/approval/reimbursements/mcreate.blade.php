@@ -162,8 +162,8 @@
 			// set number pre
 			function setNnumberPre() {
 				// set fixed default: "差旅费"
+				// 此方法在主流浏览器中可以。但在钉钉中失败，故采用selectedIndex 方式， 选择第三个下拉值
 				// $("#reimbursementtype_id option:contains('差旅费')").attr("selected", true);
-				// $("#reimbursementtype_id option[text='差旅费']").attr("selected", true);
 				$("#reimbursementtype_id").get(0).selectedIndex = 2;
 
 				if ($("#reimbursementtype_id").children('option:selected').text() == "业务费") {
