@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\DingTalkController;
 use App\Models\Approval\Reimbursement;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Reimbursementapprovals;
@@ -43,7 +44,8 @@ class ReimbursementapprovalsController extends Controller
     {
         //
         $reimbursement = Reimbursement::findOrFail($reimbursementid);
-        return view('approval/reimbursementapprovals/mcreate', compact('reimbursement'));
+        $config = DingTalkController::getconfig();
+        return view('approval/reimbursementapprovals/mcreate', compact('reimbursement', 'config'));
     }
 
     /**
