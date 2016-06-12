@@ -3,14 +3,6 @@
 @section('title', '报销')
 
 @section('main')
-    <div class="panel-heading">
-{{--        <div class="panel-title">审批 -- 报销
-            <div class="pull-right">
-                <a href="{{ URL::to('product/itemclasses') }}" target="_blank" class="btn btn-sm btn-success">{{'物料类型管理'}}</a>
-                <a href="{{ URL::to('product/characteristics') }}" target="_blank" class="btn btn-sm btn-success">{{'物料属性管理'}}</a>
-            </div> 
-        </div> --}}
-    </div>
     
 {{--    <div class="panel-body">
         <a href="{{ URL::to('approval/items/create') }}" class="btn btn-sm btn-success">新建</a>

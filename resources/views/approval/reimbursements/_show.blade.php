@@ -34,6 +34,13 @@
             ])
     {!! Form::close() !!}
 
+    {!! Form::model($reimbursement, ['class' => 'form-horizontal']) !!}
+        @include('approval.reimbursements._approvers', 
+            [
+                'attr' => 'readonly',
+            ])
+    {!! Form::close() !!}
+
     @yield('for_reimbursementapprovals_create')
 @endsection
 

@@ -187,6 +187,53 @@ class ReimbursementsController extends Controller
         return view('approval.reimbursements.mindexmyapprovaled', compact('reimbursements'));
     }
 
+    /**
+     * 下一个审批人.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function nextApprover($approversetting_id)
+    {
+        // 登录人在审批流程中的位置
+        $userid = Auth::user()->id;
+        $approversetting = Approversetting::find($approversetting_id);
+        if ($approversetting)
+        {
+            if ($approversetting->dept_id > 0 && strlen($approversetting->position) > 0)    // 设置了部门与职位才进行查找
+            {
+                $user = User::where('dept_id', $approversetting->dept_id)->where('position', $approversetting->position)->first();
+                return $user; 
+            }
+            elseif ($approversetting->level == 2)       // 第二层没有设置部门与职位，则找出部门经理的人来匹配当前用户
+            {
+                // 按照"部门经理"来查找用户组
+                $userids = User::where('position', 'like', '%'.$approversetting->position.'%')->pluck('id');
+                if (in_array($userid, $userids->toArray()))
+                {
+                    $approversetting_id_my = $approversetting->id;
+                    $approversetting_level = $approversetting->level;
+                    break;
+                }
+            }
+            elseif ($approversetting->level == 3) {     // 第三层没有设置部门与职位，则根据实际情况来确定哪个副总
+                // 按照"副总经理"来查找用户组
+                $userids = User::where('position', 'like', '%'.$approversetting->position.'%')->pluck('id');
+                if (in_array($userid, $userids->toArray()))
+                {
+                    $approversetting_id_my = $approversetting->id;
+                    $approversetting_level = $approversetting->level;
+                    break;                    
+                }
+            }
+        }
+        
+
+        
+
+
+        return view('approval.reimbursements.mindexmyapproval', compact('reimbursements'));
+    }
+
 	public function mcreate()
 	{
         // $dingtalk = new DingTalkController();
