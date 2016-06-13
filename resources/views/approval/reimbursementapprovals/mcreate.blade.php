@@ -68,7 +68,7 @@
 								        url: '',
 								        image: '',
 								        text: '2222'
-								    }
+								    },
 								    text: '有一个报销需要您审批', //消息
 								    onSuccess : function() {},
 								    onFail : function() {}
