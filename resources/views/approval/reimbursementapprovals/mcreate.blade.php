@@ -39,7 +39,6 @@
 
 			dd.ready(function() {
 				$("#btnAccept").bind("click", function() {
-					alert('abcd');
 					$.ajax({
 						type: "POST",
 						url: "{{ url('approval/reimbursementapprovals/mstore') }}",
