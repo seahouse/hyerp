@@ -49,13 +49,14 @@
                         {{ $approversetting->approver->name }}
                     </td> --}}
                     <td>
-                        {{ isset($approversetting->dept->name) ? $approversetting->dept->name : '部门' }}
 {{--
-                        @if (isset($approversetting->dept->name)) {{ $approversetting->dept->name }} @else 部门 @endif
+                        {{ isset($approversetting->dept->name) ? $approversetting->dept->name : '部门' }}
 
+                        @if (isset($approversetting->dept->name)) {{ $approversetting->dept->name }} @else 部门 @endif
+--}}
 
                         {{ $approversetting->dept->name }}
---}}
+
                     </td>
                     <td>
                         {{ $approversetting->position }}
