@@ -350,6 +350,33 @@ class ReimbursementsController extends Controller
             }
         }
 
+        if ($reimbursement)
+        {
+            // send dingtalk message.
+            $touser = $reimbursement->nextapprover();
+            if ($touser)
+            {
+                DingTalkController::send($touser->dtuserid, '', 
+                    '来自' . $reimbursement->applicant->name . '的报销单需要您审批.', 
+                    config('custom.dingtalk.agentidlist.approval'));
+                // $url = 'https://oapi.dingtalk.com/message/send';
+                // $access_token = DingTalkController::getAccessToken();
+                // $params = compact('access_token');
+                // $data = [
+                //     'touser' => $touser->dtuserid,
+                //     'toparty' => '',
+                //     'agentid' => '13231599',
+                //     'msgtype' => 'text',
+                //     'text' => [
+                //         'content' => 'just a test.',
+                //     ],
+                // ];
+                // DingTalkController::post($url, $params, json_encode($data));           
+            }
+      
+        }
+
+
         return redirect('approval/reimbursements/mindexmy');
     }
 

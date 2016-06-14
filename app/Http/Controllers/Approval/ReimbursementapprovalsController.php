@@ -44,8 +44,9 @@ class ReimbursementapprovalsController extends Controller
     {
         //
         $reimbursement = Reimbursement::findOrFail($reimbursementid);
-        $config = DingTalkController::getconfig();
-        return view('approval/reimbursementapprovals/mcreate', compact('reimbursement', 'config'));
+        // $config = DingTalkController::getconfig();
+        // return view('approval/reimbursementapprovals/mcreate', compact('reimbursement', 'config'));
+        return view('approval/reimbursementapprovals/mcreate', compact('reimbursement'));
     }
 
     /**
@@ -67,7 +68,6 @@ class ReimbursementapprovalsController extends Controller
      */
     public function mstore(Request $request)
     {
-        //
         $input = $request->all();
         $userid = Auth::user()->id;
         // $myleveltable = Approversetting::where('approvaltype_id', ReimbursementsController::$approvaltype_id)
@@ -112,6 +112,14 @@ class ReimbursementapprovalsController extends Controller
                 }
             }
 
+            // send dingtalk message.
+            $touser = $reimbursement->nextapprover();
+            if ($touser)
+            {
+                DingTalkController::send($touser->dtuserid, '', 
+                    '来自' . $reimbursement->applicant->name . '的报销单需要您审批.', 
+                    config('custom.dingtalk.agentidlist.approval'));          
+            }
 
             return 'success';
         }

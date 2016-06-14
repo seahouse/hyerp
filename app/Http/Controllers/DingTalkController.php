@@ -226,21 +226,50 @@ class DingTalkController extends Controller
         return $response->body;
     }
     
-    private function post($url, $params, $data)
+    public static function post($url, $params, $data, $handlererr = true)
     {
-//         $response = \Httpful\Request::post($url . '?' . http_build_query($params))
-//         ->body($data)
-//         ->sendsJson()
-//         ->send();
-//         if ($response->hasErrors()) {
-//             throw new \Exception($response->hasErrors());
-//         }
-//         if (!$response->hasBody()) {
-//             throw new \Exception("No response body.");
-//         }
-//         if ($response->body->errcode != 0) {
-//             throw new \Exception($response->body->errmsg);
-//         }
-//         return $response->body;
+        $response = \Httpful\Request::post($url . '?' . http_build_query($params))
+            ->body($data)
+            ->sendsJson()
+            ->send();
+        if ($response->hasErrors()) {
+            throw new \Exception($response->hasErrors());
+        }
+        if (!$response->hasBody()) {
+            throw new \Exception("No response body.");
+        }
+        if ($handlererr)
+        {
+            if ($response->body->errcode != 0) {
+                throw new \Exception($response->body->errmsg);
+            }            
+        }
+
+        return $response->body;
+    }
+
+    /**
+     * send enterprise message.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public static function send($touser, $toparty, $message, $agentid = '')
+    {
+        $url = 'https://oapi.dingtalk.com/message/send';
+        $access_token = self::getAccessToken();
+        $params = compact('access_token');
+        if ($agentid == '')
+            $agentid = config('custom.dingtalk.agentidlist.' . self::$APPNAME);
+        $data = [
+            'touser' => $touser,
+            'toparty' => '',
+            'agentid' => $agentid,
+            'msgtype' => 'text',
+            'text' => [
+                'content' => $message,
+            ],
+        ];
+        DingTalkController::post($url, $params, json_encode($data), false);
     }
 }
