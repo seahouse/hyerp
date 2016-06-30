@@ -5,9 +5,18 @@ body {
 .btn-menu-1 {
 	background-color:#FF953F;
 	height: 100px;
-	border: 0
+	border: 0;
+	color: white;
 }
 
 .btn-menu-1:hover {
 	background-color:#F57E00;
+	color: white;
+}
+
+.btn-menu-2 {
+	background-color:#FF953F;
+	height: 100px;
+	border: 0;
+	color: white;
 }
