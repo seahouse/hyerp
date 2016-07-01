@@ -7,6 +7,7 @@
 <!--	<link href="{{ asset("//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css") }}" rel="stylesheet"> -->
 	<link href="{{ asset("css/bootstrap.min.css") }}" rel="stylesheet">
 	<link href="css/styles.css" rel="stylesheet">
+	<link type="text/css" rel="stylesheet" href="fonts/iconfont.css" />
 </head>
 <body>
 	@yield('main')

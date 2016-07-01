@@ -2,6 +2,31 @@ body {
 	background-color:#FF953F;
 }
 
+.color-purple{color: #9A8AB9;}
+.color-orange2{color: #FA8120;}
+.color-lightblue{color: #5ADDE9;}
+.color-green2{color: #98CB01;}
+.color-blue2{color: #1AA3EF;}
+.color-grey{color: #DBDBDB;}
+
+/*.icon-link, .icon-link .labble{
+    display: block;
+    text-align: center;
+}*/
+
+/*.icon-link .labble{
+    color: #838383;
+}*/
+
+/*.tile a.icon-link{
+    height: 100%;
+    display: table-cell;
+    vertical-align: middle;
+}
+.tile a.icon-link .icon{
+    font-size: 2.5rem;
+}*/
+
 .btn-menu-1 {
 	background-color:#FF953F;
 	height: 100px;
@@ -15,8 +40,29 @@ body {
 }
 
 .btn-menu-2 {
-	background-color:#FF953F;
+	background-color:white;
 	height: 100px;
 	border: 0;
-	color: white;
+	color: gray;
+}
+
+.btn-menu-3 {
+  font-size: 42px;
+  line-height: 100px;
+  margin: 10px 0;
+  color:#333;
+  -webkit-transition: font-size 0.25s ease-out 0s;
+  -moz-transition: font-size 0.25s ease-out 0s;
+  transition: font-size 0.25s ease-out 0s;
+}
+
+.icon_lists li{
+  float:left;
+  width: 100px;
+  height:180px;
+  text-align: center;
+}
+
+.btn-menu-3:hover {
+	font-size: 64px;
 }

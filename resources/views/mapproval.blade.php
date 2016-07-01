@@ -29,7 +29,11 @@
 				<a href="#"><button type="button" class="btn btn-default">请款</button></a>
 			</div>
 			<div class="btn-group" role="group">
+				<i class="iconfont btn-menu-3">&#xe636;</i>
+				请假
+<!--
 				<a href="#"><button type="button" class="btn btn-default">请假</button></a>
+-->
 			</div>
 		</div>
 	</p>
