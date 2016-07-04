@@ -6,8 +6,8 @@
 	<title>@yield('title')</title>
 <!--	<link href="{{ asset("//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css") }}" rel="stylesheet"> -->
 	<link href="{{ asset("css/bootstrap.min.css") }}" rel="stylesheet">
-	<link href="css/styles.css" rel="stylesheet">
-	<link type="text/css" rel="stylesheet" href="fonts/iconfont.css" />
+	<link href="{{ asset("fonts/iconfont.css") }}" rel="stylesheet">
+	<link href="{{ asset("css/styles.css") }}" rel="stylesheet">
 </head>
 <body>
 	@yield('main')
