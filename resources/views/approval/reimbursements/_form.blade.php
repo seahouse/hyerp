@@ -137,7 +137,7 @@
         {!! Form::hidden('travel_1_order_id', 0, ['class' => 'btn btn-sm', 'id' => 'travel_1_order_id']) !!}
 --}}
         @if (isset($reimbursementtravel->order_hxold->number)) 
-             {!! Form::text('order_number', $reimbursementtravel->order_hxold->number, ['class' => 'form-control', $attr]) !!}
+             {!! Form::text('order_number', $reimbursementtravel->order_hxold->number . ' | ' . str_limit($reimbursementtravel->order_hxold->descrip, 16), ['class' => 'form-control', $attr]) !!}
         @else
             {!! Form::text('order_number', null, ['class' => 'form-control', $attr]) !!}
         @endif

@@ -4,6 +4,7 @@ namespace App\Models\System;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 // use Zizaco\Entrust\Traits\EntrustUserTrait;
+use App\Http\Controllers\Approval\ReimbursementsController;
 
 class User extends Authenticatable
 {
@@ -57,5 +58,9 @@ class User extends Authenticatable
 
     public function dept() {
         return $this->hasOne('App\Models\System\Dept', 'id', 'dept_id');
+    }
+
+    public function myapproval() {
+        return ReimbursementsController::myapproval();
     }
 }

@@ -9,7 +9,7 @@
 <!--
 				<a href="/approval/reimbursements/mindexmyapproval"><button type="button" class="btn btn-default btn-lg">待我审批</button></a>
 -->
-				<a href="/approval/reimbursements/mindexmyapproval"><button type="button" class="btn btn-default btn-lg btn-menu-1">待我审批</button></a>
+				<a href="/approval/reimbursements/mindexmyapproval"><button type="button" class="btn btn-default btn-lg btn-menu-1">待我审批({{ Auth::user()->myapproval()->count() }})</button></a>
 			</div>
 			<div class="btn-group" role="group">
 <!--
