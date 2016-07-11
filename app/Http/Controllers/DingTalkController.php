@@ -272,4 +272,17 @@ class DingTalkController extends Controller
         ];
         DingTalkController::post($url, $params, json_encode($data), false);
     }
+
+    /**
+     * send enterprise message.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public static function userGet($userid) {
+        $url = 'https://oapi.dingtalk.com/user/get';
+        $access_token = self::getAccessToken();
+        $params = compact('access_token', 'userid');
+        return self::get($url, $params);
+    }
 }

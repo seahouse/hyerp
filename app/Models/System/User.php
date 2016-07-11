@@ -5,6 +5,7 @@ namespace App\Models\System;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 // use Zizaco\Entrust\Traits\EntrustUserTrait;
 use App\Http\Controllers\Approval\ReimbursementsController;
+use App\Http\Controllers\DingTalkController;
 
 class User extends Authenticatable
 {
@@ -60,7 +61,13 @@ class User extends Authenticatable
         return $this->hasOne('App\Models\System\Dept', 'id', 'dept_id');
     }
 
+    // 获取“我审批的”报销单
     public function myapproval() {
         return ReimbursementsController::myapproval();
+    }
+
+    // 获取钉钉的用户信息
+    public function dingtalkGetUser() {
+        return DingTalkController::userGet($this->dtuserid);
     }
 }
