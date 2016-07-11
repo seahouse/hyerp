@@ -3,7 +3,8 @@
 @section('title', '报销')
 
 @section('main')
-	<p>
+<div class="mapproval">
+	<div style="background-color: #FF953F;">
 		<div class="btn-group btn-group-justified" role="group" aria-label="...">
 			<div class="btn-group" role="group">
 <!--
@@ -18,9 +19,10 @@
 				<a href="/approval/reimbursements/mindexmy"><button type="button" class="btn btn-default btn-lg btn-menu-1">我发起的</button></a>
 			</div>
 		</div>
-	</p>
+	</div>
 
-	<p>
+	<div class="menuWrapper">
+		<div class="msg">“如何销假”，请看这里!</div>
 		<div class="btn-group btn-group-justified" role="group" aria-label="...">
 			<div class="btn-group" role="group">
 				<a href="/approval/reimbursements/mcreate" class="btn btn-default btn-lg">
@@ -41,7 +43,7 @@
 				</a>
 			</div>
 			<div class="btn-group" role="group">
-				<a href="#" class="btn btn-default btn-lg">
+				<a href="#" class="btn btn-default btn-lg rightMenu">
 					<i class="icon iconfont btn-menu-2 color-purple">&#xe7e4;</i>
 					<span class="labble">请假</span>
 <!--
@@ -64,7 +66,7 @@
 				</a>
 			</div>
 			<div class="btn-group" role="group">
-				<a href="#" class="btn btn-default btn-lg">
+				<a href="#" class="btn btn-default btn-lg rightMenu" >
 					<i class="icon iconfont btn-menu-2 color-grey">&#xe65e;</i>
 					<span class="labble">XXX</span>
 				</a>
@@ -84,7 +86,7 @@
 				</a>
 			</div>
 			<div class="btn-group" role="group">
-				<a href="#" class="btn btn-default btn-lg">
+				<a href="#" class="btn btn-default btn-lg rightMenu">
 					<i class="icon iconfont btn-menu-2 color-grey">&#xe65e;</i>
 					<span class="labble">XXX</span>
 				</a>
@@ -104,31 +106,13 @@
 				</a>
 			</div>
 			<div class="btn-group" role="group">
-				<a href="#" class="btn btn-default btn-lg">
+				<a href="#" class="btn btn-default btn-lg rightMenu">
 					<i class="icon iconfont btn-menu-2 color-grey">&#xe65e;</i>
 					<span class="labble">XXX</span>
 				</a>
 			</div>
 		</div>
-		<div class="btn-group btn-group-justified" role="group" aria-label="...">
-			<div class="btn-group" role="group">
-				<a href="#" class="btn btn-default btn-lg">
-					<i class="icon iconfont btn-menu-2 color-grey">&#xe65e;</i>
-					<span class="labble">XXX</span>
-				</a>
-			</div>
-			<div class="btn-group" role="group">
-				<a href="#" class="btn btn-default btn-lg">
-					<i class="icon iconfont btn-menu-2 color-grey">&#xe65e;</i>
-					<span class="labble">XXX</span>
-				</a>
-			</div>
-			<div class="btn-group" role="group">
-				<a href="#" class="btn btn-default btn-lg">
-					<i class="icon iconfont btn-menu-2 color-grey">&#xe65e;</i>
-					<span class="labble">XXX</span>
-				</a>
-			</div>
-		</div>
-	</p>
+
+	</div>
+</div>
 @endsection

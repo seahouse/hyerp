@@ -218,47 +218,47 @@
 				travelNum++;
 				var btnId = 'btnDeleteTravel_' + String(travelNum);
 				var divName = 'divClassTravel_' + String(travelNum);
-				var itemTravel = '<div class="' + divName + '"><p class="bg-info">出差时间段明细(' + String(travelNum) + ')<button class="btn btn-sm" id="' + btnId + '" type="button">删除</button></p>\
+				var itemTravel = '<div class="' + divName + '"><p class="bannerTitle">出差时间段明细(' + String(travelNum) + ')&nbsp;<button class="btn btn-sm" id="' + btnId + '" type="button">删除</button></p>\
 					<div class="form-group">\
-						<label for="travel_' + String(travelNum) + '_datego" class="col-sm-2 control-label">出差去日:</label>\
-						<div class="col-sm-10">\
+						<label for="travel_' + String(travelNum) + '_datego" class="col-xs-6 col-sm-2 control-label">出差去日:</label>\
+						<div class="col-sm-10 col-xs-6">\
 						<input class="form-control" name="travel_' + String(travelNum) + '_datego" type="date" value="2016-01-01" >\
 						</div>\
 					</div>\
 					<div class="form-group">\
-						<label for="traveldateback_' + String(travelNum) + '" class="col-sm-2 control-label">出差回日:</label>\
-						<div class="col-sm-10">\
+						<label for="traveldateback_' + String(travelNum) + '" class="col-xs-6 col-sm-2 control-label">出差回日:</label>\
+						<div class="col-sm-10 col-xs-6">\
 						<input class="form-control" name="travel_' + String(travelNum) + '_dateback" type="date" value="2016-01-01" >\
 						</div>\
 					</div>\
 					<div class="form-group">\
-						<label for="traveldescrip_' + String(travelNum) + '" class="col-sm-2 control-label">地点及事由:</label>\
-						<div class="col-sm-10">\
+						<label for="traveldescrip_' + String(travelNum) + '" class="col-xs-4 col-sm-2 control-label">地点及事由:</label>\
+						<div class="col-sm-10 col-xs-8">\
 						<input class="form-control" name="travel_' + String(travelNum) + '_descrip" type="text">\
 						</div>\
 					</div>\
 					<div class="form-group">\
-						<label for="travel_customer_name' + String(travelNum) + '" class="col-sm-2 control-label">客户:</label>\
-						<div class="col-sm-10">\
+						<label for="travel_customer_name' + String(travelNum) + '" class="col-xs-6 col-sm-2 control-label">客户:</label>\
+						<div class="col-sm-10 col-xs-6">\
 						<input class="form-control" name="travel_' + String(travelNum) + '_customer_name" type="text" data-toggle="modal" data-target="#selectCustomerModal" data-name="travel_' + String(travelNum) + '_customer_name" data-id="travel_' + String(travelNum) + '_customer_id" type="text" id="travel_' + String(travelNum) + '_customer_name">\
 						<input name="travel_' + String(travelNum) + '_customer_id" id="travel_' + String(travelNum) + '_customer_id" type="hidden" value="0">\
 						</div>\
 					</div>\
 					<div class="form-group">\
-						<label for="travelcontacts_' + String(travelNum) + '" class="col-sm-2 control-label">客户联系人:</label>\
-						<div class="col-sm-10">\
+						<label for="travelcontacts_' + String(travelNum) + '" class="col-xs-6 col-sm-2 control-label">客户联系人:</label>\
+						<div class="col-sm-10 col-xs-6">\
 						<input class="form-control" name="travel_' + String(travelNum) + '_contacts" type="text">\
 						</div>\
 					</div>\
 					<div class="form-group">\
-						<label for="travelcontactspost_' + String(travelNum) + '" class="col-sm-2 control-label">客户联系人职务:</label>\
-						<div class="col-sm-10">\
+						<label for="travelcontactspost_' + String(travelNum) + '" class="col-xs-6 col-sm-2 control-label">客户联系人职务:</label>\
+						<div class="col-sm-10 col-xs-6">\
 						<input class="form-control" name="travel_' + String(travelNum) + '_contactspost" type="text">\
 						</div>\
 					</div>\
 					<div class="form-group">\
-						<label for="travel_order_number' + String(travelNum) + '" class="col-sm-2 control-label">对应订单:</label>\
-						<div class="col-sm-10">\
+						<label for="travel_order_number' + String(travelNum) + '" class="col-xs-6 col-sm-2 control-label">对应订单:</label>\
+						<div class="col-sm-10 col-xs-6">\
 						<input class="form-control" name="travel_' + String(travelNum) + '_order_number" type="text" data-toggle="modal" data-target="#selectOrderModal" data-name="travel_' + String(travelNum) + '_order_number" data-id="travel_' + String(travelNum) + '_order_id" data-customerid="travel_' + String(travelNum) + '_customer_id" type="text" id="travel_' + String(travelNum) + '_order_number">\
 						<input name="travel_' + String(travelNum) + '_order_id" id="travel_' + String(travelNum) + '_order_id" type="hidden" value="0">\
 						</div>\

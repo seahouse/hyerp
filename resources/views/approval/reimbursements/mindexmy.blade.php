@@ -1,6 +1,6 @@
 @extends('app')
 
-@section('title', '报销')
+@section('title', '我发起的')
 
 @section('main')
     
@@ -20,10 +20,14 @@
 
     @if ($reimbursements->count())
         @foreach($reimbursements as $reimbursement)
-        <div class="list-group">
+        <div class="reimbList list-group">
             <a href="{{ url('/approval/reimbursements/mshow', $reimbursement->id) }}" class="list-group-item">
-                <span class="badge">{{ $reimbursement->created_at }}</span>
-                {{ $reimbursement->applicant->name }}的报销
+                <div class='col-xs-2 col-sm-2 name'>梁毅</div>
+                <div class='col-xs-7 col-sm-7 content'>
+                    <div title="{{ $reimbursement->applicant->name }}的报销" class="title">{{ $reimbursement->applicant->name }}的报销</div>
+                    <div class="status">待审批</div>
+                </div>
+                <div class='col-xs-3 col-sm-3'><span class="time">{{ $reimbursement->created_at }}</span></div>
             </a>
         </div>     
         @endforeach

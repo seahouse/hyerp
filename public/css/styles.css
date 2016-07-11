@@ -1,5 +1,5 @@
 body {
-	background-color:#FF953F;
+	background-color:rgb(240,239,244);
 }
 
 .color-purple{color: #9A8AB9;}
@@ -34,3 +34,118 @@ body {
 .form-d {
 	background-color: white;
 }
+
+.mapproval .btn-group-lg>.btn, .btn-lg {
+	border-radius: 0px;
+}
+.mapproval .menuWrapper {
+	background-color: rgb(240,239,244);
+}
+
+.mapproval .msg {
+	height: 60px;
+	line-height: 60px;
+	padding-left: 10px;
+	color: rgb(135,143,154);
+	background-color: rgb(248,248,248);
+	font-size: 16px;
+	border-bottom: 1px solid rgb(219,219,219);
+	
+}
+
+.mapproval .btn {
+	border: 0px;
+}
+
+.mapproval .menuWrapper .btn-default{
+	color: rgb(135,143,154);
+	font-size: 16px;
+	border-right: 1px solid #ccc;
+    border-bottom: 1px solid rgb(219,219,219);
+}
+
+.mapproval .menuWrapper .rightMenu{
+	border-right: 0;
+}
+/*below is the reimbursement page*/
+.reimb {
+	padding: 10px 0;
+	background-color: rgb(240,239,244);
+}
+
+.reimb .form-group {
+	border-bottom: 1px solid #ccc;
+    padding: 5px 10px;
+    margin-bottom: 0px;
+}
+
+.reimb .control-label {
+	padding-top: 6px;
+	font-size: 16px;
+}
+
+.reimb .bannerTitle {
+	height: 42px;
+    line-height: 42px;
+    background-color: rgb(240,239,244);
+    padding: 0px 10px;
+    font-size: 13px;
+    color: rgb(149,156,166);
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.reimb .form-control {
+	border-radius: 0px;
+}
+.reimb .addMore {
+	color: rgb(71,178,252);
+    display: block;
+    text-align: center;
+    font-size: 18px;
+    height: 50px;
+    line-height: 50px;
+    text-decoration:none;
+}
+
+.reimb hr {
+	margin: 5px 0;
+}
+
+/*below is the reimbursements list page*/
+.reimbList {
+	margin-bottom: 0;
+}
+.reimbList .name {
+    background: rgb(253,148,72);
+    line-height: 50px;
+    font-size: 16px;
+    padding: 0;
+    width: 50px;
+    height: 50px;
+    border-radius: 30px;
+    text-align: center;
+    margin: 3px 0px 3px 5px;
+    color: #fff;
+}
+
+.reimbList .list-group-item {
+    height: 80px;
+    padding: 10px 0;
+    border-top: none;
+}
+
+.reimbList .time {
+	color: #ccc;
+    font-size: 12px;
+}
+
+.reimbList .content {
+	margin: 6px 0px;
+    font-size: 16px;
+}
+
+.reimbList .content .status {
+	color: rgb(253,148,72);
+}
+
