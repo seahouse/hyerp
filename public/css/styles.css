@@ -129,6 +129,10 @@ body {
     color: #fff;
 }
 
+.reimbList .img {
+	margin-left: -5px;
+}
+
 .reimbList .list-group-item {
     height: 80px;
     padding: 10px 0;
@@ -138,6 +142,7 @@ body {
 .reimbList .time {
 	color: #ccc;
     font-size: 12px;
+    padding: 10px 0;
 }
 
 .reimbList .content {
@@ -145,7 +150,11 @@ body {
     font-size: 16px;
 }
 
-.reimbList .content .status {
+.reimbList .content .statusTodo {
 	color: rgb(253,148,72);
+}
+
+.reimbList .content .statusDone {
+	color: #ccc;
 }
 
