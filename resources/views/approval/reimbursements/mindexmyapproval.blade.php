@@ -18,6 +18,9 @@
 
     </div> --}}
 
+    @include('approval.reimbursements._list')
+
+{{--
     @if ($reimbursements->count())
         @foreach($reimbursements as $reimbursement)
         <div class="list-group">
@@ -28,6 +31,7 @@
         </div>     
         @endforeach
     @endif
+--}}
 
 {{--    @if ($reimbursements->count())    
     <table class="table table-striped table-hover table-condensed">
