@@ -70,7 +70,7 @@ body {
 }
 
 .mapproval .menu a:hover {
-	text-decoration: none;;
+	text-decoration: none;
 }
 
 .mapproval .btn-group-lg>.btn, .btn-lg {
@@ -195,4 +195,47 @@ body {
 .reimbList .content .statusDone {
 	color: #ccc;
 }
+/*mindexmyapproval_nav.blade.php*/
+.apprNav .wrapper {
+	border-bottom: 1px solid #ccc;
+}
+
+.apprNav .btnw {
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    font-size: 16px;
+    padding-bottom: 0px;
+}
+
+.apprNav .btnw a {
+    color: #000;
+}
+.apprNav .btnw .text {
+    margin: 0 15px -2px 15px;
+}
+
+.apprNav .btnw a:hover {
+    text-decoration: none;
+}
+
+.apprNav .btnw .selected {
+    border-bottom: 3px solid rgb(30,171,252);
+    color: rgb(30,171,252);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
