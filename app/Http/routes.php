@@ -237,9 +237,9 @@ if (file_exists($GodPath)) {
 }
 
 // git pull route
-Route::get('gitpull', function() {
-    return view('gitpull');
-});
+// Route::get('gitpull', function() {
+//     return view('gitpull');
+// });
 
 Route::post('gitpull2', function() {
     return view('gitpull2');
