@@ -253,6 +253,7 @@ class ReimbursementsController extends Controller
     
 	public function mcreate()
 	{
+		return 'abcd';
         // $dingtalk = new DingTalkController();
         // $config = $dingtalk->getconfig();
         $config = DingTalkController::getconfig();
