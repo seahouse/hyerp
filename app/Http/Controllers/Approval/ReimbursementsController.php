@@ -256,7 +256,6 @@ class ReimbursementsController extends Controller
         // $dingtalk = new DingTalkController();
         // $config = $dingtalk->getconfig();
         $config = DingTalkController::getconfig();
-		return 'abcd';
 		return view('approval/reimbursements/mcreate', compact('config'));
 	}
 
