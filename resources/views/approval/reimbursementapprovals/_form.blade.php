@@ -2,9 +2,9 @@
 {!! Form::hidden('applicant_id', null, ['class' => 'form-control']) !!}
 
 <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-    {!! Form::button($acceptButtonText, ['class' => 'btn btn-sm', 'data-toggle' => 'modal', 'data-target' => '#acceptModal']) !!}
-    {!! Form::button($rejectButtonText, ['class' => 'btn btn-sm', 'data-toggle' => 'modal', 'data-target' => '#rejectModal']) !!}
+    <div style="padding-top:5px;" class="col-sm-offset-2 col-sm-10">
+    {!! Form::button($acceptButtonText, ['class' => 'btn btn-primary', 'data-toggle' => 'modal', 'data-target' => '#acceptModal']) !!}
+    {!! Form::button($rejectButtonText, ['class' => 'btn btn-primary', 'data-toggle' => 'modal', 'data-target' => '#rejectModal']) !!}
     </div>
 </div>
 
