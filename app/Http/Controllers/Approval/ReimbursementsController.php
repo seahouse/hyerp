@@ -316,7 +316,7 @@ class ReimbursementsController extends Controller
     public function mstore(Request $request)
     {
         $input = $request->all();
-        // dd($input);
+        // dd($request->input('otheramount', '0.0'));
 
         // generation number
         $cPre = $input['numberpre'];

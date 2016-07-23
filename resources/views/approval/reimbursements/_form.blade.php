@@ -249,7 +249,7 @@
 <div class="form-group">
     {!! Form::label('amountAirfares', '飞机票金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::text('amountAirfares', $amountAirfares, ['class' => 'form-control', $attr]) !!}
+    {!! Form::text('amountAirfares', $amountAirfares, ['class' => 'form-control', 'placeholder' => '本次差旅飞机票总额', $attr]) !!}
     </div>
 </div>
 
@@ -263,7 +263,7 @@
 <div class="form-group">
     {!! Form::label('amountTaxi', '出租车金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-sm-10 col-xs-8'>
-    {!! Form::text('amountTaxi', $amountTaxi, ['class' => 'form-control', $attr]) !!}
+    {!! Form::text('amountTaxi', $amountTaxi, ['class' => 'form-control', 'placeholder' => '所有出租车费用', $attr]) !!}
     </div>
 </div>
 
@@ -277,14 +277,14 @@
 <div class="form-group">
     {!! Form::label('stayamount', '住宿费:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-sm-10 col-xs-8'>
-    {!! Form::text('stayamount', $stayamount, ['class' => 'form-control', $attr]) !!}
+    {!! Form::text('stayamount', $stayamount, ['class' => 'form-control', 'placeholder' => '住宿费合计', $attr]) !!}
     </div>
 </div>
 
 <div class="form-group">
     {!! Form::label('otheramount', '其他费用:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-sm-10 col-xs-8'>
-    {!! Form::text('otheramount', $otheramount, ['class' => 'form-control', $attr]) !!}
+    {!! Form::text('otheramount', $otheramount, ['class' => 'form-control', 'placeholder' => '文印费、退票费、订票费等', $attr]) !!}
     </div>
 </div>
 

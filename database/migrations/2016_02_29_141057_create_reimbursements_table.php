@@ -36,7 +36,7 @@ class CreateReimbursementsTable extends Migration
             $table->decimal('amountTaxi', 18, 4)->default(0.0);                 // 出租车金额
             $table->decimal('amountOtherTicket', 18, 4)->default(0.0);          // 其他交通金额
             $table->decimal('stayamount', 18, 4);           // 住宿费
-            $table->decimal('otheramount', 18, 4);          // 其他费用
+            $table->decimal('otheramount', 18, 4)->default(0.0);          // 其他费用
             $table->integer('approvaler1_id')->nullable();  // 审批人1（出纳，初审）
             $table->date('approvaldate1')->nullable();      // 审批日期1
             $table->integer('approvaler2_id')->nullable();  // 审批人2（销售副总，复审）
