@@ -220,14 +220,14 @@
 				var divName = 'divClassTravel_' + String(travelNum);
 				var itemTravel = '<div class="' + divName + '"><p class="bannerTitle">出差时间段明细(' + String(travelNum) + ')&nbsp;<button class="btn btn-sm" id="' + btnId + '" type="button">删除</button></p>\
 					<div class="form-group">\
-						<label for="travel_' + String(travelNum) + '_datego" class="col-xs-6 col-sm-2 control-label">出差去日:</label>\
-						<div class="col-sm-10 col-xs-6">\
+						<label for="travel_' + String(travelNum) + '_datego" class="col-xs-4 col-sm-2 control-label">出差去日:</label>\
+						<div class="col-sm-10 col-xs-8">\
 						<input class="form-control" name="travel_' + String(travelNum) + '_datego" type="date" value="2016-01-01" >\
 						</div>\
 					</div>\
 					<div class="form-group">\
-						<label for="traveldateback_' + String(travelNum) + '" class="col-xs-6 col-sm-2 control-label">出差回日:</label>\
-						<div class="col-sm-10 col-xs-6">\
+						<label for="traveldateback_' + String(travelNum) + '" class="col-xs-4 col-sm-2 control-label">出差回日:</label>\
+						<div class="col-sm-10 col-xs-8">\
 						<input class="form-control" name="travel_' + String(travelNum) + '_dateback" type="date" value="2016-01-01" >\
 						</div>\
 					</div>\

@@ -31,8 +31,8 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('created_at', '审批时间:', ['class' => 'col-xs-6 col-sm-2 control-label']) !!}
-        <div class='col-sm-10 col-xs-6'>
+        {!! Form::label('created_at', '审批时间:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+        <div class='col-sm-10 col-xs-8'>
         {!! Form::date('created_at', $reimbursementapproval->created_at, ['class' => 'form-control', $attr]) !!}
         </div>
     </div>
