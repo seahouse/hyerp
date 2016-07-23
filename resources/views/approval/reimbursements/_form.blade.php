@@ -9,8 +9,8 @@
 
 
 <div class="form-group">
-    {!! Form::label('date', '申请日期:', ['for' => 'date', 'class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
+    {!! Form::label('date', '申请日期:', ['for' => 'date', 'class' => 'col-xs-6 col-sm-2 control-label']) !!}
+    <div class='col-xs-6 col-sm-10'>
     {!! Form::date('date', $date, ['class' => 'form-control', $attr]) !!}
     {{--
     {!! Form::date('date', $date, ['class' => 'form-control', $attr]) !!}
@@ -85,15 +85,15 @@
     @foreach ($reimbursement->reimbursementtravels as $reimbursementtravel)
     <p class="bannerTitle">出差时间段明细({{$reimbursementtravel->seq}})</p>
     <div class="form-group">
-        {!! Form::label('datego', '出差去日:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-        <div class='col-xs-8 col-sm-10'>
+        {!! Form::label('datego', '出差去日:', ['class' => 'col-xs-6 col-sm-2 control-label']) !!}
+        <div class='col-xs-6 col-sm-10'>
         {!! Form::date('datego', $reimbursementtravel->datego, ['class' => 'form-control', $attr]) !!}
         </div>
     </div>
 
     <div class="form-group">
-        {!! Form::label('dateback', '出差回日:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-        <div class='col-xs-8 col-sm-10'>
+        {!! Form::label('dateback', '出差回日:', ['class' => 'col-xs-6 col-sm-2 control-label']) !!}
+        <div class='col-xs-6 col-sm-10'>
         {!! Form::date('dateback', $reimbursementtravel->dateback, ['class' => 'form-control', $attr]) !!}
         </div>
     </div>
@@ -153,15 +153,15 @@
 <p class="bannerTitle">出差时间段明细(1)</p>
 
 <div class="form-group">
-    {!! Form::label('travel_1_datego', '出差去日:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
+    {!! Form::label('travel_1_datego', '出差去日:', ['class' => 'col-xs-6 col-sm-2 control-label']) !!}
+    <div class='col-xs-6 col-sm-10'>
     {!! Form::date('travel_1_datego', $travel_1_datego, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
 <div class="form-group">
-    {!! Form::label('travel_1_dateback', '出差回日:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
+    {!! Form::label('travel_1_dateback', '出差回日:', ['class' => 'col-xs-6 col-sm-2 control-label']) !!}
+    <div class='col-xs-6 col-sm-10'>
     {!! Form::date('travel_1_dateback', $travel_1_dateback, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>

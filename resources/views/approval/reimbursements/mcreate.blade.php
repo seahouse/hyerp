@@ -238,27 +238,27 @@
 						</div>\
 					</div>\
 					<div class="form-group">\
-						<label for="travel_customer_name' + String(travelNum) + '" class="col-xs-6 col-sm-2 control-label">客户:</label>\
-						<div class="col-sm-10 col-xs-6">\
+						<label for="travel_customer_name' + String(travelNum) + '" class="col-xs-4 col-sm-2 control-label">客户:</label>\
+						<div class="col-sm-10 col-xs-8">\
 						<input class="form-control" name="travel_' + String(travelNum) + '_customer_name" type="text" data-toggle="modal" data-target="#selectCustomerModal" data-name="travel_' + String(travelNum) + '_customer_name" data-id="travel_' + String(travelNum) + '_customer_id" type="text" id="travel_' + String(travelNum) + '_customer_name">\
 						<input name="travel_' + String(travelNum) + '_customer_id" id="travel_' + String(travelNum) + '_customer_id" type="hidden" value="0">\
 						</div>\
 					</div>\
 					<div class="form-group">\
-						<label for="travelcontacts_' + String(travelNum) + '" class="col-xs-6 col-sm-2 control-label">客户联系人:</label>\
-						<div class="col-sm-10 col-xs-6">\
+						<label for="travelcontacts_' + String(travelNum) + '" class="col-xs-4 col-sm-2 control-label">客户联系人:</label>\
+						<div class="col-sm-10 col-xs-8">\
 						<input class="form-control" name="travel_' + String(travelNum) + '_contacts" type="text">\
 						</div>\
 					</div>\
 					<div class="form-group">\
-						<label for="travelcontactspost_' + String(travelNum) + '" class="col-xs-6 col-sm-2 control-label">客户联系人职务:</label>\
-						<div class="col-sm-10 col-xs-6">\
+						<label for="travelcontactspost_' + String(travelNum) + '" class="col-xs-4 col-sm-2 control-label">客户联系人职务:</label>\
+						<div class="col-sm-10 col-xs-8">\
 						<input class="form-control" name="travel_' + String(travelNum) + '_contactspost" type="text">\
 						</div>\
 					</div>\
 					<div class="form-group">\
-						<label for="travel_order_number' + String(travelNum) + '" class="col-xs-6 col-sm-2 control-label">对应订单:</label>\
-						<div class="col-sm-10 col-xs-6">\
+						<label for="travel_order_number' + String(travelNum) + '" class="col-xs-4 col-sm-2 control-label">对应订单:</label>\
+						<div class="col-sm-10 col-xs-8">\
 						<input class="form-control" name="travel_' + String(travelNum) + '_order_number" type="text" data-toggle="modal" data-target="#selectOrderModal" data-name="travel_' + String(travelNum) + '_order_number" data-id="travel_' + String(travelNum) + '_order_id" data-customerid="travel_' + String(travelNum) + '_customer_id" type="text" id="travel_' + String(travelNum) + '_order_number">\
 						<input name="travel_' + String(travelNum) + '_order_id" id="travel_' + String(travelNum) + '_order_id" type="hidden" value="0">\
 						</div>\
