@@ -7,7 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'AddDingtalkToUsersTable' => $baseDir . '/database/migrations/2016_03_06_092334_add_dingtalk_to_users_table.php',
-    'AddReimbursementtravelassesTable' => $baseDir . '/database/migrations/2016_05_13_100324_add_reimbursementtravelasses_table.php',
     'AddReimbursementtravelsTable' => $baseDir . '/database/migrations/2016_05_13_092241_add_reimbursementtravels_table.php',
     'ApprovaltypesTableSeeder' => $baseDir . '/database/seeds/ApprovaltypesTableSeeder.php',
     'ApproversettingsTableSeeder' => $baseDir . '/database/seeds/ApproversettingsTableSeeder.php',
