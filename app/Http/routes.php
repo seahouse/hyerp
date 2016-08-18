@@ -186,6 +186,10 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('search/{key}', 'ReimbursementsController@search');
     });
     Route::resource('reimbursements', 'ReimbursementsController');
+    Route::group(['prefix' => 'paymentrequests'], function() {
+        Route::get('mcreate', 'PaymentrequestsController@mcreate');
+    });
+    Route::resource('paymentrequests', 'PaymentrequestsController');
     Route::resource('approversettings', 'ApproversettingsController');
 
     Route::group(['prefix' => 'reimbursementapprovals'], function() {
