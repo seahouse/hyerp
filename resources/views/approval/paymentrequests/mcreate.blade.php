@@ -7,7 +7,10 @@
         @include('approval.paymentrequests._form', 
         	[
         		'submitButtonText' => '提交', 
-        		'date' => date('Y-m-d'),
+        		'supplier_name' => null,
+        		'sohead_name' => null,
+        		'pohead_name' => null,
+        		'datepay' => date('Y-m-d'),
         		'customer_name' => null,
         		'customer_id' => '0', 
         		'amount' => '0.0', 

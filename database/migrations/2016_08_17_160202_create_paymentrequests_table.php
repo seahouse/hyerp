@@ -20,6 +20,7 @@ class CreatePaymentrequestsTable extends Migration
             $table->integer('pohead_id');           // 采购订单ID
             $table->decimal('amount', 18, 2)->default(0.0);             // 付款金额
             $table->string('paymentmethod');                            // 付款方式：现金、支票、转账、汇票
+			$table->date('datepay')->nullable();                        // 支付日期
             $table->string('bank');                                     // 开户行
             $table->string('bankaccountnumber');                        // 银行账号
 
