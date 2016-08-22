@@ -143,6 +143,9 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales'], function() {
 });
 
 Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' => ['web', 'auth']], function() {
+    Route::group(['prefix' => 'vendinfos'], function() {
+        Route::get('getitemsbykey/{key}', 'VendinfosController@getitemsbykey');
+    });
     Route::resource('vendinfos', 'VendinfosController');
     Route::resource('vendtypes', 'VendtypesController');
     Route::get('purchaseorders/{id}/detail', 'PurchaseordersController@detail');

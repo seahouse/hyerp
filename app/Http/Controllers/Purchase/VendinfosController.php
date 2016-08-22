@@ -26,6 +26,20 @@ class VendinfosController extends Controller
     }
 
     /**
+     * Display a listing of the resource by search.
+     *
+     * @return Response
+     */
+    public function getitemsbykey($key)
+    {
+        // $salesorders = Salesorder::latest('created_at')->where('number', 'like', '%' . $key . '%')
+        //     ->orWhere('descrip', 'like', '%'.$key.'%')->paginate(20);
+        $vendinfos = Vendinfo::where('name', 'like', '%' . $key . '%')->paginate(20);
+        // $vendinfos = Vendinfo_hxold::where('name', 'like', '%' . $key . '%')->paginate(20);
+        return $vendinfos;
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return Response

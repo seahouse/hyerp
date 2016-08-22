@@ -73,24 +73,24 @@
     </div>
 </div>
 
-<!-- customer selector -->
-<div class="modal fade" id="selectCustomerModal" tabindex="-1" role="dialog">
+<!-- supplier selector -->
+<div class="modal fade" id="selectSupplierModal" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">选择客户</h4>                
+                <h4 class="modal-title">选择供应商</h4>                
             </div>
             <div class="modal-body">
             	<div class="input-group">
-            		{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '客户名称', 'id' => 'keyCustomer']) !!}
+            		{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '供应商名称', 'id' => 'keySupplier']) !!}
             		<span class="input-group-btn">
-                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchCustomer']) !!}
+                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchSupplier']) !!}
                    	</span>
             	</div>
             	{!! Form::hidden('name', null, ['id' => 'name']) !!}
             	{!! Form::hidden('id', null, ['id' => 'id']) !!}
             	<p>
-            		<div class="list-group" id="listcustomers">
+            		<div class="list-group" id="listsuppliers">
 
             		</div>
             	</p>
@@ -221,7 +221,7 @@
 					<div class="form-group">\
 						<label for="travel_customer_name' + String(travelNum) + '" class="col-xs-4 col-sm-2 control-label">客户:</label>\
 						<div class="col-sm-10 col-xs-8">\
-						<input class="form-control" name="travel_' + String(travelNum) + '_customer_name" type="text" data-toggle="modal" data-target="#selectCustomerModal" data-name="travel_' + String(travelNum) + '_customer_name" data-id="travel_' + String(travelNum) + '_customer_id" type="text" id="travel_' + String(travelNum) + '_customer_name">\
+						<input class="form-control" name="travel_' + String(travelNum) + '_customer_name" type="text" data-toggle="modal" data-target="#selectSupplierModal" data-name="travel_' + String(travelNum) + '_customer_name" data-id="travel_' + String(travelNum) + '_customer_id" type="text" id="travel_' + String(travelNum) + '_customer_name">\
 						<input name="travel_' + String(travelNum) + '_customer_id" id="travel_' + String(travelNum) + '_customer_id" type="hidden" value="0">\
 						</div>\
 					</div>\
@@ -305,24 +305,26 @@
 				});
 			}
 
-			$('#selectCustomerModal').on('show.bs.modal', function (e) {
-				$("#listcustomers").empty();
+			$('#selectSupplierModal').on('show.bs.modal', function (e) {
+				$("#listsuppliers").empty();
 
 				var text = $(e.relatedTarget);
 				// alert(text.data('id'));
 
 				var modal = $(this);
-				// $("#selectCustomerModal#name").val('1111');
-				// alert(modal.find("#name").val());
 				modal.find('#name').val(text.data('name'));
 				modal.find('#id').val(text.data('id'));
 				// alert(modal.find('#id').val());
 			});
 
-			$("#btnSearchCustomer").click(function() {				
+			$("#btnSearchSupplier").click(function() {	
+				if ($("#keySupplier").val() == "") {
+					alert('请输入关键字');
+					return;
+				}
 				$.ajax({
 					type: "GET",
-					url: "{!! url('/sales/custinfos/getitemsbykey/') !!}" + "/" + $("#keyCustomer").val(),
+					url: "{!! url('/purchase/vendinfos/getitemsbykey/') !!}" + "/" + $("#keySupplier").val(),
 					success: function(result) {
 						var strhtml = '';
 						$.each(result.data, function(i, field) {
@@ -331,7 +333,7 @@
 						});
 						if (strhtml == '')
 							strhtml = '无记录。';
-						$("#listcustomers").empty().append(strhtml);
+						$("#listsuppliers").empty().append(strhtml);
 
 						$.each(result.data, function(i, field) {
 							btnId = 'btnSelectCustomer_' + String(i);
@@ -347,11 +349,10 @@
 
 			function addBtnClickEventCustomer(btnId, customerid, name)
 			{
-				// alert($("#selectCustomerModal").find('#id').val());
 				$("#" + btnId).bind("click", function() {
-					$('#selectCustomerModal').modal('toggle');
-					$("#" + $("#selectCustomerModal").find('#name').val()).val(name);
-					$("#" + $("#selectCustomerModal").find('#id').val()).val(customerid);
+					$('#selectSupplierModal').modal('toggle');
+					$("#" + $("#selectSupplierModal").find('#name').val()).val(name);
+					$("#" + $("#selectSupplierModal").find('#id').val()).val(customerid);
 				});
 			}
 
