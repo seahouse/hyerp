@@ -41,18 +41,19 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">选择订单</h4>                
+                <h4 class="modal-title">选择采购订单</h4>                
             </div>
             <div class="modal-body">
             	<div class="input-group">
-            		{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '订单编号或者工程名称', 'id' => 'keyOrder']) !!}
+            		{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '对应订单编号或者工程名称', 'id' => 'keyOrder']) !!}
             		<span class="input-group-btn">
                    		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchOrder']) !!}
                    	</span>
             	</div>
             	{!! Form::hidden('name', null, ['id' => 'name']) !!}
             	{!! Form::hidden('id', null, ['id' => 'id']) !!}
-            	{!! Form::hidden('customerid', 0, ['id' => 'customerid']) !!}
+            	{!! Form::hidden('supplierid', 0, ['id' => 'supplierid']) !!}
+            	{!! Form::hidden('poheadamount', 0, ['id' => 'poheadamount']) !!}
             	<p>
             		<div class="list-group" id="listsalesorders">
 
@@ -265,13 +266,18 @@
 
 				modal.find('#name').val(text.data('name'));
 				modal.find('#id').val(text.data('id'));
-				modal.find('#customerid').val(text.data('customerid'));
+				modal.find('#supplierid').val(text.data('supplierid'));
+				modal.find('#poheadamount').val(text.data('poheadamount'));
 			});
 
 			$("#btnSearchOrder").click(function() {
+				if ($("#keyOrder").val() == "") {
+					alert('请输入关键字');
+					return;
+				}
 				$.ajax({
 					type: "GET",
-					url: "{!! url('/sales/salesorders/getitemsbykey/') !!}" + "/" + $("#keyOrder").val() + "/" + $("#" + $("#selectOrderModal").find('#customerid').val()).val(),
+					url: "{!! url('/purchase/purchaseorders/getitemsbyorderkey/') !!}" + "/" + $("#keyOrder").val() + "/" + $("#" + $("#selectOrderModal").find('#supplierid').val()).val(),
 					success: function(result) {
 						var strhtml = '';
 						$.each(result.data, function(i, field) {
@@ -284,7 +290,7 @@
 
 						$.each(result.data, function(i, field) {
 							btnId = 'btnSelectOrder_' + String(i);
-							addBtnClickEvent(btnId, field.id, field.number);
+							addBtnClickEvent(btnId, field.id, field.number, field.amount);
 						});
 						// addBtnClickEvent('btnSelectOrder_0');
 					},
@@ -294,14 +300,16 @@
 				});
 			});
 
-			function addBtnClickEvent(btnId, salesorderid, number)
+			function addBtnClickEvent(btnId, salesorderid, number, amount)
 			{
+				alert(amount);
 				$("#" + btnId).bind("click", function() {
 					$('#selectOrderModal').modal('toggle');
 					// $("#order_number").val(number);
 					// $("#order_id").val(salesorderid);
 					$("#" + $("#selectOrderModal").find('#name').val()).val(number);
 					$("#" + $("#selectOrderModal").find('#id').val()).val(salesorderid);
+					$("#" + $("#selectOrderModal").find('#poheadamount').val()).val(amount);
 				});
 			}
 
@@ -337,7 +345,7 @@
 
 						$.each(result.data, function(i, field) {
 							btnId = 'btnSelectCustomer_' + String(i);
-							addBtnClickEventCustomer(btnId, field.id, field.name);
+							addBtnClickEventSupplier(btnId, field.id, field.name);
 						});
 						// addBtnClickEvent('btnSelectOrder_0');
 					},
@@ -347,12 +355,12 @@
 				});
 			});
 
-			function addBtnClickEventCustomer(btnId, customerid, name)
+			function addBtnClickEventSupplier(btnId, supplierid, name)
 			{
 				$("#" + btnId).bind("click", function() {
 					$('#selectSupplierModal').modal('toggle');
 					$("#" + $("#selectSupplierModal").find('#name').val()).val(name);
-					$("#" + $("#selectSupplierModal").find('#id').val()).val(customerid);
+					$("#" + $("#selectSupplierModal").find('#id').val()).val(supplierid);
 				});
 			}
 

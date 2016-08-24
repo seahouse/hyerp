@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Models\Purchase\Purchaseorder;
+use App\Models\Purchase\Purchaseorder_hxold;
 use App\Http\Requests\Purchase\PurchaseorderRequest;
 use Request;
 use App\Models\Purchase\Poitem;
@@ -26,6 +27,23 @@ class PurchaseordersController extends Controller
         //
         $purchaseorders = Purchaseorder::latest('created_at')->paginate(10);
         return view('purchase.purchaseorders.index', compact('purchaseorders'));
+    }
+
+    /**
+     * Display a listing of the resource by searching order key.
+     *
+     * @return Response
+     */
+    public function getitemsbyorderkey($key, $supplierid=0)
+    {
+        //
+        $purchaseorders = Purchaseorder_hxold::where('vendinfo_id', $supplierid)
+            ->where(function ($query) use ($key) {
+                $query->where('number', 'like', '%'.$key.'%')
+                    ->orWhere('descrip', 'like', '%'.$key.'%');
+            })
+            ->paginate(20);        
+        return $purchaseorders;
     }
 
     /**

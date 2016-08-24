@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Models\Purchase\Vendinfo;
+use App\Models\Purchase\Vendinfo_hxold;
 use App\Http\Requests\Purchase\VendinfoRequest;
 use Request;
 
@@ -34,8 +35,8 @@ class VendinfosController extends Controller
     {
         // $salesorders = Salesorder::latest('created_at')->where('number', 'like', '%' . $key . '%')
         //     ->orWhere('descrip', 'like', '%'.$key.'%')->paginate(20);
-        $vendinfos = Vendinfo::where('name', 'like', '%' . $key . '%')->paginate(20);
-        // $vendinfos = Vendinfo_hxold::where('name', 'like', '%' . $key . '%')->paginate(20);
+        // $vendinfos = Vendinfo::where('name', 'like', '%' . $key . '%')->paginate(20);
+        $vendinfos = Vendinfo_hxold::where('name', 'like', '%' . $key . '%')->paginate(20);
         return $vendinfos;
     }
 

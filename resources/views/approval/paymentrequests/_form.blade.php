@@ -10,8 +10,8 @@
 <div class="form-group">
     {!! Form::label('supplier_name', '支付对象:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::text('supplier_name', $supplier_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectSupplierModal']) !!}
-    {!! Form::hidden('customer_id', 0, ['class' => 'btn btn-sm', 'id' => 'customer_id']) !!}
+    {!! Form::text('supplier_name', $supplier_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectSupplierModal', 'data-name' => 'supplier_name', 'data-id' => 'supplier_id']) !!}
+    {!! Form::hidden('supplier_id', 0, ['class' => 'btn btn-sm', 'id' => 'supplier_id']) !!}
     @if (isset($reimbursement->customer_hxold->name)) 
         {!! Form::hidden('customer_name2', $reimbursement->customer_hxold->name, ['class' => 'btn btn-sm', 'id' => 'customer_name2']) !!}
     @else
@@ -21,10 +21,10 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('sohead_name', '对应订单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('sohead_number', '采购合同:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::text('sohead_name', $sohead_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectCustomerModal']) !!}
-    {!! Form::hidden('customer_id', 0, ['class' => 'btn btn-sm', 'id' => 'customer_id']) !!}
+    {!! Form::text('sohead_number', $sohead_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal', 'data-name' => 'sohead_number', 'data-id' => 'sohead_id', 'data-supplierid' => 'supplier_id', 'data-poheadamount' => 'pohead_amount']) !!}
+    {!! Form::hidden('sohead_id', 0, ['class' => 'btn btn-sm', 'id' => 'sohead_id']) !!}
     @if (isset($reimbursement->customer_hxold->name)) 
         {!! Form::hidden('customer_name2', $reimbursement->customer_hxold->name, ['class' => 'btn btn-sm', 'id' => 'customer_name2']) !!}
     @else
@@ -33,6 +33,7 @@
     </div>
 </div>
 
+{{--
 <div class="form-group">
     {!! Form::label('pohead_name', '采购合同:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
@@ -45,9 +46,10 @@
     @endif
     </div>
 </div>
+--}}
 
 <div class="form-group">
-    {!! Form::label('pohead_amount', '合同金额（万元）:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('pohead_amount', '合同金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
     {!! Form::text('pohead_amount', null, ['class' => 'form-control', 'readonly', $attr]) !!}
     </div>
@@ -115,7 +117,6 @@
     {!! Form::text('bankaccountnumber', null, ['class' => 'form-control', 'placeholder' => '请输入银行账号（必填）', $attr]) !!}
     </div>
 </div>
-
 
 
 

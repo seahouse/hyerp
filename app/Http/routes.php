@@ -156,6 +156,9 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         Route::post('store', 'PaymentsController@store');
         Route::delete('destroy/{payment}', 'PaymentsController@destroy');
     });
+    Route::group(['prefix' => 'purchaseorders'], function() {
+        Route::get('getitemsbyorderkey/{key}/{supplierid?}', 'PurchaseordersController@getitemsbyorderkey');
+    });
     Route::resource('purchaseorders', 'PurchaseordersController');
     Route::get('poitems/{headId}/create', 'PoitemsController@createByPoheadId');
     Route::resource('poitems', 'PoitemsController');
