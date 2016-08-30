@@ -10,4 +10,11 @@ class Purchaseorder_hxold extends Model
     protected $table = 'vpurchaseorder';
 	protected $connection = 'sqlsrv';
 
+	/**
+     * Get the phone record associated with the user.
+     */
+    public function payments()
+    {
+        return $this->hasMany('App\Models\Purchase\Payment_hxold', 'pohead_id', 'id');
+    }
 }

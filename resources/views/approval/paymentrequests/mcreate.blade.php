@@ -146,20 +146,6 @@
 		jQuery(document).ready(function(e) {
 			var travelNum = 1;
 
-			$("#reimbursementtype_id").change(function() {
-				if ($(this).children('option:selected').text() == "差旅费") {
-					$("#lbldatego").show();
-					$("#lbldateback").show();
-					$("#datego").show();
-					$("#dateback").show();
-				}
-				else {
-					$("#lbldatego").hide();
-					$("#lbldateback").hide();
-					$("#datego").hide();
-					$("#dateback").hide();
-				}
-			});
 
 
 			$("#btnSubmit").click(function() {
@@ -290,7 +276,7 @@
 
 						$.each(result.data, function(i, field) {
 							btnId = 'btnSelectOrder_' + String(i);
-							addBtnClickEvent(btnId, field.id, field.number, field.amount);
+							addBtnClickEvent(btnId, field.id, field.number, field.amount, field.amount_paid, field);
 						});
 						// addBtnClickEvent('btnSelectOrder_0');
 					},
@@ -300,9 +286,8 @@
 				});
 			});
 
-			function addBtnClickEvent(btnId, salesorderid, number, amount)
+			function addBtnClickEvent(btnId, salesorderid, number, amount, amount_paid, field)
 			{
-				alert(amount);
 				$("#" + btnId).bind("click", function() {
 					$('#selectOrderModal').modal('toggle');
 					// $("#order_number").val(number);
@@ -310,6 +295,8 @@
 					$("#" + $("#selectOrderModal").find('#name').val()).val(number);
 					$("#" + $("#selectOrderModal").find('#id').val()).val(salesorderid);
 					$("#" + $("#selectOrderModal").find('#poheadamount').val()).val(amount);
+					$("#pohead_amount_paid").val(amount_paid);
+					$("#pohead_amount_ticketed").val(field.amount_ticketed);
 				});
 			}
 
