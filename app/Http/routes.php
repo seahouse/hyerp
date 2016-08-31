@@ -194,6 +194,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::resource('reimbursements', 'ReimbursementsController');
     Route::group(['prefix' => 'paymentrequests'], function() {
         Route::get('mcreate', 'PaymentrequestsController@mcreate');
+        Route::post('mstore', 'PaymentrequestsController@mstore');
     });
     Route::resource('paymentrequests', 'PaymentrequestsController');
     Route::resource('approversettings', 'ApproversettingsController');
@@ -203,6 +204,8 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::post('mstore', 'ReimbursementapprovalsController@mstore');
     });
     Route::resource('reimbursementapprovals', 'ReimbursementapprovalsController');
+    Route::get('mindexmy', 'ApprovalController@mindexmy');      // 我发起的
+    Route::resource('/', 'ApprovalController');
 });
 
 Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['web', 'auth']], function() {

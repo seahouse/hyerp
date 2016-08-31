@@ -21,10 +21,10 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('sohead_number', '采购合同:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('pohead_number', '采购合同:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::text('sohead_number', $sohead_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal', 'data-name' => 'sohead_number', 'data-id' => 'sohead_id', 'data-supplierid' => 'supplier_id', 'data-poheadamount' => 'pohead_amount']) !!}
-    {!! Form::hidden('sohead_id', 0, ['class' => 'btn btn-sm', 'id' => 'sohead_id']) !!}
+    {!! Form::text('pohead_number', $sohead_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal', 'data-name' => 'pohead_number', 'data-id' => 'pohead_id', 'data-supplierid' => 'supplier_id', 'data-poheadamount' => 'pohead_amount']) !!}
+    {!! Form::hidden('pohead_id', 0, ['class' => 'btn btn-sm', 'id' => 'pohead_id']) !!}
     @if (isset($reimbursement->customer_hxold->name)) 
         {!! Form::hidden('customer_name2', $reimbursement->customer_hxold->name, ['class' => 'btn btn-sm', 'id' => 'customer_name2']) !!}
     @else
@@ -84,7 +84,7 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('amount', '付款总额（万元）:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('amount', '付款总额万元:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
     {!! Form::text('amount', null, ['class' => 'form-control', 'placeholder' => '请输入付款总额（人民币）（必填）', $attr]) !!}
     </div>

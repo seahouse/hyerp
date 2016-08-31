@@ -23,6 +23,8 @@ class CreatePaymentrequestsTable extends Migration
 			$table->date('datepay')->nullable();                        // 支付日期
             $table->string('bank');                                     // 开户行
             $table->string('bankaccountnumber');                        // 银行账号
+			$table->integer('applicant_id');							// 申请人
+			$table->integer('status')->default(1);						// 状态：1-初始，0-结束
 
             $table->timestamps();
         });

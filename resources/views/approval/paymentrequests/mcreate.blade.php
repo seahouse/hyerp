@@ -148,10 +148,10 @@
 
 
 
-			$("#btnSubmit").click(function() {
-				$('#submitModal').modal('toggle');
-				return false;
-			});
+			// $("#btnSubmit").click(function() {
+			// 	$('#submitModal').modal('toggle');
+			// 	return false;
+			// });
 
 			$('#submitModal').on('shown.bs.modal', function (e) {
 				$("#btnSubmitContinue").attr('disabled',true);
