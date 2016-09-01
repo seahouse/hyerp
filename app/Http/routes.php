@@ -195,6 +195,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::group(['prefix' => 'paymentrequests'], function() {
         Route::get('mcreate', 'PaymentrequestsController@mcreate');
         Route::post('mstore', 'PaymentrequestsController@mstore');
+        Route::get('mshow/{id}', 'PaymentrequestsController@mshow');
     });
     Route::resource('paymentrequests', 'PaymentrequestsController');
     Route::resource('approversettings', 'ApproversettingsController');
@@ -205,6 +206,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     });
     Route::resource('reimbursementapprovals', 'ReimbursementapprovalsController');
     Route::get('mindexmy', 'ApprovalController@mindexmy');      // 我发起的
+    Route::get('mindexmyapproval', 'ApprovalController@mindexmyapproval');      // 待我审批的
     Route::resource('/', 'ApprovalController');
 });
 

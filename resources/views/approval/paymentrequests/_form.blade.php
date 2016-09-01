@@ -7,15 +7,14 @@
     </div>
 </div>
 
+@if (isset($paymentrequest))
 <div class="form-group">
     {!! Form::label('supplier_name', '支付对象:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::text('supplier_name', $supplier_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectSupplierModal', 'data-name' => 'supplier_name', 'data-id' => 'supplier_id']) !!}
-    {!! Form::hidden('supplier_id', 0, ['class' => 'btn btn-sm', 'id' => 'supplier_id']) !!}
-    @if (isset($reimbursement->customer_hxold->name)) 
-        {!! Form::hidden('customer_name2', $reimbursement->customer_hxold->name, ['class' => 'btn btn-sm', 'id' => 'customer_name2']) !!}
+    @if (isset($paymentrequest->supplier_hxold->name))
+        {!! Form::text('supplier_name', $paymentrequest->supplier_hxold->name, ['class' => 'form-control', $attr]) !!}
     @else
-        {!! Form::hidden('customer_name2', null, ['class' => 'btn btn-sm', 'id' => 'customer_name2']) !!}
+        {!! Form::text('supplier_name', null, ['class' => 'form-control', $attr]) !!}
     @endif
     </div>
 </div>
@@ -23,7 +22,74 @@
 <div class="form-group">
     {!! Form::label('pohead_number', '采购合同:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::text('pohead_number', $sohead_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal', 'data-name' => 'pohead_number', 'data-id' => 'pohead_id', 'data-supplierid' => 'supplier_id', 'data-poheadamount' => 'pohead_amount']) !!}
+    @if (isset($paymentrequest->purchaseorder_hxold->number)) 
+         {!! Form::text('pohead_number', $paymentrequest->purchaseorder_hxold->number, ['class' => 'form-control', $attr]) !!}
+    @else
+        {!! Form::text('pohead_number', null, ['class' => 'form-control', $attr]) !!}
+    @endif
+    </div>
+</div>
+
+
+<div class="form-group">
+    {!! Form::label('pohead_amount', '合同金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+    @if (isset($paymentrequest->purchaseorder_hxold->amount)) 
+         {!! Form::text('pohead_amount', $paymentrequest->purchaseorder_hxold->amount, ['class' => 'form-control', $attr]) !!}
+    @else
+        {!! Form::text('pohead_amount', null, ['class' => 'form-control', $attr]) !!}
+    @endif
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('pohead_amount_paid', '已付金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+    @if (isset($paymentrequest->purchaseorder_hxold->amount_paid)) 
+         {!! Form::text('pohead_amount', $paymentrequest->purchaseorder_hxold->amount_paid, ['class' => 'form-control', $attr]) !!}
+    @else
+        {!! Form::text('pohead_amount', null, ['class' => 'form-control', $attr]) !!}
+    @endif
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('pohead_amount_ticketed', '已开票金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+    @if (isset($paymentrequest->purchaseorder_hxold->amount_ticketed)) 
+         {!! Form::text('pohead_amount', $paymentrequest->purchaseorder_hxold->amount_ticketed, ['class' => 'form-control', $attr]) !!}
+    @else
+        {!! Form::text('pohead_amount', null, ['class' => 'form-control', $attr]) !!}
+    @endif
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('pohead_arrived', '到货情况:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+    {!! Form::text('pohead_arrived', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('sohead_process', '目前工程项目进度:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+    {!! Form::text('sohead_process', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+    </div>
+</div>
+@else
+<div class="form-group">
+    {!! Form::label('supplier_name', '支付对象:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+    {!! Form::text('supplier_name', $supplier_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectSupplierModal', 'data-name' => 'supplier_name', 'data-id' => 'supplier_id']) !!}
+    {!! Form::hidden('supplier_id', 0, ['class' => 'btn btn-sm', 'id' => 'supplier_id']) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('pohead_number', '采购合同:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+    {!! Form::text('pohead_number', $pohead_number, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal', 'data-name' => 'pohead_number', 'data-id' => 'pohead_id', 'data-supplierid' => 'supplier_id', 'data-poheadamount' => 'pohead_amount']) !!}
     {!! Form::hidden('pohead_id', 0, ['class' => 'btn btn-sm', 'id' => 'pohead_id']) !!}
     @if (isset($reimbursement->customer_hxold->name)) 
         {!! Form::hidden('customer_name2', $reimbursement->customer_hxold->name, ['class' => 'btn btn-sm', 'id' => 'customer_name2']) !!}
@@ -82,6 +148,7 @@
     {!! Form::text('sohead_process', null, ['class' => 'form-control', 'readonly', $attr]) !!}
     </div>
 </div>
+@endif
 
 <div class="form-group">
     {!! Form::label('amount', '付款总额万元:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}

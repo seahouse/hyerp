@@ -68,6 +68,19 @@ class ApprovalController extends Controller
     }
 
     /**
+     * 待我审批的.
+     * 
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function mindexmyapproval()
+    {
+        $reimbursements = ReimbursementsController::myapproval();
+
+        return view('approval.mindexmyapproval', compact('reimbursements'));
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

@@ -8,7 +8,7 @@
         	[
         		'submitButtonText' => '提交', 
         		'supplier_name' => null,
-        		'sohead_name' => null,
+        		'pohead_number' => null,
         		'pohead_name' => null,
         		'datepay' => date('Y-m-d'),
         		'customer_name' => null,

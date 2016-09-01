@@ -210,6 +210,19 @@ class PaymentrequestsController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function mshow($id)
+    {
+        //
+        $paymentrequest = Paymentrequest::findOrFail($id);
+        return view('approval.paymentrequests.mshow', compact('paymentrequest'));
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
