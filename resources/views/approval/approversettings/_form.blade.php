@@ -6,9 +6,16 @@
 </div>
 
 <div class="form-group">
+    {!! Form::label('', '', ['class' => 'col-sm-2 control-label']) !!}
+    <div class='col-sm-10'>
+    {!! Form::label('', '注意：审批人和部门/职位二填一，如果都填写，则按审批人填写优先', ['class' => 'control-label']) !!}
+    </div>
+</div>
+
+<div class="form-group">
     {!! Form::label('approver_id', '审批人:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::select('approver_id', $userList, null, ['class' => 'form-control']) !!}
+    {!! Form::select('approver_id', $userList, null, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
     </div>
 </div>
 

@@ -7,11 +7,17 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DingTalkController;
+use App\Http\Controllers\HelperController;
 use App\Models\Approval\Paymentrequest;
-use Auth;
+use App\Models\Approval\Approvaltype;
+use App\Models\Approval\Approversetting;
+use Auth, DB;
 
 class PaymentrequestsController extends Controller
 {
+    private static $approvaltype_name = "付款";
+    
+
     /**
      * Display a listing of the resource.
      *
@@ -20,6 +26,69 @@ class PaymentrequestsController extends Controller
     public function index()
     {
         //
+    }
+
+    public static function typeid()
+    {
+        $approvaltype = Approvaltype::where('name', self::$approvaltype_name)->first();
+        if ($approvaltype)
+        {
+            return $approvaltype->id;
+        }
+        return 0;
+    }
+
+    /**
+     * 待我审批的报销单
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public static function myapproval()
+    {
+        $approvaltype_id = self::typeid();
+
+        // 登录人在审批流程中的位置
+        $userid = Auth::user()->id;
+        $approversettings = Approversetting::where('approvaltype_id', $approvaltype_id)->orderBy('level')->get();
+        $approversetting_id_my = 0;
+        $approversetting_level = 0;
+        foreach ($approversettings as $approversetting) {
+            // 如果已设置了审批人，则使用审批人，否则使用部门/职位
+            if ($approversetting->approver_id > 0)
+            {
+                if ($approversetting->approver_id == $userid)
+                {
+                    $approversetting_id_my = $approversetting->id;
+                    $approversetting_level = $approversetting->level;
+                    break;
+                }
+            }
+            else
+            {
+                if ($approversetting->dept_id > 0 && strlen($approversetting->position) > 0)    // 设置了部门与职位才进行查找
+                {
+                    $user = User::where('dept_id', $approversetting->dept_id)->where('position', $approversetting->position)->first();
+                    if ($user->id == $userid)
+                    {
+                        $approversetting_id_my = $approversetting->id;
+                        $approversetting_level = $approversetting->level;
+                        break;
+                    }            
+                }
+            }            
+
+        }
+        
+        // 如果当前操作人员在审批流程中
+        // 先随意查询一个结果给$paymentrequests赋值
+        $paymentrequests = Paymentrequest::where('id', -1)->paginate(10);
+        if ($approversetting_id_my > 0)
+        {           
+            $paymentrequests = Paymentrequest::latest('created_at')->where('approversetting_id', $approversetting_id_my)->get();
+            // $paymentrequests = DB::table('paymentrequests')->where('approversetting_id', $approversetting_id_my)->latest('created_at')->get();
+        }
+
+        return $paymentrequests;
     }
 
     /**
@@ -65,39 +134,30 @@ class PaymentrequestsController extends Controller
     {
         //
         $input = $request->all();
+        $input = HelperController::skipEmptyValue($input);
         // dd($input);
         // dd($request->input('amount', '0.0'));
 
-        if ($input['amount'] == '')
-            $input['amount'] = '0.0';
-
         $input['applicant_id'] = Auth::user()->id;
 
-        // // generation number
-        // $cPre = $input['numberpre'];
-        // $lastReimbursement = Reimbursement::where('number', 'like', $cPre.date('Ymd').'%')->orderBy('id', 'desc')->first();
-        // if ($lastReimbursement)
-        // {
-        //     $lastNumber = $lastReimbursement->number;
-        //     $suffix = (string)((int)substr($lastNumber, -2) + 1);
-        //     $suffix = str_pad($suffix, 2, '0', STR_PAD_LEFT);
-        //     // dd($suffix);
-        //     $number = substr($lastNumber, 0, strlen($lastNumber) - 2) . $suffix;
-        // }
-        // else
-        //     $number = $cPre . date('Ymd') . '01';
-        // $input['number'] = $number;        
 
         
 
-        // // set approversetting_id 
-        // $approversettingFirst = Approversetting::where('approvaltype_id', $this::$approvaltype_id)->orderBy('level')->first();
-        // if ($approversettingFirst)
-        //     $input['approversetting_id'] = $approversettingFirst->id;
-        // else
-        //     $input['approversetting_id'] = -1;
+        // set approversetting_id 
+        $approvaltype_id = self::typeid();
+        if ($approvaltype_id > 0)
+        {
+            $approversettingFirst = Approversetting::where('approvaltype_id', $approvaltype_id)->orderBy('level')->first();
+            if ($approversettingFirst)
+                $input['approversetting_id'] = $approversettingFirst->id;
+            else
+                $input['approversetting_id'] = -1;
+        }
+        else
+            $input['approversetting_id'] = -1;
 
-        $reimbursement = Paymentrequest::create($input);
+
+        $paymentrequest = Paymentrequest::create($input);
 
         // // create reimbursement travels
         // if ($reimbursement)

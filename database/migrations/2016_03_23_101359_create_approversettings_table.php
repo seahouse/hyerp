@@ -16,7 +16,7 @@ class CreateApproversettingsTable extends Migration
             $table->increments('id');
 
             $table->integer('approvaltype_id');
-            $table->integer('approver_id');
+            $table->integer('approver_id')->default(0);
             $table->integer('dept_id')->nullable();
             $table->string('position')->nullable();
             $table->integer('level');                   // 审批层级，从1开始

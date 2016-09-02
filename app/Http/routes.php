@@ -208,6 +208,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::get('mindexmy', 'ApprovalController@mindexmy');      // 我发起的
     Route::get('mindexmyapproval', 'ApprovalController@mindexmyapproval');      // 待我审批的
     Route::resource('/', 'ApprovalController');
+    Route::resource('approvaltypes', 'ApprovaltypesController');
 });
 
 Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['web', 'auth']], function() {

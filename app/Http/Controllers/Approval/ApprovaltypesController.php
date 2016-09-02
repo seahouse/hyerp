@@ -6,11 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Models\Approval\Approversetting;
-use App\Http\Requests\Approval\ApproversettingRequest;
-use App\Http\Controllers\HelperController;
+use App\Models\Approval\Approvaltype;
 
-class ApproversettingsController extends Controller
+class ApprovaltypesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,9 +17,9 @@ class ApproversettingsController extends Controller
      */
     public function index()
     {
-        $approversettings = Approversetting::latest('created_at')->orderBy('approvaltype_id')->orderBy('level')->paginate(10);
-        // return view('approval.approversettings.index', compact('approversettings'));
-        return view('approval.approversettings.index', ['approversettings' => $approversettings]);
+        //
+        $approvaltypes = Approvaltype::latest('created_at')->paginate(10);
+        return view('approval.approvaltypes.index', ['approvaltypes' => $approvaltypes]);
     }
 
     /**
@@ -32,7 +30,7 @@ class ApproversettingsController extends Controller
     public function create()
     {
         //
-        return view('approval.approversettings.create');
+		return view('approval.approvaltypes.create');
     }
 
     /**
@@ -41,14 +39,13 @@ class ApproversettingsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(ApproversettingRequest $request)
+    public function store(Request $request)
     {
         //
         $input = $request->all();
-		$input = HelperController::skipEmptyValue($input);
 		
-        $approversetting = Approversetting::create($input);        
-        return redirect('/approval/approversettings');
+        $approvaltype = Approvaltype::create($input);        
+        return redirect('/approval/approvaltypes');
     }
 
     /**
@@ -71,8 +68,8 @@ class ApproversettingsController extends Controller
     public function edit($id)
     {
         //
-        $approversetting = Approversetting::findOrFail($id);
-        return view('approval.approversettings.edit', compact('approversetting'));
+        $approvaltype = Approvaltype::findOrFail($id);
+        return view('approval.approvaltypes.edit', compact('approvaltype'));
     }
 
     /**
@@ -82,14 +79,13 @@ class ApproversettingsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(ApproversettingRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        //        
-        $approversetting = Approversetting::findOrFail($id);
-        $approversetting->update($request->all());
-
+        //
+        $approvaltype = Approvaltype::findOrFail($id);
+        $approvaltype->update($request->all());
         
-        return redirect('approval/approversettings');
+        return redirect('approval/approvaltypes');
     }
 
     /**
@@ -100,8 +96,8 @@ class ApproversettingsController extends Controller
      */
     public function destroy($id)
     {
-        //       
-        Approversetting::destroy($id);
-        return redirect('approval/approversettings');
+        //
+        Approvaltype::destroy($id);
+        return redirect('approval/approvaltypes');
     }
 }

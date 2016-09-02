@@ -5,10 +5,10 @@
 @section('main')
     <div class="panel-heading">
         <div class="panel-title">审批 -- 设置
-{{--            <div class="pull-right">
-                <a href="{{ URL::to('product/itemclasses') }}" target="_blank" class="btn btn-sm btn-success">{{'物料类型管理'}}</a>
-                <a href="{{ URL::to('product/characteristics') }}" target="_blank" class="btn btn-sm btn-success">{{'物料属性管理'}}</a>
-            </div> --}}
+            <div class="pull-right">
+                <a href="{{ URL::to('approval/approvaltypes') }}" target="_blank" class="btn btn-sm btn-success">{{'类型管理'}}</a>
+{{--                <a href="{{ URL::to('product/characteristics') }}" target="_blank" class="btn btn-sm btn-success">{{'物料属性管理'}}</a> --}}
+            </div> 
         </div>
     </div>
     
@@ -31,7 +31,7 @@
         <thead>
             <tr>
                 <th>类型</th>
-{{--                <th>审批人</th> --}}
+                <th>审批人</th>
                 <th>部门</th>
                 <th>职位</th>
                 <th>层级</th>
@@ -45,11 +45,11 @@
                     <td>
                         {{ $approversetting->approvaltype->name }}
                     </td>
-{{--                    <td>
-                        {{ $approversetting->approver->name }}
-                    </td> --}}
                     <td>
-                        {{ isset($approversetting->dept->name) ? $approversetting->dept->name : '部门' }}
+						{{ isset($approversetting->approver->name) ? $approversetting->approver->name : '-' }}
+                    </td>
+                    <td>
+                        {{ isset($approversetting->dept->name) ? $approversetting->dept->name : '-' }}
 {{--
                         @if (isset($approversetting->dept->name)) {{ $approversetting->dept->name }} @else 部门 @endif
 

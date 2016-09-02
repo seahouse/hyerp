@@ -76,6 +76,9 @@ class ApprovalController extends Controller
     public function mindexmyapproval()
     {
         $reimbursements = ReimbursementsController::myapproval();
+        $paymentrequests = PaymentrequestsController::myapproval()->toArray();
+
+        dd($reimbursements->toJson());
 
         return view('approval.mindexmyapproval', compact('reimbursements'));
     }

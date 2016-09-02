@@ -7,4 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Approvaltype extends Model
 {
     //
+	protected $fillable = [
+        'name',
+        'description',
+    ];
 }

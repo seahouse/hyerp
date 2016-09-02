@@ -17,6 +17,8 @@ class Paymentrequest extends Model
         'bank',
         'bankaccountnumber',
         'applicant_id',
+		'status',
+		'approversetting_id',
     ];
 
     public function supplier_hxold() {
