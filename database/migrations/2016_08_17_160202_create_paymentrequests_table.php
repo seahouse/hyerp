@@ -15,11 +15,14 @@ class CreatePaymentrequestsTable extends Migration
         Schema::create('paymentrequests', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('descrip')->default('');              		// 付款事由
+            $table->string('suppliertype')->default('');                // 供应商类型：安装公司、机务设备类、电气设备类、安装材料类、代理或服务类、厂部常用类、其他
+            $table->string('paymenttype')->default('');                 // 付款类型：预付款、进度款、到货款、安装结束款、调试运行款、环保验收款、质保金
             $table->integer('supplier_id');         	// 供应商
             $table->integer('pohead_id');           	// 采购订单ID
+            $table->string('equipmentname')->default('');               // 设备名称
+            $table->string('descrip')->default('');                     // 付款说明
             $table->decimal('amount', 18, 2)->default(0.0);             // 付款金额
-            $table->string('paymentmethod')->nullable();                // 付款方式：现金、支票、转账、汇票
+            $table->string('paymentmethod')->nullable();                // 付款方式：支票、贷记、电汇、汇票、现金、银行卡、其他
 			$table->date('datepay')->nullable();                        // 支付日期
             $table->string('bank')->nullable();							// 开户行
             $table->string('bankaccountnumber')->nullable();            // 银行账号

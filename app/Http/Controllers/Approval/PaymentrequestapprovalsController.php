@@ -6,14 +6,12 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\DingTalkController;
-use App\Models\Approval\Reimbursement;
+use App\Models\Approval\Paymentrequest;
 use App\Models\Approval\Approversetting;
-use App\Models\Approval\Reimbursementapprovals;
-use App\Http\Controllers\Approval\ReimbursementsController;
+use App\Models\Approval\Paymentrequestapproval;
 use Auth;
 
-class ReimbursementapprovalsController extends Controller
+class PaymentrequestapprovalsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -40,13 +38,13 @@ class ReimbursementapprovalsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function mcreate($reimbursementid)
+    public function mcreate($paymentrequestid)
     {
         //
-        $reimbursement = Reimbursement::findOrFail($reimbursementid);
+        $paymentrequest = Paymentrequest::findOrFail($paymentrequestid);
         // $config = DingTalkController::getconfig();
         // return view('approval/reimbursementapprovals/mcreate', compact('reimbursement', 'config'));
-        return view('approval/reimbursementapprovals/mcreate', compact('reimbursement'));
+        return view('approval/paymentrequestapprovals/mcreate', compact('paymentrequest'));
     }
 
     /**
@@ -72,52 +70,52 @@ class ReimbursementapprovalsController extends Controller
         $userid = Auth::user()->id;
         // $myleveltable = Approversetting::where('approvaltype_id', ReimbursementsController::$approvaltype_id)
         //     ->where('approver_id', $userid)->first();
-        $reimbursement = Reimbursement::findOrFail($input['reimbursement_id']);
-        $approversetting = Approversetting::findOrFail($reimbursement->approversetting_id);
+        $paymentrequest = Paymentrequest::findOrFail($input['paymentrequest_id']);
+        $approversetting = Approversetting::findOrFail($paymentrequest->approversetting_id);
         // if ($myleveltable)
         {
             // $input['level'] = $myleveltable->level;
             $input['level'] = $approversetting->level;
             $input['approver_id'] = $userid;
 
-            $reimbursementapprovals = Reimbursementapprovals::create($input);
+            $paymentrequestapproval = Paymentrequestapproval::create($input);
 
             if ($input['status'] == '0')
             {
                 // 设置下一个审批人
-                if ($reimbursementapprovals)
+                if ($paymentrequestapproval)
                 {
-                    $approversettingNext = Approversetting::where('approvaltype_id', ReimbursementsController::approvaltype_id)->where('level', '>', $approversetting->level)->orderBy('level')->first();
+                    $approversettingNext = Approversetting::where('approvaltype_id', PaymentrequestsController::typeid())->where('level', '>', $approversetting->level)->orderBy('level')->first();
                     if ($approversettingNext)
-                        $reimbursement->approversetting_id = $approversettingNext->id;
+                        $paymentrequest->approversetting_id = $approversettingNext->id;
                     else
-                        $reimbursement->approversetting_id = 0; // 已走完
+                        $paymentrequest->approversetting_id = 0; // 已走完
 
-                    $reimbursement->save();
+                    $paymentrequest->save();
                 }
             }
             elseif ($input['status'] == '-1') {
                 // 设置上一个审批人
-                if ($reimbursementapprovals)
+                if ($paymentrequestapproval)
                 {
-                    $reimbursement = Reimbursement::findOrFail($reimbursementapprovals->reimbursement_id);
-                    $approversetting = Approversetting::findOrFail($reimbursement->approversetting_id);
-                    $approversettingNext = Approversetting::where('approvaltype_id', ReimbursementsController::approvaltype_id)->where('level', '<', $approversetting->level)->orderBy('level', 'desc')->first();
+                    $paymentrequest = Paymentrequest::findOrFail($paymentrequestapproval->paymentrequest_id);
+                    $approversetting = Approversetting::findOrFail($paymentrequest->approversetting_id);
+                    $approversettingNext = Approversetting::where('approvaltype_id', PaymentrequestsController::typeid())->where('level', '<', $approversetting->level)->orderBy('level', 'desc')->first();
                     if ($approversettingNext)
-                        $reimbursement->approversetting_id = $approversettingNext->id;
+                        $paymentrequest->approversetting_id = $approversettingNext->id;
                     else
-                        $reimbursement->approversetting_id = 0; // 已走完
+                        $paymentrequest->approversetting_id = 0; // 已走完
 
-                    $reimbursement->save();
+                    $paymentrequest->save();
                 }
             }
 
             // send dingtalk message.
-            $touser = $reimbursement->nextapprover();
+            $touser = $paymentrequest->nextapprover();
             if ($touser)
             {
                 DingTalkController::send($touser->dtuserid, '', 
-                    '来自' . $reimbursement->applicant->name . '的报销单需要您审批.', 
+                    '来自' . $reimbursement->applicant->name . '的付款申请单需要您审批.', 
                     config('custom.dingtalk.agentidlist.approval'));          
             }
 

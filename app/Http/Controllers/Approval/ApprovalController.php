@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Approval\Reimbursement;
 use App\Models\Approval\Paymentrequest;
+use App\Models\Approval\Paymentrequestapproval;
 use Auth, DB;
 use Illuminate\Support\Facades\Input;
 
@@ -62,7 +63,7 @@ class ApprovalController extends Controller
         $items = new \Illuminate\Pagination\LengthAwarePaginator($itemsForCurrentPage, count($paymentrequests), $paginate, $page);
 
         // $approvals = $reimbursements + $paymentrequests;
-        // dd($items);
+        // dd($paymentrequests);
 
         return view('approval.mindexmy', compact('items'));
     }
@@ -76,11 +77,52 @@ class ApprovalController extends Controller
     public function mindexmyapproval()
     {
         $reimbursements = ReimbursementsController::myapproval();
-        $paymentrequests = PaymentrequestsController::myapproval()->toArray();
+        $paymentrequests = PaymentrequestsController::myapproval();
 
-        dd($reimbursements->toJson());
+        // dd($reimbursements->toJson());
+        // dd($reimbursements->toArray()["data"]);
+        // dd($reimbursements);
+        // $items = [];
+        // foreach ($reimbursements as $value) {
+        //     # code...
+        //     dd(array_only($value, ['id', 'applicant_id', 'approversetting_id']));
+        // }
 
-        return view('approval.mindexmyapproval', compact('reimbursements'));
+
+        return view('approval.mindexmyapproval', compact('reimbursements', 'paymentrequests'));
+    }
+
+    /**
+     * 我已审批的.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function mindexmyapprovaled()
+    {
+        // 获取当前操作人员的报销审批层次
+        $userid = Auth::user()->id;        
+        $ids = [];      // 报销id数组
+        $ids_paymentrequest = [];      // 报销id数组
+
+         // 获取需要我审批的报销id数组
+        $reimbursementids = Reimbursement::leftJoin('reimbursementapprovals', 'reimbursements.id', '=', 'reimbursementapprovals.reimbursement_id')
+            ->select('reimbursements.id', 
+                DB::raw('(select count(approver_id) from reimbursementapprovals where reimbursements.id=reimbursementapprovals.reimbursement_id and reimbursementapprovals.approver_id=' . $userid . ' limit 1) as myapprovaled'))     // 最后一次审批的状态
+            ->get();
+
+        foreach ($reimbursementids as $reimbursementid) {
+            if ($reimbursementid->myapprovaled > 0)
+                $ids = array_prepend($ids, $reimbursementid->id);
+        }
+
+        $reimbursements = Reimbursement::latest('created_at')->whereIn('id', $ids)->paginate(10);
+        // $reimbursements = Reimbursement::whereIn('id', $ids)->paginate(10);
+        
+        $ids_paymentrequest = Paymentrequestapproval::where('approver_id', $userid)->select('paymentrequest_id')->distinct()->pluck('paymentrequest_id');
+        $paymentrequests = Paymentrequest::latest('created_at')->whereIn('id', $ids_paymentrequest)->paginate(10);
+        // dd($paymentrequests);
+
+        return view('approval.mindexmyapprovaled', compact('reimbursements', 'paymentrequests'));
     }
 
     /**

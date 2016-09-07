@@ -44,7 +44,7 @@
             ])
     {!! Form::close() !!}
 
-    @yield('for_reimbursementapprovals_create')
+    @yield('for_paymentrequestapprovals_create')
 @endsection
 
 @section('script')
@@ -57,5 +57,5 @@
         });
     </script>
 
-    @yield('for_reimbursementapprovals_create_script')
+    @yield('for_paymentrequestapprovals_create_script')
 @endsection

@@ -33,6 +33,8 @@ return array(
     'CreateItemsitesTable' => $baseDir . '/database/migrations/2015_08_31_012251_create_itemsites_table.php',
     'CreateItemtypesTable' => $baseDir . '/database/migrations/2015_07_10_071426_create_itemtypes_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
+    'CreatePaymentrequestapprovalsTable' => $baseDir . '/database/migrations/2016_09_05_093746_create_paymentrequestapprovals_table.php',
+    'CreatePaymentrequestsTable' => $baseDir . '/database/migrations/2016_08_17_160202_create_paymentrequests_table.php',
     'CreatePaymentsTable' => $baseDir . '/database/migrations/2015_09_17_160420_create_payments_table.php',
     'CreatePoheadsTable' => $baseDir . '/database/migrations/2015_09_02_085823_create_poheads_table.php',
     'CreatePoitemsTable' => $baseDir . '/database/migrations/2015_09_06_025055_create_poitems_table.php',

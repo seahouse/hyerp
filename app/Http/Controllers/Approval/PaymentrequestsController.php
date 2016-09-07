@@ -84,7 +84,7 @@ class PaymentrequestsController extends Controller
         $paymentrequests = Paymentrequest::where('id', -1)->paginate(10);
         if ($approversetting_id_my > 0)
         {           
-            $paymentrequests = Paymentrequest::latest('created_at')->where('approversetting_id', $approversetting_id_my)->get();
+            $paymentrequests = Paymentrequest::latest('created_at')->where('approversetting_id', $approversetting_id_my)->paginate(10);
             // $paymentrequests = DB::table('paymentrequests')->where('approversetting_id', $approversetting_id_my)->latest('created_at')->get();
         }
 

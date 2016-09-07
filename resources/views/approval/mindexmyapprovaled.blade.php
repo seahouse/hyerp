@@ -1,6 +1,6 @@
 @extends('approval.mindexmyapproval_nav')
 
-@section('title', '待我审批的')
+@section('title', '我已审批的')
 
 @section('mindexmyapproval_main')
    
@@ -20,15 +20,15 @@
 
     @include('approval._list2',
         [
-            'href_pre' => '/approval/reimbursementapprovals/', 'href_suffix' => '/mcreate',
-            'href_pre_paymentrequest' => '/approval/paymentrequestapprovals/'
+            'href_pre' => '/approval/reimbursements/mshow/', 'href_suffix' => '',
+            'href_pre_paymentrequest' => '/approval/paymentrequests/mshow/'
         ])
 
 {{--
     @if ($reimbursements->count())
         @foreach($reimbursements as $reimbursement)
         <div class="list-group">
-            <a href="{{ url('/approval/reimbursementapprovals/' . $reimbursement->id . '/mcreate') }}" class="list-group-item">
+            <a href="{{ url('/approval/reimbursements/mshow', $reimbursement->id) }}" class="list-group-item">
                 <span class="badge">{{ $reimbursement->created_at }}</span>
                 {{ $reimbursement->applicant->name }}的报销
             </a>

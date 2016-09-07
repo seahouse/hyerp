@@ -7,10 +7,10 @@
 	<div style="background-color: #FF953F;">
 		<div class="btn-group btn-group-justified" role="group" aria-label="...">
 			<div class="btn-group menu" role="group">
-				<a href="/approval/reimbursements/mindexmyapproval">
+				<a href="/approval/mindexmyapproval">
 					<i class="icon iconfont btnMenuIcon color-orange2 icon-dengdaishenpi">
-					@if (Auth::user()->myapproval()->count() > 0)
-	                    <span class="pcount"><span class="count">{{ Auth::user()->myapproval()->count() }}</span></span>
+					@if (Auth::user()->myapproval()->count() > 0 or Auth::user()->myapproval_paymentrequest()->count() > 0)
+	                    <span class="pcount"><span class="count">{{ Auth::user()->myapproval()->count() + Auth::user()->myapproval_paymentrequest()->count() }}</span></span>
 	                @endif
 					</i>
 					<div type="button" class="btnMenu">待我审批</div>

@@ -4,13 +4,19 @@ namespace App\Models\Approval;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\System\User;
+use App\Models\System\Dept;
+
 class Paymentrequest extends Model
 {
     //
     protected $fillable = [
-        'descrip',
+        'suppliertype',
+        'paymenttype',
         'supplier_id',
         'pohead_id',
+        'equipmentname',
+        'descrip',
         'amount',
         'paymentmethod',
         'datepay',
@@ -27,5 +33,37 @@ class Paymentrequest extends Model
 
     public function purchaseorder_hxold() {
         return $this->hasOne('\App\Models\Purchase\Purchaseorder_hxold', 'id', 'pohead_id');
+    }
+
+    public function applicant() {
+        return $this->hasOne('\App\Models\System\User', 'id', 'applicant_id');
+    }
+
+    public function paymentrequestapprovals() {
+        return $this->hasMany('\App\Models\Approval\Paymentrequestapproval', 'paymentrequest_id', 'id');
+    }
+	
+	public function nextapprover() {
+        // $userid = Auth::user()->id;
+        $user = null;
+        $approversetting = Approversetting::find($this::getAttribute('approversetting_id'));
+        if ($approversetting)
+        {
+			if ($approversetting->approver_id > 0)
+			{
+				$user = User::where('id', $approversetting->approver_id)->first();
+			}
+			else
+			{
+				if ($approversetting->dept_id > 0 && strlen($approversetting->position) > 0)    // 设置了部门与职位才进行查找
+				{
+					$user = User::where('dept_id', $approversetting->dept_id)->where('position', $approversetting->position)->first();
+					// $username = $user->name; 
+				}
+			}
+
+        }
+
+        return $user;
     }
 }

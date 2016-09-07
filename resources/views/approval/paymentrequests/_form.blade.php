@@ -1,11 +1,19 @@
 <div class="reimb"><div class="form-d">
 
 <div class="form-group">
-    {!! Form::label('descrip', '付款事由:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+    {!! Form::label('suppliertype', '供应商类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::textarea('descrip', null, ['class' => 'form-control', 'placeholder' => '请输入付款事由（必填）', $attr, 'rows' => 3]) !!}
+    {!! Form::select('suppliertype', array('安装公司' => '安装公司', '机务设备类' => '机务设备类', '电气设备类' => '电气设备类', '安装材料类' => '安装材料类', '代理或服务类' => '代理或服务类', '厂部常用类' => '厂部常用类', '其他' => '其他'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr]) !!}
     </div>
 </div>
+
+<div class="form-group">
+    {!! Form::label('paymenttype', '付款类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+    {!! Form::select('paymenttype', array('预付款' => '预付款', '进度款' => '进度款', '到货款' => '到货款', '安装结束款' => '安装结束款', '调试运行款' => '调试运行款', '环保验收款' => '环保验收款', '质保金' => '质保金'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr]) !!}
+    </div>
+</div>
+
 
 @if (isset($paymentrequest))
 <div class="form-group">
@@ -151,7 +159,21 @@
 @endif
 
 <div class="form-group">
-    {!! Form::label('amount', '付款总额万元:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('equipmentname', '应付款设备名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+    {!! Form::text('equipmentname', null, ['class' => 'form-control', 'placeholder' => '请输入本次应付款的大体设备名称', $attr]) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('descrip', '付款说明:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+    <div class='col-xs-8 col-sm-10'>
+    {!! Form::textarea('descrip', null, ['class' => 'form-control', 'placeholder' => '按合同已付多少，百分比及发票开具情况说明', $attr, 'rows' => 3]) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('amount', '付款总额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
     {!! Form::text('amount', null, ['class' => 'form-control', 'placeholder' => '请输入付款总额（人民币）（必填）', $attr]) !!}
     </div>
@@ -160,7 +182,7 @@
 <div class="form-group">
     {!! Form::label('paymentmethod', '付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::select('paymentmethod', array('现金' => '现金', '支票' => '支票', '转账' => '转账', '汇票' => '汇票'), null, ['class' => 'form-control', 'placeholder' => '付款方式', $attr]) !!}
+    {!! Form::select('paymentmethod', array('支票' => '支票', '贷记' => '贷记', '电汇' => '电汇', '汇票' => '汇票', '现金' => '现金', '银行卡' => '银行卡', '其他' => '其他'), null, ['class' => 'form-control', 'placeholder' => '付款方式', $attr]) !!}
     </div>
 </div>
 
@@ -185,10 +207,59 @@
     </div>
 </div>
 
+<div class="form-group">
+    {!! Form::label('images', '付款节点审批单:', ['class' => 'col-sm-2 control-label']) !!}
+    {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
+    <div class='col-sm-10'>
+        <div class="row" id="previewimage">
+            @if (isset($reimbursement))
+                @foreach ($reimbursement->reimbursementimages as $reimbursementimage)
+                    <div class="col-xs-6 col-md-3">
+                        <div class="thumbnail">
+                            <img src="{!! $reimbursementimage->path !!}" />
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+        </div>
+    </div>
+</div>
 
+<div class="form-group">
+    {!! Form::label('images', '商务合同等必要附件:', ['class' => 'col-sm-2 control-label']) !!}
+    {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
+    <div class='col-sm-10'>
+        <div class="row" id="previewimage">
+            @if (isset($reimbursement))
+                @foreach ($reimbursement->reimbursementimages as $reimbursementimage)
+                    <div class="col-xs-6 col-md-3">
+                        <div class="thumbnail">
+                            <img src="{!! $reimbursementimage->path !!}" />
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+        </div>
+    </div>
+</div>
 
-<hr>
-
+<div class="form-group">
+    {!! Form::label('images', '图片说明:', ['class' => 'col-sm-2 control-label']) !!}
+    {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
+    <div class='col-sm-10'>
+        <div class="row" id="previewimage">
+            @if (isset($reimbursement))
+                @foreach ($reimbursement->reimbursementimages as $reimbursementimage)
+                    <div class="col-xs-6 col-md-3">
+                        <div class="thumbnail">
+                            <img src="{!! $reimbursementimage->path !!}" />
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+        </div>
+    </div>
+</div>
 
 
 
@@ -205,7 +276,6 @@
 </div>
 </div>
 </div>
-
 
 
 
