@@ -351,6 +351,30 @@
 				});
 			}
 
+			// 上传附件
+			$("#btnSelectPaymentnodeattachment").click(function() {
+				dd.biz.util.uploadImage({
+					multiple: true,
+					max: 5,
+					onSuccess: function(result) {
+						var images = result;	// result.split(',');
+						var imageHtml = '';
+						for (var i in images) {
+							imageHtml += '<div class="col-xs-6 col-md-3">';
+							imageHtml += '<div class="thumbnail">';
+							imageHtml += '<img src=' + images[i] + ' />';
+							imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
+							imageHtml += '</div>';
+							imageHtml += '</div>';
+						}
+						$("#previewimage").empty().append(imageHtml);
+					},
+					onFail: function(err) {
+						alert('select image failed: ' + JSON.stringify(err));
+					}
+				});
+			});
+
 
 			// $("#btnSelectImage").click(function() {
 			// 	var images = ['http://static.dingtalk.com/media/lADODGPhgM0CHM0DwA_960_540.jpg', 'http://static.dingtalk.com/media/lALODL7StM0DwM0CHA_540_960.png'];
