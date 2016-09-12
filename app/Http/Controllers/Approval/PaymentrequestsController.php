@@ -136,6 +136,9 @@ class PaymentrequestsController extends Controller
         $input = $request->all();
         $input = HelperController::skipEmptyValue($input);
         // dd($input);
+        // dd($request->hasFile('paymentnodeattachments'));
+        dd($request->file('paymentnodeattachments'));
+        dd($request->file('paymentnodeattachments')->getClientOriginalExtension());
         // dd($request->input('amount', '0.0'));
 
         $input['applicant_id'] = Auth::user()->id;

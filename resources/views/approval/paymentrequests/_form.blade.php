@@ -209,7 +209,11 @@
 
 <div class="form-group">
     {!! Form::label('paymentnodeattachments', '付款节点审批单:', ['class' => 'col-sm-2 control-label']) !!}
+    {!! Form::file('paymentnodeattachments[]', ['multiple']) !!}
+{{--
+    {!! Form::file('paymentnodeattachments', ['multiple']) !!}
     {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectPaymentnodeattachment']) !!}
+--}}
     <div class='col-sm-10'>
         <div class="row" id="previewimage">
             @if (isset($reimbursement))
@@ -227,7 +231,9 @@
 
 <div class="form-group">
     {!! Form::label('images', '商务合同等必要附件:', ['class' => 'col-sm-2 control-label']) !!}
+{{--
     {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
+--}}
     <div class='col-sm-10'>
         <div class="row" id="previewimage">
             @if (isset($reimbursement))

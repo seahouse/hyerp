@@ -49,7 +49,7 @@ class ImagesController extends Controller
     public function store(ImageRequest $request)
     {
         //
-        $sFilename = '';
+        $sFilename = '';        
         if (Request::hasFile('image'))
         {
             $file = Request::file('image');
