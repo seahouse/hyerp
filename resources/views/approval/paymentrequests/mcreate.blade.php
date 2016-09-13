@@ -351,29 +351,6 @@
 				});
 			}
 
-			// 上传附件
-			$("#btnSelectPaymentnodeattachment").click(function() {
-				dd.biz.util.uploadImage({
-					multiple: true,
-					max: 5,
-					onSuccess: function(result) {
-						var images = result;	// result.split(',');
-						var imageHtml = '';
-						for (var i in images) {
-							imageHtml += '<div class="col-xs-6 col-md-3">';
-							imageHtml += '<div class="thumbnail">';
-							imageHtml += '<img src=' + images[i] + ' />';
-							imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
-							imageHtml += '</div>';
-							imageHtml += '</div>';
-						}
-						$("#previewimage").empty().append(imageHtml);
-					},
-					onFail: function(err) {
-						alert('select image failed: ' + JSON.stringify(err));
-					}
-				});
-			});
 
 
 			// $("#btnSelectImage").click(function() {
@@ -396,7 +373,7 @@
 			    timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
 			    nonceStr: '{!! array_get($config, 'nonceStr') !!}', // 必填，生成签名的随机串
 			    signature: '{!! array_get($config, 'signature') !!}', // 必填，签名
-			    jsApiList: ['biz.util.uploadImage'] // 必填，需要使用的jsapi列表
+			    jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile'] // 必填，需要使用的jsapi列表
 			});
 
 			// $.ajax({
@@ -445,6 +422,34 @@
 						onFail: function(err) {
 							alert('select image failed: ' + JSON.stringify(err));
 						}
+					});
+				});
+
+				// 上传附件
+				$("#btnSelectPaymentnodeattachment").click(function() {
+					dd.biz.cspace.saveFile({
+						corpId:"{!! array_get($config, 'corpId') !!}",
+						url:"https://ringnerippca.files.wordpress.com/20.pdf",
+						name:"文件名",
+						onSuccess: function(data) {
+		                 /* data结构
+		                 {"data":
+		                    [
+		                    {
+		                    "corpId": "", //公司id
+		                    "spaceId": "" //空间id
+		                    "fileId": "", //文件id
+		                    "fileName": "", //文件名
+		                    "fileSize": 111111, //文件大小
+		                    "fileType": "", //文件类型
+		                    }
+		                    ]
+		                 }
+		                 */
+		                },
+		                onFail: function(err) {
+		                    alert(JSON.stringify(err));
+		                }
 					});
 				});
 			});
