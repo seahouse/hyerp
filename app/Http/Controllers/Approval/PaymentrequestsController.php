@@ -228,7 +228,7 @@ class PaymentrequestsController extends Controller
                 $paymentrequestattachment = new Paymentrequestattachment;
                 $paymentrequestattachment->paymentrequest_id = $paymentrequest->id;
                 $paymentrequestattachment->type = "image";     // add a '/' in the head.
-                $paymentrequestattachment->path = "/$dir/$filename";     // add a '/' in the head.
+                $paymentrequestattachment->path = "/$dir$filename";     // add a '/' in the head.
                 $paymentrequestattachment->save();
             }
         }
