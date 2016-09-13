@@ -11,6 +11,7 @@ use App\Http\Controllers\HelperController;
 use App\Models\Approval\Paymentrequest;
 use App\Models\Approval\Approvaltype;
 use App\Models\Approval\Approversetting;
+use App\Models\Approval\Paymentrequestattachment;
 use Auth, DB;
 
 class PaymentrequestsController extends Controller
