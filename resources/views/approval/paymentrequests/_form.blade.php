@@ -215,6 +215,7 @@
     {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectPaymentnodeattachment']) !!}
 --}}
     <div class='col-sm-10'>
+{{--
         <div class="row" id="previewimage">
             @if (isset($reimbursement))
                 @foreach ($reimbursement->reimbursementimages as $reimbursementimage)
@@ -226,6 +227,7 @@
                 @endforeach
             @endif
         </div>
+--}}
     </div>
 </div>
 
@@ -236,6 +238,7 @@
     {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
 --}}
     <div class='col-sm-10'>
+{{--
         <div class="row" id="previewimage">
             @if (isset($reimbursement))
                 @foreach ($reimbursement->reimbursementimages as $reimbursementimage)
@@ -247,6 +250,7 @@
                 @endforeach
             @endif
         </div>
+--}}
     </div>
 </div>
 
@@ -256,10 +260,10 @@
     <div class='col-sm-10'>
         <div class="row" id="previewimage">
             @if (isset($paymentrequest))
-                @foreach ($paymentrequest->reimbursementimages as $reimbursementimage)
+                @foreach ($paymentrequest->paymentrequestimages as $paymentrequestimage)
                     <div class="col-xs-6 col-md-3">
                         <div class="thumbnail">
-                            <img src="{!! $reimbursementimage->path !!}" />
+                            <img src="{!! $paymentrequestimage->path !!}" />
                         </div>
                     </div>
                 @endforeach

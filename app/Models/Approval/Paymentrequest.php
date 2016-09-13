@@ -42,6 +42,14 @@ class Paymentrequest extends Model
     public function paymentrequestapprovals() {
         return $this->hasMany('\App\Models\Approval\Paymentrequestapproval', 'paymentrequest_id', 'id');
     }
+
+    public function paymentrequestattachments() {
+        return $this->hasMany('\App\Models\Approval\Paymentrequestattachment', 'paymentrequest_id', 'id');
+    }
+
+    public function paymentrequestimages() {
+        return $this->paymentrequestattachments->where('type', 'image')->get();
+    }
 	
 	public function nextapprover() {
         // $userid = Auth::user()->id;
