@@ -258,9 +258,10 @@
     {!! Form::label('images', '图片说明:', ['class' => 'col-sm-2 control-label']) !!}
     {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
     <div class='col-sm-10'>
+
         <div class="row" id="previewimage">
             @if (isset($paymentrequest))
-                @foreach ($paymentrequest->paymentrequestimages as $paymentrequestimage)
+                @foreach ($paymentrequest->paymentrequestimages() as $paymentrequestimage)
                     <div class="col-xs-6 col-md-3">
                         <div class="thumbnail">
                             <img src="{!! $paymentrequestimage->path !!}" />
@@ -269,6 +270,7 @@
                 @endforeach
             @endif
         </div>
+
     </div>
 </div>
 

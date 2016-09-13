@@ -48,7 +48,7 @@ class Paymentrequest extends Model
     }
 
     public function paymentrequestimages() {
-        return $this->paymentrequestattachments->where('type', 'image')->get();
+        return $this->paymentrequestattachments->where('type', 'image');
     }
 	
 	public function nextapprover() {
