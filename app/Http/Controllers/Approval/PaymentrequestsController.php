@@ -137,8 +137,8 @@ class PaymentrequestsController extends Controller
         $input = HelperController::skipEmptyValue($input);
         // dd($input);
         // dd($request->hasFile('paymentnodeattachments'));
-        dd($request->file('paymentnodeattachments'));
-        dd($request->file('paymentnodeattachments')->getClientOriginalExtension());
+        // dd($request->file('paymentnodeattachments'));
+        // dd($request->file('paymentnodeattachments')->getClientOriginalExtension());
         // dd($request->input('amount', '0.0'));
 
         $input['applicant_id'] = Auth::user()->id;
@@ -189,74 +189,60 @@ class PaymentrequestsController extends Controller
         //     }
         // }
 
-        // // create reimbursement images
-        // if ($reimbursement)
-        // {
-        //     $images = array_where($input, function($key, $value) {
-        //         if (substr_compare($key, 'image_', 0, 6) == 0)
-        //             return $value;
-        //     });
+        // create reimbursement images
+        if ($paymentrequest)
+        {
+            $images = array_where($input, function($key, $value) {
+                if (substr_compare($key, 'image_', 0, 6) == 0)
+                    return $value;
+            });
 
-        //     foreach ($images as $key => $value) {
-        //         # code...
-        //         // save image file.
-        //         $sExtension = substr($value, strrpos($value, '.') + 1);
-        //         // $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
-        //         // Storage::disk('local')->put($sFilename, file_get_contents($value));
-        //         // Storage::move($sFilename, '../abcd.jpg');
-        //         $dir = 'images/approval/reimbursement/' . $reimbursement->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
-        //         $parts = explode('/', $dir);
-        //         $filename = array_pop($parts);
-        //         $dir = '';
-        //         foreach ($parts as $part) {
-        //             # code...
-        //             $dir .= "$part/";
-        //             if (!is_dir($dir)) {
-        //                 mkdir($dir);
-        //             }
-        //         }                
+            foreach ($images as $key => $value) {
+                # code...
+                // save image file.
+                $sExtension = substr($value, strrpos($value, '.') + 1);
+                // $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                // Storage::disk('local')->put($sFilename, file_get_contents($value));
+                // Storage::move($sFilename, '../abcd.jpg');
+                $dir = 'images/approval/paymentrequest/' . $paymentrequest->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                $parts = explode('/', $dir);
+                $filename = array_pop($parts);
+                $dir = '';
+                foreach ($parts as $part) {
+                    # code...
+                    $dir .= "$part/";
+                    if (!is_dir($dir)) {
+                        mkdir($dir);
+                    }
+                }                
 
-        //         file_put_contents("$dir/$filename", file_get_contents($value));
-        //         // file_put_contents('abcd.jpg', file_get_contents($value));
+                file_put_contents("$dir/$filename", file_get_contents($value));
+                // file_put_contents('abcd.jpg', file_get_contents($value));
 
-        //         // response()->download($value);
-        //         // Storage::put('abcde.jpg', file_get_contents($value));
-        //         // copy(storage_path('app') . '/' . $sFilename, '/images/' . $sFilename);
+                // response()->download($value);
+                // Storage::put('abcde.jpg', file_get_contents($value));
+                // copy(storage_path('app') . '/' . $sFilename, '/images/' . $sFilename);
 
-        //         // add image record
-        //         $reimbursementimages = new Reimbursementimages;
-        //         $reimbursementimages->reimbursement_id = $reimbursement->id;
-        //         $reimbursementimages->path = "/$dir/$filename";     // add a '/' in the head.
-        //         $reimbursementimages->save();
-        //     }
-        // }
+                // add image record
+                $paymentrequestattachment = new Paymentrequestattachment;
+                $paymentrequestattachment->paymentrequest_id = $paymentrequest->id;
+                $paymentrequestattachment->type = "image";     // add a '/' in the head.
+                $paymentrequestattachment->path = "/$dir/$filename";     // add a '/' in the head.
+                $paymentrequestattachment->save();
+            }
+        }
 
-        // if ($reimbursement)
-        // {
-        //     // send dingtalk message.
-        //     $touser = $reimbursement->nextapprover();
-        //     if ($touser)
-        //     {
-        //         DingTalkController::send($touser->dtuserid, '', 
-        //             '来自' . $reimbursement->applicant->name . '的报销单需要您审批.', 
-        //             config('custom.dingtalk.agentidlist.approval'));
-        //         // $url = 'https://oapi.dingtalk.com/message/send';
-        //         // $access_token = DingTalkController::getAccessToken();
-        //         // $params = compact('access_token');
-        //         // $data = [
-        //         //     'touser' => $touser->dtuserid,
-        //         //     'toparty' => '',
-        //         //     'agentid' => '13231599',
-        //         //     'msgtype' => 'text',
-        //         //     'text' => [
-        //         //         'content' => 'just a test.',
-        //         //     ],
-        //         // ];
-        //         // DingTalkController::post($url, $params, json_encode($data));           
-        //     }
-      
-        // }
-
+        if ($paymentrequest)
+        {
+            // send dingtalk message.
+            $touser = $paymentrequest->nextapprover();
+            if ($touser)
+            {
+                DingTalkController::send($touser->dtuserid, '', 
+                    '来自' . $paymentrequest->applicant->name . '的付款单需要您审批.', 
+                    config('custom.dingtalk.agentidlist.approval'));         
+            }      
+        }
 
         return redirect('approval/mindexmy');
     }

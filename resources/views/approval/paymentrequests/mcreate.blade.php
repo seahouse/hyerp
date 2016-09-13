@@ -425,33 +425,33 @@
 					});
 				});
 
-				// 上传附件
-				$("#btnSelectPaymentnodeattachment").click(function() {
-					dd.biz.cspace.saveFile({
-						corpId:"{!! array_get($config, 'corpId') !!}",
-						url:"https://ringnerippca.files.wordpress.com/20.pdf",
-						name:"文件名",
-						onSuccess: function(data) {
-		                 /* data结构
-		                 {"data":
-		                    [
-		                    {
-		                    "corpId": "", //公司id
-		                    "spaceId": "" //空间id
-		                    "fileId": "", //文件id
-		                    "fileName": "", //文件名
-		                    "fileSize": 111111, //文件大小
-		                    "fileType": "", //文件类型
-		                    }
-		                    ]
-		                 }
-		                 */
-		                },
-		                onFail: function(err) {
-		                    alert(JSON.stringify(err));
-		                }
-					});
-				});
+				// // 上传附件
+				// $("#btnSelectPaymentnodeattachment").click(function() {
+				// 	dd.biz.cspace.saveFile({
+				// 		corpId:"{!! array_get($config, 'corpId') !!}",
+				// 		url:"https://ringnerippca.files.wordpress.com/20.pdf",
+				// 		name:"文件名",
+				// 		onSuccess: function(data) {
+		  //                 data结构
+		  //                {"data":
+		  //                   [
+		  //                   {
+		  //                   "corpId": "", //公司id
+		  //                   "spaceId": "" //空间id
+		  //                   "fileId": "", //文件id
+		  //                   "fileName": "", //文件名
+		  //                   "fileSize": 111111, //文件大小
+		  //                   "fileType": "", //文件类型
+		  //                   }
+		  //                   ]
+		  //                }
+		                 
+		  //               },
+		  //               onFail: function(err) {
+		  //                   alert(JSON.stringify(err));
+		  //               }
+				// 	});
+				// });
 			});
 
 			dd.error(function(error) {

@@ -209,10 +209,9 @@
 
 <div class="form-group">
     {!! Form::label('paymentnodeattachments', '付款节点审批单:', ['class' => 'col-sm-2 control-label']) !!}
-    {!! Form::file('paymentnodeattachments[]', ['multiple']) !!}
-    {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectPaymentnodeattachment']) !!}
+    <将在钉钉的下一个版本中支持上传附件>
 {{--
-    {!! Form::file('paymentnodeattachments', ['multiple']) !!}
+    {!! Form::file('paymentnodeattachments[]', ['multiple']) !!}
     {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectPaymentnodeattachment']) !!}
 --}}
     <div class='col-sm-10'>
@@ -232,6 +231,7 @@
 
 <div class="form-group">
     {!! Form::label('images', '商务合同等必要附件:', ['class' => 'col-sm-2 control-label']) !!}
+    <将在钉钉的下一个版本中支持上传附件>
 {{--
     {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
 --}}
@@ -255,8 +255,8 @@
     {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
     <div class='col-sm-10'>
         <div class="row" id="previewimage">
-            @if (isset($reimbursement))
-                @foreach ($reimbursement->reimbursementimages as $reimbursementimage)
+            @if (isset($paymentrequest))
+                @foreach ($paymentrequest->reimbursementimages as $reimbursementimage)
                     <div class="col-xs-6 col-md-3">
                         <div class="thumbnail">
                             <img src="{!! $reimbursementimage->path !!}" />
