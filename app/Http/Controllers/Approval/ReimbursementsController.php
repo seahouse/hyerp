@@ -408,7 +408,7 @@ class ReimbursementsController extends Controller
                 // add image record
                 $reimbursementimages = new Reimbursementimages;
                 $reimbursementimages->reimbursement_id = $reimbursement->id;
-                $reimbursementimages->path = "/$dir/$filename";     // add a '/' in the head.
+                $reimbursementimages->path = "/$dir$filename";     // add a '/' in the head.
                 $reimbursementimages->save();
             }
         }

@@ -16,7 +16,7 @@ class CreatePaymentrequestattachmentsTable extends Migration
             $table->increments('id');
 
             $table->integer('paymentrequest_id');
-            $table->string('type')->nullable();
+            $table->string('type')->nullable();             // 付款节点审批单: paymentnode, 商务合同: businesscontract, 图片: image, 
             $table->string('path')->nullable();
 
             $table->timestamps();
