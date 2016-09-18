@@ -40,7 +40,7 @@
 			<div class="btn-group" role="group">
 				<a href="/approval/paymentrequests/mcreate" class="btn btn-default btn-lg">
 					<i class="icon iconfont btn-menu-2 color-lightblue icon-money1"></i>
-					<span class="labble">付款</span>
+					<span class="labble">供应商付款</span>
 <!--
 					<button type="button" class="btn btn-default">请款</button>
 -->

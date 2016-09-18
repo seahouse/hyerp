@@ -16,7 +16,7 @@ use Auth, DB;
 
 class PaymentrequestsController extends Controller
 {
-    private static $approvaltype_name = "付款";
+    private static $approvaltype_name = "供应商付款";
     
 
     /**
