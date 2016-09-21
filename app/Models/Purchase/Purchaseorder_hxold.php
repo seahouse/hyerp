@@ -17,4 +17,8 @@ class Purchaseorder_hxold extends Model
     {
         return $this->hasMany('App\Models\Purchase\Payment_hxold', 'pohead_id', 'id');
     }
+
+    public function sohead() {
+        return $this->hasOne('App\Models\Sales\Salesorder_hxold', 'id', 'sohead_id');
+    }
 }

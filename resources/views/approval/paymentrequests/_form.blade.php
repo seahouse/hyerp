@@ -76,9 +76,31 @@
     {!! Form::label('pohead_arrived', '到货情况:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
     @if (isset($paymentrequest->purchaseorder_hxold->arrival_status)) 
-         {!! Form::text('pohead_arrived', $paymentrequest->purchaseorder_hxold->arrival_status, ['class' => 'form-control', $attr]) !!}
+        {!! Form::text('pohead_arrived', $paymentrequest->purchaseorder_hxold->arrival_status, ['class' => 'form-control', $attr]) !!}
     @else
         {!! Form::text('pohead_arrived', null, ['class' => 'form-control', $attr]) !!}
+    @endif
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('sohead_paymethod', '付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+    <div class='col-xs-8 col-sm-10'>
+    @if (isset($paymentrequest->purchaseorder_hxold->sohead->paymethod)) 
+        {!! Form::textarea('sohead_paymethod', $paymentrequest->purchaseorder_hxold->sohead->paymethod, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
+    @else
+        {!! Form::textarea('sohead_paymethod', null, ['class' => 'form-control', $attr]) !!}
+    @endif
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('sohead_paymethod_descrip', '付款方式备注:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+    <div class='col-xs-8 col-sm-10'>
+    @if (isset($paymentrequest->purchaseorder_hxold->sohead->paymethod_descrip)) 
+        {!! Form::textarea('sohead_paymethod_descrip', $paymentrequest->purchaseorder_hxold->sohead->paymethod_descrip, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
+    @else
+        {!! Form::textarea('sohead_paymethod_descrip', null, ['class' => 'form-control', $attr]) !!}
     @endif
     </div>
 </div>
@@ -156,6 +178,20 @@
     </div>
 </div>
 
+<div class="form-group">
+    {!! Form::label('sohead_paymethod', '付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+    <div class='col-xs-8 col-sm-10'>
+    {!! Form::textarea('sohead_paymethod', null, ['class' => 'form-control', 'readonly', $attr, 'rows' => 3]) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('sohead_paymethod_descrip', '付款方式备注:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+    <div class='col-xs-8 col-sm-10'>
+    {!! Form::textarea('sohead_paymethod_descrip', null, ['class' => 'form-control', 'readonly', $attr, 'rows' => 3]) !!}
+    </div>
+</div>
+
 {{--
 <div class="form-group">
     {!! Form::label('sohead_process', '目前工程项目进度:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
@@ -174,9 +210,12 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('descrip', '付款说明:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+    {!! Form::label('descrip', '说明:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
     <div class='col-xs-8 col-sm-10'>
+    {!! Form::textarea('descrip', null, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
+{{--
     {!! Form::textarea('descrip', null, ['class' => 'form-control', 'placeholder' => '按合同已付多少，百分比及发票开具情况说明', $attr, 'rows' => 3]) !!}
+--}}
     </div>
 </div>
 
@@ -201,6 +240,45 @@
     </div>
 </div>
 
+@if (isset($paymentrequest))
+<div class="form-group">
+    {!! Form::label('supplier_bank', '开户行:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+    @if (isset($paymentrequest->supplier_hxold->bank)) 
+        {!! Form::text('supplier_bank', $paymentrequest->supplier_hxold->bank, ['class' => 'form-control', $attr]) !!}
+    @else
+        {!! Form::text('supplier_bank', null, ['class' => 'form-control', $attr]) !!}
+    @endif
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('supplier_bankaccountnumber', '银行账号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+    @if (isset($paymentrequest->supplier_hxold->bankaccountnumber)) 
+        {!! Form::text('supplier_bankaccountnumber', $paymentrequest->supplier_hxold->bankaccountnumber, ['class' => 'form-control', $attr]) !!}
+    @else
+        {!! Form::text('supplier_bankaccountnumber', null, ['class' => 'form-control', $attr]) !!}
+    @endif
+    </div>
+</div>
+@else
+<div class="form-group">
+    {!! Form::label('supplier_bank', '开户行:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+    {!! Form::text('supplier_bank', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('supplier_bankaccountnumber', '银行账号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+    {!! Form::text('supplier_bankaccountnumber', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+    </div>
+</div>
+@endif
+
+{{--
 <div class="form-group">
     {!! Form::label('bank', '开户行:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
@@ -214,6 +292,7 @@
     {!! Form::text('bankaccountnumber', null, ['class' => 'form-control', 'placeholder' => '请输入银行账号（必填）', $attr]) !!}
     </div>
 </div>
+--}}
 
 <div class="form-group">
     {!! Form::label('paymentnodeattachments', '付款节点审批单:', ['class' => 'col-sm-2 control-label']) !!}

@@ -61,6 +61,19 @@ class SalesOrdersController extends Controller
         return $salesorders;
     }
 
+    /**
+     * Return item value by id.
+     *
+     * @return Response
+     */
+    public function getitembyid($id)
+    {
+        // $salesorders = Salesorder::latest('created_at')->where('number', 'like', '%' . $key . '%')
+        //     ->orWhere('descrip', 'like', '%'.$key.'%')->paginate(20);
+        $salesorder = Salesorder_hxold::findOrFail($id);       
+        return $salesorder;
+    }
+
     public function getsohx()
     {
         $salesorders = Salesorder_hxold::paginate(15);

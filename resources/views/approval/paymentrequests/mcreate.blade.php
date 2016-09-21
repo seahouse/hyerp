@@ -3,6 +3,9 @@
 @section('title', '创建付款申请单')
 
 @section('main')
+{{--
+@can('approval_paymentrequest_create')
+--}}
     {!! Form::open(array('url' => 'approval/paymentrequests/mstore', 'class' => 'form-horizontal', 'id' => 'formMain', 'files' => true)) !!}
         @include('approval.paymentrequests._form', 
         	[
@@ -21,6 +24,14 @@
 				'btnclass' => 'btn btn-primary',
         	])
     {!! Form::close() !!}
+{{--
+@else
+	<div class="alert alert-warning alert-block">
+        <i class="fa fa-warning"></i>
+        {{'无权限'}}
+    </div>
+@endcan
+--}}
 
 <!-- order selector -->
 <div class="modal fade" id="selectOrderModal" tabindex="-1" role="dialog">
@@ -222,6 +233,31 @@
 					$("#pohead_amount_paid").val(amount_paid);
 					$("#pohead_amount_ticketed").val(field.amount_ticketed);
 					$("#pohead_arrived").val(field.arrival_status);
+					$.ajax({
+						type: "GET",
+						url: "{!! url('/sales/salesorders/getitembyid/') !!}" + "/" + field.sohead_id,
+						success: function(result) {
+							// alert(result.number);
+							$("#sohead_paymethod").val(result.paymethod);
+							$("#sohead_paymethod_descrip").val(result.paymethod_descrip);
+							// var strhtml = '';
+							// $.each(result.data, function(i, field) {
+							// 	btnId = 'btnSelectOrder_' + String(i);
+							// 	strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.number + "</h4><p>" + field.descrip + "</p></button>"							
+							// });
+							// if (strhtml == '')
+							// 	strhtml = '无记录。';
+							// $("#listsalesorders").empty().append(strhtml);
+
+							// $.each(result.data, function(i, field) {
+							// 	btnId = 'btnSelectOrder_' + String(i);
+							// 	addBtnClickEvent(btnId, field.id, field.number, field.amount, field.amount_paid, field);
+							// });
+						},
+						error: function(xhr, ajaxOptions, thrownError) {
+							alert('error');
+						}
+					});
 				});
 			}
 
@@ -257,7 +293,7 @@
 
 						$.each(result.data, function(i, field) {
 							btnId = 'btnSelectCustomer_' + String(i);
-							addBtnClickEventSupplier(btnId, field.id, field.name);
+							addBtnClickEventSupplier(btnId, field.id, field.name, field);
 						});
 						// addBtnClickEvent('btnSelectOrder_0');
 					},
@@ -267,12 +303,14 @@
 				});
 			});
 
-			function addBtnClickEventSupplier(btnId, supplierid, name)
+			function addBtnClickEventSupplier(btnId, supplierid, name, field)
 			{
 				$("#" + btnId).bind("click", function() {
 					$('#selectSupplierModal').modal('toggle');
 					$("#" + $("#selectSupplierModal").find('#name').val()).val(name);
 					$("#" + $("#selectSupplierModal").find('#id').val()).val(supplierid);
+					$("#supplier_bank").val(field.bank);
+					$("#supplier_bankaccountnumber").val(field.bankaccountnumber);
 				});
 			}
 
