@@ -20,7 +20,7 @@
         		'order_number' => null,
         		'order_id' => '0',
 				'attr' => '',
-				'attrdisable' => 'disabled',
+				'attrdisable' => '',
 				'btnclass' => 'btn btn-primary',
         	])
     {!! Form::close() !!}
@@ -240,6 +240,7 @@
 							// alert(result.number);
 							$("#sohead_paymethod").val(result.paymethod);
 							$("#sohead_paymethod_descrip").val(result.paymethod_descrip);
+							$("#sohead_installeddate").val(result.installeddate.substring(0, 10));
 							// var strhtml = '';
 							// $.each(result.data, function(i, field) {
 							// 	btnId = 'btnSelectOrder_' + String(i);

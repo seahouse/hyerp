@@ -3,14 +3,14 @@
 <div class="form-group">
     {!! Form::label('suppliertype', '供应商类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::select('suppliertype', array('安装公司' => '安装公司', '机务设备类' => '机务设备类', '电气设备类' => '电气设备类', '安装材料类' => '安装材料类', '代理或服务类' => '代理或服务类', '厂部常用类' => '厂部常用类', '其他' => '其他'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr]) !!}
+    {!! Form::select('suppliertype', array('安装公司' => '安装公司', '机务设备类' => '机务设备类', '电气设备类' => '电气设备类', '安装材料类' => '安装材料类', '代理或服务类' => '代理或服务类', '厂部常用类' => '厂部常用类', '其他' => '其他'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
     </div>
 </div>
 
 <div class="form-group">
     {!! Form::label('paymenttype', '付款类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::select('paymenttype', array('预付款' => '预付款', '进度款' => '进度款', '到货款' => '到货款', '安装结束款' => '安装结束款', '调试运行款' => '调试运行款', '环保验收款' => '环保验收款', '质保金' => '质保金'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr]) !!}
+    {!! Form::select('paymenttype', array('预付款' => '预付款', '进度款' => '进度款', '到货款' => '到货款', '安装结束款' => '安装结束款', '调试运行款' => '调试运行款', '环保验收款' => '环保验收款', '质保金' => '质保金'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
     </div>
 </div>
 
@@ -84,7 +84,7 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('sohead_paymethod', '付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+    {!! Form::label('sohead_paymethod', '订单付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
     <div class='col-xs-8 col-sm-10'>
     @if (isset($paymentrequest->purchaseorder_hxold->sohead->paymethod)) 
         {!! Form::textarea('sohead_paymethod', $paymentrequest->purchaseorder_hxold->sohead->paymethod, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
@@ -95,12 +95,23 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('sohead_paymethod_descrip', '付款方式备注:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+    {!! Form::label('sohead_paymethod_descrip', '订单付款备注:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
     <div class='col-xs-8 col-sm-10'>
     @if (isset($paymentrequest->purchaseorder_hxold->sohead->paymethod_descrip)) 
         {!! Form::textarea('sohead_paymethod_descrip', $paymentrequest->purchaseorder_hxold->sohead->paymethod_descrip, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
     @else
         {!! Form::textarea('sohead_paymethod_descrip', null, ['class' => 'form-control', $attr]) !!}
+    @endif
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('sohead_installeddate', '安装完毕日期:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+    <div class='col-xs-8 col-sm-10'>
+    @if (isset($paymentrequest->purchaseorder_hxold->sohead->installeddate)) 
+        {!! Form::text('sohead_installeddate', substr($paymentrequest->purchaseorder_hxold->sohead->installeddate, 0, 10), ['class' => 'form-control', $attr]) !!}
+    @else
+        {!! Form::text('sohead_installeddate', null, ['class' => 'form-control', $attr]) !!}
     @endif
     </div>
 </div>
@@ -179,16 +190,23 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('sohead_paymethod', '付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+    {!! Form::label('sohead_paymethod', '订单付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
     <div class='col-xs-8 col-sm-10'>
     {!! Form::textarea('sohead_paymethod', null, ['class' => 'form-control', 'readonly', $attr, 'rows' => 3]) !!}
     </div>
 </div>
 
 <div class="form-group">
-    {!! Form::label('sohead_paymethod_descrip', '付款方式备注:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+    {!! Form::label('sohead_paymethod_descrip', '订单付款备注:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
     <div class='col-xs-8 col-sm-10'>
     {!! Form::textarea('sohead_paymethod_descrip', null, ['class' => 'form-control', 'readonly', $attr, 'rows' => 3]) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('sohead_installeddate', '安装完毕日期:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+    <div class='col-xs-8 col-sm-10'>
+    {!! Form::text('sohead_installeddate', null, ['class' => 'form-control', 'readonly', $attr]) !!}
     </div>
 </div>
 
@@ -229,7 +247,7 @@
 <div class="form-group">
     {!! Form::label('paymentmethod', '付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::select('paymentmethod', array('支票' => '支票', '贷记' => '贷记', '电汇' => '电汇', '汇票' => '汇票', '现金' => '现金', '银行卡' => '银行卡', '其他' => '其他'), null, ['class' => 'form-control', 'placeholder' => '付款方式', $attr]) !!}
+    {!! Form::select('paymentmethod', array('支票' => '支票', '贷记' => '贷记', '电汇' => '电汇', '汇票' => '汇票', '现金' => '现金', '银行卡' => '银行卡', '其他' => '其他'), null, ['class' => 'form-control', 'placeholder' => '付款方式', $attr, $attrdisable]) !!}
     </div>
 </div>
 
