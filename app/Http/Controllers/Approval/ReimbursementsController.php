@@ -112,10 +112,13 @@ class ReimbursementsController extends Controller
                 $dtuserid = Auth::user()->dtuserid;
                 $deptnames = config('custom.dingtalk.approversettings.reimbursement.level3.'.$dtuserid);
                 $deptids = [];
-                foreach ($deptnames as $deptname) {
-                    $dept = Dept::where('name', $deptname)->first();
-                    if ($dept)
-                        array_push($deptids, $dept->id);
+                if ($deptnames != null)
+                {
+                    foreach ($deptnames as $deptname) {
+                        $dept = Dept::where('name', $deptname)->first();
+                        if ($dept)
+                            array_push($deptids, $dept->id);
+                    }
                 }
                 
                 $reimbursements = Reimbursement::leftJoin('users', 'reimbursements.applicant_id', '=', 'users.id')
