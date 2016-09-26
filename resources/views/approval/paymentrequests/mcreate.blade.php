@@ -3,9 +3,7 @@
 @section('title', '创建付款申请单')
 
 @section('main')
-{{--
 @can('approval_paymentrequest_create')
---}}
     {!! Form::open(array('url' => 'approval/paymentrequests/mstore', 'class' => 'form-horizontal', 'id' => 'formMain', 'files' => true)) !!}
         @include('approval.paymentrequests._form', 
         	[
@@ -24,14 +22,12 @@
 				'btnclass' => 'btn btn-primary',
         	])
     {!! Form::close() !!}
-{{--
 @else
 	<div class="alert alert-warning alert-block">
         <i class="fa fa-warning"></i>
         {{'无权限'}}
     </div>
 @endcan
---}}
 
 <!-- order selector -->
 <div class="modal fade" id="selectOrderModal" tabindex="-1" role="dialog">
