@@ -242,19 +242,6 @@
 							$("#sohead_paymethod").val(result.paymethod);
 							$("#sohead_paymethod_descrip").val(result.paymethod_descrip);
 							$("#sohead_installeddate").val(result.installeddate.substring(0, 10));
-							// var strhtml = '';
-							// $.each(result.data, function(i, field) {
-							// 	btnId = 'btnSelectOrder_' + String(i);
-							// 	strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.number + "</h4><p>" + field.descrip + "</p></button>"							
-							// });
-							// if (strhtml == '')
-							// 	strhtml = '无记录。';
-							// $("#listsalesorders").empty().append(strhtml);
-
-							// $.each(result.data, function(i, field) {
-							// 	btnId = 'btnSelectOrder_' + String(i);
-							// 	addBtnClickEvent(btnId, field.id, field.number, field.amount, field.amount_paid, field);
-							// });
 						},
 						error: function(xhr, ajaxOptions, thrownError) {
 							alert('error');

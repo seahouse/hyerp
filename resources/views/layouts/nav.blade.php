@@ -85,6 +85,7 @@
                     <ul class="dropdown-menu">
                         @can('module_approval')
                         <li><a href="/approval/reimbursements">报销</a></li>
+                        <li><a href="/approval/paymentrequests">供应商付款</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="/approval/approversettings">设置</a></li>
                         @endcan

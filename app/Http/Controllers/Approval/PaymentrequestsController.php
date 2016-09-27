@@ -27,6 +27,8 @@ class PaymentrequestsController extends Controller
     public function index()
     {
         //
+        $paymentrequests = Paymentrequest::latest('created_at')->paginate(10);
+        return view('approval.paymentrequests.index', compact('paymentrequests'));
     }
 
     public static function typeid()
@@ -257,6 +259,8 @@ class PaymentrequestsController extends Controller
     public function show($id)
     {
         //
+        $paymentrequest = Paymentrequest::findOrFail($id);
+        return view('approval.paymentrequests.show', compact('paymentrequest'));
     }
 
     /**
