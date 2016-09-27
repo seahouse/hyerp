@@ -75,8 +75,14 @@
 <div class="form-group">
     {!! Form::label('pohead_arrived', '到货情况:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->arrival_status)) 
-        {!! Form::text('pohead_arrived', $paymentrequest->purchaseorder_hxold->arrival_status, ['class' => 'form-control', $attr]) !!}
+    @if (isset($paymentrequest->purchaseorder_hxold->arrival_percent))
+        @if ($paymentrequest->purchaseorder_hxold->arrival_percent <= 0.0)
+            {!! Form::text('pohead_arrived', '未到货', ['class' => 'form-control', $attr]) !!}
+        @elseif ($paymentrequest->purchaseorder_hxold->arrival_percent > 0.0 and $paymentrequest->purchaseorder_hxold->arrival_percent < 0.99)
+            {!! Form::text('pohead_arrived', '部分到货', ['class' => 'form-control', $attr]) !!}
+        @else
+            {!! Form::text('pohead_arrived', '全部到货', ['class' => 'form-control', $attr]) !!}
+        @endif
     @else
         {!! Form::text('pohead_arrived', null, ['class' => 'form-control', $attr]) !!}
     @endif

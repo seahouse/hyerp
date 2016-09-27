@@ -228,7 +228,12 @@
 					$("#" + $("#selectOrderModal").find('#poheadamount').val()).val(amount);
 					$("#pohead_amount_paid").val(amount_paid);
 					$("#pohead_amount_ticketed").val(field.amount_ticketed);
-					$("#pohead_arrived").val(field.arrival_status);
+					var pohead_arrived = '未到货';
+					if (field.arrival_percent > 0.0 && field.arrival_percent < 0.99)
+						pohead_arrived = '部分到货';
+					else if (field.arrival_percent >= 0.99)
+						pohead_arrived = '全部到货';
+					$("#pohead_arrived").val(pohead_arrived);
 					$.ajax({
 						type: "GET",
 						url: "{!! url('/sales/salesorders/getitembyid/') !!}" + "/" + field.sohead_id,
