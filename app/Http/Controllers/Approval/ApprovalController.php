@@ -53,6 +53,7 @@ class ApprovalController extends Controller
         $paymentrequests = DB::table('paymentrequests')
             ->leftJoin('users', 'users.id', '=', 'paymentrequests.applicant_id')
             ->select('paymentrequests.id', 'users.name as applicant_name', 'paymentrequests.status', DB::raw('\'付款\' as type'), 'paymentrequests.created_at', DB::raw('\'/approval/paymentrequests/mshow/\' as url'))
+            ->where('applicant_id', $userid)
             ->union($reimbursements)
             ->latest('created_at')
             // ->take(10)
