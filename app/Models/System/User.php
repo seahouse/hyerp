@@ -74,6 +74,9 @@ class User extends Authenticatable
 
     // 获取钉钉的用户信息
     public function dingtalkGetUser() {
-        return DingTalkController::userGet($this->dtuserid);
+        if (strlen($this->dtuserid) > 0)
+            return DingTalkController::userGet($this->dtuserid);
+        else
+            return null;
     }
 }

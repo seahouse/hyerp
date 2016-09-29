@@ -24,6 +24,7 @@ class CreatePaymentrequestsTable extends Migration
             $table->decimal('amount', 18, 2)->default(0.0);             // 付款金额
             $table->string('paymentmethod')->nullable();                // 付款方式：支票、贷记、电汇、汇票、现金、银行卡、其他
 			$table->date('datepay')->nullable();                        // 支付日期
+			$table->integer('vendbank_id')->nullable();            		// 银行账号
             $table->string('bank')->nullable();							// 开户行
             $table->string('bankaccountnumber')->nullable();            // 银行账号
 			$table->integer('applicant_id');							// 申请人

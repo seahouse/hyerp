@@ -103,6 +103,66 @@
     </div>
 </div>
 
+<!-- supplier bank selector -->
+<div class="modal fade" id="selectSupplierBankModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">选择开户行与账号</h4>                
+            </div>
+            <div class="modal-body">
+{{--
+            	<div class="input-group">
+            		{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '供应商名称', 'id' => 'keySupplier']) !!}
+            		<span class="input-group-btn">
+                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchSupplier']) !!}
+                   	</span>
+            	</div>
+--}}
+            	{!! Form::hidden('name', null, ['id' => 'name']) !!}
+            	{!! Form::hidden('id', null, ['id' => 'id']) !!}
+            	<p>
+            		<div class="list-group" id="listsupplierbanks">
+
+            		</div>
+            	</p>
+            	<p>
+            		{!! Form::button('新增', ['class' => 'btn btn-sm', 'id' => 'btnShowAddVendbank']) !!}
+	                <form id="formAddVendbank">
+	                    {!! csrf_field() !!}
+						<div class="form-group">
+						    {!! Form::label('bankname', '开户行:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+						    <div class='col-xs-8 col-sm-10'>
+						    {!! Form::text('bankname', null, ['class' => 'form-control', 'placeholder' => '请输入开户行']) !!}
+						    </div>
+						</div>
+						<div class="form-group">
+						    {!! Form::label('accountnum', '银行账号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+						    <div class='col-xs-8 col-sm-10'>
+						    {!! Form::text('accountnum', null, ['class' => 'form-control', 'placeholder' => '请输入银行账号']) !!}
+						    </div>
+						</div>
+						{!! Form::hidden('vendinfo_id', 0, ['id' => 'vendinfo_id']) !!}
+						{!! Form::hidden('isdefault', 1, ['id' => 'isdefault']) !!}
+						{!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnAddVendbank']) !!}
+	{{--
+	                	{!! Form::hidden('reimbursement_id', $reimbursement->id, ['class' => 'form-control']) !!}
+	                    {!! Form::hidden('status', 0, ['class' => 'form-control']) !!} 
+	--}}
+	                </form>
+            	</p>
+            
+            </div>
+{{--
+            <div class="modal-footer">
+                {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
+                {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnAccept']) !!}
+            </div>
+--}}   
+        </div>
+    </div>
+</div>
+
 <!-- before submit -->
 <div class="modal fade" id="submitModal" tabindex="-1" role="dialog">
     <div class="modal-dialog">
@@ -172,7 +232,6 @@
 			$("#btnSubmitContinue").click(function() {
 				$("form#formMain").submit();
 			});
-
 
 
 			$('#selectOrderModal').on('show.bs.modal', function (e) {
@@ -300,10 +359,101 @@
 					$("#" + $("#selectSupplierModal").find('#id').val()).val(supplierid);
 					$("#supplier_bank").val(field.bank);
 					$("#supplier_bankaccountnumber").val(field.bankaccountnumber);
+					$("#vendbank_id").val(field.vendbank_id);
+					$("#selectSupplierBankModal").find("#vendinfo_id").val(supplierid);
 				});
 			}
 
+			$('#selectSupplierBankModal').on('show.bs.modal', function (e) {
+				$("#listsupplierbanks").empty();
+				$("form#formAddVendbank").hide();
+				$("#selectSupplierBankModal").find("#bankname").val("");
+				$("#selectSupplierBankModal").find("#accountnum").val("");
 
+				var text = $(e.relatedTarget);
+				var modal = $(this);
+
+				modal.find('#name').val(text.data('name'));
+				modal.find('#id').val(text.data('id'));
+			});
+
+			$('#selectSupplierBankModal').on('shown.bs.modal', function (e) {
+				// $("#listsupplierbanks").empty();
+
+				var text = $(e.relatedTarget);
+				var modal = $(this);
+
+				// modal.find('#listsupplierbanks').append("aaaa");
+				
+				$.ajax({
+					type: "GET",
+					url: "{!! url('/purchase/vendbank/getitemsbyvendid/') !!}" + "/" + $("#supplier_id").val(),
+					success: function(result) {
+						var strhtml = '';
+						$.each(result.data, function(i, field) {
+							btnId = 'btnSelectSupplierbank_' + String(i);
+							// strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.bankname + "</h4><p>" + field.accountnum + "</p></button>"		
+							strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + field.bankname + ": " + field.accountnum + "</button>"					
+						});
+						if (strhtml == '')
+							strhtml = '无记录。';
+						modal.find('#listsupplierbanks').empty().append(strhtml);
+
+						$.each(result.data, function(i, field) {
+							btnId = 'btnSelectSupplierbank_' + String(i);
+							addBtnClickEventSupplierbank(btnId, field);
+						});
+					},
+					error: function(xhr, ajaxOptions, thrownError) {
+						alert('error');
+					}
+				});
+			});
+
+			function addBtnClickEventSupplierbank(btnId, field)
+			{
+				$("#" + btnId).bind("click", function() {
+					$('#selectSupplierBankModal').modal('toggle');
+					// $("#" + $("#selectSupplierModal").find('#name').val()).val(name);
+					// $("#" + $("#selectSupplierModal").find('#id').val()).val(supplierid);
+					$("#vendbank_id").val(field.id);
+					$("#supplier_bank").val(field.bankname);
+					$("#supplier_bankaccountnumber").val(field.accountnum);
+				});
+			}
+
+			$("#btnShowAddVendbank").click(function() {
+				$("form#formAddVendbank").show();
+			});
+
+			$("#btnAddVendbank").click(function() {
+				if ($("#selectSupplierBankModal").find("#vendinfo_id").val() == 0)
+				{
+					alert("还未选中供应商。");
+					return;
+				}
+				if ($("#selectSupplierBankModal").find("#bankname").val().trim() == "" || $("#selectSupplierBankModal").find("#accountnum").val().trim() == "")
+				{
+					alert("开户行和银行账号不能为空。");
+					return;
+				}
+				$.ajax({
+					type: "POST",
+					url: "{{ url('purchase/vendbank') }}",
+					data: $("form#formAddVendbank").serialize(),
+					dataType: "json",
+					error:function(xhr, ajaxOptions, thrownError){
+						alert('error');
+					},
+					success:function(result){
+						alert("新增成功。");
+						$('#selectSupplierBankModal').modal('toggle');
+						$("#vendbank_id").val(result.id);
+						$("#supplier_bank").val(result.bankname);
+						$("#supplier_bankaccountnumber").val(result.accountnum);
+					},
+				});	
+			});
 
 			// $("#btnSelectImage").click(function() {
 			// 	var images = ['http://static.dingtalk.com/media/lADODGPhgM0CHM0DwA_960_540.jpg', 'http://static.dingtalk.com/media/lALODL7StM0DwM0CHA_540_960.png'];

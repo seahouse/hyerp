@@ -149,6 +149,10 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
     });
     Route::resource('vendinfos', 'VendinfosController');
     Route::resource('vendtypes', 'VendtypesController');
+    Route::group(['prefix' => 'vendbank'], function() {
+        Route::get('getitemsbyvendid/{vendid}', 'VendbankController@getitemsbyvendid');
+    });
+    Route::resource('vendbank', 'VendbankController');
     Route::get('purchaseorders/{id}/detail', 'PurchaseordersController@detail');
     Route::get('purchaseorders/{id}/receiving', 'PurchaseordersController@receiving');
     Route::group(['prefix' => 'purchaseorders/{purchaseorder}/payments'], function () {
