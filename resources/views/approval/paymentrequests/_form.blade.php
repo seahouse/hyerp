@@ -290,7 +290,10 @@
 <div class="form-group">
     {!! Form::label('supplier_bank', '开户行:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
+    {!! Form::text('supplier_bank', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+{{--
     {!! Form::text('supplier_bank', null, ['class' => 'form-control', 'placeholder' => '点击选择', 'readonly', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectSupplierBankModal', 'data-name' => 'supplier_name', 'data-id' => 'supplier_id']) !!}
+--}}
     {!! Form::hidden('vendbank_id', 0, ['id' => 'vendbank_id']) !!}
     </div>
 </div>
