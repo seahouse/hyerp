@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\DingTalkController;
 use App\Models\Approval\Paymentrequest;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Paymentrequestapproval;
@@ -116,7 +117,7 @@ class PaymentrequestapprovalsController extends Controller
             {
                 if (strlen($touser->dtuserid) > 0)
                     DingTalkController::send($touser->dtuserid, '', 
-                        '来自' . $reimbursement->applicant->name . '的付款申请单需要您审批.', 
+                        '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
                         config('custom.dingtalk.agentidlist.approval'));
             }
 

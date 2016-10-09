@@ -58,7 +58,7 @@ class ReimbursementsController extends Controller
             if ($approversetting->dept_id > 0 && strlen($approversetting->position) > 0)    // 设置了部门与职位才进行查找
             {
                 $user = User::where('dept_id', $approversetting->dept_id)->where('position', $approversetting->position)->first();
-                if ($user->id == $userid)
+                if ($user && $user->id == $userid)
                 {
                     $approversetting_id_my = $approversetting->id;
                     $approversetting_level = $approversetting->level;
