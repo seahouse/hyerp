@@ -116,7 +116,7 @@ class PaymentrequestapprovalsController extends Controller
             {
                 if (strlen($touser->dtuserid) > 0)
                     DingTalkController::send($touser->dtuserid, '', 
-                        '来自' . $reimbursement->applicant->name . '的付款申请单需要您审批.', 
+                        '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
                         config('custom.dingtalk.agentidlist.approval'));
             }
 
