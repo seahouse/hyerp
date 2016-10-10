@@ -67,6 +67,14 @@ class PaymentrequestapprovalsController extends Controller
      */
     public function mstore(Request $request)
     {
+        // DingTalkController::send_link('manager1200', '', 
+        //     view('approval/paymentrequestapprovals/mcreate'), '',
+        //     '供应商付款审批', 
+        //     url('approval/paymentrequestapprovals/' . $request->input('paymentrequest_id') . '/mcreate'), 
+        //     config('custom.dingtalk.agentidlist.approval'));
+        // return 'success';
+
+
         $input = $request->all();
         $userid = Auth::user()->id;
         // $myleveltable = Approversetting::where('approvaltype_id', ReimbursementsController::$approvaltype_id)
@@ -113,12 +121,16 @@ class PaymentrequestapprovalsController extends Controller
 
             // send dingtalk message.
             $touser = $paymentrequest->nextapprover();
-            if ($touser)
+            if ($touser && strlen($touser->dtuserid) > 0)
             {
-                if (strlen($touser->dtuserid) > 0)
-                    DingTalkController::send($touser->dtuserid, '', 
-                        '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
-                        config('custom.dingtalk.agentidlist.approval'));
+                DingTalkController::send($touser->dtuserid, '', 
+                    '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
+                    config('custom.dingtalk.agentidlist.approval'));
+
+                // DingTalkController::send_link($touser->dtuserid, '', 
+                //     url('approval/paymentrequestapprovals/' . $input['paymentrequest_id'] . '/mcreate'), '',
+                //     '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
+                //     config('custom.dingtalk.agentidlist.approval'));
             }
 
             return 'success';
