@@ -279,6 +279,43 @@ class DingTalkController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public static function send_link($touser, $toparty, $messageUrl, $picUrl, $title, $text, $agentid = '')
+    {
+        $url = 'https://oapi.dingtalk.com/message/send';
+        $access_token = self::getAccessToken();
+        $params = compact('access_token');
+        if ($agentid == '')
+            $agentid = config('custom.dingtalk.agentidlist.' . self::$APPNAME);
+        // $data = [
+        //     'touser' => $touser,
+        //     'toparty' => '',
+        //     'agentid' => $agentid,
+        //     'msgtype' => 'text',
+        //     'text' => [
+        //         'content' => $message,
+        //     ],
+        // ];
+        $data = [
+            'touser' => $touser,
+            'toparty' => '',
+            'agentid' => $agentid,
+            'msgtype' => 'link',
+            'link' => [
+                'messageUrl' => $messageUrl,
+                'picUrl' => $picUrl,
+                'title' => $title,
+                'text' => $text,
+            ],
+        ];
+        DingTalkController::post($url, $params, json_encode($data), false);
+    }
+
+    /**
+     * send enterprise message.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public static function userGet($userid) {
         $url = 'https://oapi.dingtalk.com/user/get';
         $access_token = self::getAccessToken();

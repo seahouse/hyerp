@@ -5,7 +5,7 @@
                 'submitButtonText' => '提交', 
                 'supplier_name' => null,
                 'pohead_number' => null,
-                'datepay' => date('Y-m-d'),
+                'datepay' => null,
                 'date' => null,
                 'customer_name' => null, 
                 'customer_id' => null, 
