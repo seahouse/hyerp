@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\DingTalkController;
 use App\Models\Approval\Paymentrequest;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Paymentrequestapproval;
