@@ -46,6 +46,9 @@
 	<script src="https://g.alicdn.com/ilw/ding/0.7.5/scripts/dingtalk.js"></script>
 	
 	<script type="text/javascript">
+		alert(history.length);
+		// alert(document.referrer);
+
 		// alert(" {!! array_get($config, 'url') !!}");
 		jQuery(document).ready(function(e) {
 			dd.config({
@@ -88,6 +91,8 @@
 			// 		});
    //              },
 			// });
+
+			
 
 			dd.ready(function() {
 				dd.runtime.info({
