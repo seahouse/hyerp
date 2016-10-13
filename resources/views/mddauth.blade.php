@@ -46,7 +46,6 @@
 	<script src="https://g.alicdn.com/ilw/ding/0.7.5/scripts/dingtalk.js"></script>
 	
 	<script type="text/javascript">
-		alert(history.length);
 		// alert(document.referrer);
 
 		// alert(" {!! array_get($config, 'url') !!}");
@@ -65,7 +64,8 @@
 			    jsApiList: ['runtime.info',
 			    	'device.notification.alert', 
 			    	'device.notification.confirm', 
-			    	'biz.util.uploadImage'] // 必填，需要使用的jsapi列表
+			    	'biz.util.uploadImage',
+			    	'biz.navigation.close'] // 必填，需要使用的jsapi列表
 			});
 
 			// $.ajax({
@@ -103,6 +103,18 @@
 						alert('fail: ' + JSON.stringify(err));
 					}
 				});
+
+				if (history.length > 1)
+				{
+					dd.biz.navigation.close({
+				    onSuccess : function(result) {
+				        /*result结构
+				        {}
+				        */
+				    },
+				    onFail : function(err) {}
+				})
+				}
 	
 				dd.runtime.permission.requestAuthCode({
 				    corpId: "{!! array_get($config, 'corpId') !!}",
