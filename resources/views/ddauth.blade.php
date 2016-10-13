@@ -103,7 +103,15 @@
 				DingTalkPC.runtime.permission.requestAuthCode({
 				    corpId: "{!! array_get($config, 'corpId') !!}",
 				    onSuccess: function(result) {
-				    	alert(result.code);
+						DingTalkPC.device.notification.alert({
+						    message: result.code,
+						    title: "提示",//可传空
+						    buttonName: "收到",
+						    onSuccess : function() {
+						        /*回调*/
+						    },
+						    onFail : function(err) {}
+						});
 			     	    $.ajax({
 			         	    type:"GET",
 			         	    url:"{{ url('dingtalk/getuserinfo') }}" + "/" + result.code,
