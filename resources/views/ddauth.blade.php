@@ -46,8 +46,10 @@
 	<script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
 	
 	<script type="text/javascript">
+		alert("aaa");
 		// alert(" {!! array_get($config, 'url') !!}");
 		jQuery(document).ready(function(e) {
+			alert("bbb");
 			DingTalkPC.config({
 			    // agentId: '13231599', // 必填，微应用ID
 			    // corpId: 'ding6ed55e00b5328f39',//必填，企业ID
@@ -69,6 +71,7 @@
 			
 
 			DingTalkPC.ready(function(res) {
+				alert("ccc");
 				// DingTalkPC.runtime.info({
 				// 	onSuccess: function(info) {
 				// 		// alert('runtime info: ' + JSON.stringify(info));
