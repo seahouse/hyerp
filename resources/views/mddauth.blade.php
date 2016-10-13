@@ -104,16 +104,17 @@
 					}
 				});
 
+				// if the page is not first history.back, exit it.
 				if (history.length > 1)
 				{
 					dd.biz.navigation.close({
-				    onSuccess : function(result) {
-				        /*result结构
-				        {}
-				        */
-				    },
-				    onFail : function(err) {}
-				})
+					    onSuccess : function(result) {
+					        /*result结构
+					        {}
+					        */
+					    },
+					    onFail : function(err) {}
+					});
 				}
 	
 				dd.runtime.permission.requestAuthCode({

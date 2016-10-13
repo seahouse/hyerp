@@ -39,7 +39,6 @@ Route::get('app2', function() {
 Route::group(['middleware' => ['web']], function () {
     // Route::get('mddauth', function() { return view('mddauth'); });
     Route::get('mddauth/{appname?}/{url?}', 'DingTalkController@mddauth');
-    Route::get('mapproval', function() { return view('mapproval'); });
 
 	Route::get('dingtalk/getuserinfo/{code}', 'DingTalkController@getuserinfo');
     Route::get('dingtalk/getconfig', 'DingTalkController@getconfig');
@@ -54,6 +53,7 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     //
     Route::get('/', function() { return view('navbarerp'); });
 	Route::get('/home', function() { return view('navbarerp'); });
+    Route::get('mapproval', function() { return view('mapproval'); });
 
 //     Route::resource('itemclasses', 'ItemclassesController');
 //     Route::post('items/search', 'ItemsController@search');
