@@ -66,18 +66,17 @@
 			    	'biz.navigation.close'] // 必填，需要使用的jsapi列表
 			});
 
-
 			
 
 			DingTalkPC.ready(function(res) {
-				DingTalkPC.runtime.info({
-					onSuccess: function(info) {
-						// alert('runtime info: ' + JSON.stringify(info));
-					},
-					onFail: function(err) {
-						alert('fail: ' + JSON.stringify(err));
-					}
-				});
+				// DingTalkPC.runtime.info({
+				// 	onSuccess: function(info) {
+				// 		// alert('runtime info: ' + JSON.stringify(info));
+				// 	},
+				// 	onFail: function(err) {
+				// 		alert('fail: ' + JSON.stringify(err));
+				// 	}
+				// });
 
 				// // if the page is not first history.back, exit it.
 				// if (history.length > 1)
@@ -94,10 +93,11 @@
 	
 				DingTalkPC.runtime.permission.requestAuthCode({
 				    corpId: "{!! array_get($config, 'corpId') !!}",
-				    onSuccess: function(info) {
+				    onSuccess: function(result) {
+				    	alert(result.code);
 			     	    $.ajax({
 			         	    type:"GET",
-			         	    url:"{{ url('dingtalk/getuserinfo') }}" + "/" + info.code,
+			         	    url:"{{ url('dingtalk/getuserinfo') }}" + "/" + result.code,
 			         	    error:function(xhr, ajaxOptions, thrownError){
 			             	    alert('error');
 								alert(xhr.status);
