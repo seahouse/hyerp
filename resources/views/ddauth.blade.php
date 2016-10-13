@@ -60,6 +60,7 @@
 			    nonceStr: "{!! array_get($config, 'nonceStr') !!}", // 必填，生成签名的随机串
 			    signature: "{!! array_get($config, 'signature') !!}", // 必填，签名
 			    jsApiList: ['runtime.info',
+			    	'runtime.permission.requestAuthCode',
 			    	'device.notification.alert', 
 			    	'device.notification.confirm', 
 			    	'biz.util.uploadImage',
@@ -71,7 +72,7 @@
 			DingTalkPC.ready(function(res) {
 				DingTalkPC.device.notification.alert({
 				    message: "{!! array_get($config, 'corpId') !!}",
-				    title: "提示",//可传空
+				    title: "ready",//可传空
 				    buttonName: "收到",
 				    onSuccess : function() {
 				        /*回调*/
@@ -137,7 +138,7 @@
 				    onFail : function(err) {
 						DingTalkPC.device.notification.alert({
 						    message: JSON.stringify(err),
-						    title: "提示",//可传空
+						    title: "requestAuthCode",//可传空
 						    buttonName: "收到",
 						    onSuccess : function() {
 						        /*回调*/
