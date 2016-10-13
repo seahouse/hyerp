@@ -70,15 +70,6 @@
 			
 
 			DingTalkPC.ready(function(res) {
-				DingTalkPC.device.notification.alert({
-				    message: "{!! array_get($config, 'corpId') !!}",
-				    title: "ready",//可传空
-				    buttonName: "收到",
-				    onSuccess : function() {
-				        /*回调*/
-				    },
-				    onFail : function(err) {}
-				});
 				// DingTalkPC.runtime.info({
 				// 	onSuccess: function(info) {
 				// 		// alert('runtime info: ' + JSON.stringify(info));
@@ -104,30 +95,41 @@
 				DingTalkPC.runtime.permission.requestAuthCode({
 				    corpId: "{!! array_get($config, 'corpId') !!}",
 				    onSuccess: function(result) {
-						DingTalkPC.device.notification.alert({
-						    message: result.code,
-						    title: "提示",//可传空
-						    buttonName: "收到",
-						    onSuccess : function() {
-						        /*回调*/
-						    },
-						    onFail : function(err) {}
-						});
 			     	    $.ajax({
 			         	    type:"GET",
 			         	    url:"{{ url('dingtalk/getuserinfo') }}" + "/" + result.code,
 			         	    error:function(xhr, ajaxOptions, thrownError){
-			             	    alert('error');
-								alert(xhr.status);
-								alert(xhr.responseText);
-								alert(ajaxOptions);
-								alert(thrownError);
+								DingTalkPC.device.notification.alert({
+								    message: "登录错误",
+								    title: "登录错误",//可传空
+								    buttonName: "收到",
+								    onSuccess : function() {
+								        /*回调*/
+								    },
+								    onFail : function(err) {}
+								});
+			     //         	    alert('error');
+								// alert(xhr.status);
+								// alert(xhr.responseText);
+								// alert(ajaxOptions);
+								// alert(thrownError);
 			             	},
 			             	success:function(msg){
 			             	    // alert('userid: ' + msg.userid);
 			             	    // alert('userid_erp: ' + msg.userid_erp);
 			             	    if (msg.userid_erp == -1)
-			             	    	alert('您的账号未与后台绑定，无法使用此应用.');
+			             	    {
+									DingTalkPC.device.notification.alert({
+									    message: "登录错误",
+									    title: "登录错误",//可传空
+									    buttonName: "收到",
+									    onSuccess : function() {
+									        /*回调*/
+									    },
+									    onFail : function(err) {}
+									});
+			             	    	// alert('您的账号未与后台绑定，无法使用此应用.');
+			             	    }
 			             	    else if ("{!! array_get($config, 'appname') !!}" == "approval")
 			             	    {
 			             	    	location.href = "{{ url('/mapproval') }}";
