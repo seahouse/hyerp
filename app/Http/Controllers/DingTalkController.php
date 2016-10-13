@@ -139,6 +139,16 @@ class DingTalkController extends Controller
         // dd(compact('config'));
         return view('mddauth', compact('config'));
     }
+
+    public function ddauth($appname = 'approval')
+    {
+        // Cache::flush();
+        // self::$AGENTID = array_get(self::$AGENTIDS, request('app'), '13231599');
+        self::$APPNAME = $appname;
+        $config = $this->getconfig();
+        // dd(compact('config'));
+        return view('ddauth', compact('config'));
+    }
     
     public function index()
     {
