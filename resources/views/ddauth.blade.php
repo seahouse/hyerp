@@ -70,7 +70,7 @@
 
 			DingTalkPC.ready(function(res) {
 				DingTalkPC.device.notification.alert({
-				    message: "亲爱的",
+				    message: "{!! array_get($config, 'corpId') !!}",
 				    title: "提示",//可传空
 				    buttonName: "收到",
 				    onSuccess : function() {
@@ -135,7 +135,16 @@
 			         	});
 				    },
 				    onFail : function(err) {
-						alert('requestAuthCode fail: ' + JSON.stringify(err));
+						DingTalkPC.device.notification.alert({
+						    message: JSON.stringify(err),
+						    title: "提示",//可传空
+						    buttonName: "收到",
+						    onSuccess : function() {
+						        /*回调*/
+						    },
+						    onFail : function(err) {}
+						});
+						// alert('requestAuthCode fail: ' + JSON.stringify(err));
 					}
 				});
 			});
