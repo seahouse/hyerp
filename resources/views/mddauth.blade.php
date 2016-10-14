@@ -40,6 +40,24 @@
 	@foreach ($config as $key => $value)
 		{!! Form::hidden($key, $value, ['id' => $key]) !!}
     @endforeach
+    $agent->is('Windows'): {{ $agent->is('Windows') }}		<br>
+    $agent->is('Firefox'): {{ $agent->is('Firefox') }}		<br>
+    $agent->is('iPhone'): {{ $agent->is('iPhone') }}		<br>
+    $agent->is('OS X'): {{ $agent->is('OS X') }}			<br>
+    $agent->isAndroidOS(): {{ $agent->isAndroidOS() }}		<br>
+    $agent->isNexus(): {{ $agent->isNexus() }}				<br>
+    $agent->isSafari(): {{ $agent->isSafari() }}			<br>
+    $agent->isMobile(): {{ $agent->isMobile() }}			<br>
+    $agent->isTablet(): {{ $agent->isTablet() }}			<br>
+<!--     $agent->languages():			<br> -->
+	$agent->device(): {{ $agent->device() }}				<br>
+    $agent->platform(): {{ $agent->platform() }}			<br>
+    $agent->browser(): {{ $agent->browser() }}				<br>
+    $agent->isDesktop(): {{ $agent->isDesktop() }}			<br>
+    $agent->isPhone(): {{ $agent->isPhone() }}				<br>
+    $agent->isRobot(): {{ $agent->isRobot() }}				<br>
+    $agent->robot(): {{ $agent->robot() }}					<br>
+    $agent->isPhone(): {{ $agent->isPhone() }}				<br>
 @endsection
 
 @section('script')

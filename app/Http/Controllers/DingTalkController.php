@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Cache;
 use DB, Auth, Config;
+use Jenssegers\Agent\Agent;
 
 class DingTalkController extends Controller
 {
@@ -137,7 +138,8 @@ class DingTalkController extends Controller
         self::$APPNAME = $appname;
         $config = $this->getconfig();
         // dd(compact('config'));
-        return view('mddauth', compact('config'));
+        $agent = new Agent();
+        return view('mddauth', compact('config', 'agent'));
     }
 
     public function ddauth($appname = 'approval')
@@ -147,7 +149,9 @@ class DingTalkController extends Controller
         self::$APPNAME = $appname;
         $config = $this->getconfig();
         // dd(compact('config'));
-        return view('ddauth', compact('config'));
+        $agent = new Agent();
+        // dd($agent->is('Firefox'));
+        return view('ddauth', compact('config', 'agent'));
     }
     
     public function index()
