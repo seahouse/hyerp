@@ -175,12 +175,11 @@
 		});
 	</script>
 @endsection
-@else
+@elseif (0)
 @section('script')
 	<script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
 	
 	<script type="text/javascript">
-		// alert(" {!! array_get($config, 'url') !!}");
 		jQuery(document).ready(function(e) {
 			DingTalkPC.config({
 			    // agentId: '13231599', // 必填，微应用ID
