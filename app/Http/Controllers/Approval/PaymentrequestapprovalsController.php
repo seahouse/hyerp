@@ -132,7 +132,7 @@ class PaymentrequestapprovalsController extends Controller
             //     config('custom.dingtalk.agentidlist.approval'));
 
             DingTalkController::send_link($touser->dtuserid, '', 
-                url('mddauth/approval'), '',
+                url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
                 '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
                 config('custom.dingtalk.agentidlist.approval'));
         }
