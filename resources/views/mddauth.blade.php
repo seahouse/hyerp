@@ -161,7 +161,7 @@
 			             	    	var url = '{!! $url !!}';
 			             	    	alert(url);
 			             	    	alert("{{ url('/mapproval') }}");
-			             	    	alert("{{ url('/$url') }}");
+			             	    	alert("{!! url('/$url') !!}");
 			             	    	if ('{!! $url !!}' != '')
 			             	    		location.href = "{{ url('/{!! $url !!}') }}";
 			             	    	else
