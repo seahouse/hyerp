@@ -60,7 +60,8 @@
 
     <!-- can not display array value -->
     <!--     $agent->languages():			<br> -->
-    {{ $url }}sfasdfasf
+    
+    <!-- {{ $url }} -->
 @endsection
 
 @if ($agent->isMobile())
