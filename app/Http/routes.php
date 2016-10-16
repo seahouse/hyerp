@@ -38,7 +38,7 @@ Route::get('app2', function() {
 
 Route::group(['middleware' => ['web']], function () {
     // Route::get('mddauth', function() { return view('mddauth'); });
-    Route::get('mddauth/{appname?}/{type?}/{id?}', 'DingTalkController@mddauth');
+    Route::get('mddauth/{appname?}/{url?}', 'DingTalkController@mddauth');
     Route::get('ddauth/{appname?}/{url?}', 'DingTalkController@ddauth');
 
 	Route::get('dingtalk/getuserinfo/{code}', 'DingTalkController@getuserinfo');

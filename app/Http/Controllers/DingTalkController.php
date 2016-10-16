@@ -131,7 +131,7 @@ class DingTalkController extends Controller
         return response()->json($user);
     }
 
-    public function mddauth($appname = 'approval', $type = '', $id = '')
+    public function mddauth($appname = 'approval', $url = '')
     {
         // dd($type);
         // Cache::flush();
@@ -140,7 +140,8 @@ class DingTalkController extends Controller
         $config = $this->getconfig();
         // dd(compact('config'));
         $agent = new Agent();
-        return view('mddauth', compact('config', 'agent', 'type', 'id'));
+        $url = str_replace("-", "/", $url);
+        return view('mddauth', compact('config', 'agent', 'url'));
     }
 
     public function ddauth($appname = 'approval')

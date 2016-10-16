@@ -158,8 +158,10 @@
 			             	    	alert('您的账号未与后台绑定，无法使用此应用.');
 			             	    else if ("{!! array_get($config, 'appname') !!}" == "approval")
 			             	    {
-			             	    	alert('{!! $type !!}');
-			             	    	location.href = "{{ url('/mapproval') }}";
+			             	    	if ('{!! $url !!}' != '')
+			             	    		location.href = "{{ url('/{!! $url !!}') }}";
+			             	    	else
+			             	    		location.href = "{{ url('/mapproval') }}";
 			             	    }
 			                },
 			         	});
