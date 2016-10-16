@@ -131,7 +131,7 @@ class DingTalkController extends Controller
         return response()->json($user);
     }
 
-    public function mddauth($appname = 'approval')
+    public function mddauth($appname = 'approval', $type = '', $id = '')
     {
         // Cache::flush();
         // self::$AGENTID = array_get(self::$AGENTIDS, request('app'), '13231599');
@@ -139,7 +139,7 @@ class DingTalkController extends Controller
         $config = $this->getconfig();
         // dd(compact('config'));
         $agent = new Agent();
-        return view('mddauth', compact('config', 'agent'));
+        return view('mddauth', compact('config', 'agent', 'type', 'id'));
     }
 
     public function ddauth($appname = 'approval')
