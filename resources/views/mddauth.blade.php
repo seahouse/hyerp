@@ -60,6 +60,7 @@
 
     <!-- can not display array value -->
     <!--     $agent->languages():			<br> -->
+    {{ $url }}sfasdfasf
 @endsection
 
 @if ($agent->isMobile())
@@ -71,6 +72,8 @@
 
 		// alert(" {!! array_get($config, 'url') !!}");
 		jQuery(document).ready(function(e) {
+
+
 			dd.config({
 			    // agentId: '13231599', // 必填，微应用ID
 			    // corpId: 'ding6ed55e00b5328f39',//必填，企业ID
@@ -159,11 +162,8 @@
 			             	    else if ("{!! array_get($config, 'appname') !!}" == "approval")
 			             	    {
 			             	    	var url = '{!! $url !!}';
-			             	    	alert(url);
-			             	    	alert("{{ url('/mapproval') }}");
-			             	    	alert("{!! url('/$url') !!}");
 			             	    	if ('{!! $url !!}' != '')
-			             	    		location.href = "{{ url('/{!! $url !!}') }}";
+			             	    		location.href = "{!! url('/') !!}" + "/" + url;
 			             	    	else
 			             	    		location.href = "{{ url('/mapproval') }}";
 			             	    }
@@ -298,4 +298,15 @@
 		});
 	</script>
 @endsection
+@else
+<script type="text/javascript">
+    	var url = '{!! $url !!}';
+    	alert(url);
+    	alert("{{ url('/mapproval') }}");
+    	alert("{!! url('/') !!}" + "/" + url);
+    	if ('{!! $url !!}' != '')
+    		location.href = "{!! url('/') !!}" + "/" + url;
+    	else
+    		location.href = "{{ url('/mapproval') }}";
+</script>
 @endif
