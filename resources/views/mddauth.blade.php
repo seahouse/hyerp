@@ -159,7 +159,7 @@
 			             	    else if ("{!! array_get($config, 'appname') !!}" == "approval")
 			             	    {
 			             	    	alert('{!! $url !!}');
-			             	    	alert("{!! url('/$url') !!}");
+			             	    	alert("@{{ url }}");
 			             	    	if ('{!! $url !!}' != '')
 			             	    		location.href = "{{ url('/{!! $url !!}') }}";
 			             	    	else
