@@ -241,10 +241,20 @@ class PaymentrequestsController extends Controller
             $touser = $paymentrequest->nextapprover();
             if ($touser)
             {
-                DingTalkController::send($touser->dtuserid, '', 
-                    '来自' . $paymentrequest->applicant->name . '的付款单需要您审批.', 
-                    config('custom.dingtalk.agentidlist.approval'));         
-            }      
+                // DingTalkController::send($touser->dtuserid, '', 
+                //     '来自' . $paymentrequest->applicant->name . '的付款单需要您审批.', 
+                //     config('custom.dingtalk.agentidlist.approval'));     
+
+                // DingTalkController::send_link($touser->dtuserid, '', 
+                //     url('approval/paymentrequestapprovals/' . $input['paymentrequest_id'] . '/mcreate'), '',
+                //     '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
+                //     config('custom.dingtalk.agentidlist.approval'));    
+
+                DingTalkController::send_link($touser->dtuserid, '', 
+                    url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
+                    '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
+                    config('custom.dingtalk.agentidlist.approval'));
+            }
         }
 
         return redirect('approval/mindexmy');

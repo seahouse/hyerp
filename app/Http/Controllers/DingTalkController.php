@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Cache;
 use DB, Auth, Config;
+use Jenssegers\Agent\Agent;
 
 class DingTalkController extends Controller
 {
@@ -130,14 +131,29 @@ class DingTalkController extends Controller
         return response()->json($user);
     }
 
-    public function mddauth($appname = 'approval')
+    public function mddauth($appname = 'approval', $url = '')
+    {
+        // dd($url);
+        // Cache::flush();
+        // self::$AGENTID = array_get(self::$AGENTIDS, request('app'), '13231599');
+        self::$APPNAME = $appname;
+        $config = $this->getconfig();
+        // dd(compact('config'));
+        $agent = new Agent();
+        $url = str_replace("-", "/", $url);
+        return view('mddauth', compact('config', 'agent', 'url'));
+    }
+
+    public function ddauth($appname = 'approval')
     {
         // Cache::flush();
         // self::$AGENTID = array_get(self::$AGENTIDS, request('app'), '13231599');
         self::$APPNAME = $appname;
         $config = $this->getconfig();
         // dd(compact('config'));
-        return view('mddauth', compact('config'));
+        $agent = new Agent();
+        // dd($agent->is('Firefox'));
+        return view('ddauth', compact('config', 'agent'));
     }
     
     public function index()
@@ -268,6 +284,43 @@ class DingTalkController extends Controller
             'msgtype' => 'text',
             'text' => [
                 'content' => $message,
+            ],
+        ];
+        DingTalkController::post($url, $params, json_encode($data), false);
+    }
+
+    /**
+     * send enterprise message.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public static function send_link($touser, $toparty, $messageUrl, $picUrl, $title, $text, $agentid = '')
+    {
+        $url = 'https://oapi.dingtalk.com/message/send';
+        $access_token = self::getAccessToken();
+        $params = compact('access_token');
+        if ($agentid == '')
+            $agentid = config('custom.dingtalk.agentidlist.' . self::$APPNAME);
+        // $data = [
+        //     'touser' => $touser,
+        //     'toparty' => '',
+        //     'agentid' => $agentid,
+        //     'msgtype' => 'text',
+        //     'text' => [
+        //         'content' => $message,
+        //     ],
+        // ];
+        $data = [
+            'touser' => $touser,
+            'toparty' => '',
+            'agentid' => $agentid,
+            'msgtype' => 'link',
+            'link' => [
+                'messageUrl' => $messageUrl,
+                'picUrl' => $picUrl,
+                'title' => $title,
+                'text' => $text,
             ],
         ];
         DingTalkController::post($url, $params, json_encode($data), false);

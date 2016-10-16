@@ -45,6 +45,12 @@ class PaymentrequestapprovalsController extends Controller
         $paymentrequest = Paymentrequest::findOrFail($paymentrequestid);
         // $config = DingTalkController::getconfig();
         // return view('approval/reimbursementapprovals/mcreate', compact('reimbursement', 'config'));
+        $touser = $paymentrequest->nextapprover();
+        if (!$touser)
+            return "此审批单无下一个审批人";
+        if ($touser && $touser->id != Auth::user()->id)
+            return "您无权限审批此审批单";
+
         return view('approval/paymentrequestapprovals/mcreate', compact('paymentrequest'));
     }
 
@@ -67,64 +73,71 @@ class PaymentrequestapprovalsController extends Controller
      */
     public function mstore(Request $request)
     {
+
         $input = $request->all();
         $userid = Auth::user()->id;
-        // $myleveltable = Approversetting::where('approvaltype_id', ReimbursementsController::$approvaltype_id)
-        //     ->where('approver_id', $userid)->first();
+
         $paymentrequest = Paymentrequest::findOrFail($input['paymentrequest_id']);
         $approversetting = Approversetting::findOrFail($paymentrequest->approversetting_id);
-        // if ($myleveltable)
+
+        if ($paymentrequest->nextapprover() && $paymentrequest->nextapprover()->id != $userid)
+            return "您不是该层级的审批人员。";
+
+        $input['level'] = $approversetting->level;
+        $input['approver_id'] = $userid;
+
+        $paymentrequestapproval = Paymentrequestapproval::create($input);
+
+        if ($input['status'] == '0')
         {
-            // $input['level'] = $myleveltable->level;
-            $input['level'] = $approversetting->level;
-            $input['approver_id'] = $userid;
-
-            $paymentrequestapproval = Paymentrequestapproval::create($input);
-
-            if ($input['status'] == '0')
+            // 设置下一个审批人
+            if ($paymentrequestapproval)
             {
-                // 设置下一个审批人
-                if ($paymentrequestapproval)
-                {
-                    $approversettingNext = Approversetting::where('approvaltype_id', PaymentrequestsController::typeid())->where('level', '>', $approversetting->level)->orderBy('level')->first();
-                    if ($approversettingNext)
-                        $paymentrequest->approversetting_id = $approversettingNext->id;
-                    else
-                        $paymentrequest->approversetting_id = 0; // 已走完
+                $approversettingNext = Approversetting::where('approvaltype_id', PaymentrequestsController::typeid())->where('level', '>', $approversetting->level)->orderBy('level')->first();
+                if ($approversettingNext)
+                    $paymentrequest->approversetting_id = $approversettingNext->id;
+                else
+                    $paymentrequest->approversetting_id = 0; // 已走完
 
-                    $paymentrequest->save();
-                }
+                $paymentrequest->save();
             }
-            elseif ($input['status'] == '-1') {
-                // 设置上一个审批人
-                if ($paymentrequestapproval)
-                {
-                    $paymentrequest = Paymentrequest::findOrFail($paymentrequestapproval->paymentrequest_id);
-                    $approversetting = Approversetting::findOrFail($paymentrequest->approversetting_id);
-                    $approversettingNext = Approversetting::where('approvaltype_id', PaymentrequestsController::typeid())->where('level', '<', $approversetting->level)->orderBy('level', 'desc')->first();
-                    if ($approversettingNext)
-                        $paymentrequest->approversetting_id = $approversettingNext->id;
-                    else
-                        $paymentrequest->approversetting_id = 0; // 已走完
-
-                    $paymentrequest->save();
-                }
-            }
-
-            // send dingtalk message.
-            $touser = $paymentrequest->nextapprover();
-            if ($touser)
+        }
+        elseif ($input['status'] == '-1') {
+            // 设置上一个审批人
+            if ($paymentrequestapproval)
             {
-                if (strlen($touser->dtuserid) > 0)
-                    DingTalkController::send($touser->dtuserid, '', 
-                        '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
-                        config('custom.dingtalk.agentidlist.approval'));
-            }
+                $paymentrequest = Paymentrequest::findOrFail($paymentrequestapproval->paymentrequest_id);
+                $approversetting = Approversetting::findOrFail($paymentrequest->approversetting_id);
+                $approversettingNext = Approversetting::where('approvaltype_id', PaymentrequestsController::typeid())->where('level', '<', $approversetting->level)->orderBy('level', 'desc')->first();
+                if ($approversettingNext)
+                    $paymentrequest->approversetting_id = $approversettingNext->id;
+                else
+                    $paymentrequest->approversetting_id = 0; // 已走完
 
-            return 'success';
+                $paymentrequest->save();
+            }
         }
 
-        return 'error';
+        // send dingtalk message.
+        $touser = $paymentrequest->nextapprover();
+        if ($touser && strlen($touser->dtuserid) > 0)
+        {
+            // DingTalkController::send($touser->dtuserid, '', 
+            //     '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
+            //     config('custom.dingtalk.agentidlist.approval'));
+
+            // DingTalkController::send_link($touser->dtuserid, '', 
+            //     url('approval/paymentrequestapprovals/' . $input['paymentrequest_id'] . '/mcreate'), '',
+            //     '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
+            //     config('custom.dingtalk.agentidlist.approval'));
+
+            DingTalkController::send_link($touser->dtuserid, '', 
+                url('mddauth/approval'), '',
+                '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
+                config('custom.dingtalk.agentidlist.approval'));
+        }
+
+        return 'success';
     }
 
     /**
