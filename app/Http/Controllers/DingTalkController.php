@@ -134,7 +134,7 @@ class DingTalkController extends Controller
     public function mddauth($appname = 'approval', $url = '')
     {
         // dd($type);
-        // Cache::flush();
+        Cache::flush();
         // self::$AGENTID = array_get(self::$AGENTIDS, request('app'), '13231599');
         self::$APPNAME = $appname;
         $config = $this->getconfig();
