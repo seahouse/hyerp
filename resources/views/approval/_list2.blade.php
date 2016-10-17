@@ -3,6 +3,12 @@
     <div class="reimbList list-group">
         <a href="{{ url($href_pre_paymentrequest . $item->id . $href_suffix) }}" class="list-group-item">
             {{-- 以下的代码判断说明：如果用户的头像url为空，则以名字显示，否则以这个头像url来显示图片 --}}
+            @if ($item->applicant->dt_avatar == '')
+                <div class='col-xs-2 col-sm-2'>{{ $item->applicant->name }}</div>
+            @else
+                <div class='col-xs-2 col-sm-2'><img class="name img" src="{{ $item->applicant->dt_avatar }}" /></div>
+            @endif
+{{--
             @if (null != $item->applicant->dingtalkGetUser())
                 @if ($item->applicant->dingtalkGetUser()->avatar == '')
                     <div class='col-xs-2 col-sm-2 name'>{{ $item->applicant->dingtalkGetUser()->name }}</div>
@@ -11,12 +17,6 @@
                 @endif
             @else
                 <div class='col-xs-2 col-sm-2 name'>{{ $item->applicant->name }}</div>
-            @endif
-{{--
-            @if (Auth::user()->dingtalkGetUser()->avatar == '')
-                <div class='col-xs-2 col-sm-2 name'>{{ Auth::user()->dingtalkGetUser()->name }}</div>
-            @else
-                <div class='col-xs-2 col-sm-2'><img class="name img" src="{{ Auth::user()->dingtalkGetUser()->avatar }}" /></div>
             @endif
 --}}
             <div class='col-xs-7 col-sm-7 content'>
@@ -41,6 +41,12 @@
     <div class="reimbList list-group">
         <a href="{{ url($href_pre . $item->id . $href_suffix) }}" class="list-group-item">
             {{-- 以下的代码判断说明：如果用户的头像url为空，则以名字显示，否则以这个头像url来显示图片 --}}
+            @if ($item->applicant->dt_avatar == '')
+                <div class='col-xs-2 col-sm-2'>{{ $item->applicant->name }}</div>
+            @else
+                <div class='col-xs-2 col-sm-2'><img class="name img" src="{{ $item->applicant->dt_avatar }}" /></div>
+            @endif
+{{--
             @if (null != $item->applicant->dingtalkGetUser())
                 @if ($item->applicant->dingtalkGetUser()->avatar == '')
                     <div class='col-xs-2 col-sm-2 name'>{{ $item->applicant->dingtalkGetUser()->name }}</div>
@@ -49,12 +55,6 @@
                 @endif
             @else
                 <div class='col-xs-2 col-sm-2 name'>{{ $item->applicant->name }}</div>
-            @endif
-{{--
-            @if (Auth::user()->dingtalkGetUser()->avatar == '')
-                <div class='col-xs-2 col-sm-2 name'>{{ Auth::user()->dingtalkGetUser()->name }}</div>
-            @else
-                <div class='col-xs-2 col-sm-2'><img class="name img" src="{{ Auth::user()->dingtalkGetUser()->avatar }}" /></div>
             @endif
 --}}
             <div class='col-xs-7 col-sm-7 content'>
