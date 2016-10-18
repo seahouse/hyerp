@@ -65,8 +65,9 @@ class ApprovalController extends Controller
 
         // $approvals = $reimbursements + $paymentrequests;
         // dd($paymentrequests);
+        $dduser = Auth::user()->dingtalkGetUser();
 
-        return view('approval.mindexmy', compact('items'));
+        return view('approval.mindexmy', compact('items', 'dduser'));
     }
 
     /**
