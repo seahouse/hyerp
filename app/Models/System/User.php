@@ -72,11 +72,16 @@ class User extends Authenticatable
         return PaymentrequestsController::myapproval();
     }
 
-    // 获取钉钉的用户信息
+    // 获取钉钉的用户信息（远程）
     public function dingtalkGetUser() {
         if (strlen($this->dtuserid) > 0)
             return DingTalkController::userGet($this->dtuserid);
         else
             return null;
+    }
+
+    // 获取钉钉的用户信息（本地）
+    public function dtuser() {
+        return $this->hasOne('App\Models\System\Dtuser');
     }
 }

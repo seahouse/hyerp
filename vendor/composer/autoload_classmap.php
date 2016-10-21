@@ -26,6 +26,7 @@ return array(
     'CreateCountysTable' => $baseDir . '/database/migrations/2015_08_14_023833_create_countys_table.php',
     'CreateCustinfosTable' => $baseDir . '/database/migrations/2015_08_20_065111_create_custinfos_table.php',
     'CreateDeptsTable' => $baseDir . '/database/migrations/2015_08_20_083905_create_depts_table.php',
+    'CreateDtusersTable' => $baseDir . '/database/migrations/2016_10_21_133537_create_dtusers_table.php',
     'CreateEmployeeTable' => $baseDir . '/database/migrations/2015_08_25_065400_create_employee_table.php',
     'CreateImagesTable' => $baseDir . '/database/migrations/2015_08_21_022329_create_images_table.php',
     'CreateItemclassesTable' => $baseDir . '/database/migrations/2015_07_08_024921_create_itemclasses_table.php',

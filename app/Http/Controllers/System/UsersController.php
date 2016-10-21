@@ -13,6 +13,7 @@ use App\Http\Requests\System\UserRequest;
 use App\Http\Requests\System\UpdateUserRequest;
 use App\Http\Requests\System\UpdateUserPassRequest;
 use App\Models\System\Role;
+use App\Models\System\Dtuser;
 use Zizaco\Entrust\Entrust;
 use Illuminate\Support\Facades\Auth;
 
@@ -123,6 +124,43 @@ class UsersController extends Controller
         $user->dept_id = $request->input('dept_id');
         $user->position = $request->input('position');
         $user->update();
+
+        $dtuser = $user->dingtalkGetUser();
+        if ($dtuser)
+        {
+            // dd($dtuser);
+            // $dtuser2 = Dtuser::firstOrCreate(['userid' => $dtuser->userid])
+            //     ->update($dtuser);
+            $dtuser2 = Dtuser::firstOrNew(['userid' => $dtuser->userid]);
+            // foreach ($dtuser as $key => $value) {
+            //     $dtuser2->$key = $value;
+            // }
+            $dtuser2->user_id       = $user->id;
+
+            $dtuser2->name          = $dtuser->name;
+            $dtuser2->tel           = $dtuser->tel;
+            $dtuser2->workPlace     = $dtuser->workPlace;
+            $dtuser2->remark        = $dtuser->remark;
+            $dtuser2->mobile        = $dtuser->mobile;
+            $dtuser2->email         = $dtuser->email;
+            // $dtuser2->orgEmail      = $dtuser->orgEmail;             // 无此元素
+            $dtuser2->active        = $dtuser->active;
+            $dtuser2->orderInDepts  = $dtuser->orderInDepts;
+            $dtuser2->isAdmin       = $dtuser->isAdmin;
+            $dtuser2->isBoss        = $dtuser->isBoss;
+            $dtuser2->dingId        = $dtuser->dingId;
+            $dtuser2->isLeaderInDepts = $dtuser->isLeaderInDepts;
+            $dtuser2->isHide        = $dtuser->isHide;
+            // $dtuser2->department    = $dtuser->department;           // 是个数组，暂不考虑
+            $dtuser2->position      = $dtuser->position;
+            $dtuser2->avatar        = $dtuser->avatar;
+            $dtuser2->jobnumber     = $dtuser->jobnumber;
+            // $dtuser2->extattr       = $dtuser->extattr;              // 无此元素
+            $dtuser2->save();
+            // Dtuser::where('userid', $dtuser->userid)->update($dtuser);
+            // $dtuser2->update($dtuser);
+        }
+
         return redirect('system/users');
     }
 
