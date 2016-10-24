@@ -138,11 +138,11 @@ class UsersController extends Controller
             $dtuser2->user_id       = $user->id;
 
             $dtuser2->name          = $dtuser->name;
-            $dtuser2->tel           = $dtuser->tel;
-            $dtuser2->workPlace     = $dtuser->workPlace;
-            $dtuser2->remark        = $dtuser->remark;
+            if (isset($dtuser->tel))        $dtuser2->tel           = $dtuser->tel;
+            if (isset($dtuser->workPlace))  $dtuser2->workPlace     = $dtuser->workPlace;
+            if (isset($dtuser->remark))     $dtuser2->remark        = $dtuser->remark;
             $dtuser2->mobile        = $dtuser->mobile;
-            $dtuser2->email         = $dtuser->email;
+            if (isset($dtuser->email))      $dtuser2->email         = $dtuser->email;
             // $dtuser2->orgEmail      = $dtuser->orgEmail;             // 无此元素
             $dtuser2->active        = $dtuser->active;
             $dtuser2->orderInDepts  = $dtuser->orderInDepts;
