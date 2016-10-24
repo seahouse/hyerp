@@ -3,10 +3,10 @@
     <div class="reimbList list-group">
         <a href="{{ url($href_pre_paymentrequest . $item->id . $href_suffix) }}" class="list-group-item">
             {{-- 以下的代码判断说明：如果用户的头像url为空，则以名字显示，否则以这个头像url来显示图片 --}}
-            @if (isset($item->applicant->dtuser))
+            @if (isset($item->applicant->dtuser->avatar))
                 <div class='col-xs-3 col-sm-2'><img class="name img" src="{{ $item->applicant->dtuser->avatar }}" /></div>
             @else
-                {{ $item->applicant->dtuser->avatar }}
+                {{ $item->applicant->name }}
                 <div class='col-xs-3 col-sm-2 name'>{{ $item->applicant->name }}</div>
             @endif
 {{--
@@ -42,10 +42,10 @@
     <div class="reimbList list-group">
         <a href="{{ url($href_pre . $item->id . $href_suffix) }}" class="list-group-item">
             {{-- 以下的代码判断说明：如果用户的头像url为空，则以名字显示，否则以这个头像url来显示图片 --}}
-            @if ($item->applicant->dt_avatar == '')
-                <div class='col-xs-3 col-sm-2 name'>{{ $item->applicant->name }}</div>
+            @if (isset($item->applicant->dtuser->avatar))
+                <div class='col-xs-3 col-sm-2'><img class="name img" src="{{ $item->applicant->dtuser->avatar }}" /></div>
             @else
-                <div class='col-xs-3 col-sm-2'><img class="name img" src="{{ $item->applicant->dt_avatar }}" /></div>
+                <div class='col-xs-3 col-sm-2 name'>{{ $item->applicant->name }}</div>
             @endif
 {{--
             @if (null != $item->applicant->dingtalkGetUser())
