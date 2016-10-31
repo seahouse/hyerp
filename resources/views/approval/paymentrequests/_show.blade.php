@@ -54,6 +54,8 @@
             // var order_number = String(@if (isset($reimbursement->order->number)) {{ $reimbursement->order->number }} @endif);
             // $("#order_number").val($("#order_number2").val());
             // $("#customer_name").val($("#customer_name2").val());
+            
+            // console.log("{{ $paymentrequest->purchaseorder_hxold->arrival_percent }}");
         });
     </script>
 

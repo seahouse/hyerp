@@ -12,6 +12,7 @@ use App\Models\Approval\Paymentrequest;
 use App\Models\Approval\Approvaltype;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Paymentrequestattachment;
+use App\Models\Purchase\Vendinfo_hxold;
 use Auth, DB;
 
 class PaymentrequestsController extends Controller
@@ -27,8 +28,51 @@ class PaymentrequestsController extends Controller
     public function index()
     {
         //
-        $paymentrequests = Paymentrequest::latest('created_at')->paginate(10);
-        return view('approval.paymentrequests.index', compact('paymentrequests'));
+        $request = request();
+        if ($request->has('key'))
+            $paymentrequests = $this->search2($request->input('key'));
+        else
+            $paymentrequests = Paymentrequest::latest('created_at')->paginate(10);
+
+        if ($request->has('key'))
+        {
+            $key = $request->input('key');
+            return view('approval.paymentrequests.index', compact('paymentrequests', 'key'));
+        }
+        else
+            return view('approval.paymentrequests.index', compact('paymentrequests'));
+    }
+
+    public function search(Request $request)
+    {
+        $key = $request->input('key');
+        if ($key == '')
+            return redirect('/approval/paymentrequests');
+
+        $paymentrequests = $this->search2($key);
+        
+        return view('approval.paymentrequests.index', compact('paymentrequests', 'key'));
+    }
+
+    public function search2($key)
+    {
+        if ($key == '')
+            return Paymentrequest::latest('created_at')->paginate(10);
+        
+        $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+
+        $paymentrequests = Paymentrequest::latest('created_at')
+            ->leftJoin('users', 'users.id', '=', 'paymentrequests.applicant_id')
+            ->whereIn('supplier_id', $supplier_ids)
+            // ->orWhere('amount', $key)
+            ->orWhere('users.name', 'like', '%'.$key.'%')
+            // ->leftJoin('sqls.vsupplier', 'vsupplier.id', '=', 'paymentrequest.supplier_id')
+            // ->where('created_at', 'like', '%' . $key . '%')
+        ->select('paymentrequests.*')
+            ->paginate(10);
+        // ->where('item_number', 'like', '%' . $key . '%')->orWhere('item_name', 'like', '%' . $key . '%')->paginate(10);
+
+        return $paymentrequests;
     }
 
     public static function typeid()

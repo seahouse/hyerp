@@ -1,14 +1,13 @@
 @if ($items->count())
     @foreach($items as $item)
-    <div class="reimbList list-group">
+    <div class="reimbList list-group">       
         <a href="{{ url($item->url . $item->id . $href_suffix) }}" class="list-group-item">
-            {{-- 以下的代码判断说明：如果用户的头像url为空，则以名字显示，否则以这个头像url来显示图片 --}}
+            {{-- 以下的代码判断说明：如果用户的头像url为空，则以名字显示，否则以这个头像url来显示图片 --}}     
             @if ($dduser->avatar == '')
                 <div class='col-xs-3 col-sm-2 name'>{{ $dduser->name }}</div>
             @else
                 <div class='col-xs-3 col-sm-2'><img class="name img" src="{{ $dduser->avatar }}" /></div>
             @endif
-
             <div class='col-xs-6 col-sm-7 content'>
                 <div title="{{ $item->applicant_name }}的报销" class="title">{{ $item->applicant_name }}的{{ $item->type }}</div>
                 {{-- 以下的代码判断说明：如果审批id大于0，则显示“待审批”，否则显示“审批完成”。 --}}

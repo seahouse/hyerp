@@ -202,6 +202,8 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('mcreate', 'PaymentrequestsController@mcreate');
         Route::post('mstore', 'PaymentrequestsController@mstore');
         Route::get('mshow/{id}', 'PaymentrequestsController@mshow');
+        Route::post('search', 'PaymentrequestsController@search');              // 搜索功能
+        Route::get('search2/{key}', 'PaymentrequestsController@search2');         // 查询数据
     });
     Route::resource('paymentrequests', 'PaymentrequestsController');
     Route::resource('approversettings', 'ApproversettingsController');
