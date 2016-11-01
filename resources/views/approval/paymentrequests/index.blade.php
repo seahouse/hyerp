@@ -22,7 +22,7 @@
                 <button type="submit" class="btn btn-default btn-sm">查找</button>
             </div>
             <div class="pull-right input-group-sm">
-                <input type="text" class="form-control" name="key" placeholder="支付对象、本次请款额、申请人">    
+                <input type="text" class="form-control" name="key" placeholder="支付对象、对应项目名称、申请人">    
             </div>
         </form>
 

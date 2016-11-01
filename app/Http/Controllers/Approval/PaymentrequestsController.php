@@ -60,15 +60,17 @@ class PaymentrequestsController extends Controller
             return Paymentrequest::latest('created_at')->paginate(10);
         
         $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+        $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
 
         $paymentrequests = Paymentrequest::latest('created_at')
             ->leftJoin('users', 'users.id', '=', 'paymentrequests.applicant_id')
             ->whereIn('supplier_id', $supplier_ids)
             // ->orWhere('amount', $key)
+            ->orWhereIn('pohead_id', $purchaseorder_ids)
             ->orWhere('users.name', 'like', '%'.$key.'%')
             // ->leftJoin('sqls.vsupplier', 'vsupplier.id', '=', 'paymentrequest.supplier_id')
             // ->where('created_at', 'like', '%' . $key . '%')
-        ->select('paymentrequests.*')
+            ->select('paymentrequests.*')
             ->paginate(10);
         // ->where('item_number', 'like', '%' . $key . '%')->orWhere('item_name', 'like', '%' . $key . '%')->paginate(10);
 
