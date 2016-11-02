@@ -11,6 +11,7 @@
     </div>
 @endif
 
+
     {!! Form::model($paymentrequest, ['class' => 'form-horizontal']) !!}
         @include('approval.paymentrequests._form', 
             [
@@ -67,7 +68,6 @@
             // $("#order_number").val($("#order_number2").val());
             // $("#customer_name").val($("#customer_name2").val());
             
-            // console.log("{{ $paymentrequest->purchaseorder_hxold->arrival_percent }}");
         });
     </script>
 

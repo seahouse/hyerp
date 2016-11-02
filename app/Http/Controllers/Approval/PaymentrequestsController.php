@@ -434,9 +434,14 @@ class PaymentrequestsController extends Controller
         //
         $paymentrequest = Paymentrequest::findOrFail($id);
 
-        $str = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<style>body { font-family:  "DroidSansFallback"; } </style>
-            <p style="font-family: simsun;">献给母亲的爱</p> ';
+        $str = '<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+</head>
+<body>
+    <p style="font-family: DroidSansFallback;">献给母亲的爱</p>供应商类型
+</body>
+</html>';
         // $str .= "<body>供应商类型: " . "aaa</body>";
         // dd($str);
 
@@ -451,7 +456,7 @@ class PaymentrequestsController extends Controller
 
         // instantiate and use the dompdf class
         $dompdf = new Dompdf();
-        $dompdf->set_option('isFontSubsettingEnabled', true);
+        // $dompdf->set_option('isFontSubsettingEnabled', true);
         $dompdf->loadHtml($str);
 
         // (Optional) Setup the paper size and orientation
