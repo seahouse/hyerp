@@ -1,4 +1,16 @@
 @section('main')
+
+@if ($agent->isDesktop())    
+    <div class="panel-body">
+        <form class="pull-right" action="/approval/paymentrequests/exportitem/{{ $paymentrequest->id }}" method="post">
+            {!! csrf_field() !!}
+            <div class="pull-right">
+                <button type="submit" class="btn btn-default btn-sm">导出</button>
+            </div>
+        </form>
+    </div>
+@endif
+
     {!! Form::model($paymentrequest, ['class' => 'form-horizontal']) !!}
         @include('approval.paymentrequests._form', 
             [
@@ -54,6 +66,8 @@
             // var order_number = String(@if (isset($reimbursement->order->number)) {{ $reimbursement->order->number }} @endif);
             // $("#order_number").val($("#order_number2").val());
             // $("#customer_name").val($("#customer_name2").val());
+            
+            // console.log("{{ $paymentrequest->purchaseorder_hxold->arrival_percent }}");
         });
     </script>
 

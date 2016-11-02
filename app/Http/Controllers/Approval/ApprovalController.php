@@ -35,7 +35,7 @@ class ApprovalController extends Controller
         $userid = Auth::user()->id;
 
         $page = Input::get('page', 1);
-        $paginate = 10;
+        $paginate = 50;
 
         // $reimbursements = Reimbursement::latest('created_at')
         //     ->select('id')
@@ -121,7 +121,7 @@ class ApprovalController extends Controller
         // $reimbursements = Reimbursement::whereIn('id', $ids)->paginate(10);
         
         $ids_paymentrequest = Paymentrequestapproval::where('approver_id', $userid)->select('paymentrequest_id')->distinct()->pluck('paymentrequest_id');
-        $paymentrequests = Paymentrequest::latest('created_at')->whereIn('id', $ids_paymentrequest)->paginate(10);
+        $paymentrequests = Paymentrequest::latest('created_at')->whereIn('id', $ids_paymentrequest)->paginate(50);
         // dd($paymentrequests);
 
         return view('approval.mindexmyapprovaled', compact('reimbursements', 'paymentrequests'));

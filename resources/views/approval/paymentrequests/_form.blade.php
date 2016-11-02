@@ -244,7 +244,7 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('amount', '付款总额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('amount', '本次请款额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
     {!! Form::text('amount', null, ['class' => 'form-control', 'placeholder' => '请输入付款总额（人民币）（必填）', $attr]) !!}
     </div>

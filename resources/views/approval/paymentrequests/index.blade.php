@@ -12,19 +12,32 @@
         </div>
     </div>
     
-{{--    <div class="panel-body">
+    <div class="panel-body">
+{{--
         <a href="{{ URL::to('approval/items/create') }}" class="btn btn-sm btn-success">新建</a>
-        <form class="pull-right" action="/approval/items/search" method="post">
+--}}
+
+        <form class="pull-right" action="/approval/paymentrequests/export" method="post">
+            {!! csrf_field() !!}
+            <div class="pull-right">
+                <button type="submit" class="btn btn-default btn-sm">导出</button>
+            </div>
+        </form>
+{{--
+        <div class="pull-right">
+            <button class="btn btn-default btn-sm" id="btnExport">导出</button>
+        </div>
+--}}
+        <form class="pull-right" action="/approval/paymentrequests/search" method="post">
             {!! csrf_field() !!}
             <div class="pull-right">
                 <button type="submit" class="btn btn-default btn-sm">查找</button>
             </div>
             <div class="pull-right input-group-sm">
-                <input type="text" class="form-control" name="key" placeholder="Search">    
+                <input type="text" class="form-control" name="key" placeholder="支付对象、对应项目名称、申请人">    
             </div>
         </form>
-
-    </div> --}}
+    </div> 
 
     
     @if ($paymentrequests->count())
@@ -32,10 +45,14 @@
         <thead>
             <tr>
                 <th>申请日期</th>
+                <th>支付对象</th>
 {{--
                 <th>报销编号</th>
 --}}
-                <th>报销金额</th>
+                <th>本次请款额</th>
+                <th>对应项目</th>
+                <th>已开票金额</th>
+                <th>合同金额</th>
                 <th>申请人</th>
                 <th style="width: 120px">操作</th>
             </tr>
@@ -46,6 +63,9 @@
                     <td>
                         <a href="{{ url('/approval/paymentrequests', $paymentrequest->id) }}" target="_blank">{{ $paymentrequest->created_at }}</a>
                     </td>
+                    <td>
+                        @if (isset($paymentrequest->supplier_hxold->name))  {{ $paymentrequest->supplier_hxold->name }} @else @endif
+                    </td>
 {{--
                     <td>
                         {{ $paymentrequest->number }}
@@ -54,7 +74,15 @@
                     <td>
                         {{ $paymentrequest->amount }}
                     </td>
-
+                    <td title="@if (isset($paymentrequest->purchaseorder_hxold->descrip)) {{ $paymentrequest->purchaseorder_hxold->descrip }} @else @endif">
+                        @if (isset($paymentrequest->purchaseorder_hxold->descrip)) {{ str_limit($paymentrequest->purchaseorder_hxold->descrip, 40) }} @else @endif
+                    </td>
+                    <td>
+                        @if (isset($paymentrequest->purchaseorder_hxold->amount_ticketed)) {{ $paymentrequest->purchaseorder_hxold->amount_ticketed }} @else @endif
+                    </td>
+                    <td>
+                        @if (isset($paymentrequest->purchaseorder_hxold->amount)) {{ $paymentrequest->purchaseorder_hxold->amount }} @else @endif
+                    </td>
                     <td>
                         {{ $paymentrequest->applicant->name }}
                     </td>
@@ -69,7 +97,11 @@
         </tbody>
 
     </table>
-    {!! $paymentrequests->render() !!}
+    @if (isset($key))
+        {!! $paymentrequests->setPath('/approval/paymentrequests')->appends(['key' => $key])->links() !!}
+    @else
+        {!! $paymentrequests->setPath('/approval/paymentrequests')->links() !!}
+    @endif
     @else
     <div class="alert alert-warning alert-block">
         <i class="fa fa-warning"></i>
@@ -77,4 +109,25 @@
     </div>
     @endif    
 
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+        jQuery(document).ready(function(e) {
+            $("#btnExport").click(function() {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('approval/paymentrequests/export') }}",
+                    // data: $("form#formAddVendbank").serialize(),
+                    // dataType: "json",
+                    error:function(xhr, ajaxOptions, thrownError){
+                        alert('error');
+                    },
+                    success:function(result){
+                        alert("导出成功:" + result);
+                    },
+                }); 
+            });
+        });
+    </script>
 @endsection
