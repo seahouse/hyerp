@@ -155,6 +155,27 @@ class DingTalkController extends Controller
         // dd($agent->is('Firefox'));
         return view('ddauth', compact('config', 'agent'));
     }
+
+    /**
+     * register call back function.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public static function register_call_back() {
+        $url = 'https://oapi.dingtalk.com/call_back/register_call_back';
+        $access_token = self::getAccessToken();
+        $params = compact('access_token', 'userid');
+        $data = [
+            'call_back_tag' => ['user_modify_org'],
+            'token' => '',
+            'aes_key' => $agentid,
+            'aes_key' => 'text',
+            'url' => '',
+        ];
+        return self::post($url, $params, json_encode($data), false);
+        // return self::post($url, $params);
+    }
     
     public function index()
     {
