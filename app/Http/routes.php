@@ -205,6 +205,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::post('search', 'PaymentrequestsController@search');              // 搜索功能
         Route::get('search2/{key}', 'PaymentrequestsController@search2');         // 查询数据
         Route::post('export', 'PaymentrequestsController@export');
+        Route::post('exportitem/{id}', 'PaymentrequestsController@exportitem');
     });
     Route::resource('paymentrequests', 'PaymentrequestsController');
     Route::resource('approversettings', 'ApproversettingsController');

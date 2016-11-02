@@ -13,8 +13,9 @@ use App\Models\Approval\Approvaltype;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Paymentrequestattachment;
 use App\Models\Purchase\Vendinfo_hxold;
-use Auth, DB, Excel;
+use Auth, DB, Excel, PDF;
 use Dompdf\Dompdf;
+use Jenssegers\Agent\Agent;
 
 class PaymentrequestsController extends Controller
 {
@@ -317,7 +318,8 @@ class PaymentrequestsController extends Controller
     {
         //
         $paymentrequest = Paymentrequest::findOrFail($id);
-        return view('approval.paymentrequests.show', compact('paymentrequest'));
+        $agent = new Agent();
+        return view('approval.paymentrequests.show', compact('paymentrequest', 'agent'));
     }
 
     /**
@@ -330,7 +332,8 @@ class PaymentrequestsController extends Controller
     {
         //
         $paymentrequest = Paymentrequest::findOrFail($id);
-        return view('approval.paymentrequests.mshow', compact('paymentrequest'));
+        $agent = new Agent();
+        return view('approval.paymentrequests.mshow', compact('paymentrequest', 'agent'));
     }
 
     /**
@@ -396,11 +399,16 @@ class PaymentrequestsController extends Controller
             // Call them separately
             $excel->setDescription('A demonstration to change the file properties');
 
-        })->export('pdf');
+        })->export('xls');
 
         // // instantiate and use the dompdf class
         // $dompdf = new Dompdf();
-        // $dompdf->loadHtml('hello world');
+        // // $dompdf->loadHtml('hello world');
+        // // $dompdf->set_option('isRemoteEnabled', true);
+        // // $dompdf->loadHtmlFile(url('/approval/paymentrequests/25'));
+        // $dompdf->loadHtmlFile('http://www.baidu.com');
+        // // $html = file_get_contents('http://www.baidu.com');
+        // // return $html;
 
         // // (Optional) Setup the paper size and orientation
         // $dompdf->setPaper('A4', 'landscape');
@@ -410,6 +418,50 @@ class PaymentrequestsController extends Controller
 
         // // Output the generated PDF to Browser
         // $dompdf->stream();
+
+        // return PDF::loadFile(url('/approval/paymentrequests/25'))->save('/path-to/my_stored_file.pdf')->stream('download.pdf');
+
+        // return 'ssss';
+    }
+
+    /**
+     * export to excel/pdf.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function exportitem($id)
+    {
+        //
+        $paymentrequest = Paymentrequest::findOrFail($id);
+
+        $str = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<style>body { font-family:  "DroidSansFallback"; } </style>
+            <p style="font-family: simsun;">献给母亲的爱</p> ';
+        // $str .= "<body>供应商类型: " . "aaa</body>";
+        // dd($str);
+
+        // // $agent = new Agent();
+        // $paymentrequests = $this->search2()->toArray();
+        // $pdf = PDF::loadView('approval.paymentrequests.index', $paymentrequests["data"]);
+        // return $pdf->download('invoice.pdf');
+
+        // $mpdf = new mpdf();
+        // $mpdf->WriteHTML($str);
+        // $mpdf->Output();
+
+        // instantiate and use the dompdf class
+        $dompdf = new Dompdf();
+        $dompdf->set_option('isFontSubsettingEnabled', true);
+        $dompdf->loadHtml($str);
+
+        // (Optional) Setup the paper size and orientation
+        $dompdf->setPaper('A4', 'landscape');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser
+        $dompdf->stream();
 
         // return 'ssss';
     }
