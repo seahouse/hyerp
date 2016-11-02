@@ -16,6 +16,18 @@
 {{--
         <a href="{{ URL::to('approval/items/create') }}" class="btn btn-sm btn-success">新建</a>
 --}}
+
+        <form class="pull-right" action="/approval/paymentrequests/export" method="post">
+            {!! csrf_field() !!}
+            <div class="pull-right">
+                <button type="submit" class="btn btn-default btn-sm">导出</button>
+            </div>
+        </form>
+{{--
+        <div class="pull-right">
+            <button class="btn btn-default btn-sm" id="btnExport">导出</button>
+        </div>
+--}}
         <form class="pull-right" action="/approval/paymentrequests/search" method="post">
             {!! csrf_field() !!}
             <div class="pull-right">
@@ -25,7 +37,6 @@
                 <input type="text" class="form-control" name="key" placeholder="支付对象、对应项目名称、申请人">    
             </div>
         </form>
-
     </div> 
 
     
@@ -98,4 +109,25 @@
     </div>
     @endif    
 
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+        jQuery(document).ready(function(e) {
+            $("#btnExport").click(function() {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('approval/paymentrequests/export') }}",
+                    // data: $("form#formAddVendbank").serialize(),
+                    // dataType: "json",
+                    error:function(xhr, ajaxOptions, thrownError){
+                        alert('error');
+                    },
+                    success:function(result){
+                        alert("导出成功:" + result);
+                    },
+                }); 
+            });
+        });
+    </script>
 @endsection

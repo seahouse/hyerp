@@ -13,7 +13,8 @@ use App\Models\Approval\Approvaltype;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Paymentrequestattachment;
 use App\Models\Purchase\Vendinfo_hxold;
-use Auth, DB;
+use Auth, DB, Excel;
+use Dompdf\Dompdf;
 
 class PaymentrequestsController extends Controller
 {
@@ -54,7 +55,7 @@ class PaymentrequestsController extends Controller
         return view('approval.paymentrequests.index', compact('paymentrequests', 'key'));
     }
 
-    public function search2($key)
+    public function search2($key = '')
     {
         if ($key == '')
             return Paymentrequest::latest('created_at')->paginate(10);
@@ -364,5 +365,52 @@ class PaymentrequestsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * export to excel/pdf.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function export()
+    {
+        //
+        // Excel::create('test1111')->export('xlsx');
+
+        Excel::create('test1111', function($excel) {
+            $excel->sheet('Sheetname', function($sheet) {
+
+                // Sheet manipulation
+                $paymentrequests = $this->search2()->toArray();
+                // dd($paymentrequests["data"]);
+                $sheet->fromArray($paymentrequests["data"]);
+            });
+
+            // Set the title
+            $excel->setTitle('Our new awesome title');
+
+            // Chain the setters
+            $excel->setCreator('Maatwebsite')
+                  ->setCompany('Maatwebsite');
+
+            // Call them separately
+            $excel->setDescription('A demonstration to change the file properties');
+
+        })->export('pdf');
+
+        // // instantiate and use the dompdf class
+        // $dompdf = new Dompdf();
+        // $dompdf->loadHtml('hello world');
+
+        // // (Optional) Setup the paper size and orientation
+        // $dompdf->setPaper('A4', 'landscape');
+
+        // // Render the HTML as PDF
+        // $dompdf->render();
+
+        // // Output the generated PDF to Browser
+        // $dompdf->stream();
+
+        // return 'ssss';
     }
 }
