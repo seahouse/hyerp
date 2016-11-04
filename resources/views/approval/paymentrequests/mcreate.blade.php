@@ -285,6 +285,7 @@
 					$("#" + $("#selectOrderModal").find('#name').val()).val(number);
 					$("#" + $("#selectOrderModal").find('#id').val()).val(salesorderid);
 					$("#" + $("#selectOrderModal").find('#poheadamount').val()).val(amount);
+					$("#pohead_descrip").val(field.descrip);
 					$("#pohead_amount_paid").val(amount_paid);
 					$("#pohead_amount_ticketed").val(field.amount_ticketed);
 					var pohead_arrived = '未到货';
