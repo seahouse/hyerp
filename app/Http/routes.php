@@ -43,6 +43,7 @@ Route::group(['middleware' => ['web']], function () {
 
 	Route::get('dingtalk/getuserinfo/{code}', 'DingTalkController@getuserinfo');
     Route::get('dingtalk/getconfig', 'DingTalkController@getconfig');
+    Route::post('dingtalk/register_call_back', 'DingTalkController@register_call_back');
 
     // run .bat shell command to run git pull.
     Route::get('gitpullbybat', function() { return view('gitpullbybat'); });
@@ -204,6 +205,8 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('mshow/{id}', 'PaymentrequestsController@mshow');
         Route::post('search', 'PaymentrequestsController@search');              // 搜索功能
         Route::get('search2/{key}', 'PaymentrequestsController@search2');         // 查询数据
+        Route::post('export', 'PaymentrequestsController@export');
+        Route::post('exportitem/{id}', 'PaymentrequestsController@exportitem');
     });
     Route::resource('paymentrequests', 'PaymentrequestsController');
     Route::resource('approversettings', 'ApproversettingsController');

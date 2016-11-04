@@ -293,13 +293,13 @@
 					else if (field.arrival_percent >= 0.99)
 						pohead_arrived = '全部到货';
 					$("#pohead_arrived").val(pohead_arrived);
+					$("#paymethod").val(field.paymethod);
 					$.ajax({
 						type: "GET",
 						url: "{!! url('/sales/salesorders/getitembyid/') !!}" + "/" + field.sohead_id,
 						success: function(result) {
-							// alert(result.number);
-							$("#sohead_paymethod").val(result.paymethod);
-							$("#sohead_paymethod_descrip").val(result.paymethod_descrip);
+							// $("#sohead_paymethod").val(result.paymethod);
+							// $("#sohead_paymethod_descrip").val(result.paymethod_descrip);
 							$("#sohead_installeddate").val(result.installeddate.substring(0, 10));
 						},
 						error: function(xhr, ajaxOptions, thrownError) {
