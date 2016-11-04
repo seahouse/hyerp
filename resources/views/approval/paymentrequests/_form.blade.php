@@ -41,8 +41,8 @@
 <div class="form-group">
     {!! Form::label('pohead_descrip', '对应工程名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->descrip)) 
-         {!! Form::textarea('pohead_descrip', $paymentrequest->purchaseorder_hxold->descrip, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
+    @if (isset($paymentrequest->purchaseorder_hxold->sohead->custinfo->name)) 
+         {!! Form::textarea('pohead_descrip', $paymentrequest->purchaseorder_hxold->sohead->custinfo->name . '|' . $paymentrequest->purchaseorder_hxold->sohead->descrip, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
     @else
         {!! Form::textarea('pohead_descrip', null, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
     @endif
@@ -364,11 +364,11 @@
 
 <div class="form-group">
     {!! Form::label('paymentnodeattachments', '付款节点审批单:', ['class' => 'col-sm-2 control-label']) !!}
-{{--
+
     <将在钉钉的下一个版本中支持上传附件>
---}}
-    {!! Form::file('paymentnodeattachments[]', ['multiple']) !!}
 {{--
+    {!! Form::file('paymentnodeattachments[]', ['multiple']) !!}
+
     {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectPaymentnodeattachment']) !!}
 --}}
     <div class='col-sm-10'>
