@@ -22,9 +22,9 @@ class Salesorder_hxold extends Model
     //     'comments',
     // ];
     
-    // public function custinfo() {
-    //     return $this->hasOne('App\Models\Sales\Custinfo', 'id', 'custinfo_id');
-    // }
+    public function custinfo() {
+        return $this->hasOne('App\Models\Sales\Custinfo_hxold', 'id', 'custinfo_id');
+    }
     
     // public function warehouse() {
     //     return $this->hasOne('App\Inventory\Warehouse', 'id', 'warehouse_id');
