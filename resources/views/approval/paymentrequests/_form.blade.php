@@ -42,9 +42,9 @@
     {!! Form::label('pohead_descrip', '对应工程名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
     @if (isset($paymentrequest->purchaseorder_hxold->descrip)) 
-         {!! Form::text('pohead_descrip', $paymentrequest->purchaseorder_hxold->descrip, ['class' => 'form-control', $attr]) !!}
+         {!! Form::textarea('pohead_descrip', $paymentrequest->purchaseorder_hxold->descrip, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
     @else
-        {!! Form::text('pohead_descrip', null, ['class' => 'form-control', $attr]) !!}
+        {!! Form::textarea('pohead_descrip', null, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
     @endif
     </div>
 </div>
@@ -178,7 +178,7 @@
 <div class="form-group">
     {!! Form::label('pohead_descrip', '对应工程名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::text('pohead_descrip', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+    {!! Form::textarea('pohead_descrip', null, ['class' => 'form-control', 'readonly', $attr, 'rows' => 3]) !!}
     </div>
 </div>
 
