@@ -90,6 +90,18 @@
 </div>
 
 <div class="form-group">
+    {!! Form::label('paymethod', '付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+    <div class='col-xs-8 col-sm-10'>
+    @if (isset($paymentrequest->purchaseorder_hxold->paymethod)) 
+        {!! Form::textarea('paymethod', $paymentrequest->purchaseorder_hxold->paymethod, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
+    @else
+        {!! Form::textarea('paymethod', null, ['class' => 'form-control', $attr]) !!}
+    @endif
+    </div>
+</div>
+
+{{--
+<div class="form-group">
     {!! Form::label('sohead_paymethod', '订单付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
     <div class='col-xs-8 col-sm-10'>
     @if (isset($paymentrequest->purchaseorder_hxold->sohead->paymethod)) 
@@ -110,6 +122,7 @@
     @endif
     </div>
 </div>
+--}}
 
 <div class="form-group">
     {!! Form::label('sohead_installeddate', '安装完毕日期:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
@@ -196,9 +209,17 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('sohead_paymethod', '订单付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+    {!! Form::label('paymethod', '付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::textarea('sohead_paymethod', null, ['class' => 'form-control', 'readonly', $attr, 'rows' => 3]) !!}
+    {!! Form::textarea('paymethod', null, ['class' => 'form-control', 'readonly', $attr, 'rows' => 3]) !!}
+    </div>
+</div>
+
+{{--
+<div class="form-group">
+    {!! Form::label('paymethod', '订单付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+    <div class='col-xs-8 col-sm-10'>
+    {!! Form::textarea('paymethod', null, ['class' => 'form-control', 'readonly', $attr, 'rows' => 3]) !!}
     </div>
 </div>
 
@@ -208,6 +229,7 @@
     {!! Form::textarea('sohead_paymethod_descrip', null, ['class' => 'form-control', 'readonly', $attr, 'rows' => 3]) !!}
     </div>
 </div>
+--}}
 
 <div class="form-group">
     {!! Form::label('sohead_installeddate', '安装完毕日期:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}

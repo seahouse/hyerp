@@ -16,14 +16,14 @@
 {{--
         <a href="{{ URL::to('approval/items/create') }}" class="btn btn-sm btn-success">新建</a>
 --}}
-
+{{--
         <form class="pull-right" action="/approval/paymentrequests/export" method="post">
             {!! csrf_field() !!}
             <div class="pull-right">
                 <button type="submit" class="btn btn-default btn-sm">导出</button>
             </div>
         </form>
-{{--
+
         <div class="pull-right">
             <button class="btn btn-default btn-sm" id="btnExport">导出</button>
         </div>

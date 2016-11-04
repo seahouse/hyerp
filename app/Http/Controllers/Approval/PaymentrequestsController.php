@@ -468,8 +468,9 @@ class PaymentrequestsController extends Controller
         $str .= '<p style="font-family: DroidSansFallback;">已付金额: ' . (isset($paymentrequest->purchaseorder_hxold->amount_paid) ? $paymentrequest->purchaseorder_hxold->amount_paid : '') . '</p>';
         $str .= '<p style="font-family: DroidSansFallback;">已开票金额: ' . (isset($paymentrequest->purchaseorder_hxold->amount_ticketed) ? $paymentrequest->purchaseorder_hxold->amount_ticketed : '') . '</p>';
         $str .= '<p style="font-family: DroidSansFallback;">到货情况: ' . $pohead_arrived . '</p>';
-        $str .= '<p style="font-family: DroidSansFallback;">订单付款方式: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->paymethod) ? $paymentrequest->purchaseorder_hxold->sohead->paymethod : '') . '</p>';
-        $str .= '<p style="font-family: DroidSansFallback;">订单付款备注: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->paymethod_descrip) ? $paymentrequest->purchaseorder_hxold->sohead->paymethod_descrip : '') . '</p>';
+        $str .= '<p style="font-family: DroidSansFallback;">付款方式: ' . (isset($paymentrequest->purchaseorder_hxold->paymethod) ? $paymentrequest->purchaseorder_hxold->paymethod : '') . '</p>';
+        // $str .= '<p style="font-family: DroidSansFallback;">订单付款方式: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->paymethod) ? $paymentrequest->purchaseorder_hxold->sohead->paymethod : '') . '</p>';
+        // $str .= '<p style="font-family: DroidSansFallback;">订单付款备注: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->paymethod_descrip) ? $paymentrequest->purchaseorder_hxold->sohead->paymethod_descrip : '') . '</p>';
         $str .= '<p style="font-family: DroidSansFallback;">安装完毕日期: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->installeddate) ? $paymentrequest->purchaseorder_hxold->sohead->installeddate : '') . '</p>';
         $str .= '<p style="font-family: DroidSansFallback;">应付款设备名称: ' . $paymentrequest->equipmentname . '</p>';
         $str .= '<p style="font-family: DroidSansFallback;">说明: ' . $paymentrequest->descrip . '</p>';
