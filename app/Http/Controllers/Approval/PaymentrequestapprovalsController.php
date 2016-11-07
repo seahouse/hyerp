@@ -11,6 +11,7 @@ use App\Models\Approval\Paymentrequest;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Paymentrequestapproval;
 use Auth;
+use Jenssegers\Agent\Agent;
 
 class PaymentrequestapprovalsController extends Controller
 {
@@ -51,7 +52,8 @@ class PaymentrequestapprovalsController extends Controller
         if ($touser && $touser->id != Auth::user()->id)
             return "您无权限审批此审批单";
 
-        return view('approval/paymentrequestapprovals/mcreate', compact('paymentrequest'));
+        $agent = new Agent();
+        return view('approval/paymentrequestapprovals/mcreate', compact('paymentrequest', 'agent'));
     }
 
     /**
