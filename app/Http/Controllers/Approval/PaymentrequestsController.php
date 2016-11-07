@@ -44,6 +44,7 @@ class PaymentrequestsController extends Controller
         else
             return view('approval.paymentrequests.index', compact('paymentrequests'));
     }
+    
 
     public function search(Request $request)
     {
@@ -87,6 +88,19 @@ class PaymentrequestsController extends Controller
             return $approvaltype->id;
         }
         return 0;
+    }
+
+    /**
+     * 我发起的数据集合.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public static function my()
+    {
+        $userid = Auth::user()->id;
+        $paymentrequests = Paymentrequest::latest('created_at')->where('applicant_id', $userid)->paginate(50);
+
+        return $paymentrequests;
     }
 
     /**

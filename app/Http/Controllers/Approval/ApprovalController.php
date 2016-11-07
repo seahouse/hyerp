@@ -32,42 +32,41 @@ class ApprovalController extends Controller
     public function mindexmy()
     {
         //
-        $userid = Auth::user()->id;
+        // $userid = Auth::user()->id;
 
-        $page = Input::get('page', 1);
-        $paginate = 50;
+        // $page = Input::get('page', 1);
+        // $paginate = 50;
 
-        // $reimbursements = Reimbursement::latest('created_at')
-        //     ->select('id')
-        //     ->where('applicant_id', $userid)->paginate(10);
-        // $paymentrequests = Paymentrequest::latest('created_at')
-        //     ->select('id')
+
+        // $reimbursements = DB::table('reimbursements')
+        //     ->leftJoin('users', 'users.id', '=', 'reimbursements.applicant_id')
+        //     ->select('reimbursements.id', 'users.name as applicant_name', 'reimbursements.approversetting_id as status', DB::raw('\'报销\' as type'), 'reimbursements.created_at', DB::raw('\'/approval/reimbursements/mshow/\' as url'))
+        //     ->where('applicant_id', $userid);
+        // $paymentrequests = DB::table('paymentrequests')
+        //     ->leftJoin('users', 'users.id', '=', 'paymentrequests.applicant_id')
+        //     ->select('paymentrequests.id', 'users.name as applicant_name', 'paymentrequests.status', DB::raw('\'付款\' as type'), 'paymentrequests.created_at', DB::raw('\'/approval/paymentrequests/mshow/\' as url'))
         //     ->where('applicant_id', $userid)
         //     ->union($reimbursements)
+        //     ->latest('created_at')
+        //     // ->take(10)
         //     ->get();
 
-        $reimbursements = DB::table('reimbursements')
-            ->leftJoin('users', 'users.id', '=', 'reimbursements.applicant_id')
-            ->select('reimbursements.id', 'users.name as applicant_name', 'reimbursements.approversetting_id as status', DB::raw('\'报销\' as type'), 'reimbursements.created_at', DB::raw('\'/approval/reimbursements/mshow/\' as url'))
-            ->where('applicant_id', $userid);
-        $paymentrequests = DB::table('paymentrequests')
-            ->leftJoin('users', 'users.id', '=', 'paymentrequests.applicant_id')
-            ->select('paymentrequests.id', 'users.name as applicant_name', 'paymentrequests.status', DB::raw('\'付款\' as type'), 'paymentrequests.created_at', DB::raw('\'/approval/paymentrequests/mshow/\' as url'))
-            ->where('applicant_id', $userid)
-            ->union($reimbursements)
-            ->latest('created_at')
-            // ->take(10)
-            ->get();
+        // $offSet = ($page * $paginate) - $paginate;
+        // $itemsForCurrentPage = array_slice($paymentrequests, $offSet, $paginate, true);
+        // $items = new \Illuminate\Pagination\LengthAwarePaginator($itemsForCurrentPage, count($paymentrequests), $paginate, $page);
 
-        $offSet = ($page * $paginate) - $paginate;
-        $itemsForCurrentPage = array_slice($paymentrequests, $offSet, $paginate, true);
-        $items = new \Illuminate\Pagination\LengthAwarePaginator($itemsForCurrentPage, count($paymentrequests), $paginate, $page);
 
-        // $approvals = $reimbursements + $paymentrequests;
+        // $dtuser = Auth::user()->dtuser;
+        // // $dduser = Auth::user()->dingtalkGetUser();
+
+        // return view('approval.mindexmy', compact('items', 'dtuser'));
+
+        $paymentrequests = PaymentrequestsController::my();
+        
+        $dtuser = Auth::user()->dtuser;
         // dd($paymentrequests);
-        $dduser = Auth::user()->dingtalkGetUser();
 
-        return view('approval.mindexmy', compact('items', 'dduser'));
+        return view('approval.mindexmy', compact('paymentrequests', 'dtuser'));
     }
 
     /**
