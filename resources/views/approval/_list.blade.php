@@ -27,7 +27,7 @@
                 </div>
                 {{-- 以下的代码判断说明：如果审批id大于0，则显示“待审批”，否则显示“审批完成”。 --}}
                 {{-- 当状态为“审批完成”时，字体为灰色 --}}
-                @if ($item->status > 0)
+                @if ($item->approversetting_id > 0)
                     <div class="statusTodo">待审批</div>
                 @else
                     <div class="statusDone">审批完成</div>      {{-- 此时，字体要修改为灰色 --}}
