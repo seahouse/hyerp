@@ -24,6 +24,8 @@
             'href_pre_paymentrequest' => '/approval/paymentrequests/'
         ])
 
+    {!! $paymentrequests->links() !!}
+
 
 {{--    @if ($reimbursements->count())    
     <table class="table table-striped table-hover table-condensed">
