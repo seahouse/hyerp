@@ -10,7 +10,11 @@
 				<a href="/approval/mindexmyapproval">
 					<i class="icon iconfont btnMenuIcon color-orange2 icon-dengdaishenpi">
 					@if (Auth::user()->myapproval()->count() > 0 or Auth::user()->myapproval_paymentrequest()->count() > 0)
+						@if (Auth::user()->myapproval()->count() + Auth::user()->myapproval_paymentrequest()->count() > 10)
+	                    <span class="pcount"><span class="count">>10</span></span>
+	                    @else
 	                    <span class="pcount"><span class="count">{{ Auth::user()->myapproval()->count() + Auth::user()->myapproval_paymentrequest()->count() }}</span></span>
+	                    @endif
 	                @endif
 					</i>
 					<div type="button" class="btnMenu">待我审批</div>

@@ -363,60 +363,49 @@
 --}}
 
 <div class="form-group">
-    {!! Form::label('paymentnodeattachments', '付款节点审批单:', ['class' => 'col-sm-2 control-label']) !!}
-
-    <将在钉钉的下一个版本中支持上传附件>
+    {!! Form::label('paymentnodeattachments', '付款节点审批单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 {{--
-    {!! Form::file('paymentnodeattachments[]', ['multiple']) !!}
+    <将在钉钉的下一个版本中支持上传附件>
+--}}
 
+    
+{{--
     {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectPaymentnodeattachment']) !!}
 --}}
-    <div class='col-sm-10'>
-
-        <div class="row" id="previewimage">
-            @if (isset($reimbursement))
-                @foreach ($reimbursement->reimbursementimages as $reimbursementimage)
-                    <div class="col-xs-6 col-md-3">
-                        <div class="thumbnail">
-                            <img src="{!! $reimbursementimage->path !!}" />
-                        </div>
-                    </div>
-                @endforeach
-            @endif
-        </div>
-
-    </div>
-</div>
-
-<div class="form-group">
-    {!! Form::label('images', '商务合同等必要附件:', ['class' => 'col-sm-2 control-label']) !!}
-    <将在钉钉的下一个版本中支持上传附件>
-{{--
-    {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
---}}
-    <div class='col-sm-10'>
-{{--
-        <div class="row" id="previewimage">
-            @if (isset($reimbursement))
-                @foreach ($reimbursement->reimbursementimages as $reimbursementimage)
-                    <div class="col-xs-6 col-md-3">
-                        <div class="thumbnail">
-                            <img src="{!! $reimbursementimage->path !!}" />
-                        </div>
-                    </div>
-                @endforeach
-            @endif
-        </div>
---}}
-    </div>
-</div>
-
-<div class="form-group">
-    {!! Form::label('images', '图片说明:', ['class' => 'col-sm-2 control-label']) !!}
-    {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
     <div class='col-xs-8 col-sm-10'>
-        <div class="row" id="previewimage">
-            @if (isset($paymentrequest))
+        @if (isset($paymentrequest))
+            @foreach ($paymentrequest->paymentnodes() as $paymentnode)
+                 <a href="{!! $paymentnode->path !!}" target="_blank">{{ $paymentnode->filename }}</a> <br>
+            @endforeach
+        @else
+            {!! Form::file('paymentnodeattachments[]', ['multiple']) !!}
+        @endif
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('businesscontractattachments', '商务合同等必要附件:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+{{--
+    <将在钉钉的下一个版本中支持上传附件>
+    {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
+--}}
+    <div class='col-xs-8 col-sm-10'>
+        @if (isset($paymentrequest))
+            @foreach ($paymentrequest->businesscontracts() as $businesscontract)
+                <a href="{!! $businesscontract->path !!}" target="_blank">{{ $businesscontract->filename }}</a> <br>
+            @endforeach
+        @else
+            {!! Form::file('businesscontractattachments[]', ['multiple']) !!}
+        @endif
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('images', '图片说明:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    
+    <div class='col-xs-8 col-sm-10'>
+        @if (isset($paymentrequest))
+            <div class="row" id="previewimage">
                 @foreach ($paymentrequest->paymentrequestimages() as $paymentrequestimage)
                     <div class="col-xs-6 col-md-3">
                         <div class="thumbnail">
@@ -424,8 +413,15 @@
                         </div>
                     </div>
                 @endforeach
-            @endif
-        </div>
+            </div>
+        @else
+            @if ($agent->isDesktop())
+                {!! Form::file('images[]', ['multiple']) !!}
+            @else
+                {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
+            @endif            
+        @endif
+
     </div>
 </div>
 

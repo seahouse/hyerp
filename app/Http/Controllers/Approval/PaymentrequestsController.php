@@ -98,7 +98,7 @@ class PaymentrequestsController extends Controller
     public static function my()
     {
         $userid = Auth::user()->id;
-        $paymentrequests = Paymentrequest::latest('created_at')->where('applicant_id', $userid)->paginate(50);
+        $paymentrequests = Paymentrequest::latest('created_at')->where('applicant_id', $userid)->paginate(10);
 
         return $paymentrequests;
     }
@@ -153,6 +153,7 @@ class PaymentrequestsController extends Controller
             // $paymentrequests = DB::table('paymentrequests')->where('approversetting_id', $approversetting_id_my)->latest('created_at')->get();
         }
 
+        // dd($paymentrequests);
         return $paymentrequests;
     }
 
@@ -175,7 +176,9 @@ class PaymentrequestsController extends Controller
     {
         //
         $config = DingTalkController::getconfig();
-        return view('approval/paymentrequests/mcreate', compact('config'));
+        $agent = new Agent();
+
+        return view('approval/paymentrequests/mcreate', compact('config', 'agent'));
     }
 
     /**
@@ -198,7 +201,7 @@ class PaymentrequestsController extends Controller
     public function mstore(Request $request)
     {
         //
-        $input = $request->all();
+        $input = $request->all();        
         $input = HelperController::skipEmptyValue($input);
         // dd($input);
         // dd($request->hasFile('paymentnodeattachments'));
@@ -206,8 +209,18 @@ class PaymentrequestsController extends Controller
         // dd($request->file('paymentnodeattachments')->getClientOriginalExtension());
         // dd($request->input('amount', '0.0'));
 
-        $input['applicant_id'] = Auth::user()->id;
+        // $files = array_get($input,'paymentnodeattachments');
+        // $destinationPath = 'uploads';
+        // foreach ($files as $key => $file) {
+        //     $extension = $file->getClientOriginalExtension();
+        //     $fileName = $file->getClientOriginalName() . '.' . $extension;
+        //     // dd($file->getClientOriginalName());
+        //     $upload_success = $file->move($destinationPath, $fileName);
+        // }
+        // dd("bbb");
 
+
+        $input['applicant_id'] = Auth::user()->id;
 
         
 
@@ -227,32 +240,81 @@ class PaymentrequestsController extends Controller
 
         $paymentrequest = Paymentrequest::create($input);
 
-        // // create reimbursement travels
-        // if ($reimbursement)
-        // {
-        //     $travels = array_where($input, function($key, $value) {     
-        //         if (substr_compare($key, 'travel_', 0, 7) == 0)
-        //             return $value;
-        //     });
-        //     $travelList = [];
-        //     foreach ($travels as $key => $value) {
-        //         $hh = substr($key, 0, 9);
-        //         $kk = substr($key, 9);
-        //         if (!array_has($travelList, $hh))
-        //             $travelList[$hh] = array($kk => $value);
-        //         else
-        //             $travelList[$hh] = array_add($travelList[$hh], $kk, $value);
+        // create paymentnodeattachments
+        if ($paymentrequest)
+        {
+            $files = array_get($input,'paymentnodeattachments');
+            $destinationPath = 'uploads/approval/paymentrequest/' . $paymentrequest->id . '/';
+            foreach ($files as $key => $file) {
+                if ($file)
+                {
+                    $extension = $file->getClientOriginalExtension();
+                    $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                    // $fileName = rand(11111, 99999) . '.' . $extension;
+                    $upload_success = $file->move($destinationPath, $filename);
 
-        //     }
+                    // add database record
+                    $paymentnodeattachment = new Paymentrequestattachment;
+                    $paymentnodeattachment->paymentrequest_id = $paymentrequest->id;
+                    $paymentnodeattachment->type = "paymentnode";
+                    $paymentnodeattachment->filename = $file->getClientOriginalName();
+                    $paymentnodeattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
+                    $paymentnodeattachment->save();
+                }
 
-        //     $seq = 0;
-        //     foreach ($travelList as $key => $value) {
-        //         // add reimbursementtravels record
-        //         $value['reimbursement_id'] = $reimbursement->id;
-        //         $value['seq'] = ++$seq;
-        //         Reimbursementtravel::create($value);
-        //     }
-        // }
+            }
+
+        }
+
+        // create businesscontractattachments
+        if ($paymentrequest)
+        {
+            $files = array_get($input,'businesscontractattachments');
+            $destinationPath = 'uploads/approval/paymentrequest/' . $paymentrequest->id . '/';
+            foreach ($files as $key => $file) {
+                if ($file)
+                {
+                    $extension = $file->getClientOriginalExtension();
+                    $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                    // $fileName = rand(11111, 99999) . '.' . $extension;
+                    $upload_success = $file->move($destinationPath, $filename);
+
+                    // add database record
+                    $paymentnodeattachment = new Paymentrequestattachment;
+                    $paymentnodeattachment->paymentrequest_id = $paymentrequest->id;
+                    $paymentnodeattachment->type = "businesscontract";
+                    $paymentnodeattachment->filename = $file->getClientOriginalName();
+                    $paymentnodeattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
+                    $paymentnodeattachment->save();
+                }
+
+            }
+        }
+
+        // create images in the desktop
+        if ($paymentrequest)
+        {
+            $files = array_get($input,'images');
+            $destinationPath = 'uploads/approval/paymentrequest/' . $paymentrequest->id . '/';
+            foreach ($files as $key => $file) {
+                if ($file)
+                {
+                    $extension = $file->getClientOriginalExtension();
+                    $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                    // $fileName = rand(11111, 99999) . '.' . $extension;
+                    $upload_success = $file->move($destinationPath, $filename);
+
+                    // add database record
+                    $paymentnodeattachment = new Paymentrequestattachment;
+                    $paymentnodeattachment->paymentrequest_id = $paymentrequest->id;
+                    $paymentnodeattachment->type = "image";
+                    $paymentnodeattachment->filename = $file->getClientOriginalName();
+                    $paymentnodeattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
+                    $paymentnodeattachment->save();
+                }
+
+            }
+        }
 
         // create reimbursement images
         if ($paymentrequest)

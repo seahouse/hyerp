@@ -52,6 +52,14 @@ class Paymentrequest extends Model
         return $this->hasMany('\App\Models\Approval\Paymentrequestattachment', 'paymentrequest_id', 'id');
     }
 
+    public function paymentnodes() {
+        return $this->paymentrequestattachments->where('type', 'paymentnode');
+    }
+
+    public function businesscontracts() {
+        return $this->paymentrequestattachments->where('type', 'businesscontract');
+    }
+
     public function paymentrequestimages() {
         return $this->paymentrequestattachments->where('type', 'image');
     }
