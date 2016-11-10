@@ -44,12 +44,24 @@ class Paymentrequest extends Model
         return $this->hasOne('\App\Models\System\User', 'id', 'applicant_id');
     }
 
+    public function approversetting() {
+        return $this->hasOne('\App\Models\Approval\Approversetting', 'id', 'approversetting_id');
+    }
+
     public function paymentrequestapprovals() {
         return $this->hasMany('\App\Models\Approval\Paymentrequestapproval', 'paymentrequest_id', 'id');
     }
 
     public function paymentrequestattachments() {
         return $this->hasMany('\App\Models\Approval\Paymentrequestattachment', 'paymentrequest_id', 'id');
+    }
+
+    public function paymentnodes() {
+        return $this->paymentrequestattachments->where('type', 'paymentnode');
+    }
+
+    public function businesscontracts() {
+        return $this->paymentrequestattachments->where('type', 'businesscontract');
     }
 
     public function paymentrequestimages() {

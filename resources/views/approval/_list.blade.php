@@ -17,7 +17,7 @@
 --}}
             <div class='col-xs-6 col-sm-7 content'>
                 <div title="{{ $item->applicant_name }}的付款" class="title">
-                    {{ $item->applicant->name }}的付款
+                    {{ $item->applicant->name }}的付款 | {{ $item->amount }}
 {{--
 
                      | {{ $item->amount }} | 
