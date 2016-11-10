@@ -61,7 +61,7 @@
 
     @yield('for_paymentrequestapprovals_create')
 
-    @if (Auth::user()->id == $paymentrequest->applicant_id and $paymentrequest->approversetting->level == 1)
+    @if (Auth::user()->id == $paymentrequest->applicant_id and isset($paymentrequest->approversetting->level) and $paymentrequest->approversetting->level == 1)
          {!! Form::open(array('url' => 'approval/paymentrequests/mdestroy/' . $paymentrequest->id, 'method' => 'delete', 'onsubmit' => 'return confirm("确定撤销此记录?");')) !!}
             {!! Form::submit('撤销', ['class' => 'btn btn-danger btn-sm']) !!}
         {!! Form::close() !!}
