@@ -444,6 +444,21 @@ class PaymentrequestsController extends Controller
     public function destroy($id)
     {
         //
+        Paymentrequest::destroy($id);
+        return redirect('/approval/paymentrequests');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function mdestroy($id)
+    {
+        //
+        Paymentrequest::destroy($id);
+        return redirect('/approval/mindexmy');
     }
 
     /**

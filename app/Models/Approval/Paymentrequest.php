@@ -44,6 +44,10 @@ class Paymentrequest extends Model
         return $this->hasOne('\App\Models\System\User', 'id', 'applicant_id');
     }
 
+    public function approversetting() {
+        return $this->hasOne('\App\Models\Approval\Approversetting', 'id', 'approversetting_id');
+    }
+
     public function paymentrequestapprovals() {
         return $this->hasMany('\App\Models\Approval\Paymentrequestapproval', 'paymentrequest_id', 'id');
     }

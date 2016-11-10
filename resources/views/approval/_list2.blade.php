@@ -6,7 +6,6 @@
             @if (isset($item->applicant->dtuser->avatar))
                 <div class='col-xs-3 col-sm-2'><img class="name img" src="{{ $item->applicant->dtuser->avatar }}" /></div>
             @else
-                {{ $item->applicant->name }}
                 <div class='col-xs-3 col-sm-2 name'>{{ $item->applicant->name }}</div>
             @endif
 {{--
@@ -21,7 +20,7 @@
             @endif
 --}}
             <div class='col-xs-6 col-sm-7 content'>
-                <div title="{{ $item->applicant->name }}的付款" class="title">{{ $item->applicant->name }}的付款</div>
+                <div title="{{ $item->applicant->name }}的付款" class="title">{{ $item->applicant->name }}的付款  | {{ $item->amount }}</div>
                 {{-- 以下的代码判断说明：如果审批id大于0，则显示“待审批”，否则显示“审批完成”。 --}}
                 {{-- 当状态为“审批完成”时，字体为灰色 --}}
                 @if ($item->approversetting_id > 0)
