@@ -285,7 +285,7 @@
 					$("#" + $("#selectOrderModal").find('#name').val()).val(number);
 					$("#" + $("#selectOrderModal").find('#id').val()).val(salesorderid);
 					$("#" + $("#selectOrderModal").find('#poheadamount').val()).val(amount);
-					// $("#pohead_descrip").val(field.descrip);
+					$("#pohead_descrip").val(field.custinfo_name + ' | ' + field.sohead_descrip);
 					$("#pohead_amount_paid").val(amount_paid);
 					$("#pohead_amount_ticketed").val(field.amount_ticketed);
 					var pohead_arrived = '未到货';
@@ -454,6 +454,16 @@
 						$("#supplier_bankaccountnumber").val(result.accountnum);
 					},
 				});	
+			});
+
+			// show amount percent when blur
+			$("#amount").blur(function() {
+				if ($("#pohead_amount").val() > 0.0 && $("#amount").val() > 0.0)
+				{
+					var percent = $("#amount").val() / $("#pohead_amount").val() * 100;
+					var percent_str = percent.toFixed(2);
+					$("#amount_percent").html(percent_str + "%");
+				}
 			});
 
 			// $("#btnSelectImage").click(function() {

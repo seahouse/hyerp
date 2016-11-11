@@ -284,9 +284,14 @@
 
 <div class="form-group">
     {!! Form::label('amount', '本次请款额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
+    <div class='col-xs-5 col-sm-9'>
     {!! Form::text('amount', null, ['class' => 'form-control', 'placeholder' => '请输入付款总额（人民币）（必填）', $attr]) !!}
     </div>
+    @if (isset($paymentrequest) and isset($paymentrequest->purchaseorder_hxold->amount) and $paymentrequest->purchaseorder_hxold->amount > 0.0)
+        {!! Form::label('amount_percent', number_format($paymentrequest->amount / $paymentrequest->purchaseorder_hxold->amount * 100.0, 2, '.', '') . '%', ['class' => 'col-xs-3 col-sm-1 control-label']) !!}
+    @else
+        {!! Form::label('amount_percent', '-', ['class' => 'col-xs-3 col-sm-1 control-label', 'id' => 'amount_percent']) !!}
+    @endif
 </div>
 
 <div class="form-group">
