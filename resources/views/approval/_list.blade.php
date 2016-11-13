@@ -23,7 +23,7 @@
 --}}
             <div class='col-xs-7 col-sm-7 content'>
                 <div title="{{ $item->applicant_name }}的付款" class="title">
-                    <div class='longText'>{{ $item->applicant->name }}的付款 | {{ $item->amount }} | 江苏华能建设工程集团有限公司</div>
+                    <div class='longText'>{{ $item->applicant->name }}的付款 | {{ $item->amount }} | @if (isset($item->supplier_hxold->name)) {{ str_limit($item->supplier_hxold->name, 6) }} @endif</div>
 
 {{--
 
@@ -32,7 +32,7 @@
                     @if (isset($item->purchaseorder_hxold->sohead_descrip)) {{ $item->purchaseorder_hxold->custinfo_name }} | {{ $item->purchaseorder_hxold->sohead_descrip }} @endif
 --}}
                 </div>
-                <div class='longText'>青岛东方铁塔股份有限公司 | 广元市生活垃圾焚烧厂烟气净化设备</div>
+                <div class='longText'>@if (isset($item->purchaseorder_hxold->sohead_descrip)) {{ $item->purchaseorder_hxold->custinfo_name }} | {{ $item->purchaseorder_hxold->sohead_descrip }} @endif</div>
                 {{-- 以下的代码判断说明：如果审批id大于0，则显示“待审批”，否则显示“审批完成”。 --}}
                 {{-- 当状态为“审批完成”时，字体为灰色 --}}
                 @if ($item->approversetting_id > 0)
