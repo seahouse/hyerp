@@ -23,16 +23,14 @@
 --}}
             <div class='col-xs-7 col-sm-7 content'>
                 <div title="{{ $item->applicant_name }}的付款" class="title">
-                    <div class='longText'>{{ $item->applicant->name }}的付款 | {{ $item->amount }} | @if (isset($item->supplier_hxold->name)) {{ str_limit($item->supplier_hxold->name, 6) }} @endif</div>
-
-{{--
-
-                     | {{ $item->amount }} | 
-                    @if (isset($item->supplier_hxold->name)) {{ str_limit($item->supplier_hxold->name, 6) }} @endif |
-                    @if (isset($item->purchaseorder_hxold->sohead_descrip)) {{ $item->purchaseorder_hxold->custinfo_name }} | {{ $item->purchaseorder_hxold->sohead_descrip }} @endif
---}}
+                    <div class='longText'>{{ $item->applicant->name }}的付款 | {{ $item->amount }}</div>
+                    {{-- 示例：山东奥博环保科技有限公司 --}}
+                    <div class='longText'>@if (isset($item->supplier_hxold->name)) {{ $item->supplier_hxold->name }} @endif</div>
                 </div>
-                <div class='longText'>@if (isset($item->purchaseorder_hxold->sohead_descrip)) {{ $item->purchaseorder_hxold->custinfo_name }} | {{ $item->purchaseorder_hxold->sohead_descrip }} @endif</div>
+                {{-- 示例：浙江锦润机电成套设备有限公司 --}}
+                <div class='longText'>@if (isset($item->purchaseorder_hxold->custinfo_name)) {{ $item->purchaseorder_hxold->custinfo_name }} @endif</div>
+                {{-- 示例：高密垃圾焚烧发电项目1#2#炉烟气脱硫净化装置系统工程 --}}
+                <div class='longText'>@if (isset($item->purchaseorder_hxold->sohead_descrip)) {{ $item->purchaseorder_hxold->sohead_descrip }} @endif</div>
                 {{-- 以下的代码判断说明：如果审批id大于0，则显示“待审批”，否则显示“审批完成”。 --}}
                 {{-- 当状态为“审批完成”时，字体为灰色 --}}
                 @if ($item->approversetting_id > 0)
