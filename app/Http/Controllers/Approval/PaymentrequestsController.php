@@ -296,24 +296,28 @@ class PaymentrequestsController extends Controller
         {
             $files = array_get($input,'images');
             $destinationPath = 'uploads/approval/paymentrequest/' . $paymentrequest->id . '/';
-            foreach ($files as $key => $file) {
-                if ($file)
-                {
-                    $extension = $file->getClientOriginalExtension();
-                    $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
-                    // $fileName = rand(11111, 99999) . '.' . $extension;
-                    $upload_success = $file->move($destinationPath, $filename);
+            if ($files)
+            {
+                foreach ($files as $key => $file) {
+                    if ($file)
+                    {
+                        $extension = $file->getClientOriginalExtension();
+                        $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                        // $fileName = rand(11111, 99999) . '.' . $extension;
+                        $upload_success = $file->move($destinationPath, $filename);
 
-                    // add database record
-                    $paymentnodeattachment = new Paymentrequestattachment;
-                    $paymentnodeattachment->paymentrequest_id = $paymentrequest->id;
-                    $paymentnodeattachment->type = "image";
-                    $paymentnodeattachment->filename = $file->getClientOriginalName();
-                    $paymentnodeattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
-                    $paymentnodeattachment->save();
+                        // add database record
+                        $paymentnodeattachment = new Paymentrequestattachment;
+                        $paymentnodeattachment->paymentrequest_id = $paymentrequest->id;
+                        $paymentnodeattachment->type = "image";
+                        $paymentnodeattachment->filename = $file->getClientOriginalName();
+                        $paymentnodeattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
+                        $paymentnodeattachment->save();
+                    }
+
                 }
-
             }
+
         }
 
         // create reimbursement images
