@@ -4,9 +4,9 @@
         <a href="{{ url($href_pre_paymentrequest . $item->id . $href_suffix) }}" class="list-group-item">
             {{-- 以下的代码判断说明：如果用户的头像url为空，则以名字显示，否则以这个头像url来显示图片 --}}
             @if (isset($item->applicant->dtuser->avatar))
-                <div class='col-xs-3 col-sm-2'><img class="name img" src="{{ $item->applicant->dtuser->avatar }}" /></div>
+                <div class='col-xs-2 col-sm-2'><img class="name img" src="{{ $item->applicant->dtuser->avatar }}" /></div>
             @else
-                <div class='col-xs-3 col-sm-2 name'>{{ $item->applicant->name }}</div>
+                <div class='col-xs-2 col-sm-2 name'>{{ $item->applicant->name }}</div>
             @endif
 {{--
             @if (null != $item->applicant->dingtalkGetUser())
@@ -19,8 +19,11 @@
                 <div class='col-xs-2 col-sm-2 name'>{{ $item->applicant->name }}</div>
             @endif
 --}}
-            <div class='col-xs-6 col-sm-7 content'>
-                <div title="{{ $item->applicant->name }}的付款" class="title">{{ $item->applicant->name }}的付款  | {{ $item->amount }}</div>
+            <div class='col-xs-7 col-sm-7 content'>
+                <div title="{{ $item->applicant->name }}的付款" class="title">
+                    <div class='longText'>{{ $item->applicant->name }}的付款 | {{ $item->amount }} | @if (isset($item->supplier_hxold->name)) {{ str_limit($item->supplier_hxold->name, 6) }} @endif</div>
+                </div>
+                <div class='longText'>@if (isset($item->purchaseorder_hxold->sohead_descrip)) {{ $item->purchaseorder_hxold->custinfo_name }} | {{ $item->purchaseorder_hxold->sohead_descrip }} @endif</div>
                 {{-- 以下的代码判断说明：如果审批id大于0，则显示“待审批”，否则显示“审批完成”。 --}}
                 {{-- 当状态为“审批完成”时，字体为灰色 --}}
                 @if ($item->approversetting_id > 0)
