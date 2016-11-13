@@ -185,8 +185,16 @@ body {
 }
 
 .reimbList .content {
-	margin: 6px 0px;
-    font-size: 16px;
+    font-size: 14px;
+    padding-left: 0px;
+    padding-right: 1px; 
+}
+
+.reimbList .content .longText {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+    overflow: hidden;
 }
 
 .reimbList .content .statusTodo {
@@ -196,6 +204,19 @@ body {
 .reimbList .content .statusDone {
 	color: #ccc;
 }
+
+.reimbListSearch {
+    height: 48px;
+    margin-top: 0px;
+}
+@media (min-width: 768px) {
+    .reimbListSearch {
+        margin-top: 10px;
+        margin-bottom: 0px;
+	}
+}
+
+
 /*mindexmyapproval_nav.blade.php*/
 .apprNav .wrapper {
 	border-bottom: 1px solid #ccc;
