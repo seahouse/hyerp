@@ -295,6 +295,19 @@
 						pohead_arrived = '全部到货';
 					$("#pohead_arrived").val(pohead_arrived);
 					$("#paymethod").val(field.paymethod);
+
+					if (amount > 0.0)
+					{
+						var percent = amount_paid / amount * 100;
+						var percent_str = percent.toFixed(2);
+						$("#amount_paid_percent").html(percent_str + "%");
+
+						percent = field.amount_ticketed / amount * 100;
+						percent_str = percent.toFixed(2);
+						$("#amount_ticketed_percent").html(percent_str + "%");
+					}
+					$("#pohead_productname").val(field.productname);
+
 					$.ajax({
 						type: "GET",
 						url: "{!! url('/sales/salesorders/getitembyid/') !!}" + "/" + field.sohead_id,

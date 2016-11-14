@@ -62,24 +62,34 @@
 
 <div class="form-group">
     {!! Form::label('pohead_amount_paid', '已付金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
+    <div class='col-xs-5 col-sm-9'>
     @if (isset($paymentrequest->purchaseorder_hxold->amount_paid)) 
          {!! Form::text('pohead_amount', $paymentrequest->purchaseorder_hxold->amount_paid, ['class' => 'form-control', $attr]) !!}
     @else
         {!! Form::text('pohead_amount', null, ['class' => 'form-control', $attr]) !!}
     @endif
     </div>
+    @if (isset($paymentrequest->purchaseorder_hxold->amount_paid) and isset($paymentrequest->purchaseorder_hxold->amount) and $paymentrequest->purchaseorder_hxold->amount > 0.0)
+        {!! Form::label('amount_paid_percent', number_format($paymentrequest->purchaseorder_hxold->amount_paid / $paymentrequest->purchaseorder_hxold->amount * 100.0, 2, '.', '') . '%', ['class' => 'col-xs-3 col-sm-1 control-label']) !!}
+    @else
+        {!! Form::label('amount_paid_percent', '-', ['class' => 'col-xs-3 col-sm-1 control-label', 'id' => 'amount_paid_percent']) !!}
+    @endif
 </div>
 
 <div class="form-group">
     {!! Form::label('pohead_amount_ticketed', '已开票金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
+    <div class='col-xs-5 col-sm-9'>
     @if (isset($paymentrequest->purchaseorder_hxold->amount_ticketed)) 
          {!! Form::text('pohead_amount_ticketed', $paymentrequest->purchaseorder_hxold->amount_ticketed, ['class' => 'form-control', $attr]) !!}
     @else
         {!! Form::text('pohead_amount_ticketed', null, ['class' => 'form-control', $attr]) !!}
     @endif
     </div>
+    @if (isset($paymentrequest->purchaseorder_hxold->amount_ticketed) and isset($paymentrequest->purchaseorder_hxold->amount) and $paymentrequest->purchaseorder_hxold->amount > 0.0)
+        {!! Form::label('amount_ticketed_percent', number_format($paymentrequest->purchaseorder_hxold->amount_ticketed / $paymentrequest->purchaseorder_hxold->amount * 100.0, 2, '.', '') . '%', ['class' => 'col-xs-3 col-sm-1 control-label']) !!}
+    @else
+        {!! Form::label('amount_ticketed_percent', '-', ['class' => 'col-xs-3 col-sm-1 control-label', 'id' => 'amount_ticketed_percent']) !!}
+    @endif
 </div>
 
 <div class="form-group">
@@ -145,6 +155,17 @@
     </div>
 </div>
 
+<div class="form-group">
+    {!! Form::label('pohead_productname', '采购商品名称:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+    <div class='col-xs-8 col-sm-10'>
+    @if (isset($paymentrequest->purchaseorder_hxold->productname)) 
+        {!! Form::text('pohead_productname', $paymentrequest->purchaseorder_hxold->productname, ['class' => 'form-control', $attr]) !!}
+    @else
+        {!! Form::text('pohead_productname', null, ['class' => 'form-control', $attr]) !!}
+    @endif
+    </div>
+</div>
+
 {{--
 <div class="form-group">
     {!! Form::label('sohead_process', '目前工程项目进度:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
@@ -206,16 +227,18 @@
 
 <div class="form-group">
     {!! Form::label('pohead_amount_paid', '已付金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
+    <div class='col-xs-5 col-sm-9'>
     {!! Form::text('pohead_amount_paid', null, ['class' => 'form-control', 'readonly', $attr]) !!}
     </div>
+    {!! Form::label('amount_paid_percent', '-', ['class' => 'col-xs-3 col-sm-1 control-label', 'id' => 'amount_paid_percent']) !!}
 </div>
 
 <div class="form-group">
     {!! Form::label('pohead_amount_ticketed', '已开票金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
+    <div class='col-xs-5 col-sm-9'>
     {!! Form::text('pohead_amount_ticketed', null, ['class' => 'form-control', 'readonly', $attr]) !!}
     </div>
+    {!! Form::label('amount_ticketed_percent', '-', ['class' => 'col-xs-3 col-sm-1 control-label', 'id' => 'amount_ticketed_percent']) !!}
 </div>
 
 <div class="form-group">
@@ -255,6 +278,13 @@
     </div>
 </div>
 
+<div class="form-group">
+    {!! Form::label('pohead_productname', '采购商品名称:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+    <div class='col-xs-8 col-sm-10'>
+    {!! Form::text('pohead_productname', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+    </div>
+</div>
+
 {{--
 <div class="form-group">
     {!! Form::label('sohead_process', '目前工程项目进度:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
@@ -265,20 +295,19 @@
 --}}
 @endif
 
+{{--
 <div class="form-group">
     {!! Form::label('equipmentname', '应付款设备名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
     {!! Form::text('equipmentname', null, ['class' => 'form-control', 'placeholder' => '请输入本次应付款的大体设备名称', $attr]) !!}
     </div>
 </div>
+--}}
 
 <div class="form-group">
     {!! Form::label('descrip', '说明:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
     <div class='col-xs-8 col-sm-10'>
     {!! Form::textarea('descrip', null, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
-{{--
-    {!! Form::textarea('descrip', null, ['class' => 'form-control', 'placeholder' => '按合同已付多少，百分比及发票开具情况说明', $attr, 'rows' => 3]) !!}
---}}
     </div>
 </div>
 
