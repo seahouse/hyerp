@@ -173,12 +173,18 @@ body {
 }
 
 .reimbList .list-group-item {
-    height: 80px;
+    height: 100px;
     padding: 10px 0;
     border-top: none;
 }
 
+.reimbList .list-group-item .headIcon{
+    margin-top: 10px;
+    text-align: center;
+}
+
 .reimbList .time {
+	margin-top: 5px;
 	color: #ccc;
     font-size: 12px;
     padding: 10px 0;
