@@ -20,7 +20,12 @@
     {!! Form::label('supplier_name', '支付对象:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
     @if (isset($paymentrequest->supplier_hxold->name))
+
         {!! Form::text('supplier_name', $paymentrequest->supplier_hxold->name, ['class' => 'form-control', $attr]) !!}
+{{--
+
+        {!! Form::label('supplier_name', $paymentrequest->supplier_hxold->name, ['class' => 'control-label']) !!}
+--}}
     @else
         {!! Form::text('supplier_name', null, ['class' => 'form-control', $attr]) !!}
     @endif

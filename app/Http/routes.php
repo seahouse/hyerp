@@ -72,13 +72,6 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('api/dropdown', 'Addr\ProvincesController@getIndex');
 });
 
-Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' => ['web']], function() {
-    // Route::group(['prefix' => 'reimbursements'], function() {
-    //     Route::get('mindex', 'ReimbursementsController@mindex');
-    //     Route::get('mcreate', 'ReimbursementsController@mcreate');
-    //     Route::post('mstore', 'ReimbursementsController@mstore');
-    // });
-});
 
 Route::group(['prefix' => 'addr', 'namespace' => 'Addr', 'middleware' => ['web', 'auth']], function() {
     Route::resource('addrs', 'AddrsController');
@@ -225,6 +218,11 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::get('mindexmy', 'ApprovalController@mindexmy');      // 我发起的
     Route::get('mindexmyapproval', 'ApprovalController@mindexmyapproval');      // 待我审批的
     Route::get('mindexmyapprovaled', 'ApprovalController@mindexmyapprovaled');      // 我已审批的
+
+    Route::group(['prefix' => 'reports'], function() {
+        Route::get('paymentrequest', 'ApprovalreportsController@paymentrequest');
+    });
+
     Route::resource('/', 'ApprovalController');
     Route::resource('approvaltypes', 'ApprovaltypesController');
 });

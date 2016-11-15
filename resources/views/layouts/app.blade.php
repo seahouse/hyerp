@@ -37,12 +37,14 @@
     @yield('content')
 
     <!-- JavaScripts -->
-    <script src="//cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
-    <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <!-- <script src="//cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script> -->
+    <script src="/js/bootstrap.min.js"></script>
+    <!-- <script src="//cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> -->
     <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
-    <!-- <script src="js/jquery.min.js"></script> -->
-    <!-- <script src="js/bootstrap.min.js"></script> -->
+    
+    
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 
     @yield('script')
