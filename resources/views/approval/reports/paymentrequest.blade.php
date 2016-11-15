@@ -118,11 +118,19 @@
 	            legend: {
 	                data:['金额']
 	            },
+	            grid: {
+			        left: '3%',
+			        right: '4%',
+			        bottom: '3%',
+			        containLabel: true
+			    },
 	            xAxis: {
 	                // data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
 	                data: [{!! "'" . implode("','",array_pluck($paymentrequests, 'm')) . "'" !!}]
 	            },
-	            yAxis: {},
+	            yAxis: {
+	            	type : 'value'
+	            },
 	            series: [{
 	                name: '金额',
 	                type: 'bar',
@@ -148,6 +156,12 @@
 	            legend: {
 	                data:['金额']
 	            },
+	            grid: {
+			        left: '3%',
+			        right: '4%',
+			        bottom: '3%',
+			        containLabel: true
+			    },
 	            xAxis: {
 	                // data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
 	                data: [{!! "'" . implode("','",array_pluck($paymentrequests_user, 'name')) . "'" !!}]
