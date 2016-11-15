@@ -21,7 +21,7 @@
 --}}
             <div class='col-xs-6 col-sm-6 content'>
                 <div title="{{ $item->applicant->name }}的付款" class="title">
-                    <div class='longText'>{{ $item->paymenttype }}的付款 | {{ $item->amount }} </div>
+                    <div class='longText'>{{ $item->paymenttype }} | {{ $item->amount }} </div>
                     <div class='longText'>@if (isset($item->supplier_hxold->name)) {{ $item->supplier_hxold->name }} @endif</div>
                     <div class='longText'>@if (isset($item->purchaseorder_hxold->custinfo_name)) {{ $item->purchaseorder_hxold->custinfo_name }} @endif</div>
                     <div class='longText'>@if (isset($item->purchaseorder_hxold->sohead_descrip)) {{ $item->purchaseorder_hxold->sohead_descrip }} @endif</div>
