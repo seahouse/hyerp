@@ -77,16 +77,16 @@ class PaymentrequestapprovalsController extends Controller
     {
 
         $input = $request->all();
-        $userid = Auth::user()->id;
+        $user = Auth::user();
 
         $paymentrequest = Paymentrequest::findOrFail($input['paymentrequest_id']);
         $approversetting = Approversetting::findOrFail($paymentrequest->approversetting_id);
 
-        if ($paymentrequest->nextapprover() && $paymentrequest->nextapprover()->id != $userid)
+        if ($paymentrequest->nextapprover() && $paymentrequest->nextapprover()->id != $user->id)
             return "您不是该层级的审批人员。";
 
         $input['level'] = $approversetting->level;
-        $input['approver_id'] = $userid;
+        $input['approver_id'] = $user->id;
 
         $paymentrequestapproval = Paymentrequestapproval::create($input);
 
@@ -137,6 +137,16 @@ class PaymentrequestapprovalsController extends Controller
                 url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
                 '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
                 config('custom.dingtalk.agentidlist.approval'));
+
+        }
+
+        if ($paymentrequestapproval)
+        {
+            // send dingtalk message to applicant
+            $str_result = $input['status'] == '0' ? '通过' : '未通过';
+            DingTalkController::send($paymentrequest->applicant->dtuserid, '', 
+                $user->name . ' 审批了您的(' . $paymentrequest->paymenttype . ' | ' . $paymentrequest->amount . ')付款单，审批结果：' . $str_result, 
+                config('custom.dingtalk.agentidlist.approval')); 
         }
 
         return 'success';

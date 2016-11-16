@@ -430,6 +430,11 @@
 --}}
     <div class='col-xs-8 col-sm-10'>
         @if (isset($paymentrequest))
+{{--
+            @if (isset($paymentrequest->purchaseorder_hxold->businesscontract))
+                <a href="{!! config('custom.hxold.purchase_businesscontract_webdir') . $paymentrequest->purchaseorder_hxold->id . '/' . $paymentrequest->purchaseorder_hxold->businesscontract !!}" target="_blank">{{ $paymentrequest->purchaseorder_hxold->businesscontract }}</a> <br>
+            @endif
+--}}
             @foreach ($paymentrequest->businesscontracts() as $businesscontract)
                 <a href="{!! $businesscontract->path !!}" target="_blank">{{ $businesscontract->filename }}</a> <br>
             @endforeach
