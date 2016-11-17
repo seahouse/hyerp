@@ -344,7 +344,8 @@ class DingTalkController extends Controller
                 'text' => $text,
             ],
         ];
-        DingTalkController::post($url, $params, json_encode($data), false);
+        DingTalkController::post($url, $params, json_encode($data));
+        // DingTalkController::post($url, $params, json_encode($data), false);
     }
 
     /**
