@@ -8,8 +8,9 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use Cache;
-use DB, Auth, Config;
+use DB, Auth, Config, Log;
 use Jenssegers\Agent\Agent;
+use App\Http\Controllers\util\Http;
 
 class DingTalkController extends Controller
 {
@@ -323,15 +324,7 @@ class DingTalkController extends Controller
         $params = compact('access_token');
         if ($agentid == '')
             $agentid = config('custom.dingtalk.agentidlist.' . self::$APPNAME);
-        // $data = [
-        //     'touser' => $touser,
-        //     'toparty' => '',
-        //     'agentid' => $agentid,
-        //     'msgtype' => 'text',
-        //     'text' => [
-        //         'content' => $message,
-        //     ],
-        // ];
+
         $data = [
             'touser' => $touser,
             'toparty' => '',
@@ -344,8 +337,21 @@ class DingTalkController extends Controller
                 'text' => $text,
             ],
         ];
-        DingTalkController::post($url, $params, json_encode($data));
+
+        // $response = self::send2($access_token, $data);
+
+        $response = DingTalkController::post($url, $params, json_encode($data));
+        // Log::info($response->errmsg);
+        // Log::info($response->invaliduser);
+        // Log::info($response->forbiddenUserId);
         // DingTalkController::post($url, $params, json_encode($data), false);
+    }
+
+    public static function send2($accessToken, $opt)
+    {
+        $response = Http::post("/message/send",
+            array("access_token" => $accessToken), json_encode($opt));
+        return $response;
     }
 
     /**

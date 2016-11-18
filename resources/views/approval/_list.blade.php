@@ -1,9 +1,27 @@
+
+{!! Form::open(['url' => '/approval/paymentrequests/search', 'method' => 'post', 'role' => 'search']) !!}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="input-group">
+                {!! Form::text('key', null, ['class' => 'form-control']) !!}
+                <span class="input-group-btn">
+                    {!! Form::submit('查找', ['class' => 'btn btn-default']) !!}
+                </span>
+            </div>
+        </div>
+    </div>
+{!! Form::close() !!}
+
+
+{{--
 <form class="navbar-form reimbListSearch" role="search">
   <div class="form-group col-sm-8 col-xs-8">
     <input type="text" name="keyword" class="form-control" style="width:100%" placeholder="输入关键字">
   </div>
   <div class='col-sm-4 col-xs-4'><button type="submit" class="btn btn-default">搜索</button></div>
 </form>
+--}}
+
 @if ($paymentrequests->count())
     @foreach($paymentrequests as $item)
     <div class="reimbList list-group">       
