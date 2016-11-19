@@ -75,12 +75,12 @@ class ApprovalController extends Controller
         // else
         //     return view('approval.paymentrequests.index', compact('paymentrequests'));
 
-        $paymentrequests = PaymentrequestsController::my();
+        return $this->searchmindexmy(request());
+        // $paymentrequests = PaymentrequestsController::my();
         
-        $dtuser = Auth::user()->dtuser;
-        // dd($paymentrequests);
+        // $dtuser = Auth::user()->dtuser;
 
-        return view('approval.mindexmy', compact('paymentrequests', 'dtuser'));
+        // return view('approval.mindexmy', compact('paymentrequests', 'dtuser'));
     }
 
     /**
@@ -91,10 +91,11 @@ class ApprovalController extends Controller
     public function searchmindexmy(Request $request)
     {
         //
-        $key = $request->input('key');
+        $key = $request->input('key');        
 
 
         $paymentrequests = PaymentrequestsController::my($key);
+        // dd($paymentrequests);
 
         return view('approval.mindexmy', compact('paymentrequests', 'key'));
     }
