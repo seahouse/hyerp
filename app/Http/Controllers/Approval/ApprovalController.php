@@ -96,7 +96,7 @@ class ApprovalController extends Controller
 
         $paymentrequests = PaymentrequestsController::my($key);
 
-        return view('approval.mindexmy', compact('paymentrequests'));
+        return view('approval.mindexmy', compact('paymentrequests', 'key'));
     }
 
     /**
