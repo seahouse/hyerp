@@ -4,19 +4,18 @@
 
 @section('main')
     
-{{--    <div class="panel-body">
-        <a href="{{ URL::to('approval/items/create') }}" class="btn btn-sm btn-success">新建</a>
-        <form class="pull-right" action="/approval/items/search" method="post">
-            {!! csrf_field() !!}
-            <div class="pull-right">
-                <button type="submit" class="btn btn-default btn-sm">查找</button>
+    {!! Form::open(['url' => '/approval/mindexmy/search', 'method' => 'post', 'role' => 'search']) !!}
+        <div class="container-fluid">
+            <div class="row">
+                <div class="input-group">
+                    {!! Form::text('key', null, ['class' => 'form-control']) !!}
+                    <span class="input-group-btn">
+                        {!! Form::submit('查找', ['class' => 'btn btn-default']) !!}
+                    </span>
+                </div>
             </div>
-            <div class="pull-right input-group-sm">
-                <input type="text" class="form-control" name="key" placeholder="Search">    
-            </div>
-        </form>
-
-    </div> --}}
+        </div>
+    {!! Form::close() !!}
 
     @include('approval._list',
         [
@@ -24,7 +23,11 @@
             'href_pre_paymentrequest' => '/approval/paymentrequests/'
         ])
 
-    {!! $paymentrequests->links() !!}
+    @if (isset($key))
+        {!! $paymentrequests->setPath('/approval/mindexmy')->appends(['key' => $key])->links() !!}
+    @else
+        {!! $paymentrequests->setPath('/approval/mindexmy')->links() !!}
+    @endif
 
 
 {{--    @if ($reimbursements->count())    

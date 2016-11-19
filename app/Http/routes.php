@@ -57,17 +57,6 @@ Route::group(['middleware' => ['web', 'auth']], function () {
 	Route::get('/home', function() { return view('navbarerp'); });
     Route::get('mapproval', function() { return view('mapproval'); });
 
-//     Route::resource('itemclasses', 'ItemclassesController');
-//     Route::post('items/search', 'ItemsController@search');
-//     Route::group(['prefix' => 'items'], function() {
-//         Route::get('mindex', 'ItemsController@mindex');
-//     });
-//     Route::resource('items', 'ItemsController');
-//     Route::resource('boms', 'BomsController');
-//     Route::get('bomitems/{id}/createitem', 'BomitemsController@createitem');
-//     Route::resource('bomitems', 'BomitemsController');
-    // Route::resource('contacts', 'ContactsController');
-    // Route::resource('custinfos', 'CustinfosController');
 
     Route::get('api/dropdown', 'Addr\ProvincesController@getIndex');
 });
@@ -197,6 +186,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::post('mstore', 'PaymentrequestsController@mstore');
         Route::get('mshow/{id}', 'PaymentrequestsController@mshow');
         Route::post('search', 'PaymentrequestsController@search');              // 搜索功能
+        Route::post('msearch', 'PaymentrequestsController@msearch');              // 搜索功能
         Route::get('search2/{key}', 'PaymentrequestsController@search2');         // 查询数据
         Route::post('export', 'PaymentrequestsController@export');
         Route::post('exportitem/{id}', 'PaymentrequestsController@exportitem');
@@ -215,7 +205,10 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::post('mstore', 'PaymentrequestapprovalsController@mstore');
     });
     Route::resource('paymentrequestapprovals', 'PaymentrequestapprovalsController');
-    Route::get('mindexmy', 'ApprovalController@mindexmy');      // 我发起的
+    Route::group(['prefix' => 'mindexmy'], function() {
+        Route::get('', 'ApprovalController@mindexmy');      // 我发起的
+        Route::post('search/{key?}', 'ApprovalController@searchmindexmy');      // 我发起的
+    });
     Route::get('mindexmyapproval', 'ApprovalController@mindexmyapproval');      // 待我审批的
     Route::get('mindexmyapprovaled', 'ApprovalController@mindexmyapprovaled');      // 我已审批的
 
