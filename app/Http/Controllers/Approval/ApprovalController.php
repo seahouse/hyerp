@@ -61,12 +61,42 @@ class ApprovalController extends Controller
 
         // return view('approval.mindexmy', compact('items', 'dtuser'));
 
+        // $request = request();
+        // if ($request->has('key'))
+        //     $paymentrequests = $this->search2($request->input('key'));
+        // else
+        //     $paymentrequests = Paymentrequest::latest('created_at')->paginate(10);
+
+        // if ($request->has('key'))
+        // {
+        //     $key = $request->input('key');
+        //     return view('approval.paymentrequests.index', compact('paymentrequests', 'key'));
+        // }
+        // else
+        //     return view('approval.paymentrequests.index', compact('paymentrequests'));
+
         $paymentrequests = PaymentrequestsController::my();
         
         $dtuser = Auth::user()->dtuser;
         // dd($paymentrequests);
 
         return view('approval.mindexmy', compact('paymentrequests', 'dtuser'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function searchmindexmy(Request $request)
+    {
+        //
+        $key = $request->input('key');
+
+
+        $paymentrequests = PaymentrequestsController::my($key);
+
+        return view('approval.mindexmy', compact('paymentrequests'));
     }
 
     /**

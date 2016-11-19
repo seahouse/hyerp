@@ -48,13 +48,41 @@ class PaymentrequestsController extends Controller
 
     public function search(Request $request)
     {
+        // dd(substr($request->header('referer'), strlen($request->header('origin'))));
+        // dd($request->header('origin'));
+        // dd($request->header('referer'));
+        // dd($request->server('HTTP_REFERER'));
         $key = $request->input('key');
         if ($key == '')
             return redirect('/approval/paymentrequests');
 
         $paymentrequests = $this->search2($key);
         
+        // $referer_url = substr($request->header('referer'), strlen($request->header('origin')));
+        // dd($referer_url);
         return view('approval.paymentrequests.index', compact('paymentrequests', 'key'));
+        // return view($referer_url, compact('paymentrequests', 'key'));
+    }
+
+    // 手机端的搜索，仅搜索自己权限的数据
+    // mindexmy：发起人搜索，搜索自己发起的审批单
+    public function msearch(Request $request)
+    {
+        // $referer_url = substr($request->header('referer'), strlen($request->header('origin')));
+        // dd($referer_url);
+        // dd(substr($request->header('referer'), strlen($request->header('origin'))));
+        // dd($request->header('origin'));
+        // dd($request->header('referer'));
+        // dd($request->server('HTTP_REFERER'));
+        $key = $request->input('key');
+        if ($key == '')
+            return redirect('/approval/mindexmy');
+
+        $paymentrequests = $this->search2($key);
+        
+        // dd($referer_url);
+        // return view('approval.paymentrequests.index', compact('paymentrequests', 'key'));
+        return view('approval.mindexmy', compact('paymentrequests', 'key'));
     }
 
     public function search2($key = '')
@@ -95,10 +123,30 @@ class PaymentrequestsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public static function my()
+    public static function my($key = '')
     {
         $userid = Auth::user()->id;
-        $paymentrequests = Paymentrequest::latest('created_at')->where('applicant_id', $userid)->paginate(10);
+
+        if ('' == $key)
+            return Paymentrequest::latest('created_at')->where('applicant_id', $userid)->paginate(10);
+
+        $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+        $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
+
+        $paymentrequests = Paymentrequest::latest('created_at')
+            ->where('applicant_id', $userid)
+            ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
+                $query->whereIn('supplier_id', $supplier_ids)
+                    ->orWhereIn('pohead_id', $purchaseorder_ids);
+            })
+            // ->leftJoin('users', 'users.id', '=', 'paymentrequests.applicant_id')
+            // ->whereIn('supplier_id', $supplier_ids)
+            // ->orWhereIn('pohead_id', $purchaseorder_ids)
+            // ->orWhere('users.name', 'like', '%'.$key.'%')
+            ->select('paymentrequests.*')
+            ->paginate(10);
+
+        // $paymentrequests = Paymentrequest::latest('created_at')->where('applicant_id', $userid)->paginate(10);
 
         return $paymentrequests;
     }

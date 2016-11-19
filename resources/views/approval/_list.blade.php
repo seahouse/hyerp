@@ -1,18 +1,16 @@
-<form class="navbar-form reimbListSearch" role="search">
-  <div class="form-group col-sm-8 col-xs-8">
-    <input type="text" name="keyword" class="form-control" style="width:100%" placeholder="输入关键字">
-  </div>
-  <div class='col-sm-4 col-xs-4'><button type="submit" class="btn btn-default">搜索</button></div>
-</form>
+
+
+
+
 @if ($paymentrequests->count())
     @foreach($paymentrequests as $item)
     <div class="reimbList list-group">       
         <a href="{{ url($href_pre_paymentrequest . $item->id . $href_suffix) }}" class="list-group-item">
             {{-- 以下的代码判断说明：如果用户的头像url为空，则以名字显示，否则以这个头像url来显示图片 --}}  
-            @if (isset($dtuser->avatar))
-                <div class='col-xs-3 col-sm-3 headIcon'><img class="name img" src="{{ $dtuser->avatar }}" /></div>
+            @if (isset($item->applicant->dtuser->avatar))
+                <div class='col-xs-3 col-sm-3 headIcon'><img class="name img" src="{{ $item->applicant->dtuser->avatar }}" /></div>
             @else
-                <div class='col-xs-3 col-sm-3 name headIcon'>{{ $dtuser->name }}</div>
+                <div class='col-xs-3 col-sm-3 name headIcon'>{{ $item->applicant->name }}</div>
             @endif
 {{--
             @if ($dduser->avatar == '')

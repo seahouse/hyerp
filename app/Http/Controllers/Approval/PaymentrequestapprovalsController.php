@@ -10,7 +10,7 @@ use App\Http\Controllers\DingTalkController;
 use App\Models\Approval\Paymentrequest;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Paymentrequestapproval;
-use Auth;
+use Auth, Log;
 use Jenssegers\Agent\Agent;
 
 class PaymentrequestapprovalsController extends Controller
@@ -78,6 +78,14 @@ class PaymentrequestapprovalsController extends Controller
 
         $input = $request->all();
         $user = Auth::user();
+
+        // Log::info($user->dtuserid);
+        // Log::info(config('custom.dingtalk.agentidlist.approval'));
+        // DingTalkController::send_link($user->dtuserid, '', 
+        //     url('mddauth/approval/approval-paymentrequestapprovals-mcreate'), '',
+        //     '供应商付款审批', '来自XXX的付款申请单需要您审批4.', 
+        //     config('custom.dingtalk.agentidlist.approval'));
+        // return 'success';
 
         $paymentrequest = Paymentrequest::findOrFail($input['paymentrequest_id']);
         $approversetting = Approversetting::findOrFail($paymentrequest->approversetting_id);
