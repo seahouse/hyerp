@@ -125,6 +125,25 @@ class ApprovalController extends Controller
         return view('approval.mindexmyapproval', compact('reimbursements', 'paymentrequests'));
     }
 
+    public function searchmindexmyapproval()
+    {
+        $reimbursements = ReimbursementsController::myapproval();
+        $paymentrequests = PaymentrequestsController::myapproval();
+        // dd($paymentrequests);
+
+        // dd($reimbursements->toJson());
+        // dd($reimbursements->toArray()["data"]);
+        // dd($reimbursements);
+        // $items = [];
+        // foreach ($reimbursements as $value) {
+        //     # code...
+        //     dd(array_only($value, ['id', 'applicant_id', 'approversetting_id']));
+        // }
+
+
+        return view('approval.mindexmyapproval', compact('reimbursements', 'paymentrequests'));
+    }
+
     /**
      * 我已审批的.
      *
@@ -153,6 +172,50 @@ class ApprovalController extends Controller
         
         $ids_paymentrequest = Paymentrequestapproval::where('approver_id', $userid)->select('paymentrequest_id')->distinct()->pluck('paymentrequest_id');
         $paymentrequests = Paymentrequest::latest('created_at')->whereIn('id', $ids_paymentrequest)->paginate(10);
+        // dd($paymentrequests);
+
+        return view('approval.mindexmyapprovaled', compact('reimbursements', 'paymentrequests'));
+    }
+
+    public function searchmindexmyapprovaled(Request $request)
+    {
+        $key = $request->input('key');
+
+        // 获取当前操作人员的报销审批层次
+        $userid = Auth::user()->id;        
+        $ids = [];      // 报销id数组
+        $ids_paymentrequest = [];      // 报销id数组
+
+        //  // 获取需要我审批的报销id数组
+        // $reimbursementids = Reimbursement::leftJoin('reimbursementapprovals', 'reimbursements.id', '=', 'reimbursementapprovals.reimbursement_id')
+        //     ->select('reimbursements.id', 
+        //         DB::raw('(select count(approver_id) from reimbursementapprovals where reimbursements.id=reimbursementapprovals.reimbursement_id and reimbursementapprovals.approver_id=' . $userid . ' limit 1) as myapprovaled'))     // 最后一次审批的状态
+        //     ->get();
+
+        // foreach ($reimbursementids as $reimbursementid) {
+        //     if ($reimbursementid->myapprovaled > 0)
+        //         $ids = array_prepend($ids, $reimbursementid->id);
+        // }
+
+        // $reimbursements = Reimbursement::latest('created_at')->whereIn('id', $ids)->paginate(10);
+        
+        $ids_paymentrequest = Paymentrequestapproval::where('approver_id', $userid)->select('paymentrequest_id')->distinct()->pluck('paymentrequest_id');
+        if ('' == $key)
+            $paymentrequests = Paymentrequest::latest('created_at')->whereIn('id', $ids_paymentrequest)->paginate(10);
+        else
+        {
+            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
+
+            $paymentrequests = Paymentrequest::latest('created_at')
+                ->whereIn('applicant_id', $ids_paymentrequest)
+                ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
+                    $query->whereIn('supplier_id', $supplier_ids)
+                        ->orWhereIn('pohead_id', $purchaseorder_ids);
+                })
+                ->select('paymentrequests.*')
+                ->paginate(10);
+        }
         // dd($paymentrequests);
 
         return view('approval.mindexmyapprovaled', compact('reimbursements', 'paymentrequests'));
