@@ -151,30 +151,30 @@ class ApprovalController extends Controller
      */
     public function mindexmyapprovaled()
     {
-        // 获取当前操作人员的报销审批层次
-        $userid = Auth::user()->id;        
-        $ids = [];      // 报销id数组
-        $ids_paymentrequest = [];      // 报销id数组
+        return $this->searchmindexmyapprovaled(request());
 
-         // 获取需要我审批的报销id数组
-        $reimbursementids = Reimbursement::leftJoin('reimbursementapprovals', 'reimbursements.id', '=', 'reimbursementapprovals.reimbursement_id')
-            ->select('reimbursements.id', 
-                DB::raw('(select count(approver_id) from reimbursementapprovals where reimbursements.id=reimbursementapprovals.reimbursement_id and reimbursementapprovals.approver_id=' . $userid . ' limit 1) as myapprovaled'))     // 最后一次审批的状态
-            ->get();
+        // // 获取当前操作人员的报销审批层次
+        // $userid = Auth::user()->id;        
+        // $ids = [];      // 报销id数组
+        // $ids_paymentrequest = [];      // 报销id数组
 
-        foreach ($reimbursementids as $reimbursementid) {
-            if ($reimbursementid->myapprovaled > 0)
-                $ids = array_prepend($ids, $reimbursementid->id);
-        }
+        //  // 获取需要我审批的报销id数组
+        // $reimbursementids = Reimbursement::leftJoin('reimbursementapprovals', 'reimbursements.id', '=', 'reimbursementapprovals.reimbursement_id')
+        //     ->select('reimbursements.id', 
+        //         DB::raw('(select count(approver_id) from reimbursementapprovals where reimbursements.id=reimbursementapprovals.reimbursement_id and reimbursementapprovals.approver_id=' . $userid . ' limit 1) as myapprovaled'))     // 最后一次审批的状态
+        //     ->get();
 
-        $reimbursements = Reimbursement::latest('created_at')->whereIn('id', $ids)->paginate(10);
-        // $reimbursements = Reimbursement::whereIn('id', $ids)->paginate(10);
+        // foreach ($reimbursementids as $reimbursementid) {
+        //     if ($reimbursementid->myapprovaled > 0)
+        //         $ids = array_prepend($ids, $reimbursementid->id);
+        // }
+
+        // $reimbursements = Reimbursement::latest('created_at')->whereIn('id', $ids)->paginate(10);
         
-        $ids_paymentrequest = Paymentrequestapproval::where('approver_id', $userid)->select('paymentrequest_id')->distinct()->pluck('paymentrequest_id');
-        $paymentrequests = Paymentrequest::latest('created_at')->whereIn('id', $ids_paymentrequest)->paginate(10);
-        // dd($paymentrequests);
+        // $ids_paymentrequest = Paymentrequestapproval::where('approver_id', $userid)->select('paymentrequest_id')->distinct()->pluck('paymentrequest_id');
+        // $paymentrequests = Paymentrequest::latest('created_at')->whereIn('id', $ids_paymentrequest)->paginate(10);
 
-        return view('approval.mindexmyapprovaled', compact('reimbursements', 'paymentrequests'));
+        // return view('approval.mindexmyapprovaled', compact('reimbursements', 'paymentrequests'));
     }
 
     public function searchmindexmyapprovaled(Request $request)
@@ -218,7 +218,7 @@ class ApprovalController extends Controller
         }
         // dd($paymentrequests);
 
-        return view('approval.mindexmyapprovaled', compact('reimbursements', 'paymentrequests'));
+        return view('approval.mindexmyapprovaled', compact('reimbursements', 'paymentrequests', 'key'));
     }
 
     /**
