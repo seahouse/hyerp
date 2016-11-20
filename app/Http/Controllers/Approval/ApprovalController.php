@@ -208,7 +208,7 @@ class ApprovalController extends Controller
             $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
 
             $paymentrequests = Paymentrequest::latest('created_at')
-                ->whereIn('applicant_id', $ids_paymentrequest)
+                ->whereIn('id', $ids_paymentrequest)
                 ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
                     $query->whereIn('supplier_id', $supplier_ids)
                         ->orWhereIn('pohead_id', $purchaseorder_ids);
