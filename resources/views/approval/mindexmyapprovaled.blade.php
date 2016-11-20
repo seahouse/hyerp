@@ -21,7 +21,7 @@
         </div>
     {!! Form::close() !!}
 
-    @include('approval._list2',
+    @include('approval._list',
         [
             'href_pre' => '/approval/reimbursements/mshow/', 'href_suffix' => '',
             'href_pre_paymentrequest' => '/approval/paymentrequests/mshow/'
