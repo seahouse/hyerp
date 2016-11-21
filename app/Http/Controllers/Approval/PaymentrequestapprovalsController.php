@@ -23,6 +23,8 @@ class PaymentrequestapprovalsController extends Controller
     public function index()
     {
         //
+        $paymentrequestapprovals = Paymentrequestapproval::latest('created_at')->paginate(10);
+        return view('approval.paymentrequestapprovals.index', compact('paymentrequestapprovals'));
     }
 
     /**
