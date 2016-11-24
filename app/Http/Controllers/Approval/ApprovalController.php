@@ -83,6 +83,31 @@ class ApprovalController extends Controller
         // return view('approval.mindexmy', compact('paymentrequests', 'dtuser'));
     }
 
+    public function mindexmying()
+    {
+        //
+        // return $this->searchmindexmy(request());
+        $paymentrequests = PaymentrequestsController::mying();
+        
+
+        return view('approval.mindexmy', compact('paymentrequests'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function mindexmyed()
+    {
+        //
+        // return $this->searchmindexmy(request());
+        $paymentrequests = PaymentrequestsController::myed();
+        
+
+        return view('approval.mindexmy', compact('paymentrequests'));
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -99,6 +124,7 @@ class ApprovalController extends Controller
 
         return view('approval.mindexmy', compact('paymentrequests', 'key'));
     }
+    
 
     /**
      * 待我审批的.
