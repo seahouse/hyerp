@@ -172,6 +172,7 @@
 </div>
 
 @can('test')
+@if (Auth::user()->email == "admin@admin.com")
 <div class="form-group">
     <div class='col-xs-4 col-sm-2'>
     </div>
@@ -180,6 +181,7 @@
     <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail') }}" target="_blank">入库价格明细</a>
     </div>
 </div>
+@endif
 @endcan
 
 {{--
