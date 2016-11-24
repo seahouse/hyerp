@@ -171,6 +171,17 @@
     </div>
 </div>
 
+@can('test')
+<div class="form-group">
+    <div class='col-xs-4 col-sm-2'>
+    </div>
+    <div class='col-xs-8 col-sm-10'>
+    <a href="{{ URL::to('/purchase/purchaseorders/' . $paymentrequest->purchaseorder_hxold->id . '/detail_hxold') }}" target="_blank">入库价格明细</a>
+    <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail') }}" target="_blank">入库价格明细</a>
+    </div>
+</div>
+@endcan
+
 {{--
 <div class="form-group">
     {!! Form::label('sohead_process', '目前工程项目进度:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}

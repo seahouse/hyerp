@@ -14,6 +14,8 @@ use App\Models\Product\Itemclass;
 use App\Models\Product\Itemtype;
 use App\Models\Inventory\Warehouse;
 use App\Models\Inventory\Itemsite;
+use App\Models\Product\Itemp_hxold;
+use App\Models\Inventory\Receiptitem_hxold;
 
 class ItemsController extends Controller
 {
@@ -181,5 +183,14 @@ class ItemsController extends Controller
         
         Item::destroy($id);
         return redirect('product/items');
+    }
+
+    // 获取入库信息
+    public function receiptitems($id)
+    {
+        $item_number = Itemp_hxold::where('goods_id', $id)->first()->goods_no;
+        $receiptitems = Receiptitem_hxold::where('item_number', $item_number)->paginate(10);
+        // dd($receiptitems);
+        return view('inventory.receiptitems.index', compact('receiptitems'));
     }
 }

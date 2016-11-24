@@ -41,7 +41,7 @@
             @foreach($paymentrequestapprovals as $paymentrequestapproval)
                 <tr>
                     <td>
-                        <a href="{{ url('/approval/paymentrequest', $paymentrequestapproval->paymentrequest_id) }}" target="_blank">{{ $paymentrequestapproval->created_at }}</a>
+                        <a href="{{ url('/approval/paymentrequests', $paymentrequestapproval->paymentrequest_id) }}" target="_blank">{{ $paymentrequestapproval->created_at }}</a>
                     </td>
                     <td>
                         {{ $paymentrequestapproval->approver->name }}

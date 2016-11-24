@@ -72,6 +72,10 @@ Route::group(['prefix' => 'inventory', 'namespace' => 'Inventory', 'middleware' 
     Route::resource('warehouses', 'WarehousesController');
     Route::get('inventoryAvailability', 'InventoryAvailabilityController@listByItems');
     Route::get('inventoryAvailabilityBySalesorder', 'InventoryAvailabilityController@listBySalesorder');
+    Route::group(['prefix' => 'rwrecord/{id}'], function () {
+        Route::get('receiptitems', 'RwrecordController@receiptitems');
+    });
+    Route::resource('rwrecord', 'RwrecordController');
 });
 
 Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => ['web', 'auth']], function() {
@@ -80,6 +84,9 @@ Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => [
     Route::group(['prefix' => 'items'], function() {
         Route::get('mmindex', 'ItemsController@mmindex');
         Route::get('mindex', 'ItemsController@mindex');
+    });
+    Route::group(['prefix' => 'items/{id}'], function() {
+        Route::get('receiptitems', 'ItemsController@receiptitems');
     });
     Route::resource('items', 'ItemsController');
     Route::resource('boms', 'BomsController');
@@ -137,8 +144,16 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         Route::get('getitemsbyvendid/{vendid}', 'VendbankController@getitemsbyvendid');
     });
     Route::resource('vendbank', 'VendbankController');
-    Route::get('purchaseorders/{id}/detail', 'PurchaseordersController@detail');
-    Route::get('purchaseorders/{id}/receiving', 'PurchaseordersController@receiving');
+    // Route::get('purchaseorders/{id}/detail', 'PurchaseordersController@detail');
+    // Route::get('purchaseorders/{id}/receiving', 'PurchaseordersController@receiving');
+    // Route::get('purchaseorders/{id}/receiptorders', 'PurchaseordersController@receiptorders');
+    Route::group(['prefix' => 'purchaseorders/{id}'], function () {
+        Route::get('detail', 'PurchaseordersController@detail');
+        Route::get('detail_hxold', 'PurchaseordersController@detail_hxold');
+        Route::get('receiving', 'PurchaseordersController@receiving');
+        Route::get('receiptorders', 'PurchaseordersController@receiptorders');
+        Route::get('poitems', 'PurchaseordersController@poitems');
+    });
     Route::group(['prefix' => 'purchaseorders/{purchaseorder}/payments'], function () {
         Route::get('/', 'PaymentsController@index');
         Route::get('create', 'PaymentsController@create');
@@ -150,6 +165,9 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
     });
     Route::resource('purchaseorders', 'PurchaseordersController');
     Route::get('poitems/{headId}/create', 'PoitemsController@createByPoheadId');
+    Route::group(['prefix' => 'poitems/hxold'], function() {
+        Route::get('', 'PoitemsController@index_hxold');
+    });
     Route::resource('poitems', 'PoitemsController');
 });
 
@@ -191,6 +209,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::post('export', 'PaymentrequestsController@export');
         Route::post('exportitem/{id}', 'PaymentrequestsController@exportitem');
         Route::delete('mdestroy/{id}', 'PaymentrequestsController@mdestroy');
+        Route::get('{id}/mrecvdetail', 'PaymentrequestsController@mrecvdetail');
     });
     Route::resource('paymentrequests', 'PaymentrequestsController');
     Route::resource('approversettings', 'ApproversettingsController');
@@ -209,6 +228,8 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('', 'ApprovalController@mindexmy');      // 我发起的
         Route::post('search/{key?}', 'ApprovalController@searchmindexmy');      // 我发起的
     });
+    Route::get('mindexmying', 'ApprovalController@mindexmying');      // 我发起的
+    Route::get('mindexmyed', 'ApprovalController@mindexmyed');      // 我发起的
     Route::group(['prefix' => 'mindexmyapproval'], function() {
         Route::get('', 'ApprovalController@mindexmyapproval');      // 待我审批的
         Route::post('search/{key?}', 'ApprovalController@searchmindexmyapproval');      // 待我审批的
