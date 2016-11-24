@@ -12,6 +12,7 @@ use App\Models\Purchase\Purchaseorder_hxold;
 use App\Http\Requests\Purchase\PurchaseorderRequest;
 use Request;
 use App\Models\Purchase\Poitem;
+use App\Models\Purchase\Poitem_hxold;
 use Carbon\Carbon;
 use App\Inventory\Recvitem;
 
@@ -128,6 +129,12 @@ class PurchaseordersController extends Controller
         $poitems = Poitem::latest('created_at')->where('pohead_id', $id)->paginate(10);
         return view('purchase.poitems.index', compact('poitems', 'id'));
     }
+
+    public function detail_hxold($id)
+    {
+        $poitems = Poitem_hxold::where('pohead_id', $id)->orderBy('id')->paginate(10);
+        return view('purchase.poitems_hxold.index', compact('poitems', 'id'));
+    }
     
     public function receiving($id)
     {
@@ -162,5 +169,48 @@ class PurchaseordersController extends Controller
             }
         }
         return redirect('purchase/purchaseorders');
+    }
+
+    // 收货单
+    public function receiptorders($id)
+    {
+        $receiptorders = Purchaseorder_hxold::find($id)->receiptorders;
+        // dd($receiptorders);
+        // foreach ($poitems as $poitem)
+        // {
+        //     $forQtyReceive = $poitem->qty_ordered - $poitem->qty_received;
+        //     if ($forQtyReceive > 0.0)
+        //     {
+        //         $itemsite = $poitem->itemsite;
+        //         if ($itemsite == null)
+        //             return $poitem->item->item_number . '无库存记录';
+        
+        //         // create receive record
+        //         $data = [
+        //             'orderitem_id' => $poitem->id,
+        //             'quantity' => $forQtyReceive,
+        //             'recvdate' => Carbon::now(),
+        //         ];
+        //         Recvitem::create($data);
+        
+        //         // update soitem qtyshipped
+        //         $poitem->qty_received = $poitem->qty_received + $forQtyReceive;
+        //         $poitem->save();
+        
+        //         // update itemsite qtyonhand
+        //         $itemsite->qtyonhand = $itemsite->qtyonhand + $forQtyReceive;
+        //         $itemsite->save();
+        //     }
+        // }
+        return view('purchase.receiptorders.index', compact('receiptorders'));
+    }
+
+    // 收货单
+    public function poitems($id)
+    {
+        $poitems = Purchaseorder_hxold::findOrFail($id)->poitems;
+        dd($poitems);
+
+        return view('purchase.receiptorders.index', compact('receiptorders'));
     }
 }

@@ -23,6 +23,11 @@ class PoitemsController extends Controller
         //
     }
 
+    public function index_hxold()
+    {
+        //
+    }
+
     /**
      * Show the form for creating a new resource.
      *

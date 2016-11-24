@@ -31,8 +31,6 @@
     @else
         {!! $paymentrequests->links() !!}
     @endif
-
-
         
 
 @endsection

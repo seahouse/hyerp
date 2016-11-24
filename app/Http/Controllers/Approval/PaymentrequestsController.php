@@ -128,7 +128,8 @@ class PaymentrequestsController extends Controller
         $userid = Auth::user()->id;
 
         if ('' == $key)
-            return Paymentrequest::latest('created_at')->where('applicant_id', $userid)->paginate(10);
+            return Paymentrequest::latest('created_at')
+                ->where('applicant_id', $userid)->paginate(10);
 
         $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
         $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
@@ -139,10 +140,63 @@ class PaymentrequestsController extends Controller
                 $query->whereIn('supplier_id', $supplier_ids)
                     ->orWhereIn('pohead_id', $purchaseorder_ids);
             })
-            // ->leftJoin('users', 'users.id', '=', 'paymentrequests.applicant_id')
-            // ->whereIn('supplier_id', $supplier_ids)
-            // ->orWhereIn('pohead_id', $purchaseorder_ids)
-            // ->orWhere('users.name', 'like', '%'.$key.'%')
+            ->select('paymentrequests.*')
+            ->paginate(10);
+
+        // $paymentrequests = Paymentrequest::latest('created_at')->where('applicant_id', $userid)->paginate(10);
+
+        return $paymentrequests;
+    }
+
+    public static function mying($key = '')
+    {
+        $userid = Auth::user()->id;
+
+        if ('' == $key)
+            return Paymentrequest::latest('created_at')
+                ->where('applicant_id', $userid)
+                ->where('approversetting_id', '>', 0)->paginate(10);
+
+        $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+        $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
+
+        $paymentrequests = Paymentrequest::latest('created_at')
+            ->where('applicant_id', $userid)
+            ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
+                $query->whereIn('supplier_id', $supplier_ids)
+                    ->orWhereIn('pohead_id', $purchaseorder_ids);
+            })
+            ->select('paymentrequests.*')
+            ->paginate(10);
+
+        // $paymentrequests = Paymentrequest::latest('created_at')->where('applicant_id', $userid)->paginate(10);
+
+        return $paymentrequests;
+    }
+
+    /**
+     * 我发起的数据集合.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public static function myed($key = '')
+    {
+        $userid = Auth::user()->id;
+
+        if ('' == $key)
+            return Paymentrequest::latest('created_at')
+                ->where('applicant_id', $userid)
+                ->where('approversetting_id', 0)->paginate(10);
+
+        $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+        $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
+
+        $paymentrequests = Paymentrequest::latest('created_at')
+            ->where('applicant_id', $userid)
+            ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
+                $query->whereIn('supplier_id', $supplier_ids)
+                    ->orWhereIn('pohead_id', $purchaseorder_ids);
+            })
             ->select('paymentrequests.*')
             ->paginate(10);
 
@@ -668,5 +722,14 @@ class PaymentrequestsController extends Controller
         // $dompdf->stream("sample.pdf", array("Attachment" => true));
 
         // return 'ssss';
+    }
+
+    public function mrecvdetail($id)
+    {
+        //
+        $purchaseorder = Paymentrequest::findOrFail($id)->purchaseorder_hxold;
+        // dd($purchaseorder);
+
+        return view('approval.paymentrequests.mrecvdetail', compact('purchaseorder'));
     }
 }

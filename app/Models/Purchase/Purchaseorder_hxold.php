@@ -21,4 +21,12 @@ class Purchaseorder_hxold extends Model
     public function sohead() {
         return $this->hasOne('App\Models\Sales\Salesorder_hxold', 'id', 'sohead_id');
     }
+
+    public function poitems() {
+        return $this->hasMany('App\Models\Purchase\Poitem_hxold', 'pohead_id', 'id');
+    }
+
+    public function receiptorders() {
+        return $this->hasMany('App\Models\Inventory\Receiptorder_hxold', 'pohead_id', 'id');
+    }
 }
