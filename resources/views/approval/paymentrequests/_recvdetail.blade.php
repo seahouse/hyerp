@@ -17,7 +17,10 @@
         历史最低价: {{ $poitem->item->receiptitems->min('unitprice') }}<br>
         历史均价: 
 
-        {{ $poitem->item->receiptitems->sum(function($item) { return $item['unitprice'] * $item['quantity'];}) / $poitem->item->receiptitems->sum('quantity')}}
+        @if ($poitem->item->receiptitems->sum('quantity') <= 0.0) - 
+        @else
+            {{ number_format($poitem->item->receiptitems->sum(function($item) { return $item['unitprice'] * $item['quantity'];}) / $poitem->item->receiptitems->sum('quantity'), 4, '.', '')}}
+        @endif
 {{--
         {{ $poitem->item->receiptitems->sum('amount') / $poitem->item->receiptitems->sum('quantity')}}
 --}}
