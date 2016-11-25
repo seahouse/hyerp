@@ -21,17 +21,17 @@
 				</a>
 			</div>
 			<div class="btn-group menu" role="group">
-
+{{--
 				<a href="/approval/mindexmy">
 					<i class="icon iconfont btnMenuIcon color-orange2 icon-daibanshixiang"></i>
 					<div type="button" class="btnMenu">我发起的</div>
 				</a>
-{{--
+--}}
 				<a href="/approval/mindexmying">
 					<i class="icon iconfont btnMenuIcon color-orange2 icon-daibanshixiang"></i>
 					<div type="button" class="btnMenu">我发起的</div>
 				</a>
---}}
+
 			</div>
 		</div>
 	</div>

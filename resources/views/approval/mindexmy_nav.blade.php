@@ -3,7 +3,7 @@
 @section('title', '我发起的')
 
 @section('main')
-{{--
+
 <div class="apprNav">
 	<div class="btn-group btn-group-justified wrapper" role="group" aria-label="...">
 	    <div class="btn-group btnw" role="group">
@@ -18,7 +18,7 @@
 	    </div>
 	</div>
 </div>
---}}
+
 
 <p>
 @yield('mindexmy_main')
