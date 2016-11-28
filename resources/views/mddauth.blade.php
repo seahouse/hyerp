@@ -183,7 +183,7 @@
 		});
 	</script>
 @endsection
-@elseif (0)
+@else
 @section('script')
 	<script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
 	
@@ -233,6 +233,7 @@
 				// 	});
 				// }
 	
+				console.log('requestAuthCode');
 				DingTalkPC.runtime.permission.requestAuthCode({
 				    corpId: "{!! array_get($config, 'corpId') !!}",
 				    onSuccess: function(result) {
@@ -248,7 +249,7 @@
 								        /*回调*/
 								    },
 								    onFail : function(err) {}
-								});
+								});				    			
 			     //         	    alert('error');
 								// alert(xhr.status);
 								// alert(xhr.responseText);
@@ -256,8 +257,10 @@
 								// alert(thrownError);
 			             	},
 			             	success:function(msg){
+			             		console.log('requestAuthCode success');
 			             	    // alert('userid: ' + msg.userid);
 			             	    // alert('userid_erp: ' + msg.userid_erp);
+			             	    console.log('{!! array_get($config, "appname") !!}');
 			             	    if (msg.userid_erp == -1)
 			             	    {
 									DingTalkPC.device.notification.alert({
@@ -275,6 +278,8 @@
 			             	    {
 			             	    	location.href = "{{ url('/mapproval') }}";
 			             	    }
+			             	    else
+			             	    	console.log('else ~~');
 			                },
 			         	});
 				    },
@@ -299,15 +304,5 @@
 		});
 	</script>
 @endsection
-@else
-<script type="text/javascript">
-    	// var url = '{!! $url !!}';
-    	// alert(url);
-    	// alert("{{ url('/mapproval') }}");
-    	// alert("{!! url('/') !!}" + "/" + url);
-    	// if ('{!! $url !!}' != '')
-    	// 	location.href = "{!! url('/') !!}" + "/" + url;
-    	// else
-    	// 	location.href = "{{ url('/mapproval') }}";
-</script>
+
 @endif

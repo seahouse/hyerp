@@ -177,7 +177,9 @@
     <div class='col-xs-4 col-sm-2'>
     </div>
     <div class='col-xs-8 col-sm-10'>
-    <a href="{{ URL::to('/purchase/purchaseorders/' . $paymentrequest->purchaseorder_hxold->id . '/detail_hxold') }}" target="_blank">入库价格明细</a>
+    @if (isset($paymentrequest->purchaseorder_hxold->id))
+        <a href="{{ URL::to('/purchase/purchaseorders/' . $paymentrequest->purchaseorder_hxold->id . '/detail_hxold') }}" target="_blank">入库价格明细</a>
+    @endif
     <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail') }}" target="_blank">入库价格明细</a>
     </div>
 </div>
