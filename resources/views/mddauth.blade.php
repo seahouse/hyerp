@@ -233,9 +233,9 @@
 				// 	});
 				// }
 	
+				console.log('requestAuthCode');
 				DingTalkPC.runtime.permission.requestAuthCode({
 				    corpId: "{!! array_get($config, 'corpId') !!}",
-				    console.log('requestAuthCode');
 				    onSuccess: function(result) {
 			     	    $.ajax({
 			         	    type:"GET",
@@ -260,6 +260,7 @@
 			             		console.log('requestAuthCode success');
 			             	    // alert('userid: ' + msg.userid);
 			             	    // alert('userid_erp: ' + msg.userid_erp);
+			             	    console.log('{!! array_get($config, "appname") !!}');
 			             	    if (msg.userid_erp == -1)
 			             	    {
 									DingTalkPC.device.notification.alert({
@@ -273,7 +274,6 @@
 									});
 			             	    	// alert('您的账号未与后台绑定，无法使用此应用.');
 			             	    }
-			             	    console.log('{!! array_get($config, "appname") !!}');
 			             	    else if ("{!! array_get($config, 'appname') !!}" == "approval")
 			             	    {
 			             	    	location.href = "{{ url('/mapproval') }}";
