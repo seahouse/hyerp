@@ -299,15 +299,5 @@
 		});
 	</script>
 @endsection
-@else
-<script type="text/javascript">
-    	// var url = '{!! $url !!}';
-    	// alert(url);
-    	// alert("{{ url('/mapproval') }}");
-    	// alert("{!! url('/') !!}" + "/" + url);
-    	// if ('{!! $url !!}' != '')
-    	// 	location.href = "{!! url('/') !!}" + "/" + url;
-    	// else
-    	// 	location.href = "{{ url('/mapproval') }}";
-</script>
+
 @endif
