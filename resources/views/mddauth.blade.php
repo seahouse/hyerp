@@ -183,7 +183,7 @@
 		});
 	</script>
 @endsection
-@elseif (0)
+@else
 @section('script')
 	<script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
 	
