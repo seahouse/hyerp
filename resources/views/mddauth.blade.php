@@ -183,7 +183,7 @@
 		});
 	</script>
 @endsection
-@elseif (isset(Auth::user()->email) and Auth::user()->email == "admin@admin.com")
+@elseif ($agent->isDesktop()) 
 @section('script')
 	<script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
 	
@@ -276,7 +276,9 @@
 			             	    }
 			             	    else if ("{!! array_get($config, 'appname') !!}" == "approval")
 			             	    {
+@if (isset(Auth::user()->email) and Auth::user()->email == "admin@admin.com")
 			             	    	location.href = "{{ url('/mapproval') }}";
+@endif
 			             	    }
 			             	    // else
 			             	    // 	console.log('else ~~');
