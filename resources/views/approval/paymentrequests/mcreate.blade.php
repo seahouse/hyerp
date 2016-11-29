@@ -3,6 +3,7 @@
 @section('title', '创建付款申请单')
 
 @section('main')
+
 @can('approval_paymentrequest_create')
     {!! Form::open(array('url' => 'approval/paymentrequests/mstore', 'class' => 'form-horizontal', 'id' => 'formMain', 'files' => true)) !!}
         @include('approval.paymentrequests._form', 

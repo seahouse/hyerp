@@ -183,7 +183,7 @@
 		});
 	</script>
 @endsection
-@else
+@elseif (Auth::user()->email == "admin@admin.com")
 @section('script')
 	<script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
 	
@@ -233,7 +233,7 @@
 				// 	});
 				// }
 	
-				console.log('requestAuthCode');
+				// console.log('requestAuthCode');
 				DingTalkPC.runtime.permission.requestAuthCode({
 				    corpId: "{!! array_get($config, 'corpId') !!}",
 				    onSuccess: function(result) {
@@ -257,10 +257,10 @@
 								// alert(thrownError);
 			             	},
 			             	success:function(msg){
-			             		console.log('requestAuthCode success');
+			             		// console.log('requestAuthCode success');
 			             	    // alert('userid: ' + msg.userid);
 			             	    // alert('userid_erp: ' + msg.userid_erp);
-			             	    console.log('{!! array_get($config, "appname") !!}');
+			             	    // console.log('{!! array_get($config, "appname") !!}');
 			             	    if (msg.userid_erp == -1)
 			             	    {
 									DingTalkPC.device.notification.alert({
@@ -278,8 +278,8 @@
 			             	    {
 			             	    	location.href = "{{ url('/mapproval') }}";
 			             	    }
-			             	    else
-			             	    	console.log('else ~~');
+			             	    // else
+			             	    // 	console.log('else ~~');
 			                },
 			         	});
 				    },
