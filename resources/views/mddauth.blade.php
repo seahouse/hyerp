@@ -183,7 +183,7 @@
 		});
 	</script>
 @endsection
-@elseif (Auth::user()->email == "admin@admin.com")
+@elseif (isset(Auth::user()->email) and Auth::user()->email == "admin@admin.com")
 @section('script')
 	<script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
 	
