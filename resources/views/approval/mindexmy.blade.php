@@ -23,7 +23,7 @@
     @include('approval._list',
         [
             'href_pre' => '/approval/reimbursements/mshow/', 'href_suffix' => '',
-            'href_pre_paymentrequest' => '/approval/paymentrequests/'
+            'href_pre_paymentrequest' => '/approval/paymentrequests/mshow/'
         ])
 
     @if (isset($key))
