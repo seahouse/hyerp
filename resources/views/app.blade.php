@@ -10,7 +10,7 @@
 	<link href="{{ asset("css/styles.css") }}" rel="stylesheet">
 </head>
 <body>
-	@include('_back')	
+	@include('_back')
 	@yield('main')
 	<script src="/js/jquery.min.js"></script>
 	<!-- <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script> -->
