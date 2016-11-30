@@ -277,7 +277,12 @@
 			             	    else if ("{!! array_get($config, 'appname') !!}" == "approval")
 			             	    {
 @if (isset(Auth::user()->email) and Auth::user()->email == "admin@admin.com")
-			             	    	location.href = "{{ url('/mapproval') }}";
+			             	    	// location.href = "{{ url('/mapproval') }}";
+			             	    	var url = '{!! $url !!}';
+			             	    	if ('{!! $url !!}' != '')
+			             	    		location.href = "{!! url('/') !!}" + "/" + url;
+			             	    	else
+			             	    		location.href = "{{ url('/mapproval') }}";
 @endif
 			             	    }
 			             	    // else
