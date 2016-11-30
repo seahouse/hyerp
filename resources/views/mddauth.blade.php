@@ -205,7 +205,9 @@
 			    	'device.notification.alert', 
 			    	'device.notification.confirm', 
 			    	'biz.util.uploadImage',
-			    	'biz.navigation.close'] // 必填，需要使用的jsapi列表
+			    	'biz.navigation.close',
+			    	'biz.util.open',
+			    	'biz.util.openLink'] // 必填，需要使用的jsapi列表
 			});
 
 			
@@ -280,7 +282,19 @@
 			             	    	// location.href = "{{ url('/mapproval') }}";
 			             	    	var url = '{!! $url !!}';
 			             	    	if ('{!! $url !!}' != '')
-			             	    		location.href = "{!! url('/') !!}" + "/" + url;
+			             	    	{
+										DingTalkPC.biz.util.openLink({
+										    url: "{!! url('/') !!}" + "/" + url,//要打开链接的地址
+										    onSuccess : function(result) {
+										    	console.log('openLink success.');
+										        /**/
+										    },
+										    onFail : function() {
+										    	console.log('openLink failed.');
+										    }
+										})
+			             	    		// location.href = "{!! url('/') !!}" + "/" + url;
+			             	    	}
 			             	    	else
 			             	    		location.href = "{{ url('/mapproval') }}";
 @endif
