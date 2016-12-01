@@ -347,6 +347,47 @@ class DingTalkController extends Controller
         // DingTalkController::post($url, $params, json_encode($data), false);
     }
 
+    /**
+     * send enterprise message.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public static function send_oa($touser, $toparty, $messageUrl, $picUrl, $title, $text, $agentid = '')
+    {
+        $url = 'https://oapi.dingtalk.com/message/send';
+        $access_token = self::getAccessToken();
+        $params = compact('access_token');
+        if ($agentid == '')
+            $agentid = config('custom.dingtalk.agentidlist.' . self::$APPNAME);
+
+        $data = [
+            'touser' => $touser,
+            'toparty' => '',
+            'agentid' => $agentid,
+            'msgtype' => 'oa',
+            'oa' => [
+                'message_url' => $messageUrl,
+                'pc_message_url' => $messageUrl,
+                'head' => [
+                    'bgcolor' => 'FFBBBBBB',
+                    'text' => $title
+                ],
+                'body' => [
+                    'title' => $text
+                ]
+            ]
+        ];
+
+        $response = self::send2($access_token, $data);
+
+        // $response = DingTalkController::post($url, $params, json_encode($data));
+        // Log::info($response->errmsg);
+        // Log::info($response->invaliduser);
+        // Log::info($response->forbiddenUserId);
+        // DingTalkController::post($url, $params, json_encode($data), false);
+    }
+
     public static function send2($accessToken, $opt)
     {
         $response = Http::post("/message/send",
