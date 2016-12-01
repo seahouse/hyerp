@@ -283,17 +283,17 @@
 			             	    	var url = '{!! $url !!}';
 			             	    	if ('{!! $url !!}' != '')
 			             	    	{
-										DingTalkPC.biz.util.openLink({
-										    url: "{!! url('/') !!}" + "/" + url,//要打开链接的地址
-										    onSuccess : function(result) {
-										    	console.log('openLink success.');
-										        /**/
-										    },
-										    onFail : function() {
-										    	console.log('openLink failed.');
-										    }
-										})
-			             	    		// location.href = "{!! url('/') !!}" + "/" + url;
+										// DingTalkPC.biz.util.openLink({
+										//     url: "{!! url('/') !!}" + "/" + url,//要打开链接的地址
+										//     onSuccess : function(result) {
+										//     	console.log('openLink success.');
+										//         /**/
+										//     },
+										//     onFail : function() {
+										//     	console.log('openLink failed.');
+										//     }
+										// })
+			             	    		location.href = "{!! url('/') !!}" + "/" + url;
 			             	    	}
 			             	    	else
 			             	    		location.href = "{{ url('/mapproval') }}";
