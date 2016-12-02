@@ -50,11 +50,17 @@
                 <th>报销编号</th>
 --}}
                 <th>本次请款额</th>
+                @if (Agent::isDesktop())
                 <th>对应项目</th>
                 <th>已开票金额</th>
                 <th>合同金额</th>
+                @endif
+
                 <th>申请人</th>
+                <th>审批状态</th>
+                @if (Agent::isDesktop())
                 <th style="width: 120px">操作</th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -74,6 +80,7 @@
                     <td>
                         {{ $paymentrequest->amount }}
                     </td>
+                    @if (Agent::isDesktop())
                     <td title="@if (isset($paymentrequest->purchaseorder_hxold->descrip)) {{ $paymentrequest->purchaseorder_hxold->descrip }} @else @endif">
                         @if (isset($paymentrequest->purchaseorder_hxold->descrip)) {{ str_limit($paymentrequest->purchaseorder_hxold->descrip, 40) }} @else @endif
                     </td>
@@ -83,15 +90,21 @@
                     <td>
                         @if (isset($paymentrequest->purchaseorder_hxold->amount)) {{ $paymentrequest->purchaseorder_hxold->amount }} @else @endif
                     </td>
+                    @endif
                     <td>
                         {{ $paymentrequest->applicant->name }}
                     </td>
+                    <td>
+                        @if ($paymentrequest->approversetting_id > 0) <div class="text-primary">审批中</div> @elseif ($paymentrequest->approversetting_id == 0) <div class="text-success">已通过</div> @else <div class="text-danger">未通过</div> @endif
+                    </td>
+                    @if (Agent::isDesktop())
                     <td>
 {{--                        <a href="{{ URL::to('/approval/paymentrequests/'.$paymentrequest->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>
                         {!! Form::open(array('route' => array('approval.paymentrequests.destroy', $paymentrequest->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
                             {!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}
                         {!! Form::close() !!} --}}
                     </td>
+                    @endif
                 </tr>
             @endforeach
         </tbody>
