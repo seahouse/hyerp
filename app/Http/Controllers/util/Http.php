@@ -49,7 +49,7 @@ Class Http
 			{
 				$url = $url . $key . "=" . $value . "&";
 			}
-			$length = count($url);
+			$length = strlen($url);
 			if ($url[$length - 1] == '&')
 			{
 				$url = substr($url, 0, $length - 1);

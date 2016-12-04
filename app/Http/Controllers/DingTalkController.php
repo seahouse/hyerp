@@ -347,6 +347,68 @@ class DingTalkController extends Controller
         // DingTalkController::post($url, $params, json_encode($data), false);
     }
 
+    /**
+     * send enterprise message.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public static function send_oa_paymentrequest($touser, $toparty, $messageUrl, $picUrl, $title, $text, $paymentrequest, $agentid = '')
+    {
+        $form = [];
+        if (Auth::user()->email == "admin@admin.com")
+        {
+            $form = [
+                [
+                    'key' => '金额:',
+                    'value' => $paymentrequest->amount
+                ],
+                [
+                    'key' => '申请人:',
+                    'value' => $paymentrequest->applicant->name
+                ]
+            ];
+        }
+
+        $response = self::send_oa($touser, $toparty, $messageUrl, $picUrl, $title, $text, $form, $agentid);
+    }
+
+    /**
+     * send enterprise message.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public static function send_oa($touser, $toparty, $messageUrl, $picUrl, $title, $text, $form, $agentid = '')
+    {
+        // $url = 'https://oapi.dingtalk.com/message/send';
+        $access_token = self::getAccessToken();
+        // $params = compact('access_token');
+        if ($agentid == '')
+            $agentid = config('custom.dingtalk.agentidlist.' . self::$APPNAME);
+
+        $data = [
+            'touser' => $touser,
+            'toparty' => '',
+            'agentid' => $agentid,
+            'msgtype' => 'oa',
+            'oa' => [
+                'message_url' => $messageUrl,
+                'pc_message_url' => $messageUrl,
+                'head' => [
+                    'bgcolor' => 'FFBBBBBB',
+                    'text' => $title
+                ],
+                'body' => [
+                    'title' => $text,
+                    'form' => $form
+                ]
+            ]
+        ];
+
+        $response = self::send2($access_token, $data);
+    }
+
     public static function send2($accessToken, $opt)
     {
         $response = Http::post("/message/send",

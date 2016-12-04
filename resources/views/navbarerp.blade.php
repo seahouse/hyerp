@@ -5,7 +5,7 @@
 @stop
 
 @section('content')
-<div class="container">
+<div class="container-fluid">
     <div class="panel panel-info">
         @yield('main')
     </div>

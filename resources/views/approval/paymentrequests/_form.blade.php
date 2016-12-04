@@ -172,18 +172,19 @@
 </div>
 
 @can('test')
-@if (Auth::user()->email == "admin@admin.com")
+
 <div class="form-group">
     <div class='col-xs-4 col-sm-2'>
     </div>
     <div class='col-xs-8 col-sm-10'>
+@if (Auth::user()->email == "admin@admin.com")
     @if (isset($paymentrequest->purchaseorder_hxold->id))
         <a href="{{ URL::to('/purchase/purchaseorders/' . $paymentrequest->purchaseorder_hxold->id . '/detail_hxold') }}" target="_blank">入库价格明细</a>
     @endif
+@endif
     <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail') }}" target="_blank">入库价格明细</a>
     </div>
 </div>
-@endif
 @endcan
 
 {{--
