@@ -124,7 +124,7 @@ class PaymentrequestapprovalsController extends Controller
                 if ($approversettingNext)
                     $paymentrequest->approversetting_id = $approversettingNext->id;
                 else
-                    $paymentrequest->approversetting_id = 0; // 已走完
+                    $paymentrequest->approversetting_id = -2; // 已走完
 
                 $paymentrequest->save();
             }
