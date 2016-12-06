@@ -1,6 +1,6 @@
 @if ($purchaseorder)
     @foreach ($purchaseorder->poitems as $poitem)
-        <ul><li><strong>{{ $poitem->item->goods_name }}</strong><br>
+        <ul><li><strong>{{ $poitem->item->goods_name . '(型号: ' . $poitem->item->goods_spec . ')'}}</strong><br>
 {{--
         名称: {{ $poitem->item->goods_name }} , 数量: {{ $poitem->qty }}, 单价: {{ $poitem->unitprice }} <br>
         <ul><li>
@@ -14,12 +14,12 @@
             @endforeach
         @endforeach
 --}}
-        历史最低价: {{ $poitem->item->receiptitems->min('unitprice') }}<br>
+        历史最低价: {{ $poitem->item->receiptitems->min('unitprice') * 1.17 }}<br>
         历史均价: 
 
         @if ($poitem->item->receiptitems->sum('quantity') <= 0.0) - 
         @else
-            {{ number_format($poitem->item->receiptitems->sum(function($item) { return $item['unitprice'] * $item['quantity'];}) / $poitem->item->receiptitems->sum('quantity'), 4, '.', '')}}
+            {{ number_format($poitem->item->receiptitems->sum(function($item) { return $item['unitprice'] * 1.17 * $item['quantity'];}) / $poitem->item->receiptitems->sum('quantity'), 6, '.', '')}}
         @endif
 {{--
         {{ $poitem->item->receiptitems->sum('amount') / $poitem->item->receiptitems->sum('quantity')}}
@@ -45,8 +45,8 @@
                 @foreach ($poitem->item->receiptitems as $receiptitem)
                 <tr @if (in_array($receiptitem->receipt_id, $purchaseorder->receiptorders->pluck('receipt_id')->toArray())) class="success" @endif>
                     <td>{{ $receiptitem->quantity }}</td>
-                    <td>{{ $receiptitem->unitprice }}</td>
-                    <td>{{ $receiptitem->amount }}</td>
+                    <td>{{ $receiptitem->unitprice * 1.17 }}</td>
+                    <td>{{ $receiptitem->amount * 1.17 }}</td>
                     <td>{{ substr($receiptitem->record_at, 0, 10) }}</td>
                 </tr>
                 @endforeach

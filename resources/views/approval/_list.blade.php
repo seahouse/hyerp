@@ -39,8 +39,10 @@
             	<span >{{ $item->created_at }}</span><br/>
             	@if ($item->approversetting_id > 0)
                     <div class="statusTodo">待审批</div>
+                @elseif ($item->approversetting_id == 0)
+                    <div class="statusDone">已通过</div>      {{-- 此时，字体要修改为灰色 --}}
                 @else
-                    <div class="statusDone">审批完成</div>      {{-- 此时，字体要修改为灰色 --}}
+                    <div class="statusDoneNotPass">未通过</div>
                 @endif
             </div>
         </a>

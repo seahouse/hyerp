@@ -207,8 +207,12 @@ body {
 	color: rgb(253,148,72);
 }
 
-.reimbList .content .statusDone {
-	color: #ccc;
+.reimbList .statusDone {
+	color: seagreen;
+}
+
+.reimbList .statusDoneNotPass {
+    color: crimson;
 }
 
 .reimbListSearch {

@@ -186,7 +186,7 @@ class PaymentrequestsController extends Controller
         if ('' == $key)
             return Paymentrequest::latest('created_at')
                 ->where('applicant_id', $userid)
-                ->where('approversetting_id', 0)->paginate(10);
+                ->where('approversetting_id', '<=', '0')->paginate(10);
 
         $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
         $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
