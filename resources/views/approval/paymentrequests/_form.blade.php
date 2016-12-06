@@ -183,6 +183,9 @@
     @endif
 @endif
     <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail') }}" target="_blank">入库价格明细</a>
+@if (Auth::user()->email == "admin@admin.com")
+    <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail2') }}" target="_blank">入库价格明细2</a>
+@endif
     </div>
 </div>
 @endcan

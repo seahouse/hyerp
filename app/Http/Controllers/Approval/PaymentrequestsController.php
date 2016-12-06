@@ -741,4 +741,13 @@ class PaymentrequestsController extends Controller
 
         return view('approval.paymentrequests.mrecvdetail', compact('purchaseorder'));
     }
+
+    public function mrecvdetail2($id)
+    {
+        //
+        $purchaseorder = Paymentrequest::findOrFail($id)->purchaseorder_hxold;
+        // dd($purchaseorder);
+
+        return view('approval.paymentrequests.mrecvdetail2', compact('purchaseorder'));
+    }
 }

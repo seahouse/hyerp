@@ -210,6 +210,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::post('exportitem/{id}', 'PaymentrequestsController@exportitem');
         Route::delete('mdestroy/{id}', 'PaymentrequestsController@mdestroy');
         Route::get('{id}/mrecvdetail', 'PaymentrequestsController@mrecvdetail');
+        Route::get('{id}/mrecvdetail2', 'PaymentrequestsController@mrecvdetail2');
     });
     Route::resource('paymentrequests', 'PaymentrequestsController');
     Route::resource('approversettings', 'ApproversettingsController');
