@@ -465,12 +465,13 @@ class DingTalkController extends Controller
         $postdata = file_get_contents("php://input");
         $postList = json_decode($postdata,true);
         $encrypt = $postList['encrypt'];
-        $crypt = new DingtalkCrypt(TOKEN, config('custom.dingtalk.ENCODING_AES_KEY'), SUITE_KEY);
+        $crypt = new DingtalkCrypt('', config('custom.dingtalk.ENCODING_AES_KEY'), '');
         Log::info("ENCODING_AES_KEY: " . config('custom.dingtalk.ENCODING_AES_KEY'));
 
         $msg = "";
         $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
         Log::info("msg" . $msg);
+        Log::info("errCode: " . $errCode);
 
         if ($errCode != 0)
         {
