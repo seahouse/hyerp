@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\crypto;
 
 include_once "errorCode.php";
+
+use Log;
+
 class PKCS7Encoder
 {
 	public static $block_size = 32;
@@ -96,6 +99,7 @@ class Prpcrypt
 			print $e;
 			return array(ErrorCode::$DecryptAESError, null);
 		}
+		Log::info($from_corpid);
 		if ($from_corpid != $corpid)
 			return array(ErrorCode::$ValidateSuiteKeyError, null);
 		return array(0, $xml_content);
