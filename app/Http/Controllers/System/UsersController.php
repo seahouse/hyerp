@@ -165,6 +165,36 @@ class UsersController extends Controller
         return redirect('system/users');
     }
 
+    public static updatedtuser($dtuserid)
+    {
+
+        $dtuser2 = Dtuser::firstOrFail(['userid' => $dtuser->userid]);
+        $dtuser2->user_id       = $user->id;
+
+        $dtuser2->name          = $dtuser->name;
+        if (isset($dtuser->tel))        $dtuser2->tel           = $dtuser->tel;
+        if (isset($dtuser->workPlace))  $dtuser2->workPlace     = $dtuser->workPlace;
+        if (isset($dtuser->remark))     $dtuser2->remark        = $dtuser->remark;
+        $dtuser2->mobile        = $dtuser->mobile;
+        if (isset($dtuser->email))      $dtuser2->email         = $dtuser->email;
+        // $dtuser2->orgEmail      = $dtuser->orgEmail;             // 无此元素
+        $dtuser2->active        = $dtuser->active;
+        $dtuser2->orderInDepts  = $dtuser->orderInDepts;
+        $dtuser2->isAdmin       = $dtuser->isAdmin;
+        $dtuser2->isBoss        = $dtuser->isBoss;
+        $dtuser2->dingId        = $dtuser->dingId;
+        $dtuser2->isLeaderInDepts = $dtuser->isLeaderInDepts;
+        $dtuser2->isHide        = $dtuser->isHide;
+        // $dtuser2->department    = $dtuser->department;           // 是个数组，暂不考虑
+        $dtuser2->position      = $dtuser->position;
+        $dtuser2->avatar        = $dtuser->avatar;
+        $dtuser2->jobnumber     = $dtuser->jobnumber;
+        // $dtuser2->extattr       = $dtuser->extattr;              // 无此元素
+        $dtuser2->save();
+        // Dtuser::where('userid', $dtuser->userid)->update($dtuser);
+        // $dtuser2->update($dtuser);
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -216,7 +246,11 @@ class UsersController extends Controller
 
     public function bingdingtalk()
     {
-        dd(DingTalkController::register_call_back_user());
+        $data = json_decode(DingTalkController::register_call_back_user());
+        if ($data.errcode == "0")
+            dd($data.errmsg);
+        else
+            dd($data.errcode . ': ' . $data.errmsg);
     }
 
     public function test1()

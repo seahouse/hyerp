@@ -466,7 +466,7 @@ class DingTalkController extends Controller
         $postList = json_decode($postdata,true);
         $encrypt = $postList['encrypt'];
         $crypt = new DingtalkCrypt(config('custom.dingtalk.TOKEN'), config('custom.dingtalk.ENCODING_AES_KEY'), config('custom.dingtalk.corpid'));
-        Log::info("ENCODING_AES_KEY: " . config('custom.dingtalk.ENCODING_AES_KEY'));
+        // Log::info("ENCODING_AES_KEY: " . config('custom.dingtalk.ENCODING_AES_KEY'));
 
         $msg = "";
         $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
@@ -561,6 +561,7 @@ class DingTalkController extends Controller
             {
                 Log::error(json_encode($_GET) . "  ERR:user_modify_org");
                 //handle auth change event
+                Log::info(json_encode($_GET["UserId"]));
             }
             else if ("user_leave_org" === $eventType)
             {
