@@ -425,7 +425,7 @@ class DingTalkController extends Controller
             'call_back_tag' => ['user_modify_org'],
             'token' => str_random(32),
             'aes_key' => str_random(43),
-            'url' => url('system/users/test')
+            'url' => url('dingtalk/test')
         ];
         // dd(url('system/users/test'));
 
@@ -451,5 +451,12 @@ class DingTalkController extends Controller
         $access_token = self::getAccessToken();
         $params = compact('access_token', 'userid');
         return self::get($url, $params);
+    }
+
+    public function test()
+    {
+        // dd('aaa');
+        // $data = ['success'];
+        // return json_encode($data);
     }
 }

@@ -219,8 +219,11 @@ class UsersController extends Controller
         dd(DingTalkController::register_call_back_user());
     }
 
-    public function test()
+    public function test1()
     {
-        
+        dd('aaa');
+        $data = ['success'];
+        dd(json_encode($data));
+        return json_encode($data);
     }
 }
