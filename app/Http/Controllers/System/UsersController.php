@@ -246,7 +246,8 @@ class UsersController extends Controller
 
     public function bingdingtalk()
     {
-        $data = DingTalkController::register_call_back_user();        
+        $data = DingTalkController::register_call_back_user();
+        dd($data);        
         if ($data.errcode == "0")
             dd($data.errmsg);
         else
