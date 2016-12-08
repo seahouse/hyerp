@@ -426,9 +426,10 @@ class DingTalkController extends Controller
             'call_back_tag' => ['user_modify_org'],
             'token' => str_random(32),
             'aes_key' => str_random(43),
-            'url' => url('dingtalk/receive')
+            // 'url' => url('dingtalk/receive')
+            'url' => 'http://hyerp.ricki.cn/dingtalk/receive'
         ];
-        // dd(url('dingtalk/receive'));
+        // dd($data);
 
         $response = self::register_call_back($access_token, $data);
         return $response;
@@ -491,7 +492,8 @@ class DingTalkController extends Controller
                     if ($errCode == 0) 
                     {
                         Log::info("CREATE SUITE URL RESPONSE: " . $encryptMsg);
-                        echo $encryptMsg;
+                        // echo $encryptMsg;
+                        return $encryptMsg;
                     } 
                     else 
                     {
