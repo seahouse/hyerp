@@ -22,7 +22,7 @@ class DingTalkController extends Controller
     // private static $AGENTIDS = ['approval' => '13231599'];
 
     private static $APPNAME = '';
-    private static $ENCODING_AES_KEY;
+    // private static $ENCODING_AES_KEY;
 
     // const corpid = 'ding6ed55e00b5328f39';
     // const corpsecret = 'gdQvzBl7IW5f3YUSMIkfEIsivOVn8lcXUL_i1BIJvbP4kPJh8SU8B8JuNe8U9JIo';
@@ -421,12 +421,13 @@ class DingTalkController extends Controller
     public static function register_call_back_user()
     {
         $access_token = self::getAccessToken();
+        // dd(str_random(43));
 
         self::$ENCODING_AES_KEY = str_random(43);
         $data = [
             'call_back_tag' => ['user_modify_org'],
             'token' => str_random(32),
-            'aes_key' => self::$ENCODING_AES_KEY,
+            'aes_key' => config('custom.dingtalk.ENCODING_AES_KEY'),
             // 'url' => url('dingtalk/receive')
             'url' => 'http://hyerp.ricki.cn/dingtalk/receive'
         ];
@@ -464,8 +465,8 @@ class DingTalkController extends Controller
         $postdata = file_get_contents("php://input");
         $postList = json_decode($postdata,true);
         $encrypt = $postList['encrypt'];
-        $crypt = new DingtalkCrypt(TOKEN, self::$ENCODING_AES_KEY, SUITE_KEY);
-        Log::info("ENCODING_AES_KEY: " . self::$ENCODING_AES_KEY);
+        $crypt = new DingtalkCrypt(TOKEN, config('custom.dingtalk.ENCODING_AES_KEY'), SUITE_KEY);
+        Log::info("ENCODING_AES_KEY: " . config('custom.dingtalk.ENCODING_AES_KEY'));
 
         $msg = "";
         $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
