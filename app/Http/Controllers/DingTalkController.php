@@ -423,7 +423,7 @@ class DingTalkController extends Controller
         $access_token = self::getAccessToken();
         // dd(str_random(43));
 
-        self::$ENCODING_AES_KEY = str_random(43);
+        // self::$ENCODING_AES_KEY = str_random(43);
         $data = [
             'call_back_tag' => ['user_modify_org'],
             'token' => str_random(32),
@@ -479,7 +479,7 @@ class DingTalkController extends Controller
             /**
              * 创建套件时检测回调地址有效性，使用CREATE_SUITE_KEY作为SuiteKey
              */
-            $crypt = new DingtalkCrypt(TOKEN, ENCODING_AES_KEY, CREATE_SUITE_KEY);
+            $crypt = new DingtalkCrypt(TOKEN, config('custom.dingtalk.ENCODING_AES_KEY'), CREATE_SUITE_KEY);
             $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
             if ($errCode == 0)
             {
