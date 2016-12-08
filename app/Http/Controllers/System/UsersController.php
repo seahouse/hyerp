@@ -16,6 +16,7 @@ use App\Models\System\Role;
 use App\Models\System\Dtuser;
 use Zizaco\Entrust\Entrust;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\DingTalkController;
 
 class UsersController extends Controller
 {
@@ -211,5 +212,15 @@ class UsersController extends Controller
                 $user->attachRole($role);
         
         return redirect('system/users');
+    }
+
+    public function bingdingtalk()
+    {
+        dd(DingTalkController::register_call_back_user());
+    }
+
+    public function test()
+    {
+        
     }
 }

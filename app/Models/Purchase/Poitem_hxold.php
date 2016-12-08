@@ -15,6 +15,6 @@ class Poitem_hxold extends Model
     }
 
     public function item2() {
-        return $this->hasOne('App\Models\Product\Itemp_hxold2', 'goods_no', 'goods_no');
+        return $this->hasOne('App\Models\Product\Itemp_hxold2', 'goods_no', 'goods_no2');
     }
 }

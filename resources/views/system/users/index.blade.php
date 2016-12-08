@@ -7,10 +7,28 @@
         @endif
         <div class="pull-right" style="padding-top: 4px;">
             <a href="{{ URL::to('system/roles') }}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> {{'角色管理', [], 'layouts'}}</a>
-{{--            <a href="{{ URL::to('system/images') }}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> {{'图片管理', [], 'layouts'}}</a> --}}
+{{--
+            <a href="{{ URL::to('system/images') }}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> {{'与钉钉强绑定', [], 'layouts'}}</a>
+--}}
         </div> 
     </div>
-    
+
+    <div class="panel-body">
+        {!! Form::open(['url' => '/system/users/bingdingtalk', 'class' => 'pull-right']) !!}
+            {!! Form::submit('与钉钉强绑定', ['class' => 'btn btn-default btn-sm']) !!}            
+        {!! Form::close() !!}
+{{--
+        <form class="pull-right" action="/approval/paymentrequests/search" method="post">
+            {!! csrf_field() !!}
+            <div class="pull-right">
+                <button type="submit" class="btn btn-default btn-sm">查找</button>
+            </div>
+            <div class="pull-right input-group-sm">
+                <input type="text" class="form-control" name="key" placeholder="支付对象、对应项目名称、申请人">    
+            </div>
+        </form>
+--}}
+    </div>    
 
     @if ($users->count())
     <table class="table table-striped table-hover table-condensed">

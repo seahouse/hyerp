@@ -163,20 +163,20 @@ class DingTalkController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public static function register_call_back() {
-        $url = 'https://oapi.dingtalk.com/call_back/register_call_back';
-        $access_token = self::getAccessToken();
-        $params = compact('access_token', 'userid');
-        $data = [
-            'call_back_tag' => ['user_modify_org'],
-            'token' => '',
-            'aes_key' => $agentid,
-            'aes_key' => 'text',
-            'url' => '',
-        ];
-        return self::post($url, $params, json_encode($data), false);
-        // return self::post($url, $params);
-    }
+    // public static function register_call_back() {
+    //     $url = 'https://oapi.dingtalk.com/call_back/register_call_back';
+    //     $access_token = self::getAccessToken();
+    //     $params = compact('access_token', 'userid');
+    //     $data = [
+    //         'call_back_tag' => ['user_modify_org'],
+    //         'token' => '',
+    //         'aes_key' => $agentid,
+    //         'aes_key' => 'text',
+    //         'url' => '',
+    //     ];
+    //     return self::post($url, $params, json_encode($data), false);
+    //     // return self::post($url, $params);
+    // }
     
     public function index()
     {
@@ -413,6 +413,29 @@ class DingTalkController extends Controller
     {
         $response = Http::post("/message/send",
             array("access_token" => $accessToken), json_encode($opt));
+        return $response;
+    }
+
+    public static function register_call_back_user()
+    {
+        $access_token = self::getAccessToken();
+
+
+        $data = [
+            'call_back_tag' => ['user_modify_org'],
+            'token' => str_random(32),
+            'aes_key' => str_random(43),
+            'url' => url('system/users/test')
+        ];
+
+        $response = self::register_call_back($access_token, $data);
+        return $response;
+    }
+
+    public static function register_call_back($accessToken, $data)
+    {
+        $response = Http::post("/call_back/register_call_back",
+            array("access_token" => $accessToken), json_encode($data));
         return $response;
     }
 
