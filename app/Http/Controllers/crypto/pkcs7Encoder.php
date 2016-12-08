@@ -33,6 +33,10 @@ class PKCS7Encoder
 class Prpcrypt
 {
 	public $key;
+	function __construct($k)
+	{
+		$this->key = base64_decode($k . "=");
+	}
 	function Prpcrypt($k)
 	{
 		$this->key = base64_decode($k . "=");
