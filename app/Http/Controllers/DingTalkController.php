@@ -463,6 +463,7 @@ class DingTalkController extends Controller
         $postdata = file_get_contents("php://input");
         $postList = json_decode($postdata,true);
         $encrypt = $postList['encrypt'];
+        Log::info("encrypt: " . $encrypt);
         $crypt = new DingtalkCrypt(TOKEN, ENCODING_AES_KEY, SUITE_KEY);
 
         $msg = "";
