@@ -13,12 +13,21 @@ class DingtalkCrypt
 	private $m_token;
 	private $m_encodingAesKey;
 	private $m_suiteKey;
+
+	function __construct($token, $encodingAesKey, $suiteKey)
+	{
+		$this->m_token = $token;
+		$this->m_encodingAesKey = $encodingAesKey;
+		$this->m_suiteKey = $suiteKey;
+		// Log::info('encodingAesKey: ' . $encodingAesKey);
+	}
 	
 	public function DingtalkCrypt($token, $encodingAesKey, $suiteKey)
 	{
 		$this->m_token = $token;
 		$this->m_encodingAesKey = $encodingAesKey;
 		$this->m_suiteKey = $suiteKey;
+		// Log::info('encodingAesKey: ' . $encodingAesKey);
 	}
 	
     
@@ -51,7 +60,7 @@ class DingtalkCrypt
 	}
 	public function DecryptMsg($signature, $timeStamp = null, $nonce, $encrypt, &$decryptMsg)
 	{
-		Log::info('m_encodingAesKey: ' . $this->m_encodingAesKey);
+		// Log::info('m_encodingAesKey: ' . $this->m_encodingAesKey);
 		if (strlen($this->m_encodingAesKey) != 43) {
 			return ErrorCode::$IllegalAesKey;
 		}
