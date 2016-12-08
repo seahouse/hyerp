@@ -165,7 +165,7 @@ class UsersController extends Controller
         return redirect('system/users');
     }
 
-    public static updatedtuser($dtuserid)
+    public static function updatedtuser($dtuserid)
     {
 
         $dtuser2 = Dtuser::firstOrFail(['userid' => $dtuser->userid]);
