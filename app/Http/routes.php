@@ -35,6 +35,7 @@ Route::get('app2', function() {
     return view('app2');
 });
 
+Route::post('dingtalk/receive', 'DingTalkController@receive');
 
 Route::group(['middleware' => ['web']], function () {
     // Route::get('mddauth', function() { return view('mddauth'); });
@@ -44,7 +45,6 @@ Route::group(['middleware' => ['web']], function () {
 	Route::get('dingtalk/getuserinfo/{code}', 'DingTalkController@getuserinfo');
     Route::get('dingtalk/getconfig', 'DingTalkController@getconfig');
     Route::post('dingtalk/register_call_back', 'DingTalkController@register_call_back');
-    Route::get('dingtalk/receive', 'DingTalkController@receive');
 
     // run .bat shell command to run git pull.
     Route::get('gitpullbybat', function() { return view('gitpullbybat'); });
