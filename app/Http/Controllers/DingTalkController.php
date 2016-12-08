@@ -421,7 +421,7 @@ class DingTalkController extends Controller
     public static function register_call_back_user()
     {
         $access_token = self::getAccessToken();
-        // dd(str_random(43));
+        // dd(str_random(32));
 
         // self::$ENCODING_AES_KEY = str_random(43);
         $data = [
@@ -465,7 +465,7 @@ class DingTalkController extends Controller
         $postdata = file_get_contents("php://input");
         $postList = json_decode($postdata,true);
         $encrypt = $postList['encrypt'];
-        $crypt = new DingtalkCrypt('', config('custom.dingtalk.ENCODING_AES_KEY'), '');
+        $crypt = new DingtalkCrypt(config('custom.dingtalk.TOKEN'), config('custom.dingtalk.ENCODING_AES_KEY'), '');
         Log::info("ENCODING_AES_KEY: " . config('custom.dingtalk.ENCODING_AES_KEY'));
 
         $msg = "";
@@ -480,7 +480,7 @@ class DingTalkController extends Controller
             /**
              * 创建套件时检测回调地址有效性，使用CREATE_SUITE_KEY作为SuiteKey
              */
-            $crypt = new DingtalkCrypt('', config('custom.dingtalk.ENCODING_AES_KEY'), '');
+            $crypt = new DingtalkCrypt(config('custom.dingtalk.TOKEN'), config('custom.dingtalk.ENCODING_AES_KEY'), '');
             $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
             if ($errCode == 0)
             {
