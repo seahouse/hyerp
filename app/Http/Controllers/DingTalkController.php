@@ -425,7 +425,7 @@ class DingTalkController extends Controller
             'call_back_tag' => ['user_modify_org'],
             'token' => str_random(32),
             'aes_key' => str_random(43),
-            'url' => 'www.dingtalk.com'
+            'url' => url('system/users/test')
         ];
         // dd(url('system/users/test'));
 
