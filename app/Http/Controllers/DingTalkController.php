@@ -469,7 +469,7 @@ class DingTalkController extends Controller
 
         if ($errCode != 0)
         {
-            Log::e(json_encode($_GET) . "  ERR:" . $errCode);
+            Log::info(json_encode($_GET) . "  ERR:" . $errCode);
             
             /**
              * 创建套件时检测回调地址有效性，使用CREATE_SUITE_KEY作为SuiteKey
@@ -478,7 +478,7 @@ class DingTalkController extends Controller
             $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
             if ($errCode == 0)
             {
-                Log::i("DECRYPT CREATE SUITE MSG SUCCESS " . json_encode($_GET) . "  " . $msg);
+                Log::info("DECRYPT CREATE SUITE MSG SUCCESS " . json_encode($_GET) . "  " . $msg);
                 $eventMsg = json_decode($msg);
                 $eventType = $eventMsg->EventType;
                 if ("check_create_suite_url" === $eventType)
@@ -490,12 +490,12 @@ class DingTalkController extends Controller
                     $errCode = $crypt->EncryptMsg($random, $timeStamp, $nonce, $encryptMsg);
                     if ($errCode == 0) 
                     {
-                        Log::i("CREATE SUITE URL RESPONSE: " . $encryptMsg);
+                        Log::info("CREATE SUITE URL RESPONSE: " . $encryptMsg);
                         echo $encryptMsg;
                     } 
                     else 
                     {
-                        Log::e("CREATE SUITE URL RESPONSE ERR: " . $errCode);
+                        Log::info("CREATE SUITE URL RESPONSE ERR: " . $errCode);
                     }
                 }
                 else
@@ -505,7 +505,7 @@ class DingTalkController extends Controller
             }
             else 
             {
-                Log::e(json_encode($_GET) . "CREATE SUITE ERR:" . $errCode);
+                Log::error(json_encode($_GET) . "CREATE SUITE ERR:" . $errCode);
             }
             return;
         }
@@ -514,7 +514,7 @@ class DingTalkController extends Controller
             /**
              * 套件创建成功后的回调推送
              */
-            Log::i("DECRYPT MSG SUCCESS " . json_encode($_GET) . "  " . $msg);
+            Log::info("DECRYPT MSG SUCCESS " . json_encode($_GET) . "  " . $msg);
             $eventMsg = json_decode($msg);
             $eventType = $eventMsg->EventType;
             /**
@@ -547,17 +547,17 @@ class DingTalkController extends Controller
             */
             else if ("user_add_org" === $eventType)
             {
-                Log::e(json_encode($_GET) . "  ERR:user_add_org");
+                Log::error(json_encode($_GET) . "  ERR:user_add_org");
                 //handle auth change event
             }
             else if ("user_modify_org" === $eventType)
             {
-                Log::e(json_encode($_GET) . "  ERR:user_modify_org");
+                Log::error(json_encode($_GET) . "  ERR:user_modify_org");
                 //handle auth change event
             }
             else if ("user_leave_org" === $eventType)
             {
-                Log::e(json_encode($_GET) . "  ERR:user_leave_org");
+                Log::error(json_encode($_GET) . "  ERR:user_leave_org");
                 //handle auth change event
             }
             /**
@@ -566,7 +566,7 @@ class DingTalkController extends Controller
             else if ("suite_relieve" === $eventType)
             {
                 $corpid = $eventMsg->AuthCorpId;
-                ISVService::removeCorpInfo($corpid);
+                // ISVService::removeCorpInfo($corpid);
                 //handle auth change event
             }else if ("change_auth" === $eventType)
              {
@@ -584,13 +584,13 @@ class DingTalkController extends Controller
                 $errCode = $crypt->EncryptMsg($random, $timeStamp, $nonce, $encryptMsg);
                 if ($errCode == 0) 
                 {
-                    Log::i("UPDATE SUITE URL RESPONSE: " . $encryptMsg);
+                    Log::info("UPDATE SUITE URL RESPONSE: " . $encryptMsg);
                     echo $encryptMsg;
                     return;
                 } 
                 else 
                 {
-                    Log::e("UPDATE SUITE URL RESPONSE ERR: " . $errCode);
+                    Log::error("UPDATE SUITE URL RESPONSE ERR: " . $errCode);
                 }
             }
             else
@@ -604,11 +604,11 @@ class DingTalkController extends Controller
             if ($errCode == 0) 
             {
                 echo $encryptMsg;
-                Log::i("RESPONSE: " . $encryptMsg);
+                Log::info("RESPONSE: " . $encryptMsg);
             } 
             else 
             {
-                Log::e("RESPONSE ERR: " . $errCode);
+                Log::error("RESPONSE ERR: " . $errCode);
             }
         }
     }

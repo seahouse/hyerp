@@ -1,4 +1,7 @@
 <?php
+
+namespace App\Http\Controllers\crypto;
+
 include_once "errorCode.php";
 class PKCS7Encoder
 {

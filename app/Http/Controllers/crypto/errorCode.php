@@ -1,4 +1,7 @@
 <?php
+
+namespace App\Http\Controllers\crypto;
+
 /**
  * error code 说明.
  * <ul>
