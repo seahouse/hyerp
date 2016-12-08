@@ -262,7 +262,7 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
         Route::post('updatepass', 'UsersController@updatepass');
     });
     Route::post('users/bingdingtalk', 'UsersController@bingdingtalk');
-    Route::get('users/test', 'UsersController@test');
+    Route::post('users/test', 'UsersController@test');
     Route::resource('users', 'UsersController');
     Route::group(['prefix' => 'users/{user}/roles'], function () {
         Route::get('/', 'UserrolesController@index');
