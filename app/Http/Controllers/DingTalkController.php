@@ -427,6 +427,7 @@ class DingTalkController extends Controller
             'aes_key' => str_random(43),
             'url' => url('system/users/test')
         ];
+        // dd(url('system/users/test'));
 
         $response = self::register_call_back($access_token, $data);
         return $response;
