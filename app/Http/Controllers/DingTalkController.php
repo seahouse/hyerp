@@ -465,6 +465,7 @@ class DingTalkController extends Controller
         $postList = json_decode($postdata,true);
         $encrypt = $postList['encrypt'];
         $crypt = new DingtalkCrypt(TOKEN, self::$ENCODING_AES_KEY, SUITE_KEY);
+        Log::info("ENCODING_AES_KEY: " . self::$ENCODING_AES_KEY);
 
         $msg = "";
         $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
