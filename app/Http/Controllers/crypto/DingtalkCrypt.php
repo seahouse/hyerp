@@ -5,6 +5,9 @@ namespace App\Http\Controllers\crypto;
 include_once "sha1.php";
 include_once "pkcs7Encoder.php";
 include_once "errorCode.php";
+
+use Log;
+
 class DingtalkCrypt
 {
 	private $m_token;
@@ -48,6 +51,7 @@ class DingtalkCrypt
 	}
 	public function DecryptMsg($signature, $timeStamp = null, $nonce, $encrypt, &$decryptMsg)
 	{
+		Log::info('m_encodingAesKey: ' . $this->m_encodingAesKey);
 		if (strlen($this->m_encodingAesKey) != 43) {
 			return ErrorCode::$IllegalAesKey;
 		}
