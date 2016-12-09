@@ -487,7 +487,7 @@ class DingTalkController extends Controller
 
         $msg = "";
         $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
-        Log::info("msg" . $msg);
+        Log::info("msg: " . $msg);
         Log::info("errCode: " . $errCode);
 
         if ($errCode != 0)
