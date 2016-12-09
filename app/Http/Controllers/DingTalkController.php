@@ -12,6 +12,7 @@ use DB, Auth, Config, Log;
 use Jenssegers\Agent\Agent;
 use App\Http\Controllers\util\Http;
 use App\Http\Controllers\crypto\DingtalkCrypt;
+use App\Http\Controllers\System\UsersController;
 
 class DingTalkController extends Controller
 {
@@ -561,7 +562,10 @@ class DingTalkController extends Controller
             {
                 Log::error(json_encode($_GET) . "  ERR:user_modify_org");
                 //handle auth change event
-                Log::info(json_encode($_GET["UserId"]));
+                foreach ($_GET["UserId"] as $key => $value) {
+                    # code...
+                    UsersController::updatedtuser($value);
+                }
             }
             else if ("user_leave_org" === $eventType)
             {
