@@ -99,7 +99,7 @@ class Prpcrypt
 			print $e;
 			return array(ErrorCode::$DecryptAESError, null);
 		}
-		Log::info($from_corpid);
+		// Log::info($from_corpid);
 		if ($from_corpid != $corpid)
 			return array(ErrorCode::$ValidateSuiteKeyError, null);
 		return array(0, $xml_content);

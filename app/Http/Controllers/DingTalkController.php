@@ -562,7 +562,8 @@ class DingTalkController extends Controller
             {
                 Log::error(json_encode($_GET) . "  ERR:user_modify_org");
                 //handle auth change event
-                foreach ($_GET["UserId"] as $key => $value) {
+                $data = json_decode($msg);
+                foreach ($data["UserId"] as $key => $value) {
                     # code...
                     UsersController::updatedtuser($value);
                 }
