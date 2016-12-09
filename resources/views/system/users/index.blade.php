@@ -14,20 +14,14 @@
     </div>
 
     <div class="panel-body">
+@if (Auth::user()->email == "admin@admin.com")
+        {!! Form::button('与钉钉取消绑定', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnCancelBindDT']) !!}
+        <a href="{{ URL::to('dingtalk/delete_call_back') }}">与钉钉取消绑定</a>
+
         {!! Form::open(['url' => '/system/users/bingdingtalk', 'class' => 'pull-right']) !!}
             {!! Form::submit('与钉钉强绑定', ['class' => 'btn btn-default btn-sm']) !!}            
         {!! Form::close() !!}
-{{--
-        <form class="pull-right" action="/approval/paymentrequests/search" method="post">
-            {!! csrf_field() !!}
-            <div class="pull-right">
-                <button type="submit" class="btn btn-default btn-sm">查找</button>
-            </div>
-            <div class="pull-right input-group-sm">
-                <input type="text" class="form-control" name="key" placeholder="支付对象、对应项目名称、申请人">    
-            </div>
-        </form>
---}}
+@endif
     </div>    
 
     @if ($users->count())
@@ -86,4 +80,31 @@
     </div>
     @endif    
 
-@stop
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+        jQuery(document).ready(function(e) {
+            $("#btnCancelBindDT").click(function() {
+                $.ajax({
+                    type: "GET",
+                    url: "{!! url('dingtalk/delete_call_back') !!}",
+                    success: function(result) {
+                        // alert(result);
+                        // alert(result.errmsg);
+                        if (result.errcode == 0)
+                        {
+                            alert("取消绑定成功.");
+                        }
+                        else
+                            alert(JSON.stringify(result));
+
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(JSON.stringify(xhr));
+                    }
+                });
+            });
+        });
+    </script>
+@endsection

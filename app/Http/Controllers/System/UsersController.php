@@ -259,11 +259,13 @@ class UsersController extends Controller
             dd($data->errcode . ': ' . $data->errmsg);
     }
 
-    public function test1()
+    public function bingdingtalkcancel()
     {
-        dd('aaa');
-        $data = ['success'];
-        dd(json_encode($data));
-        return json_encode($data);
+        $data = DingTalkController::register_call_back_user();
+
+        if ($data->errcode == "0")
+            dd($data->errmsg);
+        else
+            dd($data->errcode . ': ' . $data->errmsg);
     }
 }

@@ -421,10 +421,6 @@ class DingTalkController extends Controller
 
     public static function register_call_back_user()
     {
-        // $msg = '{"CorpId":"ding6ed55e00b5328f39","EventType":"user_modify_org","TimeStamp":"1481242982698","UserId":["manager1200"]}';
-        // $data = json_decode($msg);
-        // dd($data->UserId);
-
 
         $access_token = self::getAccessToken();
         // dd(str_random(32));
@@ -434,8 +430,8 @@ class DingTalkController extends Controller
             'call_back_tag' => ['user_modify_org'],
             'token' => config('custom.dingtalk.TOKEN'),
             'aes_key' => config('custom.dingtalk.ENCODING_AES_KEY'),
-            // 'url' => url('dingtalk/receive')
-            'url' => 'http://hyerp.ricki.cn/dingtalk/receive'
+            'url' => url('dingtalk/receive')
+            // 'url' => 'http://hyerp.ricki.cn/dingtalk/receive'
         ];
         // dd($data);
 
@@ -448,6 +444,21 @@ class DingTalkController extends Controller
         $response = Http::post("/call_back/register_call_back",
             array("access_token" => $accessToken), json_encode($data));
         return $response;
+    }
+
+    public function delete_call_back()
+    {
+        $access_token = self::getAccessToken();
+
+        $response = Http::get("/call_back/delete_call_back",
+            array("access_token" => $access_token));
+        // dd(response()->json($response));
+        $data = [
+            'errcode' => $response->errcode,
+            'errmsg' => $response->errmsg
+        ];
+        // dd(json_encode($data));
+        return response()->json($data);
     }
 
     /**

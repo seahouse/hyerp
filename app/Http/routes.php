@@ -45,6 +45,7 @@ Route::group(['middleware' => ['web']], function () {
 	Route::get('dingtalk/getuserinfo/{code}', 'DingTalkController@getuserinfo');
     Route::get('dingtalk/getconfig', 'DingTalkController@getconfig');
     Route::post('dingtalk/register_call_back', 'DingTalkController@register_call_back');
+    Route::get('dingtalk/delete_call_back', 'DingTalkController@delete_call_back');
 
     // run .bat shell command to run git pull.
     Route::get('gitpullbybat', function() { return view('gitpullbybat'); });
@@ -263,6 +264,7 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
         Route::post('updatepass', 'UsersController@updatepass');
     });
     Route::post('users/bingdingtalk', 'UsersController@bingdingtalk');
+    Route::post('users/bingdingtalkcancel', 'UsersController@bingdingtalkcancel');
     // Route::post('users/test', 'UsersController@test');
     Route::resource('users', 'UsersController');
     Route::group(['prefix' => 'users/{user}/roles'], function () {
