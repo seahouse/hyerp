@@ -421,6 +421,11 @@ class DingTalkController extends Controller
 
     public static function register_call_back_user()
     {
+        // $msg = '{"CorpId":"ding6ed55e00b5328f39","EventType":"user_modify_org","TimeStamp":"1481242982698","UserId":["manager1200"]}';
+        // $data = json_decode($msg);
+        // dd($data->UserId);
+
+
         $access_token = self::getAccessToken();
         // dd(str_random(32));
 
@@ -563,7 +568,7 @@ class DingTalkController extends Controller
                 Log::error(json_encode($_GET) . "  ERR:user_modify_org");
                 //handle auth change event
                 $data = json_decode($msg);
-                foreach ($data["UserId"] as $key => $value) {
+                foreach ($data->UserId as $key => $value) {
                     # code...
                     UsersController::updatedtuser($value);
                 }
