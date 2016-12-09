@@ -421,7 +421,7 @@ class DingTalkController extends Controller
 
     public static function register_call_back_user()
     {
-
+        // Cache::flush();
         $access_token = self::getAccessToken();
         // dd(str_random(32));
 
@@ -431,7 +431,7 @@ class DingTalkController extends Controller
             'token' => config('custom.dingtalk.TOKEN'),
             'aes_key' => config('custom.dingtalk.ENCODING_AES_KEY'),
             'url' => url('dingtalk/receive')
-            // 'url' => 'http://hyerp.ricki.cn/dingtalk/receive'
+            // 'url' => 'http://www.huaxing-east.cn:2016/dingtalk/receive'
         ];
         // dd($data);
 
@@ -615,7 +615,7 @@ class DingTalkController extends Controller
                 {
                     Log::info("UPDATE SUITE URL RESPONSE: " . $encryptMsg);
                     echo $encryptMsg;
-                    return;
+                    return $encryptMsg;
                 } 
                 else 
                 {
@@ -632,8 +632,9 @@ class DingTalkController extends Controller
             $errCode = $crypt->EncryptMsg($res, $timeStamp, $nonce, $encryptMsg);
             if ($errCode == 0) 
             {
-                echo $encryptMsg;
                 Log::info("RESPONSE: " . $encryptMsg);
+                echo $encryptMsg;
+                // return $encryptMsg;
             } 
             else 
             {
