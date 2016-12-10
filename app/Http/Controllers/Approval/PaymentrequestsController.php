@@ -16,6 +16,9 @@ use App\Models\Purchase\Vendinfo_hxold;
 use Auth, DB, Excel, PDF;
 use Dompdf\Dompdf;
 use Jenssegers\Agent\Agent;
+use App\Models\Product\Itemp_hxold;
+use App\Models\Inventory\Receiptorder_hxold;
+use App\Models\Inventory\Receiptitem_hxold;
 
 class PaymentrequestsController extends Controller
 {
@@ -749,5 +752,30 @@ class PaymentrequestsController extends Controller
         // dd($purchaseorder);
 
         return view('approval.paymentrequests.mrecvdetail2', compact('purchaseorder'));
+    }
+
+    public function mrecvdetail3($id)
+    {
+        //
+        $purchaseorder = Paymentrequest::findOrFail($id)->purchaseorder_hxold;
+
+// select * from vgoods
+// where goods_no
+// in
+// (
+// select distinct item_number from vreceiptitem
+// where receipt_id in 
+// (
+// select receipt_id from vreceiptorder
+// where pohead_id=15984
+// )
+// )
+        $receipt_ids = Receiptorder_hxold::where('pohead_id', $purchaseorder->id)->pluck('receipt_id');
+        $item_numbers = Receiptitem_hxold::whereIn('receipt_id', $receipt_ids)->distinct()->pluck('item_number');
+        // dd($item_numbers);
+        $itemps = Itemp_hxold::whereIn('goods_no', $item_numbers)->get();
+        // dd($itemps);
+
+        return view('approval.paymentrequests.mrecvdetail3', compact('purchaseorder', 'itemps'));
     }
 }
