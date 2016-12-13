@@ -432,6 +432,7 @@ class DingTalkController extends Controller
             'aes_key' => config('custom.dingtalk.ENCODING_AES_KEY'),
             'url' => url('dingtalk/receive')
             // 'url' => 'http://www.huaxing-east.cn:2016/dingtalk/receive'
+            // 'url' => 'http://hyerp.ricki.cn/dingtalk/receive'
         ];
         // dd($data);
 

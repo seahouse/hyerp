@@ -17,6 +17,7 @@ use Auth, DB, Excel, PDF;
 use Dompdf\Dompdf;
 use Jenssegers\Agent\Agent;
 use App\Models\Product\Itemp_hxold;
+use App\Models\Product\Itemp_hxold2;
 use App\Models\Inventory\Receiptorder_hxold;
 use App\Models\Inventory\Receiptitem_hxold;
 
@@ -749,9 +750,13 @@ class PaymentrequestsController extends Controller
     {
         //
         $purchaseorder = Paymentrequest::findOrFail($id)->purchaseorder_hxold;
-        // dd($purchaseorder);
 
-        return view('approval.paymentrequests.mrecvdetail2', compact('purchaseorder'));
+        $receipt_ids = Receiptorder_hxold::where('pohead_id', $purchaseorder->id)->pluck('receipt_id');
+        $item_numbers2 = Receiptitem_hxold::whereIn('receipt_id', $receipt_ids)->distinct()->pluck('item_number2');
+        $itemps = Itemp_hxold2::whereIn('goods_no', $item_numbers2)->get();
+        // dd($itemps);
+
+        return view('approval.paymentrequests.mrecvdetail2', compact('purchaseorder', 'itemps'));
     }
 
     public function mrecvdetail3($id)
