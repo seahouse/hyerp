@@ -85,7 +85,7 @@ class PaymentrequestapprovalsController extends Controller
         // Log::info(config('custom.dingtalk.agentidlist.approval'));
         // DingTalkController::send_link($user->dtuserid, '', 
         //     url('mddauth/approval/approval-paymentrequestapprovals-mcreate'), '',
-        //     '供应商付款审批', '来自XXX的付款申请单需要您审批4.', 
+        //     '供应商付款审批', '来自XXX的付款申请单需要您审批.', 
         //     config('custom.dingtalk.agentidlist.approval'));
         // return 'success';
 
@@ -143,10 +143,12 @@ class PaymentrequestapprovalsController extends Controller
             //     '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
             //     config('custom.dingtalk.agentidlist.approval'));
 
+            // Log::info($touser->dtuserid);
             DingTalkController::send_link($touser->dtuserid, '', 
                 url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
                 '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
-                config('custom.dingtalk.agentidlist.approval'));
+                config('custom.dingtalk.agentidlist.approval'));            
+            // Log::info($paymentrequest->id);
 
         }
 
