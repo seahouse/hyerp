@@ -36,6 +36,9 @@ Route::get('app2', function() {
 });
 
 Route::post('dingtalk/receive', 'DingTalkController@receive');
+// Route::post('dingtalk/receive', function() {
+//     return '';
+// });
 
 Route::group(['middleware' => ['web']], function () {
     // Route::get('mddauth', function() { return view('mddauth'); });

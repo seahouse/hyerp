@@ -515,8 +515,8 @@ class DingTalkController extends Controller
                     if ($errCode == 0) 
                     {
                         Log::info("CREATE SUITE URL RESPONSE: " . $encryptMsg);
-                        // echo $encryptMsg;
-                        return $encryptMsg;
+                        echo $encryptMsg;
+                        // return $encryptMsg;
                     } 
                     else 
                     {

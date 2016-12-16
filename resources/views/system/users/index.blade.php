@@ -16,11 +16,21 @@
     <div class="panel-body">
 @if (Auth::user()->email == "admin@admin.com")
         {!! Form::button('与钉钉取消绑定', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnCancelBindDT']) !!}
+        {!! Form::button('3333', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnTest']) !!}
         <a href="{{ URL::to('dingtalk/delete_call_back') }}">与钉钉取消绑定</a>
 
         {!! Form::open(['url' => '/system/users/bingdingtalk', 'class' => 'pull-right']) !!}
             {!! Form::submit('与钉钉强绑定', ['class' => 'btn btn-default btn-sm']) !!}            
         {!! Form::close() !!}
+
+        {!! Form::open(['url' => '/dingtalk/receive', 'class' => 'pull-right']) !!}
+            {!! Form::submit('与钉钉强绑定222', ['class' => 'btn btn-default btn-sm']) !!}            
+        {!! Form::close() !!}
+
+        <form method="POST" action="http://localhost:82/dingtalk/receive" class="pull-right">
+            <input class="btn btn-default btn-sm" type="submit" value="4444">            
+        </form>
+
 @endif
     </div>    
 
@@ -89,6 +99,28 @@
                 $.ajax({
                     type: "GET",
                     url: "{!! url('dingtalk/delete_call_back') !!}",
+                    success: function(result) {
+                        // alert(result);
+                        // alert(result.errmsg);
+                        if (result.errcode == 0)
+                        {
+                            alert("取消绑定成功.");
+                        }
+                        else
+                            alert(JSON.stringify(result));
+
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(JSON.stringify(xhr));
+                    }
+                });
+            });
+
+            $("#btnTest").click(function() {
+                alert('btnTest');
+                $.ajax({
+                    type: "POST",
+                    url: "{!! url('dingtalk/receive') !!}",
                     success: function(result) {
                         // alert(result);
                         // alert(result.errmsg);
