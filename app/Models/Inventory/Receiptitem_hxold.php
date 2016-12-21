@@ -13,4 +13,8 @@ class Receiptitem_hxold extends Model
 	public function item() {
         return $this->hasOne('App\Models\Product\Itemp_hxold', 'goods_no', 'item_number');
     }
+
+    public function rwrecord() {
+        return $this->hasOne('App\Models\Inventory\Rwrecord_hxold', 'id', 'receipt_id');
+    }
 }

@@ -14,4 +14,8 @@ class Rwrecord_hxold extends Model
 	public function receiptitems() {
         return $this->hasMany('App\Models\Inventory\Receiptitem_hxold', 'receipt_id', 'id');
     }
+
+    public function supplier() {
+    	return $this->hasOne('App\Models\Purchase\Vendinfo_hxold', 'id', 'supplier_id');
+    }
 }
