@@ -783,4 +783,34 @@ class PaymentrequestsController extends Controller
 
         return view('approval.paymentrequests.mrecvdetail3', compact('purchaseorder', 'itemps'));
     }
+
+    public function mrecvdetail4($id)
+    {
+        $purchaseorder = Paymentrequest::findOrFail($id)->purchaseorder_hxold;
+
+        $receipt_ids = Receiptorder_hxold::where('pohead_id', $purchaseorder->id)->pluck('receipt_id');
+        $item_numbers2 = Receiptitem_hxold::whereIn('receipt_id', $receipt_ids)->distinct()->pluck('item_number2');
+        $itemps2 = Itemp_hxold2::whereIn('goods_no', $item_numbers2)->get();
+
+        // return view('approval.paymentrequests.mrecvdetail2', compact('purchaseorder', 'itemps'));
+
+        // $purchaseorder = Paymentrequest::findOrFail($id)->purchaseorder_hxold;
+
+// select * from vgoods
+// where goods_no
+// in
+// (
+// select distinct item_number from vreceiptitem
+// where receipt_id in 
+// (
+// select receipt_id from vreceiptorder
+// where pohead_id=15984
+// )
+// )
+        // $receipt_ids = Receiptorder_hxold::where('pohead_id', $purchaseorder->id)->pluck('receipt_id');
+        $item_numbers = Receiptitem_hxold::whereIn('receipt_id', $receipt_ids)->distinct()->pluck('item_number');
+        $itemps = Itemp_hxold::whereIn('goods_no', $item_numbers)->get();
+
+        return view('approval.paymentrequests.mrecvdetail4', compact('purchaseorder', 'itemps2', 'itemps'));
+    }
 }

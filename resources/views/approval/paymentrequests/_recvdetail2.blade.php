@@ -27,6 +27,7 @@
                         <th>数量</th>
                         <th>单价</th>
                         <th>金额</th>
+                        <th>供应商</th>
                         <th>录入时间</th>
                     </tr>
                 </thead>
@@ -36,6 +37,13 @@
                         <td>{{ $receiptitem->quantity }}</td>
                         <td>{{ $receiptitem->unitprice * 1.17 }}</td>
                         <td>{{ $receiptitem->amount * 1.17 }}</td>
+                        <td>
+                            @if ($receiptitem->rwrecord->supplier->shortname == '') 
+                                {{ $receiptitem->rwrecord->supplier->name }}
+                            @else
+                                {{ $receiptitem->rwrecord->supplier->shortname }}
+                            @endif
+                        </td>
                         <td>{{ substr($receiptitem->record_at, 0, 10) }}</td>
                     </tr>
                     @endforeach
