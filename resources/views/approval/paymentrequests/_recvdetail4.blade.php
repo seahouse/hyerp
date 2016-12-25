@@ -74,10 +74,14 @@
                                 <td>{{ $receiptitem->unitprice * 1.17 }}</td>
                                 <td>{{ $receiptitem->amount * 1.17 }}</td>
                                 <td>
-                                    @if ($receiptitem->rwrecord->supplier->shortname == '') 
-                                        {{ $receiptitem->rwrecord->supplier->name }}
+                                    @if (isset($receiptitem->rwrecord->supplier->shortname))
+                                        @if ($receiptitem->rwrecord->supplier->shortname == '') 
+                                            {{ $receiptitem->rwrecord->supplier->name }}
+                                        @else
+                                            {{ $receiptitem->rwrecord->supplier->shortname }}
+                                        @endif
                                     @else
-                                        {{ $receiptitem->rwrecord->supplier->shortname }}
+                                        -
                                     @endif
                                 </td>
                                 <td>{{ substr($receiptitem->record_at, 0, 10) }}</td>
