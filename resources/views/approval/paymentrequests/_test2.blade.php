@@ -7,7 +7,7 @@
   <li role="presentation"><a href="#tabid2" role="tab" data-toggle="tab">Profile</a></li>
 </ul>
 
-<div class="tab-content">
+<div class="tab-content" data-spy="scroll" data-target=".navbar-example">
   <div role="tabpanel" class="tab-pane active" id="tabid1">
         1<br>
         1<br>

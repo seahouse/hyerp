@@ -8,26 +8,14 @@
 
 @section('script')
 	<script type="text/javascript">
-	    var tempNav = "tab1";
-	    var temp = "tabid1";
-	    function changeTab(n){
-	        var tabnav = "tab"+n;
-	        var tabid = "tabid"+n;
-	        if(temp != tabid){
-	            clearDislay(temp);
-	            temp =tabid;
-	        }
-	        if(tempNav != tabnav){
-	            document.getElementById(tempNav).className="text";
-	            tempNav = tabnav;
-	        }
-	        document.getElementById(tabnav).className="text selected";
-	        document.getElementById(tabid).style.display="block";
-	    };
-	    function clearDislay(tab){
-	        var clearTabid = tab;
-	        document.getElementById(clearTabid).style.display = "none";
-	    }
+		var offset = 80;
+
+		$('.navbar li a').click(function(event) {
+		    event.preventDefault();
+		    $($(this).attr('href'))[0].scrollIntoView();
+		    var navOffset = $('#navbar').height();
+		    scrollBy(0, -offset);
+		});
 	</script>
 @endsection
 

@@ -40,6 +40,8 @@ Route::post('dingtalk/receive', 'DingTalkController@receive');
 //     return '';
 // });
 
+Route::post('faceplusplus/compare', 'FaceplusplusController@compare');
+
 Route::group(['middleware' => ['web']], function () {
     // Route::get('mddauth', function() { return view('mddauth'); });
     Route::get('mddauth/{appname?}/{url?}', 'DingTalkController@mddauth');
