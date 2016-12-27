@@ -54,6 +54,14 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('gitpullbybat', function() { return view('gitpullbybat'); });
 
     Route::get('test', 'TestController@test');
+
+    // test page
+    Route::get('test1', function() {
+        return view('approval.paymentrequests.test1');
+    });
+    Route::get('test2', function() {
+        return view('approval.paymentrequests.test2');
+    });
 });
 
 Route::group(['middleware' => ['web', 'auth']], function () {

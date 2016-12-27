@@ -3,10 +3,9 @@
 @section('title', '入库价格明细')
 
 @section('main')
-	@include('approval.paymentrequests._recvdetail4')
+	@include('approval.paymentrequests._test2')
 @endsection
 
-{{--
 @section('script')
 	<script type="text/javascript">
 	    var tempNav = "tab1";
@@ -31,4 +30,4 @@
 	    }
 	</script>
 @endsection
---}}
+

@@ -1,36 +1,25 @@
-{{--
 <style type="text/css">
-    .tabnav ul{margin:0;padding:0;list-style:none;}
-    .tabnav li{padding:5 10px;border:1px solid red;float:left;}
-    .tabid {border:1px solid #000;clear:both;}
+    body { padding-top: 70px; }
 </style>
 
 <div>
-    <div class="tabnav">
-        <ul>
-            <li id="tab1" onclick='changeTab(1)'>TAB1</li>
-            <li id="tab2" onclick='changeTab(2)'>TAB2</li>
-        </ul>
-    </div>
-    <div id="tabid1" class="tabid">tab1Content</div>
-    <div id="tabid2" class="tabid" style='display:none;'>tab2Content</div>
-</div>
---}}
-
-<div>
-    <div class="apprNav">
-        <div class="btn-group btn-group-justified wrapper" role="group" aria-label="...">
-            <div class="btn-group btnw" role="group">                
-                <a href="#">
-                    <div id="tab1" onclick='changeTab(1)' class="text selected">入库价格明细2</div>
-                </a>
+    <div class="navbar-fixed-top" role="navigation">
+        <dir class="container-fluid">
+            <div class="apprNav">
+                <div class="btn-group btn-group-justified wrapper" role="group" aria-label="...">
+                    <div class="btn-group btnw" role="group">                
+                        <a href="#">
+                            <div id="tab1" onclick='changeTab(1)' class="text selected">入库价格明细2</div>
+                        </a>
+                    </div>
+                    <div class="btn-group btnw" role="group">
+                        <a href="#">
+                            <div id="tab2" onclick='changeTab(2)' class="text">入库价格明细3</div>
+                        </a>
+                    </div>
+                </div>
             </div>
-            <div class="btn-group btnw" role="group">
-                <a href="#">
-                    <div id="tab2" onclick='changeTab(2)' class="text">入库价格明细3</div>
-                </a>
-            </div>
-        </div>
+        </dir>
     </div>
 
     <div id="tabid1" class="tabid">
