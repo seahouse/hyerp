@@ -40,7 +40,10 @@ Route::post('dingtalk/receive', 'DingTalkController@receive');
 //     return '';
 // });
 
+Route::post('faceplusplus/detect', 'FaceplusplusController@detect');
 Route::post('faceplusplus/compare', 'FaceplusplusController@compare');
+Route::post('faceplusplus/search', 'FaceplusplusController@search');
+Route::post('faceplusplus/faceset_create', 'FaceplusplusController@faceset_create');
 
 Route::group(['middleware' => ['web']], function () {
     // Route::get('mddauth', function() { return view('mddauth'); });

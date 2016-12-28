@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\System;
 
-use Illuminate\Http\Request;
+// use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Models\System\User;
 use App\Http\Requests\System\UserRequest;
-// use Request;
+use Request;
 use App\Http\Requests\System\UpdateUserRequest;
 use App\Http\Requests\System\UpdateUserPassRequest;
 use App\Models\System\Role;
@@ -123,7 +123,7 @@ class UsersController extends Controller
         // $user->password = bcrypt($request->input('password'));
 		$user->dtuserid = $request->input('dtuserid');
         $user->dept_id = $request->input('dept_id');
-        $user->position = $request->input('position');
+        $user->position = $request->input('position');        
         $user->update();
 
         $dtuser = $user->dingtalkGetUser();
@@ -161,6 +161,22 @@ class UsersController extends Controller
             // Dtuser::where('userid', $dtuser->userid)->update($dtuser);
             // $dtuser2->update($dtuser);
         }
+
+        if ($user)
+        {
+            $sFilename = '';     
+            if (Request::hasFile('avatar'))
+            {
+                dd($request->all());   
+                $file = $request->file('avatar');
+                $sFilename = $this->saveImg($file);             
+
+            }           
+
+            $user->avatar = $sFilename;
+            $user->update();
+        }
+
 
         return redirect('system/users');
     }
@@ -267,5 +283,14 @@ class UsersController extends Controller
             dd($data->errmsg);
         else
             dd($data->errcode . ': ' . $data->errmsg);
+    }
+
+    private function saveImg($file)
+    {
+        $fileOriginalName = $file->getClientOriginalName();
+        $sExtension = substr($fileOriginalName, strrpos($fileOriginalName, '.') + 1);
+        $sFilename = date('YmdHis').rand(100, 200) . '.' . $sExtension;
+        $file->move('images', $sFilename);
+        return 'images/' . $sFilename;
     }
 }

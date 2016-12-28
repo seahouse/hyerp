@@ -20,6 +20,11 @@
     {!! Form::text('position', null, ['class' => 'form-control']) !!}
 </div>
 
+<div class="form-group">
+    {!! Form::label('avatar', '头像:') !!}
+    {!! Form::file('avatar') !!}
+</div>
+
 {{-- 
 <div class="form-group">
     {!! Form::label('password', '密码:') !!}

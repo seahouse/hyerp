@@ -27,6 +27,24 @@
             {!! Form::submit('与钉钉强绑定222', ['class' => 'btn btn-default btn-sm']) !!}            
         {!! Form::close() !!}
 
+        {!! Form::open(['url' => '/faceplusplus/detect', 'class' => 'pull-right']) !!}
+            {!! Form::submit('人脸监测', ['class' => 'btn btn-default btn-sm']) !!}            
+        {!! Form::close() !!}
+
+        {!! Form::open(['url' => '/faceplusplus/faceset_create', 'class' => 'pull-right', 'files' => true]) !!}
+            {!! Form::submit('人脸集合', ['class' => 'btn btn-default btn-sm']) !!}            
+        {!! Form::close() !!}
+
+        {!! Form::open(['url' => '/faceplusplus/compare', 'class' => 'pull-right']) !!}
+            {!! Form::hidden('api_key', 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk', []) !!}
+            {!! Form::hidden('api_secret', 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT', []) !!}
+            {!! Form::hidden('image_url1', 'http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg', []) !!}
+            {!! Form::hidden('image_url2', 'http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg', []) !!}
+            {!! Form::submit('人脸对比测试', ['class' => 'btn btn-default btn-sm']) !!}            
+        {!! Form::close() !!}
+
+        
+
         <form method="POST" action="http://localhost:82/dingtalk/receive" class="pull-right">
             <input class="btn btn-default btn-sm" type="submit" value="4444">            
         </form>
