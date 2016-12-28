@@ -132,30 +132,69 @@ class FaceplusplusController extends Controller
 
     public function faceset_create(Request $request)
     {
-        $images = Image::get();
-        foreach ($images as $image) {
-            # code...
-            // dd(file($image->path));
-            $data = [
-                'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
-                'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
-                // 'image_file'    => fread(fopen($image->path, "rb"), filesize($image->path))
-                'image_url' => url($image->path)
-            ];
+        // $images = Image::get();
+        // $face_tokens = [];
+        // foreach ($images as $image) {
+        //     # code...
+        //     $data = [
+        //         'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
+        //         'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
+        //         // 'image_file'    => fread(fopen($image->path, "rb"), filesize($image->path))
+        //         'image_url' => 'http://139.224.8.136:81/images/20161228145959125.jpg'
+        //     ];
 
-            $response = HttpFaceplusplus::post("/detect",
-                array(), $data);
-            dd($response);
-        }
+        //     $str = "api_key=eLObusplEGW0dCfBDYceyhoAdvcEaQtk&api_secret=bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT&image_url=http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg";
+
+        //     $response = HttpFaceplusplus::post("/detect",
+        //         array(), $str);
+        //     // dd($response->faces);
+        //     foreach ($response->faces as $face) {
+        //         # code...'
+        //         array_push($face_tokens, $face->face_token);
+        //         // dd('face_token:' . $face->face_token);
+        //     }
+        // }
 
         $data = [
             'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
-            'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT'
+            'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
+            'outer_id'  => 'faceset',
+            'force_merge'   => 1
         ];
         // $str = "api_key=eLObusplEGW0dCfBDYceyhoAdvcEaQtk&api_secret=bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT&image_url1=http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg&image_url2=http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg";
         $response = HttpFaceplusplus::post("/faceset/create",
             $data, "");
+        $faceset_token = $response->faceset_token;
         dd($response);
+
+        // $data = [
+        //     'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
+        //     'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
+        //     'faceset_token' => $faceset_token,
+        //     'face_tokens'   => implode(',', $face_tokens)
+        // ];
+        // // $str = "api_key=eLObusplEGW0dCfBDYceyhoAdvcEaQtk&api_secret=bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT&image_url1=http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg&image_url2=http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg";
+        // $response = HttpFaceplusplus::post("/faceset/addface",
+        //     $data, "");
+        // // $faceset_token = $response->faceset_token;
+        // // dd($response);
+
+        // $data = [
+        //     'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
+        //     'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
+        //     'image_url' => 'http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg',
+        //     'faceset_token'   => $faceset_token
+        // ];
+        // // $str = "api_key=eLObusplEGW0dCfBDYceyhoAdvcEaQtk&api_secret=bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT&image_url1=http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg&image_url2=http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg";
+        // $response = HttpFaceplusplus::post("/search",
+        //     $data, "");
+        // // $faceset_token = $response->faceset_token;
+        // if (count($response->results))
+        //     dd("success.");
+        // else
+        //     dd("failed.");
+        // dd($response);
+
         return $response;
     }
 }

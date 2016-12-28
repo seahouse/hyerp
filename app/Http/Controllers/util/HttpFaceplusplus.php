@@ -25,7 +25,7 @@ Class HttpFaceplusplus
 	{
 		$url = self::joinParams($path, $params);
 		$response = \Httpful\Request::post($url)
-			->addHeaders(['Content-Type'=>'application/x-www-form-urlencoded', 'enctype' => 'multipart/form-data'])
+			->addHeaders(['Content-Type'=>'application/x-www-form-urlencoded'])
 			->body($data)
 			// ->sendsJson()
 			->send();
