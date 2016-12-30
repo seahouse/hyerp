@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\util\HttpFaceplusplus;
 use App\Models\System\Image;
-use Log;
+use Log, Config;
 
 class FaceplusplusController extends Controller
 {
@@ -103,8 +103,8 @@ class FaceplusplusController extends Controller
         // return $response;
 
         $data = [
-            'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
-            'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
+            'api_key'   => config('custom.faceplusplus.api_key'),
+            'api_secret'    => config('custom.faceplusplus.api_secret'),
             'image_url'    => 'http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg'
         ];
         // $str = "api_key=eLObusplEGW0dCfBDYceyhoAdvcEaQtk&api_secret=bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT&image_url1=http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg&image_url2=http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg";
@@ -120,8 +120,8 @@ class FaceplusplusController extends Controller
     {
         // dd($request->all());
         $data = [
-            'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
-            'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
+            'api_key'   => config('custom.faceplusplus.api_key'),
+            'api_secret'    => config('custom.faceplusplus.api_secret'),
             'image_url1'    => 'http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg',
             'image_url2'    => 'http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg'
         ];
@@ -135,8 +135,8 @@ class FaceplusplusController extends Controller
     public function search(Request $request)
     {
         $data = [
-            'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
-            'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
+            'api_key'   => config('custom.faceplusplus.api_key'),
+            'api_secret'    => config('custom.faceplusplus.api_secret'),
             'face_token'    => 'cdc46592057b91a696a9e72ac59d2bae'
         ];
         // $str = "api_key=eLObusplEGW0dCfBDYceyhoAdvcEaQtk&api_secret=bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT&image_url1=http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg&image_url2=http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg";
@@ -154,8 +154,8 @@ class FaceplusplusController extends Controller
             # code...
             Log::info(url($image->path));
             $data = [
-                'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
-                'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
+                'api_key'       => config('custom.faceplusplus.api_key'),
+                'api_secret'    => config('custom.faceplusplus.api_secret'),
                 // 'image_file'    => fread(fopen($image->path, "rb"), filesize($image->path))
                 // 'image_url' => 'http://139.224.8.136:81/images/20161228145959125.jpg'
                 'image_url' => url($image->path)
@@ -175,8 +175,8 @@ class FaceplusplusController extends Controller
 
                 // set user id
                 $data = [
-                    'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
-                    'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
+                    'api_key'   => config('custom.faceplusplus.api_key'),
+                    'api_secret'    => config('custom.faceplusplus.api_secret'),
                     'face_token'    => $face->face_token,
                     'user_id' => $image->name
                 ];
@@ -192,8 +192,8 @@ class FaceplusplusController extends Controller
         // dd($face_tokens);
 
         $data = [
-            'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
-            'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
+            'api_key'   => config('custom.faceplusplus.api_key'),
+            'api_secret'    => config('custom.faceplusplus.api_secret'),
             'outer_id'  => 'faceset',
             'force_merge'   => 1
         ];
@@ -209,8 +209,8 @@ class FaceplusplusController extends Controller
         foreach ($face_tokens_arr as $face_tokens) {
             # code...
             $data = [
-                'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
-                'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
+                'api_key'   => config('custom.faceplusplus.api_key'),
+                'api_secret'    => config('custom.faceplusplus.api_secret'),
                 'faceset_token' => $faceset_token,
                 'face_tokens'   => implode(',', $face_tokens)
             ];
@@ -223,8 +223,8 @@ class FaceplusplusController extends Controller
 
 
         $data = [
-            'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
-            'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
+            'api_key'   => config('custom.faceplusplus.api_key'),
+            'api_secret'    => config('custom.faceplusplus.api_secret'),
             'image_url' => 'http://v1.qzone.cc/avatar/201503/15/13/08/550513b64bcbf041.jpg%21200x200.jpg',
             // 'image_url' => 'http://imgsrc.baidu.com/baike/pic/item/b21bb051f81986187aa0646a48ed2e738ad4e67d.jpg',
             'faceset_token'   => $faceset_token
