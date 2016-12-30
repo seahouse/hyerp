@@ -166,6 +166,8 @@ class FaceplusplusController extends Controller
             $response = HttpFaceplusplus::post("/detect",
                 $data, "");
             // dd($response);
+            if (isset($response->error_message))
+                dd('detect failed: ' . $response->error_message);
             foreach ($response->faces as $face) {
                 # code...'
                 array_push($face_tokens, $face->face_token);
@@ -201,25 +203,25 @@ class FaceplusplusController extends Controller
             $response = HttpFaceplusplus::post("/faceset/addface",
                 $data, "");
             // $faceset_token = $response->faceset_token;
-            dd($response);
+            // dd($response);
         }
 
 
-        // $data = [
-        //     'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
-        //     'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
-        //     'image_url' => 'http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg',
-        //     'faceset_token'   => $faceset_token
-        // ];
-        // // $str = "api_key=eLObusplEGW0dCfBDYceyhoAdvcEaQtk&api_secret=bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT&image_url1=http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg&image_url2=http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg";
-        // $response = HttpFaceplusplus::post("/search",
-        //     $data, "");
-        // // $faceset_token = $response->faceset_token;
-        // if (count($response->results))
-        //     dd("success.");
-        // else
-        //     dd("failed.");
-        // dd($response);
+        $data = [
+            'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
+            'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
+            'image_url' => 'http://imgsrc.baidu.com/baike/pic/item/b21bb051f81986187aa0646a48ed2e738ad4e67d.jpg',
+            'faceset_token'   => $faceset_token
+        ];
+        // $str = "api_key=eLObusplEGW0dCfBDYceyhoAdvcEaQtk&api_secret=bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT&image_url1=http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg&image_url2=http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg";
+        $response = HttpFaceplusplus::post("/search",
+            $data, "");
+        // $faceset_token = $response->faceset_token;        
+        dd($response);
+        if (count($response->results))
+            dd("success.");
+        else
+            dd("failed.");
 
         return $response;
     }
