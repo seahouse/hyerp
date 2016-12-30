@@ -319,7 +319,7 @@
 								$.ajax({
 									type: "POST",
 									url: "{{ url('faceplusplus/faceset_create') }}",
-									data: image,
+									data: "image_url=" + image,
 									// dataType: "json",
 									error:function(xhr, ajaxOptions, thrownError){
 										alert('error');

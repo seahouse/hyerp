@@ -152,7 +152,7 @@ class FaceplusplusController extends Controller
         return $response;
     }
 
-    public function faceset_create(Request $request, $image_url)
+    public function faceset_create(Request $request)
     {
         $images = Image::get();
         $face_tokens = [];
