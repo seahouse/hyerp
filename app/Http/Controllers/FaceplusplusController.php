@@ -172,33 +172,38 @@ class FaceplusplusController extends Controller
                 // dd('face_token:' . $face->face_token);
             }
         }
-        dd($face_tokens);
+        // dd($face_tokens);
 
-        // $data = [
-        //     'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
-        //     'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
-        //     'outer_id'  => 'faceset',
-        //     'force_merge'   => 1
-        // ];
-        // // $str = "api_key=eLObusplEGW0dCfBDYceyhoAdvcEaQtk&api_secret=bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT&image_url1=http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg&image_url2=http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg";
-        // $response = HttpFaceplusplus::post("/faceset/create",
-        //     $data, "");
-        // if (isset($response->error_message))
-        //     dd('create faceset failed: ' . $response->error_message);
-        // $faceset_token = $response->faceset_token;
+        $data = [
+            'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
+            'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
+            'outer_id'  => 'faceset',
+            'force_merge'   => 1
+        ];
+        // $str = "api_key=eLObusplEGW0dCfBDYceyhoAdvcEaQtk&api_secret=bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT&image_url1=http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg&image_url2=http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg";
+        $response = HttpFaceplusplus::post("/faceset/create",
+            $data, "");
+        if (isset($response->error_message))
+            dd('create faceset failed: ' . $response->error_message);
+        $faceset_token = $response->faceset_token;
         // dd($response);
 
-        // $data = [
-        //     'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
-        //     'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
-        //     'faceset_token' => $faceset_token,
-        //     'face_tokens'   => implode(',', $face_tokens)
-        // ];
-        // // $str = "api_key=eLObusplEGW0dCfBDYceyhoAdvcEaQtk&api_secret=bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT&image_url1=http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg&image_url2=http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg";
-        // $response = HttpFaceplusplus::post("/faceset/addface",
-        //     $data, "");
-        // // $faceset_token = $response->faceset_token;
-        // // dd($response);
+        $face_tokens_arr = array_chunk($face_tokens, 5);
+        foreach ($face_tokens_arr as $face_tokens) {
+            # code...
+            $data = [
+                'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
+                'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
+                'faceset_token' => $faceset_token,
+                'face_tokens'   => implode(',', $face_tokens)
+            ];
+            // $str = "api_key=eLObusplEGW0dCfBDYceyhoAdvcEaQtk&api_secret=bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT&image_url1=http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg&image_url2=http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg";
+            $response = HttpFaceplusplus::post("/faceset/addface",
+                $data, "");
+            // $faceset_token = $response->faceset_token;
+            dd($response);
+        }
+
 
         // $data = [
         //     'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
