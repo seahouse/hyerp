@@ -87,6 +87,11 @@ class FaceplusplusController extends Controller
         //
     }
 
+    public function msearch()
+    {
+        return view('facepp.demo.msearch');
+    }
+
     public function detect(Request $request)
     {
         // $data = [
@@ -238,11 +243,14 @@ class FaceplusplusController extends Controller
         {
             foreach ($response->results as $result) {
                 # code...
-                dd("success, confidence: " . $result->confidence . ", image name: " . $result->user_id);
+                if ($result->confidence >= 80)
+                    dd("success, confidence: " . $result->confidence . ", image name: " . $result->user_id);
+                else
+                    dd("failed, confidence: " . $result->confidence . ", image name: " . $result->user_id);
             }
         }
         else
-            dd("failed.");
+            dd("search failed: " . $response->error_message);
 
         return $response;
     }

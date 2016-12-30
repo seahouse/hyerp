@@ -35,6 +35,7 @@ Route::get('app2', function() {
     return view('app2');
 });
 
+
 Route::post('dingtalk/receive', 'DingTalkController@receive');
 // Route::post('dingtalk/receive', function() {
 //     return '';
@@ -67,6 +68,9 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('test2', function() {
         return view('approval.paymentrequests.test2');
     });
+
+    // face plus plus
+    Route::get('facepp/demo/msearch', 'FaceplusplusController@msearch');
 });
 
 Route::group(['middleware' => ['web', 'auth']], function () {
