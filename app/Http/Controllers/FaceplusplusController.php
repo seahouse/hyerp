@@ -89,7 +89,8 @@ class FaceplusplusController extends Controller
 
     public function msearch()
     {
-        return view('facepp.demo.msearch');
+        $config = DingTalkController::getconfig();
+        return view('facepp.demo.msearch', compact('config'));
     }
 
     public function detect(Request $request)
