@@ -217,9 +217,14 @@ class FaceplusplusController extends Controller
         $response = HttpFaceplusplus::post("/search",
             $data, "");
         // $faceset_token = $response->faceset_token;        
-        dd($response);
+        // dd($response);
         if (count($response->results))
-            dd("success.");
+        {
+            foreach ($response->results as $results) {
+                # code...
+                dd("success, confidence: " . $results->confidence);
+            }
+        }
         else
             dd("failed.");
 
