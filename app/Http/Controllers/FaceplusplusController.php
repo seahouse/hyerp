@@ -240,19 +240,30 @@ class FaceplusplusController extends Controller
             $data, "");
         // $faceset_token = $response->faceset_token;        
         // dd($response);
+        $rtn = "";
         if (count($response->results))
         {
             foreach ($response->results as $result) {
                 # code...
                 if ($result->confidence >= 80)
-                    dd("success, confidence: " . $result->confidence . ", image name: " . $result->user_id);
+                {
+                    $rtn = "success, confidence: " . $result->confidence . ", image name: " . $result->user_id;
+                    // dd("success, confidence: " . $result->confidence . ", image name: " . $result->user_id);
+                }                    
                 else
-                    dd("failed, confidence: " . $result->confidence . ", image name: " . $result->user_id);
+                {
+                    $rtn = "failed, confidence: " . $result->confidence . ", image name: " . $result->user_id;
+                    // dd("failed, confidence: " . $result->confidence . ", image name: " . $result->user_id);
+                }                    
             }
         }
         else
-            dd("search failed: " . $response->error_message);
+        {
+            $rtn = "search failed: " . $response->error_message;
+            // dd("search failed: " . $response->error_message);
+        }
+            
 
-        return $response;
+        return $rtn;
     }
 }

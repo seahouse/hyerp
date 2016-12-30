@@ -325,7 +325,7 @@
 										alert('error');
 									},
 									success:function(result){
-										alert("识别成功");
+										alert("识别成功: " + result);
 									},
 								});
 								imageHtml += '<div class="col-xs-6 col-md-3">';
