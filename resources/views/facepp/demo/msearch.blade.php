@@ -24,17 +24,6 @@
 
 
 
-			$('#selectOrderModal').on('show.bs.modal', function (e) {
-				$("#listsalesorders").empty();
-
-				var text = $(e.relatedTarget);
-				var modal = $(this);
-
-				modal.find('#name').val(text.data('name'));
-				modal.find('#id').val(text.data('id'));
-				modal.find('#supplierid').val(text.data('supplierid'));
-				modal.find('#poheadamount').val(text.data('poheadamount'));
-			});
 
 			$("#btnSearchOrder").click(function() {
 				if ($("#keyOrder").val() == "") {
@@ -325,7 +314,20 @@
 							var images = result;	// result.split(',');
 							var imageHtml = '';
 							for (var i in images) {
-								alert(images[i]);
+								var image = images[i];
+								// alert(image);
+								$.ajax({
+									type: "POST",
+									url: "{{ url('faceplusplus/faceset_create') }}",
+									data: image,
+									// dataType: "json",
+									error:function(xhr, ajaxOptions, thrownError){
+										alert('error');
+									},
+									success:function(result){
+										alert("识别成功");
+									},
+								});
 								imageHtml += '<div class="col-xs-6 col-md-3">';
 								imageHtml += '<div class="thumbnail">';
 								imageHtml += '<img src=' + images[i] + ' />';

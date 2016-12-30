@@ -44,7 +44,7 @@ Route::post('dingtalk/receive', 'DingTalkController@receive');
 Route::post('faceplusplus/detect', 'FaceplusplusController@detect');
 Route::post('faceplusplus/compare', 'FaceplusplusController@compare');
 Route::post('faceplusplus/search', 'FaceplusplusController@search');
-Route::post('faceplusplus/faceset_create', 'FaceplusplusController@faceset_create');
+Route::post('faceplusplus/faceset_create/{image_url}', 'FaceplusplusController@faceset_create');
 
 Route::group(['middleware' => ['web']], function () {
     // Route::get('mddauth', function() { return view('mddauth'); });
