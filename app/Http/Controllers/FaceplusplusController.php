@@ -172,6 +172,21 @@ class FaceplusplusController extends Controller
                 # code...'
                 array_push($face_tokens, $face->face_token);
                 // dd('face_token:' . $face->face_token);
+
+                // set user id
+                $data = [
+                    'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
+                    'api_secret'    => 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT',
+                    'face_token'    => $face->face_token,
+                    'user_id' => $image->name
+                ];
+
+                $str = "api_key=eLObusplEGW0dCfBDYceyhoAdvcEaQtk&api_secret=bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT&image_url=http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg";
+
+                $response = HttpFaceplusplus::post("/face/setuserid",
+                    $data, "");
+                if (isset($response->error_message))
+                    dd('face setuserid failed: ' . $response->error_message);
             }
         }
         // dd($face_tokens);
@@ -221,9 +236,9 @@ class FaceplusplusController extends Controller
         // dd($response);
         if (count($response->results))
         {
-            foreach ($response->results as $results) {
+            foreach ($response->results as $result) {
                 # code...
-                dd("success, confidence: " . $results->confidence);
+                dd("success, confidence: " . $result->confidence . ", image name: " . $result->user_id);
             }
         }
         else
