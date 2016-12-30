@@ -1,6 +1,6 @@
 @extends('app')
 
-@section('title', '创建付款申请单')
+@section('title', '拍照对比')
 
 @section('main')
 
@@ -22,9 +22,6 @@
 
 
 
-			$("#btnSubmitContinue").click(function() {
-				$("form#formMain").submit();
-			});
 
 
 			$('#selectOrderModal').on('show.bs.modal', function (e) {
@@ -292,7 +289,7 @@
 			    timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
 			    nonceStr: '{!! array_get($config, 'nonceStr') !!}', // 必填，生成签名的随机串
 			    signature: '{!! array_get($config, 'signature') !!}', // 必填，签名
-			    jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile'] // 必填，需要使用的jsapi列表
+			    jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile', 'biz.util.uploadImageFromCamera'] // 必填，需要使用的jsapi列表
 			});
 
 			// $.ajax({
@@ -322,13 +319,13 @@
 
 			dd.ready(function() {
 				$("#btnCam").click(function() {
-					dd.biz.util.uploadImage({
-						multiple: true,
-						max: 5,
+					dd.biz.util.uploadImageFromCamera({
+						compression: true,
 						onSuccess: function(result) {
 							var images = result;	// result.split(',');
 							var imageHtml = '';
 							for (var i in images) {
+								alert(images[i]);
 								imageHtml += '<div class="col-xs-6 col-md-3">';
 								imageHtml += '<div class="thumbnail">';
 								imageHtml += '<img src=' + images[i] + ' />';
@@ -336,7 +333,6 @@
 								imageHtml += '</div>';
 								imageHtml += '</div>';
 							}
-							$("#previewimage").empty().append(imageHtml);
 						},
 						onFail: function(err) {
 							alert('select image failed: ' + JSON.stringify(err));
