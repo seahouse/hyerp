@@ -165,13 +165,14 @@ class FaceplusplusController extends Controller
 
             $response = HttpFaceplusplus::post("/detect",
                 $data, "");
-            dd($response);
+            // dd($response);
             foreach ($response->faces as $face) {
                 # code...'
                 array_push($face_tokens, $face->face_token);
                 // dd('face_token:' . $face->face_token);
             }
         }
+        dd($face_tokens);
 
         // $data = [
         //     'api_key'   => 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk',
