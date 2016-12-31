@@ -231,7 +231,8 @@ class FaceplusplusController extends Controller
         $data = [
             'api_key'   => config('custom.faceplusplus.api_key'),
             'api_secret'    => config('custom.faceplusplus.api_secret'),
-            'image_url' => 'http://v1.qzone.cc/avatar/201503/15/13/08/550513b64bcbf041.jpg%21200x200.jpg',
+            'image_url'     => $request->input('image_url'),
+            // 'image_url' => 'http://v1.qzone.cc/avatar/201503/15/13/08/550513b64bcbf041.jpg%21200x200.jpg',
             // 'image_url' => 'http://imgsrc.baidu.com/baike/pic/item/b21bb051f81986187aa0646a48ed2e738ad4e67d.jpg',
             'faceset_token'   => $faceset_token
         ];

@@ -325,15 +325,9 @@
 										alert('error');
 									},
 									success:function(result){
-										alert("识别成功: " + result);
+										alert("识别结果: " + result);
 									},
 								});
-								imageHtml += '<div class="col-xs-6 col-md-3">';
-								imageHtml += '<div class="thumbnail">';
-								imageHtml += '<img src=' + images[i] + ' />';
-								imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
-								imageHtml += '</div>';
-								imageHtml += '</div>';
 							}
 						},
 						onFail: function(err) {
