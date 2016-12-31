@@ -242,27 +242,34 @@ class FaceplusplusController extends Controller
         // $faceset_token = $response->faceset_token;        
         // dd($response);
         $rtn = "";
-        if (count($response->results))
-        {
-            foreach ($response->results as $result) {
-                # code...
-                if ($result->confidence >= 80)
-                {
-                    $rtn = "success, confidence: " . $result->confidence . ", image name: " . $result->user_id;
-                    // dd("success, confidence: " . $result->confidence . ", image name: " . $result->user_id);
-                }                    
-                else
-                {
-                    $rtn = "failed, confidence: " . $result->confidence . ", image name: " . $result->user_id;
-                    // dd("failed, confidence: " . $result->confidence . ", image name: " . $result->user_id);
-                }                    
-            }
-        }
+        if (isset($response->error_message))
+            $rtn = 'search failed: ' . $response->error_message;
         else
         {
-            $rtn = "search failed: " . $response->error_message;
-            // dd("search failed: " . $response->error_message);
-        }
+            if (count($response->results))
+            {
+                foreach ($response->results as $result) {
+                    # code...
+                    if ($result->confidence >= 80)
+                    {
+                        $rtn = "success, confidence: " . $result->confidence . ", image name: " . $result->user_id;
+                        // dd("success, confidence: " . $result->confidence . ", image name: " . $result->user_id);
+                    }                    
+                    else
+                    {
+                        $rtn = "failed, confidence: " . $result->confidence . ", image name: " . $result->user_id;
+                        // dd("failed, confidence: " . $result->confidence . ", image name: " . $result->user_id);
+                    }                    
+                }
+            }
+            else
+            {
+                $rtn = "search failed.";
+                // dd("search failed: " . $response->error_message);
+            }
+        }           
+
+
             
 
         return $rtn;
