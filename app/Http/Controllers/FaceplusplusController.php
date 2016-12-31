@@ -231,8 +231,7 @@ class FaceplusplusController extends Controller
         $data = [
             'api_key'   => config('custom.faceplusplus.api_key'),
             'api_secret'    => config('custom.faceplusplus.api_secret'),
-            'image_url'     => 'http://static.dingtalk.com/media/lADOl-6Qnc0DwM0FAA_1280_960.jpg',
-            // 'image_url'     => $request->input('image_url'),
+            'image_url'     => $request->input('image_url'),
             // 'image_url' => 'http://v1.qzone.cc/avatar/201503/15/13/08/550513b64bcbf041.jpg%21200x200.jpg',
             // 'image_url' => 'http://imgsrc.baidu.com/baike/pic/item/b21bb051f81986187aa0646a48ed2e738ad4e67d.jpg',
             'faceset_token'   => $faceset_token
@@ -248,27 +247,33 @@ class FaceplusplusController extends Controller
             $rtn = 'search failed: ' . $response->error_message;
         else
         {
-            if (count($response->results))
+            if (isset($response->results))
             {
-                foreach ($response->results as $result) {
-                    # code...
-                    if ($result->confidence >= 80)
-                    {
-                        $rtn = "success, confidence: " . $result->confidence . ", image name: " . $result->user_id;
-                        // dd("success, confidence: " . $result->confidence . ", image name: " . $result->user_id);
-                    }                    
-                    else
-                    {
-                        $rtn = "failed, confidence: " . $result->confidence . ", image name: " . $result->user_id;
-                        // dd("failed, confidence: " . $result->confidence . ", image name: " . $result->user_id);
-                    }                    
+                if (count($response->results))
+                {
+                    foreach ($response->results as $result) {
+                        # code...
+                        if ($result->confidence >= 80)
+                        {
+                            $rtn = "success, confidence: " . $result->confidence . ", image name: " . $result->user_id;
+                            // dd("success, confidence: " . $result->confidence . ", image name: " . $result->user_id);
+                        }                    
+                        else
+                        {
+                            $rtn = "failed, confidence: " . $result->confidence . ", image name: " . $result->user_id;
+                            // dd("failed, confidence: " . $result->confidence . ", image name: " . $result->user_id);
+                        }                    
+                    }
+                }
+                else
+                {
+                    $rtn = "search failed.";
+                    // dd("search failed: " . $response->error_message);
                 }
             }
             else
-            {
-                $rtn = "search failed.";
-                // dd("search failed: " . $response->error_message);
-            }
+                $rtn = 'Can not found faces in your image.';
+
         }           
 
 
