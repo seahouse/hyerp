@@ -227,7 +227,7 @@ class FaceplusplusController extends Controller
             // dd($response);
         }
 
-
+        Log::info("image_url: " . $request->input('image_url'));
         $data = [
             'api_key'   => config('custom.faceplusplus.api_key'),
             'api_secret'    => config('custom.faceplusplus.api_secret'),
@@ -241,6 +241,7 @@ class FaceplusplusController extends Controller
             $data, "");
         // $faceset_token = $response->faceset_token;        
         // dd($response);
+        Log::info(json_encode($response));
         $rtn = "";
         if (isset($response->error_message))
             $rtn = 'search failed: ' . $response->error_message;
