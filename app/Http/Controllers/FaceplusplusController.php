@@ -228,56 +228,74 @@ class FaceplusplusController extends Controller
         }
 
         Log::info("image_url: " . $request->input('image_url'));
-        $data = [
-            'api_key'   => config('custom.faceplusplus.api_key'),
-            'api_secret'    => config('custom.faceplusplus.api_secret'),
-            'image_url'     => $request->input('image_url'),
-            // 'image_url' => 'http://v1.qzone.cc/avatar/201503/15/13/08/550513b64bcbf041.jpg%21200x200.jpg',
-            // 'image_url' => 'http://imgsrc.baidu.com/baike/pic/item/b21bb051f81986187aa0646a48ed2e738ad4e67d.jpg',
-            'faceset_token'   => $faceset_token
-        ];
-        // $str = "api_key=eLObusplEGW0dCfBDYceyhoAdvcEaQtk&api_secret=bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT&image_url1=http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg&image_url2=http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg";
-        $response = HttpFaceplusplus::post("/search",
-            $data, "");
-        // $faceset_token = $response->faceset_token;        
-        // dd($response);
-        Log::info(json_encode($response));
         $rtn = "";
+
+        // detect image
+        $data = [
+            'api_key'       => config('custom.faceplusplus.api_key'),
+            'api_secret'    => config('custom.faceplusplus.api_secret'),
+            'image_url'     => $request->input('image_url')
+        ];
+        $response = HttpFaceplusplus::post("/detect",
+            $data, "");
+        // dd($response);
         if (isset($response->error_message))
-            $rtn = 'search failed: ' . $response->error_message;
-        else
-        {
-            if (isset($response->results))
+            dd('detect failed: ' . $response->error_message);
+        foreach ($response->faces as $face) {
+            # code...'
+            // array_push($face_tokens, $face->face_token);
+            // dd('face_token:' . $face->face_token);
+            $data = [
+                'api_key'   => config('custom.faceplusplus.api_key'),
+                'api_secret'    => config('custom.faceplusplus.api_secret'),
+                'face_token'    => $face->face_token,
+                // 'image_url'     => $request->input('image_url'),
+                // 'image_url' => 'http://v1.qzone.cc/avatar/201503/15/13/08/550513b64bcbf041.jpg%21200x200.jpg',
+                // 'image_url' => 'http://imgsrc.baidu.com/baike/pic/item/b21bb051f81986187aa0646a48ed2e738ad4e67d.jpg',
+                'faceset_token'   => $faceset_token
+            ];
+            // $str = "api_key=eLObusplEGW0dCfBDYceyhoAdvcEaQtk&api_secret=bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT&image_url1=http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg&image_url2=http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg";
+            $response = HttpFaceplusplus::post("/search",
+                $data, "");
+            // $faceset_token = $response->faceset_token;        
+            // dd($response);
+            Log::info(json_encode($response));
+            if (isset($response->error_message))
+                $rtn = 'search failed: ' . $response->error_message;
+            else
             {
-                if (count($response->results))
+                if (isset($response->results))
                 {
-                    foreach ($response->results as $result) {
-                        # code...
-                        if ($result->confidence >= 80)
-                        {
-                            $rtn = "success, confidence: " . $result->confidence . ", image name: " . $result->user_id;
-                            // dd("success, confidence: " . $result->confidence . ", image name: " . $result->user_id);
-                        }                    
-                        else
-                        {
-                            $rtn = "failed, confidence: " . $result->confidence . ", image name: " . $result->user_id;
-                            // dd("failed, confidence: " . $result->confidence . ", image name: " . $result->user_id);
-                        }                    
+                    if (count($response->results))
+                    {
+                        foreach ($response->results as $result) {
+                            # code...
+                            if ($result->confidence >= 80)
+                            {
+                                $rtn .= "success, confidence: " . $result->confidence . ", image name: " . $result->user_id . ";";
+                                // dd("success, confidence: " . $result->confidence . ", image name: " . $result->user_id);
+                            }                    
+                            else
+                            {
+                                $rtn .= "failed, confidence: " . $result->confidence . ", image name: " . $result->user_id . ";";
+                                // dd("failed, confidence: " . $result->confidence . ", image name: " . $result->user_id);
+                            }                    
+                        }
+                    }
+                    else
+                    {
+                        $rtn = "search failed.";
+                        // dd("search failed: " . $response->error_message);
                     }
                 }
                 else
-                {
-                    $rtn = "search failed.";
-                    // dd("search failed: " . $response->error_message);
-                }
+                    $rtn = 'Can not found faces in your image.';
+
             }
-            else
-                $rtn = 'Can not found faces in your image.';
 
-        }           
+        }
 
 
-            
 
         return $rtn;
     }
