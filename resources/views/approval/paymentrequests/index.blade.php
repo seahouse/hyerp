@@ -58,6 +58,7 @@
 
                 <th>申请人</th>
                 <th>审批状态</th>
+                <th>付款状态</th>
                 @if (Agent::isDesktop())
                 <th style="width: 120px">操作</th>
                 @endif
@@ -96,6 +97,21 @@
                     </td>
                     <td>
                         @if ($paymentrequest->approversetting_id > 0) <div class="text-primary">审批中</div> @elseif ($paymentrequest->approversetting_id == 0) <div class="text-success">已通过</div> @else <div class="text-danger">未通过</div> @endif
+                    </td>
+                    <td>
+                        @if ($paymentrequest->approversetting_id === 0)
+{{--
+                            {{ $paymentrequest->paymentrequestapprovals->max('created_at') }}
+--}}
+                            @if (isset($paymentrequest->purchaseorder_hxold->payments))
+{{--
+                                {{ $paymentrequest->purchaseorder_hxold->payments->max('create_date') }}
+--}}
+                                @if ($paymentrequest->paymentrequestapprovals->max('created_at') < $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
+                                    <div class="text-success">已付款</div>
+                                @endif
+                            @endif
+                        @endif
                     </td>
                     @if (Agent::isDesktop())
                     <td>
