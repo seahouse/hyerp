@@ -95,6 +95,20 @@
                     </ul>
                 </li>
                 <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">教学<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        @can('module_teaching')
+@if (isset(Auth::user()->email) and Auth::user()->email == "admin@admin.com")
+                        <li><a href="/teaching/teachingpoint">教学点</a></li>
+                        <li><a href="/teaching/teachingadministrator">教学管理员</a></li>
+                        <li><a href="/teaching/teachingstudentimage">学员图片库</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="/approval/approversettings">设置</a></li>
+@endif
+                        @endcan
+                    </ul>
+                </li>
+                <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">系统<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         @can('module_system')

@@ -124,8 +124,14 @@ class ViewComposerServiceProvider extends ServiceProvider
         });
 
         // userList
-        view()->composer(array('approval.approversettings.create', 'approval.approversettings.edit'), function($view) {
+        view()->composer(array('approval.approversettings.create', 'approval.approversettings.edit', 
+            'teaching.teachingadministrator.create', 'teaching.teachingadministrator.edit'), function($view) {
             $view->with('userList', \App\Models\System\User::orderby('id', 'asc')->lists('name', 'id'));
+        });
+
+        // teachingpointList
+        view()->composer(array('teaching.teachingadministrator.create', 'teaching.teachingadministrator.edit'), function($view) {
+            $view->with('teachingpointList', \App\Models\Teaching\Teachingpoint::orderby('id', 'asc')->lists('name', 'id'));
         });
     }
 

@@ -304,6 +304,45 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
     Route::post('rolepermissions/store', 'RolepermissionsController@store');
 });
 
+Route::group(['prefix' => 'teaching', 'namespace' => 'Teaching', 'middleware' => ['web', 'auth']], function() {
+    Route::resource('teachingpoint', 'TeachingpointController');
+    Route::resource('teachingadministrator', 'TeachingadministratorController');
+    Route::resource('teachingstudentimage', 'TeachingstudentimageController');
+
+    // Route::group(['prefix' => 'reimbursementapprovals'], function() {
+    //     Route::get('{reimbursementid}/mcreate', 'ReimbursementapprovalsController@mcreate');
+    //     Route::post('mstore', 'ReimbursementapprovalsController@mstore');
+    // });
+    // Route::resource('reimbursementapprovals', 'ReimbursementapprovalsController');
+    // Route::group(['prefix' => 'paymentrequestapprovals'], function() {
+    //     Route::get('{paymentrequestid}/mcreate', 'PaymentrequestapprovalsController@mcreate');
+    //     Route::post('mstore', 'PaymentrequestapprovalsController@mstore');
+    // });
+    // Route::resource('paymentrequestapprovals', 'PaymentrequestapprovalsController');
+    // Route::group(['prefix' => 'mindexmy'], function() {
+    //     Route::get('', 'ApprovalController@mindexmy');      // 我发起的
+    //     Route::post('search/{key?}', 'ApprovalController@searchmindexmy');      // 我发起的
+    // });
+    // Route::get('mindexmying', 'ApprovalController@mindexmying');      // 我发起的
+    // Route::get('mindexmyed', 'ApprovalController@mindexmyed');      // 我发起的
+    // Route::group(['prefix' => 'mindexmyapproval'], function() {
+    //     Route::get('', 'ApprovalController@mindexmyapproval');      // 待我审批的
+    //     Route::post('search/{key?}', 'ApprovalController@searchmindexmyapproval');      // 待我审批的
+    // });
+    // Route::group(['prefix' => 'mindexmyapprovaled'], function() {
+    //     Route::get('', 'ApprovalController@mindexmyapprovaled');      // 我已审批的
+    //     Route::post('search/{key?}', 'ApprovalController@searchmindexmyapprovaled');      // 我已审批的
+    // });
+    // // Route::get('mindexmyapprovaled', 'ApprovalController@mindexmyapprovaled');      // 我已审批的
+
+    // Route::group(['prefix' => 'reports'], function() {
+    //     Route::get('paymentrequest', 'ApprovalreportsController@paymentrequest');
+    // });
+
+    // Route::resource('/', 'ApprovalController');
+    // Route::resource('approvaltypes', 'ApprovaltypesController');
+});
+
 Route::group(['middleware' => 'web'], function () {
     Route::auth();
 
