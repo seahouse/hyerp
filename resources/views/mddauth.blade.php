@@ -239,9 +239,9 @@
 				// }
 
 				console.log(DingTalkPC.ua);
-				// var uaJson = JSON.parse(DingTalkPC.ua);
-				// if (uaJson.isInDingTalk)
-				// 	$("#t1").attr("target", "_self");
+				var uaJson = JSON.parse(DingTalkPC.ua);
+				if (uaJson.isInDingTalk)
+					$("#t1").attr("target", "_self");
 	
 				// console.log('requestAuthCode');
 				DingTalkPC.runtime.permission.requestAuthCode({
