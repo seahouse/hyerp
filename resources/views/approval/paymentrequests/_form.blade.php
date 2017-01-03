@@ -182,7 +182,7 @@
         <a href="{{ URL::to('/purchase/purchaseorders/' . $paymentrequest->purchaseorder_hxold->id . '/detail_hxold') }}" target="_blank">入库价格明细</a>
     @endif
 @endif
-    <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail') }}" target="_blank" class="btn btn-default btn-sm">入库价格明细</a>
+    <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail') }}" target="_blank" class="btn btn-default btn-sm" id="t1">入库价格明细</a>
     <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail2') }}" target="_blank" class="btn btn-default btn-sm">入库价格明细2</a>
     <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail3') }}" target="_blank" class="btn btn-default btn-sm">入库价格明细3</a>
     <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail4') }}" target="_blank" class="btn btn-default btn-sm">入库明细</a>

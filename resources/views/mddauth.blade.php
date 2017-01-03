@@ -62,6 +62,8 @@
     <!--     $agent->languages():			<br> -->
     
     <!-- {{ $url }} -->
+
+    <a href="http://www.baidu.com" target="_blank" class="btn btn-default btn-sm" id="t1">百度</a>
 @endsection
 
 @if ($agent->isMobile())
@@ -236,6 +238,8 @@
 				// }
 
 				console.log(DingTalkPC.ua);
+				if (DingTalkPC.ua.isInDingTalk)
+					$("#t1").attr("target", "_self");
 	
 				// console.log('requestAuthCode');
 				DingTalkPC.runtime.permission.requestAuthCode({
