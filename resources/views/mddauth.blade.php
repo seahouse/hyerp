@@ -191,6 +191,7 @@
 	
 	<script type="text/javascript">
 		jQuery(document).ready(function(e) {
+			// $("#t1").attr("target", "_self");
 			DingTalkPC.config({
 			    // agentId: '13231599', // 必填，微应用ID
 			    // corpId: 'ding6ed55e00b5328f39',//必填，企业ID
@@ -238,7 +239,8 @@
 				// }
 
 				console.log(DingTalkPC.ua);
-				if (DingTalkPC.ua.isInDingTalk)
+				var uaJson = JSON.parse(DingTalkPC.ua);
+				if (uaJson.isInDingTalk)
 					$("#t1").attr("target", "_self");
 	
 				// console.log('requestAuthCode');
