@@ -130,7 +130,8 @@ class ViewComposerServiceProvider extends ServiceProvider
         });
 
         // teachingpointList
-        view()->composer(array('teaching.teachingadministrator.create', 'teaching.teachingadministrator.edit'), function($view) {
+        view()->composer(array('teaching.teachingadministrator.create', 'teaching.teachingadministrator.edit',
+            'teaching.teachingstudentimage.create', 'teaching.teachingstudentimage.edit'), function($view) {
             $view->with('teachingpointList', \App\Models\Teaching\Teachingpoint::orderby('id', 'asc')->lists('name', 'id'));
         });
     }

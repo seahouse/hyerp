@@ -15,12 +15,17 @@ class CreateTeachingstudentimagesTable extends Migration
         Schema::create('teachingstudentimages', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('image_id');
+            // $table->integer('image_id');
+			$table->string('name');
+			$table->string('path');
+			$table->string('descrip')->nullable();
             $table->integer('teachingpoint_id');
 
             $table->timestamps();
 
             $table->foreign('teachingpoint_id')->references('id')->on('teachingpoints');
+			
+			$table->unique('name');
         });
     }
 

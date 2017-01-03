@@ -234,6 +234,8 @@
 				// 	    onFail : function(err) {}
 				// 	});
 				// }
+
+				console.log(DingTalkPC.ua);
 	
 				// console.log('requestAuthCode');
 				DingTalkPC.runtime.permission.requestAuthCode({

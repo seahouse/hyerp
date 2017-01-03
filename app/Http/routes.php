@@ -309,16 +309,7 @@ Route::group(['prefix' => 'teaching', 'namespace' => 'Teaching', 'middleware' =>
     Route::resource('teachingadministrator', 'TeachingadministratorController');
     Route::resource('teachingstudentimage', 'TeachingstudentimageController');
 
-    // Route::group(['prefix' => 'reimbursementapprovals'], function() {
-    //     Route::get('{reimbursementid}/mcreate', 'ReimbursementapprovalsController@mcreate');
-    //     Route::post('mstore', 'ReimbursementapprovalsController@mstore');
-    // });
-    // Route::resource('reimbursementapprovals', 'ReimbursementapprovalsController');
-    // Route::group(['prefix' => 'paymentrequestapprovals'], function() {
-    //     Route::get('{paymentrequestid}/mcreate', 'PaymentrequestapprovalsController@mcreate');
-    //     Route::post('mstore', 'PaymentrequestapprovalsController@mstore');
-    // });
-    // Route::resource('paymentrequestapprovals', 'PaymentrequestapprovalsController');
+
     // Route::group(['prefix' => 'mindexmy'], function() {
     //     Route::get('', 'ApprovalController@mindexmy');      // 我发起的
     //     Route::post('search/{key?}', 'ApprovalController@searchmindexmy');      // 我发起的
