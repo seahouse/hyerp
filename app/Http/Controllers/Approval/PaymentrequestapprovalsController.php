@@ -55,7 +55,8 @@ class PaymentrequestapprovalsController extends Controller
             return "您无权限审批此审批单";
 
         $agent = new Agent();
-        return view('approval/paymentrequestapprovals/mcreate', compact('paymentrequest', 'agent'));
+        $config = DingTalkController::getconfig();
+        return view('approval/paymentrequestapprovals/mcreate', compact('paymentrequest', 'agent', 'config'));
     }
 
     /**
