@@ -11,7 +11,7 @@ class Receiptitem_hxold2 extends Model
 	protected $connection = 'sqlsrv';
 
 	public function item() {
-        return $this->hasOne('App\Models\Product\Itemp_hxold', 'goods_no', 'item_number');
+        return $this->hasOne('App\Models\Product\Itemp_hxold2', 'goods_no', 'item_number');
     }
 
     public function rwrecord() {

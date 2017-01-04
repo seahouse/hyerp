@@ -47,6 +47,7 @@
                             <tr>
                                 <th>数量</th>
                                 <th>单价</th>
+                                <th>单位</th>
                                 <th>金额</th>
                                 <th>供应商</th>
                                 <th>录入时间</th>
@@ -57,6 +58,7 @@
                             <tr @if (in_array($receiptitem->receipt_id, $purchaseorder->receiptorders->pluck('receipt_id')->toArray())) class="success" @endif>
                                 <td>{{ $receiptitem->quantity }}</td>
                                 <td>{{ $receiptitem->unitprice * 1.17 }}</td>
+                                <td>{{ $receiptitem->item->goods_unit_name }}</td>
                                 <td>{{ $receiptitem->amount * 1.17 }}</td>
                                 <td>
                                     @if (isset($receiptitem->rwrecord->supplier->shortname))
@@ -113,6 +115,7 @@
                         <tr>
                             <th>数量</th>
                             <th>单价</th>
+                            <th>单位</th>
                             <th>金额</th>
                             <th>供应商</th>
                             <th>录入时间</th>
@@ -123,6 +126,7 @@
                         <tr @if (in_array($receiptitem->receipt_id, $purchaseorder->receiptorders->pluck('receipt_id')->toArray())) class="success" @endif>
                             <td>{{ $receiptitem->quantity }}</td>
                             <td>{{ $receiptitem->unitprice * 1.17 }}</td>
+                            <td>{{ $receiptitem->item->goods_unit_name }}</td>
                             <td>{{ $receiptitem->amount * 1.17 }}</td>
                             <td>
                                 @if ($receiptitem->rwrecord->supplier->shortname == '') 
