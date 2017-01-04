@@ -529,7 +529,8 @@ class PaymentrequestsController extends Controller
         //
         $paymentrequest = Paymentrequest::findOrFail($id);
         $agent = new Agent();
-        return view('approval.paymentrequests.mshow', compact('paymentrequest', 'agent'));
+        $config = DingTalkController::getconfig();
+        return view('approval.paymentrequests.mshow', compact('paymentrequest', 'agent', 'config'));
     }
 
     /**

@@ -83,15 +83,16 @@
 @if (Agent::isDesktop())
     <script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
     <script type="text/javascript">
+        $("a").attr("target", "_self");
         jQuery(document).ready(function(e) {
-            // DingTalkPC.config({
-            //     agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
-            //     corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID
-            //     timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
-            //     nonceStr: "{!! array_get($config, 'nonceStr') !!}", // 必填，生成签名的随机串
-            //     signature: "{!! array_get($config, 'signature') !!}", // 必填，签名
-            //     jsApiList: [] // 必填，需要使用的jsapi列表
-            // });
+            DingTalkPC.config({
+                agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
+                corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID
+                timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
+                nonceStr: "{!! array_get($config, 'nonceStr') !!}", // 必填，生成签名的随机串
+                signature: "{!! array_get($config, 'signature') !!}", // 必填，签名
+                jsApiList: [] // 必填，需要使用的jsapi列表
+            });
 
             DingTalkPC.ready(function(res) {
                 if (DingTalkPC.ua.isInDingTalk)
