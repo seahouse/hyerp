@@ -69,37 +69,37 @@
     @endif
 @endsection
 
+
 @section('script')
     <script type="text/javascript">
-        // window.onbeforeprint = function() {
-        //     alert("aaaa");
-        // }
-
-        jQuery(document).ready(function(e) {
-            // 是个问题：如果是数字字符串，会把签名的0省了
-            // var order_number = String(@if (isset($reimbursement->order->number)) {{ $reimbursement->order->number }} @endif);
-            // $("#order_number").val($("#order_number2").val());
-            // $("#customer_name").val($("#customer_name2").val());
-            
+        jQuery(document).ready(function(e) {            
             $("#btnPreview").click(function() {
-                // bdhtml=window.document.body.innerHTML; 
-                // sprnstr="<!--startprint-->"; 
-                // eprnstr="<!--endprint-->"; 
-                // prnhtml=bdhtml.substr(bdhtml.indexOf(sprnstr)+17); 
-                // prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr)); 
-                // window.document.body.innerHTML=prnhtml; 
                 window.print();
+            });      
 
-                // window.document.body.innerHTML=bdhtml;
-            });
-
-            
-
-            // window.onafterprint = function() {
-            //     alert("bbbb");
-            // }
         });
     </script>
+
+@if (Agent::isDesktop())
+    <script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function(e) {
+            // DingTalkPC.config({
+            //     agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
+            //     corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID
+            //     timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
+            //     nonceStr: "{!! array_get($config, 'nonceStr') !!}", // 必填，生成签名的随机串
+            //     signature: "{!! array_get($config, 'signature') !!}", // 必填，签名
+            //     jsApiList: [] // 必填，需要使用的jsapi列表
+            // });
+
+            DingTalkPC.ready(function(res) {
+                if (DingTalkPC.ua.isInDingTalk)
+                    $("a").attr("target", "_self");
+            });
+        });
+    </script>
+@endif
 
     @yield('for_paymentrequestapprovals_create_script')
 @endsection
