@@ -15,6 +15,7 @@ use App\Models\Product\Itemtype;
 use App\Models\Inventory\Warehouse;
 use App\Models\Inventory\Itemsite;
 use App\Models\Product\Itemp_hxold;
+use App\Models\Product\Itemp_hxold2;
 use App\Models\Inventory\Receiptitem_hxold;
 
 class ItemsController extends Controller
@@ -32,6 +33,13 @@ class ItemsController extends Controller
 //         $itemclass = Item::find($id)->itemclass;
 //         $items = Item::paginate(5);
         return view('product.items.index', compact('items'));
+    }
+
+    public function indexp_hxold()
+    {
+        //
+        $items = Itemp_hxold::latest('add_time')->paginate(10);
+        return view('product.items.indexp_hxold', compact('items'));
     }
     
     /**
@@ -57,6 +65,16 @@ class ItemsController extends Controller
         
         $items = Item::latest('created_at')->where('item_number', 'like', '%' . $key . '%')->orWhere('item_name', 'like', '%' . $key . '%')->paginate(10);
         return view('product.items.index', compact('items'));
+    }
+
+    public function itemp_hxold_search(Request $request)
+    {
+        $key = $request->input('key');
+        if ($key == '')
+            return redirect('product/indexp_hxold');
+        
+        $items = Itemp_hxold::latest('add_time')->where('goods_no', 'like', '%' . $key . '%')->paginate(10);
+        return view('product.items.indexp_hxold', compact('items'));
     }
 
     /**
@@ -192,5 +210,33 @@ class ItemsController extends Controller
         $receiptitems = Receiptitem_hxold::where('item_number', $item_number)->paginate(10);
         // dd($receiptitems);
         return view('inventory.receiptitems.index', compact('receiptitems'));
+    }
+
+    public function sethxold2($id)
+    {
+        $itemp = Itemp_hxold::where('goods_id', $id)->firstOrFail();
+        $items2 = Itemp_hxold2::where('goods_name', $itemp->goods_name)->paginate(20);
+        
+        return view('product.items.sethxold2', compact('itemp', 'items2'));
+    }
+
+    public function sethxold2update($id, $id2)
+    {
+        $itemp = Itemp_hxold::where('goods_id', $id)->firstOrFail();
+        $itemp2 = Itemp_hxold2::where('goods_id', $id2)->firstOrFail();
+        $items2 = Itemp_hxold2::where('goods_name', $itemp->goods_name)->paginate(20);
+
+        $pdo = DB::connection('sqlsrv')->getPdo();
+        $stmt = $pdo->prepare("EXEC pSetGoodsNo2 ?,?");
+        $goods_no2 = $itemp2->goods_no;
+        $stmt->bindParam(1, $id);
+        $stmt->bindParam(2, $goods_no2);
+        $stmt->execute();
+        // $pdo->select('exec pSetGoodsNo2 ?,?', [$id, $itemp2->goods_no]);
+        
+        // DB::connection('sqlsrv')->select('exec pSetGoodsNo2 ?,?', [$id, $itemp2->goods_no]);
+        
+        return redirect('product/indexp_hxold/' . $itemp->goods_id . '/sethxold2');
+        // return view('product.items.sethxold2', compact('itemp', 'items2'));
     }
 }

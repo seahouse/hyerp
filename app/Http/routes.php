@@ -105,11 +105,20 @@ Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => [
     Route::post('items/search', 'ItemsController@search');
     Route::group(['prefix' => 'items'], function() {
         Route::get('mmindex', 'ItemsController@mmindex');
-        Route::get('mindex', 'ItemsController@mindex');
+        Route::get('mindex', 'ItemsController@mindex');        
     });
     Route::group(['prefix' => 'items/{id}'], function() {
         Route::get('receiptitems', 'ItemsController@receiptitems');
     });
+
+    // hxold itemp
+    Route::get('indexp_hxold', 'ItemsController@indexp_hxold');
+    Route::group(['prefix' => 'indexp_hxold'], function() {
+        Route::post('search', 'ItemsController@itemp_hxold_search');
+        Route::get('{id}/sethxold2', 'ItemsController@sethxold2');
+        Route::post('{id}/sethxold2/{id2}', 'ItemsController@sethxold2update');
+    });
+
     Route::resource('items', 'ItemsController');
     Route::resource('boms', 'BomsController');
     Route::get('bomitems/{id}/createitem', 'BomitemsController@createitem');
