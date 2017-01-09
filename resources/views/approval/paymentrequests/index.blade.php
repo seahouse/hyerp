@@ -34,7 +34,13 @@
                 <button type="submit" class="btn btn-default btn-sm">查找</button>
             </div>
             <div class="pull-right input-group-sm">
-                <input type="text" class="form-control" name="key" placeholder="支付对象、对应项目名称、申请人">    
+                <input type="text" class="form-control" name="key" placeholder="支付对象、对应项目名称、申请人">
+            </div>
+            <div class="pull-right input-group-sm">
+                {!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']); !!}
+            </div>
+            <div class="pull-right input-group-sm">
+                {!! Form::select('paymentstatus', ['0' => '已付款', '-1' => '未付款'], null, ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}
             </div>
         </form>
     </div> 
@@ -126,11 +132,13 @@
         </tbody>
 
     </table>
+
     @if (isset($key))
-        {!! $paymentrequests->setPath('/approval/paymentrequests')->appends(['key' => $key])->links() !!}
+        {!! $paymentrequests->setPath('/approval/paymentrequests')->appends(['key' => $key, 'approvalstatus' => $approvalstatus])->links() !!}
     @else
         {!! $paymentrequests->setPath('/approval/paymentrequests')->links() !!}
     @endif
+
     @else
     <div class="alert alert-warning alert-block">
         <i class="fa fa-warning"></i>

@@ -90,7 +90,11 @@
     <div id="tabid2" class="tabid" style='display:none;'>
         @if ($purchaseorder)
             @foreach ($itemps as $itemp)
-                <ul><li><strong>{{ $itemp->goods_name . '(型号: ' . $itemp->goods_spec . ')'}}</strong><br>
+                <ul><li><strong>{{ $itemp->goods_name . '(型号: ' . $itemp->goods_spec . ')'}}</strong>
+{{--
+                <a href="{{ url('/product/indexp_hxold/' . $itemp->goods_id . '/sethxold2') }}" target="_blank" class="btn btn-default btn-sm">重新对应</a>
+--}}
+                <br>
 
                 历史最低价: {{ $itemp->receiptitems->min('unitprice') * 1.17 }}<br>
                 历史均价: 

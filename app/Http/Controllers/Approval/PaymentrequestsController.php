@@ -13,7 +13,7 @@ use App\Models\Approval\Approvaltype;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Paymentrequestattachment;
 use App\Models\Purchase\Vendinfo_hxold;
-use Auth, DB, Excel, PDF;
+use Auth, DB, Excel, PDF, Log;
 use Dompdf\Dompdf;
 use Jenssegers\Agent\Agent;
 use App\Models\Product\Itemp_hxold;
@@ -35,18 +35,22 @@ class PaymentrequestsController extends Controller
     {
         //
         $request = request();
-        if ($request->has('key'))
-            $paymentrequests = $this->search2($request->input('key'));
+        $key = $request->input('key', '');
+        $approvalstatus = $request->input('approvalstatus', '');
+        if (null !== request('key'))
+            $paymentrequests = $this->searchrequest($request);
         else
             $paymentrequests = Paymentrequest::latest('created_at')->paginate(10);
 
-        if ($request->has('key'))
+        // if ($request->has('key'))
+        if (null !== request('key'))
         {
-            $key = $request->input('key');
-            return view('approval.paymentrequests.index', compact('paymentrequests', 'key'));
+            return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'approvalstatus'));
         }
         else
+        {
             return view('approval.paymentrequests.index', compact('paymentrequests'));
+        }
     }
     
 
@@ -56,16 +60,41 @@ class PaymentrequestsController extends Controller
         // dd($request->header('origin'));
         // dd($request->header('referer'));
         // dd($request->server('HTTP_REFERER'));
-        $key = $request->input('key');
-        if ($key == '')
-            return redirect('/approval/paymentrequests');
 
-        $paymentrequests = $this->search2($key);
-        
-        // $referer_url = substr($request->header('referer'), strlen($request->header('origin')));
-        // dd($referer_url);
-        return view('approval.paymentrequests.index', compact('paymentrequests', 'key'));
-        // return view($referer_url, compact('paymentrequests', 'key'));
+        // $key = $request->input('key');
+        // $approvalstatus = $request->input('approvalstatus');
+
+        // $supplier_ids = [];
+        // $purchaseorder_ids = [];
+        // if (strlen($key) > 0)
+        // {
+        //     $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+        //     $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
+        // }
+
+        // $query = Paymentrequest::latest('created_at');
+
+        // if (strlen($key) > 0)
+        // {
+        //     $query->whereIn('supplier_id', $supplier_ids)
+        //         ->orWhereIn('pohead_id', $purchaseorder_ids);
+        // }
+
+        // if ($approvalstatus <> '')
+        // {
+        //     if ($approvalstatus == "1")
+        //         $query->where('approversetting_id', '>', '0');
+        //     else
+        //         $query->where('approversetting_id', $approvalstatus);
+        // }
+
+        // $paymentrequests = $query->paginate(10);
+
+        $key = $request->input('key');
+        $approvalstatus = $request->input('approvalstatus');
+        $paymentrequests = $this->searchrequest($request);
+
+        return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'approvalstatus'));
     }
 
     // 手机端的搜索，仅搜索自己权限的数据
@@ -108,6 +137,55 @@ class PaymentrequestsController extends Controller
             ->select('paymentrequests.*')
             ->paginate(10);
         // ->where('item_number', 'like', '%' . $key . '%')->orWhere('item_name', 'like', '%' . $key . '%')->paginate(10);
+
+        return $paymentrequests;
+    }
+
+    public function searchrequest($request)
+    {
+        $key = $request->input('key');
+        $approvalstatus = $request->input('approvalstatus');        
+
+        $supplier_ids = [];
+        $purchaseorder_ids = [];
+        if (strlen($key) > 0)
+        {
+            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
+        }
+
+        $query = Paymentrequest::latest('created_at');
+
+        if (strlen($key) > 0)
+        {
+            $query->whereIn('supplier_id', $supplier_ids)
+                ->orWhereIn('pohead_id', $purchaseorder_ids);
+        }
+
+        if ($approvalstatus <> '')
+        {
+            if ($approvalstatus == "1")
+                $query->where('approversetting_id', '>', '0');
+            else
+                $query->where('approversetting_id', $approvalstatus);
+        }
+
+        // payment status
+        if ($request->has('paymentstatus'))
+        {
+            $paymentstatus = $request->input('paymentstatus');
+            if ($paymentstatus == 0)
+            {
+                $query->where('approversetting_id', '0');
+                $query->leftJoin('paymentrequestapprovals', 'paymentrequestapprovals.paymentrequest_id', '=', 'paymentrequests.id')
+                    ->select('paymentrequests.id', DB::raw('max(paymentrequestapprovals.created_at)'))
+                    ->groupBy('paymentrequests.id')
+                    ->havingRaw('max(paymentrequestapprovals.created_at) < now()');
+            }
+        }
+
+
+        $paymentrequests = $query->select('paymentrequests.*')->paginate(10);
 
         return $paymentrequests;
     }
