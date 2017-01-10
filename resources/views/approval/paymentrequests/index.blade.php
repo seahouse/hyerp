@@ -148,7 +148,7 @@
     </table>
 
     @if (isset($key))
-        {!! $paymentrequests->setPath('/approval/paymentrequests')->appends(['key' => $key, 'approvalstatus' => $approvalstatus])->links() !!}
+        {!! $paymentrequests->setPath('/approval/paymentrequests')->appends(['key' => $key, 'approvalstatus' => $approvalstatus, 'paymentstatus' => $paymentstatus])->links() !!}
     @else
         {!! $paymentrequests->setPath('/approval/paymentrequests')->links() !!}
     @endif

@@ -204,6 +204,24 @@ class PaymentrequestsController extends Controller
                 //     ->groupBy('paymentrequests.id')
                 //     ->havingRaw('max(paymentrequestapprovals.created_at) < now()');
             }
+            elseif ($paymentstatus == -1)
+            {
+                $query->where('approversetting_id', '0');
+
+                $paymentrequestids = [];
+                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
+                    foreach ($paymentrequests as $paymentrequest) {
+                        # code...
+                        if (isset($paymentrequest->purchaseorder_hxold->payments))
+                        {
+                            if ($paymentrequest->paymentrequestapprovals->max('created_at') > $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
+                                array_push($paymentrequestids, $paymentrequest->id);
+                        }
+                    }
+                });
+
+                $query->whereIn('id', $paymentrequestids);
+            }
         }
 
 
