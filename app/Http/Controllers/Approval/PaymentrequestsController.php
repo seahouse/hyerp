@@ -37,6 +37,7 @@ class PaymentrequestsController extends Controller
         $request = request();
         $key = $request->input('key', '');
         $approvalstatus = $request->input('approvalstatus', '');
+        $paymentstatus = $request->input('paymentstatus');
         if (null !== request('key'))
             $paymentrequests = $this->searchrequest($request);
         else
@@ -46,7 +47,7 @@ class PaymentrequestsController extends Controller
         // use request('key') for null compare, not $request->has('key')
         if (null !== request('key'))        
         {
-            return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'approvalstatus'));
+            return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'approvalstatus', 'paymentstatus'));
         }
         else
         {
@@ -93,9 +94,10 @@ class PaymentrequestsController extends Controller
 
         $key = $request->input('key');
         $approvalstatus = $request->input('approvalstatus');
+        $paymentstatus = $request->input('paymentstatus');
         $paymentrequests = $this->searchrequest($request);
 
-        return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'approvalstatus'));
+        return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'approvalstatus', 'paymentstatus'));
     }
 
     // 手机端的搜索，仅搜索自己权限的数据
