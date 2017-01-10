@@ -43,7 +43,8 @@ class PaymentrequestsController extends Controller
             $paymentrequests = Paymentrequest::latest('created_at')->paginate(10);
 
         // if ($request->has('key'))
-        if (null !== request('key'))
+        // use request('key') for null compare, not $request->has('key')
+        if (null !== request('key'))        
         {
             return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'approvalstatus'));
         }
@@ -171,21 +172,45 @@ class PaymentrequestsController extends Controller
         }
 
         // payment status
-        // if ($request->has('paymentstatus'))
-        // {
-        //     $paymentstatus = $request->input('paymentstatus');
-        //     if ($paymentstatus == 0)
-        //     {
-        //         $query->where('approversetting_id', '0');
-        //         $query->leftJoin('paymentrequestapprovals', 'paymentrequestapprovals.paymentrequest_id', '=', 'paymentrequests.id')
-        //             ->select('paymentrequests.id', DB::raw('max(paymentrequestapprovals.created_at)'))
-        //             ->groupBy('paymentrequests.id')
-        //             ->havingRaw('max(paymentrequestapprovals.created_at) < now()');
-        //     }
-        // }
+        if ($request->has('paymentstatus'))
+        {
+            $paymentstatus = $request->input('paymentstatus');
+            if ($paymentstatus == 0)
+            {
+                $query->where('approversetting_id', '0');
+
+                $paymentrequestids = [];
+                $query->chunk(100, function($paymentrequests) {
+                    foreach ($paymentrequests as $paymentrequest) {
+                        # code...
+                        if (isset($paymentrequest->purchaseorder_hxold->payments))
+                        {
+                            if ($paymentrequest->paymentrequestapprovals->max('created_at') < $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
+                                array_push($paymentrequestids, $paymentrequest->id);
+                        }
+
+                    }
+                });
+
+                // dd($paymentrequestids);
+                $query->whereIn('id', $paymentrequestids);
+
+                // $query->whereHas('paymentrequestapprovals', function($query) {
+                //     $query->from('sqlsrv.vpayments')->whereRaw('max(create_date) > max(paymentrequestapprovals.created_at)');
+                // });
+
+                // $query->leftJoin('paymentrequestapprovals', 'paymentrequestapprovals.paymentrequest_id', '=', 'paymentrequests.id')
+                //     ->leftJoin(DB::connection('sqlsrv')->table('vpurchaseorder'), 'vpurchaseorder.id', '=', 'paymentrequests.pohead_id')
+                //     ->select('paymentrequests.id', DB::raw('max(paymentrequestapprovals.created_at)'))
+                //     ->groupBy('paymentrequests.id')
+                //     ->havingRaw('max(paymentrequestapprovals.created_at) < now()');
+            }
+        }
 
 
-        $paymentrequests = $query->select('paymentrequests.*')->paginate(10);
+        $paymentrequests = $query->select('paymentrequests.*')
+            ->paginate(10);
+        dd($paymentrequests);
 
         return $paymentrequests;
     }
