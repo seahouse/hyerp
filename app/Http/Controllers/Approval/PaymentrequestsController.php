@@ -180,7 +180,7 @@ class PaymentrequestsController extends Controller
                 $query->where('approversetting_id', '0');
 
                 $paymentrequestids = [];
-                $query->chunk(100, function($paymentrequests) {
+                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
                     foreach ($paymentrequests as $paymentrequest) {
                         # code...
                         if (isset($paymentrequest->purchaseorder_hxold->payments))
@@ -188,7 +188,6 @@ class PaymentrequestsController extends Controller
                             if ($paymentrequest->paymentrequestapprovals->max('created_at') < $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
                                 array_push($paymentrequestids, $paymentrequest->id);
                         }
-
                     }
                 });
 
@@ -210,7 +209,7 @@ class PaymentrequestsController extends Controller
 
         $paymentrequests = $query->select('paymentrequests.*')
             ->paginate(10);
-        dd($paymentrequests);
+        // dd($paymentrequests);
 
         return $paymentrequests;
     }
