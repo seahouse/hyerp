@@ -171,18 +171,18 @@ class PaymentrequestsController extends Controller
         }
 
         // payment status
-        if ($request->has('paymentstatus'))
-        {
-            $paymentstatus = $request->input('paymentstatus');
-            if ($paymentstatus == 0)
-            {
-                $query->where('approversetting_id', '0');
-                $query->leftJoin('paymentrequestapprovals', 'paymentrequestapprovals.paymentrequest_id', '=', 'paymentrequests.id')
-                    ->select('paymentrequests.id', DB::raw('max(paymentrequestapprovals.created_at)'))
-                    ->groupBy('paymentrequests.id')
-                    ->havingRaw('max(paymentrequestapprovals.created_at) < now()');
-            }
-        }
+        // if ($request->has('paymentstatus'))
+        // {
+        //     $paymentstatus = $request->input('paymentstatus');
+        //     if ($paymentstatus == 0)
+        //     {
+        //         $query->where('approversetting_id', '0');
+        //         $query->leftJoin('paymentrequestapprovals', 'paymentrequestapprovals.paymentrequest_id', '=', 'paymentrequests.id')
+        //             ->select('paymentrequests.id', DB::raw('max(paymentrequestapprovals.created_at)'))
+        //             ->groupBy('paymentrequests.id')
+        //             ->havingRaw('max(paymentrequestapprovals.created_at) < now()');
+        //     }
+        // }
 
 
         $paymentrequests = $query->select('paymentrequests.*')->paginate(10);

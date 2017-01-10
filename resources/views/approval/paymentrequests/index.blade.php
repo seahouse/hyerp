@@ -39,9 +39,11 @@
             <div class="pull-right input-group-sm">
                 {!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']); !!}
             </div>
+{{--
             <div class="pull-right input-group-sm">
                 {!! Form::select('paymentstatus', ['0' => '已付款', '-1' => '未付款'], null, ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}
             </div>
+--}}
         </form>
     </div> 
 
@@ -129,6 +131,18 @@
                     @endif
                 </tr>
             @endforeach
+
+            <tr class="info">
+                <td>合计</td>
+                <td></td>
+                <td>{{ $paymentrequests->sum('amount') }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
         </tbody>
 
     </table>
