@@ -161,8 +161,16 @@
                 <td></td>
                 <td>{{ $paymentrequests->sum('amount') }}</td>
                 <td></td>
-                <td></td>
-                <td></td>
+                <td>
+                @if (Auth::user()->email == "admin@admin.com")
+                {{ $purchaseorders->sum('amount_ticketed') }}
+                @endif
+                </td>
+                <td>
+                @if (Auth::user()->email == "admin@admin.com")
+                    {{ $purchaseorders->sum('amount') }}
+                @endif
+                </td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -175,7 +183,9 @@
         {!! $paymentrequests->setPath('/approval/paymentrequests')->appends([
             'key' => $key, 
             'approvalstatus' => $inputs['approvalstatus'], 
-            'paymentstatus' => $inputs['paymentstatus']
+            'paymentstatus' => $inputs['paymentstatus'],
+            'approvaldatestart' => $inputs['approvaldatestart'],
+            'approvaldateend' => $inputs['approvaldateend']
         ])->links() !!}
     @else
         {!! $paymentrequests->setPath('/approval/paymentrequests')->links() !!}

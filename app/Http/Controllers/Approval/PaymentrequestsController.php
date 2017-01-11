@@ -20,6 +20,7 @@ use App\Models\Product\Itemp_hxold;
 use App\Models\Product\Itemp_hxold2;
 use App\Models\Inventory\Receiptorder_hxold;
 use App\Models\Inventory\Receiptitem_hxold;
+use App\Models\Purchase\Purchaseorder_hxold;
 
 class PaymentrequestsController extends Controller
 {
@@ -43,16 +44,17 @@ class PaymentrequestsController extends Controller
             $paymentrequests = $this->searchrequest($request);
         else
             $paymentrequests = Paymentrequest::latest('created_at')->paginate(10);
+        $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
 
         // if ($request->has('key'))
         // use request('key') for null compare, not $request->has('key')
         if (null !== request('key'))        
         {
-            return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'inputs'));
+            return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'inputs', 'purchaseorders'));
         }
         else
         {
-            return view('approval.paymentrequests.index', compact('paymentrequests'));
+            return view('approval.paymentrequests.index', compact('paymentrequests', 'purchaseorders'));
         }
     }
     
@@ -98,8 +100,9 @@ class PaymentrequestsController extends Controller
         $paymentstatus = $request->input('paymentstatus');
         $inputs = $request->all();
         $paymentrequests = $this->searchrequest($request);
+        $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
 
-        return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'inputs'));
+        return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'inputs', 'purchaseorders'));
     }
 
     // 手机端的搜索，仅搜索自己权限的数据
@@ -177,13 +180,13 @@ class PaymentrequestsController extends Controller
                 $query->where('approversetting_id', $approvalstatus);
         }
 
-        // if ($request->has('approvaldatestart') && $request->has('approvaldateend'))
-        // {
-        //     $query->leftJoin('paymentrequestapprovals', 'paymentrequestapprovals.paymentrequest_id', '=', 'paymentrequests.id')
-        //         // ->select('paymentrequests.id', DB::raw('max(paymentrequestapprovals.created_at)'))
-        //         ->groupBy('paymentrequests.id')
-        //         ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'::timestamp + interval \'1D\'');
-        // }
+        if ($request->has('approvaldatestart') && $request->has('approvaldateend'))
+        {
+            $query->leftJoin('paymentrequestapprovals', 'paymentrequestapprovals.paymentrequest_id', '=', 'paymentrequests.id')
+                // ->select('paymentrequests.id', DB::raw('max(paymentrequestapprovals.created_at)'))
+                ->groupBy('paymentrequests.id')
+                ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'::timestamp + interval \'1D\'');
+        }
 
         // payment status
         // because need search hxold database, so select this condition last.
@@ -242,7 +245,10 @@ class PaymentrequestsController extends Controller
 
         $paymentrequests = $query->select('paymentrequests.*')
             ->paginate(10);
-        // dd($paymentrequests);
+        // dd($paymentrequests->pluck('pohead_id'));
+
+        // $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
+        // dd($purchaseorders->pluck('id'));
 
         return $paymentrequests;
     }
