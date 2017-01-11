@@ -38,6 +38,7 @@ class PaymentrequestsController extends Controller
         $key = $request->input('key', '');
         $approvalstatus = $request->input('approvalstatus', '');
         $paymentstatus = $request->input('paymentstatus');
+        $inputs = $request->all();
         if (null !== request('key'))
             $paymentrequests = $this->searchrequest($request);
         else
@@ -47,7 +48,7 @@ class PaymentrequestsController extends Controller
         // use request('key') for null compare, not $request->has('key')
         if (null !== request('key'))        
         {
-            return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'approvalstatus', 'paymentstatus'));
+            return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'inputs'));
         }
         else
         {
@@ -95,9 +96,10 @@ class PaymentrequestsController extends Controller
         $key = $request->input('key');
         $approvalstatus = $request->input('approvalstatus');
         $paymentstatus = $request->input('paymentstatus');
+        $inputs = $request->all();
         $paymentrequests = $this->searchrequest($request);
 
-        return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'approvalstatus', 'paymentstatus'));
+        return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'inputs'));
     }
 
     // 手机端的搜索，仅搜索自己权限的数据
@@ -161,8 +163,10 @@ class PaymentrequestsController extends Controller
 
         if (strlen($key) > 0)
         {
-            $query->whereIn('supplier_id', $supplier_ids)
-                ->orWhereIn('pohead_id', $purchaseorder_ids);
+            $query->where(function($query) use ($supplier_ids, $purchaseorder_ids) {
+                $query->whereIn('supplier_id', $supplier_ids)
+                    ->orWhereIn('pohead_id', $purchaseorder_ids);
+            });
         }
 
         if ($approvalstatus <> '')
@@ -173,7 +177,16 @@ class PaymentrequestsController extends Controller
                 $query->where('approversetting_id', $approvalstatus);
         }
 
+        // if ($request->has('approvaldatestart') && $request->has('approvaldateend'))
+        // {
+        //     $query->leftJoin('paymentrequestapprovals', 'paymentrequestapprovals.paymentrequest_id', '=', 'paymentrequests.id')
+        //         // ->select('paymentrequests.id', DB::raw('max(paymentrequestapprovals.created_at)'))
+        //         ->groupBy('paymentrequests.id')
+        //         ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'::timestamp + interval \'1D\'');
+        // }
+
         // payment status
+        // because need search hxold database, so select this condition last.
         if ($request->has('paymentstatus'))
         {
             $paymentstatus = $request->input('paymentstatus');

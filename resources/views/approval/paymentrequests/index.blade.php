@@ -28,6 +28,22 @@
             <button class="btn btn-default btn-sm" id="btnExport">导出</button>
         </div>
 --}}
+        {!! Form::open(['url' => '/approval/paymentrequests/search', 'class' => 'pull-right form-inline']) !!}
+            <div class="form-group-sm">
+                @if (Auth::user()->email == "admin@admin.com")
+                {!! Form::label('approvaldatelabel', '审批时间:', ['class' => 'control-label']); !!}
+                {!! Form::date('approvaldatestart', null, ['class' => 'form-control']); !!}
+                {!! Form::label('approvaldatelabelto', '-', ['class' => 'control-label']); !!}
+                {!! Form::date('approvaldateend', null, ['class' => 'form-control']); !!}
+                @endif
+
+                {!! Form::select('paymentstatus', ['0' => '已付款', '-1' => '未付款'], null, ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}
+                {!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']); !!}
+                {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称、申请人']); !!}
+                {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']); !!}
+            </div>
+        {!! Form::close() !!}
+{{--
         <form class="pull-right" action="/approval/paymentrequests/search" method="post">
             {!! csrf_field() !!}
             <div class="pull-right">
@@ -39,12 +55,20 @@
             <div class="pull-right input-group-sm">
                 {!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']); !!}
             </div>
-            @if (Auth::user()->email == "admin@admin.com")
             <div class="pull-right input-group-sm">
                 {!! Form::select('paymentstatus', ['0' => '已付款', '-1' => '未付款'], null, ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}
             </div>
+            @if (Auth::user()->email == "admin@admin.com")
+            <div class="pull-right input-group-sm">                
+                
+                {!! Form::date('approvaldatestart', \Carbon\Carbon::now(), ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}
+                
+            </div>
+            {!! Form::label('approvaldatelabel', '审批时间:', ['class' => 'control-label pull-right']); !!}
+                
             @endif
         </form>
+--}}
     </div> 
 
     
@@ -148,7 +172,11 @@
     </table>
 
     @if (isset($key))
-        {!! $paymentrequests->setPath('/approval/paymentrequests')->appends(['key' => $key, 'approvalstatus' => $approvalstatus, 'paymentstatus' => $paymentstatus])->links() !!}
+        {!! $paymentrequests->setPath('/approval/paymentrequests')->appends([
+            'key' => $key, 
+            'approvalstatus' => $inputs['approvalstatus'], 
+            'paymentstatus' => $inputs['paymentstatus']
+        ])->links() !!}
     @else
         {!! $paymentrequests->setPath('/approval/paymentrequests')->links() !!}
     @endif
