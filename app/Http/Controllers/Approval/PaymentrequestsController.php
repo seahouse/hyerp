@@ -21,6 +21,7 @@ use App\Models\Product\Itemp_hxold2;
 use App\Models\Inventory\Receiptorder_hxold;
 use App\Models\Inventory\Receiptitem_hxold;
 use App\Models\Purchase\Purchaseorder_hxold;
+use App\Models\System\Employee_hxold_t;
 
 class PaymentrequestsController extends Controller
 {
@@ -35,6 +36,8 @@ class PaymentrequestsController extends Controller
     public function index()
     {
         //
+        // dd(Employee_hxold_t::all()->first());
+
         $request = request();
         $key = $request->input('key', '');
         $approvalstatus = $request->input('approvalstatus', '');
@@ -186,6 +189,12 @@ class PaymentrequestsController extends Controller
                 // ->select('paymentrequests.id', DB::raw('max(paymentrequestapprovals.created_at)'))
                 ->groupBy('paymentrequests.id')
                 ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'::timestamp + interval \'1D\'');
+        }
+
+        // paymentmethod
+        if ($request->has('paymentmethod'))
+        {
+            $query->where('paymentmethod', $request->input('paymentmethod'));
         }
 
         // payment status

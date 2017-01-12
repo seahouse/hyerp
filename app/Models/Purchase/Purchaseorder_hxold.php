@@ -29,4 +29,8 @@ class Purchaseorder_hxold extends Model
     public function receiptorders() {
         return $this->hasMany('App\Models\Inventory\Receiptorder_hxold', 'pohead_id', 'id');
     }
+
+    public function vendinfo() {
+        return $this->hasOne('App\Models\Purchase\Vendinfo_hxold', 'id', 'vendinfo_id');
+    }
 }

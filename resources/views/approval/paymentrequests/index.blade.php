@@ -35,6 +35,8 @@
                 {!! Form::date('approvaldatestart', null, ['class' => 'form-control']); !!}
                 {!! Form::label('approvaldatelabelto', '-', ['class' => 'control-label']); !!}
                 {!! Form::date('approvaldateend', null, ['class' => 'form-control']); !!}
+
+                {!! Form::select('paymentmethod', ['支票' => '支票', '贷记' => '贷记', '电汇' => '电汇', '汇票' => '汇票', '现金' => '现金', '银行卡' => '银行卡', '其他' => '其他'], null, ['class' => 'form-control', 'placeholder' => '--付款方式--']) !!}
                 @endif
 
                 {!! Form::select('paymentstatus', ['0' => '已付款', '-1' => '未付款'], null, ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}
@@ -147,10 +149,22 @@
                     </td>
                     @if (Agent::isDesktop())
                     <td>
-{{--                        <a href="{{ URL::to('/approval/paymentrequests/'.$paymentrequest->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>
+@if (Auth::user()->email == "admin@admin.com")
+                        @if ($paymentrequest->approversetting_id === 0)
+                            @if (isset($paymentrequest->purchaseorder_hxold->payments))
+                                @if ($paymentrequest->paymentrequestapprovals->max('created_at') > $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
+                                    <a href="{{ url('/purchase/purchaseorders/' . $paymentrequest->pohead_id . '/payments/create_hxold') }}" target="_blank" class="btn btn-success btn-sm">付款</a>
+                                @endif
+                            @endif
+                        @endif
+                        
+@endif
+{{--                        
+                        <a href="{{ URL::to('/approval/paymentrequests/'.$paymentrequest->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>
                         {!! Form::open(array('route' => array('approval.paymentrequests.destroy', $paymentrequest->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
                             {!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}
-                        {!! Form::close() !!} --}}
+                        {!! Form::close() !!} 
+--}}
                     </td>
                     @endif
                 </tr>

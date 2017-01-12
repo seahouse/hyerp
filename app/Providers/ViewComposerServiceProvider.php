@@ -125,7 +125,7 @@ class ViewComposerServiceProvider extends ServiceProvider
 
         // userList
         view()->composer(array('approval.approversettings.create', 'approval.approversettings.edit', 
-            'teaching.teachingadministrator.create', 'teaching.teachingadministrator.edit'), function($view) {
+            'teaching.teachingadministrator.create', 'teaching.teachingadministrator.edit', 'purchase.payments.create_hxold'), function($view) {
             $view->with('userList', \App\Models\System\User::orderby('id', 'asc')->lists('name', 'id'));
         });
 
@@ -133,6 +133,11 @@ class ViewComposerServiceProvider extends ServiceProvider
         view()->composer(array('teaching.teachingadministrator.create', 'teaching.teachingadministrator.edit',
             'teaching.teachingstudentimage.create', 'teaching.teachingstudentimage.edit'), function($view) {
             $view->with('teachingpointList', \App\Models\Teaching\Teachingpoint::orderby('id', 'asc')->lists('name', 'id'));
+        });
+
+        // payerList_hxold, 管理层 和 采购部
+        view()->composer(array('purchase.payments.create_hxold', 'purchase.payments.edit_hxold'), function($view) {
+            $view->with('payerList_hxold', \App\Models\System\Employee_hxold::orderby('id', 'asc')->where('dept_id', 10)->orWhere('dept_id', 11)->lists('name', 'id'));
         });
     }
 

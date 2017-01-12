@@ -11,6 +11,8 @@ use App\Models\Purchase\Purchaseorder;
 use App\Http\Requests\Purchase\PaymentRequest;
 use Request;
 use App\Models\Purchase\Vendinfo;
+use App\Models\Purchase\Purchaseorder_hxold;
+use App\Models\Purchase\Payment_hxold_t;
 
 class PaymentsController extends Controller
 {
@@ -38,6 +40,13 @@ class PaymentsController extends Controller
         return view('purchase.payments.create', compact('purchaseorder'));
     }
 
+    public function create_hxold($poheadid)
+    {
+        //
+        $purchaseorder = Purchaseorder_hxold::findOrFail($poheadid);
+        return view('purchase.payments.create_hxold', compact('purchaseorder'));
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -61,6 +70,16 @@ class PaymentsController extends Controller
         $input = Request::all();
         Payment::create($input);
         return redirect('purchase/purchaseorders/' . $poheadId . '/payments');
+    }
+
+    public function store_hxold(Request $request, $poheadid)
+    {
+        //        
+        $input = Request::all();
+        $input['录入时间'] = \Carbon\Carbon::now();
+        $payment = Payment_hxold_t::create($input);
+        // return redirect('purchase/purchaseorders/' . $poheadid . '/payments');
+        return '付款成功。';
     }
 
     /**
