@@ -3,7 +3,7 @@
 @if ($agent->isDesktop())    
     <div class="panel-body">
 @if (Auth::user()->email == "admin@admin.com")
-        <a href="{{url('/approval/paymentrequests/' . $paymentrequest->id . '/printpage')}}" target="_blank" class="btn btn-default btn-sm pull-right">打印页面</a>
+        <a href="{{url('/approval/paymentrequests/' . $paymentrequest->id . '/printpage')}}" target="_blank" class="btn btn-default btn-sm pull-right">打印版页面</a>
 @endif
         <form class="pull-right" action="/approval/paymentrequests/exportitem/{{ $paymentrequest->id }}" method="post">
             {!! csrf_field() !!}
