@@ -165,7 +165,7 @@ class PaymentrequestsController extends Controller
             $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
         }
 
-        $query = Paymentrequest::latest('created_at');
+        $query = Paymentrequest::latest('paymentrequests.created_at');
 
         if (strlen($key) > 0)
         {
@@ -185,10 +185,30 @@ class PaymentrequestsController extends Controller
 
         if ($request->has('approvaldatestart') && $request->has('approvaldateend'))
         {
-            $query->leftJoin('paymentrequestapprovals', 'paymentrequestapprovals.paymentrequest_id', '=', 'paymentrequests.id')
+            $paymentrequestids = DB::table('paymentrequestapprovals')
+                ->select('paymentrequest_id')
+                ->groupBy('paymentrequest_id')
+                ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'::timestamp + interval \'1D\'')
+                ->pluck('paymentrequest_id');
+            $query->whereIn('id', $paymentrequestids);
+
+            // $query->leftJoin('paymentrequestapprovals', 'paymentrequestapprovals.paymentrequest_id', '=', 'paymentrequests.id')
+            //     // ->select('paymentrequests.id', DB::raw('max(paymentrequestapprovals.created_at)'))
+            //     ->groupBy('paymentrequests.id')
+            //     ->havingRaw('max(paymentrequestapprovals.created_at1) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'::timestamp + interval \'1D\'');
+
+            // $query->leftJoin('paymentrequestapprovals', function($join) use ($request) {
+            //     $join->on('paymentrequestapprovals.paymentrequest_id', '=', 'paymentrequests.id')
+            //         ->where('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'::timestamp + interval \'1D\'');
+
+            // });
+
+            // ->groupBy('paymentrequests.id')
+            //         ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'::timestamp + interval \'1D\'');
                 // ->select('paymentrequests.id', DB::raw('max(paymentrequestapprovals.created_at)'))
-                ->groupBy('paymentrequests.id')
-                ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'::timestamp + interval \'1D\'');
+                
+                
+
         }
 
         // paymentmethod
