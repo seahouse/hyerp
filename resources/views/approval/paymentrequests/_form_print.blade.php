@@ -343,8 +343,8 @@
 --}}
 
 <div class="form-group">
-    {!! Form::label('descrip', '说明:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
-    <div class='col-xs-8 col-sm-10'>
+    {!! Form::label('descrip', '说明:', ['class' => 'col-xs-2 col-sm-2 control-label' ]) !!}
+    <div class='col-xs-10 col-sm-10'>
     {!! Form::textarea('descrip', null, ['class' => 'form-control', $attr, 'rows' => 1]) !!}
     </div>
 </div>
