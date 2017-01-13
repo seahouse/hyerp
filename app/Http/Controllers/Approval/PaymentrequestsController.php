@@ -965,4 +965,12 @@ class PaymentrequestsController extends Controller
 
         return view('approval.paymentrequests.mrecvdetail4', compact('purchaseorder', 'itemps2', 'itemps'));
     }
+
+    public function printpage($id)
+    {
+        $paymentrequest = Paymentrequest::findOrFail($id);
+        $agent = new Agent();
+        $config = DingTalkController::getconfig();
+        return view('approval.paymentrequests.show_print', compact('paymentrequest', 'agent', 'config'));
+    }
 }

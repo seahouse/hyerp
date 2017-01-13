@@ -2,9 +2,6 @@
 
 @if ($agent->isDesktop())    
     <div class="panel-body">
-@if (Auth::user()->email == "admin@admin.com")
-        <a href="{{url('/approval/paymentrequests/' . $paymentrequest->id . '/printpage')}}" target="_blank" class="btn btn-default btn-sm pull-right">打印页面</a>
-@endif
         <form class="pull-right" action="/approval/paymentrequests/exportitem/{{ $paymentrequest->id }}" method="post">
             {!! csrf_field() !!}
             <div class="pull-right">
@@ -17,7 +14,7 @@
 
 <!--startprint-->
     {!! Form::model($paymentrequest, ['class' => 'form-horizontal']) !!}
-        @include('approval.paymentrequests._form', 
+        @include('approval.paymentrequests._form_print', 
             [
                 'submitButtonText' => '提交', 
                 'supplier_name' => null,
@@ -46,7 +43,7 @@
     {!! Form::close() !!}
 
     {!! Form::model($paymentrequest, ['class' => 'form-horizontal']) !!}
-        @include('approval.paymentrequests._approvals', 
+        @include('approval.paymentrequests._approvals_print', 
             [
                 'attr' => 'readonly',
                 'attrdisable' => 'disabled',

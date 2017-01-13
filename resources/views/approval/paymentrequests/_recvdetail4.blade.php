@@ -49,7 +49,7 @@
                                 <th>单价</th>
                                 <th>单位</th>
                                 <th>金额</th>
-                                <th>供应商</th>
+                                <th style="min-width: 80px">供应商</th>
                                 <th>录入时间</th>
                             </tr>
                         </thead>
@@ -57,9 +57,9 @@
                             @foreach ($itemp->receiptitems as $receiptitem)
                             <tr @if (in_array($receiptitem->receipt_id, $purchaseorder->receiptorders->pluck('receipt_id')->toArray())) class="success" @endif>
                                 <td>{{ $receiptitem->quantity }}</td>
-                                <td>{{ $receiptitem->unitprice * 1.17 }}</td>
+                                <td>{{ number_format($receiptitem->unitprice * 1.17, 2, '.', '') }}</td>
                                 <td>{{ $receiptitem->item->goods_unit_name }}</td>
-                                <td>{{ $receiptitem->amount * 1.17 }}</td>
+                                <td>{{ number_format($receiptitem->amount * 1.17, 2, '.', '') }}</td>
                                 <td>
                                     @if (isset($receiptitem->rwrecord->supplier->shortname))
                                         @if ($receiptitem->rwrecord->supplier->shortname == '') 
@@ -121,7 +121,7 @@
                             <th>单价</th>
                             <th>单位</th>
                             <th>金额</th>
-                            <th>供应商</th>
+                            <th style="min-width: 80px">供应商</th>
                             <th>录入时间</th>
                         </tr>
                     </thead>
@@ -129,9 +129,9 @@
                         @foreach ($itemp->receiptitems as $receiptitem)
                         <tr @if (in_array($receiptitem->receipt_id, $purchaseorder->receiptorders->pluck('receipt_id')->toArray())) class="success" @endif>
                             <td>{{ $receiptitem->quantity }}</td>
-                            <td>{{ $receiptitem->unitprice * 1.17 }}</td>
+                            <td>{{ number_format($receiptitem->unitprice * 1.17, 2, '.', '') }}</td>
                             <td>{{ $receiptitem->item->goods_unit_name }}</td>
-                            <td>{{ $receiptitem->amount * 1.17 }}</td>
+                            <td>{{ number_format($receiptitem->amount * 1.17, 2, '.', '') }}</td>
                             <td>
                                 @if ($receiptitem->rwrecord->supplier->shortname == '') 
                                     {{ $receiptitem->rwrecord->supplier->name }}
