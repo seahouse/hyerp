@@ -172,6 +172,7 @@
                 <td>合计</td>
                 <td></td>
                 <td>{{ $paymentrequests->sum('amount') }}</td>
+@if (Agent::isDesktop())
                 <td></td>
                 <td>
                 @if (Auth::user()->email == "admin@admin.com")
@@ -183,6 +184,7 @@
                     {{ $purchaseorders->sum('amount') }}
                 @endif
                 </td>
+@endif
                 <td></td>
                 <td></td>
                 <td></td>

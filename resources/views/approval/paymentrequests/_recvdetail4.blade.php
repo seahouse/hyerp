@@ -50,6 +50,7 @@
                                 <th>单位</th>
                                 <th>金额</th>
                                 <th style="min-width: 80px">供应商</th>
+                                <th>对应项目</th>
                                 <th>录入时间</th>
                             </tr>
                         </thead>
@@ -63,12 +64,17 @@
                                 <td>
                                     @if (isset($receiptitem->rwrecord->supplier->shortname))
                                         @if ($receiptitem->rwrecord->supplier->shortname == '') 
-                                            {{ $receiptitem->rwrecord->supplier->name }}
+                                            {{ str_limit($receiptitem->rwrecord->supplier->name, 8) }}
                                         @else
-                                            {{ $receiptitem->rwrecord->supplier->shortname }}
+                                            {{ str_limit($receiptitem->rwrecord->supplier->shortname, 8) }}
                                         @endif
                                     @else
                                         -
+                                    @endif
+                                </td>
+                                <td>
+                                    @if (isset($receiptitem->rwrecord->receiptorder->pohead->sohead->descrip))
+                                        {{ $receiptitem->rwrecord->receiptorder->pohead->sohead->descrip }}
                                     @endif
                                 </td>
                                 <td>{{ substr($receiptitem->record_at, 0, 10) }}</td>
@@ -122,6 +128,7 @@
                             <th>单位</th>
                             <th>金额</th>
                             <th style="min-width: 80px">供应商</th>
+                            <th style="min-width: 80px">对应项目</th>
                             <th>录入时间</th>
                         </tr>
                     </thead>
@@ -137,6 +144,15 @@
                                     {{ $receiptitem->rwrecord->supplier->name }}
                                 @else
                                     {{ $receiptitem->rwrecord->supplier->shortname }}
+                                @endif
+                            </td>
+                            <td>
+                                @if (isset($receiptitem->rwrecord->receiptorder->pohead->sohead->projectjc))
+                                    @if ($receiptitem->rwrecord->receiptorder->pohead->sohead->projectjc === "")
+                                        {{ $receiptitem->rwrecord->receiptorder->pohead->sohead->descrip }}
+                                    @else
+                                        $receiptitem->rwrecord->receiptorder->pohead->sohead->projectjc === ""
+                                    @endif
                                 @endif
                             </td>
                             <td>{{ substr($receiptitem->record_at, 0, 10) }}</td>

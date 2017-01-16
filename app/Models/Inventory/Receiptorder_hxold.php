@@ -17,4 +17,8 @@ class Receiptorder_hxold extends Model
     public function rwrecord() {
         return $this->hasOne('App\Models\Inventory\Rwrecord_hxold', 'id', 'receipt_id');
     }
+
+    public function pohead() {
+        return $this->hasOne('App\Models\Purchase\Purchaseorder_hxold', 'id', 'pohead_id');
+    }
 }
