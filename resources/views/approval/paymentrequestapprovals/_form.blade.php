@@ -8,6 +8,16 @@
     </div>
 </div>
 
+@if (Auth::user()->email == "admin@admin.com")
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+    {!! Form::open(['url' => url('/dingtalk/chat_create')]) !!}
+        {!! Form::submit('聊天', ['class' => 'btn btn-primary']) !!}
+    {!! Form::close() !!}
+    </div>
+</div>
+@endif
+
 <div class="modal fade" id="acceptModal" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">

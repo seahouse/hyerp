@@ -43,6 +43,10 @@
             {!! Form::submit('人脸对比测试', ['class' => 'btn btn-default btn-sm']) !!}            
         {!! Form::close() !!}
 
+        {!! Form::open(['url' => '/facecore/urlfacedetect', 'class' => 'pull-right']) !!}
+            {!! Form::submit('人头数监测', ['class' => 'btn btn-default btn-sm']) !!}            
+        {!! Form::close() !!}
+
         
 
         <form method="POST" action="http://localhost:82/dingtalk/receive" class="pull-right">

@@ -50,7 +50,7 @@
                                 <th>单位</th>
                                 <th>金额</th>
                                 <th style="min-width: 80px">供应商</th>
-                                <th>对应项目</th>
+                                <th style="min-width: 80px">对应项目</th>
                                 <th>录入时间</th>
                             </tr>
                         </thead>

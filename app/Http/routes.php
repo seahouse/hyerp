@@ -46,6 +46,8 @@ Route::post('faceplusplus/compare', 'FaceplusplusController@compare');
 Route::post('faceplusplus/search', 'FaceplusplusController@search');
 Route::post('faceplusplus/faceset_create', 'FaceplusplusController@faceset_create');
 
+Route::post('facecore/urlfacedetect', 'FacecoreController@urlfacedetect');
+
 Route::group(['middleware' => ['web']], function () {
     // Route::get('mddauth', function() { return view('mddauth'); });
     Route::get('mddauth/{appname?}/{url?}', 'DingTalkController@mddauth');
@@ -55,6 +57,9 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('dingtalk/getconfig', 'DingTalkController@getconfig');
     Route::post('dingtalk/register_call_back', 'DingTalkController@register_call_back');
     Route::get('dingtalk/delete_call_back', 'DingTalkController@delete_call_back');
+
+    // chat
+    Route::post('dingtalk/chat_create', 'DingTalkController@chat_create');
 
     // run .bat shell command to run git pull.
     Route::get('gitpullbybat', function() { return view('gitpullbybat'); });

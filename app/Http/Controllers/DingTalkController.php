@@ -643,4 +643,21 @@ class DingTalkController extends Controller
             }
         }
     }
+
+    public static function chat_create()
+    {
+        // dd('chat_create');
+        $access_token = self::getAccessToken();
+        $data = [
+            'name' => 'hi',
+            'owner' => 'manager1200',
+            'useridlist' => ['03035843446917', '03360238665830']
+            // 'url' => 'http://www.huaxing-east.cn:2016/dingtalk/receive'
+            // 'url' => 'http://hyerp.ricki.cn/dingtalk/receive'
+        ];
+
+        $response = Http::post("/chat/create",
+            array("access_token" => $access_token), json_encode($data));
+        return json_encode($response);
+    }
 }
