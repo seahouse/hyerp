@@ -12,6 +12,7 @@ class Paymentrequest extends Model
 {
     //
     use SoftDeletes;
+    protected $dates = ['deleted_at'];
 
     protected $fillable = [
         'suppliertype',
@@ -30,8 +31,6 @@ class Paymentrequest extends Model
 		'status',
 		'approversetting_id',
     ];
-
-    protected $dates = ['deleted_at'];
 
     public function supplier_hxold() {
         return $this->hasOne('\App\Models\Purchase\Vendinfo_hxold', 'id', 'supplier_id');

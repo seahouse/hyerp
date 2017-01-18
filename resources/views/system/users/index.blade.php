@@ -47,7 +47,11 @@
             {!! Form::submit('人头数监测', ['class' => 'btn btn-default btn-sm']) !!}            
         {!! Form::close() !!}
 
-        
+
+        {!! Form::open(['url' => url('/dingtalk/chat_create'), 'class' => 'pull-right']) !!}
+            {!! Form::submit('聊天', ['class' => 'btn btn-default btn-sm']) !!}
+        {!! Form::close() !!}
+
 
         <form method="POST" action="http://localhost:82/dingtalk/receive" class="pull-right">
             <input class="btn btn-default btn-sm" type="submit" value="4444">            
