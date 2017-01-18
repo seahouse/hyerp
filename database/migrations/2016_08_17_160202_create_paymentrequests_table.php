@@ -32,6 +32,7 @@ class CreatePaymentrequestsTable extends Migration
 			$table->integer('approversetting_id');          			// 下一个审批流程id, 0表示已经走完流程, -1表示没有流程可以走，-2表示流程已走完，未通过
 
             $table->timestamps();
+			$table->softDeletes();
         });
     }
 

@@ -92,7 +92,7 @@
                 <th>审批状态</th>
                 <th>付款状态</th>
                 @if (Agent::isDesktop())
-                <th style="width: 120px">操作</th>
+                <th style="width: 150px">操作</th>
                 @endif
             </tr>
         </thead>
@@ -151,7 +151,7 @@
                         @if ($paymentrequest->approversetting_id === 0)
                             @if (isset($paymentrequest->purchaseorder_hxold->payments))
                                 @if ($paymentrequest->paymentrequestapprovals->max('created_at') > $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
-                                    <a href="{{ url('/purchase/purchaseorders/' . $paymentrequest->pohead_id . '/payments/create_hxold') }}" target="_blank" class="btn btn-success btn-sm">付款</a>
+                                    <a href="{{ url('/purchase/purchaseorders/' . $paymentrequest->pohead_id . '/payments/create_hxold') }}" target="_blank" class="btn btn-success btn-sm pull-left">付款</a>
                                 @endif
                             @endif
                         @endif
@@ -159,10 +159,12 @@
 @endif
 {{--                        
                         <a href="{{ URL::to('/approval/paymentrequests/'.$paymentrequest->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>
+--}}
+@if (Auth::user()->email == "admin@admin.com")
                         {!! Form::open(array('route' => array('approval.paymentrequests.destroy', $paymentrequest->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
                             {!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}
                         {!! Form::close() !!} 
---}}
+@endif
                     </td>
                     @endif
                 </tr>

@@ -22,6 +22,8 @@ class CreatePaymentrequestapprovalsTable extends Migration
             $table->string('description');
 			
             $table->timestamps();
+			
+			$table->foreign('paymentrequest_id')->references('id')->on('paymentrequests')->onDelete('cascade');
         });
     }
 

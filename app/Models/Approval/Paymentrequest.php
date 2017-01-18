@@ -3,6 +3,7 @@
 namespace App\Models\Approval;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\System\User;
 use App\Models\System\Dept;
@@ -10,6 +11,8 @@ use App\Models\System\Dept;
 class Paymentrequest extends Model
 {
     //
+    use SoftDeletes;
+
     protected $fillable = [
         'suppliertype',
         'paymenttype',
@@ -27,6 +30,8 @@ class Paymentrequest extends Model
 		'status',
 		'approversetting_id',
     ];
+
+    protected $dates = ['deleted_at'];
 
     public function supplier_hxold() {
         return $this->hasOne('\App\Models\Purchase\Vendinfo_hxold', 'id', 'supplier_id');
