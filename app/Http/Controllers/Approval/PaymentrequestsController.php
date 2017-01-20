@@ -48,16 +48,17 @@ class PaymentrequestsController extends Controller
         else
             $paymentrequests = Paymentrequest::latest('created_at')->paginate(10);
         $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
+        $totalamount = Paymentrequest::sum('amount');
 
         // if ($request->has('key'))
         // use request('key') for null compare, not $request->has('key')
         if (null !== request('key'))        
         {
-            return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'inputs', 'purchaseorders'));
+            return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'inputs', 'purchaseorders', 'totalamount'));
         }
         else
         {
-            return view('approval.paymentrequests.index', compact('paymentrequests', 'purchaseorders'));
+            return view('approval.paymentrequests.index', compact('paymentrequests', 'purchaseorders', 'totalamount'));
         }
     }
     
@@ -104,8 +105,9 @@ class PaymentrequestsController extends Controller
         $inputs = $request->all();
         $paymentrequests = $this->searchrequest($request);
         $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
+        $totalamount = Paymentrequest::sum('amount');
 
-        return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'inputs', 'purchaseorders'));
+        return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'inputs', 'purchaseorders', 'totalamount'));
     }
 
     // 手机端的搜索，仅搜索自己权限的数据

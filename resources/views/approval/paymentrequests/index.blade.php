@@ -3,6 +3,7 @@
 @section('title', '供应商付款')
 
 @section('main')
+@if (Auth::user()->isSuperAdmin())
     <div class="panel-heading">
         <div class="panel-title">审批 -- 供应商付款
 {{--            <div class="pull-right">
@@ -147,7 +148,6 @@
                     </td>
                     @if (Agent::isDesktop())
                     <td>
-@if (Auth::user()->email == "admin@admin.com")
                         @if ($paymentrequest->approversetting_id === 0)
                             @if (isset($paymentrequest->purchaseorder_hxold->payments))
                                 @if ($paymentrequest->paymentrequestapprovals->max('created_at') > $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
@@ -155,8 +155,6 @@
                                 @endif
                             @endif
                         @endif
-                        
-@endif
 {{--                        
                         <a href="{{ URL::to('/approval/paymentrequests/'.$paymentrequest->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>
 --}}
@@ -191,6 +189,30 @@
                 <td></td>
                 <td></td>
             </tr>
+
+@if (Auth::user()->email == "admin@admin.com")
+            <tr class="success">
+                <td>汇总</td>
+                <td></td>
+                <td>
+                @if (isset($totalamount))
+                    {{ $totalamount }}
+                @endif
+                </td>
+@if (Agent::isDesktop())
+                <td></td>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+@endif
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+@endif
         </tbody>
 
     </table>
@@ -214,7 +236,9 @@
         {{'无记录', [], 'layouts'}}
     </div>
     @endif    
-
+@else
+无权限
+@endif
 @endsection
 
 @section('script')
