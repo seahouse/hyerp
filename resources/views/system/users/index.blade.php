@@ -47,6 +47,10 @@
             {!! Form::submit('人头数监测', ['class' => 'btn btn-default btn-sm']) !!}            
         {!! Form::close() !!}
 
+        {!! Form::open(['url' => '/cloudwalk/face_tool_detect', 'class' => 'pull-right']) !!}
+            {!! Form::submit('云从科技', ['class' => 'btn btn-default btn-sm']) !!}            
+        {!! Form::close() !!}
+
 
         {!! Form::open(['url' => url('/dingtalk/chat_create'), 'class' => 'pull-right']) !!}
             {!! Form::submit('聊天', ['class' => 'btn btn-default btn-sm']) !!}

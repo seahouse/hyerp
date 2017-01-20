@@ -48,6 +48,8 @@ Route::post('faceplusplus/faceset_create', 'FaceplusplusController@faceset_creat
 
 Route::post('facecore/urlfacedetect', 'FacecoreController@urlfacedetect');
 
+Route::post('cloudwalk/face_tool_detect', 'CloudwalkController@face_tool_detect');
+
 Route::group(['middleware' => ['web']], function () {
     // Route::get('mddauth', function() { return view('mddauth'); });
     Route::get('mddauth/{appname?}/{url?}', 'DingTalkController@mddauth');

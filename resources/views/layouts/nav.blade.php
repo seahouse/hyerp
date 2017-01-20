@@ -85,7 +85,11 @@
                     <ul class="dropdown-menu">
                         @can('module_approval')
                         <li><a href="/approval/reimbursements">报销</a></li>
+                        @endcan
+                        @can('approval_paymentrequest_view')
                         <li><a href="/approval/paymentrequests">供应商付款</a></li>
+                        @endcan
+                        @can('module_approval')
 @if (isset(Auth::user()->email) and Auth::user()->email == "admin@admin.com")
                         <li><a href="/approval/paymentrequestapprovals">供应商付款审批记录</a></li>
 @endif
