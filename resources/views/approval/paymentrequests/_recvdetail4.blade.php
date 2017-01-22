@@ -151,7 +151,7 @@
                                     @if ($receiptitem->rwrecord->receiptorder->pohead->sohead->projectjc === "")
                                         {{ $receiptitem->rwrecord->receiptorder->pohead->sohead->descrip }}
                                     @else
-                                        $receiptitem->rwrecord->receiptorder->pohead->sohead->projectjc === ""
+                                        {{ $receiptitem->rwrecord->receiptorder->pohead->sohead->projectjc }}
                                     @endif
                                 @endif
                             </td>
