@@ -995,4 +995,19 @@ class PaymentrequestsController extends Controller
         $config = DingTalkController::getconfig();
         return view('approval.paymentrequests.show_print', compact('paymentrequest', 'agent', 'config'));
     }
+
+    public function pay($id)
+    {
+        $paymentrequest = Paymentrequest::findOrFail($id);
+        if ($paymentrequest->approversetting_id === 0)
+        {
+            if (isset($paymentrequest->purchaseorder_hxold->payments))
+            {
+                if ($paymentrequest->paymentrequestapprovals->max('created_at') > $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
+                    return redirect('/purchase/purchaseorders/' . $paymentrequest->pohead_id . '/payments/create_hxold');
+            }
+        }
+
+        echo '无法付款：需要审批已完成，且此采购订单在审批完成后没有付款记录才可付款。如有问题，请联系管理员。';
+    }
 }

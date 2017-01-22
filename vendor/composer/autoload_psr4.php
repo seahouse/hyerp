@@ -27,6 +27,7 @@ return array(
     'Symfony\\Component\\CssSelector\\' => array($vendorDir . '/symfony/css-selector'),
     'Symfony\\Component\\Console\\' => array($vendorDir . '/symfony/console'),
     'SuperClosure\\' => array($vendorDir . '/jeremeamia/SuperClosure/src'),
+    'Softon\\LaravelFaceDetect\\' => array($vendorDir . '/softon/laravel-face-detect/src'),
     'Psy\\' => array($vendorDir . '/psy/psysh/src/Psy'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),

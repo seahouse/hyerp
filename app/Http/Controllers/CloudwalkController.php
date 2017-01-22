@@ -12,13 +12,6 @@ class CloudwalkController extends Controller
     //
     public function face_tool_detect(Request $request)
     {
-        $detector = new FaceDetector();
-        $detector->scan("images/20161226_pic_540_779.jpg");
-        $faces = $detector->getFaces();
-        foreach($faces as $face)
-        {
-            echo "Face found at x: {$face['x']}, y: {$face['y']}, width: {$face['width']}, height: {$face['height']}<br />\n"; 
-        }
 
         // $data = [
         //     'url'   => 'http://static.dingtalk.com/media/lADOngciz80DIM0CWA_600_800.jpg'

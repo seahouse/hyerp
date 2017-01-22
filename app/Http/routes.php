@@ -255,6 +255,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('{id}/mrecvdetail3', 'PaymentrequestsController@mrecvdetail3');
         Route::get('{id}/mrecvdetail4', 'PaymentrequestsController@mrecvdetail4');
         Route::get('{id}/printpage', 'PaymentrequestsController@printpage');
+        Route::get('{id}/pay', 'PaymentrequestsController@pay');
     });
     Route::resource('paymentrequests', 'PaymentrequestsController');
     Route::resource('approversettings', 'ApproversettingsController');

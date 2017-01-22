@@ -149,6 +149,22 @@
                     @if (Agent::isDesktop())
                     <td>
                     @can('approval_paymentrequest_payment_create')
+                        <a href="{{ url('/approval/paymentrequests/' . $paymentrequest->id . '/pay') }}" target="_blank" class="btn btn-success btn-sm pull-left 
+                        @if ($paymentrequest->approversetting_id === 0)
+                            @if (isset($paymentrequest->purchaseorder_hxold->payments))
+                                @if ($paymentrequest->paymentrequestapprovals->max('created_at') > $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
+                                    abled
+                                @else
+                                    disabled
+                                @endif
+                            @else
+                                disabled
+                            @endif
+                        @else
+                            disabled
+                        @endif
+                        ">付款</a>
+{{--
                         <a href="{{ url('/purchase/purchaseorders/' . $paymentrequest->pohead_id . '/payments/create_hxold') }}" target="_blank" class="btn btn-success btn-sm pull-left 
                         @if ($paymentrequest->approversetting_id === 0)
                             @if (isset($paymentrequest->purchaseorder_hxold->payments))
@@ -164,6 +180,7 @@
                             disabled
                         @endif
                         ">付款</a>
+--}}
                     @endcan
 {{--                        
                         <a href="{{ URL::to('/approval/paymentrequests/'.$paymentrequest->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>
