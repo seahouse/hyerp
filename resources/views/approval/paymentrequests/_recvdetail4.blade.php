@@ -55,8 +55,16 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {{ $count = 1 }}
                             @foreach ($itemp->receiptitems as $receiptitem)
+@if (Auth::user()->email == "admin@admin.com")
+                                @if ($count > 20)
+                                    @break
+                                @endif
+                                {{ $count++ }}
+@endif
                             <tr @if (in_array($receiptitem->receipt_id, $purchaseorder->receiptorders->pluck('receipt_id')->toArray())) class="success" @endif>
+
                                 <td>{{ $receiptitem->quantity }}</td>
                                 <td>{{ number_format($receiptitem->unitprice * 1.17, 2, '.', '') }}</td>
                                 <td>{{ $receiptitem->item->goods_unit_name }}</td>
@@ -133,7 +141,14 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {{ $count = 1 }}
                         @foreach ($itemp->receiptitems as $receiptitem)
+@if (Auth::user()->email == "admin@admin.com")
+                                @if ($count > 20)
+                                    @break
+                                @endif
+                                {{ $count++ }}
+@endif
                         <tr @if (in_array($receiptitem->receipt_id, $purchaseorder->receiptorders->pluck('receipt_id')->toArray())) class="success" @endif>
                             <td>{{ $receiptitem->quantity }}</td>
                             <td>{{ number_format($receiptitem->unitprice * 1.17, 2, '.', '') }}</td>
