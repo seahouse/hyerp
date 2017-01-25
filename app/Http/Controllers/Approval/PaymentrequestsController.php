@@ -495,11 +495,12 @@ class PaymentrequestsController extends Controller
         //     // dd($file->getClientOriginalName());
         //     $upload_success = $file->move($destinationPath, $fileName);
         // }
-        // dd("bbb");
+
+        if ($request->has('paymenttype') && $request->input('paymenttype') === '到货款' && !$request->hasFile('paymentnodeattachments'))
+            dd("到货款必须要上传付款节点审批单。");
 
 
         $input['applicant_id'] = Auth::user()->id;
-
         
 
         // set approversetting_id 

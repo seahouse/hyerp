@@ -11,6 +11,6 @@ class Itemp_hxold extends Model
 	protected $connection = 'sqlsrv';
 
 	public function receiptitems() {
-        return $this->hasMany('App\Models\Inventory\Receiptitem_hxold', 'item_number', 'goods_no')->orderBy('record_at', 'desc');;
+        return $this->hasMany('App\Models\Inventory\Receiptitem_hxold', 'item_number', 'goods_no');;
     }
 }

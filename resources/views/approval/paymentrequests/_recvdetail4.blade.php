@@ -55,14 +55,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{ $count = 1 }}
-                            @foreach ($itemp->receiptitems as $receiptitem)
-@if (Auth::user()->email == "admin@admin.com")
-                                @if ($count > 20)
-                                    @break
-                                @endif
-                                {{ $count++ }}
-@endif
+                            @foreach ($itemp->receiptitems->sortByDesc('record_at')->take(20) as $receiptitem)
                             <tr @if (in_array($receiptitem->receipt_id, $purchaseorder->receiptorders->pluck('receipt_id')->toArray())) class="success" @endif>
 
                                 <td>{{ $receiptitem->quantity }}</td>
@@ -141,14 +134,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{ $count = 1 }}
-                        @foreach ($itemp->receiptitems as $receiptitem)
-@if (Auth::user()->email == "admin@admin.com")
-                                @if ($count > 20)
-                                    @break
-                                @endif
-                                {{ $count++ }}
-@endif
+                        @foreach ($itemp->receiptitems->sortByDesc('record_at')->take(20) as $receiptitem)
                         <tr @if (in_array($receiptitem->receipt_id, $purchaseorder->receiptorders->pluck('receipt_id')->toArray())) class="success" @endif>
                             <td>{{ $receiptitem->quantity }}</td>
                             <td>{{ number_format($receiptitem->unitprice * 1.17, 2, '.', '') }}</td>
