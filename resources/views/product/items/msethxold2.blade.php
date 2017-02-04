@@ -44,7 +44,7 @@
                 <th>创建日期</th>
                 <th>BOM</th>
 --}}
-                <th style="width: 150px">操作</th>
+                <th>操作</th>
             </tr>
         </thead>
         <tbody>
