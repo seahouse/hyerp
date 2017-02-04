@@ -37,8 +37,8 @@
 --}}
                 <th>名称</th>
                 <th>型号</th>
-                <th>老编号</th>
 {{--
+                <th>老编号</th>
                 <th>物料类型</th>
                 <th>索引</th>
                 <th>创建日期</th>
@@ -67,10 +67,10 @@
                     <td>
                         {{ $item->goods_spec }}
                     </td>
+{{--
                     <td>
                         {{ $item->goods_no2 }}
                     </td>
-{{--
                     <td>
                         {{ $item->itemtype->name }}
                     </td>

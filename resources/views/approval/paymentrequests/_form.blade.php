@@ -383,6 +383,27 @@
     @endif
     </div>
 </div>
+
+@if (Auth::user()->email == "admin@admin.com")
+<div class="form-group">
+    {!! Form::label('created_at', '发起时间:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+        {!! Form::text('created_at', $paymentrequest->created_at, ['class' => 'form-control', $attr]) !!}
+    </div>
+</div>
+
+@if ($paymentrequest->approversetting_id === 0)
+    @if ($paymentrequest->paymentrequestapprovals->count())
+        <div class="form-group">
+            {!! Form::label('last_approval_created_at', '审批时间:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::text('last_approval_created_at', $paymentrequest->paymentrequestapprovals->last()->created_at, ['class' => 'form-control', $attr]) !!}
+            </div>
+        </div>
+    @endif
+@endif
+@endif
+
 @else
 <div class="form-group">
     {!! Form::label('supplier_bank', '开户行:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
