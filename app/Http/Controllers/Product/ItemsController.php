@@ -220,6 +220,14 @@ class ItemsController extends Controller
         return view('product.items.sethxold2', compact('itemp', 'items2'));
     }
 
+    public function msethxold2($id)
+    {
+        $itemp = Itemp_hxold::where('goods_id', $id)->firstOrFail();
+        $items2 = Itemp_hxold2::where('goods_name', $itemp->goods_name)->paginate(20);
+        
+        return view('product.items.msethxold2', compact('itemp', 'items2'));
+    }
+
     public function sethxold2update($id, $id2)
     {
         $itemp = Itemp_hxold::where('goods_id', $id)->firstOrFail();

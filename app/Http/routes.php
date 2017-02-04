@@ -123,6 +123,7 @@ Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => [
     Route::group(['prefix' => 'indexp_hxold'], function() {
         Route::post('search', 'ItemsController@itemp_hxold_search');
         Route::get('{id}/sethxold2', 'ItemsController@sethxold2');
+        Route::get('{id}/msethxold2', 'ItemsController@msethxold2');
         Route::post('{id}/sethxold2/{id2}', 'ItemsController@sethxold2update');
     });
 
