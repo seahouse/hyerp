@@ -27,6 +27,15 @@
                 <input type="text" class="form-control" name="key" placeholder="编号">    
             </div>
         </form>
+
+        {!! Form::button('重新对新老系统编号进行一一对应（按照名称、型号完全匹配）', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnSetNo']) !!}
+
+
+        {!! Form::open(['url' => '', 'class' => 'pull-right form-inline']) !!}
+        <div class="form-group-sm">
+            {!! Form::submit('对新老系统编号进行一一对应（按照名称、型号）', ['class' => 'btn btn-default btn-sm']) !!}
+        </div>
+        {!! Form::close() !!}
         
 {{--        <form class="pull-right" role="search" action="/items/search" method="post">
             <div class="pull-right">
@@ -53,7 +62,6 @@
                 <a href="{{ URL::to('items/create') }}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> {{'搜索', [], 'layouts'}}</a> 
             {!! Form::close() !!}
         </div> --}}
-    
     @if ($items->count())
     <table class="table table-striped table-hover table-condensed">
         <thead>
@@ -134,6 +142,47 @@
         <i class="fa fa-warning"></i>
         {{'无记录', [], 'layouts'}}
     </div>
-    @endif    
+    @endif
 
+    <div class="modal fade" id="myModal1" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <span style="text-align:center;color:red">正在批量修改数据库信息，请勿刷新页面！</span><br />
+
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="{{$items->total()}}" style="width:0%" id="process1">
+                        <span class="sr-only">60% Complete</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+        jQuery(document).ready(function(e) {
+            $("#btnSetNo").click(function() {
+                $('#myModal1').modal('toggle');
+                setitempnumber(0);
+            });
+            
+            function setitempnumber(from) {
+                $.post("{{ url('/product/indexp_hxold/resetitempnumber') }}", {from:from, _token:"{!! csrf_token() !!}"}, function (data) {
+                    from = from + parseInt(data);
+//                    alert(from);
+                    $('#process1').css('width', String(from / {!! $items->total() !!} * 100) + '%');
+                    if (data > 0 && from < {!! $items->total() !!})
+                        setitempnumber(from);
+                    else
+                    {
+                        $('#myModal1').modal('toggle');
+                        window.location.reload(true);
+                    }
+                });
+            }
+        });
+    </script>
 @endsection

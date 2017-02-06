@@ -4,7 +4,7 @@
 
 @section('main')
     <div class="panel-heading">
-        <div class="panel-title">设置老编号 -- 名称: {{ $itemp->goods_name }}, 型号: {{ $itemp->goods_spec }}
+        <div class="panel-title">设置老编号 -- 名称: {{ $itemp->goods_name }}, 型号: {{ $itemp->goods_spec }}, 编号: {{ $itemp->goods_no }}
             <div class="pull-right">
                 <a href="{{ URL::to('product/itemclasses') }}" target="_blank" class="btn btn-sm btn-success">{{'物料类型管理'}}</a>
                 <a href="{{ URL::to('product/characteristics') }}" target="_blank" class="btn btn-sm btn-success">{{'物料属性管理'}}</a>

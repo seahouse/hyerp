@@ -4,7 +4,7 @@
 
 @section('main')
     <div class="panel-heading">
-        <div class="panel-title">设置老编号 -- 名称: {{ $itemp->goods_name }}, 型号: {{ $itemp->goods_spec }}
+        <div class="panel-title">设置老编号 -- 名称: {{ $itemp->goods_name }}, 型号: {{ $itemp->goods_spec }}, 编号: {{ $itemp->goods_no }}
         </div>
     </div>
     

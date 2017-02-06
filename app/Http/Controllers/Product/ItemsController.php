@@ -15,6 +15,7 @@ use App\Models\Product\Itemtype;
 use App\Models\Inventory\Warehouse;
 use App\Models\Inventory\Itemsite;
 use App\Models\Product\Itemp_hxold;
+use App\Models\Product\Itemp_hxold_t;
 use App\Models\Product\Itemp_hxold2;
 use App\Models\Inventory\Receiptitem_hxold;
 
@@ -246,5 +247,39 @@ class ItemsController extends Controller
         
         return redirect('product/indexp_hxold/' . $itemp->goods_id . '/sethxold2');
         // return view('product.items.sethxold2', compact('itemp', 'items2'));
+    }
+
+    public function resetitempnumber(Request $request)
+    {
+//        $items = Itemp_hxold::leftJoin('vgoods2', function ($join) {
+//            $join->on('vgoods2.goods_name', '=', 'vgoods.goods_name')->orOn('vgoods2.goods_spec', '=', 'vgoods.goods_spec');
+//        } )->get();
+
+//        DB::connection('foo')->update()
+//        return 0;
+
+        $from = $request->input('from', 0);
+//        $from = 0;
+        $items = Itemp_hxold_t::orderBy('goods_id')->skip($from)->take(100)->get();
+        $count = 0;
+        foreach ($items as $item)
+        {
+            $items2 = Itemp_hxold2::where('goods_name', $item->goods_name)->where('goods_spec', $item->goods_spec)->get();
+            if ($items2->count() === 1)
+            {
+                $item2 = $items2->first();
+                if ($item2->goods_no !== '')
+                {
+                    Itemp_hxold_t::where('goods_id', $item->goods_id)->update(['goods_no2' => $item2->goods_no]);
+//                    dd('change goods(goods_id:' . $item->goods_id . ') goods_no2 to ' . $items2->first()->goods_no);
+                }
+            }
+            $count++;
+        }
+//        dd($items->count());
+
+        return $count;
+//        return redirect('product/indexp_hxold/');
+
     }
 }
