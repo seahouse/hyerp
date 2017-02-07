@@ -18,33 +18,33 @@
 {{--
         <a href="{{ URL::to('product/items/create') }}" class="btn btn-sm btn-success">新建</a>
 --}}
-        <form class="pull-right" action="/product/indexp_hxold/search" method="post">
-            {!! csrf_field() !!}
-            <div class="pull-right">
-                <button type="submit" class="btn btn-default btn-sm">查找</button>
-            </div>
-            <div class="pull-right input-group-sm">
-                <input type="text" class="form-control" name="key" placeholder="编号">    
-            </div>
-        </form>
+        {!! Form::open(['url' => '/product/indexp_hxold/search', 'class' => 'pull-right form-inline']) !!}
+        <div class="form-group-sm">
+            {!! Form::select('numberstatus', ['已设置' => '已设置', '未设置' => '未设置'], null, ['class' => 'form-control', 'placeholder' => '--编号设置状态--']) !!}
+            {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '编号']); !!}
+            {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']); !!}
+        </div>
+        {!! Form::close() !!}
+
 
         {!! Form::button('重新对新老系统编号进行一一对应（按照名称、型号完全匹配）', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnSetNo']) !!}
 
+        {{--
+                {!! Form::open(['url' => '', 'class' => 'pull-right form-inline']) !!}
+                <div class="form-group-sm">
+                    {!! Form::submit('对新老系统编号进行一一对应（按照名称、型号）', ['class' => 'btn btn-default btn-sm']) !!}
+                </div>
+                {!! Form::close() !!}
+         --}}
 
-        {!! Form::open(['url' => '', 'class' => 'pull-right form-inline']) !!}
-        <div class="form-group-sm">
-            {!! Form::submit('对新老系统编号进行一一对应（按照名称、型号）', ['class' => 'btn btn-default btn-sm']) !!}
-        </div>
-        {!! Form::close() !!}
-        
-{{--        <form class="pull-right" role="search" action="/items/search" method="post">
-            <div class="pull-right">
-                <button type="submit" class="btn btn-default btn-sm">查找</button>
-            </div>
-            <div class="pull-right input-group-sm">
-                <input type="text" class="form-control" name="key" placeholder="Search">    
-            </div>
-        </form> --}}
+        {{--        <form class="pull-right" role="search" action="/items/search" method="post">
+                    <div class="pull-right">
+                        <button type="submit" class="btn btn-default btn-sm">查找</button>
+                    </div>
+                    <div class="pull-right input-group-sm">
+                        <input type="text" class="form-control" name="key" placeholder="Search">
+                    </div>
+                </form> --}}
 
         </div>
 {{--        <form class="media-right" role="search">
@@ -136,7 +136,15 @@
         </tbody>
 
     </table>
-    {!! $items->render() !!}
+
+    @if (isset($key))
+        {!! $items->setPath('/product/indexp_hxold')->appends([
+            'key' => $key,
+            'numberstatus' => $inputs['numberstatus']
+        ])->links() !!}
+    @else
+        {!! $items->setPath('/product/indexp_hxold')->links() !!}
+    @endif
     @else
     <div class="alert alert-warning alert-block">
         <i class="fa fa-warning"></i>
@@ -151,7 +159,7 @@
                 <span style="text-align:center;color:red">正在批量修改数据库信息，请勿刷新页面！</span><br />
 
                 <div class="progress">
-                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="{{$items->total()}}" style="width:0%" id="process1">
+                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%" id="process1">
                         <span class="sr-only">60% Complete</span>
                     </div>
                 </div>
@@ -171,17 +179,18 @@
             
             function setitempnumber(from) {
                 $.post("{{ url('/product/indexp_hxold/resetitempnumber') }}", {from:from, _token:"{!! csrf_token() !!}"}, function (data) {
-                    from = from + parseInt(data);
+//                    alert(data.sum);
+                    from = from + parseInt(data.count);
 //                    alert(from);
-                    $('#process1').css('width', String(from / {!! $items->total() !!} * 100) + '%');
-                    if (data > 0 && from < {!! $items->total() !!})
+                    $('#process1').css('width', String(from / parseInt(data.sum) * 100) + '%').text(String(from) + "/" + String(data.sum));
+                    if (data.count > 0 && from < data.sum)
                         setitempnumber(from);
                     else
                     {
                         $('#myModal1').modal('toggle');
                         window.location.reload(true);
                     }
-                });
+                }, "json");
             }
         });
     </script>

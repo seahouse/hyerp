@@ -39,8 +39,24 @@ class ItemsController extends Controller
     public function indexp_hxold()
     {
         //
-        $items = Itemp_hxold::latest('add_time')->paginate(10);
-        return view('product.items.indexp_hxold', compact('items'));
+        $request = request();
+        $key = $request->input('key', '');
+        $inputs = $request->all();
+        if (null !== request('key'))
+            $items = $this->searchrequest($request);
+        else
+            $items = Itemp_hxold::latest('add_time')->paginate(10);
+
+        if (null !== request('key'))
+        {
+            return view('product.items.indexp_hxold', compact('items', 'key', 'inputs'));
+        }
+        else
+        {
+            return view('product.items.indexp_hxold', compact('items'));
+        }
+
+//        return view('product.items.indexp_hxold', compact('items'));
     }
     
     /**
@@ -70,12 +86,58 @@ class ItemsController extends Controller
 
     public function itemp_hxold_search(Request $request)
     {
+//        $key = $request->input('key');
+//        $numberstatus = $request->input('numberstatus');
+//        if ($key == '')
+//            return redirect('product/indexp_hxold');
+
+//        $query = Itemp_hxold::latest('add_time');
+//        if (strlen($key) > 0)
+//        {
+//            $query->where('goods_no', 'like', '%' . $key . '%');
+//        }
+//
+//        if (strlen($numberstatus) > 0)
+//        {
+//            if ($numberstatus === "已设置")
+//                $query->where('goods_no2', '!=', '');
+//            elseif ($numberstatus === "未设置")
+//                $query->where('goods_no2', '=', '');
+//        }
+
+//        $items = $query->select('*')->paginate(10);
+//        $items = Itemp_hxold::latest('add_time')->where('goods_no', 'like', '%' . $key . '%')->paginate(10);
+
         $key = $request->input('key');
-        if ($key == '')
-            return redirect('product/indexp_hxold');
-        
-        $items = Itemp_hxold::latest('add_time')->where('goods_no', 'like', '%' . $key . '%')->paginate(10);
-        return view('product.items.indexp_hxold', compact('items'));
+        $inputs = $request->all();
+        $items = $this->searchrequest($request);
+        return view('product.items.indexp_hxold', compact('items', 'key', 'inputs'));
+//        return view('product.items.indexp_hxold', compact('items'));
+    }
+
+    private function searchrequest($request)
+    {
+        $key = $request->input('key');
+        $numberstatus = $request->input('numberstatus');
+//        if ($key == '')
+//            return redirect('product/indexp_hxold');
+
+        $query = Itemp_hxold::latest('add_time');
+        if (strlen($key) > 0)
+        {
+            $query->where('goods_no', 'like', '%' . $key . '%');
+        }
+
+        if (strlen($numberstatus) > 0)
+        {
+            if ($numberstatus === "已设置")
+                $query->where('goods_no2', '!=', '');
+            elseif ($numberstatus === "未设置")
+                $query->where('goods_no2', '=', '');
+        }
+
+        $items = $query->select('*')->paginate(10);
+        return $items;
     }
 
     /**
@@ -277,8 +339,10 @@ class ItemsController extends Controller
             $count++;
         }
 //        dd($items->count());
-
-        return $count;
+        $data = ['count' => $count, 'sum' => Itemp_hxold_t::count()];
+        return json_encode($data);
+//        return Itemp_hxold_t::count();
+//        return $count;
 //        return redirect('product/indexp_hxold/');
 
     }

@@ -41,13 +41,13 @@
 --}}
                 <th>名称</th>
                 <th>型号</th>
-                <th>老编号</th>
-{{--
-                <th>物料类型</th>
-                <th>索引</th>
-                <th>创建日期</th>
-                <th>BOM</th>
---}}
+                {{--
+                                <th>老编号</th>
+                                <th>物料类型</th>
+                                <th>索引</th>
+                                <th>创建日期</th>
+                                <th>BOM</th>
+                --}}
                 <th style="width: 150px">操作</th>
             </tr>
         </thead>
@@ -71,27 +71,27 @@
                     <td>
                         {{ $item->goods_spec }}
                     </td>
-                    <td>
-                        {{ $item->goods_no2 }}
-                    </td>
-{{--
-                    <td>
-                        {{ $item->itemtype->name }}
-                    </td>
-                    <td>
-                        {{ $item->index }}
-                    </td>
-                    <td>
-                        {{ $item->created_at }}
-                    </td>
-                    <td>
-                        @if ($item->itemtype->name == '生产' || $item->itemtype->name == '采购')
-                            <a href="{{ URL::to('product/boms/' . $item->id . '/edit') }}" target="_blank">编辑</a>
-                        @else
-                            --
-                        @endif
-                    </td>
---}}
+                    {{--
+                                        <td>
+                                            {{ $item->goods_no2 }}
+                                        </td>
+                                        <td>
+                                            {{ $item->itemtype->name }}
+                                        </td>
+                                        <td>
+                                            {{ $item->index }}
+                                        </td>
+                                        <td>
+                                            {{ $item->created_at }}
+                                        </td>
+                                        <td>
+                                            @if ($item->itemtype->name == '生产' || $item->itemtype->name == '采购')
+                                                <a href="{{ URL::to('product/boms/' . $item->id . '/edit') }}" target="_blank">编辑</a>
+                                            @else
+                                                --
+                                            @endif
+                                        </td>
+                    --}}
                     <td>
                         {!! Form::open(['url' => url('product/indexp_hxold/' . $itemp->goods_id . '/sethxold2/' . $item->goods_id), 'onsubmit' => 'return confirm("确定设定此记录?");']) !!}
                             {!! Form::submit('设定', ['class' => 'btn btn-success btn-sm']) !!}
