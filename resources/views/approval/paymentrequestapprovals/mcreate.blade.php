@@ -26,7 +26,7 @@
 
 
 @section('for_paymentrequestapprovals_create_script')	
-	<script src="https://g.alicdn.com/ilw/ding/0.7.5/scripts/dingtalk.js"></script>
+	<script src="http://g.alicdn.com/dingding/open-develop/1.0.0/dingtalk.js"></script>
 
 	<script type="text/javascript">		
 		jQuery(document).ready(function(e) {
