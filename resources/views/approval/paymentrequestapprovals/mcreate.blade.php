@@ -21,6 +21,8 @@
 
 	{!! Form::button('聊天2', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnPickConversation']) !!}
 	{!! Form::button('聊天3', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnPickConversation3']) !!}
+	{!! Form::button('聊天4', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnPickConversation4']) !!}
+	<a href="/dingtalk/send_to_conversation">聊天5</a>
 
 @endsection
 
@@ -99,6 +101,12 @@
 				});
 			});
 
+            $("#btnPickConversation4").click(function() {
+                $.post("{{ url('/dingtalk/send_to_conversation') }}", {cid:"chatf12c075227956c1a596eec32885865f8", _token:"{!! csrf_token() !!}"}, function (data) {
+
+                });
+            });
+
             dd.config({
                 agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
                 corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID
@@ -131,6 +139,11 @@
 								},
                                 onFail : function() { alert('进入会话失败'); }
                             });
+
+                            $.post("{{ url('/dingtalk/send_to_conversation') }}", {cid:result.cid, _token:"{!! csrf_token() !!}"}, function (data) {
+
+                            }, "json");
+
                         },
                         onFail : function() { alert('error'); }
                     });
@@ -156,6 +169,8 @@
                                 },
                                 onFail : function(error) { alert('进入会话失败'); alert(result.chatId); alert('dd.error: ' + JSON.stringify(error)); }
                             });
+
+
                         },
                         onFail : function() { alert('error'); }
                     });

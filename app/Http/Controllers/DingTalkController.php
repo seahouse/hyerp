@@ -660,4 +660,22 @@ class DingTalkController extends Controller
             array("access_token" => $access_token), json_encode($data));
         return json_encode($response);
     }
+
+    public static function send_to_conversation(Request $request)
+    {
+//         dd('send_to_conversation');
+        $access_token = self::getAccessToken();
+        $data = [
+            'sender' => 'manager1200',
+            'cid' => $request->input('cid'),
+            'msgtype' => "text",
+            "text" => [
+                "content" => "tttt"
+            ]
+        ];
+
+        $response = Http::post("/message/send_to_conversation",
+            array("access_token" => $access_token), json_encode($data));
+        return json_encode($response);
+    }
 }
