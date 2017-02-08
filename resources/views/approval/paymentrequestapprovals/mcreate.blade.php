@@ -154,7 +154,7 @@
                                 onSuccess : function() {
                                     alert('进入会话.');
                                 },
-                                onFail : function() { alert('进入会话失败'); }
+                                onFail : function(error) { alert('进入会话失败'); alert(result.chatId); alert('dd.error: ' + JSON.stringify(error)); }
                             });
                         },
                         onFail : function() { alert('error'); }
