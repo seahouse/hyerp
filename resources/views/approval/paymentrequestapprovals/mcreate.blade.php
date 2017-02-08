@@ -19,6 +19,8 @@
 			'btnclass' => 'btn btn-primary',
     	])
 
+	{!! Form::button('聊天2', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnPickConversation']) !!}
+
 @endsection
 
 
@@ -27,16 +29,7 @@
 
 	<script type="text/javascript">		
 		jQuery(document).ready(function(e) {
-{{--
-			// dd.config({
-			//     agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
-			//     corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID
-			//     timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
-			//     nonceStr: '{!! array_get($config, 'nonceStr') !!}', // 必填，生成签名的随机串
-			//     signature: '{!! array_get($config, 'signature') !!}', // 必填，签名
-			//     jsApiList: ['biz.ding.post'] // 必填，需要使用的jsapi列表
-			// });
---}}
+
 
 			$("#btnAccept").bind("click", function() {
 				$.ajax({
@@ -105,7 +98,44 @@
 				});
 			});
 
+            dd.config({
+                agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
+                corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID
+                timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
+                nonceStr: '{!! array_get($config, 'nonceStr') !!}', // 必填，生成签名的随机串
+                signature: '{!! array_get($config, 'signature') !!}', // 必填，签名
+                jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile'] // 必填，需要使用的jsapi列表
+            });
 
+            dd.ready(function() {
+                $("#btnPickConversation").click(function() {
+                    dd.biz.util.uploadImage({
+                        multiple: true,
+                        max: 5,
+                        onSuccess: function(result) {
+                            var images = result;	// result.split(',');
+                            var imageHtml = '';
+                            for (var i in images) {
+                                imageHtml += '<div class="col-xs-6 col-md-3">';
+                                imageHtml += '<div class="thumbnail">';
+                                imageHtml += '<img src=' + images[i] + ' />';
+                                imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
+                                imageHtml += '</div>';
+                                imageHtml += '</div>';
+                            }
+                            $("#previewimage").empty().append(imageHtml);
+                        },
+                        onFail: function(err) {
+                            alert('select image failed: ' + JSON.stringify(err));
+                        }
+                    });
+                });
+
+            });
+
+            dd.error(function(error) {
+                alert('dd.error: ' + JSON.stringify(error));
+            });
 			
 		});
 	</script>

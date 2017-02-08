@@ -16,6 +16,8 @@
     {!! Form::close() !!}
     </div>
 </div>
+
+
 @endif
 
 <div class="modal fade" id="acceptModal" tabindex="-1" role="dialog">
