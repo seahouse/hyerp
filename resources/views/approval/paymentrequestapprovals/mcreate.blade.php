@@ -104,30 +104,24 @@
                 timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
                 nonceStr: '{!! array_get($config, 'nonceStr') !!}', // 必填，生成签名的随机串
                 signature: '{!! array_get($config, 'signature') !!}', // 必填，签名
-                jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile'] // 必填，需要使用的jsapi列表
+                jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile', 'biz.chat.pickConversation'] // 必填，需要使用的jsapi列表
             });
 
             dd.ready(function() {
                 $("#btnPickConversation").click(function() {
-                    dd.biz.util.uploadImage({
-                        multiple: true,
-                        max: 5,
-                        onSuccess: function(result) {
-                            var images = result;	// result.split(',');
-                            var imageHtml = '';
-                            for (var i in images) {
-                                imageHtml += '<div class="col-xs-6 col-md-3">';
-                                imageHtml += '<div class="thumbnail">';
-                                imageHtml += '<img src=' + images[i] + ' />';
-                                imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
-                                imageHtml += '</div>';
-                                imageHtml += '</div>';
-                            }
-                            $("#previewimage").empty().append(imageHtml);
+                    dd.biz.chat.pickConversation({
+                        corpId: '{!! array_get($config, 'corpId') !!}'
+                        isConfirm:'true', //是否弹出确认窗口，默认为true
+                        onSuccess : function(result) {
+                            //onSuccess将在选择结束之后调用
+                            // 该cid和服务端开发文档-普通会话消息接口配合使用，而且只能使用一次，之后将失效
+							alert(result.cid);
+							/*{
+							 cid: 'xxxx',
+							 title:'xxx'
+							 }*/
                         },
-                        onFail: function(err) {
-                            alert('select image failed: ' + JSON.stringify(err));
-                        }
+                        onFail : function() { alert('error'); }
                     });
                 });
 
