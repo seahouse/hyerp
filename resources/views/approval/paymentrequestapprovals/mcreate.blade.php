@@ -147,6 +147,15 @@
 							 chatId: 'xxxx',
 							 title:'xxx'
 							 }*/
+
+                            dd.biz.chat.toConversation({
+                                corpId: '{!! array_get($config, 'corpId') !!}', //企业id
+                                chatId: result.cid,//会话Id
+                                onSuccess : function() {
+                                    alert('进入会话.');
+                                },
+                                onFail : function() { alert('进入会话失败'); }
+                            });
                         },
                         onFail : function() { alert('error'); }
                     });
