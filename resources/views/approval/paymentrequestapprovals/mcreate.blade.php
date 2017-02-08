@@ -110,7 +110,7 @@
             dd.ready(function() {
                 $("#btnPickConversation").click(function() {
                     dd.biz.chat.pickConversation({
-                        corpId: '{!! array_get($config, 'corpId') !!}'
+                        corpId: '{!! array_get($config, 'corpId') !!}',
                         isConfirm:'true', //是否弹出确认窗口，默认为true
                         onSuccess : function(result) {
                             //onSuccess将在选择结束之后调用
