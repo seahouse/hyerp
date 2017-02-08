@@ -150,7 +150,7 @@
 
                             dd.biz.chat.toConversation({
                                 corpId: '{!! array_get($config, 'corpId') !!}', //企业id
-                                chatId: "'" + result.cid + "'",//会话Id
+                                chatId: "'" + result.chatId + "'",//会话Id
                                 onSuccess : function() {
                                     alert('进入会话.');
                                 },
