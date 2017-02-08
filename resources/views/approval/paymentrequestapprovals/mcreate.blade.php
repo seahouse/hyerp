@@ -20,6 +20,7 @@
     	])
 
 	{!! Form::button('聊天2', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnPickConversation']) !!}
+	{!! Form::button('聊天3', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnPickConversation3']) !!}
 
 @endsection
 
@@ -104,20 +105,38 @@
                 timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
                 nonceStr: '{!! array_get($config, 'nonceStr') !!}', // 必填，生成签名的随机串
                 signature: '{!! array_get($config, 'signature') !!}', // 必填，签名
-                jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile', 'biz.chat.pickConversation'] // 必填，需要使用的jsapi列表
+                jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile', 'biz.chat.pickConversation',
+					'biz.chat.chooseConversationByCorpId'] // 必填，需要使用的jsapi列表
             });
 
             dd.ready(function() {
                 $("#btnPickConversation").click(function() {
                     dd.biz.chat.pickConversation({
                         corpId: '{!! array_get($config, 'corpId') !!}',
-                        isConfirm:'true', //是否弹出确认窗口，默认为true
+                        isConfirm:'false', //是否弹出确认窗口，默认为true
                         onSuccess : function(result) {
                             //onSuccess将在选择结束之后调用
                             // 该cid和服务端开发文档-普通会话消息接口配合使用，而且只能使用一次，之后将失效
 							alert(result.cid);
+                            alert(result.title);
 							/*{
 							 cid: 'xxxx',
+							 title:'xxx'
+							 }*/
+                        },
+                        onFail : function() { alert('error'); }
+                    });
+                });
+
+                $("#btnPickConversation3").click(function() {
+                    dd.biz.chat.chooseConversationByCorpId({
+                        corpId: '{!! array_get($config, 'corpId') !!}',
+                        onSuccess : function(result) {
+                            //onSuccess将在选择结束之后调用
+                            alert(result.chatId);
+                            alert(result.title);
+							/*{
+							 chatId: 'xxxx',
 							 title:'xxx'
 							 }*/
                         },
