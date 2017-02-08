@@ -102,7 +102,7 @@
 			});
 
             $("#btnPickConversation4").click(function() {
-                $.post("{{ url('/dingtalk/send_to_conversation') }}", {cid:"chatf12c075227956c1a596eec32885865f8", _token:"{!! csrf_token() !!}"}, function (data) {
+                $.post("{{ url('/dingtalk/send_to_conversation') }}", {cid:"chatf12c075227956c1a596eec32885865f8", id: "{{$paymentrequest->id}}", _token:"{!! csrf_token() !!}"}, function (data) {
 
                 });
             });
@@ -125,12 +125,14 @@
                         onSuccess : function(result) {
                             //onSuccess将在选择结束之后调用
                             // 该cid和服务端开发文档-普通会话消息接口配合使用，而且只能使用一次，之后将失效
-							alert(result.cid);
-                            alert(result.title);
+							// alert(result.cid);
+                            // alert(result.title);
 							/*{
 							 cid: 'xxxx',
 							 title:'xxx'
 							 }*/
+
+							{{--
                             dd.biz.chat.toConversation({
                                 corpId: '{!! array_get($config, 'corpId') !!}', //企业id
                                 chatId: result.cid,//会话Id
@@ -139,6 +141,7 @@
 								},
                                 onFail : function() { alert('进入会话失败'); }
                             });
+                            --}}
 
                             $.post("{{ url('/dingtalk/send_to_conversation') }}", {cid:result.cid, _token:"{!! csrf_token() !!}"}, function (data) {
 

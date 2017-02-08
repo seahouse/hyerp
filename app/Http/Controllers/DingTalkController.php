@@ -670,7 +670,7 @@ class DingTalkController extends Controller
             'cid' => $request->input('cid'),
             'msgtype' => "text",
             "text" => [
-                "content" => "tttt"
+                "content" => "tttt: " . $request->input('id')
             ]
         ];
 
