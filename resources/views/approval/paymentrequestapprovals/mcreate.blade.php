@@ -106,7 +106,7 @@
                 nonceStr: '{!! array_get($config, 'nonceStr') !!}', // 必填，生成签名的随机串
                 signature: '{!! array_get($config, 'signature') !!}', // 必填，签名
                 jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile', 'biz.chat.pickConversation',
-					'biz.chat.chooseConversationByCorpId'] // 必填，需要使用的jsapi列表
+					'biz.chat.chooseConversationByCorpId', 'biz.chat.toConversation'] // 必填，需要使用的jsapi列表
             });
 
             dd.ready(function() {
@@ -123,6 +123,14 @@
 							 cid: 'xxxx',
 							 title:'xxx'
 							 }*/
+                            dd.biz.chat.toConversation({
+                                corpId: '{!! array_get($config, 'corpId') !!}', //企业id
+                                chatId: result.cid,//会话Id
+                                onSuccess : function() {
+                                    alert('进入会话.');
+								},
+                                onFail : function() { alert('进入会话失败'); }
+                            });
                         },
                         onFail : function() { alert('error'); }
                     });
