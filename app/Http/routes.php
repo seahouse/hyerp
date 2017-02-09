@@ -62,7 +62,7 @@ Route::group(['middleware' => ['web']], function () {
 
     // chat
     Route::post('dingtalk/chat_create', 'DingTalkController@chat_create');
-    Route::get('dingtalk/send_to_conversation', 'DingTalkController@send_to_conversation');
+    Route::post('dingtalk/send_to_conversation', 'DingTalkController@send_to_conversation');
 
     // run .bat shell command to run git pull.
     Route::get('gitpullbybat', function() { return view('gitpullbybat'); });
