@@ -13,6 +13,7 @@ use Jenssegers\Agent\Agent;
 use App\Http\Controllers\util\Http;
 use App\Http\Controllers\crypto\DingtalkCrypt;
 use App\Http\Controllers\System\UsersController;
+use App\Models\Approval\Paymentrequest;
 
 class DingTalkController extends Controller
 {
@@ -665,12 +666,14 @@ class DingTalkController extends Controller
     {
 //         dd('send_to_conversation');
         $access_token = self::getAccessToken();
+        $paymentrequestid = $request->input('id', -1);
+        $paymentrequest = Paymentrequest::findOrFail($paymentrequestid);
         $data = [
             'sender' => 'manager1200',
             'cid' => $request->input('cid'),
             'msgtype' => "text",
             "text" => [
-                "content" => "tttt: " . $request->input('id')
+                "content" => "审批日期: " . $paymentrequest->created_at . ", 客户: " . $paymentrequest->supplier_hxold->name . ", 金额: " . $paymentrequest->amount
             ]
         ];
 
