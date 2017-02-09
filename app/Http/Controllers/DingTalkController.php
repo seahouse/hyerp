@@ -668,12 +668,13 @@ class DingTalkController extends Controller
         $access_token = self::getAccessToken();
         $paymentrequestid = $request->input('id', -1);
         $paymentrequest = Paymentrequest::findOrFail($paymentrequestid);
+//        dd("审批日期: " . $paymentrequest->created_at . ", 客户: " . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : "") . ", 金额: " . $paymentrequest->amount);
         $data = [
             'sender' => 'manager1200',
             'cid' => $request->input('cid'),
             'msgtype' => "text",
             "text" => [
-                "content" => "审批日期: " . $paymentrequest->created_at . ", 客户: " . isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : "" . ", 金额: " . $paymentrequest->amount
+                "content" => "审批日期: " . $paymentrequest->created_at . ", 客户: " . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : "") . ", 金额: " . $paymentrequest->amount
             ]
         ];
 
