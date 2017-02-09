@@ -19,10 +19,12 @@
 			'btnclass' => 'btn btn-primary',
     	])
 
+	@if (Auth::user()->email == "admin@admin.com")
 	{!! Form::button('聊天2', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnPickConversation']) !!}
 	{!! Form::button('聊天3', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnPickConversation3']) !!}
 	{!! Form::button('聊天4', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnPickConversation4']) !!}
 	<a href="/dingtalk/send_to_conversation">聊天5</a>
+	@endif
 
 @endsection
 
