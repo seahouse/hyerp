@@ -143,7 +143,7 @@
                             });
                             --}}
 
-                            $.post("{{ url('/dingtalk/send_to_conversation') }}", {cid:result.cid, _token:"{!! csrf_token() !!}"}, function (data) {
+                            $.post("{{ url('/dingtalk/send_to_conversation') }}", {cid:result.cid, id: "{{$paymentrequest->id}}", _token:"{!! csrf_token() !!}"}, function (data) {
 
                             }, "json");
 
