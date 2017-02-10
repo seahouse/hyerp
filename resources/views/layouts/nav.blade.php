@@ -29,6 +29,9 @@
                         <li><a href="/product/itemclasses">物料类别</a></li>
                         <li><a href="/product/boms">物料清单</a></li>
                         @endcan
+                            @can('product_item_purchase_view')
+                                <li><a href="/product/indexp_hxold/">购入零件</a></li>
+                            @endcan
                     </ul>
                 </li>
                 <li class="dropdown">

@@ -2,6 +2,7 @@
 
 @section('title', '物料')
 
+@can('product_item_purchase_view')
 @section('main')
     <div class="panel-heading">
         <div class="panel-title">基础资料 -- 购入商品
@@ -26,8 +27,9 @@
         </div>
         {!! Form::close() !!}
 
-
+@if (Auth::user()->isSuperAdmin())
         {!! Form::button('重新对新老系统编号进行一一对应（按照名称、型号完全匹配）', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnSetNo']) !!}
+@endif
 
         {{--
                 {!! Form::open(['url' => '', 'class' => 'pull-right form-inline']) !!}
@@ -124,7 +126,9 @@
                     </td>
 --}}
                     <td>
+                        @can('product_item_purchase_setoldrelation')
                         <a href="{{ URL::to('/product/indexp_hxold/'.$item->goods_id.'/sethxold2') }}" target="_blank" class="btn btn-success btn-sm pull-left">对应老编号</a>
+                        @endcan
 {{--
                         {!! Form::open(array('route' => array('product.items.destroy', $item->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
                             {!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}
@@ -195,3 +199,6 @@
         });
     </script>
 @endsection
+@else
+    无权限。
+@endcan
