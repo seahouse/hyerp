@@ -18,7 +18,7 @@ class CreateReportsTable extends Migration
             $table->string('name');
             $table->string('module')->default('');
             $table->string('descrip')->default('')->commet('描述');
-            $table->string('statement')->default('')->commet('SQL语句');
+            $table->string('statement', 1023)->default('')->commet('SQL语句');
 
             $table->timestamps();
 
