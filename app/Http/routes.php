@@ -213,6 +213,7 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         Route::get('', 'PoitemsController@index_hxold');
     });
     Route::resource('poitems', 'PoitemsController');
+//    Route::get('report', 'ReportController@showpurchase');
 });
 
 Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase'], function() {
@@ -326,6 +327,10 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
         Route::delete('destroy/{permission}', 'RolepermissionsController@destroy');
     });
     Route::post('rolepermissions/store', 'RolepermissionsController@store');
+    Route::get('report/{id}/statistics', 'ReportController@statistics');
+    Route::post('report/{id}/statistics', 'ReportController@statistics');
+    Route::post('report/{id}/export', 'ReportController@export');
+    Route::resource('report', 'ReportController');
 });
 
 Route::group(['prefix' => 'teaching', 'namespace' => 'Teaching', 'middleware' => ['web', 'auth']], function() {

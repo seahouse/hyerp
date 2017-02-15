@@ -17,18 +17,21 @@
 {{--
         <a href="{{ URL::to('approval/items/create') }}" class="btn btn-sm btn-success">新建</a>
 --}}
-{{--
+
+        @if (Auth::user()->email === "admin@admin.com")
         <form class="pull-right" action="/approval/paymentrequests/export" method="post">
             {!! csrf_field() !!}
             <div class="pull-right">
                 <button type="submit" class="btn btn-default btn-sm">导出</button>
             </div>
         </form>
+        @endif
 
-        <div class="pull-right">
-            <button class="btn btn-default btn-sm" id="btnExport">导出</button>
-        </div>
---}}
+        {{--
+                <div class="pull-right">
+                    <button class="btn btn-default btn-sm" id="btnExport">导出</button>
+                </div>
+        --}}
         {!! Form::open(['url' => '/approval/paymentrequests/search', 'class' => 'pull-right form-inline']) !!}
             <div class="form-group-sm">
                 {!! Form::label('approvaldatelabel', '审批时间:', ['class' => 'control-label']); !!}

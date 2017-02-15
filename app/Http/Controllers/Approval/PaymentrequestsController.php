@@ -771,7 +771,8 @@ class PaymentrequestsController extends Controller
 
                 // Sheet manipulation
                 $paymentrequests = $this->search2()->toArray();
-                // dd($paymentrequests["data"]);
+//                dd($this->search2());
+                dd($paymentrequests["data"]);
                 $sheet->fromArray($paymentrequests["data"]);
             });
 

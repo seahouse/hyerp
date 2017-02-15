@@ -61,6 +61,9 @@
                         <li><a href="/purchase/vendinfos">供应商</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="/inventory/inventoryAvailability">库存可用量</a></li>
+                        @if (Auth::user()->email === "admin@admin.com")
+                            <li><a href="/system/report">报表</a></li>
+                        @endif
                         @endcan
                     </ul>
                 </li>
