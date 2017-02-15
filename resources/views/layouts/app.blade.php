@@ -14,7 +14,8 @@
     <!-- <link href="{{ asset("http://fonts.useso.com/css?family=Lato:100,300,400,700") }}" rel='stylesheet' type='text/css'> -->
 
     <!-- Styles -->
-    <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ asset("css/bootstrap.min.css") }}" rel="stylesheet">
+    {{--<link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">--}}
     <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"> -->
     <!-- <link href="{{ asset("css/bootstrap.min.css") }}" rel="stylesheet"> -->
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
