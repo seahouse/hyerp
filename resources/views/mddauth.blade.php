@@ -34,7 +34,6 @@
 	</p> -->
 
 	{{ $code }}
-	{{ $_SERVER['REQUEST_URI'] }}
 	{{ request() }}
 	{{ request('code', 'aaa') }}
 <!-- 	{{ $config['url'] }}
@@ -201,47 +200,31 @@
 			{
                 console.info("{{request('code', '')}}");
 
+				{{--
                 $.ajax({
                     type:"GET",
                     url:"{{ url('dingtalk/getuserinfo') }}" + "/" + "{{ request('code', '')  }}",
                     error:function(xhr, ajaxOptions, thrownError){
                         console.info("getuserinfo failed.");
-
                     },
                     success:function(msg){
-                        // console.log('requestAuthCode success');
-                        // alert('userid: ' + msg.userid);
-                        // alert('userid_erp: ' + msg.userid_erp);
-                        // console.log('{!! array_get($config, "appname") !!}');
                         if (msg.userid_erp == -1)
                         {
                             console.info("您的账号未与后台绑定，无法使用此应用..");
                         }
                         else if ("{!! array_get($config, 'appname') !!}" == "approval")
                         {
-                            // location.href = "{{ url('/mapproval') }}";
                             var url = '{!! $url !!}';
                             if ('{!! $url !!}' != '')
                             {
-                                // DingTalkPC.biz.util.openLink({
-                                //     url: "{!! url('/') !!}" + "/" + url,//要打开链接的地址
-                                //     onSuccess : function(result) {
-                                //     	console.log('openLink success.');
-                                //         /**/
-                                //     },
-                                //     onFail : function() {
-                                //     	console.log('openLink failed.');
-                                //     }
-                                // })
                                 location.href = "{!! url('/') !!}" + "/" + url;
                             }
                             else
                                 location.href = "{{ url('/mapproval') }}";
                         }
-                        // else
-                        // 	console.log('else ~~');
                     },
                 });
+                --}}
 			}
 			else
 			{
