@@ -47,8 +47,8 @@ class DingTalkController extends Controller
         $accessToken = Cache::remember('access_token_sns', 7200/60 - 5, function() {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
             $url = 'https://oapi.dingtalk.com/sns/gettoken';
             $appid = config('custom.dingtalk.appid');
-            $appSecret = config('custom.dingtalk.appSecret');
-            $params = compact('appid', 'appSecret');
+            $appsecret = config('custom.dingtalk.appsecret');
+            $params = compact('appid', 'appsecret');
             // $reply = $this->get($url, $params);
             $reply = self::get($url, $params);
             $accessToken = $reply->access_token;
@@ -194,12 +194,12 @@ class DingTalkController extends Controller
         }
 
         $user = [
-            'deviceId' => $userInfo->deviceId,
-            'errcode' => $userInfo->errcode,
-            'errmsg' => $userInfo->errmsg,
-            'is_sys' => $userInfo->is_sys,
-            'sys_level' => $userInfo->sys_level,
-            'userid' => $userInfo->userid,
+//            'deviceId' => $userInfo->deviceId,
+//            'errcode' => $userInfo->errcode,
+//            'errmsg' => $userInfo->errmsg,
+//            'is_sys' => $userInfo->is_sys,
+//            'sys_level' => $userInfo->sys_level,
+//            'userid' => $userInfo->userid,
             'userid_erp' => $userid_erp,
         ];
         return response()->json($user);
