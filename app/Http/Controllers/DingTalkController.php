@@ -180,11 +180,12 @@ class DingTalkController extends Controller
         Log::info(json_encode($userInfo));
 
         // get erp user info and set session userid
-        $user_erp = DB::table('users')->where('dtuserid', $userInfo->user_info->dingId)->first();
+//        $user_erp = DB::table('users')->where('dtuserid', $userInfo->user_info->dingId)->first();
+        $dtuser = DB::table('dtusers')->where('dingId', $userInfo->user_info->dingId)->first();
         $userid_erp = -1;
-        if (!is_null($user_erp))
+        if (isset($dtuser))
         {
-            $userid_erp = $user_erp->id;
+            $userid_erp = $dtuser->user_id;
             session()->put('userid', $userid_erp);
             // login
             if (!Auth::check())
