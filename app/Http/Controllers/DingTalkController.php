@@ -43,6 +43,20 @@ class DingTalkController extends Controller
         return $accessToken;
     }
 
+    public static function getTokenSns() {
+        $accessToken = Cache::remember('access_token_sns', 7200/60 - 5, function() {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
+            $url = 'https://oapi.dingtalk.com/sns/gettoken';
+            $appid = config('custom.dingtalk.appid');
+            $appSecret = config('custom.dingtalk.appSecret');
+            $params = compact('appid', 'appSecret');
+            // $reply = $this->get($url, $params);
+            $reply = self::get($url, $params);
+            $accessToken = $reply->access_token;
+            return $accessToken;
+        });
+        return $accessToken;
+    }
+
     public static function getTicket($access_token)
     {
         $ticket = Cache::remember('ticket', 7200/60 - 5, function() use($access_token) {
@@ -96,8 +110,8 @@ class DingTalkController extends Controller
 
     public function getuserinfo($code)
     {
-        $corpid = 'ding6ed55e00b5328f39';
-        $corpsecret = 'gdQvzBl7IW5f3YUSMIkfEIsivOVn8lcXUL_i1BIJvbP4kPJh8SU8B8JuNe8U9JIo';
+//        $corpid = 'ding6ed55e00b5328f39';
+//        $corpsecret = 'gdQvzBl7IW5f3YUSMIkfEIsivOVn8lcXUL_i1BIJvbP4kPJh8SU8B8JuNe8U9JIo';
 
         // $url = 'https://oapi.dingtalk.com/gettoken';
         // $params = compact('corpid', 'corpsecret');
@@ -118,6 +132,61 @@ class DingTalkController extends Controller
             $userid_erp = $user_erp->id;
             session()->put('userid', $userid_erp);
             // login 
+            if (!Auth::check())
+            {
+                Auth::loginUsingId($userid_erp);
+            }
+        }
+
+        $user = [
+            'deviceId' => $userInfo->deviceId,
+            'errcode' => $userInfo->errcode,
+            'errmsg' => $userInfo->errmsg,
+            'is_sys' => $userInfo->is_sys,
+            'sys_level' => $userInfo->sys_level,
+            'userid' => $userInfo->userid,
+            'userid_erp' => $userid_erp,
+        ];
+        return response()->json($user);
+    }
+
+    // 扫码免登的获取用户信息接口
+    public function getuserinfoByScancode($code)
+    {
+
+        // $url = 'https://oapi.dingtalk.com/gettoken';
+        // $params = compact('corpid', 'corpsecret');
+        // $reply = $this->get($url, $params);
+        // $access_token = $reply->access_token;
+        $access_token = self::getTokenSns();
+
+        $data = ['tmp_auth_code' => $code];
+        $response = Http::post("/sns/get_persistent_code",
+            array("access_token" => $access_token), json_encode($data));
+//        return $response;
+        $openid = $response->openid;
+        $persistent_code = $response->persistent_code;
+
+        $data = ['openid' => $openid, 'persistent_code' => $persistent_code];
+        $response = Http::post("/sns/get_sns_token",
+            array("access_token" => $access_token), json_encode($data));
+//        return $response;
+        $sns_token = $response->sns_token;
+
+        // Get user info
+        $url = 'https://oapi.dingtalk.com/sns/getuserinfo';
+        $params = compact('sns_token');
+        $userInfo = $this->get($url, $params);
+        Log::info(json_encode($userInfo));
+
+        // get erp user info and set session userid
+        $user_erp = DB::table('users')->where('dtuserid', $userInfo->user_info->dingId)->first();
+        $userid_erp = -1;
+        if (!is_null($user_erp))
+        {
+            $userid_erp = $user_erp->id;
+            session()->put('userid', $userid_erp);
+            // login
             if (!Auth::check())
             {
                 Auth::loginUsingId($userid_erp);
