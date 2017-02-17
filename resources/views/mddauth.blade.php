@@ -33,7 +33,10 @@
 		</div>
 	</p> -->
 
+	{{ $code }}
+	{{ $_SERVER['REQUEST_URI'] }}
 	{{ request() }}
+	{{ request('code', 'aaa') }}
 <!-- 	{{ $config['url'] }}
 	{{ array_get($config, 'url') }} -->
 

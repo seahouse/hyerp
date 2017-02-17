@@ -146,7 +146,8 @@ class DingTalkController extends Controller
         // dd(compact('config'));
         $agent = new Agent();
         $url = str_replace("-", "/", $url);
-        return view('mddauth', compact('config', 'agent', 'url'));
+        $code = request('code', '');
+        return view('mddauth', compact('config', 'agent', 'url', 'code'));
     }
 
     public function ddauth($appname = 'approval')
