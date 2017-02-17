@@ -33,9 +33,6 @@
 		</div>
 	</p> -->
 
-	{{ $code }}
-	{{ request() }}
-	{{ request('code', 'aaa') }}
 <!-- 	{{ $config['url'] }}
 	{{ array_get($config, 'url') }} -->
 
@@ -220,7 +217,7 @@
                                 location.href = "{!! url('/') !!}" + "/" + url;
                             }
                             else
-                                location.href = "{{ url('/mapproval') }}";
+                                location.href = "{{ url('/') }}";
                         }
                     },
                 });
