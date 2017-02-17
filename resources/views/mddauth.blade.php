@@ -33,7 +33,7 @@
 		</div>
 	</p> -->
 
-
+	{{ request('code') }}
 <!-- 	{{ $config['url'] }}
 	{{ array_get($config, 'url') }} -->
 
@@ -193,143 +193,193 @@
 	
 	<script type="text/javascript">
 		jQuery(document).ready(function(e) {
-            console.log('{{ Request()->input('code') }}');
-			// $("#t1").attr("target", "_self");
-			DingTalkPC.config({
-			    // agentId: '13231599', // 必填，微应用ID
-			    // corpId: 'ding6ed55e00b5328f39',//必填，企业ID
-			    // timeStamp: $('#timeStamp').val(), // 必填，生成签名的时间戳
-			    // nonceStr: $('#nonceStr').val(), // 必填，生成签名的随机串
-			    // signature: $('#signature').val(), // 必填，签名
-			    agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
-			    corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID
-			    timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
-			    nonceStr: "{!! array_get($config, 'nonceStr') !!}", // 必填，生成签名的随机串
-			    signature: "{!! array_get($config, 'signature') !!}", // 必填，签名
-			    jsApiList: ['runtime.info',
-			    	'runtime.permission.requestAuthCode',
-			    	'device.notification.alert', 
-			    	'device.notification.confirm', 
-			    	'biz.util.uploadImage',
-			    	'biz.navigation.close',
-			    	'biz.util.open',
-			    	'biz.util.openLink'] // 必填，需要使用的jsapi列表
-			});
+		    // 扫码登录
+			if ("{{ request('code', '')  }}" != "")
+			{
+                console.info("{{request('code', '')}}");
 
-			
+                $.ajax({
+                    type:"GET",
+                    url:"{{ url('dingtalk/getuserinfo') }}" + "/" + "{{ request('code', '')  }}",
+                    error:function(xhr, ajaxOptions, thrownError){
+                        console.info("getuserinfo failed.");
 
-			DingTalkPC.ready(function(res) {
-				// DingTalkPC.runtime.info({
-				// 	onSuccess: function(info) {
-				// 		// alert('runtime info: ' + JSON.stringify(info));
-				// 	},
-				// 	onFail: function(err) {
-				// 		alert('fail: ' + JSON.stringify(err));
-				// 	}
-				// });
+                    },
+                    success:function(msg){
+                        // console.log('requestAuthCode success');
+                        // alert('userid: ' + msg.userid);
+                        // alert('userid_erp: ' + msg.userid_erp);
+                        // console.log('{!! array_get($config, "appname") !!}');
+                        if (msg.userid_erp == -1)
+                        {
+                            console.info("您的账号未与后台绑定，无法使用此应用..");
+                        }
+                        else if ("{!! array_get($config, 'appname') !!}" == "approval")
+                        {
+                            // location.href = "{{ url('/mapproval') }}";
+                            var url = '{!! $url !!}';
+                            if ('{!! $url !!}' != '')
+                            {
+                                // DingTalkPC.biz.util.openLink({
+                                //     url: "{!! url('/') !!}" + "/" + url,//要打开链接的地址
+                                //     onSuccess : function(result) {
+                                //     	console.log('openLink success.');
+                                //         /**/
+                                //     },
+                                //     onFail : function() {
+                                //     	console.log('openLink failed.');
+                                //     }
+                                // })
+                                location.href = "{!! url('/') !!}" + "/" + url;
+                            }
+                            else
+                                location.href = "{{ url('/mapproval') }}";
+                        }
+                        // else
+                        // 	console.log('else ~~');
+                    },
+                });
+			}
+			else
+			{
+                DingTalkPC.config({
+                    // agentId: '13231599', // 必填，微应用ID
+                    // corpId: 'ding6ed55e00b5328f39',//必填，企业ID
+                    // timeStamp: $('#timeStamp').val(), // 必填，生成签名的时间戳
+                    // nonceStr: $('#nonceStr').val(), // 必填，生成签名的随机串
+                    // signature: $('#signature').val(), // 必填，签名
+                    agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
+                    corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID
+                    timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
+                    nonceStr: "{!! array_get($config, 'nonceStr') !!}", // 必填，生成签名的随机串
+                    signature: "{!! array_get($config, 'signature') !!}", // 必填，签名
+                    jsApiList: ['runtime.info',
+                        'runtime.permission.requestAuthCode',
+                        'device.notification.alert',
+                        'device.notification.confirm',
+                        'biz.util.uploadImage',
+                        'biz.navigation.close',
+                        'biz.util.open',
+                        'biz.util.openLink'] // 必填，需要使用的jsapi列表
+                });
 
-				// // if the page is not first history.back, exit it.
-				// if (history.length > 1)
-				// {
-				// 	dd.biz.navigation.close({
-				// 	    onSuccess : function(result) {
-				// 	        /*result结构
-				// 	        {}
-				// 	        */
-				// 	    },
-				// 	    onFail : function(err) {}
-				// 	});
-				// }
 
-				console.log(DingTalkPC.ua);
-				// if (DingTalkPC.ua.isInDingTalk)
-				// 	$("#t1").attr("target", "_self");
-	
-				// console.log('requestAuthCode');
-				DingTalkPC.runtime.permission.requestAuthCode({
-				    corpId: "{!! array_get($config, 'corpId') !!}",
-				    onSuccess: function(result) {
-			     	    $.ajax({
-			         	    type:"GET",
-			         	    url:"{{ url('dingtalk/getuserinfo') }}" + "/" + result.code,
-			         	    error:function(xhr, ajaxOptions, thrownError){
-								DingTalkPC.device.notification.alert({
-								    message: "登录错误",
-								    title: "登录错误",//可传空
-								    buttonName: "收到",
-								    onSuccess : function() {
-								        /*回调*/
-								    },
-								    onFail : function(err) {}
-								});				    			
-			     //         	    alert('error');
-								// alert(xhr.status);
-								// alert(xhr.responseText);
-								// alert(ajaxOptions);
-								// alert(thrownError);
-			             	},
-			             	success:function(msg){
-			             		// console.log('requestAuthCode success');
-			             	    // alert('userid: ' + msg.userid);
-			             	    // alert('userid_erp: ' + msg.userid_erp);
-			             	    // console.log('{!! array_get($config, "appname") !!}');
-			             	    if (msg.userid_erp == -1)
-			             	    {
-									DingTalkPC.device.notification.alert({
-									    message: "登录错误",
-									    title: "登录错误",//可传空
-									    buttonName: "收到",
-									    onSuccess : function() {
-									        /*回调*/
-									    },
-									    onFail : function(err) {}
-									});
-			             	    	// alert('您的账号未与后台绑定，无法使用此应用.');
-			             	    }
-			             	    else if ("{!! array_get($config, 'appname') !!}" == "approval")
-			             	    {
-			             	    	// location.href = "{{ url('/mapproval') }}";
-			             	    	var url = '{!! $url !!}';
-			             	    	if ('{!! $url !!}' != '')
-			             	    	{
-										// DingTalkPC.biz.util.openLink({
-										//     url: "{!! url('/') !!}" + "/" + url,//要打开链接的地址
-										//     onSuccess : function(result) {
-										//     	console.log('openLink success.');
-										//         /**/
-										//     },
-										//     onFail : function() {
-										//     	console.log('openLink failed.');
-										//     }
-										// })
-			             	    		location.href = "{!! url('/') !!}" + "/" + url;
-			             	    	}
-			             	    	else
-			             	    		location.href = "{{ url('/mapproval') }}";
-			             	    }
-			             	    // else
-			             	    // 	console.log('else ~~');
-			                },
-			         	});
-				    },
-				    onFail : function(err) {
-						DingTalkPC.device.notification.alert({
-						    message: JSON.stringify(err),
-						    title: "requestAuthCode",//可传空
-						    buttonName: "收到",
-						    onSuccess : function() {
-						        /*回调*/
-						    },
-						    onFail : function(err) {}
-						});
-						// alert('requestAuthCode fail: ' + JSON.stringify(err));
-					}
-				});
-			});
 
-			DingTalkPC.error(function(error) {
-				alert('DingTalkPC.error: ' + JSON.stringify(error));
-			});
+                DingTalkPC.ready(function(res) {
+                    // DingTalkPC.runtime.info({
+                    // 	onSuccess: function(info) {
+                    // 		// alert('runtime info: ' + JSON.stringify(info));
+                    // 	},
+                    // 	onFail: function(err) {
+                    // 		alert('fail: ' + JSON.stringify(err));
+                    // 	}
+                    // });
+
+                    // // if the page is not first history.back, exit it.
+                    // if (history.length > 1)
+                    // {
+                    // 	dd.biz.navigation.close({
+                    // 	    onSuccess : function(result) {
+                    // 	        /*result结构
+                    // 	        {}
+                    // 	        */
+                    // 	    },
+                    // 	    onFail : function(err) {}
+                    // 	});
+                    // }
+
+                    console.log(DingTalkPC.ua);
+                    // if (DingTalkPC.ua.isInDingTalk)
+                    // 	$("#t1").attr("target", "_self");
+
+                    // console.log('requestAuthCode');
+                    DingTalkPC.runtime.permission.requestAuthCode({
+                        corpId: "{!! array_get($config, 'corpId') !!}",
+                        onSuccess: function(result) {
+                            $.ajax({
+                                type:"GET",
+                                url:"{{ url('dingtalk/getuserinfo') }}" + "/" + result.code,
+                                error:function(xhr, ajaxOptions, thrownError){
+                                    DingTalkPC.device.notification.alert({
+                                        message: "登录错误",
+                                        title: "登录错误",//可传空
+                                        buttonName: "收到",
+                                        onSuccess : function() {
+											/*回调*/
+                                        },
+                                        onFail : function(err) {}
+                                    });
+                                    //         	    alert('error');
+                                    // alert(xhr.status);
+                                    // alert(xhr.responseText);
+                                    // alert(ajaxOptions);
+                                    // alert(thrownError);
+                                },
+                                success:function(msg){
+                                    // console.log('requestAuthCode success');
+                                    // alert('userid: ' + msg.userid);
+                                    // alert('userid_erp: ' + msg.userid_erp);
+                                    // console.log('{!! array_get($config, "appname") !!}');
+                                    if (msg.userid_erp == -1)
+                                    {
+                                        DingTalkPC.device.notification.alert({
+                                            message: "登录错误",
+                                            title: "登录错误",//可传空
+                                            buttonName: "收到",
+                                            onSuccess : function() {
+												/*回调*/
+                                            },
+                                            onFail : function(err) {}
+                                        });
+                                        // alert('您的账号未与后台绑定，无法使用此应用.');
+                                    }
+                                    else if ("{!! array_get($config, 'appname') !!}" == "approval")
+                                    {
+                                        // location.href = "{{ url('/mapproval') }}";
+                                        var url = '{!! $url !!}';
+                                        if ('{!! $url !!}' != '')
+                                        {
+                                            // DingTalkPC.biz.util.openLink({
+                                            //     url: "{!! url('/') !!}" + "/" + url,//要打开链接的地址
+                                            //     onSuccess : function(result) {
+                                            //     	console.log('openLink success.');
+                                            //         /**/
+                                            //     },
+                                            //     onFail : function() {
+                                            //     	console.log('openLink failed.');
+                                            //     }
+                                            // })
+                                            location.href = "{!! url('/') !!}" + "/" + url;
+                                        }
+                                        else
+                                            location.href = "{{ url('/mapproval') }}";
+                                    }
+                                    // else
+                                    // 	console.log('else ~~');
+                                },
+                            });
+                        },
+                        onFail : function(err) {
+                            DingTalkPC.device.notification.alert({
+                                message: JSON.stringify(err),
+                                title: "requestAuthCode",//可传空
+                                buttonName: "收到",
+                                onSuccess : function() {
+									/*回调*/
+                                },
+                                onFail : function(err) {}
+                            });
+                            // alert('requestAuthCode fail: ' + JSON.stringify(err));
+                        }
+                    });
+                });
+
+                DingTalkPC.error(function(error) {
+                    alert('DingTalkPC.error: ' + JSON.stringify(error));
+                });
+			}
+
+
 		});
 	</script>
 @endsection
