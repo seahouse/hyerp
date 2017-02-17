@@ -10,4 +10,5 @@
 
 <script type="text/javascript">
 	console.log("{{ $_SERVER['REQUEST_URI'] }}");
+	{{ $_REQUEST['code'] }}
 </script>
