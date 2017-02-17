@@ -202,7 +202,7 @@
 
                 $.ajax({
                     type:"GET",
-                    url:"{{ url('dingtalk/getuserinfo') }}" + "/" + "{{ request('code', '')  }}",
+                    url:"{{ url('dingtalk/getuserinfoByScancode') }}" + "/" + "{{ request('code', '')  }}",
                     error:function(xhr, ajaxOptions, thrownError){
                         console.info("getuserinfo failed.");
                     },
