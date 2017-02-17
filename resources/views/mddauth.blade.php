@@ -193,6 +193,7 @@
 	
 	<script type="text/javascript">
 		jQuery(document).ready(function(e) {
+            console.log({{ Request()->input('code') }});
 			// $("#t1").attr("target", "_self");
 			DingTalkPC.config({
 			    // agentId: '13231599', // 必填，微应用ID
