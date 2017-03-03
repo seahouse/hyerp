@@ -211,6 +211,52 @@ class DingTalkController extends Controller
         return response()->json($user);
     }
 
+    // 扫码免登的获取用户信息接口
+    public function getuserinfoByScancode_hxold($code)
+    {
+
+        $access_token = self::getTokenSns();
+
+        $data = ['tmp_auth_code' => $code];
+        $response = Http::post("/sns/get_persistent_code",
+            array("access_token" => $access_token), json_encode($data));
+//        return $response;
+        $openid = $response->openid;
+        $persistent_code = $response->persistent_code;
+
+        $data = ['openid' => $openid, 'persistent_code' => $persistent_code];
+        $response = Http::post("/sns/get_sns_token",
+            array("access_token" => $access_token), json_encode($data));
+//        return $response;
+        $sns_token = $response->sns_token;
+
+        // Get user info
+        $url = 'https://oapi.dingtalk.com/sns/getuserinfo';
+        $params = compact('sns_token');
+        $userInfo = $this->get($url, $params);
+//        Log::info(json_encode($userInfo));
+
+        // get erp user info and set session userid
+//        $user_erp = DB::table('users')->where('dtuserid', $userInfo->user_info->dingId)->first();
+        $dtuser = DB::table('dtusers')->where('dingId', $userInfo->user_info->dingId)->first();
+        $userid_erp = -1;
+        if (isset($dtuser))
+        {
+            $userold = $dtuser->userold;
+            if (isset($userold))
+            {
+                $userid_erp = $userold->user_hxold_id;
+            }
+            $userid_erp = $dtuser->user_id;
+            session()->put('userid', $userid_erp);
+        }
+
+        $user = [
+            'userid_erp' => $userid_erp,
+        ];
+        return response()->json($user);
+    }
+
     public function mddauth($appname = 'approval', $url = '')
     {
         // dd($url);
