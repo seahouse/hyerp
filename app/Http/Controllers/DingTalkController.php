@@ -247,8 +247,8 @@ class DingTalkController extends Controller
             {
                 $userid_erp = $userold->user_hxold_id;
             }
-            $userid_erp = $dtuser->user_id;
-            session()->put('userid', $userid_erp);
+//            $userid_erp = $dtuser->user_id;
+//            session()->put('userid', $userid_erp);
         }
 
         $user = [
