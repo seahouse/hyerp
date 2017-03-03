@@ -310,6 +310,8 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
     Route::group(['prefix' => 'users/{id}'], function() {
         Route::get('editpass', 'UsersController@editpass');
         Route::post('updatepass', 'UsersController@updatepass');
+        Route::get('edituserold', 'UsersController@edituserold');
+        Route::post('updateuserold', 'UsersController@updateuserold');
     });
     Route::post('users/bingdingtalk', 'UsersController@bingdingtalk');
     Route::post('users/bingdingtalkcancel', 'UsersController@bingdingtalkcancel');

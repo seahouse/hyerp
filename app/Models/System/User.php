@@ -84,4 +84,9 @@ class User extends Authenticatable
     public function dtuser() {
         return $this->hasOne('App\Models\System\Dtuser');
     }
+
+    // 获取老系统的用户信息
+    public function userold() {
+        return $this->hasOne('App\Models\System\Userold');
+    }
 }

@@ -10,6 +10,7 @@
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}">
                         {!! csrf_field() !!}
 
+                        @if (config('custom.dingtalk.dtloginscanonly') !== '1')
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                             <label class="col-md-4 control-label">E-Mail Address</label>
 
@@ -47,19 +48,22 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
+                                @if (config('custom.dingtalk.dtloginscanonly') !== '1')
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fa fa-btn fa-sign-in"></i>Login
                                 </button>
+                                @endif
 
-                                {{--
-                                <a href="" class="btn btn-default">钉钉扫码登录</a>
-                                --}}
                                 <a href="{{ config('custom.dingtalk.oapi_host') . '/connect/qrconnect?appid=' . config('custom.dingtalk.appid') .'&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=' . url('/') . '/mddauth' }}" class="btn btn-default">钉钉扫码登录</a>
 
+                                @if (config('custom.dingtalk.dtloginscanonly') !== '1')
                                 <a class="btn btn-link" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
+                                @endif
+
                             </div>
                         </div>
                     </form>

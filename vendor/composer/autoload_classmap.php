@@ -65,6 +65,7 @@ return array(
     'CreateTeachingpointsTable' => $baseDir . '/database/migrations/2017_01_01_105213_create_teachingpoints_table.php',
     'CreateTeachingstudentimagesTable' => $baseDir . '/database/migrations/2017_01_01_112515_create_teachingstudentimages_table.php',
     'CreateTermsTable' => $baseDir . '/database/migrations/2015_08_27_024511_create_terms_table.php',
+    'CreateUseroldsTable' => $baseDir . '/database/migrations/2017_03_03_125434_create_userolds_table.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2014_10_12_000000_create_users_table.php',
     'CreateVendinfosTable' => $baseDir . '/database/migrations/2015_09_02_072849_create_vendinfos_table.php',
     'CreateVendtypesTable' => $baseDir . '/database/migrations/2015_09_01_085017_create_vendtypes_table.php',

@@ -17,6 +17,7 @@ use App\Models\System\Dtuser;
 use Zizaco\Entrust\Entrust;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DingTalkController;
+use App\Models\System\Userold;
 
 class UsersController extends Controller
 {
@@ -292,5 +293,38 @@ class UsersController extends Controller
         $sFilename = date('YmdHis').rand(100, 200) . '.' . $sExtension;
         $file->move('images', $sFilename);
         return 'images/' . $sFilename;
+    }
+
+    public function edituserold($id)
+    {
+        //
+        $user = User::findOrFail($id);
+        return view('system.users.edituserold', compact('user'));
+    }
+
+    public function updateuserold(Request $request, $id)
+    {
+        //
+//        dd(Request::all());
+        $user = User::findOrFail($id);
+//        $userold = Userold::firstOrNew(['user_id' => $id]);
+        $userold = Userold::where('user_id', $id)->first();
+        if (isset($userold))
+        {
+            $userold->user_hxold_id = Request::input('user_hxold_id');
+            $userold->save();
+        }
+        else
+        {
+            $userold = new Userold;
+            $userold->user_id = $id;
+            $userold->user_hxold_id = Request::input('user_hxold_id');
+            $userold->save();
+        }
+//        dd($userold);
+//        $userold->user_hxold_id = $request->input('user_hxold_id');
+//        $userold->save();
+//        $user->update();
+        return redirect('system/users');
     }
 }

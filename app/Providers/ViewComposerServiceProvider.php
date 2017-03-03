@@ -139,6 +139,11 @@ class ViewComposerServiceProvider extends ServiceProvider
         view()->composer(array('purchase.payments.create_hxold', 'purchase.payments.edit_hxold'), function($view) {
             $view->with('payerList_hxold', \App\Models\System\Employee_hxold::orderby('id', 'asc')->where('dept_id', 10)->orWhere('dept_id', 11)->lists('name', 'id'));
         });
+
+        // userList_hxold
+        view()->composer(array('system.users.edituserold'), function($view) {
+            $view->with('userList_hxold', \App\Models\System\Employee_hxold::orderby('name', 'asc')->lists('name', 'id'));
+        });
     }
 
     /**
