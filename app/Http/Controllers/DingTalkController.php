@@ -177,7 +177,7 @@ class DingTalkController extends Controller
         $url = 'https://oapi.dingtalk.com/sns/getuserinfo';
         $params = compact('sns_token');
         $userInfo = $this->get($url, $params);
-        Log::info(json_encode($userInfo));
+//        Log::info(json_encode($userInfo));
 
         // get erp user info and set session userid
 //        $user_erp = DB::table('users')->where('dtuserid', $userInfo->user_info->dingId)->first();
@@ -190,6 +190,11 @@ class DingTalkController extends Controller
             // login
             if (!Auth::check())
             {
+                Auth::loginUsingId($userid_erp);
+            }
+            else
+            {
+                Auth::logout();
                 Auth::loginUsingId($userid_erp);
             }
         }
