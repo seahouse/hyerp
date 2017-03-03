@@ -35,4 +35,8 @@ class Dtuser extends Model
         'jobnumber',
         'extattr',
     ];
+
+    public function user() {
+        return $this->hasOne('App\Models\System\User', 'id', 'user_id');
+    }
 }
