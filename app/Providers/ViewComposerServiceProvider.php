@@ -142,7 +142,7 @@ class ViewComposerServiceProvider extends ServiceProvider
 
         // userList_hxold
         view()->composer(array('system.users.edituserold'), function($view) {
-            $view->with('userList_hxold', \App\Models\System\Employee_hxold::orderby('name', 'asc')->lists('name', 'id'));
+            $view->with('userList_hxold', \App\Models\System\Employee_hxold::where('status', '<>', -1)->orderby('name', 'asc')->lists('name', 'id'));
         });
     }
 

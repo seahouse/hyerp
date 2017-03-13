@@ -98,10 +98,10 @@
                         {{ $user->position }}
                     </td>
                     <td>
+                        <a href="{{ url('/system/users/' . $user->id . '/edituserold') }}" class="btn btn-default btn-sm" target="_blank">设置</a>
                         @if (isset($user->userold->user_hxold))
                             {{ $user->userold->user_hxold->name }}
                         @endif
-                        <a href="{{ url('/system/users/' . $user->id . '/edituserold') }}" class="btn btn-default btn-sm" target="_blank">设置</a>
                     </td>
                     <td>
                         <a href="{{ URL::to('/system/users/'.$user->id.'/roles') }}">明细</a>

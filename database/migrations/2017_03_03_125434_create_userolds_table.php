@@ -20,7 +20,7 @@ class CreateUseroldsTable extends Migration
 
             $table->timestamps();
 
-            $table->unique('user_hxold_id');
+//            $table->unique('user_hxold_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }

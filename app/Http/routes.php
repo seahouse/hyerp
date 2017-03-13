@@ -334,6 +334,11 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
     Route::post('report/{id}/statistics', 'ReportController@statistics');
     Route::post('report/{id}/export', 'ReportController@export');
     Route::resource('report', 'ReportController');
+
+    Route::group(['prefix' => 'userold'], function() {
+        Route::get('hasrepeatoldid/{oldid}', 'UseroldController@hasrepeatoldid');
+    });
+    Route::resource('userold', 'UseroldController');
 });
 
 Route::group(['prefix' => 'teaching', 'namespace' => 'Teaching', 'middleware' => ['web', 'auth']], function() {
