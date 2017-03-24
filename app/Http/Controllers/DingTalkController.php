@@ -742,7 +742,9 @@ class DingTalkController extends Controller
                 $data = json_decode($msg);
                 foreach ($data->UserId as $userid) {
                     # code...
+                    Log::info("user id: " . $userid);
                     $user = self::userGet($userid);
+                    Log::info("user: " . json_encode($user));
                     UsersController::synchronizedtuser($user);
                 }
 
