@@ -553,9 +553,10 @@ class DingTalkController extends Controller
             'call_back_tag' => ['user_modify_org'],
             'token' => config('custom.dingtalk.TOKEN'),
             'aes_key' => config('custom.dingtalk.ENCODING_AES_KEY'),
-            'url' => url('dingtalk/receive')
+//            'url' => url('dingtalk/receive')
             // 'url' => 'http://www.huaxing-east.cn:2016/dingtalk/receive'
             // 'url' => 'http://hyerp.ricki.cn/dingtalk/receive'
+             'url' => 'http://139.224.8.136:81/dingtalk/receive'
         ];
         // dd($data);
 
@@ -577,6 +578,46 @@ class DingTalkController extends Controller
         $response = Http::get("/call_back/delete_call_back",
             array("access_token" => $access_token));
         // dd(response()->json($response));
+        $data = [
+            'errcode' => $response->errcode,
+            'errmsg' => $response->errmsg
+        ];
+        // dd(json_encode($data));
+        return response()->json($data);
+    }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function synchronizeusers()
+    {
+//        Cache::flush();
+        $access_token = self::getAccessToken();
+
+        $response = Http::get("/department/list",
+            array("access_token" => $access_token));
+        $departments = $response->department;
+        foreach ($departments as $department)
+        {
+            echo  $department->name . "</br>";
+            $access_token = self::getAccessToken();
+            $response = Http::get("/user/list",
+                array("access_token" => $access_token, 'department_id' => $department->id));
+            $userlist = $response->userlist;
+            foreach ($userlist as $user)
+            {
+                echo '<li> ' . $user->name  . ' ' . $user->userid . ' ' . (isset($user->orgEmail) ? $user->orgEmail : '') . '</li>';
+                if (isset($user->orgEmail) && !empty($user->orgEmail))
+                    UsersController::synchronizedtuser($user);
+//                if ($user->userid === "0823230530894101")
+//                    dd(isset($user->orgEmail));
+//                echo '<li> ' . $user->name  . ' ' . $user->orgEmail .  '</li>';
+//                dd($user);
+//                UsersController::synchronizedtuser($user);
+            }
+        }
+        dd($departments);
+//        dd(response()->json($response));
         $data = [
             'errcode' => $response->errcode,
             'errmsg' => $response->errmsg

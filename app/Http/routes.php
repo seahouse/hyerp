@@ -61,6 +61,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('dingtalk/getconfig', 'DingTalkController@getconfig');
     Route::post('dingtalk/register_call_back', 'DingTalkController@register_call_back');
     Route::get('dingtalk/delete_call_back', 'DingTalkController@delete_call_back');
+    Route::post('dingtalk/synchronizeusers', 'DingTalkController@synchronizeusers');
 
     // chat
     Route::post('dingtalk/chat_create', 'DingTalkController@chat_create');

@@ -213,8 +213,51 @@ class UsersController extends Controller
             // Dtuser::where('userid', $dtuser->userid)->update($dtuser);
             // $dtuser2->update($dtuser);
         }
+    }
 
+    // synchronize dingtalk user
+    // if user is not exist, create.
+    public static function synchronizedtuser($dtuser)
+    {
+        if (isset($dtuser->orgEmail) && !empty($dtuser->orgEmail))
+        {
+            $user = User::where('email', $dtuser->orgEmail)->first();
+            if (!isset($user))
+            {
+                $user = new User;
 
+                $user->password     = bcrypt('123456');
+            }
+            $user->name         = $dtuser->name;
+            $user->email        = $dtuser->orgEmail;
+            $user->dtuserid        = $dtuser->userid;
+            $user->save();
+
+            $dtuserlocal = Dtuser::firstOrNew(['userid' => $dtuser->userid]);
+            if (!isset($dtuserlocal))
+                $dtuserlocal = new Dtuser;
+            $dtuserlocal->user_id       = $user->id;
+            $dtuserlocal->name          = $dtuser->name;
+            $dtuserlocal->tel           = isset($dtuser->tel) ? $dtuser->tel : '';
+            $dtuserlocal->workPlace    = isset($dtuser->workPlace) ? $dtuser->workPlace : '';
+            $dtuserlocal->remark        = isset($dtuser->remark) ? $dtuser->remark : '';
+            $dtuserlocal->mobile        = $dtuser->mobile;
+            if (isset($dtuser->email))      $dtuserlocal->email         = $dtuser->email;
+            $dtuserlocal->orgEmail      = $dtuser->orgEmail;             // 无此元素
+            $dtuserlocal->active        = $dtuser->active;
+            $dtuserlocal->orderInDepts  = isset($dtuser->orderInDepts) ? $dtuser->orderInDepts : '';
+            $dtuserlocal->isAdmin       = $dtuser->isAdmin;
+            $dtuserlocal->isBoss        = $dtuser->isBoss;
+            $dtuserlocal->dingId        = $dtuser->dingId;
+            $dtuserlocal->isLeaderInDepts = isset($dtuser->isLeaderInDepts) ? $dtuser->isLeaderInDepts : '';
+            $dtuserlocal->isHide        = $dtuser->isHide;
+            // $dtuserlocal->department    = $dtuser->department;           // 是个数组，暂不考虑
+            $dtuserlocal->position      = $dtuser->position;
+            $dtuserlocal->avatar        = $dtuser->avatar;
+            $dtuserlocal->jobnumber     = $dtuser->jobnumber;
+            // $dtuserlocal->extattr       = $dtuser->extattr;              // 无此元素
+            $dtuserlocal->save();
+        }
     }
 
     /**
