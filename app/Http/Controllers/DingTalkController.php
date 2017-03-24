@@ -550,7 +550,7 @@ class DingTalkController extends Controller
 
         // self::$ENCODING_AES_KEY = str_random(43);
         $data = [
-            'call_back_tag' => ['user_modify_org'],
+            'call_back_tag' => ['user_add_org', 'user_modify_org', 'user_leave_org'],
             'token' => config('custom.dingtalk.TOKEN'),
             'aes_key' => config('custom.dingtalk.ENCODING_AES_KEY'),
 //            'url' => 'http://139.224.8.136:81/dingtalk/receive'
@@ -654,7 +654,7 @@ class DingTalkController extends Controller
         $msg = "";
         $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
         Log::info("msg: " . $msg);
-        Log::info("errCode: " . $errCode);
+//        Log::info("errCode: " . $errCode);
 
         if ($errCode != 0)
         {
