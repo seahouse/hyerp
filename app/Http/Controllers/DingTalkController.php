@@ -642,8 +642,6 @@ class DingTalkController extends Controller
 
     public function receive()
     {
-//        dd($_GET);
-        dd(request());
         $signature = $_GET["signature"];
         $timeStamp = $_GET["timestamp"];
         $nonce = $_GET["nonce"];
