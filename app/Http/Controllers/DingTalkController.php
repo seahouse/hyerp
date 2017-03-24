@@ -737,8 +737,15 @@ class DingTalkController extends Controller
             */
             else if ("user_add_org" === $eventType)
             {
-                Log::error(json_encode($_GET) . "  ERR:user_add_org");
+                Log::info(json_encode($_GET) . "  Info:user_add_org");
                 //handle auth change event
+                $data = json_decode($msg);
+                foreach ($data->UserId as $userid) {
+                    # code...
+                    $user = self::userGet($userid);
+                    UsersController::synchronizedtuser($user);
+                }
+
             }
             else if ("user_modify_org" === $eventType)
             {
