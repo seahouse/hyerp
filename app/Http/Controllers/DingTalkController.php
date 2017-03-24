@@ -553,10 +553,11 @@ class DingTalkController extends Controller
             'call_back_tag' => ['user_modify_org'],
             'token' => config('custom.dingtalk.TOKEN'),
             'aes_key' => config('custom.dingtalk.ENCODING_AES_KEY'),
-//            'url' => url('dingtalk/receive')
-            // 'url' => 'http://www.huaxing-east.cn:2016/dingtalk/receive'
-            // 'url' => 'http://hyerp.ricki.cn/dingtalk/receive'
-             'url' => 'http://139.224.8.136:81/dingtalk/receive'
+//            'url' => 'http://139.224.8.136:81/dingtalk/receive'
+            'url' => url('dingtalk/receive')
+//             'url' => 'http://www.huaxing-east.cn:2016/dingtalk/receive'
+//             'url' => 'http://hyerp.ricki.cn/dingtalk/receive'
+//             'url' => 'http://139.224.8.136:81/dingtalk/receive'
         ];
         // dd($data);
 
