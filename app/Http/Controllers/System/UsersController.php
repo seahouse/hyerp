@@ -234,8 +234,8 @@ class UsersController extends Controller
             $user->save();
 
             $dtuserlocal = Dtuser::firstOrNew(['userid' => $dtuser->userid]);
-            if (!isset($dtuserlocal))
-                $dtuserlocal = new Dtuser;
+//            if (!isset($dtuserlocal))
+//                $dtuserlocal = new Dtuser;
             $dtuserlocal->user_id       = $user->id;
             $dtuserlocal->name          = $dtuser->name;
             $dtuserlocal->tel           = isset($dtuser->tel) ? $dtuser->tel : '';
@@ -258,6 +258,15 @@ class UsersController extends Controller
             // $dtuserlocal->extattr       = $dtuser->extattr;              // 无此元素
             $dtuserlocal->save();
         }
+    }
+
+    // delete dtuser
+    // when dingtalk delete the user, do this
+    public static function destroydtuser($dtuserid)
+    {
+        $dtuserlocal = Dtuser::first(['userid' => $dtuserid]);
+        if (isset($dtuserlocal))
+            Dtuser::destroy($dtuserlocal->id);
     }
 
     /**

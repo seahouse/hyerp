@@ -766,7 +766,15 @@ class DingTalkController extends Controller
             else if ("user_leave_org" === $eventType)
             {
                 Log::error(json_encode($_GET) . "  ERR:user_leave_org");
-                //handle auth change event
+                // delete dtuser
+                $data = json_decode($msg);
+                foreach ($data->UserId as $userid) {
+                    # code...
+                    Log::info("user id: " . $userid);
+                    $user = self::userGet($userid);
+                    Log::info("user: " . json_encode($user));
+                    UsersController::destroydtuser($userid);
+                }
             }
             /**
              * 应用被解除授权的时候，需要删除相应企业的存储信息

@@ -19,6 +19,7 @@ class AddDingtalkToUsersTable extends Migration
             $table->string('position')->nullable();             // 职位
             $table->string('dt_avatar')->nullable();            // 头像地址
 			$table->string('avatar')->nullable();            	// 头像地址
+            $table->boolean('active')->default(true);               // 激活状态
         });
     }
 
