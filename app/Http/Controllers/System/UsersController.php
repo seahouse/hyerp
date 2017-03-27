@@ -264,9 +264,9 @@ class UsersController extends Controller
     // when dingtalk delete the user, do this
     public static function destroydtuser($dtuserid)
     {
-        $dtuserlocal = Dtuser::first(['userid' => $dtuserid]);
+        $dtuserlocal = Dtuser::where('userid', $dtuserid);
         if (isset($dtuserlocal))
-            Dtuser::destroy($dtuserlocal->id);
+            $dtuserlocal->delete();
     }
 
     /**
