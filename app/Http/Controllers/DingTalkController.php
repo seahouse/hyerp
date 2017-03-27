@@ -771,8 +771,8 @@ class DingTalkController extends Controller
                 foreach ($data->UserId as $userid) {
                     # code...
                     Log::info("user id: " . $userid);
-                    $user = self::userGet($userid);
-                    Log::info("user: " . json_encode($user));
+//                    $user = self::userGet($userid);
+//                    Log::info("user: " . json_encode($user));
                     UsersController::destroydtuser($userid);
                 }
             }
