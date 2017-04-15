@@ -10,11 +10,11 @@
                 <div class="input-group">
                     {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称']) !!}
                     <span class="input-group-btn">
-
-                        {!! Form::button('查找', ['class' => 'btn btn-default']) !!}
 {{--
-                        {!! Form::submit('查找', ['class' => 'btn btn-default']) !!}
+                        {!! Form::button('查找', ['class' => 'btn btn-default']) !!}
 --}}
+                        {!! Form::submit('查找', ['class' => 'btn btn-default']) !!}
+
                     </span>
                 </div>
             </div>
