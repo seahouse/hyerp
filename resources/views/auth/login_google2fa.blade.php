@@ -41,11 +41,9 @@
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
-                                @if (config('custom.dingtalk.dtloginscanonly') !== '1')
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fa fa-btn fa-sign-in"></i>Login
                                 </button>
-                                @endif
 {{--
                                 <a href="{{ config('custom.dingtalk.oapi_host') . '/connect/qrconnect?appid=' . config('custom.dingtalk.appid') .'&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=' . url('/') . '/mddauth' }}" class="btn btn-default">钉钉扫码登录</a>
 
