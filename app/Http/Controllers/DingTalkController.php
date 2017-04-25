@@ -14,6 +14,10 @@ use App\Http\Controllers\util\Http;
 use App\Http\Controllers\crypto\DingtalkCrypt;
 use App\Http\Controllers\System\UsersController;
 use App\Models\Approval\Paymentrequest;
+use GA;
+//use PragmaRX\Google2FA\Google2FA;
+//use PragmaRX\Google2FA\Contracts\Google2FA;
+use Google2FA;
 
 class DingTalkController extends Controller
 {
@@ -866,5 +870,19 @@ class DingTalkController extends Controller
         $response = Http::post("/message/send_to_conversation",
             array("access_token" => $access_token), json_encode($data));
         return json_encode($response);
+    }
+
+    public static function googleauthenticator(Google2FA $google2fa)
+    {
+//        $ga = new GA();
+//        $secret = $ga->createSecret();
+//        echo "Secret is: ".$secret."\n\n";
+
+//        $google2fa = new Google2FA();
+//        return $google2fa->generateSecretKey();
+
+//        return $google2fa->generateSecretKey();
+
+        return Google2FA::generateSecretKey();
     }
 }

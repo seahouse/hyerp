@@ -68,6 +68,15 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('dingtalk/chat_create', 'DingTalkController@chat_create');
     Route::post('dingtalk/send_to_conversation', 'DingTalkController@send_to_conversation');
 
+    // google authenticator
+    Route::get('dingtalk/googleauthenticator ', 'DingTalkController@googleauthenticator');
+    Route::get('google2fa/generatesecretkey', 'Google2FAController@generatesecretkey');
+    Route::get('google2fa/test/{secret}', 'Google2FAController@test');
+    Route::post('google2fa/login', 'Google2FAController@login');
+    Route::get('google2fa/login', function () {
+        return view('auth.login_google2fa');
+    });
+
     // run .bat shell command to run git pull.
     Route::get('gitpullbybat', function() { return view('gitpullbybat'); });
 
@@ -315,6 +324,8 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
         Route::post('updatepass', 'UsersController@updatepass');
         Route::get('edituserold', 'UsersController@edituserold');
         Route::post('updateuserold', 'UsersController@updateuserold');
+        Route::get('google2fa', 'UsersController@google2fa');
+        Route::post('updategoogle2fa', 'UsersController@updategoogle2fa');
     });
     Route::post('users/bingdingtalk', 'UsersController@bingdingtalk');
     Route::post('users/bingdingtalkcancel', 'UsersController@bingdingtalkcancel');

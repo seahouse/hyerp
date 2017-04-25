@@ -80,6 +80,7 @@
                 <th>职位</th>
                 <th>老系统姓名</th>
                 <th>角色</th>
+                <th>Google Authentication</th>
                 <th>操作</th>
             </tr>
         </thead>
@@ -110,6 +111,9 @@
                     <td>
                         <a href="{{ URL::to('/system/users/'.$user->id.'/roles') }}">明细</a>
 {{--                        @if (isset($user->role->display_name)) {{ $user->role->display_name }} @endif --}}
+                    </td>
+                    <td>
+                        <a href="{{ url('/system/users/' . $user->id . '/google2fa') }}" class="btn btn-default btn-sm">设置</a>
                     </td>
                     <td>
                         <a href="{{ URL::to('/system/users/'.$user->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>

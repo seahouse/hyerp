@@ -13,7 +13,9 @@
         "maatwebsite/excel": "~2.1.0",
         "dompdf/dompdf": "^0.7.0",
         "mpdf/mpdf": "^6.1",
-        "barryvdh/laravel-dompdf": "^0.7.0"
+        "barryvdh/laravel-dompdf": "^0.7.0",
+        "pragmarx/google2fa": "^1.0",
+        "bacon/bacon-qr-code": "~1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

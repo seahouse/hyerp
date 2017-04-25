@@ -354,6 +354,13 @@ class UsersController extends Controller
         return view('system.users.edituserold', compact('user'));
     }
 
+    public function google2fa($id)
+    {
+        //
+        $user = User::findOrFail($id);
+        return view('system.users.editgoogle2fa', compact('user'));
+    }
+
     public function updateuserold(Request $request, $id)
     {
         //
@@ -379,4 +386,17 @@ class UsersController extends Controller
 //        $user->update();
         return redirect('system/users');
     }
+
+    public function updategoogle2fa(Request $request, $id)
+    {
+        //
+//        dd(Request::all());
+        $user = User::findOrFail($id);
+        $user->google2fa_secret = Request::input('google2fa_secret');
+        $user->save();
+
+        return redirect('system/users');
+    }
+
+
 }

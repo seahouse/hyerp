@@ -60,6 +60,8 @@
 
                                 <a href="{{ config('custom.dingtalk.oapi_host') . '/connect/qrconnect?appid=' . config('custom.dingtalk.appid') .'&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=' . url('/') . '/mddauth' }}" class="btn btn-default">钉钉扫码登录</a>
 
+                                <a href="{{ url('google2fa/login')  }}" class="btn btn-default">Google Authentication Login</a>
+
                                 @if (config('custom.dingtalk.dtloginscanonly') !== '1')
                                 <a class="btn btn-link" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
                                 @endif
