@@ -35,14 +35,20 @@ class Google2FAController extends Controller
         if (isset($user))
         {
             $secret = $request->input('google2fa_secret');
-            $valid = Google2FA::verifyKey($user->google2fa_secret, $secret);
-            if ($valid)
+            if (isset($user->google2fa_secret))
             {
-                Auth::loginUsingId($user->id);
-                return redirect('/');
+                $valid = Google2FA::verifyKey($user->google2fa_secret, $secret);
+                if ($valid)
+                {
+                    Auth::loginUsingId($user->id);
+                    return redirect('/');
+                }
+                else
+                    return "验证失败";
             }
             else
-                return "验证失败";
+                return "还未绑定Google Authenticator.";
+
         }
         else
             return "无此用户";
