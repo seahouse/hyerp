@@ -129,7 +129,8 @@ class TestController extends Controller
 
     public function test()
     {
-        dd(request()->fullurl());
+//        dd(request()->fullurl());
+        return view('test');
     }
     
     public function index()

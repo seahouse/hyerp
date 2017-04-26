@@ -54,6 +54,7 @@ Route::post('cloudwalk/face_tool_detect', 'CloudwalkController@face_tool_detect'
 Route::group(['middleware' => ['web']], function () {
     // Route::get('mddauth', function() { return view('mddauth'); });
     Route::get('mddauth/{appname?}/{url?}', 'DingTalkController@mddauth');
+//    Route::get('test', 'DingTalkController@test');
     Route::get('ddauth/{appname?}/{url?}', 'DingTalkController@ddauth');
 
 	Route::get('dingtalk/getuserinfo/{code}', 'DingTalkController@getuserinfo');

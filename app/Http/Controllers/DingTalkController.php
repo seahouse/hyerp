@@ -885,4 +885,9 @@ class DingTalkController extends Controller
 
         return Google2FA::generateSecretKey();
     }
+
+//    public function test()
+//    {
+//        return view('test');
+//    }
 }
