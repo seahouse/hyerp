@@ -188,11 +188,13 @@
 {{--                        
                         <a href="{{ URL::to('/approval/paymentrequests/'.$paymentrequest->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>
 --}}
-@if (Auth::user()->email == "admin@admin.com")
+
+                            @can('approval_paymentrequest_delete')
                         {!! Form::open(array('route' => array('approval.paymentrequests.destroy', $paymentrequest->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
                             {!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}
-                        {!! Form::close() !!} 
-@endif
+                        {!! Form::close() !!}
+                            @endcan
+
                     </td>
                     @endif
                 </tr>

@@ -21,13 +21,17 @@
 
         {!! Form::open(['url' => '/system/report/' . $report->id . '/statistics', 'class' => 'pull-right form-inline']) !!}
         <div class="form-group-sm">
-            {!! Form::label('arrivaldatelabel', '到货时间:', ['class' => 'control-label']) !!}
-            {!! Form::date('datearravalfrom', null, ['class' => 'form-control']) !!}
-            {!! Form::label('arrivaldatelabelto', '-', ['class' => 'control-label']) !!}
-            {!! Form::date('datearravalto', null, ['class' => 'form-control']) !!}
+            {{-- 根据不同报表设置不同搜索条件 --}}
+            @if ($report->id == 1)
+                {!! Form::label('arrivaldatelabel', '到货时间:', ['class' => 'control-label']) !!}
+                {!! Form::date('datearravalfrom', null, ['class' => 'form-control']) !!}
+                {!! Form::label('arrivaldatelabelto', '-', ['class' => 'control-label']) !!}
+                {!! Form::date('datearravalto', null, ['class' => 'form-control']) !!}
 
+                {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '对应项目名称']) !!}
+            @elseif ($report->id == 2)
+            @endif
 
-            {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '对应项目名称']) !!}
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
         </div>
         {!! Form::close() !!}
