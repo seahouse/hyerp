@@ -50,6 +50,9 @@
                         <li><a href="/sales/custinfos">客户</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="/inventory/inventoryAvailabilityBySalesorder">库存可用量</a></li>
+                        @if (Auth::user()->email === "admin@admin.com")
+                            <li><a href="/sales/report">报表</a></li>
+                        @endif
                         @endcan
                     </ul>
                 </li>
@@ -62,7 +65,7 @@
                         <li role="separator" class="divider"></li>
                         <li><a href="/inventory/inventoryAvailability">库存可用量</a></li>
                         @if (Auth::user()->email === "admin@admin.com")
-                            <li><a href="/system/report">报表</a></li>
+                            <li><a href="/purchase/report">报表</a></li>
                         @endif
                         @endcan
                     </ul>
@@ -125,6 +128,9 @@
                         <li><a href="/system/employees">员工</a></li>
                         <li><a href="/system/users">用户管理</a></li>
                         @endcan
+                        @if (Auth::user()->email === "admin@admin.com")
+                            <li><a href="/system/report">报表</a></li>
+                        @endif
                         {{-- <li><a href="/system/permissions">权限管理</a></li> --}}
                     </ul>
                 </li>

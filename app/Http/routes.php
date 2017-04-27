@@ -181,6 +181,7 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
         Route::get('getitemsbykey/{key}', 'CustinfosController@getitemsbykey');
     });
     Route::resource('custinfos', 'CustinfosController');
+    Route::get('report', '\App\Http\Controllers\System\ReportController@indexsales');
 });
 
 Route::group(['prefix' => 'sales', 'namespace' => 'Sales'], function() {
@@ -227,7 +228,7 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         Route::get('', 'PoitemsController@index_hxold');
     });
     Route::resource('poitems', 'PoitemsController');
-//    Route::get('report', 'ReportController@showpurchase');
+    Route::get('report', '\App\Http\Controllers\System\ReportController@indexpurchase');
 });
 
 Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase'], function() {

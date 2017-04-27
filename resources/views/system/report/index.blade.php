@@ -17,10 +17,14 @@
         <thead>
             <tr>
                 <th>名称</th>
-                <th>模块</th>
+                @if (!isset($readonly))
+                    <th>模块</th>
+                @endif
                 <th>描述</th>
                 <th>统计</th>
-                <th width="120">操作</th>
+                @if (!isset($readonly))
+                    <th width="120">操作</th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -29,21 +33,25 @@
                     <td>
                         {{ $report->name }}
                     </td>
-                    <td>
-                        {{ $report->module }}
-                    </td>
+                    @if (!isset($readonly))
+                        <td>
+                            {{ $report->module }}
+                        </td>
+                    @endif
                     <td>
                         {{ $report->descrip }}
                     </td>
                     <td>
                         <a href="{{ URL::to('/system/report/'.$report->id.'/statistics') }}" class="btn btn-success btn-sm" target="_blank">统计</a>
                     </td>
+                    @if (!isset($readonly))
                     <td>
                         <a href="{{ URL::to('/system/report/'.$report->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>
                         {!! Form::open(array('route' => array('system.report.destroy', $report->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
                             {!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}
                         {!! Form::close() !!}
                     </td>
+                    @endif
                 </tr>
             @endforeach
         </tbody>

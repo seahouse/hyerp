@@ -25,6 +25,20 @@ class ReportController extends Controller
         return view('system.report.index', compact('reports'));
     }
 
+    public function indexpurchase()
+    {
+        $reports = Report::latest('created_at')->where('module', '采购')->paginate(10);
+        $readonly = true;
+        return view('system.report.index', compact('reports', 'readonly'));
+    }
+
+    public function indexsales()
+    {
+        $reports = Report::latest('created_at')->where('module', '销售')->paginate(10);
+        $readonly = true;
+        return view('system.report.index', compact('reports', 'readonly'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -61,6 +75,8 @@ class ReportController extends Controller
         //
 
     }
+
+
 
     /**
      * Show the form for editing the specified resource.

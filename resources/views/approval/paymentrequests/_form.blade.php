@@ -384,7 +384,6 @@
     </div>
 </div>
 
-@if (Auth::user()->email == "admin@admin.com")
 <div class="form-group">
     {!! Form::label('created_at', '发起时间:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
@@ -401,7 +400,6 @@
             </div>
         </div>
     @endif
-@endif
 @endif
 
 @else
