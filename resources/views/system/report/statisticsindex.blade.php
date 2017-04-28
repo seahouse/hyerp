@@ -30,6 +30,8 @@
 
                 {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '对应项目名称']) !!}
             @elseif ($report->name == "so_factory_analysis")
+            @elseif ($report->name == "so_height_statistics_detail")
+                {!! Form::select('orderid', $poheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
             @endif
 
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}

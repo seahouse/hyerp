@@ -140,7 +140,7 @@ class ReportController extends Controller
         }
         $param = count($input) > 0 ? substr($param, 0, strlen($param) - 1) : $param;
 //        dd("exec pGetPoheadArrivalPercent " . implode(' ', $input));
-        $items_t = DB::connection('sqlsrv')->select($report->statement . $param);
+        $items_t = DB::connection('sqlsrv')->select($report->statement . ' ' . $param);
 //        $items_t = DB::connection('sqlsrv')->select("exec pGetPoheadArrivalPercent " . $param);
 
         $page = $request->get('page', 1);
