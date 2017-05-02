@@ -194,6 +194,7 @@
 
 @can('test')
 
+{{--
 <div class="form-group">
     <div class='col-xs-4 col-sm-2'>
     </div>
@@ -209,6 +210,8 @@
     <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail4') }}" target="_blank" class="btn btn-default btn-sm">入库明细</a>
     </div>
 </div>
+--}}
+
 @endcan
 
 
