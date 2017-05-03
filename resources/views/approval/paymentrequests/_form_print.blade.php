@@ -408,6 +408,24 @@
     </div>
 </div>
 
+<div class="form-group">
+    {!! Form::label('created_at', '发起时间:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
+    <div class='col-xs-4 col-sm-4'>
+        {!! Form::text('created_at', $paymentrequest->created_at, ['class' => 'form-control', $attr]) !!}
+    </div>
+
+    @if ($paymentrequest->approversetting_id === 0)
+        @if ($paymentrequest->paymentrequestapprovals->count())
+            {!! Form::label('last_approval_created_at', '审批时间:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
+            <div class='col-xs-4 col-sm-4'>
+                {!! Form::text('last_approval_created_at', $paymentrequest->paymentrequestapprovals->last()->created_at, ['class' => 'form-control', $attr]) !!}
+            </div>
+        @endif
+    @endif
+</div>
+
+
+
 {{--
 <div class="form-group">
     {!! Form::label('supplier_bankaccountnumber', '银行账号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
