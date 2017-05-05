@@ -17,6 +17,7 @@ class CreateReportsTable extends Migration
 
             $table->string('name');
             $table->string('module')->default('');
+            $table->smallInteger('active')->default(1);
             $table->string('descrip')->default('')->commet('描述');
             $table->string('statement', 1023)->default('')->commet('SQL语句');
 

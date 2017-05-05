@@ -13,6 +13,23 @@
 </div>
 
 <div class="form-group">
+    {!! Form::label('active', '有效性:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class='col-sm-10'>
+        {!! Form::radio('active', 1) !!}有效
+        {!! Form::radio('active', 0) !!}无效
+        {!! $report->active !!}
+        {{--
+        {!! Form::checkbox('active') !!}
+
+        {!! Form::select('active', array(true => '有效', '' => '无效'), null, ['class' => 'form-control']) !!}
+
+        {{ $report->active }}
+        --}}
+    </div>
+</div>
+
+
+<div class="form-group">
     {!! Form::label('descrip', '描述:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
         {!! Form::text('descrip', null, ['class' => 'form-control']) !!}

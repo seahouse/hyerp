@@ -50,7 +50,7 @@
                         <li><a href="/sales/custinfos">客户</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="/inventory/inventoryAvailabilityBySalesorder">库存可用量</a></li>
-                        @if (Auth::user()->email === "admin@admin.com")
+                        @if (Auth::user()->isSuperAdmin())
                             <li><a href="/sales/report">报表</a></li>
                         @endif
                         @endcan

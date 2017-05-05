@@ -27,14 +27,14 @@ class ReportController extends Controller
 
     public function indexpurchase()
     {
-        $reports = Report::latest('created_at')->where('module', '采购')->paginate(10);
+        $reports = Report::latest('created_at')->where('module', '采购')->where('active', 1)->paginate(10);
         $readonly = true;
         return view('system.report.index', compact('reports', 'readonly'));
     }
 
     public function indexsales()
     {
-        $reports = Report::latest('created_at')->where('module', '销售')->paginate(10);
+        $reports = Report::latest('created_at')->where('module', '销售')->where('active', 1)->paginate(10);
         $readonly = true;
         return view('system.report.index', compact('reports', 'readonly'));
     }
@@ -88,6 +88,7 @@ class ReportController extends Controller
     {
         //
         $report = Report::findOrFail($id);
+//        var_dump($report->active);
         return view('system.report.edit', compact('report'));
     }
 
@@ -101,6 +102,7 @@ class ReportController extends Controller
     public function update(Request $request, $id)
     {
         //
+//        dd($request->all());
         $report = Report::findOrFail($id);
         $report->update($request->all());
         return redirect('system/report');
