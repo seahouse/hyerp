@@ -17,7 +17,6 @@
     <div class='col-sm-10'>
         {!! Form::radio('active', 1) !!}有效
         {!! Form::radio('active', 0) !!}无效
-        {!! $report->active !!}
         {{--
         {!! Form::checkbox('active') !!}
 
