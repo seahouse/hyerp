@@ -17,7 +17,7 @@ class CreateItemsTable extends Migration
             
             $table->string('item_number')->unique();
             $table->string('item_name');
-            $table->string('item_descrip');
+            $table->string('item_descrip')->default('');
             $table->integer('itemtype_id')->unsigned();         // 类型：采购、销售、生产等
             $table->integer('itemclass_id')->unsigned();        // 类别
             $table->string('index');                            // 索引，可供快速查找

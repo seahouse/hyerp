@@ -32,6 +32,14 @@
             @elseif ($report->name == "so_factory_analysis")
             @elseif ($report->name == "so_height_statistics_detail")
                 {!! Form::select('orderid', $poheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
+            @elseif ($report->name == "po_statistics")
+                {!! Form::label('signdatelabel', '签订日期:', ['class' => 'control-label']) !!}
+                {!! Form::date('signdatefrom', null, ['class' => 'form-control']) !!}
+                {!! Form::label('signdatelabelto', '-', ['class' => 'control-label']) !!}
+                {!! Form::date('signdateto', null, ['class' => 'form-control']) !!}
+                {!! Form::select('arrivalstatus', array(0 => '未到货', 1 => '部分到货', 2 => '全部到货'), null, ['class' => 'form-control', 'placeholder' => '--到货状态--']) !!}
+                {!! Form::select('paidstatus', array(0 => '未付款', 1 => '部分付款', 2 => '全部付款'), null, ['class' => 'form-control', 'placeholder' => '--付款状态--']) !!}
+                {!! Form::select('ticketedstatus', array(0 => '未开票', 1 => '部分开票', 2 => '全部开票'), null, ['class' => 'form-control', 'placeholder' => '--开票状态--']) !!}
             @endif
 
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}

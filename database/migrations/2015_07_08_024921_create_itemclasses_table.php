@@ -16,7 +16,7 @@ class CreateItemclassesTable extends Migration
             $table->increments('id');
             
             $table->string('name')->unique();
-            $table->string('descrip');
+            $table->string('descrip')->default('');
             
             $table->timestamps();
         });
