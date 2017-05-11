@@ -127,23 +127,22 @@ class ReportController extends Controller
         $report = Report::findOrFail($id);
 
         $request = Request();
+
         $input = $request->all();
         $input = HelperController::skipEmptyValue($input);
         $input = array_except($input, '_token');
         $input = array_except($input, 'page');
-
-//        dd($input);
-//        $param = count($input) > 0 ? "'" : "";
-//        $param .= implode("','", $input);
-        $param = "";
-        foreach ($input as $key=>$value)
-        {
-            $param .= "@" . $key . "='" . $value . "',";
-        }
-        $param = count($input) > 0 ? substr($param, 0, strlen($param) - 1) : $param;
-//        dd("exec pGetPoheadArrivalPercent " . implode(' ', $input));
-        $items_t = DB::connection('sqlsrv')->select($report->statement . ' ' . $param);
-//        $items_t = DB::connection('sqlsrv')->select("exec pGetPoheadArrivalPercent " . $param);
+//
+//        $param = "";
+//        foreach ($input as $key=>$value)
+//        {
+//            $param .= "@" . $key . "='" . $value . "',";
+//        }
+//        $param = count($input) > 0 ? substr($param, 0, strlen($param) - 1) : $param;
+//        $items_t = DB::connection('sqlsrv')->select($report->statement . ' ' . $param);
+        $items_t = $this->search(Request(), $report);
+//        dd($items_t);
+//        dd(json_decode(json_encode($items_t), true));
 
         $page = $request->get('page', 1);
         $paginate = 15;
@@ -185,8 +184,27 @@ class ReportController extends Controller
 //                dd($items_t);
 //                dd(json_decode(json_encode($items_t), true));
 //                $paymentrequests = $this->search2()->toArray();
-                $sheet->fromArray(json_decode(json_encode($items_t), true));
+                $sheet->freezeFirstRow();
+//                $sheet->setColumnFormat(array(
+//                    'C' => 'yyyy-mm-dd',
+//                    'G' => '0.00%'
+//                ));
+//                $sheet->fromArray(json_decode(json_encode($items_t), true));
+                $dataArray = json_decode(json_encode($items_t), true);
+                list($keys, $values) = array_divide(array_first($dataArray));
+                $sheet->appendRow($keys);
+                foreach ($dataArray as $value)
+                    $sheet->appendRow($value);
+
 //                $sheet->fromModel($items_t);
+//                $sheet->protect('password');
+//                $sheet->setColumnFormat(array('G' => '0%'));
+//                $sheet->row(1, function ($row) {
+//                    $row->setBackground('#000000');
+//                });
+//                $sheet->appendRow(array(
+//                    'appended', 54546, '2017-05-01', 1, 1, 1, '0.5'
+//                ));
             });
 
             // Set the title
@@ -216,7 +234,7 @@ class ReportController extends Controller
             $param .= "@" . $key . "='" . $value . "',";
         }
         $param = count($input) > 0 ? substr($param, 0, strlen($param) - 1) : $param;
-        $items_t = DB::connection('sqlsrv')->select($report->statement . $param);
+        $items_t = DB::connection('sqlsrv')->select($report->statement . ' ' . $param);
 
         return $items_t;
     }
