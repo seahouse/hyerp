@@ -3,6 +3,7 @@
 namespace App\Models\Inventory;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Receiptitem_hxold extends Model
 {
@@ -17,4 +18,8 @@ class Receiptitem_hxold extends Model
     public function rwrecord() {
         return $this->hasOne('App\Models\Inventory\Rwrecord_hxold', 'id', 'receipt_id');
     }
+
+//    public function outSoheadNamesByBatch() {
+//	    DB::connection()
+//    }
 }

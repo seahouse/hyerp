@@ -120,6 +120,7 @@ Route::group(['prefix' => 'inventory', 'namespace' => 'Inventory', 'middleware' 
         Route::get('receiptitems', 'RwrecordController@receiptitems');
     });
     Route::resource('rwrecord', 'RwrecordController');
+    Route::get('report', '\App\Http\Controllers\System\ReportController@indexinventory');
 });
 
 Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => ['web', 'auth']], function() {

@@ -39,6 +39,13 @@ class ReportController extends Controller
         return view('system.report.index', compact('reports', 'readonly'));
     }
 
+    public function indexinventory()
+    {
+        $reports = Report::latest('created_at')->where('module', '库存')->where('active', 1)->paginate(10);
+        $readonly = true;
+        return view('system.report.index', compact('reports', 'readonly'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *

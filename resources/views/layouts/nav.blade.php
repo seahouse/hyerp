@@ -39,6 +39,10 @@
                     <ul class="dropdown-menu">
                         @can('module_inventory')
                         <li><a href="/inventory/warehouses">仓库</a></li>
+                        <li role="separator" class="divider"></li>
+                        @can('inventory_batch_search')
+                            <li><a href="/inventory/report">报表</a></li>
+                        @endcan
                         @endcan
                     </ul>
                 </li>

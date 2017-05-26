@@ -128,6 +128,7 @@
                             <th>金额</th>
                             <th style="min-width: 80px">供应商</th>
                             <th style="min-width: 80px">对应项目</th>
+                            <th>出库项目</th>
                             <th>录入时间</th>
                         </tr>
                     </thead>
@@ -152,6 +153,11 @@
                                     @else
                                         {{ $receiptitem->rwrecord->receiptorder->pohead->sohead->projectjc }}
                                     @endif
+                                @endif
+                            </td>
+                            <td>
+                                @if (Auth::user()->email === 'admin@admin.com')
+                                {{ $receiptitem->out_sohead_name }}
                                 @endif
                             </td>
                             <td>{{ substr($receiptitem->record_at, 0, 10) }}</td>

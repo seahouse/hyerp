@@ -8,14 +8,14 @@
 <div class="form-group">
     {!! Form::label('module', '模块:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-        {!! Form::select('module', array('系统' => '系统', '销售' => '销售', '采购' => '采购'), null, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
+        {!! Form::select('module', array('系统' => '系统', '销售' => '销售', '采购' => '采购', '库存' => '库存'), null, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
     </div>
 </div>
 
 <div class="form-group">
     {!! Form::label('active', '有效性:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-        {!! Form::radio('active', 1) !!}有效
+        {!! Form::radio('active', 1, true) !!}有效
         {!! Form::radio('active', 0) !!}无效
         {{--
         {!! Form::checkbox('active') !!}
