@@ -4,6 +4,8 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use DB;
+use Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -26,5 +28,19 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')
         //          ->hourly();
+        Log::info('schedule start.');
+        $schedule->call(function () {
+            DB::table('items')->where('id', 4)->update(['item_name' => '电伴热']);
+        })->everyMinute();
+        Log::info('schedule end.');
+    }
+
+    protected function ttt(Schedule $schedule)
+    {
+        Log::info('ttt start.');
+        $schedule->call(function () {
+            DB::table('items')->where('id', 4)->update(['item_name' => '电伴热2']);
+        });
+        Log::info('ttt end.');
     }
 }
