@@ -156,9 +156,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if (Auth::user()->email === 'admin@admin.com')
                                 {{ $receiptitem->out_sohead_name }}
-                                @endif
                             </td>
                             <td>{{ substr($receiptitem->record_at, 0, 10) }}</td>
                         </tr>
