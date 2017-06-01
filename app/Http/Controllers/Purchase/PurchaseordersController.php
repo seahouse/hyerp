@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers\Purchase;
 
-// use Illuminate\Http\Request;
+ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Models\Purchase\Purchaseorder;
 use App\Models\Purchase\Purchaseorder_hxold;
+use App\Models\Purchase\Purchaseorder_hxold_simple;
 use App\Http\Requests\Purchase\PurchaseorderRequest;
-use Request;
+//use Request;
 use App\Models\Purchase\Poitem;
 use App\Models\Purchase\Poitem_hxold;
 use Carbon\Carbon;
 use App\Inventory\Recvitem;
+
 
 class PurchaseordersController extends Controller
 {
@@ -28,6 +30,27 @@ class PurchaseordersController extends Controller
         //
         $purchaseorders = Purchaseorder::latest('created_at')->paginate(10);
         return view('purchase.purchaseorders.index', compact('purchaseorders'));
+    }
+
+    public function index_hx()
+    {
+        //
+        $purchaseorders = Purchaseorder_hxold::orderBy('id', 'desc')->paginate(10);
+        return view('purchase.purchaseorders.index_hx', compact('purchaseorders'));
+    }
+
+    public function search_hx(Request $request)
+    {
+        //
+//        dd($request);
+        $key = $request->input('key');
+        if (strlen($key) > 0)
+        {
+            $purchaseorders = Purchaseorder_hxold::orderBy('id', 'desc')->where('number', 'like', '%' . $key . '%')->paginate(10);
+        }
+        else
+            $purchaseorders = Purchaseorder_hxold::orderBy('id', 'desc')->paginate(10);
+        return view('purchase.purchaseorders.index_hx', compact('purchaseorders'));
     }
 
     /**
@@ -212,5 +235,13 @@ class PurchaseordersController extends Controller
         dd($poitems);
 
         return view('purchase.receiptorders.index', compact('receiptorders'));
+    }
+
+    // 入库单
+    public function receiptorders_hx($id)
+    {
+        $receiptorders = Purchaseorder_hxold::find($id)->receiptorders;
+//        dd($receiptorders);
+        return view('purchase.receiptorders.index_hx', compact('receiptorders'));
     }
 }

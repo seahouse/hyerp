@@ -15,8 +15,10 @@
     <table class="table table-striped table-hover table-condensed">
         <thead>
             <tr>
-                <th>入库编号</th>
-                <th>采购订单ID</th>
+                <th>入库单号</th>
+                <th>入库时间</th>
+                <th>仓库</th>
+                <th>供货单位</th>
                 <th>操作</th>
             </tr>
         </thead>
@@ -24,10 +26,16 @@
             @foreach($receiptorders as $receiptorder)
                 <tr>
                     <td>
-                        <a href="{{ URL::to('/inventory/rwrecord/' . $receiptorder->receipt_id . '/receiptitems_hx') }}" target="_blank">{{ $receiptorder->receipt_id }}</a>
+                        <a href="{{ URL::to('/inventory/rwrecord/' . $receiptorder->receipt_id . '/receiptitems_hx') }}" target="_blank">{{ $receiptorder->rwrecord->number }}</a>
                     </td>
                     <td>
-                        {{ $receiptorder->pohead_id }}
+                        {{ $receiptorder->rwrecord->create_at }}
+                    </td>
+                    <td>
+                        {{ $receiptorder->rwrecord->warehouse->name }}
+                    </td>
+                    <td>
+                        {{ $receiptorder->rwrecord->supplier->name }}
                     </td>
 {{--
                     <td>

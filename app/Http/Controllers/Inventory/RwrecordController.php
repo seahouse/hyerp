@@ -92,8 +92,18 @@ class RwrecordController extends Controller
     {
         //
         $receiptitems = Rwrecord_hxold::findOrFail($id)->receiptitems;
-        // dd($receiptitems);
+//         dd($receiptitems);
 
         return view('inventory.receiptitems.index', compact('receiptitems'));
+    }
+
+    // 显示入库明细
+    public function receiptitems_hx($id)
+    {
+        //
+        $receiptitems = Rwrecord_hxold::findOrFail($id)->receiptitems;
+//        dd($receiptitems);
+
+        return view('inventory.receiptitems.index_hx', compact('receiptitems'));
     }
 }

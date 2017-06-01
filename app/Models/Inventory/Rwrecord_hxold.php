@@ -23,4 +23,8 @@ class Rwrecord_hxold extends Model
     public function receiptorder() {
         return $this->hasOne('App\Models\Inventory\Receiptorder_hxold', 'receipt_id', 'id');
     }
+
+    public function warehouse() {
+        return $this->hasOne('App\Models\Inventory\Warehouse_hxold', 'id', 'warehouse_id');
+    }
 }

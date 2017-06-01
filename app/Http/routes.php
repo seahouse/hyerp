@@ -118,6 +118,7 @@ Route::group(['prefix' => 'inventory', 'namespace' => 'Inventory', 'middleware' 
     Route::get('inventoryAvailabilityBySalesorder', 'InventoryAvailabilityController@listBySalesorder');
     Route::group(['prefix' => 'rwrecord/{id}'], function () {
         Route::get('receiptitems', 'RwrecordController@receiptitems');
+        Route::get('receiptitems_hx', 'RwrecordController@receiptitems_hx');
     });
     Route::resource('rwrecord', 'RwrecordController');
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexinventory');
@@ -210,6 +211,7 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         Route::get('receiving', 'PurchaseordersController@receiving');
         Route::get('receiptorders', 'PurchaseordersController@receiptorders');
         Route::get('poitems', 'PurchaseordersController@poitems');
+        Route::get('receiptorders_hx', 'PurchaseordersController@receiptorders_hx');
     });
     Route::group(['prefix' => 'purchaseorders/{purchaseorder}/payments'], function () {
         Route::get('/', 'PaymentsController@index');
@@ -222,6 +224,9 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
     });
     Route::group(['prefix' => 'purchaseorders'], function() {
         Route::get('getitemsbyorderkey/{key}/{supplierid?}', 'PurchaseordersController@getitemsbyorderkey');
+
+        Route::get('index_hx', 'PurchaseordersController@index_hx');
+        Route::post('search_hx', 'PurchaseordersController@search_hx');
     });
     Route::resource('purchaseorders', 'PurchaseordersController');
     Route::get('poitems/{headId}/create', 'PoitemsController@createByPoheadId');
