@@ -1019,6 +1019,9 @@ class PaymentrequestsController extends Controller
     // 对到货100%的采购订单进行创建审批单
     public static function createApprovalByArrival()
     {
+
+        return;
+
         Log::info('createApprovalByArrival start');
 
         // 获取今天的入库单信息
