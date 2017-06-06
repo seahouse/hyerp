@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Approval;
 
+use App\Models\System\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -22,6 +24,7 @@ use App\Models\Inventory\Receiptorder_hxold;
 use App\Models\Inventory\Receiptitem_hxold;
 use App\Models\Purchase\Purchaseorder_hxold;
 use App\Models\System\Employee_hxold_t;
+use App\Models\Inventory\Rwrecord_hxold;
 
 class PaymentrequestsController extends Controller
 {
@@ -1011,5 +1014,66 @@ class PaymentrequestsController extends Controller
         }
 
         echo '无法付款：需要审批已完成，且此采购订单在审批完成后没有付款记录才可付款。如有问题，请联系管理员。';
+    }
+
+    // 对到货100%的采购订单进行创建审批单
+    public static function createApprovalByArrival()
+    {
+        Log::info('createApprovalByArrival start');
+
+        // 获取今天的入库单信息
+        $rwrecords = Rwrecord_hxold::where('create_at', '>=', '2017-05-24')->get();
+        Log::info('$rwrecords->count(): ' . $rwrecords->count());
+        foreach ($rwrecords as $rwrecord)
+        {
+            Log::info('$rwrecord->id: ' . $rwrecord->id);
+            Log::info('$rwrecord->receiptorder->pohead_id: ' . $rwrecord->receiptorder->pohead_id);
+            $pohead = $rwrecord->receiptorder->pohead;
+            if (isset($rwrecord->receiptorder->pohead->arrival_percent))
+            {
+                Log::info('$rwrecord->receiptorder->pohead->arrival_percent: ' . $rwrecord->receiptorder->pohead->arrival_percent);
+
+                // 如果已经全部到货，且到货地等于'无锡工厂'， 且"货到"的付款百分比不等于0
+                // 且不存在此审批单，进行创建
+                Log::info('$pohead->arrival_pay_percent: ' . $pohead->arrival_pay_percent);
+                if ($rwrecord->receiptorder->pohead->arrival_percent >= 0.99 && $rwrecord->receiptorder->pohead->arrival === '无锡工厂' && floatval($pohead->arrival_pay_percent) > 0.0)
+                {
+                    $paymentrequest = Paymentrequest::where('pohead_id', $rwrecord->receiptorder->pohead_id)
+                        ->where('paymenttype', '到货款')->first();
+                    if (isset($paymentrequest))
+                    {
+                        Log::info('Paymentrequest has exists.');
+                    }
+                    else
+                    {
+                        $applicant =  User::where('email', 'liuhuaming@huaxing-east.com')->first();
+                        $approversetting_id = -1;
+                        $approvaltype_id = self::typeid();
+                        if ($approvaltype_id > 0)
+                        {
+                            $approversettingFirst = Approversetting::where('approvaltype_id', $approvaltype_id)->orderBy('level')->first();
+                            if ($approversettingFirst)
+                                $approversetting_id = $approversettingFirst->id;
+                        }
+
+                        $data = [
+                            'supplier_id' => $pohead->vendinfo_id,
+                            'pohead_id' => $pohead->id,
+                            'amount'    => $pohead->amount * doubleval($pohead->arrival_pay_percent) / 100,
+                            'paymentmethod' => '汇票',
+                            'datepay'   => Carbon::now(),
+                            'applicant_id'  => isset($applicant) ? $applicant->id : 0,
+                            'approversetting_id'    => $approversetting_id,
+                            'suppliertype'          => '机务设备类',
+                            'paymenttype'           => '到货款',
+                            'vendbank_id'           => $pohead->vendinfo->vendbank_id
+                        ];
+                        Paymentrequest::create($data);
+                        Log::info('Create Paymentrequest Approval.');
+                    }
+                }
+            }
+        }
+//        dd(Carbon::today());
     }
 }
