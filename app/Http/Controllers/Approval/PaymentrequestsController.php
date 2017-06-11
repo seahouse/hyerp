@@ -824,6 +824,84 @@ class PaymentrequestsController extends Controller
         //
         $paymentrequest = Paymentrequest::findOrFail($id);
 
+        ////////////////////////////////////////////////////
+        $str = '<html>';
+        $str .= '<head>';
+        $str .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>';
+        $str .= '</head>';
+        $str .= '<body>';
+
+        $str .= '<h1 style="font-family: DroidSansFallback;">供应商到货款节点' . '</h1>';
+        $str .= '<p style="font-family: DroidSansFallback;">申请人: ' . $paymentrequest->applicant->name . '</p>';
+        $str .= '<p style="font-family: DroidSansFallback;">货到目的类型: ' . '</p>';
+        $str .= '<p style="font-family: DroidSansFallback;">供应商: ' . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '') . '</p>';
+        $str .= '<p style="font-family: DroidSansFallback;">采购商品名称: ' . (isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '') . '</p>';
+        $str .= '<p style="font-family: DroidSansFallback;">对应工程名称: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->descrip) ? $paymentrequest->purchaseorder_hxold->sohead->descrip : '') . '</p>';
+        $str .= '<p style="font-family: DroidSansFallback;">项目所属销售经理: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->salesmanager) ? $paymentrequest->purchaseorder_hxold->sohead->salesmanager : '') . '</p>';
+        $str .= '<p style="font-family: DroidSansFallback;">工程类型: ' . '</p>';
+        $str .= '<p style="font-family: DroidSansFallback;">采购合同: ' . (isset($paymentrequest->purchaseorder_hxold->number) ? $paymentrequest->purchaseorder_hxold->number : '') . '</p>';
+
+//        $str .= '<p style="font-family: DroidSansFallback;">供应商类型: ' . $paymentrequest->suppliertype . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">付款类型: ' . $paymentrequest->paymenttype . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">支付对象: ' . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">采购合同: ' . (isset($paymentrequest->purchaseorder_hxold->number) ? $paymentrequest->purchaseorder_hxold->number : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">对应工程名称: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->custinfo->name) ? $paymentrequest->purchaseorder_hxold->sohead->custinfo->name . $paymentrequest->purchaseorder_hxold->sohead->descrip : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">合同金额: ' . (isset($paymentrequest->purchaseorder_hxold->amount) ? $paymentrequest->purchaseorder_hxold->amount : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">已付金额: ' . (isset($paymentrequest->purchaseorder_hxold->amount_paid) ? $paymentrequest->purchaseorder_hxold->amount_paid : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">已开票金额: ' . (isset($paymentrequest->purchaseorder_hxold->amount_ticketed) ? $paymentrequest->purchaseorder_hxold->amount_ticketed : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">到货情况: ' . $pohead_arrived . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">付款方式: ' . (isset($paymentrequest->purchaseorder_hxold->paymethod) ? $paymentrequest->purchaseorder_hxold->paymethod : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">安装完毕日期: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->installeddate) ? $paymentrequest->purchaseorder_hxold->sohead->installeddate : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">应付款设备名称: ' . $paymentrequest->equipmentname . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">说明: ' . $paymentrequest->descrip . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">本次请款额: ' . $paymentrequest->amount . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">付款方式: ' . $paymentrequest->paymentmethod . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">付款日期: ' . $paymentrequest->datepay . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">开户行: ' . (isset($paymentrequest->vendbank_hxold->bankname) ? $paymentrequest->vendbank_hxold->bankname : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">银行账号: ' . (isset($paymentrequest->vendbank_hxold->accountnum) ? $paymentrequest->vendbank_hxold->accountnum : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">付款日期: ' . $paymentrequest->datepay . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">审批记录:</p>';
+//
+//        foreach ($paymentrequest->paymentrequestapprovals as $paymentrequestapproval) {
+//            $str .= '<p style="font-family: DroidSansFallback; text-indent:2em">审批人: ' . $paymentrequestapproval->approver->name . ', 审批结果: ' . ($paymentrequestapproval->status==0 ? '通过' : '未通过') . ', 审批时间: ' . $paymentrequestapproval->created_at . ', 审批描述: ' . $paymentrequestapproval->description . '</p>';
+//
+//        }
+
+        $str .= '</body>';
+        $str .= '</html>';
+
+
+
+
+
+
+        // // $agent = new Agent();
+        // $paymentrequests = $this->search2()->toArray();
+        // $pdf = PDF::loadView('approval.paymentrequests.index', $paymentrequests["data"]);
+        // return $pdf->download('invoice.pdf');
+
+        // $mpdf = new mpdf();
+        // $mpdf->WriteHTML($str);
+        // $mpdf->Output();
+
+        // instantiate and use the dompdf class
+        $dompdf = new Dompdf();
+        // $dompdf->set_option('isFontSubsettingEnabled', true);
+        $dompdf->loadHtml($str);
+
+        // (Optional) Setup the paper size and orientation
+        // $dompdf->setPaper('A4', 'landscape');
+        $dompdf->setPaper('A4');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser
+        $dompdf->stream('供应商到货款节点');
+        $dompdf->output();
+
+        return;
+
 //         $str = '<html>
 // <head>
 //     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
@@ -1019,6 +1097,87 @@ class PaymentrequestsController extends Controller
     // 对到货100%的采购订单进行创建审批单
     public static function createApprovalByArrival()
     {
+        //
+//        $paymentrequest = Paymentrequest::findOrFail($id);
+//
+//
+//        $pohead_arrived = '';
+//        if (isset($paymentrequest->purchaseorder_hxold->arrival_percent))
+//        {
+//            if ($paymentrequest->purchaseorder_hxold->arrival_percent <= 0.0)
+//                $pohead_arrived = '未到货';
+//            elseif ($paymentrequest->purchaseorder_hxold->arrival_percent > 0.0 && $paymentrequest->purchaseorder_hxold->arrival_percent < 0.99)
+//                $pohead_arrived = '部分到货';
+//            else
+//                $pohead_arrived = '全部到货';
+//        }
+
+        $str = '<html>';
+        $str .= '<head>';
+        $str .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>';
+        $str .= '</head>';
+        $str .= '<body>';
+
+        $str .= '<h1 style="font-family: DroidSansFallback;">供应商到货款节点' . '</h1>';
+
+//        $str .= '<p style="font-family: DroidSansFallback;">供应商类型: ' . $paymentrequest->suppliertype . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">付款类型: ' . $paymentrequest->paymenttype . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">支付对象: ' . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">采购合同: ' . (isset($paymentrequest->purchaseorder_hxold->number) ? $paymentrequest->purchaseorder_hxold->number : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">对应工程名称: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->custinfo->name) ? $paymentrequest->purchaseorder_hxold->sohead->custinfo->name . $paymentrequest->purchaseorder_hxold->sohead->descrip : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">合同金额: ' . (isset($paymentrequest->purchaseorder_hxold->amount) ? $paymentrequest->purchaseorder_hxold->amount : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">已付金额: ' . (isset($paymentrequest->purchaseorder_hxold->amount_paid) ? $paymentrequest->purchaseorder_hxold->amount_paid : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">已开票金额: ' . (isset($paymentrequest->purchaseorder_hxold->amount_ticketed) ? $paymentrequest->purchaseorder_hxold->amount_ticketed : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">到货情况: ' . $pohead_arrived . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">付款方式: ' . (isset($paymentrequest->purchaseorder_hxold->paymethod) ? $paymentrequest->purchaseorder_hxold->paymethod : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">安装完毕日期: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->installeddate) ? $paymentrequest->purchaseorder_hxold->sohead->installeddate : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">应付款设备名称: ' . $paymentrequest->equipmentname . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">说明: ' . $paymentrequest->descrip . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">本次请款额: ' . $paymentrequest->amount . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">付款方式: ' . $paymentrequest->paymentmethod . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">付款日期: ' . $paymentrequest->datepay . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">开户行: ' . (isset($paymentrequest->vendbank_hxold->bankname) ? $paymentrequest->vendbank_hxold->bankname : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">银行账号: ' . (isset($paymentrequest->vendbank_hxold->accountnum) ? $paymentrequest->vendbank_hxold->accountnum : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">付款日期: ' . $paymentrequest->datepay . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">审批记录:</p>';
+//
+//        foreach ($paymentrequest->paymentrequestapprovals as $paymentrequestapproval) {
+//            $str .= '<p style="font-family: DroidSansFallback; text-indent:2em">审批人: ' . $paymentrequestapproval->approver->name . ', 审批结果: ' . ($paymentrequestapproval->status==0 ? '通过' : '未通过') . ', 审批时间: ' . $paymentrequestapproval->created_at . ', 审批描述: ' . $paymentrequestapproval->description . '</p>';
+//
+//        }
+
+        $str .= '</body>';
+        $str .= '</html>';
+
+
+
+
+
+
+        // // $agent = new Agent();
+        // $paymentrequests = $this->search2()->toArray();
+        // $pdf = PDF::loadView('approval.paymentrequests.index', $paymentrequests["data"]);
+        // return $pdf->download('invoice.pdf');
+
+        // $mpdf = new mpdf();
+        // $mpdf->WriteHTML($str);
+        // $mpdf->Output();
+
+        // instantiate and use the dompdf class
+        $dompdf = new Dompdf();
+        // $dompdf->set_option('isFontSubsettingEnabled', true);
+        $dompdf->loadHtml($str);
+
+        // (Optional) Setup the paper size and orientation
+        // $dompdf->setPaper('A4', 'landscape');
+        $dompdf->setPaper('A4');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser
+        $dompdf->stream('供应商到货款节点');
+//        $dompdf->stream($paymentrequest->id . '_' . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '') . '_' . $paymentrequest->amount);
 
         return;
 
