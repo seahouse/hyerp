@@ -499,8 +499,20 @@ class PaymentrequestsController extends Controller
         //     $upload_success = $file->move($destinationPath, $fileName);
         // }
 
+        $needGeneratePdf = false;
         if ($request->has('paymenttype') && $request->input('paymenttype') === '到货款' && !$request->hasFile('paymentnodeattachments'))
-            dd("到货款必须要上传付款节点审批单。");
+        {
+            // 如果已经全部到货，且到货地等于'无锡工厂'， 且"货到"的付款百分比不等于0
+            $pohead = Purchaseorder_hxold::where('id', $request->input('pohead_id'))->first();
+//            dd($pohead);
+            if (isset($pohead) && $pohead->arrival_percent >= 0.99 && $pohead->arrival === '无锡工厂' && floatval($pohead->arrival_pay_percent) > 0.0)
+            {
+                $needGeneratePdf = true;
+            }
+            else
+                dd("到货款必须要上传付款节点审批单。");
+        }
+
 
 
         $input['applicant_id'] = Auth::user()->id;
@@ -521,6 +533,58 @@ class PaymentrequestsController extends Controller
 
 
         $paymentrequest = Paymentrequest::create($input);
+
+        // auto generate paymentnodeattachments (pdf)
+        if ($paymentrequest && $needGeneratePdf)
+        {
+            $str = '<html>';
+            $str .= '<head>';
+            $str .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>';
+            $str .= '</head>';
+            $str .= '<body>';
+
+            $str .= '<h1 style="font-family: DroidSansFallback;">供应商到货款节点' . '</h1>';
+            $str .= '<p style="font-family: DroidSansFallback;">申请人: ' . $paymentrequest->applicant->name . '</p>';
+            $str .= '<p style="font-family: DroidSansFallback;">货到目的类型: ' . '</p>';
+            $str .= '<p style="font-family: DroidSansFallback;">供应商: ' . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '') . '</p>';
+            $str .= '<p style="font-family: DroidSansFallback;">采购商品名称: ' . (isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '') . '</p>';
+            $str .= '<p style="font-family: DroidSansFallback;">对应工程名称: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->descrip) ? $paymentrequest->purchaseorder_hxold->sohead->descrip : '') . '</p>';
+            $str .= '<p style="font-family: DroidSansFallback;">项目所属销售经理: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->salesmanager) ? $paymentrequest->purchaseorder_hxold->sohead->salesmanager : '') . '</p>';
+            $str .= '<p style="font-family: DroidSansFallback;">工程类型: ' . '</p>';
+            $str .= '<p style="font-family: DroidSansFallback;">采购合同: ' . (isset($paymentrequest->purchaseorder_hxold->number) ? $paymentrequest->purchaseorder_hxold->number : '') . '</p>';
+
+            $str .= '</body>';
+            $str .= '</html>';
+
+            // instantiate and use the dompdf class
+            $dompdf = new Dompdf();
+            // $dompdf->set_option('isFontSubsettingEnabled', true);
+            $dompdf->loadHtml($str);
+
+            // (Optional) Setup the paper size and orientation
+            // $dompdf->setPaper('A4', 'landscape');
+            $dompdf->setPaper('A4');
+
+            // Render the HTML as PDF
+            $dompdf->render();
+            $destdir = 'uploads/approval/paymentrequest/' . $paymentrequest->id;
+            if (!is_dir($destdir))
+                mkdir($destdir);
+            $dest = $destdir . '/' . date('YmdHis').rand(100, 200) . '.pdf';
+            file_put_contents($dest, $dompdf->output());
+
+            // Output the generated PDF to Browser
+//        $file = $dompdf->stream('供应商到货款节点');
+//        dd($dompdf->output());
+
+            // add database record
+            $paymentnodeattachment = new Paymentrequestattachment;
+            $paymentnodeattachment->paymentrequest_id = $paymentrequest->id;
+            $paymentnodeattachment->type = "paymentnode";
+            $paymentnodeattachment->filename = '供应商到货款节点(自动生成)';
+            $paymentnodeattachment->path = "/$dest";     // add a '/' in the head.
+            $paymentnodeattachment->save();
+        }
 
         // create paymentnodeattachments
         if ($paymentrequest)
@@ -895,10 +959,20 @@ class PaymentrequestsController extends Controller
 
         // Render the HTML as PDF
         $dompdf->render();
+        $dest = 'uploads/approval/paymentrequest/' . $paymentrequest->id . '/' . date('YmdHis').rand(100, 200) . '.pdf';
+        file_put_contents($dest, $dompdf->output());
 
         // Output the generated PDF to Browser
-        $dompdf->stream('供应商到货款节点');
-        $dompdf->output();
+//        $file = $dompdf->stream('供应商到货款节点');
+//        dd($dompdf->output());
+
+        // add database record
+        $paymentnodeattachment = new Paymentrequestattachment;
+        $paymentnodeattachment->paymentrequest_id = $paymentrequest->id;
+        $paymentnodeattachment->type = "paymentnode";
+        $paymentnodeattachment->filename = '供应商到货款节点';
+        $paymentnodeattachment->path = "/$dest";     // add a '/' in the head.
+        $paymentnodeattachment->save();
 
         return;
 
