@@ -553,8 +553,13 @@ class PaymentrequestsController extends Controller
             $str .= '</tr>';
 
             $str .= '<tr>';
+            $str .= '<td style="font-family: DroidSansFallback;">申请人部门</td>';
+            $str .= '<td style="font-family: DroidSansFallback;">' . $paymentrequest->applicant->dept->name . '</td>';
+            $str .= '</tr>';
+
+            $str .= '<tr>';
             $str .= '<td style="font-family: DroidSansFallback;">货到目的类型</td>';
-            $str .= '<td style="font-family: DroidSansFallback;">' . '' . '</td>';
+            $str .= '<td style="font-family: DroidSansFallback;">' . '发仓库 - ' . (isset($paymentrequest->purchaseorder_hxold->receiptorders->first()->rwrecord->handler->name) ? $paymentrequest->purchaseorder_hxold->receiptorders->first()->rwrecord->handler->name : '') . '</td>';
             $str .= '</tr>';
 
             $str .= '<tr>';
@@ -579,7 +584,7 @@ class PaymentrequestsController extends Controller
 
             $str .= '<tr>';
             $str .= '<td style="font-family: DroidSansFallback;">工程类型</td>';
-            $str .= '<td style="font-family: DroidSansFallback;">' . '' . '</td>';
+            $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->sohead->equipmenttype) ? $paymentrequest->purchaseorder_hxold->sohead->equipmenttype : '') . '</td>';
             $str .= '</tr>';
 
             $str .= '<tr>';
@@ -955,8 +960,13 @@ class PaymentrequestsController extends Controller
         $str .= '</tr>';
 
         $str .= '<tr>';
+        $str .= '<td style="font-family: DroidSansFallback;">申请人部门</td>';
+        $str .= '<td style="font-family: DroidSansFallback;">' . $paymentrequest->applicant->dept->name . '</td>';
+        $str .= '</tr>';
+
+        $str .= '<tr>';
         $str .= '<td style="font-family: DroidSansFallback;">货到目的类型</td>';
-        $str .= '<td style="font-family: DroidSansFallback;">' . '' . '</td>';
+        $str .= '<td style="font-family: DroidSansFallback;">' . '发仓库 - ' . (isset($paymentrequest->purchaseorder_hxold->receiptorders->first()->rwrecord->handler->name) ? $paymentrequest->purchaseorder_hxold->receiptorders->first()->rwrecord->handler->name : '') . '</td>';
         $str .= '</tr>';
 
         $str .= '<tr>';
@@ -971,7 +981,7 @@ class PaymentrequestsController extends Controller
 
         $str .= '<tr>';
         $str .= '<td style="font-family: DroidSansFallback;">对应工程名称</td>';
-        $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->sohead->descrip) ? $paymentrequest->purchaseorder_hxold->sohead->descrip : '') . '</td>';
+        $str .= '<td style="font-family: DroidSansFallback;">' .  (isset($paymentrequest->purchaseorder_hxold->sohead->descrip) ? $paymentrequest->purchaseorder_hxold->sohead->descrip : '') . '</td>';
         $str .= '</tr>';
 
         $str .= '<tr>';
@@ -981,7 +991,7 @@ class PaymentrequestsController extends Controller
 
         $str .= '<tr>';
         $str .= '<td style="font-family: DroidSansFallback;">工程类型</td>';
-        $str .= '<td style="font-family: DroidSansFallback;">' . '' . '</td>';
+        $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->sohead->equipmenttype) ? $paymentrequest->purchaseorder_hxold->sohead->equipmenttype : '') . '</td>';
         $str .= '</tr>';
 
         $str .= '<tr>';

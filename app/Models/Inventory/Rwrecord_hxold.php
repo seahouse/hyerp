@@ -27,4 +27,8 @@ class Rwrecord_hxold extends Model
     public function warehouse() {
         return $this->hasOne('App\Models\Inventory\Warehouse_hxold', 'number', 'warehouse_number');
     }
+
+    public function handler() {
+	    return $this->hasOne('App\Models\System\Employee_hxold', 'id', 'handler_id');
+    }
 }
