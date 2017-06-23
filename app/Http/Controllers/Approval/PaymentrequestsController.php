@@ -543,15 +543,65 @@ class PaymentrequestsController extends Controller
             $str .= '</head>';
             $str .= '<body>';
 
-            $str .= '<h1 style="font-family: DroidSansFallback;">供应商到货款节点' . '</h1>';
-            $str .= '<p style="font-family: DroidSansFallback;">申请人: ' . $paymentrequest->applicant->name . '</p>';
-            $str .= '<p style="font-family: DroidSansFallback;">货到目的类型: ' . '</p>';
-            $str .= '<p style="font-family: DroidSansFallback;">供应商: ' . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '') . '</p>';
-            $str .= '<p style="font-family: DroidSansFallback;">采购商品名称: ' . (isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '') . '</p>';
-            $str .= '<p style="font-family: DroidSansFallback;">对应工程名称: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->descrip) ? $paymentrequest->purchaseorder_hxold->sohead->descrip : '') . '</p>';
-            $str .= '<p style="font-family: DroidSansFallback;">项目所属销售经理: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->salesmanager) ? $paymentrequest->purchaseorder_hxold->sohead->salesmanager : '') . '</p>';
-            $str .= '<p style="font-family: DroidSansFallback;">工程类型: ' . '</p>';
-            $str .= '<p style="font-family: DroidSansFallback;">采购合同: ' . (isset($paymentrequest->purchaseorder_hxold->number) ? $paymentrequest->purchaseorder_hxold->number : '') . '</p>';
+            $str .= '<h1 style="font-family: DroidSansFallback; text-align:center">供应商到货款节点' . '</h1>';
+
+            $str .= '<table border="1px" cellpadding="0" cellspacing="0" width="100%"><tbody>';
+
+            $str .= '<tr>';
+            $str .= '<td style="font-family: DroidSansFallback;">申请人</td>';
+            $str .= '<td style="font-family: DroidSansFallback;">' . $paymentrequest->applicant->name . '</td>';
+            $str .= '</tr>';
+
+            $str .= '<tr>';
+            $str .= '<td style="font-family: DroidSansFallback;">货到目的类型</td>';
+            $str .= '<td style="font-family: DroidSansFallback;">' . '' . '</td>';
+            $str .= '</tr>';
+
+            $str .= '<tr>';
+            $str .= '<td style="font-family: DroidSansFallback;">供应商</td>';
+            $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '') . '</td>';
+            $str .= '</tr>';
+
+            $str .= '<tr>';
+            $str .= '<td style="font-family: DroidSansFallback;">采购商品名称</td>';
+            $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '') . '</td>';
+            $str .= '</tr>';
+
+            $str .= '<tr>';
+            $str .= '<td style="font-family: DroidSansFallback;">对应工程名称</td>';
+            $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->sohead->descrip) ? $paymentrequest->purchaseorder_hxold->sohead->descrip : '') . '</td>';
+            $str .= '</tr>';
+
+            $str .= '<tr>';
+            $str .= '<td style="font-family: DroidSansFallback;">项目所属销售经理</td>';
+            $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->sohead->salesmanager) ? $paymentrequest->purchaseorder_hxold->sohead->salesmanager : '') . '</td>';
+            $str .= '</tr>';
+
+            $str .= '<tr>';
+            $str .= '<td style="font-family: DroidSansFallback;">工程类型</td>';
+            $str .= '<td style="font-family: DroidSansFallback;">' . '' . '</td>';
+            $str .= '</tr>';
+
+            $str .= '<tr>';
+            $str .= '<td style="font-family: DroidSansFallback;">采购合同</td>';
+            $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->number) ? $paymentrequest->purchaseorder_hxold->number : '') . '</td>';
+            $str .= '</tr>';
+
+            $str .= '<tr>';
+            $str .= '<td style="font-family: DroidSansFallback;">到货地</td>';
+            $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->arrival) ? $paymentrequest->purchaseorder_hxold->arrival : '') . '</td>';
+            $str .= '</tr>';
+
+            $str .= '</tbody></table>';
+
+//            $str .= '<p style="font-family: DroidSansFallback;">申请人: ' . $paymentrequest->applicant->name . '</p>';
+//            $str .= '<p style="font-family: DroidSansFallback;">货到目的类型: ' . '</p>';
+//            $str .= '<p style="font-family: DroidSansFallback;">供应商: ' . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '') . '</p>';
+//            $str .= '<p style="font-family: DroidSansFallback;">采购商品名称: ' . (isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '') . '</p>';
+//            $str .= '<p style="font-family: DroidSansFallback;">对应工程名称: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->descrip) ? $paymentrequest->purchaseorder_hxold->sohead->descrip : '') . '</p>';
+//            $str .= '<p style="font-family: DroidSansFallback;">项目所属销售经理: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->salesmanager) ? $paymentrequest->purchaseorder_hxold->sohead->salesmanager : '') . '</p>';
+//            $str .= '<p style="font-family: DroidSansFallback;">工程类型: ' . '</p>';
+//            $str .= '<p style="font-family: DroidSansFallback;">采购合同: ' . (isset($paymentrequest->purchaseorder_hxold->number) ? $paymentrequest->purchaseorder_hxold->number : '') . '</p>';
 
             $str .= '</body>';
             $str .= '</html>';
@@ -895,15 +945,65 @@ class PaymentrequestsController extends Controller
         $str .= '</head>';
         $str .= '<body>';
 
-        $str .= '<h1 style="font-family: DroidSansFallback;">供应商到货款节点' . '</h1>';
-        $str .= '<p style="font-family: DroidSansFallback;">申请人: ' . $paymentrequest->applicant->name . '</p>';
-        $str .= '<p style="font-family: DroidSansFallback;">货到目的类型: ' . '</p>';
-        $str .= '<p style="font-family: DroidSansFallback;">供应商: ' . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '') . '</p>';
-        $str .= '<p style="font-family: DroidSansFallback;">采购商品名称: ' . (isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '') . '</p>';
-        $str .= '<p style="font-family: DroidSansFallback;">对应工程名称: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->descrip) ? $paymentrequest->purchaseorder_hxold->sohead->descrip : '') . '</p>';
-        $str .= '<p style="font-family: DroidSansFallback;">项目所属销售经理: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->salesmanager) ? $paymentrequest->purchaseorder_hxold->sohead->salesmanager : '') . '</p>';
-        $str .= '<p style="font-family: DroidSansFallback;">工程类型: ' . '</p>';
-        $str .= '<p style="font-family: DroidSansFallback;">采购合同: ' . (isset($paymentrequest->purchaseorder_hxold->number) ? $paymentrequest->purchaseorder_hxold->number : '') . '</p>';
+        $str .= '<h1 style="font-family: DroidSansFallback; text-align:center">供应商到货款节点' . '</h1>';
+
+        $str .= '<table border="1px" cellpadding="0" cellspacing="0" width="100%"><tbody>';
+
+        $str .= '<tr>';
+        $str .= '<td style="font-family: DroidSansFallback;">申请人</td>';
+        $str .= '<td style="font-family: DroidSansFallback;">' . $paymentrequest->applicant->name . '</td>';
+        $str .= '</tr>';
+
+        $str .= '<tr>';
+        $str .= '<td style="font-family: DroidSansFallback;">货到目的类型</td>';
+        $str .= '<td style="font-family: DroidSansFallback;">' . '' . '</td>';
+        $str .= '</tr>';
+
+        $str .= '<tr>';
+        $str .= '<td style="font-family: DroidSansFallback;">供应商</td>';
+        $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '') . '</td>';
+        $str .= '</tr>';
+
+        $str .= '<tr>';
+        $str .= '<td style="font-family: DroidSansFallback;">采购商品名称</td>';
+        $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '') . '</td>';
+        $str .= '</tr>';
+
+        $str .= '<tr>';
+        $str .= '<td style="font-family: DroidSansFallback;">对应工程名称</td>';
+        $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->sohead->descrip) ? $paymentrequest->purchaseorder_hxold->sohead->descrip : '') . '</td>';
+        $str .= '</tr>';
+
+        $str .= '<tr>';
+        $str .= '<td style="font-family: DroidSansFallback;">项目所属销售经理</td>';
+        $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->sohead->salesmanager) ? $paymentrequest->purchaseorder_hxold->sohead->salesmanager : '') . '</td>';
+        $str .= '</tr>';
+
+        $str .= '<tr>';
+        $str .= '<td style="font-family: DroidSansFallback;">工程类型</td>';
+        $str .= '<td style="font-family: DroidSansFallback;">' . '' . '</td>';
+        $str .= '</tr>';
+
+        $str .= '<tr>';
+        $str .= '<td style="font-family: DroidSansFallback;">采购合同</td>';
+        $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->number) ? $paymentrequest->purchaseorder_hxold->number : '') . '</td>';
+        $str .= '</tr>';
+
+        $str .= '<tr>';
+        $str .= '<td style="font-family: DroidSansFallback;">到货地</td>';
+        $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->arrival) ? $paymentrequest->purchaseorder_hxold->arrival : '') . '</td>';
+        $str .= '</tr>';
+
+        $str .= '</tbody></table>';
+
+//        $str .= '<p style="font-family: DroidSansFallback;">申请人: ' . $paymentrequest->applicant->name . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">货到目的类型: ' . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">供应商: ' . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">采购商品名称: ' . (isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">对应工程名称: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->descrip) ? $paymentrequest->purchaseorder_hxold->sohead->descrip : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">项目所属销售经理: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->salesmanager) ? $paymentrequest->purchaseorder_hxold->sohead->salesmanager : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">工程类型: ' . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">采购合同: ' . (isset($paymentrequest->purchaseorder_hxold->number) ? $paymentrequest->purchaseorder_hxold->number : '') . '</p>';
 
 //        $str .= '<p style="font-family: DroidSansFallback;">供应商类型: ' . $paymentrequest->suppliertype . '</p>';
 //        $str .= '<p style="font-family: DroidSansFallback;">付款类型: ' . $paymentrequest->paymenttype . '</p>';
@@ -934,8 +1034,7 @@ class PaymentrequestsController extends Controller
         $str .= '</body>';
         $str .= '</html>';
 
-
-
+//        dd($str);
 
 
 
@@ -959,11 +1058,11 @@ class PaymentrequestsController extends Controller
 
         // Render the HTML as PDF
         $dompdf->render();
-        $dest = 'uploads/approval/paymentrequest/' . $paymentrequest->id . '/' . date('YmdHis').rand(100, 200) . '.pdf';
-        file_put_contents($dest, $dompdf->output());
+//        $dest = 'uploads/approval/paymentrequest/' . $paymentrequest->id . '/' . date('YmdHis').rand(100, 200) . '.pdf';
+//        file_put_contents($dest, $dompdf->output());
 
         // Output the generated PDF to Browser
-//        $file = $dompdf->stream('供应商到货款节点');
+        $file = $dompdf->stream('供应商到货款节点');
 //        dd($dompdf->output());
 
         // add database record
