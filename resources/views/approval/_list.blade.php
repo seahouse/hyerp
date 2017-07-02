@@ -48,7 +48,7 @@
                 @if (isset($item->purchaseorder_hxold->amount_ticketed) and isset($item->purchaseorder_hxold->amount) and $item->purchaseorder_hxold->amount > 0.0 and $item->purchaseorder_hxold->amount_ticketed / $item->purchaseorder_hxold->amount > 0.9999)
                     票
                 @endif
-                @if (isset($item->purchaseorder_hxold->arrival_percent) and $item->purchaseorder_hxold->arrival_percent > 0.9999)
+                @if (isset($item->purchaseorder_hxold->arrival_percent) and $item->purchaseorder_hxold->arrival_percent >= 0.9999)
                     货
                 @endif
             </div>

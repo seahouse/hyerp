@@ -15,7 +15,8 @@
         "mpdf/mpdf": "^6.1",
         "barryvdh/laravel-dompdf": "^0.7.0",
         "pragmarx/google2fa": "^1.0",
-        "bacon/bacon-qr-code": "~1.0"
+        "bacon/bacon-qr-code": "~1.0",
+        "yajra/laravel-oci8": "5.2.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

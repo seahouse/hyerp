@@ -165,7 +165,7 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         // Barryvdh\DomPDF\ServiceProvider::class,
         PragmaRX\Google2FA\Vendor\Laravel\ServiceProvider::class,
-
+        Yajra\Oci8\Oci8ServiceProvider::class,
     ],
 
     /*
