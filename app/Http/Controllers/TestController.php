@@ -236,4 +236,12 @@ class TestController extends Controller
 //         }
 //         return $response->body;
     }
+
+    public function testoracle()
+    {
+//        $con = DB::connection('oracle');
+//        dd($con);
+        $tests = DB::connection('oracle')->select("select * from test1");
+        dd($tests);
+    }
 }
