@@ -41,4 +41,17 @@ class Salesorder_hxold extends Model
     // public function soitems() {
     //     return $this->hasMany('App\Models\Sales\Soitem', 'sohead_id');
     // }
+
+    public function poheads() {
+        return $this->hasMany('App\Models\Purchase\Purchaseorder_hxold', 'sohead_id', 'id');
+    }
+
+    public function receiptpayments() {
+        return $this->hasMany('App\Models\Sales\Receiptpayment_hxold', 'sohead_id', 'id');
+    }
+
+    // 此订单的对应的采购订单的对应的付款记录
+    public function payments() {
+        return $this->hasManyThrough('App\Models\Purchase\Payment_hxold', 'App\Models\Purchase\Purchaseorder_hxold', 'sohead_id', 'pohead_id');
+    }
 }

@@ -188,6 +188,17 @@
     <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail4') }}" target="_blank" class="btn btn-default btn-sm">入库明细</a>
     </div>
 </div>
+
+<div class="form-group">
+    <div class='col-xs-4 col-sm-2'>
+    </div>
+    <div class='col-xs-8 col-sm-10'>
+        @if (Auth::user()->email == "admin@admin.com")
+
+        @endif
+        <a href="{{ URL::to('/sales/salesorders/' . $paymentrequest->purchaseorder_hxold->sohead->id . '/mstatistics') }}" target="_blank" class="btn btn-default btn-sm">对应的销售订单金额数据统计</a>
+    </div>
+</div>
 @endcan
 
 {{--

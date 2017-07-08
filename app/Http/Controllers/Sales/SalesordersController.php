@@ -192,4 +192,11 @@ class SalesOrdersController extends Controller
         }
         return redirect('sales/salesorders');
     }
+
+    public function mstatistics($id)
+    {
+        $sohead = Salesorder_hxold::find($id);
+
+        return view('sales.salesorders.mstatistics', compact('sohead'));
+    }
 }
