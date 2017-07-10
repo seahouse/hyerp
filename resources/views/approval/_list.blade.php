@@ -30,12 +30,23 @@
 	                <div class='longText'>@if (isset($item->purchaseorder_hxold->custinfo_name)) {{ $item->purchaseorder_hxold->custinfo_name }} @endif</div>
 	                {{-- 示例：高密垃圾焚烧发电项目1#2#炉烟气脱硫净化装置系统工程 --}}
 	                {{-- @if (isset($item->purchaseorder_hxold->sohead_descrip)) {{ $item->purchaseorder_hxold->sohead_descrip }} @endif--}}
-	                <div class='longText'>@if (isset($item->purchaseorder_hxold->sohead_descrip)) {{ $item->purchaseorder_hxold->sohead_descrip }} @endif</div>
+	                <div class='longText'>
+                        @if (isset($item->purchaseorder_hxold->sohead->projectjc))
+                            {{ $item->purchaseorder_hxold->sohead->projectjc }}
+                        @elseif (isset($item->purchaseorder_hxold->sohead_descrip))
+                            {{ $item->purchaseorder_hxold->sohead_descrip }}
+                        @endif
+                    </div>
                 </div>
                 
                 
             </div>
+
             <div class='col-xs-3 col-sm-3 time'>
+                @if (isset($item->purchaseorder_hxold->productname)   )
+                    <div class='product'>{{ $item->purchaseorder_hxold->productname }}</div>
+                @endif
+
             	<span >{{ $item->created_at }}</span><br/>
             	@if ($item->approversetting_id > 0)
                     <div class="statusTodo">待审批</div>

@@ -184,11 +184,27 @@ body {
 }
 
 .reimbList .time {
-	margin-top: 5px;
-	color: #ccc;
     font-size: 12px;
-    padding: 10px 0;
+    margin-top: 0px;
+    color: #ccc;
+    padding: 0px 0;
 }
+
+.reimbList .time .product {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: #ccc;
+    padding: 0px 0;
+    display: block;
+}
+
+/*.reimbList .time {*/
+	/*margin-top: 5px;*/
+	/*color: #ccc;*/
+    /*font-size: 12px;*/
+    /*padding: 10px 0;*/
+/*}*/
 
 .reimbList .content {
     font-size: 14px;
