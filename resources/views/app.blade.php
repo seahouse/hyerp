@@ -7,7 +7,7 @@
 <!--	<link href="{{ asset("//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css") }}" rel="stylesheet"> -->
 	<link href="{{ asset("css/bootstrap.min.css") }}" rel="stylesheet">
 	<link href="{{ asset("fonts/iconfont.css") }}" rel="stylesheet">
-	<link href="{{ asset("css/styles.css") }}" rel="stylesheet">
+	<link href="{{ asset("css/styles.css?v=20170713") }}" rel="stylesheet">
 </head>
 <body>
 	@include('_back')
