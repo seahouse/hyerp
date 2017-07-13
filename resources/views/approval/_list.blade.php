@@ -1,10 +1,9 @@
 
 
 
-
 @if ($paymentrequests->count())
     @foreach($paymentrequests as $item)
-    <div class="reimbList list-group">       
+    <div class="reimbList list-group">
         <a href="{{ url($href_pre_paymentrequest . $item->id . $href_suffix) }}" class="list-group-item">
             {{-- 以下的代码判断说明：如果用户的头像url为空，则以名字显示，否则以这个头像url来显示图片 --}}  
             @if (isset($item->applicant->dtuser->avatar))
@@ -19,7 +18,9 @@
                 <div class='col-xs-3 col-sm-3 headIcon' ><img class="name img" src="{{ $dduser->avatar }}" /></div>
             @endif
 --}}
-            <div class='col-xs-6 col-sm-6 content'>
+            <div class='col-xs-6 col-sm-6 content'
+                 {{-- 如果是垫资，则用特殊颜色显示。垫资：销售订单的收款金额小于此销售订单对应的采购订单的付款总额。--}}
+                @if (isset($item->purchaseorder_hxold->sohead) and $item->purchaseorder_hxold->sohead->receiptpayments->sum('amount') * 10000 < $item->purchaseorder_hxold->sohead->payments->sum('amount'))  style="color: #FF3300;") @endif >
                 <div title="{{ $item->applicant_name }}的付款" class="title">
                     <div class='longText'>{{ $item->paymenttype }} | {{ $item->amount }}</div>
                     {{-- 示例：山东奥博环保科技有限公司 --}}
