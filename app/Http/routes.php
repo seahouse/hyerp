@@ -401,6 +401,14 @@ Route::group(['middleware' => 'web'], function () {
 //    Route::get('/home', 'HomeController@index');
 });
 
+// for admin login
+Route::group(['middleware' => 'web'], function () {
+//    Route::post('login2', 'Auth\AuthController@login2');
+    Route::get('login2', 'Auth\AuthController@showLoginForm');
+
+//    Route::get('/home', 'HomeController@index');
+});
+
 
 // Load other urls.
 $GodPath = __DIR__.'/../God/routes.php';

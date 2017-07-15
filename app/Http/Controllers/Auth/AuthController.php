@@ -106,4 +106,20 @@ class AuthController extends Controller
 //
 //        return redirect()->intended($this->redirectTo);
 //    }
+
+    public function showLoginForm2()
+    {
+        //get user id and create cache key
+//        $userId = $request->session()->pull('2fa:user:id');
+//        $key    = $userId . ':' . $request->totp;
+//
+//        //use cache to store token to blacklist
+//        Cache::add($key, true, 4);
+//
+//        //login and redirect user
+//        Auth::loginUsingId($userId);
+
+        return view('auth.login2');
+        return redirect()->intended($this->redirectTo);
+    }
 }
