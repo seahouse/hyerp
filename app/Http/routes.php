@@ -398,16 +398,13 @@ Route::group(['prefix' => 'teaching', 'namespace' => 'Teaching', 'middleware' =>
 Route::group(['middleware' => 'web'], function () {
     Route::auth();
 
-//    Route::get('/home', 'HomeController@index');
-});
-
-// for admin login
-Route::group(['middleware' => 'web'], function () {
+    // for admin login
 //    Route::post('login2', 'Auth\AuthController@login2');
     Route::get('login2', 'Auth\AuthController@showLoginForm2');
 
 //    Route::get('/home', 'HomeController@index');
 });
+
 
 
 // Load other urls.

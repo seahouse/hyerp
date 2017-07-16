@@ -108,6 +108,10 @@
                 @else
                     {{ number_format($itemp->receiptitems->sum(function($item) { return $item['unitprice'] * 1.17 * $item['quantity'];}) / $itemp->receiptitems->sum('quantity'), 6, '.', '')}}
                 @endif
+                <br>
+                现存量:
+                {{ $itemp->receiptitems->sum('quantity') - $itemp->shipitems->sum('quantity') }}
+
         {{--
                 {{ $poitem->item->receiptitems->sum('amount') / $poitem->item->receiptitems->sum('quantity')}}
         --}}
