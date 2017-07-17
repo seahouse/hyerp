@@ -44,17 +44,32 @@
             </div>
 
             <div class='col-xs-3 col-sm-3 time'>
-                @if (isset($item->purchaseorder_hxold->productname)   )
+                @if (isset($item->purchaseorder_hxold->productname))
                     <div class='product'>{{ $item->purchaseorder_hxold->productname }}</div>
                 @endif
 
             	<span >{{ $item->created_at }}</span><br/>
             	@if ($item->approversetting_id > 0)
-                    <div class="statusTodo">待审批</div>
+                    <div class="statusTodo">待审批
+                        @if (isset($item->purchaseorder_hxold->arrival))
+                            {{-- mb_substr: 中文截取 --}}
+                            {{ mb_substr($item->purchaseorder_hxold->arrival, 0, 2) }}
+                        @endif
+                    </div>
                 @elseif ($item->approversetting_id == 0)
-                    <div class="statusDone">已通过</div>      {{-- 此时，字体要修改为灰色 --}}
+                    <div class="statusDone">已通过
+                        @if (isset($item->purchaseorder_hxold->arrival))
+                            {{-- mb_substr: 中文截取 --}}
+                            {{ mb_substr($item->purchaseorder_hxold->arrival, 0, 2) }}
+                        @endif
+                    </div>      {{-- 此时，字体要修改为灰色 --}}
                 @else
-                    <div class="statusDoneNotPass">未通过</div>
+                    <div class="statusDoneNotPass">未通过
+                        @if (isset($item->purchaseorder_hxold->arrival))
+                            {{-- mb_substr: 中文截取 --}}
+                            {{ mb_substr($item->purchaseorder_hxold->arrival, 0, 2) }}
+                        @endif
+                    </div>
                 @endif
 
                 @if (isset($item->purchaseorder_hxold->amount_ticketed) and isset($item->purchaseorder_hxold->amount) and $item->purchaseorder_hxold->amount > 0.0 and $item->purchaseorder_hxold->amount_ticketed / $item->purchaseorder_hxold->amount > 0.9999)
