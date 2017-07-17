@@ -18,6 +18,7 @@ use Zizaco\Entrust\Entrust;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DingTalkController;
 use App\Models\System\Userold;
+use App\Models\System\Employee_hxold;
 
 class UsersController extends Controller
 {
@@ -257,6 +258,8 @@ class UsersController extends Controller
             $dtuserlocal->jobnumber     = $dtuser->jobnumber;
             // $dtuserlocal->extattr       = $dtuser->extattr;              // 无此元素
             $dtuserlocal->save();
+
+            self::updateuseroldone($user);
         }
     }
 
@@ -385,6 +388,71 @@ class UsersController extends Controller
 //        $userold->save();
 //        $user->update();
         return redirect('system/users');
+    }
+
+    // update all userold
+    // if not set already, add it and set it.
+    public function updateuseroldall(Request $request)
+    {
+        //
+//        dd(Request::all());
+        $users = User::all();
+
+        foreach ($users as $user)
+        {
+            $userold = Userold::where('user_id', $user->id)->first();
+            if (isset($userold))
+            {
+//                Employee_hxold::where('name', '');
+//                $userold->user_hxold_id = Request::input('user_hxold_id');
+//                $userold->save();
+            }
+            else
+            {
+                $employeehxold = Employee_hxold::where('name', $user->name)->first();
+                if (isset($employeehxold))
+                {
+//                    dd($employeehxold);
+
+                    $userold = new Userold;
+                    $userold->user_id = $user->id;
+                    $userold->user_hxold_id = $employeehxold->id;
+                    $userold->save();
+                }
+
+            }
+        }
+//        dd($users);
+
+//        dd($userold);
+//        $userold->user_hxold_id = $request->input('user_hxold_id');
+//        $userold->save();
+//        $user->update();
+        return redirect('system/users');
+    }
+
+    public static function updateuseroldone($user)
+    {
+        $userold = Userold::where('user_id', $user->id)->first();
+        if (isset($userold))
+        {
+//                Employee_hxold::where('name', '');
+//                $userold->user_hxold_id = Request::input('user_hxold_id');
+//                $userold->save();
+        }
+        else
+        {
+            $employeehxold = Employee_hxold::where('name', $user->name)->first();
+            if (isset($employeehxold))
+            {
+//                    dd($employeehxold);
+
+                $userold = new Userold;
+                $userold->user_id = $user->id;
+                $userold->user_hxold_id = $employeehxold->id;
+                $userold->save();
+            }
+        }
     }
 
     public function updategoogle2fa(Request $request, $id)
