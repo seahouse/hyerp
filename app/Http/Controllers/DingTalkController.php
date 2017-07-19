@@ -886,8 +886,29 @@ class DingTalkController extends Controller
         return Google2FA::generateSecretKey();
     }
 
-//    public function test()
-//    {
-//        return view('test');
-//    }
+    public function routerrest()
+    {
+//        $response = Http::post("/message/send_to_conversation",
+//            array("access_token" => $access_token), json_encode($data));
+//        return json_encode($response);
+
+        $method = 'dingtalk.smartwork.bpms.processinstance.create';
+        $session = self::getAccessToken();
+        $timestamp = time('2017-07-19 13:06:00');
+        $format = 'json';
+        $v = '2.0';
+
+        $process_code = 'PROC-EF6YRO35P2-7MPMNW3BNO0R8DKYN8GX1-2EACCA5J-6';
+        $originator_user_id = 'manager1200';
+        $dept_id = 6643803;
+        $approvers = 'manager1200';
+        $form_component_values = '{name:\'测试1\', value:\'aaa\'}';
+        $params = compact('method', 'session', 'v', 'format',
+            'process_code', 'originator_user_id', 'dept_id', 'approvers', 'form_component_values');
+        $data = [
+//            'process_code' => '001'
+        ];
+        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+        dd($response);
+    }
 }

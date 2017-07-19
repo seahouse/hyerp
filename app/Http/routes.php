@@ -78,6 +78,9 @@ Route::group(['middleware' => ['web']], function () {
         return view('auth.login_google2fa');
     });
 
+    // approval
+    Route::get('dingtalk/router/rest', 'DingTalkController@routerrest');
+
     // run .bat shell command to run git pull.
     Route::get('gitpullbybat', function() { return view('gitpullbybat'); });
 
