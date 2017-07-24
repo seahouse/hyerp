@@ -30,8 +30,20 @@ class UsersController extends Controller
     public function index()
     {
         //
-        $users = User::latest('created_at')->paginate(10);
-        return view('system.users.index', compact('users'));
+        $request = request();
+        $key = $request->input('key', '');
+        $inputs = $request->all();
+        if (null !== request('key'))
+            $users = $this->searchrequest($request);
+        else
+            $users = User::latest('created_at')->paginate(10);
+//        $users = User::latest('created_at')->paginate(10);
+
+        if (null !== request('key'))
+            return view('system.users.index', compact('users', 'key', 'inputs'));
+        else
+            return view('system.users.index', compact('users'));
+//        return view('system.users.index', compact('users'));
     }
 
     /**
@@ -466,5 +478,116 @@ class UsersController extends Controller
         return redirect('system/users');
     }
 
+    public function search(Request $request)
+    {
+        $key = Request::input('key');
+        $inputs = Request::all();
+        $users = $this->searchrequest($request);
+//        $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
+//        $totalamount = Paymentrequest::sum('amount');
+
+        return view('system.users.index', compact('users', 'key', 'inputs'));
+    }
+
+    public function searchrequest($request)
+    {
+        $inputs = Request::all();
+        $key = Request::input('key');
+
+//        if (strlen($key) > 0)
+//        {
+//            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
+//        }
+
+        $query = User::latest();
+
+        if (strlen($key) > 0)
+        {
+            $query->where(function($query) use ($key) {
+                $query->where('name', 'like',  '%' . $key . '%');
+            });
+        }
+
+//        if ($approvalstatus <> '')
+//        {
+//            if ($approvalstatus == "1")
+//                $query->where('approversetting_id', '>', '0');
+//            else
+//                $query->where('approversetting_id', $approvalstatus);
+//        }
+//
+//        if ($request->has('approvaldatestart') && $request->has('approvaldateend'))
+//        {
+//            $paymentrequestids = DB::table('paymentrequestapprovals')
+//                ->select('paymentrequest_id')
+//                ->groupBy('paymentrequest_id')
+//                ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'::timestamp + interval \'1D\'')
+//                ->pluck('paymentrequest_id');
+//            $query->whereIn('id', $paymentrequestids);
+//
+//
+//
+//
+//        }
+
+//        // paymentmethod
+//        if ($request->has('paymentmethod'))
+//        {
+//            $query->where('paymentmethod', $request->input('paymentmethod'));
+//        }
+//
+//        // payment status
+//        // because need search hxold database, so select this condition last.
+//        if ($request->has('paymentstatus'))
+//        {
+//            $paymentstatus = $request->input('paymentstatus');
+//            if ($paymentstatus == 0)
+//            {
+//                $query->where('approversetting_id', '0');
+//
+//                $paymentrequestids = [];
+//                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
+//                    foreach ($paymentrequests as $paymentrequest) {
+//                        # code...
+//                        if (isset($paymentrequest->purchaseorder_hxold->payments))
+//                        {
+//                            if ($paymentrequest->paymentrequestapprovals->max('created_at') < $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
+//                                array_push($paymentrequestids, $paymentrequest->id);
+//                        }
+//                    }
+//                });
+//
+//                // dd($paymentrequestids);
+//                $query->whereIn('id', $paymentrequestids);
+//
+//            }
+//            elseif ($paymentstatus == -1)
+//            {
+//                $query->where('approversetting_id', '0');
+//
+//                $paymentrequestids = [];
+//                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
+//                    foreach ($paymentrequests as $paymentrequest) {
+//                        # code...
+//                        if (isset($paymentrequest->purchaseorder_hxold->payments))
+//                        {
+//                            if ($paymentrequest->paymentrequestapprovals->max('created_at') > $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
+//                                array_push($paymentrequestids, $paymentrequest->id);
+//                        }
+//                    }
+//                });
+//
+//                $query->whereIn('id', $paymentrequestids);
+//            }
+//        }
+
+
+        $users = $query->select('users.*')
+            ->paginate(10);
+//        dd($paymentrequests);
+
+        return $users;
+    }
 
 }

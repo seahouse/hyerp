@@ -14,6 +14,24 @@
     </div>
 
     <div class="panel-body">
+        {!! Form::open(['url' => '/system/users/search', 'class' => 'pull-right form-inline']) !!}
+        <div class="form-group-sm">
+            {{--
+            {!! Form::label('approvaldatelabel', '审批时间:', ['class' => 'control-label']); !!}
+            {!! Form::date('approvaldatestart', null, ['class' => 'form-control']); !!}
+            {!! Form::label('approvaldatelabelto', '-', ['class' => 'control-label']); !!}
+            {!! Form::date('approvaldateend', null, ['class' => 'form-control']); !!}
+
+            {!! Form::select('paymentmethod', ['支票' => '支票', '贷记' => '贷记', '电汇' => '电汇', '汇票' => '汇票', '现金' => '现金', '银行卡' => '银行卡', '其他' => '其他'], null, ['class' => 'form-control', 'placeholder' => '--付款方式--']) !!}
+
+            {!! Form::select('paymentstatus', ['0' => '已付款', '-1' => '未付款'], null, ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}
+            {!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']); !!}
+            --}}
+            {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '姓名']) !!}
+            {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
+        </div>
+        {!! Form::close() !!}
+
 @if (Auth::user()->email == "admin@admin.com")
         {!! Form::button('与钉钉取消绑定', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnCancelBindDT']) !!}
         {!! Form::button('3333', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnTest']) !!}
@@ -44,13 +62,7 @@
             {!! Form::submit('人脸对比测试', ['class' => 'btn btn-default btn-sm']) !!}            
         {!! Form::close() !!}
 
-        {!! Form::open(['url' => '/facecore/urlfacedetect', 'class' => 'pull-right']) !!}
-            {!! Form::submit('人头数监测', ['class' => 'btn btn-default btn-sm']) !!}            
-        {!! Form::close() !!}
 
-        {!! Form::open(['url' => '/cloudwalk/face_tool_detect', 'class' => 'pull-right']) !!}
-            {!! Form::submit('云从科技', ['class' => 'btn btn-default btn-sm']) !!}            
-        {!! Form::close() !!}
 
 
         {!! Form::open(['url' => url('/dingtalk/chat_create'), 'class' => 'pull-right']) !!}
@@ -66,9 +78,19 @@
             {!! Form::close() !!}
 
 
+        {{--
+        {!! Form::open(['url' => '/facecore/urlfacedetect', 'class' => 'pull-right']) !!}
+            {!! Form::submit('人头数监测', ['class' => 'btn btn-default btn-sm']) !!}
+        {!! Form::close() !!}
+
+        {!! Form::open(['url' => '/cloudwalk/face_tool_detect', 'class' => 'pull-right']) !!}
+            {!! Form::submit('云从科技', ['class' => 'btn btn-default btn-sm']) !!}
+        {!! Form::close() !!}
+
         <form method="POST" action="http://localhost:82/dingtalk/receive" class="pull-right">
             <input class="btn btn-default btn-sm" type="submit" value="4444">            
         </form>
+        --}}
 
 @endif
     </div>    
@@ -132,7 +154,15 @@
         </tbody>
 
     </table>
-    {!! $users->render() !!}
+
+    @if (isset($key))
+        {!! $users->setPath('/system/users')->appends([
+            'key' => $inputs['key']
+        ])->links() !!}
+    @else
+        {!! $users->setPath('/system/users')->links() !!}
+    @endif
+
     @else
     <div class="alert alert-warning alert-block">
         <i class="fa fa-warning"></i>

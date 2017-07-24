@@ -334,6 +334,9 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
     Route::get('users/{id}/roles/edit', 'UserrolesController@edit');
     Route::group(['prefix' => 'users'], function() {
         Route::post('updateuseroldall', 'UsersController@updateuseroldall');
+
+        Route::post('search', 'UsersController@search');              // 搜索功能
+        Route::post('msearch', 'UsersController@msearch');              // 搜索功能
     });
     Route::group(['prefix' => 'users/{id}'], function() {
         Route::get('editpass', 'UsersController@editpass');
