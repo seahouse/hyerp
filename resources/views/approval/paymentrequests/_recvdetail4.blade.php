@@ -22,7 +22,8 @@
         @if ($purchaseorder)
             @foreach ($itemps2 as $itemp)
                 @if (isset($itemp->goods_name))
-                    <ul><li><strong>{{ $itemp->goods_name . '(型号: ' . $itemp->goods_spec . ')'}}</strong><br>
+                    <ul><li>
+                    <strong>{{ $itemp->goods_name . '(型号: ' . $itemp->goods_spec . ')'}}</strong><br>
 
                     历史最低价: {{ $itemp->receiptitems->min('unitprice') * 1.17 }}<br>
                     历史均价: 
@@ -84,7 +85,7 @@
                         </tbody>
 
                     </table>
-                    </li></ul></li></ul>
+                    </li></ul>
                 @else
                     <div class="alert alert-warning alert-block">
                         <i class="fa fa-warning"></i>
