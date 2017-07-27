@@ -554,7 +554,7 @@ class PaymentrequestsController extends Controller
 
             $str .= '<tr>';
             $str .= '<td style="font-family: DroidSansFallback;">申请人部门</td>';
-            $str .= '<td style="font-family: DroidSansFallback;">' . $paymentrequest->applicant->dept->name . '</td>';
+            $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->applicant->dept->name) ? $paymentrequest->applicant->dept->name : '') . '</td>';
             $str .= '</tr>';
 
             $str .= '<tr>';
