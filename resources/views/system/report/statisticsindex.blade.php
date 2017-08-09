@@ -42,6 +42,8 @@
                 {!! Form::select('ticketedstatus', array(0 => '未开票', 1 => '部分开票', 2 => '全部开票'), null, ['class' => 'form-control', 'placeholder' => '--开票状态--']) !!}
             @elseif ($report->name == "in_batch")
                 {!! Form::text('batch', null, ['class' => 'form-control', 'placeholder' => '批号']) !!}
+            @elseif ($report->name == "so_cost_statistics")
+                {!! Form::select('orderid', $poheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
             @endif
 
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
