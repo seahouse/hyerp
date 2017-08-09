@@ -97,6 +97,11 @@ Route::group(['middleware' => ['web']], function () {
 
     // face plus plus
     Route::get('facepp/demo/msearch', 'FaceplusplusController@msearch');
+
+    // suning
+    Route::group(['prefix' => 'suning'], function() {
+        Route::get('gateway', 'SuningController@gateway');
+    });
 });
 
 Route::group(['middleware' => ['web', 'auth']], function () {
