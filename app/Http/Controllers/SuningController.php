@@ -62,20 +62,20 @@ U0Nr19uAFaIM5sE=
         $idType = '01';
         $idNo = '321322198512286054';
         $loanApplyAmount = 1000.0;
-        $loanTerm = 20;
+        $loanTerm = 9;
         $termType = '02';
         $loanRate = 0.00012;
         $payWay = 'R9925';
         $accountType = '01';
         $accountName = '阿飞大法师法';
-        $bankCardNum = '6222548451548545484';
-        $bankName = '02';
+        $bankCardNum = '8000000000000000' . '211';
+        $bankName = '00';
 
         $a0 = [
             'version=1.0',
             'app_id=yfbm70058709e2017060701',
             'service=suning.fosps.pls.ptdpc.savecustomerptdpc',
-            'timestamp=' . $timestamp,
+            'timestamp=\'' . $timestamp . '\'',
             'partnerNo=18',
             'bizCode=113',
             'productNo=04',
@@ -96,18 +96,22 @@ U0Nr19uAFaIM5sE=
             'bankCardNum=' . $bankCardNum,
             'bankName=' . $bankName,
         ];
+        $ret2 = md5(http_build_query($a0));
         sort($a0);
 //        ksort($a0);
         $a1 = implode('&', $a0);
         echo $a1 . "</br>";
 //        $a1 = serialize($a0);
-        $a2 = strtoupper(md5(utf8_encode($a1)));
+//        $a2 = strtoupper(md5(utf8_encode($a1)));
+        $a2 = strtoupper(md5($a1));
 //        $a3 = $this->sign($a2);
         echo $a2 . "</br>";
 
 //        $pi_key = openssl_pkey_get_private($this->priKey);
         $pi_key = openssl_pkey_get_private($b0);
         $pu_key = openssl_pkey_get_public($this->pubKey);
+        echo "pu_key: " . $pu_key . "</br>";
+        echo "pu_key2: " . openssl_get_publickey($this->pubKey) . "</br></br>";
 
         $ret = '';
         if (openssl_sign($a2, $ret, $pi_key)){
@@ -133,6 +137,38 @@ U0Nr19uAFaIM5sE=
 //            'version'       => '1.0',
 //            'app_id'       => 'yfbm70058709e2017060701'
         ];
+
+        $aa0 = array(
+            'version'       => '1.0',
+            'app_id'        => 'yfbm70058709e2017060701',
+            'sign_type'     => 'RSA2',
+            'signkey_index' => '0001',
+//                'sign'           => $encrypted,
+            'sign'           => $ret,
+            'service'       => 'suning.fosps.pls.ptdpc.savecustomerptdpc',
+            'timestamp'     => $timestamp,
+            'partnerNo'     => '18',
+            'bizCode'       => '113',
+            'productNo'     => '04',
+            'intfNo'        => 'I001',
+            'transNo'       => $transNo,
+            'serialNo'      => $serialNo,
+            'custName'      => $custName,
+            'custMobile'    => $custMobile,
+            'idType'        => $idType,
+            'idNo'          => $idNo,
+            'loanApplyAmount'   => $loanApplyAmount,
+            'loanTerm'      => $loanTerm,
+            'termType'      => $termType,
+            'loanRate'      => $loanRate,
+            'payWay'        => $payWay,
+            'accountType'   => $accountType,
+            'accountName'   => $accountName,
+            'bankCardNum'   => $bankCardNum,
+            'bankName'      => $bankName,
+        );
+//        dd($aa0);
+
         $response = HttpSuning::post("/gateway.htm",
             array(
                 'version'       => '1.0',

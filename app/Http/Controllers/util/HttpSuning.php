@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\util;
 
-use Config;
+use Config, Log;
 
 Class HttpSuning
 {
@@ -24,9 +24,13 @@ Class HttpSuning
 	public static function post($path, $params, $data)
 	{
 		$url = self::joinParams($path, $params);
+		echo $url . "</br></br>";
+		$aaa = urlencode($url);
+        echo $aaa . "</br></br>";
+        Log::info($url);
 		$response = \Httpful\Request::post($url)
 			->body($data)
-			->sendsJson()
+//			->sendsJson()
 			->send();
 //		dd($response);
 		if ($response->hasErrors())
