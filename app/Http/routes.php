@@ -101,6 +101,7 @@ Route::group(['middleware' => ['web']], function () {
     // suning
     Route::group(['prefix' => 'suning'], function() {
         Route::get('gateway', 'SuningController@gateway');
+        Route::get('verifysign', 'SuningController@verifysign');
     });
 });
 
