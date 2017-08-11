@@ -37,7 +37,7 @@ Class HttpSuning
 		{
 			var_dump($response);
 		}
-		if ($response->body->error_code != 0)
+		if ($response->body->errorCode != 0)
 		{
 			var_dump($response->body);
 		}
@@ -47,8 +47,20 @@ Class HttpSuning
 	private static function joinParams($path, $params)
 	{
 		$url = "https://fopenapipre.cnsuning.com:8443" . $path;
+		$str_params = '';
 		if (count($params) > 0)
 		{
+//            $str_params = $str_params . "?";
+//            foreach ($params as $key => $value)
+//            {
+//                $str_params = $str_params . $key . "=" . $value . "&";
+//            }
+//            $length = strlen($str_params);
+//            if ($str_params[$length - 1] == '&')
+//            {
+//                $str_params = substr($str_params, 0, $length - 1);
+//            }
+
 			$url = $url . "?";
 			foreach ($params as $key => $value)
 			{
@@ -60,6 +72,12 @@ Class HttpSuning
 				$url = substr($url, 0, $length - 1);
 			}
 		}
-		return $url;
+
+		Log::info($str_params);
+        $str_params = urlencode($str_params);
+        Log::info($str_params);
+//        return $url . $str_params;
+//		return $url . "?" . $str_params;
+        return $url;
 	}
 }

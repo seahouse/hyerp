@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\util\HttpSuning;
+use Log;
 
 class SuningController extends Controller
 {
@@ -64,7 +65,7 @@ U0Nr19uAFaIM5sE=
         $loanApplyAmount = 1000.0;
         $loanTerm = 9;
         $termType = '02';
-        $loanRate = 0.00012;
+        $loanRate = 0.000167;
         $payWay = 'R9925';
         $accountType = '01';
         $accountName = '阿飞大法师法';
@@ -75,7 +76,7 @@ U0Nr19uAFaIM5sE=
             'version=1.0',
             'app_id=yfbm70058709e2017060701',
             'service=suning.fosps.pls.ptdpc.savecustomerptdpc',
-            'timestamp=\'' . $timestamp . '\'',
+            'timestamp=' . $timestamp,
             'partnerNo=18',
             'bizCode=113',
             'productNo=04',
@@ -101,6 +102,7 @@ U0Nr19uAFaIM5sE=
 //        ksort($a0);
         $a1 = implode('&', $a0);
         echo $a1 . "</br>";
+        Log::info($a1);
 //        $a1 = serialize($a0);
 //        $a2 = strtoupper(md5(utf8_encode($a1)));
         $a2 = strtoupper(md5($a1));
@@ -144,7 +146,7 @@ U0Nr19uAFaIM5sE=
             'sign_type'     => 'RSA2',
             'signkey_index' => '0001',
 //                'sign'           => $encrypted,
-            'sign'           => $ret,
+            'sign'           => urlencode($ret),
             'service'       => 'suning.fosps.pls.ptdpc.savecustomerptdpc',
             'timestamp'     => $timestamp,
             'partnerNo'     => '18',
@@ -176,7 +178,7 @@ U0Nr19uAFaIM5sE=
                 'sign_type'     => 'RSA2',
                 'signkey_index' => '0001',
 //                'sign'           => $encrypted,
-                'sign'           => $ret,
+                'sign'           => urlencode($ret),
                 'service'       => 'suning.fosps.pls.ptdpc.savecustomerptdpc',
                 'timestamp'     => $timestamp,
                 'partnerNo'     => '18',
@@ -185,7 +187,7 @@ U0Nr19uAFaIM5sE=
                 'intfNo'        => 'I001',
                 'transNo'       => $transNo,
                 'serialNo'      => $serialNo,
-                'custName'      => $custName,
+                'custName'      => urlencode($custName),
                 'custMobile'    => $custMobile,
                 'idType'        => $idType,
                 'idNo'          => $idNo,
@@ -195,7 +197,7 @@ U0Nr19uAFaIM5sE=
                 'loanRate'      => $loanRate,
                 'payWay'        => $payWay,
                 'accountType'   => $accountType,
-                'accountName'   => $accountName,
+                'accountName'   => urlencode($accountName),
                 'bankCardNum'   => $bankCardNum,
                 'bankName'      => $bankName,
                 ), json_encode($data));
