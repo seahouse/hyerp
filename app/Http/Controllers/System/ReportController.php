@@ -159,7 +159,8 @@ class ReportController extends Controller
 //        dd($items);
 //        dd(array_first(array_first($items->items())));
 
-        return view('system.report.statisticsindex', compact('items', 'report', 'input'));
+        $titleshows = explode(',', $report->titleshow);
+        return view('system.report.statisticsindex', compact('items', 'report', 'input', 'titleshows'));
     }
 
     public function export($id)
@@ -198,8 +199,18 @@ class ReportController extends Controller
 //                ));
 //                $sheet->fromArray(json_decode(json_encode($items_t), true));
                 $dataArray = json_decode(json_encode($items_t), true);
-                list($keys, $values) = array_divide(array_first($dataArray));
-                $sheet->appendRow($keys);
+
+                // 修改：原来是根据数据的key来设置标题
+                // 考虑到无法处理中文标题，修改此代码
+                $titleshows = explode(',', $report->titleshow);
+                if (count($titleshows))
+                    $sheet->appendRow($titleshows);
+                else
+                {
+                    list($keys, $values) = array_divide(array_first($dataArray));
+                    $sheet->appendRow($keys);
+                }
+
                 foreach ($dataArray as $value)
                     $sheet->appendRow($value);
 

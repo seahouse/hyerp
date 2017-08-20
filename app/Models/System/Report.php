@@ -10,6 +10,7 @@ class Report extends Model
     protected $fillable = [
         'name',
         'module',
+        'titleshow',
         'active',
         'descrip',
         'statement'
