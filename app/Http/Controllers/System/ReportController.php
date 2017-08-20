@@ -203,7 +203,7 @@ class ReportController extends Controller
                 // 修改：原来是根据数据的key来设置标题
                 // 考虑到无法处理中文标题，修改此代码
                 $titleshows = explode(',', $report->titleshow);
-                if (count($titleshows))
+                if (count($titleshows) > 1)
                     $sheet->appendRow($titleshows);
                 else
                 {
