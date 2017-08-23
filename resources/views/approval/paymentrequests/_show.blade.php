@@ -68,6 +68,40 @@
             {!! Form::submit('撤销', ['class' => 'btn btn-danger btn-sm']) !!}
         {!! Form::close() !!}
     @endif
+
+<div class="modal fade" id="retractModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">请输入撤回的理由</h4>
+            </div>
+            <div class="modal-body">
+                <form id="formRetract">
+                    {!! csrf_field() !!}
+                    {!! Form::text('description', null, ['class' => 'form-control']) !!}
+                    {!! Form::hidden('paymentrequest_id', $paymentrequest->id, ['class' => 'form-control']) !!}
+                    {!! Form::hidden('status', -1, ['class' => 'form-control']) !!}
+                </form>
+            </div>
+            <div class="modal-footer">
+                {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
+                {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnRetract']) !!}
+            </div>
+        </div>
+    </div>
+</div>
+
+    {{-- 审批通过后，发起人可以申请撤回 --}}
+    {{-- todo: 已撤回的审批单，无法再次撤回 --}}
+    @if (Auth::user()->id == $paymentrequest->applicant_id and $paymentrequest->approversetting_id == 0)
+        {!! Form::button('申请撤回', ['class' => 'btn btn-warning btn-sm', 'data-toggle' => 'modal', 'data-target' => '#retractModal']) !!}
+        {!! Form::open(array('url' => 'approval/paymentrequests/retract/' . $paymentrequest->id)) !!}
+            {{--
+            {!! Form::submit('申请撤回', ['class' => 'btn btn-warning btn-sm']) !!}
+            {!! Form::button('申请撤回', ['class' => 'btn btn-warning btn-sm', 'data-toggle' => 'modal', 'data-target' => '#retractModal']) !!}
+            --}}
+        {!! Form::close() !!}
+    @endif
 @endsection
 
 
@@ -76,8 +110,29 @@
         jQuery(document).ready(function(e) {            
             $("#btnPreview").click(function() {
                 window.print();
-            });      
+            });
 
+            $("#btnRetract").bind("click", function() {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('approval/paymentrequests/retract') }}",
+                    data: $("form#formRetract").serialize(),
+                    contentType:"application/x-www-form-urlencoded",
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert($("form#formRetract").serialize());
+                        alert('error');
+                        alert(xhr.status);
+                        alert(xhr.responseText);
+                        alert(ajaxOptions);
+                        alert(thrownError);
+                    },
+                    success: function(result) {
+                        alert('操作完成.');
+                        $('#rejectModal').modal('toggle');
+                        location.href = "{{ url('approval/reimbursements/mindexmyapproval') }}";
+                    },
+                });
+            });
         });
     </script>
 

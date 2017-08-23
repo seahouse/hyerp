@@ -140,36 +140,28 @@ U0Nr19uAFaIM5sE=
 //            'app_id'       => 'yfbm70058709e2017060701'
         ];
 
-        $aa0 = array(
-            'version'       => '1.0',
-            'app_id'        => 'yfbm70058709e2017060701',
-            'sign_type'     => 'RSA2',
-            'signkey_index' => '0001',
-//                'sign'           => $encrypted,
-            'sign'           => urlencode($ret),
-            'service'       => 'suning.fosps.pls.ptdpc.savecustomerptdpc',
-            'timestamp'     => $timestamp,
-            'partnerNo'     => '18',
-            'bizCode'       => '113',
-            'productNo'     => '04',
-            'intfNo'        => 'I001',
-            'transNo'       => $transNo,
-            'serialNo'      => $serialNo,
-            'custName'      => $custName,
-            'custMobile'    => $custMobile,
-            'idType'        => $idType,
-            'idNo'          => $idNo,
-            'loanApplyAmount'   => $loanApplyAmount,
-            'loanTerm'      => $loanTerm,
-            'termType'      => $termType,
-            'loanRate'      => $loanRate,
-            'payWay'        => $payWay,
-            'accountType'   => $accountType,
-            'accountName'   => $accountName,
-            'bankCardNum'   => $bankCardNum,
-            'bankName'      => $bankName,
-        );
-//        dd($aa0);
+        $method = 'post';
+        $url = 'https://fopenapipre.cnsuning.com:8443/gateway.htm';
+        if(!in_array($method,array('post','get'))){
+            return false;
+        }
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); //输出到变量中
+        curl_setopt($ch, CURLOPT_HEADER, 0);//是否将头文件作为数据流输出
+        curl_setopt($ch, CURLOPT_POST, 1);//启用时会发送一个常规的POST请求，类型为：application/x-www-form-urlencoded
+//        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($ch, CURLOPT_TIMEOUT, 3);//设置cURL允许执行的最长秒数
+//        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        $output = curl_exec($ch);
+        if (!$output)
+        {
+            echo curl_error($ch) . "</br></br>";
+            dd(curl_getinfo($ch));
+        }
+        curl_close($ch);
+        dd($output) ;
 
         $response = HttpSuning::post("/gateway.htm",
             array(
