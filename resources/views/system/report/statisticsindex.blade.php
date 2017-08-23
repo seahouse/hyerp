@@ -56,9 +56,15 @@
     <table class="table table-striped table-hover table-condensed">
         <thead>
             <tr>
-                @foreach(array_first($items->items()) as $key=>$value)
-                <th>{{$key}}</th>
-                @endforeach
+                @if (count($titleshows) > 1)
+                    @foreach($titleshows as $titleshow)
+                        <th>{{ $titleshow }}</th>
+                    @endforeach
+                @else
+                    @foreach(array_first($items->items()) as $key=>$value)
+                        <th>{{$key}}</th>
+                    @endforeach
+                @endif
             </tr>
         </thead>
         <tbody>
