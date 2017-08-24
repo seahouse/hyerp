@@ -329,6 +329,8 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
 
     Route::resource('/', 'ApprovalController');
     Route::resource('approvaltypes', 'ApprovaltypesController');
+
+    Route::resource('paymentrequestretract', 'PaymentrequestretractController');
 });
 
 Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['web', 'auth']], function() {

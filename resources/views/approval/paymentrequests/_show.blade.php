@@ -115,7 +115,7 @@
             $("#btnRetract").bind("click", function() {
                 $.ajax({
                     type: "POST",
-                    url: "{{ url('approval/paymentrequests/retract') }}",
+                    url: "{{ url('approval/paymentrequestretract') }}",
                     data: $("form#formRetract").serialize(),
                     contentType:"application/x-www-form-urlencoded",
                     error: function(xhr, ajaxOptions, thrownError) {
@@ -127,9 +127,10 @@
                         alert(thrownError);
                     },
                     success: function(result) {
-                        alert('操作完成.');
+//                        alert('操作完成.');
                         $('#rejectModal').modal('toggle');
-                        location.href = "{{ url('approval/reimbursements/mindexmyapproval') }}";
+{{--                        location.href = "{{ url('approval/mindexmyapproval') }}";--}}
+                        location.reload(true);
                     },
                 });
             });
