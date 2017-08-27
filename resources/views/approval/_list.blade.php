@@ -63,6 +63,20 @@
                             {{ mb_substr($item->purchaseorder_hxold->arrival, 0, 2) }}
                         @endif
                     </div>      {{-- 此时，字体要修改为灰色 --}}
+                @elseif ($item->approversetting_id == -3)
+                    <div class="statusTodo">撤回中
+                        @if (isset($item->purchaseorder_hxold->arrival))
+                            {{-- mb_substr: 中文截取 --}}
+                            {{ mb_substr($item->purchaseorder_hxold->arrival, 0, 2) }}
+                        @endif
+                    </div>
+                @elseif ($item->approversetting_id == -4)
+                    <div class="statusDoneNotPass">已撤回
+                        @if (isset($item->purchaseorder_hxold->arrival))
+                            {{-- mb_substr: 中文截取 --}}
+                            {{ mb_substr($item->purchaseorder_hxold->arrival, 0, 2) }}
+                        @endif
+                    </div>
                 @else
                     <div class="statusDoneNotPass">未通过
                         @if (isset($item->purchaseorder_hxold->arrival))

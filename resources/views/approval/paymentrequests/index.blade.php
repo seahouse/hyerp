@@ -136,7 +136,17 @@
                         {{ $paymentrequest->applicant->name }}
                     </td>
                     <td>
-                        @if ($paymentrequest->approversetting_id > 0) <div class="text-primary">审批中</div> @elseif ($paymentrequest->approversetting_id == 0) <div class="text-success">已通过</div> @else <div class="text-danger">未通过</div> @endif
+                        @if ($paymentrequest->approversetting_id > 0)
+                            <div class="text-primary">审批中</div>
+                        @elseif ($paymentrequest->approversetting_id == 0)
+                            <div class="text-success">已通过</div>
+                        @elseif ($paymentrequest->approversetting_id == -3)
+                            <div class="text-warning">撤回中</div>
+                        @elseif ($paymentrequest->approversetting_id == -4)
+                            <div class="text-danger">已撤回</div>
+                        @else
+                            <div class="text-danger">未通过</div>
+                        @endif
                     </td>
                     <td>
                         @if ($paymentrequest->approversetting_id === 0)
