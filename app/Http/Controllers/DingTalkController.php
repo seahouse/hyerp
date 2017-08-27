@@ -471,6 +471,7 @@ class DingTalkController extends Controller
         // $response = self::send2($access_token, $data);
 
         $response = DingTalkController::post($url, $params, json_encode($data), false);
+//        dd($response);
         // Log::info($response->errmsg);
         // Log::info($response->invaliduser);
         // Log::info($response->forbiddenUserId);

@@ -62,6 +62,32 @@
 
     @yield('for_paymentrequestapprovals_create')
 
+{{-- 撤回审批记录 --}}
+<?php $paymentrequestretract = $paymentrequest->paymentrequestretract; ?>
+
+@if(isset($paymentrequestretract))
+    {!! Form::model($paymentrequestretract, ['class' => 'form-horizontal']) !!}
+    @include('approval.paymentrequestretractapprovals._approvals',
+        [
+            'attr' => 'readonly',
+            'attrdisable' => 'disabled',
+            'btnclass' => 'hidden',
+        ])
+    {!! Form::close() !!}
+@endif
+
+{{-- 下一个审批人 --}}
+@if(isset($paymentrequestretract))
+    {!! Form::model($paymentrequestretract, ['class' => 'form-horizontal']) !!}
+    @include('approval.paymentrequestretractapprovals._approvers',
+        [
+            'attr' => 'readonly',
+        ])
+    {!! Form::close() !!}
+@endif
+
+    @yield('for_paymentrequestretractapprovals_create')
+
     <!-- when next approver level is 1 or next approver is nothing, can destory -->
     @if (Auth::user()->id == $paymentrequest->applicant_id and isset($paymentrequest->approversetting->level) and $paymentrequest->approversetting->level == 1)
          {!! Form::open(array('url' => 'approval/paymentrequests/mdestroy/' . $paymentrequest->id, 'method' => 'delete', 'onsubmit' => 'return confirm("确定撤销此记录?");')) !!}
@@ -76,6 +102,13 @@
                 <h4 class="modal-title">请输入撤回的理由</h4>
             </div>
             <div class="modal-body">
+                {{--
+                {!! Form::open(array('url' => 'approval/paymentrequestretract')) !!}
+                    {!! Form::text('retractreason', null, ['class' => 'form-control']) !!}
+                    {!! Form::hidden('paymentrequest_id', $paymentrequest->id, ['class' => 'form-control']) !!}
+                    {!! Form::submit('确定', ['class' => 'btn btn-sm']) !!}
+                {!! Form::close() !!}
+                --}}
                 <form id="formRetract">
                     {!! csrf_field() !!}
                     {!! Form::text('description', null, ['class' => 'form-control']) !!}

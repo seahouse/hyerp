@@ -331,6 +331,11 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::resource('approvaltypes', 'ApprovaltypesController');
 
     Route::resource('paymentrequestretract', 'PaymentrequestretractController');
+    Route::group(['prefix' => 'paymentrequestretractapproval'], function() {
+        Route::get('{paymentrequestretractid}/mcreate', 'PaymentrequestretractapprovalController@mcreate');
+        Route::post('mstore', 'PaymentrequestretractapprovalController@mstore');
+    });
+    Route::resource('paymentrequestretractapproval', 'PaymentrequestretractapprovalController');
 });
 
 Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['web', 'auth']], function() {

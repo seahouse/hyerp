@@ -6,9 +6,18 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\DingTalkController;
+use App\Http\Controllers\HelperController;
+use App\Models\Approval\Paymentrequestretract;
+use App\Models\Approval\Approvaltype;
+use App\Models\Approval\Approversetting;
+use App\Models\Approval\Paymentrequest;
+use Auth;
 
 class PaymentrequestretractController extends Controller
 {
+    private static $approvaltype_name = "供应商付款撤回";
+
     /**
      * Display a listing of the resource.
      *
@@ -39,82 +48,74 @@ class PaymentrequestretractController extends Controller
     {
         //
         $input = $request->all();
-        $user = Auth::user();
+        $input = HelperController::skipEmptyValue($input);
 
 
-        $paymentrequest = Paymentrequest::findOrFail($input['paymentrequest_id']);
-        $approversetting = Approversetting::findOrFail($paymentrequest->approversetting_id);
+        $input['applicant_id'] = Auth::user()->id;
 
-        if ($paymentrequest->nextapprover() && $paymentrequest->nextapprover()->id != $user->id)
-            return "您不是该层级的审批人员。";
 
-        $input['level'] = $approversetting->level;
-        $input['approver_id'] = $user->id;
-
-        $paymentrequestapproval = Paymentrequestapproval::create($input);
-
-        if ($input['status'] == '0')
+        // set approversetting_id
+        $approvaltype_id = self::typeid();
+        if ($approvaltype_id > 0)
         {
-            // 设置下一个审批人
-            if ($paymentrequestapproval)
-            {
-                $approversettingNext = Approversetting::where('approvaltype_id', PaymentrequestsController::typeid())->where('level', '>', $approversetting->level)->orderBy('level')->first();
-                if ($approversettingNext)
-                    $paymentrequest->approversetting_id = $approversettingNext->id;
-                else
-                    $paymentrequest->approversetting_id = 0; // 已走完
-
-                $paymentrequest->save();
-            }
+            $approversettingFirst = Approversetting::where('approvaltype_id', $approvaltype_id)->orderBy('level')->first();
+            if ($approversettingFirst)
+                $input['approversetting_id'] = $approversettingFirst->id;
+            else
+                $input['approversetting_id'] = -1;
         }
-        elseif ($input['status'] == '-1') {
-            // 设置上一个审批人
-            if ($paymentrequestapproval)
-            {
-                $paymentrequest = Paymentrequest::findOrFail($paymentrequestapproval->paymentrequest_id);
-                $approversetting = Approversetting::findOrFail($paymentrequest->approversetting_id);
-                $approversettingNext = Approversetting::where('approvaltype_id', PaymentrequestsController::typeid())->where('level', '<', $approversetting->level)->orderBy('level', 'desc')->first();
-                if ($approversettingNext)
-                    $paymentrequest->approversetting_id = $approversettingNext->id;
-                else
-                    $paymentrequest->approversetting_id = -2; // 已走完
+        else
+            $input['approversetting_id'] = -1;
+//        dd($input);
+        if ($input['approversetting_id'] == -1)
+            return "没有设置审批流，无法申请撤回";
 
+        $paymentrequestretract = Paymentrequestretract::create($input);
+
+        // 修改审批单状态为：撤回过程中（-3）
+        if ($paymentrequestretract)
+        {
+            $paymentrequest =  Paymentrequest::findOrFail($paymentrequestretract->paymentrequest_id);
+            if ($paymentrequest)
+            {
+                $paymentrequest->approversetting_id = -3;
                 $paymentrequest->save();
             }
         }
 
-        // send dingtalk message.
-        $touser = $paymentrequest->nextapprover();
-        if ($touser && strlen($touser->dtuserid) > 0)
+        if ($paymentrequestretract)
         {
-            // DingTalkController::send($touser->dtuserid, '',
-            //     '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.',
-            //     config('custom.dingtalk.agentidlist.approval'));
+            // send dingtalk message.
+            $touser = $paymentrequestretract->nextapprover();
+            if ($touser)
+            {
+                // DingTalkController::send($touser->dtuserid, '',
+                //     '来自' . $paymentrequest->applicant->name . '的付款单需要您审批.',
+                //     config('custom.dingtalk.agentidlist.approval'));
 
-            // DingTalkController::send_link($touser->dtuserid, '',
-            //     url('approval/paymentrequestapprovals/' . $input['paymentrequest_id'] . '/mcreate'), '',
-            //     '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.',
-            //     config('custom.dingtalk.agentidlist.approval'));
+                // DingTalkController::send_link($touser->dtuserid, '',
+                //     url('approval/paymentrequestapprovals/' . $input['paymentrequest_id'] . '/mcreate'), '',
+                //     '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.',
+                //     config('custom.dingtalk.agentidlist.approval'));
 
-            // Log::info($touser->dtuserid);
-            DingTalkController::send_link($touser->dtuserid, '',
-                url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
-                '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.',
-                config('custom.dingtalk.agentidlist.approval'));
-            // Log::info($paymentrequest->id);
+                DingTalkController::send_link($touser->dtuserid, '',
+                    url('mddauth/approval/approval-paymentrequestretractapprovals-' . $paymentrequestretract->id . '-mcreate'), '',
+                    '供应商付款撤回审批', '来自' . $paymentrequestretract->applicant->name . '的付款申请单撤回需要您审批.',
+                    config('custom.dingtalk.agentidlist.approval'));
+
+                if (Auth::user()->email == "admin@admin.com")
+                {
+                    DingTalkController::send_oa_paymentrequest($touser->dtuserid, '',
+                        url('mddauth/approval/approval-paymentrequestretractapprovals-' . $paymentrequestretract->id . '-mcreate'), '',
+                        '供应商付款撤回审批', '来自' . $paymentrequestretract->applicant->name . '的付款申请单撤回需要您审批.', $paymentrequestretract,
+                        config('custom.dingtalk.agentidlist.approval'));
+                }
+
+            }
 
         }
 
-        if ($paymentrequestapproval)
-        {
-            // send dingtalk message to applicant
-            $str_result = $input['status'] == '0' ? '通过' : '未通过';
-            DingTalkController::send($paymentrequest->applicant->dtuserid, '',
-                $user->name . ' 审批了您的(' . $paymentrequest->paymenttype . ' | ' . $paymentrequest->amount . ')付款单，审批结果：' . $str_result,
-                config('custom.dingtalk.agentidlist.approval'));
-        }
-
-        return 'success';
+        return "success";
     }
 
     /**
@@ -160,5 +161,15 @@ class PaymentrequestretractController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public static function typeid()
+    {
+        $approvaltype = Approvaltype::where('name', self::$approvaltype_name)->first();
+        if ($approvaltype)
+        {
+            return $approvaltype->id;
+        }
+        return 0;
     }
 }

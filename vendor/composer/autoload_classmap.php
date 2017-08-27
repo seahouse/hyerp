@@ -45,6 +45,7 @@ return array(
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
     'CreatePaymentrequestapprovalsTable' => $baseDir . '/database/migrations/2016_09_05_093746_create_paymentrequestapprovals_table.php',
     'CreatePaymentrequestattachmentsTable' => $baseDir . '/database/migrations/2016_09_13_110408_create_paymentrequestattachments_table.php',
+    'CreatePaymentrequestretractapprovalsTable' => $baseDir . '/database/migrations/2017_08_26_201409_create_paymentrequestretractapprovals_table.php',
     'CreatePaymentrequestretractsTable' => $baseDir . '/database/migrations/2017_08_24_085856_create_paymentrequestretracts_table.php',
     'CreatePaymentrequestsTable' => $baseDir . '/database/migrations/2016_08_17_160202_create_paymentrequests_table.php',
     'CreatePaymentsTable' => $baseDir . '/database/migrations/2015_09_17_160420_create_payments_table.php',

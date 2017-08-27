@@ -71,6 +71,10 @@ class Paymentrequest extends Model
     public function paymentrequestimages() {
         return $this->paymentrequestattachments->where('type', 'image');
     }
+
+    public function paymentrequestretract() {
+        return $this->hasOne('\App\Models\Approval\Paymentrequestretract', 'paymentrequest_id', 'id');
+    }
 	
 	public function nextapprover() {
         // $userid = Auth::user()->id;
