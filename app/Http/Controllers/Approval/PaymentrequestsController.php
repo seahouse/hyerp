@@ -311,7 +311,10 @@ class PaymentrequestsController extends Controller
                 ->where('applicant_id', $userid)->paginate(10);
 
         $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
-        $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
+        $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+            ->where('descrip', 'like', '%'.$key.'%')
+            ->orWhere('productname', 'like', '%'.$key.'%')
+            ->pluck('id');
 
         $paymentrequests = Paymentrequest::latest('created_at')
             ->where('applicant_id', $userid)

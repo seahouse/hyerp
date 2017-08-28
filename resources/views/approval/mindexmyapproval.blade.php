@@ -3,8 +3,23 @@
 @section('title', '待我审批的')
 
 @section('mindexmyapproval_main')
-   
 
+    {!! Form::open(['url' => '/approval/mindexmyapproval/search', 'method' => 'post', 'role' => 'search']) !!}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="input-group">
+                {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称、商品名称']) !!}
+                <span class="input-group-btn">
+{{--
+                        {!! Form::button('查找', ['class' => 'btn btn-default']) !!}
+--}}
+                    {!! Form::submit('查找', ['class' => 'btn btn-default']) !!}
+
+                    </span>
+            </div>
+        </div>
+    </div>
+    {!! Form::close() !!}
 
     @include('approval._list',
         [

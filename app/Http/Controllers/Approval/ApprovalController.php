@@ -151,23 +151,41 @@ class ApprovalController extends Controller
         return view('approval.mindexmyapproval', compact('reimbursements', 'paymentrequests'));
     }
 
-    public function searchmindexmyapproval()
+    public function searchmindexmyapproval(Request $request)
     {
-        $reimbursements = ReimbursementsController::myapproval();
-        $paymentrequests = PaymentrequestsController::myapproval();
+//        $reimbursements = ReimbursementsController::myapproval();
+//        $paymentrequests = PaymentrequestsController::myapproval();
+//        return view('approval.mindexmyapproval', compact('reimbursements', 'paymentrequests'));
+
+
+        $key = $request->input('key');
+
+        // 获取当前操作人员的报销审批层次
+        $userid = Auth::user()->id;
+
+        $ids_paymentrequest = Paymentrequestapproval::where('approver_id', $userid)->select('paymentrequest_id')->distinct()->pluck('paymentrequest_id');
+        if ('' == $key)
+            $paymentrequests = Paymentrequest::latest('created_at')->whereIn('id', $ids_paymentrequest)->paginate(10);
+        else
+        {
+            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+                ->where('descrip', 'like', '%'.$key.'%')
+                ->orWhere('productname', 'like', '%'.$key.'%')
+                ->pluck('id');
+
+            $paymentrequests = Paymentrequest::latest('created_at')
+                ->whereIn('id', $ids_paymentrequest)
+                ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
+                    $query->whereIn('supplier_id', $supplier_ids)
+                        ->orWhereIn('pohead_id', $purchaseorder_ids);
+                })
+                ->select('paymentrequests.*')
+                ->paginate(10);
+        }
         // dd($paymentrequests);
 
-        // dd($reimbursements->toJson());
-        // dd($reimbursements->toArray()["data"]);
-        // dd($reimbursements);
-        // $items = [];
-        // foreach ($reimbursements as $value) {
-        //     # code...
-        //     dd(array_only($value, ['id', 'applicant_id', 'approversetting_id']));
-        // }
-
-
-        return view('approval.mindexmyapproval', compact('reimbursements', 'paymentrequests'));
+        return view('approval.mindexmyapproval', compact('reimbursements', 'paymentrequests', 'key'));
     }
 
     /**
@@ -231,7 +249,10 @@ class ApprovalController extends Controller
         else
         {
             $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
-            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
+            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+                ->where('descrip', 'like', '%'.$key.'%')
+                ->orWhere('productname', 'like', '%'.$key.'%')
+                ->pluck('id');
 
             $paymentrequests = Paymentrequest::latest('created_at')
                 ->whereIn('id', $ids_paymentrequest)
