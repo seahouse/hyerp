@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Approval;
 
+use App\Models\Approval\Approversetting;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -134,21 +135,12 @@ class ApprovalController extends Controller
      */
     public function mindexmyapproval()
     {
-        $reimbursements = ReimbursementsController::myapproval();
-        $paymentrequests = PaymentrequestsController::myapproval();
-        // dd($paymentrequests);
+//        $reimbursements = ReimbursementsController::myapproval();
+//        $paymentrequests = PaymentrequestsController::myapproval();
 
-        // dd($reimbursements->toJson());
-        // dd($reimbursements->toArray()["data"]);
-        // dd($reimbursements);
-        // $items = [];
-        // foreach ($reimbursements as $value) {
-        //     # code...
-        //     dd(array_only($value, ['id', 'applicant_id', 'approversetting_id']));
-        // }
+//        return view('approval.mindexmyapproval', compact('reimbursements', 'paymentrequests'));
 
-
-        return view('approval.mindexmyapproval', compact('reimbursements', 'paymentrequests'));
+        return $this->searchmindexmyapproval(request());
     }
 
     public function searchmindexmyapproval(Request $request)
@@ -160,12 +152,16 @@ class ApprovalController extends Controller
 
         $key = $request->input('key');
 
-        // 获取当前操作人员的报销审批层次
+        // 获取当前登录人员的审批设置中的id
+        $user = Auth::user();
         $userid = Auth::user()->id;
+        $ids_approversetting = Approversetting::where('approver_id', $userid)->select('id')->pluck('id');
+        // 如果审批设置中没有设置人员，而是设置了部门和职位，那么也要加进去
+        $ids_approversetting2 = Approversetting::where('approver_id', '<', 1)->where('dept_id', $user->dept->id)->where('position', $user->position)->select('id')->pluck('id');
+        $ids_approversetting = $ids_approversetting->merge($ids_approversetting2);
 
-        $ids_paymentrequest = Paymentrequestapproval::where('approver_id', $userid)->select('paymentrequest_id')->distinct()->pluck('paymentrequest_id');
         if ('' == $key)
-            $paymentrequests = Paymentrequest::latest('created_at')->whereIn('id', $ids_paymentrequest)->paginate(10);
+            $paymentrequests = Paymentrequest::latest('created_at')->whereIn('approversetting_id', $ids_approversetting)->paginate(10);
         else
         {
             $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
@@ -175,7 +171,7 @@ class ApprovalController extends Controller
                 ->pluck('id');
 
             $paymentrequests = Paymentrequest::latest('created_at')
-                ->whereIn('id', $ids_paymentrequest)
+                ->whereIn('approversetting_id', $ids_approversetting)
                 ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
                     $query->whereIn('supplier_id', $supplier_ids)
                         ->orWhereIn('pohead_id', $purchaseorder_ids);
@@ -183,7 +179,6 @@ class ApprovalController extends Controller
                 ->select('paymentrequests.*')
                 ->paginate(10);
         }
-        // dd($paymentrequests);
 
         return view('approval.mindexmyapproval', compact('reimbursements', 'paymentrequests', 'key'));
     }
