@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Approval;
 
+use App\Models\Approval\Approvaltype;
 use App\Models\Approval\Approversetting;
+use App\Models\Approval\Paymentrequestretract;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -151,17 +153,30 @@ class ApprovalController extends Controller
 
 
         $key = $request->input('key');
+        $inputs = $request->all();
+
+        // 给出默认值
+        if (!array_key_exists('approvaltype', $inputs))
+            $inputs['approvaltype'] = '供应商付款';
+
+        $approvaltype = Approvaltype::where('name', $inputs['approvaltype'])->first();
+        $approvaltype_id = $approvaltype->id;
 
         // 获取当前登录人员的审批设置中的id
         $user = Auth::user();
         $userid = Auth::user()->id;
-        $ids_approversetting = Approversetting::where('approver_id', $userid)->select('id')->pluck('id');
+        $ids_approversetting = Approversetting::where('approver_id', $userid)
+            ->where('approvaltype_id', $approvaltype_id)
+            ->select('id')->pluck('id');
         // 如果审批设置中没有设置人员，而是设置了部门和职位，那么也要加进去
         $ids_approversetting2 = Approversetting::where('approver_id', '<', 1)->where('dept_id', $user->dept->id)->where('position', $user->position)->select('id')->pluck('id');
         $ids_approversetting = $ids_approversetting->merge($ids_approversetting2);
 
         if ('' == $key)
+        {
             $paymentrequests = Paymentrequest::latest('created_at')->whereIn('approversetting_id', $ids_approversetting)->paginate(10);
+            $paymentrequestretracts = Paymentrequestretract::latest('created_at')->whereIn('approversetting_id', $ids_approversetting)->paginate(10);
+        }
         else
         {
             $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
@@ -178,9 +193,19 @@ class ApprovalController extends Controller
                 })
                 ->select('paymentrequests.*')
                 ->paginate(10);
+
+            // todo: 以后实现对供应商审批撤回的关键字搜索功能
+//            $paymentrequestretracts = Paymentrequestretract::latest('created_at')
+//                ->whereIn('approversetting_id', $ids_approversetting)
+//                ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
+//                    $query->whereIn('supplier_id', $supplier_ids)
+//                        ->orWhereIn('pohead_id', $purchaseorder_ids);
+//                })
+//                ->select('paymentrequests.*')
+//                ->paginate(10);
         }
 
-        return view('approval.mindexmyapproval', compact('reimbursements', 'paymentrequests', 'key'));
+        return view('approval.mindexmyapproval', compact('reimbursements', 'paymentrequests', 'paymentrequestretracts', 'key', 'inputs'));
     }
 
     /**

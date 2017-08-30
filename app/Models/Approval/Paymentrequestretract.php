@@ -21,6 +21,10 @@ class Paymentrequestretract extends Model
         return $this->hasOne('\App\Models\System\User', 'id', 'applicant_id');
     }
 
+    public function paymentrequest() {
+        return $this->hasOne('\App\Models\Approval\Paymentrequest', 'id', 'paymentrequest_id');
+    }
+
     public function paymentrequestretractapprovals() {
         return $this->hasMany('\App\Models\Approval\Paymentrequestretractapproval', 'paymentrequestretract_id', 'id');
     }
