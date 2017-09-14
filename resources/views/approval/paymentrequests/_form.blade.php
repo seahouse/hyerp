@@ -127,17 +127,6 @@
 
 {{--
 <div class="form-group">
-    {!! Form::label('sohead_paymethod', '订单付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->sohead->paymethod)) 
-        {!! Form::textarea('sohead_paymethod', $paymentrequest->purchaseorder_hxold->sohead->paymethod, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
-    @else
-        {!! Form::textarea('sohead_paymethod', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-</div>
-
-<div class="form-group">
     {!! Form::label('sohead_paymethod_descrip', '订单付款备注:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
     <div class='col-xs-8 col-sm-10'>
     @if (isset($paymentrequest->purchaseorder_hxold->sohead->paymethod_descrip)) 
@@ -193,10 +182,9 @@
     <div class='col-xs-4 col-sm-2'>
     </div>
     <div class='col-xs-8 col-sm-10'>
-        @if (Auth::user()->email == "admin@admin.com")
-
+        @if (isset($paymentrequest->purchaseorder_hxold->sohead->id))
+            <a href="{{ URL::to('/sales/salesorders/' . $paymentrequest->purchaseorder_hxold->sohead->id . '/mstatistics') }}" target="_blank" class="btn btn-default btn-sm">对应的销售订单金额数据统计</a>
         @endif
-        <a href="{{ URL::to('/sales/salesorders/' . $paymentrequest->purchaseorder_hxold->sohead->id . '/mstatistics') }}" target="_blank" class="btn btn-default btn-sm">对应的销售订单金额数据统计</a>
     </div>
 </div>
 @endcan
