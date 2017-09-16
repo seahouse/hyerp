@@ -44,6 +44,9 @@
                 {!! Form::text('batch', null, ['class' => 'form-control', 'placeholder' => '批号']) !!}
             @elseif ($report->name == "so_cost_statistics")
                 {!! Form::select('orderid', $poheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
+            @elseif ($report->name == "so_amount_statistics")
+                {{-- todo: 修改为自动获取需要哪些年份 --}}
+                {!! Form::select('dateyear', array(2016 => '2016', 2017=> '2017'), null, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
             @endif
 
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}

@@ -107,7 +107,7 @@
 
                 @if ($itemp->receiptitems->sum('quantity') <= 0.0) - 
                 @else
-                    {{ number_format($itemp->receiptitems->sum(function($item) { return $item['unitprice'] * 1.17 * $item['quantity'];}) / $itemp->receiptitems->sum('quantity'), 6, '.', '')}}
+                    {{ number_format($itemp->receiptitems->sum(function($item) { return $item['unitprice'] * (1 + $item['taxrate'] / 100.0) * $item['quantity'];}) / $itemp->receiptitems->sum('quantity'), 6, '.', '')}}
                 @endif
                 <br>
                 现存量:
@@ -141,9 +141,9 @@
                         @foreach ($itemp->receiptitems->sortByDesc('record_at')->take(20) as $receiptitem)
                         <tr @if (in_array($receiptitem->receipt_id, $purchaseorder->receiptorders->pluck('receipt_id')->toArray())) class="success" @endif>
                             <td>{{ $receiptitem->quantity }}</td>
-                            <td>{{ number_format($receiptitem->unitprice * 1.17, 2, '.', '') }}</td>
+                            <td>{{ number_format($receiptitem->unitprice * (1 + $receiptitem['taxrate'] / 100.0), 2, '.', '') }}</td>
                             <td>{{ $receiptitem->item->goods_unit_name }}</td>
-                            <td>{{ number_format($receiptitem->amount * 1.17, 2, '.', '') }}</td>
+                            <td>{{ number_format($receiptitem->amount * (1 + $receiptitem['taxrate'] / 100.0), 2, '.', '') }}</td>
                             <td>
                                 @if ($receiptitem->rwrecord->supplier->shortname == '') 
                                     {{ $receiptitem->rwrecord->supplier->name }}
