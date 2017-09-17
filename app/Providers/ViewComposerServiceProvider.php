@@ -150,11 +150,11 @@ class ViewComposerServiceProvider extends ServiceProvider
             $view->with('poheadList_hxold', \App\Models\Sales\Salesorder_hxold::orderby('id', 'asc')->lists('projectjc', 'id'));
         });
 
-        // poheadList_hxold2
-//        view()->composer(array('system.report.statisticsindex'), function($view) {
-////            $view->with('poheadList_hxold2', \App\Models\Sales\Salesorder_hxold::select(DB::raw('datepart(year, orderdate)'))->get());
-//            $view->with('itemsiteList', DB::connection('sqlsrv')->select(DB::raw('select distinct datepart(year, orderdate) from vorder'))->lists('projectjc', 'id'));
-//        });
+         // poheadOrderDateyearList_hxold
+        view()->composer(array('system.report.statisticsindex'), function($view) {
+            $view->with('poheadOrderDateyearList_hxold', \App\Models\Sales\Salesorder_hxold::select(DB::raw('datepart(year, orderdate) as dateyear'))->orderby('dateyear', 'asc')->lists('dateyear', 'dateyear'));
+//            $view->with('poheadOrderDateyearList_hxold', DB::connection('sqlsrv')->select(DB::raw('select distinct datepart(year, orderdate) from vorder'))->lists('projectjc', 'id'));
+        });
     }
 
     /**

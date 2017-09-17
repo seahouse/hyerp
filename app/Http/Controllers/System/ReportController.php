@@ -131,6 +131,8 @@ class ReportController extends Controller
     public function statistics($id)
     {
         //
+//        dd(\App\Models\Sales\Salesorder_hxold::select(DB::raw('datepart(year, orderdate) as dateyear'))->orderby('dateyear', 'asc')->lists('dateyear', 'dateyear'));
+
         $report = Report::findOrFail($id);
 
         $request = Request();
