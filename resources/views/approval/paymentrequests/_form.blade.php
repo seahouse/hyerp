@@ -469,7 +469,7 @@
         @if (isset($paymentrequest))
 
             @if (isset($paymentrequest->purchaseorder_hxold->businesscontract))
-                <a href="{!! config('custom.hxold.purchase_businesscontract_webdir') . $paymentrequest->purchaseorder_hxold->id . '/' . $paymentrequest->purchaseorder_hxold->businesscontract !!}" target="_blank">{{ $paymentrequest->purchaseorder_hxold->businesscontract }}</a> <br>
+                <a href="{!! config('custom.hxold.purchase_businesscontract_webdir') . $paymentrequest->purchaseorder_hxold->id . '/' . $paymentrequest->purchaseorder_hxold->businesscontract !!}" target="_self">{{ $paymentrequest->purchaseorder_hxold->businesscontract }}</a> <br>
             @endif
 
             @foreach ($paymentrequest->businesscontracts() as $businesscontract)
