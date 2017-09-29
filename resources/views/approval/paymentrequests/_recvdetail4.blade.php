@@ -131,6 +131,10 @@
                             <th>单价</th>
                             <th>单位</th>
                             <th>金额</th>
+                            @if (Agent::isDesktop())
+                                <th>材质</th>
+                                <th>尺寸</th>
+                            @endif
                             <th style="min-width: 80px">供应商</th>
                             <th style="min-width: 80px">对应项目</th>
                             <th>出库项目</th>
@@ -144,6 +148,10 @@
                             <td>{{ number_format($receiptitem->unitprice * (1 + $receiptitem['taxrate'] / 100.0), 2, '.', '') }}</td>
                             <td>{{ $receiptitem->item->goods_unit_name }}</td>
                             <td>{{ number_format($receiptitem->amount * (1 + $receiptitem['taxrate'] / 100.0), 2, '.', '') }}</td>
+                            @if (Agent::isDesktop())
+                                <td>{{ $receiptitem->material }}</td>
+                                <td>{{ $receiptitem->size }}</td>
+                            @endif
                             <td>
                                 @if ($receiptitem->rwrecord->supplier->shortname == '') 
                                     {{ $receiptitem->rwrecord->supplier->name }}
