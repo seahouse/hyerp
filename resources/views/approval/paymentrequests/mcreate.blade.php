@@ -173,9 +173,9 @@
             </div>
             <div class="modal-body">
             	<p>
-            		<div id="dataDefine">
+					<div id="dataDefine">
 
-            		</div>
+					</div>
             	</p>
                 <form id="formAccept">                	
                    	
@@ -189,6 +189,7 @@
     </div>
 </div>
 
+
 @endsection
 
 
@@ -197,38 +198,46 @@
 
 	<script type="text/javascript">
 		jQuery(document).ready(function(e) {
-			var travelNum = 1;
+//			var travelNum = 1;
 
+			 $("#btnSubmit").click(function() {
+//			 	$('#submitModal').modal('toggle');
+                 $.get("{{ url('approval/paymentrequests/hasrepeat/') }}" +  "/" + $('#pohead_id').val() + "/" + $('#amount').val(), function (data) {
+                     if (data.code < 0)
+					 {
+                         $('#submitModal').modal('toggle');
+                         $("#dataDefine").empty().append(data.msg);
+					 }
+                     else
+                         $("form#formMain").submit();
+                 });
+				 return false;
+			 });
 
-			// $("#btnSubmit").click(function() {
-			// 	$('#submitModal').modal('toggle');
-			// 	return false;
-			// });
+			{{--$('#submitModal').on('shown.bs.modal', function (e) {--}}
+				{{--$("#btnSubmitContinue").attr('disabled',true);--}}
+				{{--$.ajax({--}}
+					{{--type: "POST",--}}
+					{{--url: "{{ url('approval/paymentrequests/check') }}",--}}
+					{{--data: $("form#formMain").serialize(),--}}
+					{{--dataType: "json",--}}
+					{{--error:function(xhr, ajaxOptions, thrownError){--}}
+						{{--alert('error');--}}
+					{{--},--}}
+					{{--success:function(msg){--}}
+						{{--var strhtml = '';--}}
+						{{--strhtml += "生活补贴合计: " + String(msg.mealamount) + "<br />";--}}
+						{{--strhtml += "交通费合计: " + String(msg.ticketamount) + "<br />";--}}
+						{{--strhtml += "总费用: " + String(msg.amountTotal) + "<br />";--}}
+						{{--strhtml += "平均每日住宿费: " + String(msg.stayamountPer) + "<br />";--}}
+						{{--strhtml += "平均每日合计: " + String(msg.amountPer) + "<br />";--}}
+						{{--$("#dataDefine").empty().append(strhtml);--}}
 
-			$('#submitModal').on('shown.bs.modal', function (e) {
-				$("#btnSubmitContinue").attr('disabled',true);
-				$.ajax({
-					type: "POST",
-					url: "{{ url('approval/paymentrequests/check') }}",
-					data: $("form#formMain").serialize(),
-					dataType: "json",
-					error:function(xhr, ajaxOptions, thrownError){
-						alert('error');
-					},
-					success:function(msg){
-						var strhtml = '';
-						strhtml += "生活补贴合计: " + String(msg.mealamount) + "<br />";
-						strhtml += "交通费合计: " + String(msg.ticketamount) + "<br />";
-						strhtml += "总费用: " + String(msg.amountTotal) + "<br />";
-						strhtml += "平均每日住宿费: " + String(msg.stayamountPer) + "<br />";
-						strhtml += "平均每日合计: " + String(msg.amountPer) + "<br />";
-						$("#dataDefine").empty().append(strhtml);
-
-						if (msg.status == "OK")
-							$("#btnSubmitContinue").attr('disabled', false);
-					},
-				});				
-			});
+						{{--if (msg.status == "OK")--}}
+							{{--$("#btnSubmitContinue").attr('disabled', false);--}}
+					{{--},--}}
+				{{--});				--}}
+			{{--});--}}
 
 			$("#btnSubmitContinue").click(function() {
 				$("form#formMain").submit();

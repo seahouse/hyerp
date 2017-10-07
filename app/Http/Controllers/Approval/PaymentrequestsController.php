@@ -1409,4 +1409,30 @@ class PaymentrequestsController extends Controller
         }
 //        dd(Carbon::today());
     }
+
+    // 判断是否有重复提交：同一个采购订单，同一个金额，在10天内是否有重复
+    public function hasrepeat($pohead_id, $amount = 0)
+    {
+        $data = [
+            "code" => 0,
+            "msg" => ""
+        ];
+        if ($pohead_id <= 0)
+        {
+            $data["code"] = -1;
+            $data["msg"] = "采购订单录入有误，请重新录入。";
+        }
+        else
+        {
+            $paymentrequests = Paymentrequest::where("created_at", ">", Carbon::now()->subDays(3))
+                ->where("pohead_id", $pohead_id)->where("amount", $amount)
+                ->get();
+            if ($paymentrequests->count() > 0)
+            {
+                $data["code"] = -1;
+                $data["msg"] = "采购订单和付款金额在10天内有重复申请。";
+            }
+        }
+        return response()->json($data);
+    }
 }
