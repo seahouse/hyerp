@@ -184,6 +184,10 @@
                 jsApiList: [] // 必填，需要使用的jsapi列表
             });
 
+            $(function() {
+                $('a.media').media({width:800, height:600});
+            });
+            
             DingTalkPC.ready(function(res) {
                 if (DingTalkPC.ua.isInDingTalk)
                     $("a").attr("target", "_self");
