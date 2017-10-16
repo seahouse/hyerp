@@ -172,6 +172,7 @@
 
 @if (Agent::isDesktop())
     <script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
+    <script src="/js/jquery.media.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
             DingTalkPC.config({
