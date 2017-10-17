@@ -469,10 +469,10 @@
         @if (isset($paymentrequest))
 
             @if (isset($paymentrequest->purchaseorder_hxold->businesscontract))
-                <a class="media" href="{!! config('custom.hxold.purchase_businesscontract_webdir') . $paymentrequest->purchaseorder_hxold->id . '/' . $paymentrequest->purchaseorder_hxold->businesscontract !!}" target="_blank">{{ $paymentrequest->purchaseorder_hxold->businesscontract }}</a> <br>
+                <a class="media" href="{!! config('custom.hxold.purchase_businesscontract_webdir') . $paymentrequest->purchaseorder_hxold->id . '/' . $paymentrequest->purchaseorder_hxold->businesscontract !!}" target="_blank" id="showPdf">{{ $paymentrequest->purchaseorder_hxold->businesscontract }}</a> <br>
             @endif
-                {!! Form::button('TTT', ['class' => 'btn btn-sm', 'id' => 'btnTest']) !!}
-                <a class="pdf" style="" href="/pdfjs/build/generic/web/viewer.html?file=/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf" >aaa.pdf</a>
+                {{--{!! Form::button('TTT', ['class' => 'btn btn-sm', 'id' => 'btnTest']) !!}--}}
+                {{--<a class="pdf" style="" href="/pdfjs/build/generic/web/viewer.html?file=/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf" >aaa.pdf</a>--}}
 
             @foreach ($paymentrequest->businesscontracts() as $businesscontract)
                 <a href="{!! $businesscontract->path !!}" target="_blank">{{ $businesscontract->filename }}</a> <br>
