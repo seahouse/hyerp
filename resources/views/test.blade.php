@@ -5,71 +5,46 @@
 @endsection
 
 @section('main')
-	<p>
-		<h4>身份验证中，请稍后....</h4>		
-	</p>
-<!-- 	<p>
-		<div class="btn-group btn-group-justified" role="group" aria-label="...">
-			<div class="btn-group" role="group">
-				<a href="#"><button type="button" class="btn btn-default">待我审批</button></a>
-			</div>
-			<div class="btn-group" role="group">
-				<a href="#"><button type="button" class="btn btn-default">我发起的</button></a>
-			</div>
-		</div>
-	</p>
 
-	<p>
-		<div class="btn-group btn-group-justified" role="group" aria-label="...">
-			<div class="btn-group" role="group">
-				<a href="/approval/reimbursements/mcreate"><button type="button" class="btn btn-default">报销</button></a>
-			</div>
-			<div class="btn-group" role="group">
-				<a href="#"><button type="button" class="btn btn-default">请款</button></a>
-			</div>
-			<div class="btn-group" role="group">
-				<a href="#"><button type="button" class="btn btn-default">请假</button></a>
-			</div>
-		</div>
-	</p> -->
+<html>
 
-    <a href="dingtalk://dingtalkclient/action/switchtab?index=2&name=work&scene=1&corpid={{config('custom.dingtalk.corpid')}}&appid=1288" class="btn btn-success btn-sm">视频</a>
+
+<body style="margin: 0;overflow: hidden">
+<div id="tmPlayer" class="tmPlayer" style="height: 557px; width: 100%; height: 100%"></div>
 
 
 
-{{--
-	@foreach ($config as $key => $value)
-		{!! Form::hidden($key, $value, ['id' => $key]) !!}
-    @endforeach
---}}
-
-    {{--     $agent->is('Windows'): {{ $agent->is('Windows') }}		<br>
-        $agent->is('Firefox'): {{ $agent->is('Firefox') }}		<br>
-        $agent->is('iPhone'): {{ $agent->is('iPhone') }}		<br>
-        $agent->is('OS X'): {{ $agent->is('OS X') }}			<br>
-        $agent->isAndroidOS(): {{ $agent->isAndroidOS() }}		<br>
-        $agent->isNexus(): {{ $agent->isNexus() }}				<br>
-        $agent->isSafari(): {{ $agent->isSafari() }}			<br>
-        $agent->isMobile(): {{ $agent->isMobile() }}			<br>
-        $agent->isTablet(): {{ $agent->isTablet() }}			<br>
-        $agent->device(): {{ $agent->device() }}				<br>
-        $agent->platform(): {{ $agent->platform() }}			<br>
-        $agent->browser(): {{ $agent->browser() }}				<br>
-        $agent->isDesktop(): {{ $agent->isDesktop() }}			<br>
-        $agent->isPhone(): {{ $agent->isPhone() }}				<br>
-        $agent->isRobot(): {{ $agent->isRobot() }}				<br>
-        $agent->robot(): {{ $agent->robot() }}					<br>
-        $agent->isPhone(): {{ $agent->isPhone() }}				<br>
-        --}}
-
-        <!-- can not display array value -->
-    {{--
-             $agent->languages():			<br>
-             --}}
+</body>
+</html>
 
 
-    <!--
-        <a href="http://www.baidu.com" target="_blank" class="btn btn-default btn-sm" id="t1">百度</a>
-    -->
     @endsection
 
+@section('script')
+    <script src="/pdfjs/build/pdf.js"></script>
+    <script src="/pdfjs/build/pdf.worker.js"></script>
+    <script type="text/javascript">
+        {{--var var_filepath = decodeURIComponent("@filepath");//不能跨域--}}
+        var var_filepath = '/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf';//不能跨域
+        var var_win_height = 500;
+
+        jQuery(document).ready(function () {
+            resetPlayerSize();
+        });
+
+        $(window).resize(function () {
+            resetPlayerSize();
+        });
+
+        function resetPlayerSize() {
+            var_win_height = $(window).height();
+            $(".tmPlayer").css({ "height": var_win_height + "px" });
+        }
+    </script>
+
+    <script type="text/javascript">
+        $('.tmPlayer').html('<iframe frameBorder="0" scrolling="no" src="/pdfjs/build/generic/web/viewer.html?file=' +
+            var_filepath +
+            '" style="width:100%; height:100%;"></iframe>');
+    </script>
+@endsection
