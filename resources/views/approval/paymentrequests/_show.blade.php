@@ -230,6 +230,7 @@
                             },
                             onFail : function() {}
                         })
+                        return false;
                     });
                 }
 
