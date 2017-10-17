@@ -217,6 +217,9 @@
 //                $('a.media').media({width:800, height:600});
 //            });
 
+            console.log($("#showPdf").attr("href"));
+//            alert($("#showPdf").attr("href"));
+
             DingTalkPC.ready(function(res) {
                 if (DingTalkPC.ua.isInDingTalk)
                 {
@@ -224,7 +227,8 @@
 
                     $("#showPdf").click(function() {
                         DingTalkPC.biz.util.openLink({
-                            url: "http://www.huaxing-east.cn:2015/HxCgFiles/swht/7592/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf",//要打开链接的地址
+                            url: $("#showPdf").attr("href"),
+//                            url: "http://www.huaxing-east.cn:2015/HxCgFiles/swht/7592/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf",//要打开链接的地址
                             onSuccess : function(result) {
                                 /**/
                             },
