@@ -471,6 +471,8 @@
             @if (isset($paymentrequest->purchaseorder_hxold->businesscontract))
                 <a class="media" href="{!! config('custom.hxold.purchase_businesscontract_webdir') . $paymentrequest->purchaseorder_hxold->id . '/' . $paymentrequest->purchaseorder_hxold->businesscontract !!}" target="_blank">{{ $paymentrequest->purchaseorder_hxold->businesscontract }}</a> <br>
             @endif
+                {!! Form::button('TTT', ['class' => 'btn btn-sm', 'id' => 'btnTest']) !!}
+
 
             @foreach ($paymentrequest->businesscontracts() as $businesscontract)
                 <a href="{!! $businesscontract->path !!}" target="_blank">{{ $businesscontract->filename }}</a> <br>

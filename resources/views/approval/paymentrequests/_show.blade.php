@@ -1,5 +1,26 @@
 @section('main')
 
+    <style type="text/css">
+        .lightbox{
+            position: fixed;
+            top: 0px;
+            left: 0px;
+            height: 100%;
+            width: 100%;
+            z-index: 7;
+            opacity: 0.3;
+            display: block;
+            background-color: rgb(0, 0, 0);
+        }
+        .pop{
+            position: absolute;
+            left: 50%;
+            width: 894px;
+            margin-left: -447px;
+            z-index: 9;
+        }
+    </style>
+
 @if ($agent->isDesktop())    
     <div class="panel-body">
         <a href="{{url('/approval/paymentrequests/' . $paymentrequest->id . '/printpage')}}" target="_blank" class="btn btn-default btn-sm pull-right">打印版页面</a>
@@ -42,6 +63,13 @@
                 'btnclass' => 'hidden',
             ])
     {!! Form::close() !!}
+
+<div id="container" style="display: none;">
+    <div class="lightbox"></div>
+    <div id="pop" class="pop">
+        <canvas id="the-canvas"></canvas>
+    </div>
+</div>
 
     {!! Form::model($paymentrequest, ['class' => 'form-horizontal']) !!}
         @include('approval.paymentrequests._approvals', 
@@ -173,6 +201,7 @@
 @if (Agent::isDesktop())
     <script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
     <script src="/js/jquery.media.js"></script>
+    <script src="/js/pdf.min.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
             DingTalkPC.config({
@@ -187,10 +216,43 @@
             $(function() {
                 $('a.media').media({width:800, height:600});
             });
-            
+
             DingTalkPC.ready(function(res) {
                 if (DingTalkPC.ua.isInDingTalk)
                     $("a").attr("target", "_self");
+            });
+
+            function showPdf() {
+                var container = document.getElementById("container");
+                container.style.display = "block";
+                var url = '/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf';
+                PDFJS.workerSrc = '/js/pdf.worker.min.js';
+                PDFJS.getDocument(url).then(function getPdfHelloWorld(pdf) {
+                    pdf.getPage(1).then(function getPageHelloWorld(page) {
+                        var scale = 1;
+                        var viewport = page.getViewport(scale);
+                        var canvas = document.getElementById('the-canvas');
+                        var context = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+                        var renderContext = {
+                            canvasContext: context,
+                            viewport: viewport
+                        };
+                        page.render(renderContext);
+                    });
+                });
+            }
+
+            $("#btnTest").click(function() {
+//                showPdf();
+                DingTalkPC.biz.util.openLink({
+                    url: "http://www.huaxing-east.cn:2015/HxCgFiles/swht/7592/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf",//要打开链接的地址
+                    onSuccess : function(result) {
+                        /**/
+                    },
+                    onFail : function() {}
+                })
             });
         });
     </script>
