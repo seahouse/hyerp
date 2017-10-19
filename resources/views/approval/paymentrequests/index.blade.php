@@ -87,6 +87,7 @@
 --}}
                 <th>本次请款额</th>
                 @if (Agent::isDesktop())
+                <th>付款方式</th>
                 <th>对应项目</th>
                 <th>已开票金额</th>
                 <th>合同金额</th>
@@ -122,6 +123,9 @@
                         {{ $paymentrequest->amount }}
                     </td>
                     @if (Agent::isDesktop())
+                    <td>
+                        {{ $paymentrequest->paymentmethod }}
+                    </td>
                     <td title="@if (isset($paymentrequest->purchaseorder_hxold->descrip)) {{ $paymentrequest->purchaseorder_hxold->descrip }} @else @endif">
                         @if (isset($paymentrequest->purchaseorder_hxold->descrip)) {{ str_limit($paymentrequest->purchaseorder_hxold->descrip, 40) }} @else @endif
                     </td>
