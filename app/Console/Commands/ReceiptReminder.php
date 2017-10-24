@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Http\Controllers\DingTalkController;
 use App\Models\Sales\Paywayass_hxold;
 use App\Models\Sales\Salesorder_hxold;
+use App\Models\System\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Log;
@@ -121,9 +122,12 @@ class ReceiptReminder extends Command
 
                 Log::info($msg);
 
-                DingTalkController::send('manager1200', '',
-                    $msg,
-                    config('custom.dingtalk.agentidlist.approval'));
+                $touser = User::where('email', 'admin@admin.com')->first();
+                if (isset($touser))
+                    DingTalkController::send($touser->dtuserid, '',
+                        $msg,
+                        config('custom.dingtalk.agentidlist.approval'));
+
             }
         }
 //        DingTalkController::send('manager1200', '',
