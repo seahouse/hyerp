@@ -149,10 +149,14 @@
                             <td>{{ $receiptitem->material }}</td>
                             <td>{{ $receiptitem->size }}</td>
                             <td>
-                                @if ($receiptitem->rwrecord->supplier->shortname == '') 
-                                    {{ $receiptitem->rwrecord->supplier->name }}
+                                @if (isset($receiptitem->rwrecord->supplier))
+                                    @if ($receiptitem->rwrecord->supplier->shortname == '')
+                                        {{ $receiptitem->rwrecord->supplier->name }}
+                                    @else
+                                        {{ $receiptitem->rwrecord->supplier->shortname }}
+                                    @endif
                                 @else
-                                    {{ $receiptitem->rwrecord->supplier->shortname }}
+                                    {{ '<供应商信息错误:>' . $receiptitem->rwrecord->supplier_id }}
                                 @endif
                             </td>
                             <td>

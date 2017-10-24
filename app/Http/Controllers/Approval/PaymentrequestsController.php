@@ -1268,6 +1268,8 @@ class PaymentrequestsController extends Controller
     // 对到货100%的采购订单进行创建审批单
     public static function createApprovalByArrival()
     {
+        Log::info("createApprovalByArrival start...");
+        return;
         //
 //        $paymentrequest = Paymentrequest::findOrFail($id);
 //
