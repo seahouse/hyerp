@@ -17,7 +17,7 @@ class ReceiptReminder extends Command
      *
      * @var string
      */
-    protected $signature = 'reminder:receipt';
+    protected $signature = 'reminder:receipt {useremail=admin@admin.com}';
 
     /**
      * The console command description.
@@ -122,7 +122,7 @@ class ReceiptReminder extends Command
 
                 Log::info($msg);
 
-                $touser = User::where('email', 'admin@admin.com')->first();
+                $touser = User::where('email', $this->argument('useremail'))->first();
                 if (isset($touser))
                     DingTalkController::send($touser->dtuserid, '',
                         $msg,
