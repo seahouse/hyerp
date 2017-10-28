@@ -161,7 +161,7 @@ class ReceiptReminder extends Command
                         ;
                 }
 
-                if ($bWarning && $notReceivedAmount > 0.0)
+                if ($bWarning && $notReceivedAmount > $sohead->amount * 0.01)
                 {
                     $msgTemp = "应收" . $paywayass->payway_name . "款" . $amountDest . "万, " .
                         "实收" . $receivedAmount . "万, 未收" . $notReceivedAmount . "万";
