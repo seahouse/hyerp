@@ -187,36 +187,36 @@ class ReceiptReminder extends Command
 
                 Log::info($msg);
 
-                $touser = User::where('email', $this->argument('useremail'))->first();
-                if (isset($touser))
-                    DingTalkController::send($touser->dtuserid, '',
-                        $msg,
-                        config('custom.dingtalk.agentidlist.approval'));
+//                $touser = User::where('email', $this->argument('useremail'))->first();
+//                if (isset($touser))
+//                    DingTalkController::send($touser->dtuserid, '',
+//                        $msg,
+//                        config('custom.dingtalk.agentidlist.approval'));
 
-//                if (!$this->option('nottomanager'))
-//                {
-//                    // 向销售经理发送消息
-//                    $salesmanager_hxold = Userold::where('user_hxold_id', $sohead->salesmanager_id)->first();
-//                    if (isset($salesmanager_hxold))
-//                    {
-//                        $salesmanager = User::where('id', $salesmanager_hxold->user_id)->first();
-//                        if (isset($salesmanager))
-//                            DingTalkController::send($salesmanager->dtuserid, '',
-//                                $msg,
-//                                config('custom.dingtalk.agentidlist.approval'));
-//                    }
-//
-//                }
-//
-//                // 向吴HL发送消息
-//                if ($toWuHL)
-//                {
-//                    $touser = User::where('email', 'wuhaolun@huaxing-east.com')->first();
-//                    if (isset($touser))
-//                        DingTalkController::send($touser->dtuserid, '',
-//                            $msg,
-//                            config('custom.dingtalk.agentidlist.approval'));
-//                }
+                if (!$this->option('nottomanager'))
+                {
+                    // 向销售经理发送消息
+                    $salesmanager_hxold = Userold::where('user_hxold_id', $sohead->salesmanager_id)->first();
+                    if (isset($salesmanager_hxold))
+                    {
+                        $salesmanager = User::where('id', $salesmanager_hxold->user_id)->first();
+                        if (isset($salesmanager))
+                            DingTalkController::send($salesmanager->dtuserid, '',
+                                $msg,
+                                config('custom.dingtalk.agentidlist.approval'));
+                    }
+
+                }
+
+                // 向吴HL发送消息
+                if ($toWuHL)
+                {
+                    $touser = User::where('email', 'wuhaolun@huaxing-east.com')->first();
+                    if (isset($touser))
+                        DingTalkController::send($touser->dtuserid, '',
+                            $msg,
+                            config('custom.dingtalk.agentidlist.approval'));
+                }
 
 
 
