@@ -182,17 +182,22 @@ class ReceiptReminder extends Command
 //                $msg = ($sohead->projectjc == "" ? $sohead->descrip : $sohead->projectjc) . ", "  .
 //                    "合同" . $sohead->amount . "万, 累计可收" . $amountDest . "万, 累计实收" . $receivedAmount .
 //                    "万, 差" . $notReceivedAmount . "万. 2";
+
                 $msg = ($sohead->projectjc == "" ? $sohead->descrip : $sohead->projectjc) . ", "  .
-                    "合同" . $sohead->amount . "万, " . array_pop($msgList) . "";
+                    "合同" . $sohead->amount . "万, " . array_pop($msgList) . " \n付款方式: " . $sohead->paymethod;
+//                $msg = ($sohead->projectjc == "" ? $sohead->descrip : $sohead->projectjc) . ", "  .
+//                    "合同" . $sohead->amount . "万, " . implode(',', $msgList) . "";
 
                 Log::info($msg);
 
+                // 本地测试
 //                $touser = User::where('email', $this->argument('useremail'))->first();
 //                if (isset($touser))
 //                    DingTalkController::send($touser->dtuserid, '',
 //                        $msg,
 //                        config('custom.dingtalk.agentidlist.approval'));
 
+                // 生产环境
                 if (!$this->option('nottomanager'))
                 {
                     // 向销售经理发送消息
