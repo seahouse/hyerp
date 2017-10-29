@@ -18,7 +18,7 @@ class ReceiptReminder extends Command
      *
      * @var string
      */
-    protected $signature = 'reminder:receipt {useremail=admin@admin.com} {--nottomanager= : Do not send message to sales manager}';
+    protected $signature = 'reminder:receipt {useremail=admin@admin.com} {--debug}';
 
     /**
      * The console command description.
@@ -45,6 +45,7 @@ class ReceiptReminder extends Command
     public function handle()
     {
         //
+        Log::info($this->option('debug'));
         $soheads = Salesorder_hxold::all();
         foreach ($soheads as $sohead)
         {
@@ -52,6 +53,7 @@ class ReceiptReminder extends Command
 //            if ($sohead->id != 7527 && $sohead->id != 7538)
 //                continue;
 
+            $soheadAmount = $sohead->amount;
             $receivedAmount = $sohead->receiptpayments()->sum('amount');
             $msgList = [];
             $toWuHL = false;
@@ -89,8 +91,8 @@ class ReceiptReminder extends Command
                         if ($sohead->delivery_status == 1)
                         {
                             $bWarning = true;
-                            $this->info('      ' . "delivery finished.");
-                            Log::info("delivery finished.");
+//                            $this->info('      ' . "delivery finished.");
+//                            Log::info("delivery finished.");
                         }
                         break;
                     case 14:
@@ -113,8 +115,8 @@ class ReceiptReminder extends Command
                         if ($debugendDate->gt($baseDate))
                         {
                             $bWarning = true;
-                            $this->info('      ' . "debug finished.");
-                            Log::info("debug finished.");
+//                            $this->info('      ' . "debug finished.");
+//                            Log::info("debug finished.");
                         }
                         break;
                     case 9:             //
@@ -134,8 +136,6 @@ class ReceiptReminder extends Command
                         if ($debugendDate->gt($baseDate) && Carbon::now()->gt($debugendDate->addMonth(6)))
                         {
                             $bWarning = true;
-                            $this->info('      ' . "debug finished.");
-                            Log::info("debug finished.");
                         }
                         break;
                     case 10:        // 质保: 项目投运日期（72+24小时完成日）后, 12个月后
@@ -153,8 +153,8 @@ class ReceiptReminder extends Command
                         if ($debugendDate->gt($baseDate) && Carbon::now()->gt($debugendDate->addMonth(12)))
                         {
                             $bWarning = true;
-                            $this->info('      ' . "debug finished.");
-                            Log::info("debug finished.");
+//                            $this->info('      ' . "debug finished.");
+//                            Log::info("debug finished.");
                         }
                         break;
                     default:
@@ -165,8 +165,10 @@ class ReceiptReminder extends Command
                 {
                     $msgTemp = "应收" . $paywayass->payway_name . "款" . $amountDest . "万, " .
                         "实收" . $receivedAmount . "万, 未收" . $notReceivedAmount . "万";
-                    Log::info($msgTemp);
-                    $msgTemp = "累计可收" . $amountDest . "万, 累计实收" . $receivedAmount . "万, 差" . $notReceivedAmount . "万.";
+//                    Log::info($msgTemp);
+                    $msgTemp = "累计可收" . $amountDest . "万(" . $amountDest / $soheadAmount * 100.0 . "%), " .
+                        "累计实收" . doubleval($receivedAmount) . "万(" . number_format($receivedAmount / $soheadAmount * 100.0, 2) . "%), " .
+                        "差" . $notReceivedAmount . "万(" . number_format($notReceivedAmount / $soheadAmount * 100.0, 2) . "%).";
                     if ($notReceivedAmount > 50.0)
                         $toWuHL = true;
                     array_push($msgList, $msgTemp);
@@ -184,21 +186,22 @@ class ReceiptReminder extends Command
 //                    "万, 差" . $notReceivedAmount . "万. 2";
 
                 $msg = ($sohead->projectjc == "" ? $sohead->descrip : $sohead->projectjc) . ", "  .
-                    "合同" . $sohead->amount . "万, " . array_pop($msgList) . " \n付款方式: " . $sohead->paymethod;
+                    "合同" . doubleval($soheadAmount) . "万, " . array_pop($msgList) . " \n付款方式: " . $sohead->paymethod;
 //                $msg = ($sohead->projectjc == "" ? $sohead->descrip : $sohead->projectjc) . ", "  .
 //                    "合同" . $sohead->amount . "万, " . implode(',', $msgList) . "";
 
                 Log::info($msg);
 
                 // 本地测试
-//                $touser = User::where('email', $this->argument('useremail'))->first();
-//                if (isset($touser))
-//                    DingTalkController::send($touser->dtuserid, '',
-//                        $msg,
-//                        config('custom.dingtalk.agentidlist.approval'));
-
-                // 生产环境
-                if (!$this->option('nottomanager'))
+                if ($this->option('debug'))
+                {
+                    $touser = User::where('email', $this->argument('useremail'))->first();
+                    if (isset($touser))
+                        DingTalkController::send($touser->dtuserid, '',
+                            $msg,
+                            config('custom.dingtalk.agentidlist.approval'));
+                }
+                else
                 {
                     // 向销售经理发送消息
                     $salesmanager_hxold = Userold::where('user_hxold_id', $sohead->salesmanager_id)->first();
@@ -211,16 +214,15 @@ class ReceiptReminder extends Command
                                 config('custom.dingtalk.agentidlist.approval'));
                     }
 
-                }
-
-                // 向吴HL发送消息
-                if ($toWuHL)
-                {
-                    $touser = User::where('email', 'wuhaolun@huaxing-east.com')->first();
-                    if (isset($touser))
-                        DingTalkController::send($touser->dtuserid, '',
-                            $msg,
-                            config('custom.dingtalk.agentidlist.approval'));
+                    // 向吴HL发送消息
+                    if ($toWuHL)
+                    {
+                        $touser = User::where('email', 'wuhaolun@huaxing-east.com')->first();
+                        if (isset($touser))
+                            DingTalkController::send($touser->dtuserid, '',
+                                $msg,
+                                config('custom.dingtalk.agentidlist.approval'));
+                    }
                 }
 
 
