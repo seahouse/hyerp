@@ -129,9 +129,9 @@ class ReceiptReminder extends Command
                         $baseDate = Carbon::create(1900, 1, 1);
                         if ($sohead->id == 7545)
                         {
-                            Log::info($sohead->debugend_date);
-                            Log::info($debugendDate);
-                            Log::info($baseDate);
+//                            Log::info($sohead->debugend_date);
+//                            Log::info($debugendDate);
+//                            Log::info($baseDate);
                         }
                         if ($debugendDate->gt($baseDate) && Carbon::now()->gt($debugendDate->addMonth(6)))
                         {
@@ -234,16 +234,25 @@ class ReceiptReminder extends Command
                             DingTalkController::send($touser->dtuserid, '',
                                 $msg,
                                 config('custom.dingtalk.agentidlist.erpmessage'));
+
+                        $touser = User::where('email', 'liyao@huaxing-east.com')->first();
+                        if (isset($touser))
+                            DingTalkController::send($touser->dtuserid, '',
+                                $msg,
+                                config('custom.dingtalk.agentidlist.erpmessage'));
                     }
                 }
 
             }
         }
-        Log::info(json_encode($receiptPeopleArray));
+//        Log::info(json_encode($receiptPeopleArray));
 
-        foreach ( $receiptPeopleArray as $key => $value)
+        $totalCompany = 0.0;
+        $msgCompany = [];
+        foreach ($receiptPeopleArray as $key => $value)
         {
             Log::info($key . implode(", ", $value['msg']) . $value['total']);
+            $totalCompany += $value['total'];
 
             // 向销售经理发送消息
             $salesmanager_hxold = Userold::where('user_hxold_id', $key)->first();
@@ -253,6 +262,7 @@ class ReceiptReminder extends Command
                 if (isset($salesmanager))
                 {
                     $msg = $salesmanager->name . "可收" . $value['total'] . "万元, 明细: " . implode(", ", $value['msg']) . ".";
+                    array_push($msgCompany, $salesmanager->name . $value['total'] . "万元");
                     
                     if ($this->option('debug'))
                     {
@@ -264,15 +274,57 @@ class ReceiptReminder extends Command
                         }
                     }
                     else
+                    {
                         DingTalkController::send($salesmanager->dtuserid, '',
                             $msg,
                             config('custom.dingtalk.agentidlist.erpmessage'));
+
+                        $touser = User::where('email', 'wuhaolun@huaxing-east.com')->first();
+                        if (isset($touser))
+                            DingTalkController::send($touser->dtuserid, '',
+                                $msg,
+                                config('custom.dingtalk.agentidlist.erpmessage'));
+
+                        $touser = User::where('email', 'liyao@huaxing-east.com')->first();
+                        if (isset($touser))
+                            DingTalkController::send($touser->dtuserid, '',
+                                $msg,
+                                config('custom.dingtalk.agentidlist.erpmessage'));
+                    }
+
 
 //                    Log::info($salesmanager->name . "可收" . $value['total'] . "万元, 明细: " . implode(", ", $value['msg']) . ".");
                 }
 
             }
         }
+
+        $msg = "公司应收" . $totalCompany . "万元, 明细为: " . implode(", ", $msgCompany) . ".";
+        Log::info($msg);
+        if ($this->option('debug'))
+        {
+            $touser = User::where('email', $this->argument('useremail'))->first();
+            if (isset($touser)) {
+                DingTalkController::send($touser->dtuserid, '',
+                    $msg,
+                    config('custom.dingtalk.agentidlist.erpmessage'));
+            }
+        }
+        else
+        {
+            $touser = User::where('email', 'wuhaolun@huaxing-east.com')->first();
+            if (isset($touser))
+                DingTalkController::send($touser->dtuserid, '',
+                    $msg,
+                    config('custom.dingtalk.agentidlist.erpmessage'));
+
+            $touser = User::where('email', 'liyao@huaxing-east.com')->first();
+            if (isset($touser))
+                DingTalkController::send($touser->dtuserid, '',
+                    $msg,
+                    config('custom.dingtalk.agentidlist.erpmessage'));
+        }
+
 
 //        DingTalkController::send('manager1200', '',
 //            '来自的付款单需要您审批.',
