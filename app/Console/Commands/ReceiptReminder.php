@@ -45,8 +45,8 @@ class ReceiptReminder extends Command
     public function handle()
     {
         //
-        Log::info($this->option('debug'));
         $soheads = Salesorder_hxold::all();
+        $receiptPeopleArray = [];
         foreach ($soheads as $sohead)
         {
             $this->info($sohead->id);
@@ -144,12 +144,12 @@ class ReceiptReminder extends Command
                         $debugendDate = Carbon::parse($sohead->debugend_date);
                         $this->info('      ' . $debugendDate);
                         $baseDate = Carbon::create(1900, 1, 1);
-                        if ($sohead->id == 7545)
-                        {
-                            Log::info($sohead->debugend_date);
-                            Log::info($debugendDate);
-                            Log::info($baseDate);
-                        }
+//                        if ($sohead->id == 7545)
+//                        {
+//                            Log::info($sohead->debugend_date);
+//                            Log::info($debugendDate);
+//                            Log::info($baseDate);
+//                        }
                         if ($debugendDate->gt($baseDate) && Carbon::now()->gt($debugendDate->addMonth(12)))
                         {
                             $bWarning = true;
@@ -169,7 +169,7 @@ class ReceiptReminder extends Command
                     $msgTemp = "累计可收" . $amountDest . "万(" . $amountDest / $soheadAmount * 100.0 . "%), " .
                         "累计实收" . doubleval($receivedAmount) . "万(" . number_format($receivedAmount / $soheadAmount * 100.0, 2) . "%), " .
                         "差" . $notReceivedAmount . "万(" . number_format($notReceivedAmount / $soheadAmount * 100.0, 2) . "%).";
-                    if ($notReceivedAmount > 50.0)
+//                    if ($notReceivedAmount > 50.0)
                         $toWuHL = true;
                     array_push($msgList, $msgTemp);
                 }
@@ -190,16 +190,28 @@ class ReceiptReminder extends Command
 //                $msg = ($sohead->projectjc == "" ? $sohead->descrip : $sohead->projectjc) . ", "  .
 //                    "合同" . $sohead->amount . "万, " . implode(',', $msgList) . "";
 
-                Log::info($msg);
+//                Log::info($msg);
 
                 // 本地测试
                 if ($this->option('debug'))
                 {
                     $touser = User::where('email', $this->argument('useremail'))->first();
                     if (isset($touser))
+                    {
                         DingTalkController::send($touser->dtuserid, '',
                             $msg,
-                            config('custom.dingtalk.agentidlist.approval'));
+                            config('custom.dingtalk.agentidlist.erpmessage'));
+
+                        $salesmanager_id = $sohead->salesmanager_id;
+                        if (!array_key_exists($sohead->salesmanager_id, $receiptPeopleArray))
+                        {
+                            $receiptPeopleArray[$salesmanager_id] = [];
+                            $receiptPeopleArray[$salesmanager_id]['msg'] = [];
+                            $receiptPeopleArray[$salesmanager_id]['total'] = 0.0;
+                        }
+                        array_push($receiptPeopleArray[$sohead->salesmanager_id]['msg'], ($sohead->projectjc == "" ? $sohead->descrip : $sohead->projectjc) . $notReceivedAmount . "万元")  ;
+                        $receiptPeopleArray[$salesmanager_id]['total'] += $notReceivedAmount;
+                    }
                 }
                 else
                 {
@@ -211,7 +223,7 @@ class ReceiptReminder extends Command
                         if (isset($salesmanager))
                             DingTalkController::send($salesmanager->dtuserid, '',
                                 $msg,
-                                config('custom.dingtalk.agentidlist.approval'));
+                                config('custom.dingtalk.agentidlist.erpmessage'));
                     }
 
                     // 向吴HL发送消息
@@ -221,14 +233,47 @@ class ReceiptReminder extends Command
                         if (isset($touser))
                             DingTalkController::send($touser->dtuserid, '',
                                 $msg,
-                                config('custom.dingtalk.agentidlist.approval'));
+                                config('custom.dingtalk.agentidlist.erpmessage'));
                     }
                 }
 
+            }
+        }
+        Log::info(json_encode($receiptPeopleArray));
 
+        foreach ( $receiptPeopleArray as $key => $value)
+        {
+            Log::info($key . implode(", ", $value['msg']) . $value['total']);
+
+            // 向销售经理发送消息
+            $salesmanager_hxold = Userold::where('user_hxold_id', $sohead->salesmanager_id)->first();
+            if (isset($salesmanager_hxold))
+            {
+                $salesmanager = User::where('id', $salesmanager_hxold->user_id)->first();
+                if (isset($salesmanager))
+                {
+                    $msg = $salesmanager->name . "可收" . $value['total'] . "万元, 明细: " . implode(", ", $value['msg']) . ".";
+                    
+                    if ($this->option('debug'))
+                    {
+                        $touser = User::where('email', $this->argument('useremail'))->first();
+                        if (isset($touser))
+                        {
+                            DingTalkController::send($touser->dtuserid, '',
+                                $msg,
+                                config('custom.dingtalk.agentidlist.erpmessage'));
+                    }
+                    else
+                        DingTalkController::send($salesmanager->dtuserid, '',
+                            $msg,
+                            config('custom.dingtalk.agentidlist.erpmessage'));
+
+//                    Log::info($salesmanager->name . "可收" . $value['total'] . "万元, 明细: " . implode(", ", $value['msg']) . ".");
+                }
 
             }
         }
+
 //        DingTalkController::send('manager1200', '',
 //            '来自的付款单需要您审批.',
 //            config('custom.dingtalk.agentidlist.approval'));
