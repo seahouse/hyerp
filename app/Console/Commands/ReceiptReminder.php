@@ -246,7 +246,7 @@ class ReceiptReminder extends Command
             Log::info($key . implode(", ", $value['msg']) . $value['total']);
 
             // 向销售经理发送消息
-            $salesmanager_hxold = Userold::where('user_hxold_id', $sohead->salesmanager_id)->first();
+            $salesmanager_hxold = Userold::where('user_hxold_id', $key)->first();
             if (isset($salesmanager_hxold))
             {
                 $salesmanager = User::where('id', $salesmanager_hxold->user_id)->first();
