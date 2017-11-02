@@ -257,11 +257,11 @@ class ReceiptReminder extends Command
                     if ($this->option('debug'))
                     {
                         $touser = User::where('email', $this->argument('useremail'))->first();
-                        if (isset($touser))
-                        {
+                        if (isset($touser)) {
                             DingTalkController::send($touser->dtuserid, '',
                                 $msg,
                                 config('custom.dingtalk.agentidlist.erpmessage'));
+                        }
                     }
                     else
                         DingTalkController::send($salesmanager->dtuserid, '',
