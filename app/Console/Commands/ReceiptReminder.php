@@ -194,6 +194,16 @@ class ReceiptReminder extends Command
 
 //                Log::info($msg);
 
+                $salesmanager_id = $sohead->salesmanager_id;
+                if (!array_key_exists($sohead->salesmanager_id, $receiptPeopleArray))
+                {
+                    $receiptPeopleArray[$salesmanager_id] = [];
+                    $receiptPeopleArray[$salesmanager_id]['msg'] = [];
+                    $receiptPeopleArray[$salesmanager_id]['total'] = 0.0;
+                }
+                array_push($receiptPeopleArray[$sohead->salesmanager_id]['msg'], ($sohead->projectjc == "" ? $sohead->descrip : $sohead->projectjc) . $notReceiveAmountForWarning . "万元")  ;
+                $receiptPeopleArray[$salesmanager_id]['total'] += $notReceiveAmountForWarning;
+
                 // 本地测试
                 if ($this->option('debug'))
                 {
@@ -203,16 +213,6 @@ class ReceiptReminder extends Command
                         DingTalkController::send($touser->dtuserid, '',
                             $msg,
                             config('custom.dingtalk.agentidlist.erpmessage'));
-
-                        $salesmanager_id = $sohead->salesmanager_id;
-                        if (!array_key_exists($sohead->salesmanager_id, $receiptPeopleArray))
-                        {
-                            $receiptPeopleArray[$salesmanager_id] = [];
-                            $receiptPeopleArray[$salesmanager_id]['msg'] = [];
-                            $receiptPeopleArray[$salesmanager_id]['total'] = 0.0;
-                        }
-                        array_push($receiptPeopleArray[$sohead->salesmanager_id]['msg'], ($sohead->projectjc == "" ? $sohead->descrip : $sohead->projectjc) . $notReceiveAmountForWarning . "万元")  ;
-                        $receiptPeopleArray[$salesmanager_id]['total'] += $notReceiveAmountForWarning;
                     }
                 }
                 else
