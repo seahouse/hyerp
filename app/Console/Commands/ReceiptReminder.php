@@ -57,6 +57,7 @@ class ReceiptReminder extends Command
             $receivedAmount = $sohead->receiptpayments()->sum('amount');
             $msgList = [];
             $toWuHL = false;
+            $notReceiveAmountForWarning = 0.0;
             // 获取付款方式
             $paywayasses = Paywayass_hxold::where('paywayass_order_id', $sohead->id)->orderBy('payway_seq')->get();
             $percentSum = 0.0;
@@ -163,6 +164,7 @@ class ReceiptReminder extends Command
 
                 if ($bWarning && $notReceivedAmount > $sohead->amount * 0.01)
                 {
+                    $notReceiveAmountForWarning = $notReceivedAmount;
                     $msgTemp = "应收" . $paywayass->payway_name . "款" . $amountDest . "万, " .
                         "实收" . $receivedAmount . "万, 未收" . $notReceivedAmount . "万";
 //                    Log::info($msgTemp);
@@ -209,8 +211,8 @@ class ReceiptReminder extends Command
                             $receiptPeopleArray[$salesmanager_id]['msg'] = [];
                             $receiptPeopleArray[$salesmanager_id]['total'] = 0.0;
                         }
-                        array_push($receiptPeopleArray[$sohead->salesmanager_id]['msg'], ($sohead->projectjc == "" ? $sohead->descrip : $sohead->projectjc) . $notReceivedAmount . "万元")  ;
-                        $receiptPeopleArray[$salesmanager_id]['total'] += $notReceivedAmount;
+                        array_push($receiptPeopleArray[$sohead->salesmanager_id]['msg'], ($sohead->projectjc == "" ? $sohead->descrip : $sohead->projectjc) . $notReceiveAmountForWarning . "万元")  ;
+                        $receiptPeopleArray[$salesmanager_id]['total'] += $notReceiveAmountForWarning;
                     }
                 }
                 else
