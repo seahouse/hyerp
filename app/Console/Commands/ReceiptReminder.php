@@ -76,90 +76,121 @@ class ReceiptReminder extends Command
                 $this->info('    ' . $paywayId);
                 switch ($paywayId)
                 {
-                    case 2:
-                    case 3:
-                    case 4:
+                    case 1:         // 预付款: 合同签订后10天
+                        $orderDate = Carbon::parse($sohead->orderdate);
+                        if (Carbon::now()->gt($orderDate->addDay(10)))
+                            $bWarning = true;
+                        break;
+                    case 2:         // 提资款: 合同签订后20天
+                        $orderDate = Carbon::parse($sohead->orderdate);
+                        if (Carbon::now()->gt($orderDate->addDay(20)))
+                            $bWarning = true;
+                        break;
+                    case 15:        // 设计结束款: 技术部与电气部都已完成
                         // 目前数据库中的电气部似乎都没有显示完成，所以先不考虑电气部的完成情况
-//                        if ($sohead->techdept_status == 1 && $sohead->elecdept_status == "完成")
-                        if ($sohead->techdept_status == 1)
+                        if ($sohead->techdept_status == 1 && $sohead->elecdept_status == 1)
+//                        if ($sohead->techdept_status == 1)
                         {
                             $bWarning = true;
-                            $this->info('      ' . "design finished.");
                         }
+                        break;
+                    case 3:         // todo: 进度款: 已填写开工日期
+                    case 4:         // todo: 发货前款: 已填写开工日期
                         break;
                     case 13:
                     case 5:
                         if ($sohead->delivery_status == 1)
                         {
                             $bWarning = true;
-//                            $this->info('      ' . "delivery finished.");
-//                            Log::info("delivery finished.");
                         }
                         break;
-                    case 14:
+                    case 14:            // 安装结束款: 已填写安装日期
+                        $installeddate = Carbon::parse($sohead->installeddate);
+                        $baseDate = Carbon::create(1900, 1, 1);
+                        if ($installeddate->gt($baseDate))
+                        {
+                            $bWarning = true;
+                        }
+                        break;
                     case 7:             // 调试后: 项目投运日期（72+24小时完成日）
-                    case 8:
                         // Carbon使用方法: https://9iphp.com/web/laravel/php-datetime-package-carbon.html
                         $this->info('      ' . $sohead->debugend_date);
                         $debugendDate = Carbon::parse($sohead->debugend_date);
                         $this->info('      ' . $debugendDate);
                         $baseDate = Carbon::create(1900, 1, 1);
-                        if ($sohead->id == 7538)
-                        {
-//                            Log::info($sohead->debugend_date);
-//                            Log::info($debugendDate);
-//                            Log::info($baseDate);
-//                            Log::info($amountDest);
-//                            Log::info($receivedAmount);
-//                            Log::info($notReceivedAmount);
-                        }
                         if ($debugendDate->gt($baseDate))
                         {
                             $bWarning = true;
-//                            $this->info('      ' . "debug finished.");
-//                            Log::info("debug finished.");
                         }
                         break;
-                    case 9:             //
-                    case 12:            // 环保验收: 项目投运日期（72+24小时完成日）后, 6个月后
-                    case 11:
+                    case 23:            // todo: 通烟气款: 已填写通烟气日期
+                        break;
+                    case 21:            // todo: 滤料质保金: 已填写通烟气日期后两年
+                        break;
+                    case 8:             // 72小时后款: 已填写项目投运日期
                         // Carbon使用方法: https://9iphp.com/web/laravel/php-datetime-package-carbon.html
                         $this->info('      ' . $sohead->debugend_date);
                         $debugendDate = Carbon::parse($sohead->debugend_date);
                         $this->info('      ' . $debugendDate);
                         $baseDate = Carbon::create(1900, 1, 1);
-                        if ($sohead->id == 7545)
-                        {
-//                            Log::info($sohead->debugend_date);
-//                            Log::info($debugendDate);
-//                            Log::info($baseDate);
-                        }
-                        if ($debugendDate->gt($baseDate) && Carbon::now()->gt($debugendDate->addMonth(6)))
+                        if ($debugendDate->gt($baseDate))
                         {
                             $bWarning = true;
                         }
                         break;
-                    case 10:        // 质保: 项目投运日期（72+24小时完成日）后, 12个月后
+                    case 22:            // todo: 性能验收后: 已填写性能验收日期
+                        break;
+                    case 17:            // 运行3个月
+                        $debugendDate = Carbon::parse($sohead->debugend_date);
+                        $baseDate = Carbon::create(1900, 1, 1);
+                        if ($debugendDate->gt($baseDate) && Carbon::now()->gt($debugendDate->addMonth(3)))
+                            $bWarning = true;
+                        break;
+                    case 18:            // 运行半年
+                        $debugendDate = Carbon::parse($sohead->debugend_date);
+                        $baseDate = Carbon::create(1900, 1, 1);
+                        if ($debugendDate->gt($baseDate) && Carbon::now()->gt($debugendDate->addMonth(6)))
+                            $bWarning = true;
+                        break;
+                    case 9:             // 运行1年
+                    case 12:            // 环保验收: 项目投运日期（72+24小时完成日）后, 12个月后
                         // Carbon使用方法: https://9iphp.com/web/laravel/php-datetime-package-carbon.html
-                        $this->info('      ' . $sohead->debugend_date);
                         $debugendDate = Carbon::parse($sohead->debugend_date);
                         $this->info('      ' . $debugendDate);
                         $baseDate = Carbon::create(1900, 1, 1);
-//                        if ($sohead->id == 7545)
-//                        {
-//                            Log::info($sohead->debugend_date);
-//                            Log::info($debugendDate);
-//                            Log::info($baseDate);
-//                        }
                         if ($debugendDate->gt($baseDate) && Carbon::now()->gt($debugendDate->addMonth(12)))
                         {
                             $bWarning = true;
-//                            $this->info('      ' . "debug finished.");
-//                            Log::info("debug finished.");
                         }
                         break;
+                    case 10:        // 质保金: quolityDate.  不知道为什么质保金日期在后台里很多订单是 1901-01-01, 而不是 1900
+                        $quolityDate = Carbon::parse($sohead->quolityDate);
+                        $baseDate = Carbon::create(1901, 1, 1);
+                        if ($quolityDate->gt($baseDate) && Carbon::now()->gt($quolityDate))
+                        {
+                            $bWarning = true;
+                        }
+                        break;
+                    case 19:        // 第1年质保金: quolityDate
+                        $quolityDate = Carbon::parse($sohead->quolityDate);
+                        $baseDate = Carbon::create(1901, 1, 1);
+                        if ($quolityDate->gt($baseDate) && Carbon::now()->gt($quolityDate->addYear(1)))
+                        {
+                            $bWarning = true;
+                        }
+                        break;
+                    case 20:        // 第2年质保金: quolityDate
+                        $quolityDate = Carbon::parse($sohead->quolityDate);
+                        $baseDate = Carbon::create(1901, 1, 1);
+                        if ($quolityDate->gt($baseDate) && Carbon::now()->gt($quolityDate->addYear(2)))
+                        {
+                            $bWarning = true;
+                        }
+                        break;
+                    case 11:
+                        break;
                     default:
-                        ;
+                        break;
                 }
 
                 if ($bWarning && $notReceivedAmount > $sohead->amount * 0.01)

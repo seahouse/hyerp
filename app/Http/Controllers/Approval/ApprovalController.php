@@ -169,7 +169,9 @@ class ApprovalController extends Controller
             ->where('approvaltype_id', $approvaltype_id)
             ->select('id')->pluck('id');
         // 如果审批设置中没有设置人员，而是设置了部门和职位，那么也要加进去
-        $ids_approversetting2 = Approversetting::where('approver_id', '<', 1)->where('dept_id', $user->dept->id)->where('position', $user->position)->select('id')->pluck('id');
+        $ids_approversetting2 = [];
+        if (isset($user->dept->id))
+            $ids_approversetting2 = Approversetting::where('approver_id', '<', 1)->where('dept_id', $user->dept->id)->where('position', $user->position)->select('id')->pluck('id');
         $ids_approversetting = $ids_approversetting->merge($ids_approversetting2);
 
         if ('' == $key)
