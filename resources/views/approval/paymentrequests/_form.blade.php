@@ -451,7 +451,7 @@
     <div class='col-xs-8 col-sm-10'>
         @if (isset($paymentrequest))
             @foreach ($paymentrequest->paymentnodes() as $paymentnode)
-                 <a href="{!! $paymentnode->path !!}" target="_blank" id="showPaymentnode">{{ $paymentnode->filename }}</a> <br>
+                 <a href="{!! URL($paymentnode->path) !!}" target="_blank" id="showPaymentnode">{{ $paymentnode->filename }}</a> <br>
             @endforeach
         @else
             {!! Form::file('paymentnodeattachments[]', ['multiple']) !!}

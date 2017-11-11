@@ -94,8 +94,12 @@ class ReceiptReminder extends Command
                             $bWarning = true;
                         }
                         break;
-                    case 3:         // todo: 进度款: 已填写开工日期
-                    case 4:         // todo: 发货前款: 已填写开工日期
+                    case 3:         // 进度款: 已填写开工日期
+                    case 4:         // 发货前款: 已填写开工日期
+                        $startDate = Carbon::parse($sohead->startDate);
+                        $baseDate = Carbon::create(1900, 1, 1);
+                        if ($startDate->gt($baseDate))
+                            $bWarning = true;
                         break;
                     case 13:
                     case 5:
@@ -123,9 +127,17 @@ class ReceiptReminder extends Command
                             $bWarning = true;
                         }
                         break;
-                    case 23:            // todo: 通烟气款: 已填写通烟气日期
+                    case 23:            // 通烟气款: 已填写通烟气日期
+                        $passgasDate = Carbon::parse($sohead->passgasDate);
+                        $baseDate = Carbon::create(1900, 1, 1);
+                        if ($passgasDate->gt($baseDate))
+                            $bWarning = true;
                         break;
-                    case 21:            // todo: 滤料质保金: 已填写通烟气日期后两年
+                    case 21:            // 滤料质保金: 已填写通烟气日期后两年
+                        $passgasDate = Carbon::parse($sohead->passgasDate);
+                        $baseDate = Carbon::create(1900, 1, 1);
+                        if ($passgasDate->gt($baseDate) && Carbon::now()->gt($passgasDate->addYear(2)))
+                            $bWarning = true;
                         break;
                     case 8:             // 72小时后款: 已填写项目投运日期
                         // Carbon使用方法: https://9iphp.com/web/laravel/php-datetime-package-carbon.html
@@ -138,7 +150,11 @@ class ReceiptReminder extends Command
                             $bWarning = true;
                         }
                         break;
-                    case 22:            // todo: 性能验收后: 已填写性能验收日期
+                    case 22:            // 性能验收后: 已填写性能验收日期
+                        $performanceAcceptDate = Carbon::parse($sohead->performanceAcceptDate);
+                        $baseDate = Carbon::create(1900, 1, 1);
+                        if ($performanceAcceptDate->gt($baseDate))
+                            $bWarning = true;
                         break;
                     case 17:            // 运行3个月
                         $debugendDate = Carbon::parse($sohead->debugend_date);

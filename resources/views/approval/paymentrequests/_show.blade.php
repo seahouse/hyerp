@@ -217,8 +217,7 @@
 //                $('a.media').media({width:800, height:600});
 //            });
 
-            console.log($("#showPdf").attr("href"));
-//            alert($("#showPdf").attr("href"));
+//            console.log($("#showPdf").attr("href"));
 
             DingTalkPC.ready(function(res) {
                 if (DingTalkPC.ua.isInDingTalk)
