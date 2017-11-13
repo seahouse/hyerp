@@ -579,7 +579,7 @@ class DingTalkController extends Controller
 //        dd($accessToken);
         $response = HttpDingtalkEco::post("",
             $params, json_encode($data));
-        dd($response);
+//        dd($response);
         return $response;
     }
 
