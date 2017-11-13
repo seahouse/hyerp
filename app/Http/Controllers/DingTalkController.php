@@ -574,11 +574,31 @@ class DingTalkController extends Controller
             $user = User::where('id', $userold->user_id)->first();
             if (isset($user))
             {
-                $userid_list = $user->dtuserid; //0308011851774
-                dd(self::userGet($user->dtuserid));
+                $userid_list = $user->dtuserid;
+                $dtuser = self::userGet($user->dtuserid);
+                $jsonIsLeaderInDepts = $dtuser->isLeaderInDepts;
+//                dd($dtuser->department[0]);
+                if (!strpos($jsonIsLeaderInDepts, "true"))
+                {
+                    $userListResponse = Http::get("/user/list",
+                        array("access_token" => $session, 'department_id' => $dtuser->department[0]));
+                    $userlist = $userListResponse->userlist;
+                    foreach ($userlist as $user)
+                    {
+                        if ($user->isLeader == "true")
+                            $userid_list .= "," . $user->userid;
+                        else
+                            ;
+                    }
+                }
+                else
+                {
+
+                }
                 $msgcontent = '{"content":' . $json->msgcontent . '}';
             }
         }
+        Log::info($userid_list);
 
 //        $userid_list = 'manager1200';
 //        $msgcontent = '{"content":' . $strJson . '}';
@@ -593,12 +613,11 @@ class DingTalkController extends Controller
 //        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
 //        dd($response);
 
-//        $accessToken = self::getAccessToken();
-//        dd($accessToken);
-        $response = HttpDingtalkEco::post("",
-            $params, json_encode($data));
-//        dd($response);
-        return response()->json($response);
+//        $response = HttpDingtalkEco::post("",
+//            $params, json_encode($data));
+//        return response()->json($response);
+
+        return "";
     }
 
     public static function register_call_back_user()
