@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\util\HttpDingtalkEco;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -544,6 +546,40 @@ class DingTalkController extends Controller
     {
         $response = Http::post("/message/send",
             array("access_token" => $accessToken), json_encode($opt));
+        return $response;
+    }
+
+    public function send_erp($strJson)
+    {
+        $method = 'dingtalk.corp.message.corpconversation.asyncsend';
+        $session = self::getAccessToken();
+//        $timestamp = date('Y-m-d h:i:s');
+//        $timestamp = Carbon::now()->toDateTimeString();
+//        dd($timestamp . ' ' . $session);
+        $format = 'json';
+        $v = '2.0';
+
+        $msgtype = 'text';
+        $agent_id = config('custom.dingtalk.agentidlist.erpmessage');
+
+        $userid_list = 'manager1200';
+        $msgcontent = '{"content":' . $strJson . '}';
+//        $msgcontent = '{"content":"张三的请假申请9"}';
+
+        $params = compact('method', 'session', 'v', 'format',
+            'msgtype', 'agent_id', 'userid_list', 'msgcontent');
+        $data = [
+//            'content' => $strJson
+        ];
+//        dd($params);
+//        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+//        dd($response);
+
+//        $accessToken = self::getAccessToken();
+//        dd($accessToken);
+        $response = HttpDingtalkEco::post("",
+            $params, json_encode($data));
+        dd($response);
         return $response;
     }
 

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\util;
 
 use Config;
 
-Class Http
+Class HttpDingtalkEco
 {
 	public static function get($path, $params, $isEco = false)
 	{
@@ -21,9 +21,9 @@ Class Http
 		return $response->body;
 	}
 
-	public static function post($path, $params, $data, $isEco = false)
+	public static function post($path, $params, $data)
 	{
-		$url = self::joinParams($path, $params, $isEco);
+		$url = self::joinParams($path, $params);
 		$response = \Httpful\Request::post($url)
 			->body($data)
 			->sendsJson()
@@ -32,18 +32,16 @@ Class Http
 		{
 			var_dump($response);
 		}
-		if ($response->body->errcode != 0)
-		{
-			var_dump($response->body);
-		}
+//		if ($response->body->errcode != 0)
+//		{
+//			var_dump($response->body);
+//		}
 		return $response->body;
 	}
 
-	private static function joinParams($path, $params, $isEco)
+	private static function joinParams($path, $params)
 	{
-		$url = config('custom.dingtalk.oapi_host') . $path;
-		if ($isEco)
-            $url = config('custom.dingtalk.eco_taobao_host') . $path;
+		$url = config('custom.dingtalk.eco_taobao_host') . $path;
 		if (count($params) > 0)
 		{
 			$url = $url . "?";

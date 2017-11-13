@@ -82,6 +82,9 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('dingtalk/router/rest', 'DingTalkController@routerrest');
     Route::get('dingtalk/processinstance/list', 'DingTalkController@processinstance_list');
 
+    // erp, send dingtalk message
+    Route::any('dingtalk/message/send_erp/{strJson}',  'DingTalkController@send_erp');
+
     // run .bat shell command to run git pull.
     Route::get('gitpullbybat', function() { return view('gitpullbybat'); });
 
