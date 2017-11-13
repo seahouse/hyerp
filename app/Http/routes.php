@@ -51,6 +51,10 @@ Route::post('facecore/urlfacedetect', 'FacecoreController@urlfacedetect');
 
 Route::post('cloudwalk/face_tool_detect', 'CloudwalkController@face_tool_detect');
 
+// erp, send dingtalk message
+// because not need cref, so not in middle web
+Route::any('dingtalk/message/send_erp/{strJson}',  'DingTalkController@send_erp');
+
 Route::group(['middleware' => ['web']], function () {
     // Route::get('mddauth', function() { return view('mddauth'); });
     Route::get('mddauth/{appname?}/{url?}', 'DingTalkController@mddauth');
@@ -82,8 +86,6 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('dingtalk/router/rest', 'DingTalkController@routerrest');
     Route::get('dingtalk/processinstance/list', 'DingTalkController@processinstance_list');
 
-    // erp, send dingtalk message
-    Route::any('dingtalk/message/send_erp/{strJson}',  'DingTalkController@send_erp');
 
     // run .bat shell command to run git pull.
     Route::get('gitpullbybat', function() { return view('gitpullbybat'); });
