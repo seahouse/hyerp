@@ -593,7 +593,10 @@ class DingTalkController extends Controller
                 }
                 else
                 {
-
+                    //
+                    $uplevelusers = config('custom.dingtalk.uplevel.' . $user->userid);
+                    if (strlen($uplevelusers) > 0)
+                        $userid_list .= "," . $uplevelusers;
                 }
                 $msgcontent = '{"content":' . $json->msgcontent . '}';
             }
