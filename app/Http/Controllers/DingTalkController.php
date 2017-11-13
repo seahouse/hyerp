@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\util\HttpDingtalkEco;
+use App\Models\System\User;
 use App\Models\System\Userold;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -567,14 +568,15 @@ class DingTalkController extends Controller
         $msgcontent = '';
 
         $json = json_decode($strJson);
-        $userold = Userold::where('user_hxold_id', $json["userid"])->first();
+        $userold = Userold::where('user_hxold_id', $json->userid)->first();
         if (isset($userold))
         {
             $user = User::where('id', $userold->user_id)->first();
-            if (isset($userold))
+            if (isset($user))
             {
-                $userid_list = $user->dtuserid;
-                $msgcontent = '{"content":' . $json["msgcontent"] . '}';
+                $userid_list = $user->dtuserid; //0308011851774
+                dd(self::userGet($user->dtuserid));
+                $msgcontent = '{"content":' . $json->msgcontent . '}';
             }
         }
 
