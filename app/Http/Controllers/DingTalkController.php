@@ -580,7 +580,7 @@ class DingTalkController extends Controller
         $response = HttpDingtalkEco::post("",
             $params, json_encode($data));
 //        dd($response);
-        return $response;
+        return response()->json($response);
     }
 
     public static function register_call_back_user()
