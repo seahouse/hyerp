@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\util\HttpDingtalkEco;
+use App\Models\System\Userold;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -562,8 +563,23 @@ class DingTalkController extends Controller
         $msgtype = 'text';
         $agent_id = config('custom.dingtalk.agentidlist.erpmessage');
 
-        $userid_list = 'manager1200';
-        $msgcontent = '{"content":' . $strJson . '}';
+        $userid_list = '';
+        $msgcontent = '';
+
+        $json = json_decode($strJson);
+        $userold = Userold::where('user_hxold_id', $json["userid"])->first();
+        if (isset($userold))
+        {
+            $user = User::where('id', $userold->user_id)->first();
+            if (isset($userold))
+            {
+                $userid_list = $user->dtuserid;
+                $msgcontent = '{"content":' . $json["msgcontent"] . '}';
+            }
+        }
+
+//        $userid_list = 'manager1200';
+//        $msgcontent = '{"content":' . $strJson . '}';
 //        $msgcontent = '{"content":"张三的请假申请9"}';
 
         $params = compact('method', 'session', 'v', 'format',
