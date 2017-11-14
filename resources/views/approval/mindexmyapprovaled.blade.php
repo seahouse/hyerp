@@ -21,7 +21,7 @@
         </div>
     {!! Form::close() !!}
 
-    @if (Agent::isDesktop() && Auth::user()->email == "wangai@huaxing-east.com")
+    @if (Agent::isDesktop() && (Auth::user()->email == "wangai@huaxing-east.com" || Auth::user()->email == "shenhaixia@huaxing-east.com"))
         @include('approval._list',
             [
                 'href_pre' => '/approval/reimbursements/mshow/', 'href_suffix' => '/printpage',

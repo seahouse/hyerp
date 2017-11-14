@@ -105,7 +105,7 @@
             @foreach($paymentrequests as $paymentrequest)
                 <tr>
                     <td>
-                        @if (Agent::isDesktop() && Auth::user()->email == "wangai@huaxing-east.com")
+                        @if (Agent::isDesktop() && (Auth::user()->email == "wangai@huaxing-east.com" || Auth::user()->email == "shenhaixia@huaxing-east.com"))
                             <a href="{{ url('/approval/paymentrequests/' . $paymentrequest->id . '/printpage') }}" target="_blank">{{ $paymentrequest->created_at }}</a>
                         @else
                             <a href="{{ url('/approval/paymentrequests', $paymentrequest->id) }}" target="_blank">{{ $paymentrequest->created_at }}</a>
