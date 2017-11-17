@@ -603,6 +603,10 @@ class DingTalkController extends Controller
         }
         Log::info($userid_list);
 
+        // sent to wuceshi for test
+        if (strlen($userid_list) > 0)
+            $userid_list .= ",04090710367573";
+
 //        $userid_list = 'manager1200';
 //        $msgcontent = '{"content":' . $strJson . '}';
 //        $msgcontent = '{"content":"张三的请假申请9"}';
@@ -616,9 +620,9 @@ class DingTalkController extends Controller
 //        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
 //        dd($response);
 
-//        $response = HttpDingtalkEco::post("",
-//            $params, json_encode($data));
-//        return response()->json($response);
+        $response = HttpDingtalkEco::post("",
+            $params, json_encode($data));
+        return response()->json($response);
 
         return "";
     }
