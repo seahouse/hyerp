@@ -163,6 +163,27 @@
             --}}
         {!! Form::close() !!}
     @endif
+
+    {{-- pdf 预览 --}}
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        PDF 预览标题
+                    </h4>
+                </div>
+                <div class="modal-body" >
+                    <a class="media" id="pdfContainer" href="http://www.huaxing-east.cn:2015/HxCgFiles/swht/7592/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf"></a>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    {!! Form::button('预览PDF', ['class' => 'btn btn-warning btn-sm', 'data-toggle' => 'modal', 'data-target' => '#myModal']) !!}
 @endsection
 
 
@@ -199,6 +220,13 @@
     </script>
 
 @if (Agent::isDesktop())
+    <script src="/js/jquery.media.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('#pdfContainer').media({width:'100%', height:800});
+        });
+    </script>
+
     <script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
     {{--<script src="/js/jquery.media.js"></script>--}}
     {{--<script src="/js/pdf.min.js"></script>--}}
