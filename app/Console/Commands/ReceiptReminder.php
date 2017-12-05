@@ -45,7 +45,8 @@ class ReceiptReminder extends Command
     public function handle()
     {
         //
-        $soheads = Salesorder_hxold::all();
+        $soheads = Salesorder_hxold::where('status', '<>', -10)->get();
+//        $soheads = Salesorder_hxold::all();
         $receiptPeopleArray = [];
         foreach ($soheads as $sohead)
         {

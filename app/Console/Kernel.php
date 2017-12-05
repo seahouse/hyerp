@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         // Commands\Inspire::class,
         Commands\SendEmails::class,
         Commands\ReceiptReminder::class,
+        Commands\TaxamountStatistics::class,
     ];
 
     /**
