@@ -184,6 +184,7 @@
     </div>
 
     {!! Form::button('预览PDF', ['class' => 'btn btn-warning btn-sm', 'data-toggle' => 'modal', 'data-target' => '#myModal']) !!}
+    <div class="media" style="width: 300px; height: 300px;" id="pdfContainer2"  href="http://www.huaxing-east.cn:2015/HxCgFiles/swht/7592/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf"></div>
 @endsection
 
 
@@ -224,6 +225,7 @@
     <script type="text/javascript">
         $(function() {
             $('#pdfContainer').media({width:'100%', height:800});
+            $('#pdfContainer2').media({width:'100%', height:800});
         });
     </script>
 
