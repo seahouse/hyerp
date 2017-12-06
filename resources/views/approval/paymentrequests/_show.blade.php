@@ -183,10 +183,14 @@
         </div><!-- /.modal -->
     </div>
 
+    {{--
     {!! Form::button('预览PDF', ['class' => 'btn btn-warning btn-sm', 'data-toggle' => 'modal', 'data-target' => '#myModal']) !!}
     <div class="media" style="width: 300px; height: 300px;" id="pdfContainer2"  href="http://www.huaxing-east.cn:2015/HxCgFiles/swht/7592/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf"></div>
 
     <embed width="100%" height="800px" name="plugin" id="plugin" src="http://www.huaxing-east.cn:2015/HxCgFiles/swht/7592/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf" type="application/pdf" internalinstanceid="68" title="">
+    --}}
+
+    <a class="pdf" style="" href="/pdfjs/build/generic/web/viewer.html?file=compressed.tracemonkey-pldi-09.pdf" >aaa.pdf</a>
 @endsection
 
 
@@ -223,6 +227,7 @@
     </script>
 
 @if (Agent::isDesktop())
+    {{--
     <script src="/js/jquery.media.js"></script>
     <script type="text/javascript">
         $(function() {
@@ -230,6 +235,7 @@
             $('#pdfContainer2').media({width:'100%', height:800});
         });
     </script>
+    --}}
 
     <script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
     {{--<script src="/js/jquery.media.js"></script>--}}
