@@ -265,7 +265,7 @@
                     $("#btnShowPdf").hide();
 
                     $("#showPdf").click(function() {
-                        location.href('http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf").attr("href"));
+                        location.href = 'http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf").attr("href");
 //                        DingTalkPC.biz.util.openLink({
 //                            url: $("#showPdf").attr("href"),
 //                            onSuccess : function(result) {
