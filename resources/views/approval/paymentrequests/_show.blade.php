@@ -191,6 +191,7 @@
     --}}
 
     <a class="pdf" style="" href="/pdfjs/build/generic/web/viewer.html?file=compressed.tracemonkey-pldi-09.pdf" >aaa.pdf</a>
+    <a class="pdf" style="" href="/approval/paymentrequests/pdfjs/viewer" >bbb.pdf</a>
 @endsection
 
 

@@ -298,7 +298,8 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('{id}/mrecvdetail4', 'PaymentrequestsController@mrecvdetail4');
         Route::get('{id}/printpage', 'PaymentrequestsController@printpage');
         Route::get('{id}/pay', 'PaymentrequestsController@pay');
-        Route::get('hasrepeat/{pohead_id}/{amount?}', 'PaymentrequestsController@hasrepeat');
+        Route::get('hasrepeat/{pohead_id}/{amount?}', 'PaymentrequestsController@hasrepeat');    // pdfjs viewer.html
+//        Route::get('pdfjs/viewer/{pdffile?}', 'PaymentrequestsController@pdfjsviewer');
     });
     Route::resource('paymentrequests', 'PaymentrequestsController');
     Route::resource('approversettings', 'ApproversettingsController');
@@ -342,6 +343,13 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::post('mstore', 'PaymentrequestretractapprovalController@mstore');
     });
     Route::resource('paymentrequestretractapproval', 'PaymentrequestretractapprovalController');
+});
+
+Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' => ['web', 'auth']], function() {
+
+    Route::group(['prefix' => 'paymentrequests'], function() {
+        Route::get('pdfjs/viewer/{pdffile?}', 'PaymentrequestsController@pdfjsviewer');
+    });
 });
 
 Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['web', 'auth']], function() {

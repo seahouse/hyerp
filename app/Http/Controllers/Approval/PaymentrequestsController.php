@@ -25,6 +25,7 @@ use App\Models\Inventory\Receiptitem_hxold;
 use App\Models\Purchase\Purchaseorder_hxold;
 use App\Models\System\Employee_hxold_t;
 use App\Models\Inventory\Rwrecord_hxold;
+use Response;
 
 class PaymentrequestsController extends Controller
 {
@@ -1436,5 +1437,27 @@ class PaymentrequestsController extends Controller
             }
         }
         return response()->json($data);
+    }
+
+    // 通过 pdfjs 访问pdf文件
+    public function pdfjsviewer($pdffile = '')
+    {
+//        dd(request());
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Method: GET');
+        header('Access-Control-Allow-Headers: Content-Type, X-Auth-Token, Origin');
+
+//        header('Access-Control-Allow-Headers: Range');
+//        header('Access-Control-Expose-Headers: Accept-Ranges, Content-Encoding, Content-Length, Content-Range');
+
+//        return view('viewer');
+//        return view('pdfjs/build/generic/web/viewer?file=compressed.tracemonkey-pldi-09.pdf');
+//        return view('pdfjs/build/generic/web/viewer.html?file=compressed.tracemonkey-pldi-09.pdf');
+
+        return redirect('http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html') ;
+//        return redirect('/pdfjs/build/generic/web/viewer.html?file=/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf') ;
+
+        return redirect('/pdfjs/build/generic/web/viewer.html?file=http://www.huaxing-east.cn:2015/HxCgFiles/swht/7592/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf') ;
+//        view('/pdfjs/build/generic/web/viewer.html?file=compressed.tracemonkey-pldi-09.pdf');
     }
 }
