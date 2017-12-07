@@ -262,7 +262,6 @@
                 if (DingTalkPC.ua.isInDingTalk)
                 {
                     $("a").attr("target", "_self");
-                    $("#btnShowPdf").hide();
 
                     $("#showPdf").click(function() {
                         location.href = 'http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf").attr("href");
@@ -295,13 +294,6 @@
                 }
 
 
-            });
-
-            $("#showPdf").click(function() {
-                myModal.modal();
-//                        location.href('http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf").attr("href"));
-
-                return false;
             });
 
             function showPdf() {
