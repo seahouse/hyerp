@@ -264,9 +264,9 @@
                     $("a").attr("target", "_self");
 
                     $("#showPdf").click(function() {
+                        location.href('http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf").attr("href"));
                         DingTalkPC.biz.util.openLink({
                             url: $("#showPdf").attr("href"),
-//                            url: "http://www.huaxing-east.cn:2015/HxCgFiles/swht/7592/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf",//要打开链接的地址
                             onSuccess : function(result) {
                                 /**/
                             },
