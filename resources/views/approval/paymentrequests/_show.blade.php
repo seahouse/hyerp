@@ -166,7 +166,7 @@
 
     {{-- pdf 预览 --}}
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -190,8 +190,10 @@
     <embed width="100%" height="800px" name="plugin" id="plugin" src="http://www.huaxing-east.cn:2015/HxCgFiles/swht/7592/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf" type="application/pdf" internalinstanceid="68" title="">
     --}}
 
+    {{--
     <a class="pdf" style="" href="/pdfjs/build/generic/web/viewer.html?file=compressed.tracemonkey-pldi-09.pdf" >aaa.pdf</a>
     <a class="pdf" style="" href="/approval/paymentrequests/pdfjs/viewer" >bbb.pdf</a>
+    --}}
 @endsection
 
 
@@ -228,15 +230,13 @@
     </script>
 
 @if (Agent::isDesktop())
-    {{--
     <script src="/js/jquery.media.js"></script>
     <script type="text/javascript">
         $(function() {
             $('#pdfContainer').media({width:'100%', height:800});
-            $('#pdfContainer2').media({width:'100%', height:800});
+//            $('#pdfContainer2').media({width:'100%', height:800});
         });
     </script>
-    --}}
 
     <script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
     {{--<script src="/js/jquery.media.js"></script>--}}
@@ -262,16 +262,17 @@
                 if (DingTalkPC.ua.isInDingTalk)
                 {
                     $("a").attr("target", "_self");
+                    $("#btnShowPdf").hide();
 
                     $("#showPdf").click(function() {
                         location.href('http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf").attr("href"));
-                        DingTalkPC.biz.util.openLink({
-                            url: $("#showPdf").attr("href"),
-                            onSuccess : function(result) {
-                                /**/
-                            },
-                            onFail : function() {}
-                        })
+//                        DingTalkPC.biz.util.openLink({
+//                            url: $("#showPdf").attr("href"),
+//                            onSuccess : function(result) {
+//                                /**/
+//                            },
+//                            onFail : function() {}
+//                        });
                         return false;
                     });
 
@@ -287,8 +288,20 @@
                         return false;
                     });
                 }
+                else
+                {
+
+//                    $("#showPdf").display = 'none';
+                }
 
 
+            });
+
+            $("#showPdf").click(function() {
+                myModal.modal();
+//                        location.href('http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf").attr("href"));
+
+                return false;
             });
 
             function showPdf() {
