@@ -177,10 +177,10 @@
                     </h4>
                 </div>
                 <div class="modal-body" >
-                    <a class="media" id="pdfContainer"
-                       @if (isset($paymentrequest->purchaseorder_hxold->businesscontract)) href="{!! config('custom.hxold.purchase_businesscontract_webdir') . $paymentrequest->purchaseorder_hxold->id . '/' . $paymentrequest->purchaseorder_hxold->businesscontract !!}" @else href="" @endif>
+                        <a class="media" id="pdfContainer"
+                           @if (isset($paymentrequest->purchaseorder_hxold->businesscontract)) href="{!! config('custom.hxold.purchase_businesscontract_webdir') . $paymentrequest->purchaseorder_hxold->id . '/' . $paymentrequest->purchaseorder_hxold->businesscontract !!}" @else href="" @endif>
 
-                    </a>
+                        </a>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
