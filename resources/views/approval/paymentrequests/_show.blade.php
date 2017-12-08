@@ -177,7 +177,10 @@
                     </h4>
                 </div>
                 <div class="modal-body" >
-                    <a class="media" id="pdfContainer" href="http://www.huaxing-east.cn:2015/HxCgFiles/swht/7592/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf"></a>
+                    <a class="media" id="pdfContainer"
+                       @if (isset($paymentrequest->purchaseorder_hxold->businesscontract)) href="{!! config('custom.hxold.purchase_businesscontract_webdir') . $paymentrequest->purchaseorder_hxold->id . '/' . $paymentrequest->purchaseorder_hxold->businesscontract !!}" @else href="" @endif>
+
+                    </a>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
@@ -257,6 +260,17 @@
 //            });
 
 //            console.log($("#showPdf").attr("href"));
+            console.log(DingTalkPC.ua.isInDingTalk);
+            if (DingTalkPC.ua.isInDingTalk)
+                ;
+            else
+            {
+                $("#showPdf").click(function() {
+                    $('#myModal').modal();
+//                    location.href = 'http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf").attr("href");
+                    return false;
+                });
+            }
 
             DingTalkPC.ready(function(res) {
                 if (DingTalkPC.ua.isInDingTalk)
