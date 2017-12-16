@@ -3,6 +3,7 @@
 namespace App\Models\Sales;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Salesorder_hxold extends Model
 {
@@ -53,5 +54,15 @@ class Salesorder_hxold extends Model
     // 此订单的对应的采购订单的对应的付款记录
     public function payments() {
         return $this->hasManyThrough('App\Models\Purchase\Payment_hxold', 'App\Models\Purchase\Purchaseorder_hxold', 'sohead_id', 'pohead_id');
+    }
+
+    // 公用订单的分摊成本金额
+    public function getPoheadAmountBy7550() {
+        return DB::connection('sqlsrv')->select('select dbo.getPoheadAmountBy7550(' . $this->id . ') as poheadAmountBy7550');
+    }
+
+    // 税率差
+    public function temTaxamountstatistics() {
+        return $this->hasOne('App\Models\Sales\Tem_Taxamountstatistics_hxold', 'sohead_id', 'id');
     }
 }
