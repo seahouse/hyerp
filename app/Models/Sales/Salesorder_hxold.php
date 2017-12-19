@@ -61,6 +61,10 @@ class Salesorder_hxold extends Model
         return DB::connection('sqlsrv')->select('select dbo.getPoheadAmountBy7550(' . $this->id . ') as poheadAmountBy7550');
     }
 
+    public function soheadtaxratetypeasses() {
+        return $this->hasMany('App\Models\Sales\Soheadtaxratetypeass_hxold', 'sohead_id', 'id');
+    }
+
     // 税率差
     public function temTaxamountstatistics() {
         return $this->hasOne('App\Models\Sales\Tem_Taxamountstatistics_hxold', 'sohead_id', 'id');

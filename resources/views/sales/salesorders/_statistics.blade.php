@@ -15,10 +15,15 @@
 			@endif
 			<?php $pohead_amount_total = $sohead->poheads->sum('amount'); ?>
             <?php $poheadAmountBy7550 = array_first($sohead->getPoheadAmountBy7550())->poheadAmountBy7550; ?>
+            <?php $sohead_taxamount = $sohead->temTaxamountstatistics->sohead_taxamount; ?>
+            <?php $sohead_poheadtaxamount = $sohead->temTaxamountstatistics->sohead_poheadtaxamount; ?>
 			<p>对应的采购订单合同金额总额：{{ number_format($pohead_amount_total / 10000.0, 4) }}万</p>		{{-- 似乎写到数据库视图中速度更快 --}}
 			<p>公用订单分摊成本金额：{{ number_format($poheadAmountBy7550 / 10000.0, 4)  }}万</p>
+			<p>税差：{{ number_format(($sohead_taxamount - $sohead_poheadtaxamount) / 10000.0, 4) }}万</p>
 			@if ($sohead->amount > 0.0)
-				<p>采购成本比例：{{ number_format(($pohead_amount_total + $poheadAmountBy7550) / ($sohead->amount * 10000.0) * 100.0, 2) }}%(含公摊)</p>
+				<p>采购成本比例：{{ number_format(($pohead_amount_total + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount) / ($sohead->amount * 10000.0) * 100.0, 2) }}%
+					(含公摊{{ number_format($poheadAmountBy7550 / ($sohead->amount * 10000.0) * 100.0, 2) }}%、
+					税差{{ number_format(($sohead_taxamount - $sohead_poheadtaxamount) / ($sohead->amount * 10000.0) * 100.0, 2) }}%)</p>
 			@else
 				<p>采购成本比例：-</p>
 			@endif
@@ -30,9 +35,6 @@
 			@else
 				<p>采购付款占销售订单比例：-</p>
 			@endif
-            <?php $sohead_taxamount = $sohead->temTaxamountstatistics->sohead_taxamount; ?>
-            <?php $sohead_poheadtaxamount = $sohead->temTaxamountstatistics->sohead_poheadtaxamount; ?>
-			<p>税差：{{ number_format(($sohead_taxamount - $sohead_poheadtaxamount) / 10000.0, 4) }}万</p>
 		@endif
 	</div>
 @endif

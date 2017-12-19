@@ -33,4 +33,8 @@ class Purchaseorder_hxold_simple extends Model
     public function vendinfo() {
         return $this->hasOne('App\Models\Purchase\Vendinfo_hxold', 'id', 'vendinfo_id');
     }
+
+    public function poheadtaxrateasses() {
+        return $this->hasMany('App\Models\Purchase\Poheadtaxrateass_hxold', 'pohead_id', 'id');
+    }
 }
