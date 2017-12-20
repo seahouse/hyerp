@@ -43,54 +43,55 @@ class TaxrateinputReminder extends Command
     public function handle()
     {
         //
-//        $soheads = Salesorder_hxold::where('status', '<>', -10)->get();
-//        $msgList = [];
-//        foreach ($soheads as $sohead)
-//        {
-//            $this->info($sohead->id . '  ' . $sohead->amount);
-//            $soheadtaxratetypeasses = $sohead->soheadtaxratetypeasses;
-//            foreach ($soheadtaxratetypeasses as $soheadtaxratetypeass)
-//            {
-//                $this->info('  ' . $soheadtaxratetypeass->amount);
-//            }
-//            if ($sohead->amount > $soheadtaxratetypeasses->sum('amount'))
-//            {
-//                array_push($msgList, $sohead->number);
-//            }
-//        }
-//        if (count($msgList) > 0)
-//        {
-//            $msg = "还未填写完整税率的订单如下: \n" . implode(", \n", $msgList);
-//            $this->info('  ' . $msg);
-//            if ($this->option('debug'))
-//            {
-//                $touser = User::where('email', $this->argument('useremail'))->first();
-//                if (isset($touser))
-//                {
-//                    DingTalkController::send($touser->dtuserid, '',
-//                        $msg,
-//                        config('custom.dingtalk.agentidlist.erpmessage'));
-//                }
-//            }
-//            else
-//            {
-//                // send msg to ZhouYP
-//                $userZhouyp = Userold::where('email', 'zhouyanping@huaxing-east.com')->first();
-//                if (isset($userZhouyp))
-//                {
-//                    DingTalkController::send($userZhouyp->dtuserid, '',
-//                        $msg,
-//                        config('custom.dingtalk.agentidlist.erpmessage'));
-//                }
-//
-//                // send msg to Wuhl
-//                $userWuhl = User::where('email', 'wuhaolun@huaxing-east.com')->first();
-//                if (isset($userWuhl))
-//                    DingTalkController::send($userWuhl->dtuserid, '',
-//                        $msg,
-//                        config('custom.dingtalk.agentidlist.erpmessage'));
-//            }
-//        }
+        $soheads = Salesorder_hxold::where('status', '<>', -10)->get();
+        $msgList = [];
+        foreach ($soheads as $sohead)
+        {
+            $this->info($sohead->id . '  ' . $sohead->amount);
+            $soheadtaxratetypeasses = $sohead->soheadtaxratetypeasses;
+            foreach ($soheadtaxratetypeasses as $soheadtaxratetypeass)
+            {
+                $this->info('  ' . $soheadtaxratetypeass->amount);
+            }
+            if ($sohead->amount > $soheadtaxratetypeasses->sum('amount'))
+            {
+                array_push($msgList, $sohead->number);
+            }
+        }
+        if (count($msgList) > 0)
+        {
+            $msgList = array_slice($msgList, 0, 50);        // pre 50
+            $msg = "还未填写完整税率的销售订单如下(前50条): \n" . implode(", \n", $msgList);
+            $this->info('  ' . $msg);
+            if ($this->option('debug'))
+            {
+                $touser = User::where('email', $this->argument('useremail'))->first();
+                if (isset($touser))
+                {
+                    DingTalkController::send($touser->dtuserid, '',
+                        $msg,
+                        config('custom.dingtalk.agentidlist.erpmessage'));
+                }
+            }
+            else
+            {
+                // send msg to ZhouYP
+                $userZhouyp = Userold::where('email', 'zhouyanping@huaxing-east.com')->first();
+                if (isset($userZhouyp))
+                {
+                    DingTalkController::send($userZhouyp->dtuserid, '',
+                        $msg,
+                        config('custom.dingtalk.agentidlist.erpmessage'));
+                }
+
+                // send msg to Wuhl
+                $userWuhl = User::where('email', 'wuhaolun@huaxing-east.com')->first();
+                if (isset($userWuhl))
+                    DingTalkController::send($userWuhl->dtuserid, '',
+                        $msg,
+                        config('custom.dingtalk.agentidlist.erpmessage'));
+            }
+        }
 
         $poheads = Purchaseorder_hxold_simple::all();
         $msgList = [];
@@ -110,7 +111,7 @@ class TaxrateinputReminder extends Command
         if (count($msgList) > 0)
         {
             $msgList = array_slice($msgList, 0, 50);        // pre 50
-            $msg = "还未填写完整税率的订单如下: \n" . implode(", \n", $msgList);
+            $msg = "还未填写完整税率的采购订单如下(前50条): \n" . implode(", \n", $msgList);
             $this->info('  ' . $msg);
             if ($this->option('debug'))
             {
