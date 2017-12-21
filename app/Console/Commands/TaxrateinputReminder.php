@@ -115,14 +115,14 @@ class TaxrateinputReminder extends Command
                 }
                 if ($pohead->amount > $poheadtaxrateasses->sum('amount'))
                 {
-                    $transactor_id = $pohead->transactor_id;
-                    if ($transactor_id == 0)
-                        $transactor_id = 425;       // XiaMin
-                    if (!array_key_exists($transactor_id, $transactorPoheads))
+                    $contract_operator_id = $pohead->contract_operator_id;
+                    if ($contract_operator_id == 0)
+                        $contract_operator_id = 425;       // XiaMin
+                    if (!array_key_exists($contract_operator_id, $transactorPoheads))
                     {
-                        $transactorPoheads[$transactor_id] = [];
+                        $transactorPoheads[$contract_operator_id] = [];
                     }
-                    array_push($transactorPoheads[$transactor_id], $pohead->number) ;
+                    array_push($transactorPoheads[$contract_operator_id], $pohead->number);
                     array_push($msgList, $pohead->number);
                 }
             }
