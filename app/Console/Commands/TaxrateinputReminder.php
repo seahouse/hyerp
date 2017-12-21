@@ -7,6 +7,7 @@ use App\Models\Purchase\Purchaseorder_hxold_simple;
 use Illuminate\Console\Command;
 use App\Models\Sales\Salesorder_hxold;
 use App\Models\System\User;
+use App\Models\System\Userold;
 use App\Http\Controllers\DingTalkController;
 
 class TaxrateinputReminder extends Command
@@ -62,21 +63,28 @@ class TaxrateinputReminder extends Command
         {
             $msgList = array_slice($msgList, 0, 50);        // pre 50
             $msg = "还未填写完整税率的销售订单如下(前50条): \n" . implode(", \n", $msgList);
+//            $msg = "还未填写完整税率的销售订单如下(前50条)3";
             $this->info('  ' . $msg);
             if ($this->option('debug'))
             {
                 $touser = User::where('email', $this->argument('useremail'))->first();
                 if (isset($touser))
                 {
-                    DingTalkController::send($touser->dtuserid, '',
-                        $msg,
-                        config('custom.dingtalk.agentidlist.erpmessage'));
+                    $data = [
+                        'userid'        => $touser->id,
+                        'msgcontent'    => urlencode($msg) ,
+                    ];
+
+                    DingTalkController::sendCorpMessageText(json_encode($data));
+//                    DingTalkController::send($touser->dtuserid, '',
+//                        $msg,
+//                        config('custom.dingtalk.agentidlist.erpmessage'));
                 }
             }
             else
             {
                 // send msg to ZhouYP
-                $userZhouyp = Userold::where('email', 'zhouyanping@huaxing-east.com')->first();
+                $userZhouyp = User::where('email', 'zhouyanping@huaxing-east.com')->first();
                 if (isset($userZhouyp))
                 {
                     DingTalkController::send($userZhouyp->dtuserid, '',
@@ -93,54 +101,109 @@ class TaxrateinputReminder extends Command
             }
         }
 
-        $poheads = Purchaseorder_hxold_simple::all();
+//        $poheads = Purchaseorder_hxold_simple::all();
         $msgList = [];
-        foreach ($poheads as $pohead)
-        {
-            $this->info($pohead->id . '  ' . $pohead->amount);
-            $poheadtaxrateasses = $pohead->poheadtaxrateasses;
-            foreach ($poheadtaxrateasses as $poheadtaxrateass)
+        $transactorPoheads = [];
+        Purchaseorder_hxold_simple::chunk(200, function ($poheads) use (&$msgList, &$transactorPoheads) {
+            foreach ($poheads as $pohead)
             {
-                $this->info('  ' . $poheadtaxrateass->amount);
+                $this->info($pohead->id . '  ' . $pohead->amount);
+                $poheadtaxrateasses = $pohead->poheadtaxrateasses;
+                foreach ($poheadtaxrateasses as $poheadtaxrateass)
+                {
+                    $this->info('  ' . $poheadtaxrateass->amount);
+                }
+                if ($pohead->amount > $poheadtaxrateasses->sum('amount'))
+                {
+                    $transactor_id = $pohead->transactor_id;
+                    if ($transactor_id == 0)
+                        $transactor_id = 425;       // XiaMin
+                    if (!array_key_exists($transactor_id, $transactorPoheads))
+                    {
+                        $transactorPoheads[$transactor_id] = [];
+                    }
+                    array_push($transactorPoheads[$transactor_id], $pohead->number) ;
+                    array_push($msgList, $pohead->number);
+                }
             }
-            if ($pohead->amount > $poheadtaxrateasses->sum('amount'))
-            {
-                array_push($msgList, $pohead->number);
-            }
-        }
-        if (count($msgList) > 0)
+        });
+
+        foreach ($transactorPoheads as $key => $value)
         {
-            $msgList = array_slice($msgList, 0, 50);        // pre 50
-            $msg = "还未填写完整税率的采购订单如下(前50条): \n" . implode(", \n", $msgList);
+            $value = array_slice($value, 0, 50);        // pre 50
+            $msg = "还未填写完整税率的采购订单如下(前50条): \n" . implode(", \n", $value);
+            $this->info('  ' . $key);
             $this->info('  ' . $msg);
+
+            $data = [
+                'userid'        => $key,
+                'msgcontent'    => urlencode($msg),
+            ];
+
             if ($this->option('debug'))
             {
                 $touser = User::where('email', $this->argument('useremail'))->first();
                 if (isset($touser))
                 {
-                    DingTalkController::send($touser->dtuserid, '',
-                        $msg,
-                        config('custom.dingtalk.agentidlist.erpmessage'));
+                    $data['userid'] = $touser->id;
+                    DingTalkController::sendCorpMessageText(json_encode($data));
+//                    DingTalkController::send($touser->dtuserid, '',
+//                        $msg,
+//                        config('custom.dingtalk.agentidlist.erpmessage'));
                 }
             }
             else
             {
-                // send msg to Liuhm
-                $userLiuhm = Userold::where('email', 'liuhuaming@huaxing-east.com')->first();
-                if (isset($userLiuhm))
+                $transactor_hxold = Userold::where('user_hxold_id', $key)->first();
+                if (isset($transactor_hxold))
                 {
-                    DingTalkController::send($userLiuhm->dtuserid, '',
-                        $msg,
-                        config('custom.dingtalk.agentidlist.erpmessage'));
-                }
+                    $touser = User::where('id', $transactor_hxold->user_id)->first();
+                    if (isset($touser))
+                    {
+                        $data['userid'] = $touser->id;
+                        DingTalkController::sendCorpMessageText(json_encode($data));
 
-                // send msg to Wuhl
-                $userWuhl = User::where('email', 'wuhaolun@huaxing-east.com')->first();
-                if (isset($userWuhl))
-                    DingTalkController::send($userWuhl->dtuserid, '',
-                        $msg,
-                        config('custom.dingtalk.agentidlist.erpmessage'));
+//                        DingTalkController::send($touser->dtuserid, '',
+//                            $msg,
+//                            config('custom.dingtalk.agentidlist.erpmessage'));
+                    }
+                }
             }
         }
+
+//        if (count($msgList) > 0)
+//        {
+//            $msgList = array_slice($msgList, 0, 50);        // pre 50
+//            $msg = "还未填写完整税率的采购订单如下(前50条): \n" . implode(", \n", $msgList);
+//            $this->info('  ' . $msg);
+//            if ($this->option('debug'))
+//            {
+//                $touser = User::where('email', $this->argument('useremail'))->first();
+//                if (isset($touser))
+//                {
+//                    DingTalkController::send($touser->dtuserid, '',
+//                        $msg,
+//                        config('custom.dingtalk.agentidlist.erpmessage'));
+//                }
+//            }
+//            else
+//            {
+//                // send msg to Liuhm
+//                $userLiuhm = User::where('email', 'liuhuaming@huaxing-east.com')->first();
+//                if (isset($userLiuhm))
+//                {
+//                    DingTalkController::send($userLiuhm->dtuserid, '',
+//                        $msg,
+//                        config('custom.dingtalk.agentidlist.erpmessage'));
+//                }
+//
+//                // send msg to Wuhl
+//                $userWuhl = User::where('email', 'wuhaolun@huaxing-east.com')->first();
+//                if (isset($userWuhl))
+//                    DingTalkController::send($userWuhl->dtuserid, '',
+//                        $msg,
+//                        config('custom.dingtalk.agentidlist.erpmessage'));
+//            }
+//        }
     }
 }
