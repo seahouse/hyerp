@@ -45,7 +45,6 @@ class PadcapitalStatistics extends Command
         $soheads = Salesorder_hxold::where('status', '<>', -10)->get();
         foreach ($soheads as $sohead)
         {
-            if ($sohead->id <> 7682) continue;
             $this->info($sohead->id);
 
             $receiptpayment = $sohead->receiptpayments->sum('amount')  * 10000;
