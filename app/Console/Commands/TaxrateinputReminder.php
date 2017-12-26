@@ -17,7 +17,7 @@ class TaxrateinputReminder extends Command
      *
      * @var string
      */
-    protected $signature = 'reminder:taxrateinput {useremail=admin@admin.com} {--debug}';
+    protected $signature = 'reminder:taxrateinput {useremail=admin@admin.com} {--sohead_id=} {--debug}';
 
     /**
      * The console command description.
@@ -44,6 +44,9 @@ class TaxrateinputReminder extends Command
     public function handle()
     {
         //
+//        $this->info($this->argument('useremail'));
+//        $this->info($this->option('sohead_id'));
+//        return;
         $soheads = Salesorder_hxold::where('status', '<>', -10)->get();
         $msgList = [];
         foreach ($soheads as $sohead)
@@ -170,6 +173,7 @@ class TaxrateinputReminder extends Command
                 }
             }
         }
+
 
 //        if (count($msgList) > 0)
 //        {
