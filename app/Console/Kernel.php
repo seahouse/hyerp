@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         Commands\ReceiptReminder::class,
         Commands\TaxamountStatistics::class,
         Commands\TaxrateinputReminder::class,
+        Commands\PadcapitalStatistics::class,
     ];
 
     /**

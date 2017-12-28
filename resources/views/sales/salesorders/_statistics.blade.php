@@ -15,8 +15,8 @@
 			@endif
 			<?php $pohead_amount_total = $sohead->poheads->sum('amount'); ?>
             <?php $poheadAmountBy7550 = array_first($sohead->getPoheadAmountBy7550())->poheadAmountBy7550; ?>
-            <?php $sohead_taxamount = $sohead->temTaxamountstatistics->sohead_taxamount; ?>
-            <?php $sohead_poheadtaxamount = $sohead->temTaxamountstatistics->sohead_poheadtaxamount; ?>
+            <?php $sohead_taxamount = isset($sohead->temTaxamountstatistics->sohead_taxamount) ? $sohead->temTaxamountstatistics->sohead_taxamount : 0.0; ?>
+            <?php $sohead_poheadtaxamount = isset($sohead->temTaxamountstatistics->sohead_poheadtaxamount) ? $sohead->temTaxamountstatistics->sohead_poheadtaxamount : 0.0; ?>
 			<p>对应的采购订单合同金额总额：{{ number_format($pohead_amount_total / 10000.0, 4) }}万</p>		{{-- 似乎写到数据库视图中速度更快 --}}
 			<p>公用订单分摊成本金额：{{ number_format($poheadAmountBy7550 / 10000.0, 4)  }}万</p>
 			<p>税差：{{ number_format(($sohead_taxamount - $sohead_poheadtaxamount) / 10000.0, 4) }}万</p>

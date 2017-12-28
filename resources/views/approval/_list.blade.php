@@ -108,8 +108,12 @@
                 @endif
                 <?php $item = $item->paymentrequest; ?>
                 <div class='col-xs-6 col-sm-6 content'
-                     {{-- 如果是垫资，则用特殊颜色显示。垫资：销售订单的收款金额小于此销售订单对应的采购订单的付款总额。--}}
-                     @if (isset($item->purchaseorder_hxold->sohead) and $item->purchaseorder_hxold->sohead->receiptpayments->sum('amount') * 10000 < $item->purchaseorder_hxold->sohead->payments->sum('amount'))  style="color: #FF3300;") @endif >
+                     {{-- 如果是垫资，则用特殊颜色显示。垫资：销售订单的收款金额小于（此销售订单对应的采购订单的付款总额 + 公摊金额 + 税差）--}}
+                     <?php $sohead = $item->purchaseorder_hxold->sohead; ?>
+                     <?php $poheadAmountBy7550 = isset($sohead) ? array_first($sohead->getPoheadAmountBy7550())->poheadAmountBy7550 : 0.0; ?>
+                     <?php $sohead_taxamount = isset($sohead->temTaxamountstatistics->sohead_taxamount) ? $sohead->temTaxamountstatistics->sohead_taxamount : 0; ?>
+                     <?php $sohead_poheadtaxamount = isset($sohead->temTaxamountstatistics->sohead_poheadtaxamount) ? $sohead->temTaxamountstatistics->sohead_poheadtaxamount : 0.0; ?>
+                     @if (isset($item->purchaseorder_hxold->sohead) and $item->purchaseorder_hxold->sohead->receiptpayments->sum('amount') * 10000 < ($item->purchaseorder_hxold->sohead->payments->sum('amount') + $poheadAmountBy7550))  style="color: #FF3300;") @endif >
                     <div title="{{ $item->applicant_name }}的付款" class="title">
                         <div class='longText'>{{ $item->paymenttype }} | {{ $item->amount }}</div>
                         {{-- 示例：山东奥博环保科技有限公司 --}}
