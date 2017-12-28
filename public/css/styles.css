@@ -272,7 +272,31 @@ body {
     color: rgb(30,171,252);
 }
 
+.search-area input,
+.search-area select {
+    border-radius: 0px;
+}
 
+.search-area .ctrl1 {
+    padding: 0 5px;
+}
+
+.search-area .ctrl2 {
+    padding: 0 5px 0 0;
+}
+
+.search-area .search {
+    float: right;
+    margin-right: 5px;
+}
+
+.search-area .row {
+    margin-bottom: 5px;
+}
+
+.search-area .more-search {
+    text-decoration: none;
+}
 
 
 
