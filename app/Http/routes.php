@@ -185,6 +185,11 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
         Route::get('{id}/mstatistics', 'SalesordersController@mstatistics');
     });
     Route::resource('salesorders', 'SalesordersController');
+    Route::group(['prefix' => 'salesorderhx'], function() {
+        Route::post('search', 'SalesorderhxController@search');
+        Route::get('{id}/checktaxrateinput', 'SalesorderhxController@checktaxrateinput');
+    });
+    Route::resource('salesorderhx', 'SalesorderhxController');
     Route::group(['prefix' => 'salesorders/{salesorder}/receiptpayments'], function () {
         Route::get('/', 'ReceiptpaymentsController@index');
         Route::get('create', 'ReceiptpaymentsController@create');

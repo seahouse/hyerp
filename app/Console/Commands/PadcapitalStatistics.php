@@ -99,6 +99,34 @@ class PadcapitalStatistics extends Command
                 }
             }
         }
-        $this->info($padcapitalTotal);
+
+        $msg = '垫资总金额为' . number_format($padcapitalTotal, 4, '.', ',') . '元.';
+        $this->info(number_format($padcapitalTotal, 4, '.', ','));
+        if ($this->option('debug'))
+        {
+            $touser = User::where('email', $this->argument('useremail'))->first();
+            if (isset($touser))
+            {
+                $data = [
+                    'userid'        => $touser->id,
+                    'msgcontent'    => urlencode($msg) ,
+                ];
+
+                DingTalkController::sendCorpMessageText(json_encode($data));
+            }
+        }
+        else
+        {
+            // send msg to Wuhl
+            $userWuhl = User::where('email', 'wuhaolun@huaxing-east.com')->first();
+            if (isset($userWuhl))
+            {
+                $data = [
+                    'userid'        => $userWuhl->id,
+                    'msgcontent'    => urlencode($msg) ,
+                ];
+                DingTalkController::sendCorpMessageText(json_encode($data));
+            }
+        }
     }
 }

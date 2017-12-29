@@ -119,13 +119,13 @@ class ApprovalController extends Controller
     public function searchmindexmy(Request $request)
     {
         //
-        $key = $request->input('key');        
+//        $key = $request->input($request);
+        $inputs = $request->all();
 
-
-        $paymentrequests = PaymentrequestsController::my($key);
+        $paymentrequests = PaymentrequestsController::my($request);
         // dd($paymentrequests);
 
-        return view('approval.mindexmy', compact('paymentrequests', 'key'));
+        return view('approval.mindexmy', compact('paymentrequests', 'inputs'));
     }
     
 
@@ -153,6 +153,10 @@ class ApprovalController extends Controller
 
 
         $key = $request->input('key');
+        $paymenttype = $request->input('paymenttype');
+        $projectname = $request->input('projectname');
+        $productname = $request->input('productname');
+        $suppliername = $request->input('suppliername');
         $inputs = $request->all();
 
         // 给出默认值
@@ -174,30 +178,66 @@ class ApprovalController extends Controller
             $ids_approversetting2 = Approversetting::where('approver_id', '<', 1)->where('dept_id', $user->dept->id)->where('position', $user->position)->select('id')->pluck('id');
         $ids_approversetting = $ids_approversetting->merge($ids_approversetting2);
 
-        if ('' == $key)
-        {
-            $paymentrequests = Paymentrequest::latest('created_at')->whereIn('approversetting_id', $ids_approversetting)->paginate(10);
-            $paymentrequestretracts = Paymentrequestretract::latest('created_at')->whereIn('approversetting_id', $ids_approversetting)->paginate(10);
-        }
-        else
+        $query = Paymentrequest::latest('created_at');
+        $query->whereIn('approversetting_id', $ids_approversetting);
+
+        if (strlen($key) > 0)
         {
             $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
             $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
                 ->where('descrip', 'like', '%'.$key.'%')
                 ->orWhere('productname', 'like', '%'.$key.'%')
                 ->pluck('id');
+            $query->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
+                $query->whereIn('supplier_id', $supplier_ids)
+                    ->orWhereIn('pohead_id', $purchaseorder_ids);
+            });
+        }
 
-            $paymentrequests = Paymentrequest::latest('created_at')
-                ->whereIn('approversetting_id', $ids_approversetting)
-                ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
-                    $query->whereIn('supplier_id', $supplier_ids)
-                        ->orWhereIn('pohead_id', $purchaseorder_ids);
-                })
-                ->select('paymentrequests.*')
-                ->paginate(10);
+        if (strlen($paymenttype) > 0)
+        {
+            $query->where('paymenttype', $paymenttype);
+        }
 
-            // todo: 以后实现对供应商审批撤回的关键字搜索功能
-//            $paymentrequestretracts = Paymentrequestretract::latest('created_at')
+        if (strlen($projectname) > 0)
+        {
+            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+                ->where('descrip', 'like', '%'.$projectname .'%')
+                ->pluck('id');
+            $query->whereIn('pohead_id', $purchaseorder_ids);
+        }
+
+        if (strlen($productname) > 0)
+        {
+            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+                ->where('productname', 'like', '%'.$productname .'%')
+                ->pluck('id');
+            $query->whereIn('pohead_id', $purchaseorder_ids);
+        }
+
+        if (strlen($suppliername) > 0)
+        {
+            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$suppliername.'%')->pluck('id');
+            $query->whereIn('supplier_id', $supplier_ids);
+        }
+
+        $paymentrequests = $query->select()->paginate(10);
+
+
+//        if ('' == $key)
+//        {
+//            $paymentrequests = Paymentrequest::latest('created_at')->whereIn('approversetting_id', $ids_approversetting)->paginate(10);
+//            $paymentrequestretracts = Paymentrequestretract::latest('created_at')->whereIn('approversetting_id', $ids_approversetting)->paginate(10);
+//        }
+//        else
+//        {
+//            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+//                ->where('descrip', 'like', '%'.$key.'%')
+//                ->orWhere('productname', 'like', '%'.$key.'%')
+//                ->pluck('id');
+//
+//            $paymentrequests = Paymentrequest::latest('created_at')
 //                ->whereIn('approversetting_id', $ids_approversetting)
 //                ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
 //                    $query->whereIn('supplier_id', $supplier_ids)
@@ -205,7 +245,17 @@ class ApprovalController extends Controller
 //                })
 //                ->select('paymentrequests.*')
 //                ->paginate(10);
-        }
+//
+//            // todo: 以后实现对供应商审批撤回的关键字搜索功能
+////            $paymentrequestretracts = Paymentrequestretract::latest('created_at')
+////                ->whereIn('approversetting_id', $ids_approversetting)
+////                ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
+////                    $query->whereIn('supplier_id', $supplier_ids)
+////                        ->orWhereIn('pohead_id', $purchaseorder_ids);
+////                })
+////                ->select('paymentrequests.*')
+////                ->paginate(10);
+//        }
 
         return view('approval.mindexmyapproval', compact('reimbursements', 'paymentrequests', 'paymentrequestretracts', 'key', 'inputs'));
     }
@@ -246,6 +296,11 @@ class ApprovalController extends Controller
     public function searchmindexmyapprovaled(Request $request)
     {
         $key = $request->input('key');
+        $paymenttype = $request->input('paymenttype');
+        $projectname = $request->input('projectname');
+        $productname = $request->input('productname');
+        $suppliername = $request->input('suppliername');
+        $inputs = $request->all();
 
         // 获取当前操作人员的报销审批层次
         $userid = Auth::user()->id;        
@@ -266,28 +321,73 @@ class ApprovalController extends Controller
         // $reimbursements = Reimbursement::latest('created_at')->whereIn('id', $ids)->paginate(10);
         
         $ids_paymentrequest = Paymentrequestapproval::where('approver_id', $userid)->select('paymentrequest_id')->distinct()->pluck('paymentrequest_id');
-        if ('' == $key)
-            $paymentrequests = Paymentrequest::latest('created_at')->whereIn('id', $ids_paymentrequest)->paginate(10);
-        else
+
+        $query = Paymentrequest::latest('created_at');
+        $query->whereIn('id', $ids_paymentrequest);
+
+        if (strlen($key) > 0)
         {
             $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
             $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
                 ->where('descrip', 'like', '%'.$key.'%')
                 ->orWhere('productname', 'like', '%'.$key.'%')
                 ->pluck('id');
-
-            $paymentrequests = Paymentrequest::latest('created_at')
-                ->whereIn('id', $ids_paymentrequest)
-                ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
-                    $query->whereIn('supplier_id', $supplier_ids)
-                        ->orWhereIn('pohead_id', $purchaseorder_ids);
-                })
-                ->select('paymentrequests.*')
-                ->paginate(10);
+            $query->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
+                $query->whereIn('supplier_id', $supplier_ids)
+                    ->orWhereIn('pohead_id', $purchaseorder_ids);
+            });
         }
-        // dd($paymentrequests);
 
-        return view('approval.mindexmyapprovaled', compact('reimbursements', 'paymentrequests', 'key'));
+        if (strlen($paymenttype) > 0)
+        {
+            $query->where('paymenttype', $paymenttype);
+        }
+
+        if (strlen($projectname) > 0)
+        {
+            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+                ->where('descrip', 'like', '%'.$projectname .'%')
+                ->pluck('id');
+            $query->whereIn('pohead_id', $purchaseorder_ids);
+        }
+
+        if (strlen($productname) > 0)
+        {
+            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+                ->where('productname', 'like', '%'.$productname .'%')
+                ->pluck('id');
+            $query->whereIn('pohead_id', $purchaseorder_ids);
+        }
+
+        if (strlen($suppliername) > 0)
+        {
+            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$suppliername.'%')->pluck('id');
+            $query->whereIn('supplier_id', $supplier_ids);
+        }
+
+        $paymentrequests = $query->select()->paginate(10);
+
+//        if ('' == $key)
+//            $paymentrequests = Paymentrequest::latest('created_at')->whereIn('id', $ids_paymentrequest)->paginate(10);
+//        else
+//        {
+//            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+//                ->where('descrip', 'like', '%'.$key.'%')
+//                ->orWhere('productname', 'like', '%'.$key.'%')
+//                ->pluck('id');
+//
+//            $paymentrequests = Paymentrequest::latest('created_at')
+//                ->whereIn('id', $ids_paymentrequest)
+//                ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
+//                    $query->whereIn('supplier_id', $supplier_ids)
+//                        ->orWhereIn('pohead_id', $purchaseorder_ids);
+//                })
+//                ->select('paymentrequests.*')
+//                ->paginate(10);
+//        }
+
+        return view('approval.mindexmyapprovaled', compact('reimbursements', 'paymentrequests', 'inputs'));
     }
 
     /**

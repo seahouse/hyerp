@@ -12,7 +12,7 @@
                 </div>
                 <div class="col-xs-4 col-sm-4 ctrl2">
                     {!! Form::select('paymenttype', array('预付款' => '预付款', '进度款' => '进度款', '到货款' => '到货款', '安装结束款' => '安装结束款', '调试运行款' => '调试运行款', '环保验收款' => '环保验收款', '质保金' => '质保金'), null, 
-                        ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
+                        ['class' => 'form-control', 'placeholder' => '--付款类型--']) !!}
                 </div>
             </div>
             
@@ -23,23 +23,41 @@
             <div id="expandArea" style="display:none;">
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 ctrl1">
-                        {!! Form::text('project', null, ['class' => 'form-control ctrl1', 'placeholder' => '项目名称']) !!}
+                        {!! Form::text('projectname', null, ['class' => 'form-control ctrl1', 'placeholder' => '项目名称']) !!}
                     </div>
                 </div>
                 <div class="row">
                 <div class="col-xs-12 col-sm-12 ctrl1">
-                        {!! Form::text('product', null, ['class' => 'form-control ctrl1', 'placeholder' => '商品名称']) !!}
+                        {!! Form::text('productname', null, ['class' => 'form-control ctrl1', 'placeholder' => '商品名称']) !!}
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-xs-12 col-sm-12 ctrl1">
-                        {!! Form::text('provider', null, ['class' => 'form-control ctrl1', 'placeholder' => '供应商']) !!}
+                        {!! Form::text('suppliername', null, ['class' => 'form-control ctrl1', 'placeholder' => '供应商']) !!}
                     </div>
                 </div>
             </div>
         </div>
     {!! Form::close() !!}
-    <script src="../js/jquery.min.js"></script>
+
+    @include('approval._list',
+        [
+            'href_pre' => '/approval/reimbursements/mshow/', 'href_suffix' => '',
+            'href_pre_paymentrequest' => '/approval/paymentrequests/mshow/'
+        ])
+
+    @if (isset($inputs))
+        {!! $paymentrequests->setPath('/approval/mindexmy')->appends($inputs)->links() !!}
+    @else
+        {!! $paymentrequests->links() !!}
+    @endif
+
+
+        
+
+@endsection
+
+@section('script')
     <script type="text/javascript">
         $(function() {
             var panel = $('#expandArea')[0];
@@ -55,19 +73,4 @@
             })
         });
     </script>
-    @include('approval._list',
-        [
-            'href_pre' => '/approval/reimbursements/mshow/', 'href_suffix' => '',
-            'href_pre_paymentrequest' => '/approval/paymentrequests/mshow/'
-        ])
-
-    @if (isset($key))
-        {!! $paymentrequests->setPath('/approval/mindexmy')->appends(['key' => $key])->links() !!}
-    @else
-        {!! $paymentrequests->links() !!}
-    @endif
-
-
-        
-
 @endsection

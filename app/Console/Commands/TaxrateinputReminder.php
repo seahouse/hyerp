@@ -46,8 +46,15 @@ class TaxrateinputReminder extends Command
         //
 //        $this->info($this->argument('useremail'));
 //        $this->info($this->option('sohead_id'));
+//        if ($this->option('sohead_id'))
+//            $this->info('aaaa');
 //        return;
-        $soheads = Salesorder_hxold::where('status', '<>', -10)->get();
+
+        $query = Salesorder_hxold::where('status', '<>', -10);
+        if ($this->option('sohead_id'))
+            $query->where('id', $this->option('sohead_id'));
+//        $soheads = Salesorder_hxold::where('status', '<>', -10)->get();
+        $soheads = $query->select()->get();
         $msgList = [];
         foreach ($soheads as $sohead)
         {
@@ -104,10 +111,14 @@ class TaxrateinputReminder extends Command
             }
         }
 
+
 //        $poheads = Purchaseorder_hxold_simple::all();
         $msgList = [];
         $transactorPoheads = [];
-        Purchaseorder_hxold_simple::chunk(200, function ($poheads) use (&$msgList, &$transactorPoheads) {
+        $query = Purchaseorder_hxold_simple::orderBy('id');
+        if ($this->option('sohead_id'))
+            $query->where('sohead_id', $this->option('sohead_id'));
+        $query->chunk(200, function ($poheads) use (&$msgList, &$transactorPoheads) {
             foreach ($poheads as $pohead)
             {
                 $this->info($pohead->id . '  ' . $pohead->amount);
@@ -116,7 +127,7 @@ class TaxrateinputReminder extends Command
                 {
                     $this->info('  ' . $poheadtaxrateass->amount);
                 }
-                if ($pohead->amount > $poheadtaxrateasses->sum('amount'))
+                if ($pohead->amount <> $poheadtaxrateasses->sum('amount'))
                 {
                     $contract_operator_id = $pohead->contract_operator_id;
                     if ($contract_operator_id == 0)
@@ -128,6 +139,7 @@ class TaxrateinputReminder extends Command
                     array_push($transactorPoheads[$contract_operator_id], $pohead->number);
                     array_push($msgList, $pohead->number);
                 }
+
             }
         });
 
@@ -174,40 +186,73 @@ class TaxrateinputReminder extends Command
             }
         }
 
+        if ($this->option('sohead_id'))
+        {
+            if (count($msgList) > 0)
+            {
+                $msgList = array_slice($msgList, 0, 20);        // pre 50
+                $msg = "填写有误的采购订单如下(前20条): \n" . implode(", \n", $msgList);
+                $this->info('  ' . $msg);
+                $data = [
+                    'userid'        => 0,
+                    'msgcontent'    => urlencode($msg),
+                ];
+                if ($this->option('debug'))
+                {
+                    $touser = User::where('email', $this->argument('useremail'))->first();
+                    if (isset($touser))
+                    {
+                        $data['userid'] = $touser->id;
+                        DingTalkController::sendCorpMessageText(json_encode($data));
+                    }
+                }
+                else
+                {
+                    // send msg to Liuhm
+                    $userLiuhm = User::where('email', 'liuhuaming@huaxing-east.com')->first();
+                    if (isset($userLiuhm))
+                    {
+                        $data['userid'] = $userLiuhm->id;
+                        DingTalkController::sendCorpMessageText(json_encode($data));
+                    }
 
-//        if (count($msgList) > 0)
-//        {
-//            $msgList = array_slice($msgList, 0, 50);        // pre 50
-//            $msg = "还未填写完整税率的采购订单如下(前50条): \n" . implode(", \n", $msgList);
-//            $this->info('  ' . $msg);
-//            if ($this->option('debug'))
-//            {
-//                $touser = User::where('email', $this->argument('useremail'))->first();
-//                if (isset($touser))
-//                {
-//                    DingTalkController::send($touser->dtuserid, '',
-//                        $msg,
-//                        config('custom.dingtalk.agentidlist.erpmessage'));
-//                }
-//            }
-//            else
-//            {
-//                // send msg to Liuhm
-//                $userLiuhm = User::where('email', 'liuhuaming@huaxing-east.com')->first();
-//                if (isset($userLiuhm))
-//                {
-//                    DingTalkController::send($userLiuhm->dtuserid, '',
-//                        $msg,
-//                        config('custom.dingtalk.agentidlist.erpmessage'));
-//                }
-//
-//                // send msg to Wuhl
-//                $userWuhl = User::where('email', 'wuhaolun@huaxing-east.com')->first();
-//                if (isset($userWuhl))
-//                    DingTalkController::send($userWuhl->dtuserid, '',
-//                        $msg,
-//                        config('custom.dingtalk.agentidlist.erpmessage'));
-//            }
-//        }
+//                    // send msg to Wuhl
+//                    $userWuhl = User::where('email', 'wuhaolun@huaxing-east.com')->first();
+//                    if (isset($userWuhl))
+//                        DingTalkController::send($userWuhl->dtuserid, '',
+//                            $msg,
+//                            config('custom.dingtalk.agentidlist.erpmessage'));
+                }
+            }
+            else
+            {
+                $msg = "此订单对应的采购订单税率已全部填写正确:" . $this->option('sohead_id');
+                $this->info('  ' . $msg);
+                $data = [
+                    'userid'        => 0,
+                    'msgcontent'    => urlencode($msg),
+                ];
+                if ($this->option('debug'))
+                {
+                    $touser = User::where('email', $this->argument('useremail'))->first();
+                    if (isset($touser))
+                    {
+                        $data['userid'] = $touser->id;
+                        DingTalkController::sendCorpMessageText(json_encode($data));
+                    }
+                }
+                else
+                {
+                    // send msg to Liuhm
+                    $userLiuhm = User::where('email', 'liuhuaming@huaxing-east.com')->first();
+                    if (isset($userLiuhm))
+                    {
+                        $data['userid'] = $userLiuhm->id;
+                        DingTalkController::sendCorpMessageText(json_encode($data));
+                    }
+                }
+            }
+        }
+
     }
 }

@@ -303,32 +303,83 @@ class PaymentrequestsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public static function my($key = '')
+    public static function my(Request $request)
     {
         $userid = Auth::user()->id;
 
-        if ('' == $key)
-            return Paymentrequest::latest('created_at')
-                ->where('applicant_id', $userid)->paginate(10);
+        $key = $request->input('key');
+        $paymenttype = $request->input('paymenttype');
+        $projectname = $request->input('projectname');
+        $productname = $request->input('productname');
+        $suppliername = $request->input('suppliername');
 
-        $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
-        $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
-            ->where('descrip', 'like', '%'.$key.'%')
-            ->orWhere('productname', 'like', '%'.$key.'%')
-            ->pluck('id');
+        $query = Paymentrequest::latest('created_at');
+        $query->where('applicant_id', $userid);
 
-        $paymentrequests = Paymentrequest::latest('created_at')
-            ->where('applicant_id', $userid)
-            ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
+        if (strlen($key) > 0)
+        {
+            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+                ->where('descrip', 'like', '%'.$key.'%')
+                ->orWhere('productname', 'like', '%'.$key.'%')
+                ->pluck('id');
+            $query->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
                 $query->whereIn('supplier_id', $supplier_ids)
                     ->orWhereIn('pohead_id', $purchaseorder_ids);
-            })
-            ->select('paymentrequests.*')
-            ->paginate(10);
+            });
+        }
 
-        // $paymentrequests = Paymentrequest::latest('created_at')->where('applicant_id', $userid)->paginate(10);
+        if (strlen($paymenttype) > 0)
+        {
+            $query->where('paymenttype', $paymenttype);
+        }
 
+        if (strlen($projectname) > 0)
+        {
+            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+                ->where('descrip', 'like', '%'.$projectname .'%')
+                ->pluck('id');
+            $query->whereIn('pohead_id', $purchaseorder_ids);
+        }
+
+        if (strlen($productname) > 0)
+        {
+            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+                ->where('productname', 'like', '%'.$productname .'%')
+                ->pluck('id');
+            $query->whereIn('pohead_id', $purchaseorder_ids);
+        }
+
+        if (strlen($suppliername) > 0)
+        {
+            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$suppliername.'%')->pluck('id');
+            $query->whereIn('supplier_id', $supplier_ids);
+        }
+
+        $paymentrequests = $query->select()->paginate(10);
         return $paymentrequests;
+
+
+//        if ('' == $key)
+//            return Paymentrequest::latest('created_at')
+//                ->where('applicant_id', $userid)->paginate(10);
+//
+//        $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+//        $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+//            ->where('descrip', 'like', '%'.$key.'%')
+//            ->orWhere('productname', 'like', '%'.$key.'%')
+//            ->pluck('id');
+//
+//        $paymentrequests = Paymentrequest::latest('created_at')
+//            ->where('applicant_id', $userid)
+//            ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
+//                $query->whereIn('supplier_id', $supplier_ids)
+//                    ->orWhereIn('pohead_id', $purchaseorder_ids);
+//            })
+//            ->select('paymentrequests.*')
+//            ->paginate(10);
+//
+//        return $paymentrequests;
     }
 
     public static function mying($key = '')
