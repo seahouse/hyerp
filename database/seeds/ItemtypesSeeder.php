@@ -15,9 +15,9 @@ class ItemtypesSeeder extends Seeder
         DB::table('itemtypes')->delete();
         
         DB::table('itemtypes')->insert(array(
-            ['name' => '采购', 'descrip' => '', 'created_at' => DB::raw('NOW()'), 'updated_at' => DB::raw('NOW()')],
-            ['name' => '生产', 'descrip' => '', 'created_at' => DB::raw('NOW()'), 'updated_at' => DB::raw('NOW()')],
-            ['name' => '外购', 'descrip' => '', 'created_at' => DB::raw('NOW()'), 'updated_at' => DB::raw('NOW()')]
+            ['name' => '采购', 'descrip' => ''],
+            ['name' => '生产', 'descrip' => ''],
+            ['name' => '外购', 'descrip' => '']
         ));
     }
 }

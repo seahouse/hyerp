@@ -16,8 +16,8 @@ class UsersTableSeeder extends Seeder
         'name' => 'admin',
         'email' => 'admin@admin.com',
         'password' => bcrypt('admin'),
-        'created_at' => DB::raw('NOW()'),
-        'updated_at' => DB::raw('NOW()')
+        'created_at' => \Carbon\Carbon::now(),
+        'updated_at' => \Carbon\Carbon::now()
         ]);
     }
 }

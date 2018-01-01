@@ -15,7 +15,7 @@ class CreateBomitemsTable extends Migration
         Schema::create('bomitems', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer('parent_item_id')->unsigned();
+            $table->integer('bomhead_id')->unsigned();
             $table->integer('seqnumber')->nullable()->default(0);
             $table->integer('item_id')->unsigned();
             $table->decimal('qtyper', 8, 6)->nullable()->default(0.0);
@@ -24,9 +24,9 @@ class CreateBomitemsTable extends Migration
             
             $table->timestamps();
 
-            $table->foreign('parent_item_id')->references('id')->on('items')->onDelete('cascade');
-            $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
-            $table->index(['parent_item_id', 'item_id']);
+            $table->foreign('bomhead_id')->references('id')->on('bomheads')->onDelete('cascade');
+            $table->foreign('item_id')->references('id')->on('items');
+            $table->index(['bomhead_id', 'item_id']);
         });
     }
 
