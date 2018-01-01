@@ -443,7 +443,7 @@ Route::group(['middleware' => 'web'], function () {
     // for admin login
 //    Route::post('login2', 'Auth\AuthController@login2');
     Route::get('login2', 'Auth\AuthController@showLoginForm2');
-
+    Route::get('changeuser', 'HelperController@changeuser');
 //    Route::get('/home', 'HomeController@index');
 });
 

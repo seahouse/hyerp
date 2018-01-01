@@ -323,7 +323,12 @@ class ApprovalController extends Controller
         $ids_paymentrequest = Paymentrequestapproval::where('approver_id', $userid)->select('paymentrequest_id')->distinct()->pluck('paymentrequest_id');
 
         $query = Paymentrequest::latest('created_at');
-        $query->whereIn('id', $ids_paymentrequest);
+//        $query->whereIn('id', $ids_paymentrequest);
+        $query->whereExists(function ($query) use ($userid) {
+            $query->select(DB::raw(1))
+                ->from('paymentrequestapprovals')
+                ->whereRaw('paymentrequestapprovals.approver_id=' . $userid . ' and paymentrequestapprovals.paymentrequest_id=paymentrequests.id ');
+        });
 
         if (strlen($key) > 0)
         {

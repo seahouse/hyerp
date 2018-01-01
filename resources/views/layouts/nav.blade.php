@@ -159,6 +159,9 @@
 
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>退出登录</a></li>
+                            @if (Auth::user()->email == "admin@admin.com")
+                                <li><a href="{{ url('/changeuser') }}"><i class="fa fa-btn fa-sign-out"></i>切换用户</a></li>
+                            @endif
                         </ul>
                     </li>
                 @endif

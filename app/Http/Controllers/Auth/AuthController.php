@@ -123,4 +123,24 @@ class AuthController extends Controller
         return view('auth.login2', compact('redirect_uri'));
         return redirect()->intended($this->redirectTo);
     }
+
+    public function changeuser()
+    {
+//        if (!Auth::check())
+//        {
+//            Auth::loginUsingId(config('custom.changeuser_id'));
+//        }
+//        else
+//        {
+//            Auth::logout();
+//            Auth::loginUsingId(config('custom.changeuser_id'));
+//        }
+////
+////        //login and redirect user
+////        Auth::loginUsingId($userId);
+//
+////        $redirect_uri = urlencode("https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=" . config('custom.dingtalk.appid') . "&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=" .url("/mddauth") . "/");
+////        return view('auth.login2', compact('redirect_uri'));
+//        return redirect()->intended($this->redirectTo);
+    }
 }
