@@ -86,7 +86,6 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('dingtalk/router/rest', 'DingTalkController@routerrest');
     Route::get('dingtalk/processinstance/list', 'DingTalkController@processinstance_list');
 
-
     // run .bat shell command to run git pull.
     Route::get('gitpullbybat', function() { return view('gitpullbybat'); });
 
@@ -119,6 +118,8 @@ Route::group(['middleware' => ['web', 'auth']], function () {
 
 
     Route::get('api/dropdown', 'Addr\ProvincesController@getIndex');
+
+    Route::get('dingtalk/issuedrawing', 'DingTalkController@issuedrawing');
 });
 
 

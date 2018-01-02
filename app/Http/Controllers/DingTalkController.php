@@ -1056,4 +1056,28 @@ class DingTalkController extends Controller
         $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
         dd($response);
     }
+
+    public function issuedrawing()
+    {
+
+        $method = 'dingtalk.smartwork.bpms.processinstance.create';
+        $session = self::getAccessToken();
+        $timestamp = time('2017-07-19 13:06:00');
+        $format = 'json';
+        $v = '2.0';
+
+        $process_code = 'PROC-EF6YJDXRN2-V88CLW5WMN8R63JUE7XW3-M0DE5SQI-2K';
+        $originator_user_id = Auth::user()->dtuserid;
+        dd($originator_user_id);
+//        $dept_id = 6643803;
+        $approvers = 'manager1200';
+        $form_component_values = '{name:\'测试1\', value:\'aaa\'}';
+        $params = compact('method', 'session', 'v', 'format',
+            'process_code', 'originator_user_id', 'approvers', 'form_component_values');
+        $data = [
+//            'process_code' => '001'
+        ];
+        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+        dd($response);
+    }
 }
