@@ -1024,7 +1024,18 @@ class DingTalkController extends Controller
         $originator_user_id = 'manager1200';
         $dept_id = 6643803;
         $approvers = 'manager1200';
-        $form_component_values = '{name:\'测试1\', value:\'aaa\'}';
+        $formdata = [
+            [
+                'name'      => '测试1',
+                'value'     => 'aaa',
+            ],
+            [
+                'name'      => '测试2',
+                'value'     => 'bbb',
+            ],
+        ];
+//        $form_component_values = '{name:\'测试1\', value:\'aaa\'}';
+        $form_component_values = json_encode($formdata);
         $params = compact('method', 'session', 'v', 'format',
             'process_code', 'originator_user_id', 'dept_id', 'approvers', 'form_component_values');
         $data = [
@@ -1059,21 +1070,78 @@ class DingTalkController extends Controller
 
     public function issuedrawing()
     {
-
+        Cache::flush();
+        $user = Auth::user();
         $method = 'dingtalk.smartwork.bpms.processinstance.create';
         $session = self::getAccessToken();
         $timestamp = time('2017-07-19 13:06:00');
         $format = 'json';
         $v = '2.0';
 
-        $process_code = 'PROC-EF6YJDXRN2-V88CLW5WMN8R63JUE7XW3-M0DE5SQI-2K';
-        $originator_user_id = Auth::user()->dtuserid;
-        dd($originator_user_id);
-//        $dept_id = 6643803;
-        $approvers = 'manager1200';
-        $form_component_values = '{name:\'测试1\', value:\'aaa\'}';
+//        $process_code = 'PROC-EF6YRO35P2-7MPMNW3BNO0R8DKYN8GX1-2EACCA5J-6';     // hyerp
+//        $process_code = 'PROC-EF6YJDXRN2-V88CLW5WMN8R63JUE7XW3-M0DE5SQI-2K';    // huaxing
+        $process_code = 'PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2';    // huaxing
+        $originator_user_id = $user->dtuserid;
+        $departmentList = json_decode($user->dtuser->department);
+        $dept_id = 0;
+        if (count($departmentList) > 0)
+            $dept_id = array_first($departmentList);
+        $approvers = $user->dtuserid;
+        $formdata = [
+            [
+                'name'      => '设计部门',
+                'value'     => '工艺一室',
+            ],
+            [
+                'name'      => '项目名称',
+                'value'     => 'aaaa',
+            ],
+            [
+                'name'      => '制作概述',
+                'value'     => 'bbbb',
+            ],
+            [
+                'name'      => '吨位（吨）',
+                'value'     => '200',
+            ],
+            [
+                'name'      => '项目编号',
+                'value'     => 'cccc',
+            ],
+            [
+                'name'      => '制作公司',
+                'value'     => '无锡制造中心',
+            ],
+            [
+                'name'      => '材料供应方',
+                'value'     => '华星东方',
+            ],
+            [
+                'name'      => '图纸校核人',
+                'value'     => '张三',
+            ],
+            [
+                'name'      => '要求发货日',
+                'value'     => '2018-1-3',
+            ],
+            [
+                'name'      => '图纸份数（份）',
+                'value'     => '3',
+            ],
+//            [
+//                'name'      => '目录上传，图纸邮寄',
+//                'value'     => 'ffff',
+//            ],
+            [
+                'name'      => '图纸签收回执',
+                'value'     => '["http://pic4.nipic.com/20091217/3885730_124701000519_2.jpg"]',
+            ],
+        ];
+//        $form_component_values = '{name:\'测试1\', value:\'aaa\'}';
+//        dd(json_encode($formdata));
+        $form_component_values = json_encode($formdata);
         $params = compact('method', 'session', 'v', 'format',
-            'process_code', 'originator_user_id', 'approvers', 'form_component_values');
+            'process_code', 'originator_user_id', 'dept_id', 'approvers', 'form_component_values');
         $data = [
 //            'process_code' => '001'
         ];

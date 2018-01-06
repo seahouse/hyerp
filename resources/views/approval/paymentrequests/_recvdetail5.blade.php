@@ -113,18 +113,9 @@
                 现存量:
                 {{ $itemp->receiptitems->sum('quantity') - $itemp->shipitems->sum('quantity') }}
 
-        {{--
-                {{ $poitem->item->receiptitems->sum('amount') / $poitem->item->receiptitems->sum('quantity')}}
-        --}}
                 <br>
-        {{--
-                最近一次采购单价{{ $poitem->item->receiptitems->max('record_at') }}<br>
-        --}}
-        {{--
-                {{ $purchaseorder->receiptorders->pluck('receipt_id')->toArray() }}<br>
-        --}}
                 历史采购明细<br>
-                <table class="table table-hover table-condensed">
+                <table id="table_item_{{$itemp->goods_id}}" class="table table-hover table-condensed">
                     <thead>
                         <tr>
                             <th>数量</th>
@@ -141,44 +132,6 @@
                             <th>录入时间</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        @foreach ($itemp->receiptitems->sortByDesc('record_at')->take(20) as $receiptitem)
-                        <tr @if (in_array($receiptitem->receipt_id, $purchaseorder->receiptorders->pluck('receipt_id')->toArray())) class="success" @endif>
-                            <td>{{ $receiptitem->quantity }}</td>
-                            <td>{{ number_format($receiptitem->unitprice * (1 + $receiptitem['taxrate'] / 100.0), 2, '.', '') }}</td>
-                            <td>{{ $receiptitem->item->goods_unit_name }}</td>
-                            <td>{{ number_format($receiptitem->amount * (1 + $receiptitem['taxrate'] / 100.0), 2, '.', '') }}</td>
-                            <td>{{ $receiptitem->material }}</td>
-                            <td>{{ $receiptitem->size }}</td>
-                            <td>{{ isset($receiptitem->rwrecord->warehouse->name) ? $receiptitem->rwrecord->warehouse->name : '' }}</td>
-                            <td>
-                                @if (isset($receiptitem->rwrecord->supplier))
-                                    @if ($receiptitem->rwrecord->supplier->shortname == '')
-                                        {{ $receiptitem->rwrecord->supplier->name }}
-                                    @else
-                                        {{ $receiptitem->rwrecord->supplier->shortname }}
-                                    @endif
-                                @else
-                                    {{ '<供应商信息错误:>' . $receiptitem->rwrecord->supplier_id }}
-                                @endif
-                            </td>
-                            <td>{{ isset($receiptitem->rwrecord->receiptorder->pohead->orderdate) ? substr($receiptitem->rwrecord->receiptorder->pohead->orderdate, 0, 10) : '-' }}</td>
-                            <td>
-                                @if (isset($receiptitem->rwrecord->receiptorder->pohead->sohead->projectjc))
-                                    @if ($receiptitem->rwrecord->receiptorder->pohead->sohead->projectjc === "")
-                                        {{ $receiptitem->rwrecord->receiptorder->pohead->sohead->descrip }}
-                                    @else
-                                        {{ $receiptitem->rwrecord->receiptorder->pohead->sohead->projectjc }}
-                                    @endif
-                                @endif
-                            </td>
-                            <td>
-                                {{ $receiptitem->out_sohead_name }}
-                            </td>
-                            <td>{{ substr($receiptitem->record_at, 0, 10) }}</td>
-                        </tr>
-                        @endforeach
-                    </tbody>
 
                 </table>
         </li></ul></li></ul>

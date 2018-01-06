@@ -75,16 +75,15 @@
 --}}
     </div> 
 
-    
+
     @if ($paymentrequests->count())
-    <table class="table table-striped table-hover table-condensed">
+
+    <table id="userDataTable" class="table table-striped table-hover table-condensed">
         <thead>
             <tr>
                 <th>申请日期</th>
                 <th>支付对象</th>
-{{--
-                <th>报销编号</th>
---}}
+
                 <th>本次请款额</th>
                 @if (Agent::isDesktop())
                 <th>付款方式</th>
@@ -99,8 +98,10 @@
                 @if (Agent::isDesktop())
                 <th style="width: 150px">操作</th>
                 @endif
+
             </tr>
         </thead>
+
         <tbody>
             @foreach($paymentrequests as $paymentrequest)
                 <tr>
@@ -114,11 +115,6 @@
                     <td>
                         @if (isset($paymentrequest->supplier_hxold->name))  {{ $paymentrequest->supplier_hxold->name }} @else @endif
                     </td>
-{{--
-                    <td>
-                        {{ $paymentrequest->number }}
-                    </td>
---}}
                     <td>
                         {{ $paymentrequest->amount }}
                     </td>
@@ -154,13 +150,8 @@
                     </td>
                     <td>
                         @if ($paymentrequest->approversetting_id === 0)
-{{--
-                            {{ $paymentrequest->paymentrequestapprovals->max('created_at') }}
---}}
+
                             @if (isset($paymentrequest->purchaseorder_hxold->payments))
-{{--
-                                {{ $paymentrequest->purchaseorder_hxold->payments->max('create_date') }}
---}}
                                 @if ($paymentrequest->paymentrequestapprovals->max('created_at') < $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
                                     <div class="text-success">已付款</div>
                                 @endif
@@ -185,27 +176,7 @@
                             disabled
                         @endif
                         ">付款</a>
-{{--
-                        <a href="{{ url('/purchase/purchaseorders/' . $paymentrequest->pohead_id . '/payments/create_hxold') }}" target="_blank" class="btn btn-success btn-sm pull-left 
-                        @if ($paymentrequest->approversetting_id === 0)
-                            @if (isset($paymentrequest->purchaseorder_hxold->payments))
-                                @if ($paymentrequest->paymentrequestapprovals->max('created_at') > $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
-                                    abled
-                                @else
-                                    disabled
-                                @endif
-                            @else
-                                disabled
-                            @endif
-                        @else
-                            disabled
-                        @endif
-                        ">付款</a>
---}}
                     @endcan
-{{--                        
-                        <a href="{{ URL::to('/approval/paymentrequests/'.$paymentrequest->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>
---}}
 
                             @can('approval_paymentrequest_delete')
                         {!! Form::open(array('route' => array('approval.paymentrequests.destroy', $paymentrequest->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
@@ -224,6 +195,7 @@
                 <td>{{ $paymentrequests->sum('amount') }}</td>
 @if (Agent::isDesktop())
                 <td></td>
+                    <td></td>
                 <td>
                 @if (Auth::user()->email == "admin@admin.com")
                 {{ $purchaseorders->sum('amount_ticketed') }}
@@ -238,6 +210,9 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                @if (Agent::isDesktop())
+                    <td></td>
+                @endif
             </tr>
 
 @if (Auth::user()->email == "admin@admin.com")
@@ -251,6 +226,7 @@
                 </td>
 @if (Agent::isDesktop())
                 <td></td>
+                    <td></td>
                 <td>
 
                 </td>
@@ -261,11 +237,15 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                @if (Agent::isDesktop())
+                    <td></td>
+                @endif
             </tr>
 @endif
         </tbody>
 
     </table>
+
 
     @if (isset($key))
         {!! $paymentrequests->setPath('/approval/paymentrequests')->appends([
@@ -280,18 +260,23 @@
         {!! $paymentrequests->setPath('/approval/paymentrequests')->links() !!}
     @endif
 
+
+
     @else
     <div class="alert alert-warning alert-block">
         <i class="fa fa-warning"></i>
         {{'无记录', [], 'layouts'}}
     </div>
-    @endif    
+    @endif
+
 @else
 无权限
 @endcan
 @endsection
 
 @section('script')
+    <script type="text/javascript" src="/DataTables/datatables.js"></script>
+    {{--<script type="text/javascript" src="/DataTables/DataTables-1.10.16/js/jquery.dataTables.js"></script>--}}
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
             $("#btnExport").click(function() {
@@ -308,6 +293,17 @@
                     },
                 }); 
             });
+
+            {{--
+            $('#userDataTable').DataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": "{{ url('approval/paymentrequests/indexjson') }}",
+                "columns": [
+                    {"data": "created_at", "name": "created_at"},
+                ]
+            });
+            --}}
         });
     </script>
 @endsection

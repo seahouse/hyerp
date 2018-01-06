@@ -302,9 +302,12 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('{id}/mrecvdetail2', 'PaymentrequestsController@mrecvdetail2');
         Route::get('{id}/mrecvdetail3', 'PaymentrequestsController@mrecvdetail3');
         Route::get('{id}/mrecvdetail4', 'PaymentrequestsController@mrecvdetail4');
+        Route::get('{id}/mrecvdetail5', 'PaymentrequestsController@mrecvdetail5');
+        Route::get('mrecvdetail5data/{itemid}', 'PaymentrequestsController@mrecvdetail5data');
         Route::get('{id}/printpage', 'PaymentrequestsController@printpage');
         Route::get('{id}/pay', 'PaymentrequestsController@pay');
         Route::get('hasrepeat/{pohead_id}/{amount?}', 'PaymentrequestsController@hasrepeat');    // pdfjs viewer.html
+        Route::get('indexjson', 'PaymentrequestsController@indexjson');    // pdfjs viewer.html
 //        Route::get('pdfjs/viewer/{pdffile?}', 'PaymentrequestsController@pdfjsviewer');
     });
     Route::resource('paymentrequests', 'PaymentrequestsController');

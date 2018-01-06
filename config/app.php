@@ -166,6 +166,7 @@ return [
         // Barryvdh\DomPDF\ServiceProvider::class,
         PragmaRX\Google2FA\Vendor\Laravel\ServiceProvider::class,
         Yajra\Oci8\Oci8ServiceProvider::class,
+        Yajra\Datatables\DatatablesServiceProvider::class,
     ],
 
     /*
@@ -221,6 +222,7 @@ return [
         'DT'        => \App\Http\Controllers\DingTalkController::class,
         'GA'        => \App\Http\Controllers\util\PHPGangsta_GoogleAuthenticator::class,
         'Google2FA' => PragmaRX\Google2FA\Vendor\Laravel\Facade::class,
+        'Datatables' => Yajra\Datatables\Facades\Datatables::class,
     ],
 
 ];

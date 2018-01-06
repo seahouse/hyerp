@@ -8,6 +8,8 @@
 	<link href="{{ asset("css/bootstrap.min.css") }}" rel="stylesheet">
 	<link href="{{ asset("fonts/iconfont.css") }}" rel="stylesheet">
 	<link href="{{ asset("css/styles.css?v=20170713") }}" rel="stylesheet">
+	{{--<link rel="stylesheet" type="text/css" href="{{ asset('DataTables/datatables.min.css') }}" />--}}
+	<link rel="stylesheet" type="text/css" href="{{ asset('DataTables/DataTables-1.10.16/css/jquery.dataTables.min.css') }}" />
 </head>
 <body>
 	@include('_back')

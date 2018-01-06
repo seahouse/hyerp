@@ -19,6 +19,8 @@
     <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"> -->
     <!-- <link href="{{ asset("css/bootstrap.min.css") }}" rel="stylesheet"> -->
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('DataTables/datatables.min.css') }}" />
+    {{--<link rel="stylesheet" type="text/css" href="{{ asset('DataTables/DataTables-1.10.16/css/jquery.dataTables.css') }}" />--}}
 
     <style>
         body {

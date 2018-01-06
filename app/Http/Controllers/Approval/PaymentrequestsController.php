@@ -26,6 +26,7 @@ use App\Models\Purchase\Purchaseorder_hxold;
 use App\Models\System\Employee_hxold_t;
 use App\Models\Inventory\Rwrecord_hxold;
 use Response;
+use Datatables;
 
 class PaymentrequestsController extends Controller
 {
@@ -54,8 +55,11 @@ class PaymentrequestsController extends Controller
         $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
         $totalamount = Paymentrequest::sum('amount');
 
+//        return view('approval.paymentrequests.index');
+
         // if ($request->has('key'))
         // use request('key') for null compare, not $request->has('key')
+
         if (null !== request('key'))        
         {
             return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'inputs', 'purchaseorders', 'totalamount'));
@@ -64,6 +68,20 @@ class PaymentrequestsController extends Controller
         {
             return view('approval.paymentrequests.index', compact('paymentrequests', 'purchaseorders', 'totalamount'));
         }
+    }
+
+    public function indexjson()
+    {
+        return Datatables::of(Paymentrequest::query())->make(true);
+
+//        $paymentrequests = Paymentrequest::latest('created_at')->paginate(10);
+//        dd($paymentrequests);
+//        $data = [
+//            'draw' => 1,
+//            'recordsTotal'  => 300,
+//            'recordsFiltered'   =>300,
+//        ];
+//        return json_encode($data);
     }
     
 
@@ -1292,6 +1310,55 @@ class PaymentrequestsController extends Controller
         $itemps = Itemp_hxold::whereIn('goods_no', $item_numbers)->get();
 
         return view('approval.paymentrequests.mrecvdetail4', compact('purchaseorder', 'itemps2', 'itemps'));
+    }
+
+    public function mrecvdetail5($id)
+    {
+        $purchaseorder = Paymentrequest::findOrFail($id)->purchaseorder_hxold;
+
+        $receipt_ids = Receiptorder_hxold::where('pohead_id', $purchaseorder->id)->pluck('receipt_id');
+        $item_numbers2 = Receiptitem_hxold::whereIn('receipt_id', $receipt_ids)->distinct()->pluck('item_number2');
+        $itemps2 = Itemp_hxold2::whereIn('goods_no', $item_numbers2)->get();
+
+        // return view('approval.paymentrequests.mrecvdetail2', compact('purchaseorder', 'itemps'));
+
+        // $purchaseorder = Paymentrequest::findOrFail($id)->purchaseorder_hxold;
+
+        // $receipt_ids = Receiptorder_hxold::where('pohead_id', $purchaseorder->id)->pluck('receipt_id');
+        $item_numbers = Receiptitem_hxold::whereIn('receipt_id', $receipt_ids)->distinct()->pluck('item_number');
+        $itemps = Itemp_hxold::whereIn('goods_no', $item_numbers)->get();
+
+        return view('approval.paymentrequests.mrecvdetail5', compact('purchaseorder', 'itemps2', 'itemps'));
+    }
+
+    public function mrecvdetail5data($itemid)
+    {
+        $item = Itemp_hxold::where('goods_id', $itemid)->firstOrFail();
+        $receiptitems = Receiptitem_hxold::where('item_number', $item->goods_no)
+            ->leftJoin('vgoods', 'vgoods.goods_no', '=', 'vreceiptitem.item_number')
+            ->leftJoin('vrwrecord', 'vrwrecord.id', '=', 'vreceiptitem.receipt_id')
+            ->leftJoin('vwarehouse', 'vwarehouse.number', '=', 'vrwrecord.warehouse_number')
+            ->leftJoin('vsupplier', 'vsupplier.id', '=', 'vrwrecord.supplier_id')
+            ->leftJoin('vreceiptorder', 'vreceiptorder.receipt_id', '=', 'vrwrecord.id')
+            ->leftJoin('vpurchaseorder', 'vpurchaseorder.id', '=', 'vreceiptorder.pohead_id')
+            ->leftJoin('vorder', 'vorder.id', '=', 'vpurchaseorder.sohead_id')->select([
+                'vreceiptitem.quantity',
+                Db::raw('convert(decimal(18,3), vreceiptitem.unitprice * (1+taxrate/100.0)) as unitprice'),
+                'vgoods.goods_unit_name',
+                Db::raw('convert(decimal(18,3), vreceiptitem.amount * (1+taxrate/100.0)) as price'),
+                'vreceiptitem.material',
+                'vreceiptitem.size',
+                'vwarehouse.name',
+                'vsupplier.name as supplier_name',
+                Db::raw('convert(varchar(100), vpurchaseorder.orderdate, 23) as purchaseorder_orderdate'),
+                DB::raw("case vorder.projectjc when '' then vorder.descrip else vorder.projectjc end as order_projectjc"),
+                'vreceiptitem.out_sohead_name',
+                Db::raw('convert(varchar(100), vreceiptitem.record_at, 23) as receiptitem_record_at'),
+            ]);
+//        Log::info($receiptitems->count);
+        return Datatables::of($receiptitems)->make();
+
+        return view('approval.paymentrequests.mrecvdetail5', compact('purchaseorder', 'itemps2', 'itemps'));
     }
 
     public function printpage($id)
