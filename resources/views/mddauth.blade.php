@@ -182,7 +182,7 @@
 
 			dd.error(function(error) {
 				alert('dd.error: ' + JSON.stringify(error));
-                {{ Cache::flush(); }}       // add by seahouse, 2018/1/10
+                {{ Cache::flush() }}       // add by seahouse, 2018/1/10
                 {{--
                 $.ajax({
                     type:"GET",

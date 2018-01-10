@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Approval;
 
 use App\Http\Controllers\HelperController;
 use App\Models\Approval\Approvaltype;
+use App\Models\Approval\Approversetting;
+use App\Models\Approval\Issuedrawing;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -84,7 +86,6 @@ class IssuedrawingController extends Controller
 
         // set approversetting_id
         $approvaltype_id = self::typeid();
-        dd($approvaltype_id);
         if ($approvaltype_id > 0)
         {
             $approversettingFirst = Approversetting::where('approvaltype_id', $approvaltype_id)->orderBy('level')->first();
@@ -96,8 +97,8 @@ class IssuedrawingController extends Controller
         else
             $input['approversetting_id'] = -1;
 
-
-        $paymentrequest = Paymentrequest::create($input);
+        $issuedrawing = Issuedrawing::create($input);
+        dd($issuedrawing);
 
 
 
