@@ -52,12 +52,23 @@ class SalesOrdersController extends Controller
     {
         // $salesorders = Salesorder::latest('created_at')->where('number', 'like', '%' . $key . '%')
         //     ->orWhere('descrip', 'like', '%'.$key.'%')->paginate(20);
-        $salesorders = Salesorder_hxold::where('custinfo_id', $customerid)
-            ->where(function ($query) use ($key) {
-                $query->where('number', 'like', '%'.$key.'%')
-                    ->orWhere('descrip', 'like', '%'.$key.'%');
-            })
-            ->paginate(20);        
+        $query = Salesorder_hxold::orderBy('id', 'desc');
+        if ($customerid > 0)
+        {
+            $query->where('custinfo_id', $customerid);
+
+        }
+        $query->where(function ($query) use ($key) {
+            $query->where('number', 'like', '%'.$key.'%')
+                ->orWhere('descrip', 'like', '%'.$key.'%');
+        });
+        $salesorders = $query->paginate(20);
+//        $salesorders = Salesorder_hxold::where('custinfo_id', $customerid)
+//            ->where(function ($query) use ($key) {
+//                $query->where('number', 'like', '%'.$key.'%')
+//                    ->orWhere('descrip', 'like', '%'.$key.'%');
+//            })
+//            ->paginate(20);
         return $salesorders;
     }
 

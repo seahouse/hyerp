@@ -68,6 +68,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::post('dingtalk/register_call_back', 'DingTalkController@register_call_back');
     Route::get('dingtalk/delete_call_back', 'DingTalkController@delete_call_back');
     Route::post('dingtalk/synchronizeusers', 'DingTalkController@synchronizeusers');
+    Route::get('dingtalk/cacheflush', 'DingTalkController@cacheflush');
 
     // chat
     Route::post('dingtalk/chat_create', 'DingTalkController@chat_create');
@@ -311,6 +312,11 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
 //        Route::get('pdfjs/viewer/{pdffile?}', 'PaymentrequestsController@pdfjsviewer');
     });
     Route::resource('paymentrequests', 'PaymentrequestsController');
+    Route::group(['prefix' => 'issuedrawing'], function() {
+        Route::get('mcreate', 'IssuedrawingController@mcreate');
+        Route::post('mstore', 'IssuedrawingController@mstore');
+    });
+    Route::resource('issuedrawing', 'IssuedrawingController');
     Route::resource('approversettings', 'ApproversettingsController');
 
     Route::group(['prefix' => 'reimbursementapprovals'], function() {
@@ -374,6 +380,7 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
 
         Route::post('search', 'UsersController@search');              // 搜索功能
         Route::post('msearch', 'UsersController@msearch');              // 搜索功能
+        Route::get('getitemsbykey/{key}', 'UsersController@getitemsbykey');
     });
     Route::group(['prefix' => 'users/{id}'], function() {
         Route::get('editpass', 'UsersController@editpass');

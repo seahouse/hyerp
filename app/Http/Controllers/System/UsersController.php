@@ -590,4 +590,17 @@ class UsersController extends Controller
         return $users;
     }
 
+    public function getitemsbykey($key)
+    {
+        $query = User::latest();
+        $query->where('name', 'like', '%'.$key.'%');
+        $users = $query->paginate(20);
+//        $salesorders = Salesorder_hxold::where('custinfo_id', $customerid)
+//            ->where(function ($query) use ($key) {
+//                $query->where('number', 'like', '%'.$key.'%')
+//                    ->orWhere('descrip', 'like', '%'.$key.'%');
+//            })
+//            ->paginate(20);
+        return $users;
+    }
 }

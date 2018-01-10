@@ -116,6 +116,11 @@ class DingTalkController extends Controller
         // return response()->json($config);
     }
 
+    public static function cacheflush()
+    {
+        Cache::flush();
+    }
+
     public function getuserinfo($code)
     {
 //        $corpid = 'ding6ed55e00b5328f39';

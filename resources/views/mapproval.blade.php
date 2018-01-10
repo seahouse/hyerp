@@ -58,9 +58,9 @@
 				</a>
 			</div>
 			<div class="btn-group" role="group">
-				<a href="#" class="btn btn-default btn-lg rightMenu">
+				<a href="{{ url('/approval/issuedrawing/mcreate') }}" class="btn btn-default btn-lg rightMenu">
 					<i class="icon iconfont btn-menu-2 color-purple icon-time"></i>
-					<span class="labble">请假</span>
+					<span class="labble">下发图纸</span>
 <!--
 					<button type="button" class="btn btn-default">请假</button>
 -->
