@@ -176,26 +176,26 @@
 				    },
 				    onFail : function(err) {
 						alert('requestAuthCode fail: ' + JSON.stringify(err));
-                        $.ajax({
-                            type:"GET",
-                            url:"{{ url('dingtalk/cacheflush') }}",
-                            error:function(xhr, ajaxOptions, thrownError){
-                                alert('error');
-                                alert(xhr.status);
-                                alert(xhr.responseText);
-                                alert(ajaxOptions);
-                                alert(thrownError);
-                            },
-                            success:function(msg){
-                                {{ Log::info('cacheflush') }}
-                            },
-                        });
 					}
 				});
 			});
 
 			dd.error(function(error) {
 				alert('dd.error: ' + JSON.stringify(error));
+                $.ajax({
+                    type:"GET",
+                    url:"{{ url('dingtalk/cacheflush') }}",
+                    error:function(xhr, ajaxOptions, thrownError){
+                        alert('error');
+                        alert(xhr.status);
+                        alert(xhr.responseText);
+                        alert(ajaxOptions);
+                        alert(thrownError);
+                    },
+                    success:function(){
+                        {{ Log::info('cacheflush') }}
+                    },
+                });
 			});
 		});
 	</script>

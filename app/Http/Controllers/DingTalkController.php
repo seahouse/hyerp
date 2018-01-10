@@ -118,6 +118,7 @@ class DingTalkController extends Controller
 
     public static function cacheflush()
     {
+        dd('aaa');
         Cache::flush();
     }
 
