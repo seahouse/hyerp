@@ -325,8 +325,10 @@
     {!! Form::label('images', '图纸签收回执:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     
     <div class='col-xs-8 col-sm-10'>
+        <div class="row" id="previewimage">
+        </div>
         @if (isset($paymentrequest))
-            <div class="row" id="previewimage">
+            <div class="row" id="previewimage2">
                 @foreach ($paymentrequest->paymentrequestimages() as $paymentrequestimage)
                     <div class="col-xs-6 col-md-3">
                         <div class="thumbnail">
