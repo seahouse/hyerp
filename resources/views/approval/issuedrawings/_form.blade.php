@@ -192,7 +192,7 @@
     {!! Form::label('drawingchecker', '图纸校核人:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
     {!! Form::text('drawingchecker', $drawingchecker, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectDrawingcheckerModal', 'data-name' => 'drawingchecker', 'data-id' => 'pohead_id', 'data-soheadid' => 'sohead_id', 'data-poheadamount' => 'pohead_amount']) !!}
-    {!! Form::hidden('drawingchecker_id', 0, ['class' => 'btn btn-sm', 'id' => 'pohead_id']) !!}
+    {!! Form::hidden('drawingchecker_id', 0, ['class' => 'btn btn-sm', 'id' => 'drawingchecker_id']) !!}
     @if (isset($reimbursement->customer_hxold->name))
         {!! Form::hidden('customer_name2', $reimbursement->customer_hxold->name, ['class' => 'btn btn-sm', 'id' => 'customer_name2']) !!}
     @else
@@ -309,7 +309,7 @@
                  <a href="{!! URL($paymentnode->path) !!}" target="_blank" id="showPaymentnode">{{ $paymentnode->filename }}</a> <br>
             @endforeach
         @else
-            {!! Form::file('drawingattachment[]', ['multiple']) !!}
+            {!! Form::file('drawingattachments[]', ['multiple']) !!}
         @endif
     </div>
 </div>
@@ -346,9 +346,9 @@
     </div>
 </div>
 
-
-
-
+{{--
+        {!! Form::file('image_file', array('class' => 'form-control')) !!}
+--}}
 
 
 {!! Form::hidden('applicant_id', null, ['class' => 'btn btn-sm']) !!}

@@ -1074,9 +1074,8 @@ class DingTalkController extends Controller
         dd($response);
     }
 
-    public function issuedrawing()
+    public static function issuedrawing($inputs)
     {
-        Cache::flush();
         $user = Auth::user();
         $method = 'dingtalk.smartwork.bpms.processinstance.create';
         $session = self::getAccessToken();
@@ -1096,43 +1095,43 @@ class DingTalkController extends Controller
         $formdata = [
             [
                 'name'      => '设计部门',
-                'value'     => '工艺一室',
+                'value'     => $inputs['designdepartment'],
             ],
             [
                 'name'      => '项目名称',
-                'value'     => 'aaaa',
+                'value'     => $inputs['project_name'],
             ],
             [
                 'name'      => '制作概述',
-                'value'     => 'bbbb',
+                'value'     => $inputs['overview'],
             ],
             [
                 'name'      => '吨位（吨）',
-                'value'     => '200',
+                'value'     => $inputs['tonnage'],
             ],
             [
                 'name'      => '项目编号',
-                'value'     => 'cccc',
+                'value'     => $inputs['sohead_number'],
             ],
             [
                 'name'      => '制作公司',
-                'value'     => '无锡制造中心',
+                'value'     => $inputs['productioncompany'],
             ],
             [
                 'name'      => '材料供应方',
-                'value'     => '华星东方',
+                'value'     => $inputs['materialsupplier'],
             ],
             [
                 'name'      => '图纸校核人',
-                'value'     => '张三',
+                'value'     => $inputs['drawingchecker'],
             ],
             [
                 'name'      => '要求发货日',
-                'value'     => '2018-1-3',
+                'value'     => $inputs['requestdeliverydate'],
             ],
             [
                 'name'      => '图纸份数（份）',
-                'value'     => '3',
+                'value'     => $inputs['drawingcount'],
             ],
 //            [
 //                'name'      => '目录上传，图纸邮寄',
@@ -1152,6 +1151,6 @@ class DingTalkController extends Controller
 //            'process_code' => '001'
         ];
         $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
-        dd($response);
+        return $response;
     }
 }

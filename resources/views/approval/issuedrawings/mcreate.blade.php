@@ -4,6 +4,7 @@
 
 @section('main')
 
+
 @can('approval_issuedrawing_create')
     {!! Form::open(array('url' => 'approval/issuedrawing/mstore', 'class' => 'form-horizontal', 'id' => 'formMain', 'files' => true)) !!}
         @include('approval.issuedrawings._form',
@@ -23,6 +24,17 @@
 				'btnclass' => 'btn btn-primary',
         	])
     {!! Form::close() !!}
+
+	@if (count($errors) > 0)
+		<div class="alert alert-danger">
+			<ul>
+				@foreach ($errors->all() as $error)
+					<li>{{ $error }}</li>
+				@endforeach
+			</ul>
+		</div>
+	@endif
+
 @else
 	<div class="alert alert-warning alert-block">
         <i class="fa fa-warning"></i>

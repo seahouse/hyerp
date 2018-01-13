@@ -6,12 +6,14 @@ use App\Http\Controllers\HelperController;
 use App\Models\Approval\Approvaltype;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Issuedrawing;
+use App\Models\Approval\Issuedrawingattachment;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DingTalkController;
 use Auth;
+use Validator, Storage;
 
 class IssuedrawingController extends Controller
 {
@@ -61,9 +63,52 @@ class IssuedrawingController extends Controller
     public function mstore(Request $request)
     {
         //
+//        $imagefiles = $request->file('images') ;
+////        $imagefiles = array_get($request->all(),'images');
+////        dd($imagefiles);
+//        foreach ($imagefiles as $imagefile)
+//        {
+//            $tempimage = array('image' =>  $imagefile);
+////            dd($tempimage);
+//            $rules = array(
+//            'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000' // max 10000kb
+////                'images' => 'image' // max 10000kb
+//            );
+//            $validator = Validator::make($tempimage, $rules);
+//            dd($validator->errors());
+//        }
+//        $rules = array(
+//            '*' => 'required|image|mimes:jpeg,jpg,png,gif|max:10000' // max 10000kb
+////            'images' => 'image' // max 10000kb
+//        );
+//        $validator = Validator::make($imagefiles, $rules);
+//        dd($validator->errors());
+//        $files = $request->input('images');
+//        dd($files);
         $input = $request->all();
+//        dd($input);
+//        $request->file('image_file');
+//        dd($input->file('image_file'));
+//        dd($input);
+        $this->validate($request, [
+            'designdepartment'      => 'required',
+            'productioncompany'      => 'required',
+            'materialsupplier'      => 'required',
+            'sohead_id'             => 'required|integer|min:1',
+            'overview'              => 'required',
+            'tonnage'               => 'required|numeric',
+            'drawingchecker_id'     => 'required|integer|min:1',
+            'requestdeliverydate'   => 'required',
+            'drawingcount'          => 'required|integer|min:1',
+            'drawingattachments.*'  => 'required|file',
+            'images.*'                => 'required|image',
+//            'images.*'                => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+//            'image_file'            => 'required|image',
+//            'image_file'            => 'required|file|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+        ]);
         $input = HelperController::skipEmptyValue($input);
-        // dd($input);
+//        DingTalkController::issuedrawing($input);
+//        dd($input);
         // dd($request->hasFile('paymentnodeattachments'));
         // dd($request->file('paymentnodeattachments'));
         // dd($request->file('paymentnodeattachments')->getClientOriginalExtension());
@@ -98,94 +143,82 @@ class IssuedrawingController extends Controller
             $input['approversetting_id'] = -1;
 
         $issuedrawing = Issuedrawing::create($input);
-        dd($issuedrawing);
-
-
-
-
-
-        // create paymentnodeattachments
-        if ($paymentrequest)
+        if (isset($issuedrawing))
         {
-            $files = array_get($input,'paymentnodeattachments');
-            $destinationPath = 'uploads/approval/paymentrequest/' . $paymentrequest->id . '/';
+            $response = DingTalkController::issuedrawing($input);
+            $responsejson = json_decode($response);
+            if ($responsejson->dingtalk_smartwork_bpms_processinstance_create_response->result->ding_open_errcode <> 0)
+            {
+                $issuedrawing->forceDelete();
+                dd('钉钉端创建失败: ' . $responsejson->dingtalk_smartwork_bpms_processinstance_create_response->result->error_msg);
+            }
+        }
+
+
+        // create drawingattachments
+        if ($issuedrawing)
+        {
+            $files = array_get($input,'drawingattachments');
+            $destinationPath = 'uploads/approval/issuedrawing/' . $issuedrawing->id . '/drawingattachments/';
             foreach ($files as $key => $file) {
                 if ($file)
                 {
+                    $originalName = $file->getClientOriginalName();
+                    Storage::put($destinationPath . $originalName, file_get_contents($file->getRealPath()));
+
                     $extension = $file->getClientOriginalExtension();
                     $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
                     // $fileName = rand(11111, 99999) . '.' . $extension;
                     $upload_success = $file->move($destinationPath, $filename);
 
                     // add database record
-                    $paymentnodeattachment = new Paymentrequestattachment;
-                    $paymentnodeattachment->paymentrequest_id = $paymentrequest->id;
-                    $paymentnodeattachment->type = "paymentnode";
-                    $paymentnodeattachment->filename = $file->getClientOriginalName();
-                    $paymentnodeattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
-                    $paymentnodeattachment->save();
+                    $issuedrawingattachment = new Issuedrawingattachment;
+                    $issuedrawingattachment->issuedrawing_id = $issuedrawing->id;
+                    $issuedrawingattachment->type = "drawingattachment";
+                    $issuedrawingattachment->filename = $originalName;
+                    $issuedrawingattachment->path = "/$destinationPath$originalName";     // add a '/' in the head.
+                    $issuedrawingattachment->save();
                 }
 
             }
 
         }
 
-        // create businesscontractattachments
-        if ($paymentrequest)
-        {
-            $files = array_get($input,'businesscontractattachments');
-            $destinationPath = 'uploads/approval/paymentrequest/' . $paymentrequest->id . '/';
-            foreach ($files as $key => $file) {
-                if ($file)
-                {
-                    $extension = $file->getClientOriginalExtension();
-                    $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
-                    // $fileName = rand(11111, 99999) . '.' . $extension;
-                    $upload_success = $file->move($destinationPath, $filename);
-
-                    // add database record
-                    $paymentnodeattachment = new Paymentrequestattachment;
-                    $paymentnodeattachment->paymentrequest_id = $paymentrequest->id;
-                    $paymentnodeattachment->type = "businesscontract";
-                    $paymentnodeattachment->filename = $file->getClientOriginalName();
-                    $paymentnodeattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
-                    $paymentnodeattachment->save();
-                }
-
-            }
-        }
 
         // create images in the desktop
-        if ($paymentrequest)
+        if ($issuedrawing)
         {
             $files = array_get($input,'images');
-            $destinationPath = 'uploads/approval/paymentrequest/' . $paymentrequest->id . '/';
+            $destinationPath = 'uploads/approval/issuedrawing/' . $issuedrawing->id . '/images/';
             if ($files)
             {
                 foreach ($files as $key => $file) {
                     if ($file)
                     {
+                        $originalName = $file->getClientOriginalName();
+                        Storage::put($destinationPath . $originalName, file_get_contents($file->getRealPath()));
+
                         $extension = $file->getClientOriginalExtension();
                         $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
                         // $fileName = rand(11111, 99999) . '.' . $extension;
                         $upload_success = $file->move($destinationPath, $filename);
 
                         // add database record
-                        $paymentnodeattachment = new Paymentrequestattachment;
-                        $paymentnodeattachment->paymentrequest_id = $paymentrequest->id;
-                        $paymentnodeattachment->type = "image";
-                        $paymentnodeattachment->filename = $file->getClientOriginalName();
-                        $paymentnodeattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
-                        $paymentnodeattachment->save();
+                        $issuedrawingattachment = new Issuedrawingattachment;
+                        $issuedrawingattachment->issuedrawing_id = $issuedrawing->id;
+                        $issuedrawingattachment->type = "image";
+                        $issuedrawingattachment->filename = $originalName;
+                        $issuedrawingattachment->path = "/$destinationPath$originalName";     // add a '/' in the head.
+                        $issuedrawingattachment->save();
                     }
 
                 }
             }
-
         }
+        dd($issuedrawing);
 
         // create reimbursement images
-        if ($paymentrequest)
+        if ($issuedrawing)
         {
             $images = array_where($input, function($key, $value) {
                 if (substr_compare($key, 'image_', 0, 6) == 0)
@@ -199,7 +232,7 @@ class IssuedrawingController extends Controller
                 // $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
                 // Storage::disk('local')->put($sFilename, file_get_contents($value));
                 // Storage::move($sFilename, '../abcd.jpg');
-                $dir = 'images/approval/paymentrequest/' . $paymentrequest->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                $dir = 'images/approval/paymentrequest/' . $issuedrawing->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
                 $parts = explode('/', $dir);
                 $filename = array_pop($parts);
                 $dir = '';
@@ -220,38 +253,38 @@ class IssuedrawingController extends Controller
 
                 // add image record
                 $paymentrequestattachment = new Paymentrequestattachment;
-                $paymentrequestattachment->paymentrequest_id = $paymentrequest->id;
+                $paymentrequestattachment->paymentrequest_id = $issuedrawing->id;
                 $paymentrequestattachment->type = "image";     // add a '/' in the head.
                 $paymentrequestattachment->path = "/$dir$filename";     // add a '/' in the head.
                 $paymentrequestattachment->save();
             }
         }
 
-        if ($paymentrequest)
+        if ($issuedrawing)
         {
             // send dingtalk message.
-            $touser = $paymentrequest->nextapprover();
+            $touser = $issuedrawing->nextapprover();
             if ($touser)
             {
                 // DingTalkController::send($touser->dtuserid, '',
-                //     '来自' . $paymentrequest->applicant->name . '的付款单需要您审批.',
+                //     '来自' . $issuedrawing->applicant->name . '的付款单需要您审批.',
                 //     config('custom.dingtalk.agentidlist.approval'));
 
                 // DingTalkController::send_link($touser->dtuserid, '',
                 //     url('approval/paymentrequestapprovals/' . $input['paymentrequest_id'] . '/mcreate'), '',
-                //     '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.',
+                //     '供应商付款审批', '来自' . $issuedrawing->applicant->name . '的付款申请单需要您审批.',
                 //     config('custom.dingtalk.agentidlist.approval'));
 
                 DingTalkController::send_link($touser->dtuserid, '',
-                    url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
-                    '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.',
+                    url('mddauth/approval/approval-paymentrequestapprovals-' . $issuedrawing->id . '-mcreate'), '',
+                    '供应商付款审批', '来自' . $issuedrawing->applicant->name . '的付款申请单需要您审批.',
                     config('custom.dingtalk.agentidlist.approval'));
 
                 if (Auth::user()->email == "admin@admin.com")
                 {
                     DingTalkController::send_oa_paymentrequest($touser->dtuserid, '',
-                        url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
-                        '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', $paymentrequest,
+                        url('mddauth/approval/approval-paymentrequestapprovals-' . $issuedrawing->id . '-mcreate'), '',
+                        '供应商付款审批', '来自' . $issuedrawing->applicant->name . '的付款申请单需要您审批.', $issuedrawing,
                         config('custom.dingtalk.agentidlist.approval'));
                 }
 

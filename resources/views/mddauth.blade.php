@@ -374,6 +374,7 @@
                 });
 
                 DingTalkPC.error(function(error) {
+                    {{ Cache::flush() }}       // add by seahouse, 2018/1/12
                     alert('DingTalkPC.error: ' + JSON.stringify(error));
                 });
 			}
