@@ -215,9 +215,8 @@ class IssuedrawingController extends Controller
                 }
             }
         }
-        dd($issuedrawing);
 
-        // create reimbursement images
+        // create images from dingtalk mobile
         if ($issuedrawing)
         {
             $images = array_where($input, function($key, $value) {
@@ -225,14 +224,16 @@ class IssuedrawingController extends Controller
                     return $value;
             });
 
+            $destinationPath = 'uploads/approval/issuedrawing/' . $issuedrawing->id . '/images/';
             foreach ($images as $key => $value) {
                 # code...
+
                 // save image file.
                 $sExtension = substr($value, strrpos($value, '.') + 1);
                 // $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
                 // Storage::disk('local')->put($sFilename, file_get_contents($value));
                 // Storage::move($sFilename, '../abcd.jpg');
-                $dir = 'images/approval/paymentrequest/' . $issuedrawing->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                $dir = 'images/approval/issuedrawing/' . $issuedrawing->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
                 $parts = explode('/', $dir);
                 $filename = array_pop($parts);
                 $dir = '';
@@ -244,6 +245,9 @@ class IssuedrawingController extends Controller
                     }
                 }
 
+//                $originalName = $file->getClientOriginalName();
+                Storage::put($destinationPath . $filename, file_get_contents($value));
+
                 file_put_contents("$dir/$filename", file_get_contents($value));
                 // file_put_contents('abcd.jpg', file_get_contents($value));
 
@@ -252,13 +256,14 @@ class IssuedrawingController extends Controller
                 // copy(storage_path('app') . '/' . $sFilename, '/images/' . $sFilename);
 
                 // add image record
-                $paymentrequestattachment = new Paymentrequestattachment;
-                $paymentrequestattachment->paymentrequest_id = $issuedrawing->id;
-                $paymentrequestattachment->type = "image";     // add a '/' in the head.
-                $paymentrequestattachment->path = "/$dir$filename";     // add a '/' in the head.
-                $paymentrequestattachment->save();
+                $issuedrawingattachment = new Issuedrawingattachment;
+                $issuedrawingattachment->issuedrawing_id = $issuedrawing->id;
+                $issuedrawingattachment->type = "image";     // add a '/' in the head.
+                $issuedrawingattachment->path = "/$dir$filename";     // add a '/' in the head.
+                $issuedrawingattachment->save();
             }
         }
+        dd($issuedrawing);
 
         if ($issuedrawing)
         {
