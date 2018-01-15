@@ -263,7 +263,6 @@ class IssuedrawingController extends Controller
                 $issuedrawingattachment->save();
             }
         }
-        dd($issuedrawing);
 
         if ($issuedrawing)
         {
@@ -297,6 +296,7 @@ class IssuedrawingController extends Controller
 
         }
 
+        dd('创建成功.');
         return redirect('approval/mindexmy');
     }
 

@@ -1137,10 +1137,10 @@ class DingTalkController extends Controller
 //                'name'      => '目录上传，图纸邮寄',
 //                'value'     => 'ffff',
 //            ],
-            [
-                'name'      => '图纸签收回执',
-                'value'     => '["http://pic4.nipic.com/20091217/3885730_124701000519_2.jpg"]',
-            ],
+//            [
+//                'name'      => '图纸签收回执',
+//                'value'     => '["http://pic4.nipic.com/20091217/3885730_124701000519_2.jpg"]',
+//            ],
         ];
 //        $form_component_values = '{name:\'测试1\', value:\'aaa\'}';
 //        dd(json_encode($formdata));

@@ -111,7 +111,10 @@
                 @endif
                 <br>
                 现存量:
-                {{ $itemp->receiptitems->sum('quantity') - $itemp->shipitems->sum('quantity') }}
+                        {{-- bcsub函数为高精度相减
+                        {{ bcsub($itemp->receiptitems->sum('quantity'), $itemp->shipitems->sum('quantity'), 2) }}
+                        --}}
+                        {{ number_format($itemp->receiptitems->sum('quantity') - $itemp->shipitems->sum('quantity'), 2) }}
 
         {{--
                 {{ $poitem->item->receiptitems->sum('amount') / $poitem->item->receiptitems->sum('quantity')}}
