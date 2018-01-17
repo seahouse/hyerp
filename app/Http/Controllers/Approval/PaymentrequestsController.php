@@ -1545,7 +1545,7 @@ class PaymentrequestsController extends Controller
         }
         else
         {
-            $paymentrequests = Paymentrequest::where("created_at", ">", Carbon::now()->subDays(3))
+            $paymentrequests = Paymentrequest::where("created_at", ">", Carbon::now()->subDays(10))
                 ->where("pohead_id", $pohead_id)->where("amount", $amount)
                 ->get();
             if ($paymentrequests->count() > 0)

@@ -86,7 +86,19 @@ class IssuedrawingController extends Controller
 //        $files = $request->input('images');
 //        dd($files);
         $input = $request->all();
-//        dd($input);
+//        $image_urls = [];
+//        array_push($image_urls, url('aaa'));
+//        array_push($image_urls, url('bbb'));
+//        dd(json_encode($image_urls));
+//        foreach ($input['images'] as $image)
+//        {
+//            if (isset($image))
+//            {
+//                dd(url('uploads/approval/issuedrawing/13/images/02.jpg'));
+//                dd($image->getClientOriginalName());
+//            }
+//        }
+//        dd($input['images']);
 //        $request->file('image_file');
 //        dd($input->file('image_file'));
 //        dd($input);
@@ -143,16 +155,6 @@ class IssuedrawingController extends Controller
             $input['approversetting_id'] = -1;
 
         $issuedrawing = Issuedrawing::create($input);
-        if (isset($issuedrawing))
-        {
-            $response = DingTalkController::issuedrawing($input);
-            $responsejson = json_decode($response);
-            if ($responsejson->dingtalk_smartwork_bpms_processinstance_create_response->result->ding_open_errcode <> 0)
-            {
-                $issuedrawing->forceDelete();
-                dd('钉钉端创建失败: ' . $responsejson->dingtalk_smartwork_bpms_processinstance_create_response->result->error_msg);
-            }
-        }
 
 
         // create drawingattachments
@@ -185,6 +187,7 @@ class IssuedrawingController extends Controller
         }
 
 
+        $image_urls = [];
         // create images in the desktop
         if ($issuedrawing)
         {
@@ -210,6 +213,8 @@ class IssuedrawingController extends Controller
                         $issuedrawingattachment->filename = $originalName;
                         $issuedrawingattachment->path = "/$destinationPath$originalName";     // add a '/' in the head.
                         $issuedrawingattachment->save();
+
+                        array_push($image_urls, url($destinationPath . $filename));
                     }
 
                 }
@@ -261,40 +266,54 @@ class IssuedrawingController extends Controller
                 $issuedrawingattachment->type = "image";     // add a '/' in the head.
                 $issuedrawingattachment->path = "/$dir$filename";     // add a '/' in the head.
                 $issuedrawingattachment->save();
+
+                array_push($image_urls, url($destinationPath . $value));
             }
         }
 
-        if ($issuedrawing)
+        if (isset($issuedrawing))
         {
-            // send dingtalk message.
-            $touser = $issuedrawing->nextapprover();
-            if ($touser)
+            $input['image_urls'] = json_encode($image_urls);
+            Log::info($input['image_urls']);
+            $response = DingTalkController::issuedrawing($input);
+            $responsejson = json_decode($response);
+            if ($responsejson->dingtalk_smartwork_bpms_processinstance_create_response->result->ding_open_errcode <> 0)
             {
-                // DingTalkController::send($touser->dtuserid, '',
-                //     '来自' . $issuedrawing->applicant->name . '的付款单需要您审批.',
-                //     config('custom.dingtalk.agentidlist.approval'));
-
-                // DingTalkController::send_link($touser->dtuserid, '',
-                //     url('approval/paymentrequestapprovals/' . $input['paymentrequest_id'] . '/mcreate'), '',
-                //     '供应商付款审批', '来自' . $issuedrawing->applicant->name . '的付款申请单需要您审批.',
-                //     config('custom.dingtalk.agentidlist.approval'));
-
-                DingTalkController::send_link($touser->dtuserid, '',
-                    url('mddauth/approval/approval-paymentrequestapprovals-' . $issuedrawing->id . '-mcreate'), '',
-                    '供应商付款审批', '来自' . $issuedrawing->applicant->name . '的付款申请单需要您审批.',
-                    config('custom.dingtalk.agentidlist.approval'));
-
-                if (Auth::user()->email == "admin@admin.com")
-                {
-                    DingTalkController::send_oa_paymentrequest($touser->dtuserid, '',
-                        url('mddauth/approval/approval-paymentrequestapprovals-' . $issuedrawing->id . '-mcreate'), '',
-                        '供应商付款审批', '来自' . $issuedrawing->applicant->name . '的付款申请单需要您审批.', $issuedrawing,
-                        config('custom.dingtalk.agentidlist.approval'));
-                }
-
+                $issuedrawing->forceDelete();
+                dd('钉钉端创建失败: ' . $responsejson->dingtalk_smartwork_bpms_processinstance_create_response->result->error_msg);
             }
+            else
+            {
+                // send dingtalk message.
+                $touser = $issuedrawing->nextapprover();
+                if ($touser)
+                {
+                    // DingTalkController::send($touser->dtuserid, '',
+                    //     '来自' . $issuedrawing->applicant->name . '的付款单需要您审批.',
+                    //     config('custom.dingtalk.agentidlist.approval'));
 
+                    // DingTalkController::send_link($touser->dtuserid, '',
+                    //     url('approval/paymentrequestapprovals/' . $input['paymentrequest_id'] . '/mcreate'), '',
+                    //     '供应商付款审批', '来自' . $issuedrawing->applicant->name . '的付款申请单需要您审批.',
+                    //     config('custom.dingtalk.agentidlist.approval'));
+
+                    DingTalkController::send_link($touser->dtuserid, '',
+                        url('mddauth/approval/approval-paymentrequestapprovals-' . $issuedrawing->id . '-mcreate'), '',
+                        '供应商付款审批', '来自' . $issuedrawing->applicant->name . '的付款申请单需要您审批.',
+                        config('custom.dingtalk.agentidlist.approval'));
+
+                    if (Auth::user()->email == "admin@admin.com")
+                    {
+                        DingTalkController::send_oa_paymentrequest($touser->dtuserid, '',
+                            url('mddauth/approval/approval-paymentrequestapprovals-' . $issuedrawing->id . '-mcreate'), '',
+                            '供应商付款审批', '来自' . $issuedrawing->applicant->name . '的付款申请单需要您审批.', $issuedrawing,
+                            config('custom.dingtalk.agentidlist.approval'));
+                    }
+
+                }
+            }
         }
+
 
         dd('创建成功.');
         return redirect('approval/mindexmy');
