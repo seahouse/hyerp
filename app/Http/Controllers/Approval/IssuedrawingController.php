@@ -158,6 +158,7 @@ class IssuedrawingController extends Controller
 
 
         // create drawingattachments
+        $drawingattachments_url = [];
         if ($issuedrawing)
         {
             $files = array_get($input,'drawingattachments');
@@ -180,6 +181,8 @@ class IssuedrawingController extends Controller
                     $issuedrawingattachment->filename = $originalName;
                     $issuedrawingattachment->path = "/$destinationPath$originalName";     // add a '/' in the head.
                     $issuedrawingattachment->save();
+
+                    array_push($drawingattachments_url, url($destinationPath . $originalName));
                 }
 
             }
@@ -273,8 +276,8 @@ class IssuedrawingController extends Controller
 
         if (isset($issuedrawing))
         {
+            $input['drawingattachments_url'] = json_encode($drawingattachments_url);
             $input['image_urls'] = json_encode($image_urls);
-            Log::info($input['image_urls']);
             $response = DingTalkController::issuedrawing($input);
             $responsejson = json_decode($response);
             if ($responsejson->dingtalk_smartwork_bpms_processinstance_create_response->result->ding_open_errcode <> 0)

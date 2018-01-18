@@ -1133,10 +1133,10 @@ class DingTalkController extends Controller
                 'name'      => '图纸份数（份）',
                 'value'     => $inputs['drawingcount'],
             ],
-//            [
-//                'name'      => '目录上传，图纸邮寄',
-//                'value'     => 'ffff',
-//            ],
+            [
+                'name'      => '附件地址',
+                'value'     => $inputs['drawingattachments_url'],
+            ],
             [
                 'name'      => '图纸签收回执',
                 'value'     => $inputs['image_urls'],
