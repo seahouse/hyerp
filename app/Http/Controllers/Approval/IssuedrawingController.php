@@ -86,6 +86,24 @@ class IssuedrawingController extends Controller
 //        $files = $request->input('images');
 //        dd($files);
         $input = $request->all();
+//        $files = array_get($input,'drawingattachments');
+//        $destinationPath = 'uploads/approval/issuedrawing/23/drawingattachments/';
+//        foreach ($files as $key => $file) {
+//            if ($file)
+//            {
+//                $originalName = $file->getClientOriginalName();
+//                Log::info($destinationPath . $originalName);
+//                Log::info($file->getRealPath());
+//                $extension = $file->getClientOriginalExtension();
+//                $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+//                Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
+//
+//                // $fileName = rand(11111, 99999) . '.' . $extension;
+//                $upload_success = $file->move($destinationPath, $filename);
+//
+//            }
+//        }
+//        dd('aaa');
 //        $image_urls = [];
 //        array_push($image_urls, url('aaa'));
 //        array_push($image_urls, url('bbb'));
@@ -166,11 +184,11 @@ class IssuedrawingController extends Controller
             foreach ($files as $key => $file) {
                 if ($file)
                 {
-                    $originalName = $file->getClientOriginalName();
-                    Storage::put($destinationPath . $originalName, file_get_contents($file->getRealPath()));
-
-                    $extension = $file->getClientOriginalExtension();
+                    $originalName = $file->getClientOriginalName();         // aa.xlsx
+                    $extension = $file->getClientOriginalExtension();       // .xlsx
                     $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                    Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
+
                     // $fileName = rand(11111, 99999) . '.' . $extension;
                     $upload_success = $file->move($destinationPath, $filename);
 
@@ -179,14 +197,12 @@ class IssuedrawingController extends Controller
                     $issuedrawingattachment->issuedrawing_id = $issuedrawing->id;
                     $issuedrawingattachment->type = "drawingattachment";
                     $issuedrawingattachment->filename = $originalName;
-                    $issuedrawingattachment->path = "/$destinationPath$originalName";     // add a '/' in the head.
+                    $issuedrawingattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
                     $issuedrawingattachment->save();
 
-                    array_push($drawingattachments_url, url($destinationPath . $originalName));
+                    array_push($drawingattachments_url, url($destinationPath . $filename));
                 }
-
             }
-
         }
 
 
