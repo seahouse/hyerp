@@ -292,7 +292,7 @@ class IssuedrawingController extends Controller
 
         if (isset($issuedrawing))
         {
-            $input['drawingattachments_url'] = json_encode($drawingattachments_url);
+            $input['drawingattachments_url'] = implode(" , ", $drawingattachments_url);
             $input['image_urls'] = json_encode($image_urls);
             $response = DingTalkController::issuedrawing($input);
             $responsejson = json_decode($response);
