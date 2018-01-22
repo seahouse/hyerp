@@ -1091,7 +1091,8 @@ class DingTalkController extends Controller
         $dept_id = 0;
         if (count($departmentList) > 0)
             $dept_id = array_first($departmentList);
-        $approvers = $user->dtuserid;
+        $approvers = $inputs['approvers'];
+//        $approvers = $user->dtuserid;
         $formdata = [
             [
                 'name'      => '设计部门',

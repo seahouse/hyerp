@@ -64,7 +64,7 @@
                         {{ $approversetting->level }}
                     </td>
                     <td>
-                        {{ str_limit($approversetting->descrip, 20) }}
+                        {{ str_limit($approversetting->descrip, 40) }}
                     </td>
                     <td>
                         <a href="{{ URL::to('/approval/approversettings/'.$approversetting->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>

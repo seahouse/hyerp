@@ -304,7 +304,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('{id}/mrecvdetail3', 'PaymentrequestsController@mrecvdetail3');
         Route::get('{id}/mrecvdetail4', 'PaymentrequestsController@mrecvdetail4');
         Route::get('{id}/mrecvdetail5', 'PaymentrequestsController@mrecvdetail5');
-        Route::get('mrecvdetail5data/{itemid}', 'PaymentrequestsController@mrecvdetail5data');
+        Route::get('mrecvdetail5data/{itemid}/{receiptid?}', 'PaymentrequestsController@mrecvdetail5data');
         Route::get('{id}/printpage', 'PaymentrequestsController@printpage');
         Route::get('{id}/pay', 'PaymentrequestsController@pay');
         Route::get('hasrepeat/{pohead_id}/{amount?}', 'PaymentrequestsController@hasrepeat');    // pdfjs viewer.html

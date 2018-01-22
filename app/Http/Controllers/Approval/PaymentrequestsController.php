@@ -1328,10 +1328,15 @@ class PaymentrequestsController extends Controller
         $item_numbers = Receiptitem_hxold::whereIn('receipt_id', $receipt_ids)->distinct()->pluck('item_number');
         $itemps = Itemp_hxold::whereIn('goods_no', $item_numbers)->get();
 
-        return view('approval.paymentrequests.mrecvdetail5', compact('purchaseorder', 'itemps2', 'itemps'));
+        $receiptid = 0;
+        foreach ($receipt_ids as $receipt_id) {
+            $receiptid = $receipt_id;
+            break;
+        }
+        return view('approval.paymentrequests.mrecvdetail5', compact('purchaseorder', 'itemps2', 'itemps', 'receiptid'));
     }
 
-    public function mrecvdetail5data($itemid)
+    public function mrecvdetail5data($itemid, $receiptid = 0)
     {
         $item = Itemp_hxold::where('goods_id', $itemid)->firstOrFail();
         $receiptitems = Receiptitem_hxold::where('item_number', $item->goods_no)
@@ -1354,9 +1359,13 @@ class PaymentrequestsController extends Controller
                 DB::raw("case vorder.projectjc when '' then vorder.descrip else vorder.projectjc end as order_projectjc"),
                 'vreceiptitem.out_sohead_name',
                 Db::raw('convert(varchar(100), vreceiptitem.record_at, 23) as receiptitem_record_at'),
+                'vreceiptitem.receipt_id',
             ]);
 //        Log::info($receiptitems->count);
-        return Datatables::of($receiptitems)->make();
+        return Datatables::of($receiptitems)
+            ->setRowClass(function ($receiptitem) use ($receiptid) {
+                return $receiptitem->receipt_id == $receiptid ? 'success' : '';
+            })->make();
 
         return view('approval.paymentrequests.mrecvdetail5', compact('purchaseorder', 'itemps2', 'itemps'));
     }

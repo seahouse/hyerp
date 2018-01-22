@@ -63,6 +63,8 @@ class IssuedrawingController extends Controller
     public function mstore(Request $request)
     {
         //
+//        $issuedrawing = Issuedrawing::findOrFail(33);
+//        dd($issuedrawing->approvers());
 //        $imagefiles = $request->file('images') ;
 ////        $imagefiles = array_get($request->all(),'images');
 ////        dd($imagefiles);
@@ -294,6 +296,7 @@ class IssuedrawingController extends Controller
         {
             $input['drawingattachments_url'] = implode(" , ", $drawingattachments_url);
             $input['image_urls'] = json_encode($image_urls);
+            $input['approvers'] = $issuedrawing->approvers();
             $response = DingTalkController::issuedrawing($input);
             $responsejson = json_decode($response);
             if ($responsejson->dingtalk_smartwork_bpms_processinstance_create_response->result->ding_open_errcode <> 0)

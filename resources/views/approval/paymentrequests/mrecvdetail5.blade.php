@@ -45,7 +45,7 @@
 				$('#table_item_{{$itemp->goods_id}}').DataTable({
 					"processing": true,
 					"serverSide": true,
-					"ajax": "{{ url('approval/paymentrequests/mrecvdetail5data/' . $itemp->goods_id) }}",
+					"ajax": "{{ url('approval/paymentrequests/mrecvdetail5data/' . $itemp->goods_id . '/' . $receiptid) }}",
 					"columns": [
 						{"data": "0", "name": "quantity"},
                         {"data": "1", name: "unitprice", "searchable": false},
@@ -59,7 +59,8 @@
                         {"data": "9", name: "vorder.projectjc"},
                         {"data": "10", name: "out_sohead_name"},
                         {"data": "11", name: "vreceiptitem.record_at"},
-					]
+					],
+					'order': [["11", "desc"]]
 				});
             @endforeach
 

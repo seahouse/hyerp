@@ -115,7 +115,7 @@
 
                 <br>
                 历史采购明细<br>
-                <table id="table_item_{{$itemp->goods_id}}" class="table table-hover table-condensed">
+                <table id="table_item_{{$itemp->goods_id}}" class="table table-hover table-condensed" width="100%">
                     <thead>
                         <tr>
                             <th>数量</th>
