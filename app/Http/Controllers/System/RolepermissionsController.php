@@ -37,7 +37,8 @@ class RolepermissionsController extends Controller
         //
         $role = Role::findOrFail($roleId);
         $permissionIds = RolePermission::where('role_id', $roleId)->select('permission_id')->get();
-        $permissionList = Permission::whereNotIn('id', $permissionIds)->select('id', DB::raw('concat(name, \' - \', display_name) as name'))->lists('name', 'id');
+        $permissionList = Permission::whereNotIn('id', $permissionIds)->select('id', DB::raw("name + ' - ' + display_name as name"))->lists('name', 'id');
+//        $permissionList = Permission::whereNotIn('id', $permissionIds)->select('id', DB::raw('concat(name, \' - \', display_name) as name'))->lists('name', 'id');        // for pgsql
         if ($role != null)
             return view('system.rolepermissions.create', compact('role', 'permissionList'));
         else

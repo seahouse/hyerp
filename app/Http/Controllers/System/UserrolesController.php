@@ -38,7 +38,7 @@ class UserrolesController extends Controller
         //
         $user = User::findOrFail($userId);
         $roleIds = Userrole::where('user_id', $userId)->select('role_id')->get();
-        $roleList = Role::whereNotIn('id', $roleIds)->select('id', DB::raw('concat(name, \' - \', display_name) as name'))->lists('name', 'id');
+        $roleList = Role::whereNotIn('id', $roleIds)->select('id', DB::raw('name + \' - \' + display_name as name'))->lists('name', 'id');
         if ($user != null)
             return view('system.userroles.create', compact('user', 'roleList'));
         else
