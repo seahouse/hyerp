@@ -310,27 +310,19 @@ class IssuedrawingController extends Controller
                 $touser = $issuedrawing->nextapprover();
                 if ($touser)
                 {
-                    // DingTalkController::send($touser->dtuserid, '',
-                    //     '来自' . $issuedrawing->applicant->name . '的付款单需要您审批.',
-                    //     config('custom.dingtalk.agentidlist.approval'));
 
-                    // DingTalkController::send_link($touser->dtuserid, '',
-                    //     url('approval/paymentrequestapprovals/' . $input['paymentrequest_id'] . '/mcreate'), '',
-                    //     '供应商付款审批', '来自' . $issuedrawing->applicant->name . '的付款申请单需要您审批.',
-                    //     config('custom.dingtalk.agentidlist.approval'));
-
-                    DingTalkController::send_link($touser->dtuserid, '',
-                        url('mddauth/approval/approval-paymentrequestapprovals-' . $issuedrawing->id . '-mcreate'), '',
-                        '供应商付款审批', '来自' . $issuedrawing->applicant->name . '的付款申请单需要您审批.',
-                        config('custom.dingtalk.agentidlist.approval'));
-
-                    if (Auth::user()->email == "admin@admin.com")
-                    {
-                        DingTalkController::send_oa_paymentrequest($touser->dtuserid, '',
-                            url('mddauth/approval/approval-paymentrequestapprovals-' . $issuedrawing->id . '-mcreate'), '',
-                            '供应商付款审批', '来自' . $issuedrawing->applicant->name . '的付款申请单需要您审批.', $issuedrawing,
-                            config('custom.dingtalk.agentidlist.approval'));
-                    }
+//                    DingTalkController::send_link($touser->dtuserid, '',
+//                        url('mddauth/approval/approval-paymentrequestapprovals-' . $issuedrawing->id . '-mcreate'), '',
+//                        '供应商付款审批', '来自' . $issuedrawing->applicant->name . '的付款申请单需要您审批.',
+//                        config('custom.dingtalk.agentidlist.approval'));
+//
+//                    if (Auth::user()->email == "admin@admin.com")
+//                    {
+//                        DingTalkController::send_oa_paymentrequest($touser->dtuserid, '',
+//                            url('mddauth/approval/approval-paymentrequestapprovals-' . $issuedrawing->id . '-mcreate'), '',
+//                            '供应商付款审批', '来自' . $issuedrawing->applicant->name . '的付款申请单需要您审批.', $issuedrawing,
+//                            config('custom.dingtalk.agentidlist.approval'));
+//                    }
 
                 }
             }
