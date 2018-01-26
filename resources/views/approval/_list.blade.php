@@ -90,6 +90,11 @@
                 @if (isset($item->purchaseorder_hxold->arrival_percent) and $item->purchaseorder_hxold->arrival_percent >= 0.9999)
                     货
                 @endif
+
+                    {{-- 已付款比例 --}}
+                    @if (isset($item->purchaseorder_hxold->amount_paid))
+                        {{ number_format($item->purchaseorder_hxold->amount_paid / $item->purchaseorder_hxold->amount * 100.0, 2, '.', '') . '%' }}
+                    @endif
             </div>
         </a>
     </div>
@@ -185,6 +190,11 @@
                     @if (isset($item->purchaseorder_hxold->arrival_percent) and $item->purchaseorder_hxold->arrival_percent >= 0.9999)
                         货
                     @endif
+
+                        {{-- 已付款比例 --}}
+                        @if (isset($item->purchaseorder_hxold->amount_paid))
+                            {{ number_format($item->purchaseorder_hxold->amount_paid / $item->purchaseorder_hxold->amount * 100.0, 2, '.', '') . '%' }}
+                        @endif
                 </div>
             </a>
         </div>
