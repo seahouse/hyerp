@@ -62,7 +62,7 @@ class PadcapitalStatistics extends Command
             $padcapitalTotal += $orderamountstatistics->padcapital;
             $msg = $orderamountstatistics->projectjc == "" ? $orderamountstatistics->descrip : $orderamountstatistics->projectjc
                 . '(' .$orderamountstatistics->number . ')垫资'
-                . number_format($orderamountstatistics->padcapital, 4, '.', ',') . '元.';
+                . number_format($orderamountstatistics->padcapital, 2, '.', ',') . '元.';
             $this->info('  ' . $msg);
             if ($this->option('debug'))
             {
