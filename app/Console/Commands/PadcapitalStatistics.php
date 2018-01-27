@@ -4,8 +4,10 @@ namespace App\Console\Commands;
 
 use App\Http\Controllers\DingTalkController;
 use App\Models\Sales\Salesorder_hxold;
+use App\Models\Sales\Vorderamountstatistics_hxold;
 use App\Models\System\User;
 use Illuminate\Console\Command;
+use DB, Log;
 
 class PadcapitalStatistics extends Command
 {
@@ -41,6 +43,58 @@ class PadcapitalStatistics extends Command
     public function handle()
     {
         //
+//        $data = [
+//            'aaa' => 'bb1',
+//            'bbb' => 'aa1',
+//            'ccc' => 'dd1',
+//            'ccc' => 'cc1'
+//        ];
+//        $data = array_sort_recursive($data);
+////        $data = array_sort($data, function ($value) {
+////            return $value;
+////        });
+//        dd($data);
+
+        $orderamountstatisticses = Vorderamountstatistics_hxold::where('padcapital', '>', 0.0)->orderBy('padcapital', 'desc')->get();
+        foreach ($orderamountstatisticses as $orderamountstatistics)
+        {
+            $msg = $orderamountstatistics->projectjc == "" ? $orderamountstatistics->descrip : $orderamountstatistics->projectjc
+                . '(' .$orderamountstatistics->number . ')垫资'
+                . number_format($orderamountstatistics->padcapital, 4, '.', ',') . '元.';
+            $this->info('  ' . $msg);
+            if ($this->option('debug'))
+            {
+                $touser = User::where('email', $this->argument('useremail'))->first();
+                if (isset($touser))
+                {
+                    $this->info('  ' . $touser->id);
+                    $data = [
+                        'userid'        => $touser->id,
+                        'msgcontent'    => urlencode($msg) ,
+                    ];
+
+                    $response = DingTalkController::sendCorpMessageText(json_encode($data));
+                }
+            }
+            else
+            {
+                // send msg to Wuhl
+                $userWuhl = User::where('email', 'wuhaolun@huaxing-east.com')->first();
+                if (isset($userWuhl))
+                {
+                    $data = [
+                        'userid'        => $userWuhl->id,
+                        'msgcontent'    => urlencode($msg) ,
+                    ];
+                    DingTalkController::sendCorpMessageText(json_encode($data));
+//                        DingTalkController::send($userWuhl->dtuserid, '',
+//                            $msg,
+//                            config('custom.dingtalk.agentidlist.erpmessage'));
+                }
+            }
+        }
+        dd('aaa');
+
         $padcapitalTotal = 0.0;
         $soheads = Salesorder_hxold::where('status', '<>', -10)->get();
         foreach ($soheads as $sohead)
