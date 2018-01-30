@@ -142,6 +142,7 @@
                             <th style="min-width: 80px">对应项目</th>
                             <th>出库项目</th>
                             <th>录入时间</th>
+                            <th>录入人</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -179,6 +180,11 @@
                                 {{ $receiptitem->out_sohead_name }}
                             </td>
                             <td>{{ substr($receiptitem->record_at, 0, 10) }}</td>
+                            <td>
+                                @if (isset($receiptitem->rwrecord->recorder->name))
+                                    {{ $receiptitem->rwrecord->recorder->name }}
+                                @endif
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

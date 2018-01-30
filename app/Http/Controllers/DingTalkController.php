@@ -697,6 +697,22 @@ class DingTalkController extends Controller
         return $response;
     }
 
+    // register call back approval
+    public static function register_call_back_bpms()
+    {
+        $access_token = self::getAccessToken();
+
+        $data = [
+            'call_back_tag' => ['bpms_task_change', 'bpms_instance_change'],
+            'token' => config('custom.dingtalk.TOKEN'),
+            'aes_key' => config('custom.dingtalk.ENCODING_AES_KEY'),
+            'url' => url('dingtalk/receivebpms')
+        ];
+
+        $response = self::register_call_back($access_token, $data);
+        return $response;
+    }
+
     public static function register_call_back($accessToken, $data)
     {
         $response = Http::post("/call_back/register_call_back",
@@ -956,6 +972,193 @@ class DingTalkController extends Controller
                 // return $encryptMsg;
             } 
             else 
+            {
+                Log::error("RESPONSE ERR: " . $errCode);
+            }
+        }
+    }
+
+    public function receivebpms()
+    {
+        $signature = $_GET["signature"];
+        $timeStamp = $_GET["timestamp"];
+        $nonce = $_GET["nonce"];
+        $postdata = file_get_contents("php://input");
+        $postList = json_decode($postdata,true);
+        $encrypt = $postList['encrypt'];
+        $crypt = new DingtalkCrypt(config('custom.dingtalk.TOKEN'), config('custom.dingtalk.ENCODING_AES_KEY'), config('custom.dingtalk.corpid'));
+        // Log::info("ENCODING_AES_KEY: " . config('custom.dingtalk.ENCODING_AES_KEY'));
+
+        $msg = "";
+        $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
+        Log::info("msg: " . $msg);
+//        Log::info("errCode: " . $errCode);
+
+        if ($errCode != 0)
+        {
+            Log::info(json_encode($_GET) . "  ERR:" . $errCode);
+
+            /**
+             * 创建套件时检测回调地址有效性，使用CREATE_SUITE_KEY作为SuiteKey
+             */
+            $crypt = new DingtalkCrypt(config('custom.dingtalk.TOKEN'), config('custom.dingtalk.ENCODING_AES_KEY'), '');
+            $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
+            if ($errCode == 0)
+            {
+                Log::info("DECRYPT CREATE SUITE MSG SUCCESS " . json_encode($_GET) . "  " . $msg);
+                $eventMsg = json_decode($msg);
+                $eventType = $eventMsg->EventType;
+                if ("check_create_suite_url" === $eventType)
+                {
+                    $random = $eventMsg->Random;
+                    $testSuiteKey = $eventMsg->TestSuiteKey;
+
+                    $encryptMsg = "";
+                    $errCode = $crypt->EncryptMsg($random, $timeStamp, $nonce, $encryptMsg);
+                    if ($errCode == 0)
+                    {
+                        Log::info("CREATE SUITE URL RESPONSE: " . $encryptMsg);
+                        echo $encryptMsg;
+                        // return $encryptMsg;
+                    }
+                    else
+                    {
+                        Log::info("CREATE SUITE URL RESPONSE ERR: " . $errCode);
+                    }
+                }
+                else
+                {
+                    //should never happened
+                }
+            }
+            else
+            {
+                Log::error(json_encode($_GET) . "CREATE SUITE ERR:" . $errCode);
+            }
+            return;
+        }
+        else
+        {
+            /**
+             * 套件创建成功后的回调推送
+             */
+            Log::info("DECRYPT MSG SUCCESS " . json_encode($_GET) . "  " . $msg);
+            $eventMsg = json_decode($msg);
+            $eventType = $eventMsg->EventType;
+            /**
+             * 套件ticket
+             */
+            if ("suite_ticket" === $eventType)
+            {
+                Cache::setSuiteTicket($eventMsg->SuiteTicket);
+            }
+            /**
+             * 临时授权码
+             */
+            else if ("tmp_auth_code" === $eventType)
+            {
+                $tmpAuthCode = $eventMsg->AuthCode;
+                Activate::autoActivateSuite($tmpAuthCode);
+            }
+            /**
+             * 授权变更事件
+             */
+            /*bpms_task_change :
+            bpms_instance_change :
+            user_leave_org : 通讯录用户离职
+            org_admin_add ：通讯录用户被设为管理员
+            org_admin_remove ：通讯录用户被取消设置管理员
+            org_dept_create ： 通讯录企业部门创建
+            org_dept_modify ： 通讯录企业部门修改
+            org_dept_remove ： 通讯录企业部门删除
+            org_remove ： 企业被解散
+            */
+            else if ("bpms_task_change" === $eventType)
+            {
+                Log::info(json_encode($_GET) . "  Info:bpms_task_change");
+                //handle auth change event
+                $data = json_decode($msg);
+//                foreach ($data->UserId as $userid) {
+//                    # code...
+//                    Log::info("user id: " . $userid);
+//                    $user = self::userGet($userid);
+//                    Log::info("user: " . json_encode($user));
+//                    UsersController::synchronizedtuser($user);
+//                }
+
+            }
+            else if ("bpms_instance_change" === $eventType)
+            {
+                Log::error(json_encode($_GET) . "  Info:bpms_instance_change");
+                //handle auth change event
+                $data = json_decode($msg);
+//                foreach ($data->UserId as $userid) {
+//                    # code...
+//                    Log::info("user id: " . $userid);
+//                    $user = self::userGet($userid);
+//                    Log::info("user: " . json_encode($user));
+//                    UsersController::synchronizedtuser($user);
+////                    UsersController::updatedtuser($userid);
+//                }
+            }
+            else if ("user_leave_org" === $eventType)
+            {
+                Log::error(json_encode($_GET) . "  ERR:user_leave_org");
+                // delete dtuser
+                $data = json_decode($msg);
+//                foreach ($data->UserId as $userid) {
+//                    Log::info("user id: " . $userid);
+//                    UsersController::destroydtuser($userid);
+//                }
+            }
+            /**
+             * 应用被解除授权的时候，需要删除相应企业的存储信息
+             */
+            else if ("suite_relieve" === $eventType)
+            {
+                $corpid = $eventMsg->AuthCorpId;
+                // ISVService::removeCorpInfo($corpid);
+                //handle auth change event
+            }else if ("change_auth" === $eventType)
+            {
+                //handle auth change event
+            }
+            /**
+             * 回调地址更新
+             */
+            else if ("check_update_suite_url" === $eventType)
+            {
+                $random = $eventMsg->Random;
+                $testSuiteKey = $eventMsg->TestSuiteKey;
+
+                $encryptMsg = "";
+                $errCode = $crypt->EncryptMsg($random, $timeStamp, $nonce, $encryptMsg);
+                if ($errCode == 0)
+                {
+                    Log::info("UPDATE SUITE URL RESPONSE: " . $encryptMsg);
+                    echo $encryptMsg;
+                    return $encryptMsg;
+                }
+                else
+                {
+                    Log::error("UPDATE SUITE URL RESPONSE ERR: " . $errCode);
+                }
+            }
+            else
+            {
+                //should never happen
+            }
+
+            $res = "success";
+            $encryptMsg = "";
+            $errCode = $crypt->EncryptMsg($res, $timeStamp, $nonce, $encryptMsg);
+            if ($errCode == 0)
+            {
+                Log::info("RESPONSE: " . $encryptMsg);
+                echo $encryptMsg;
+                // return $encryptMsg;
+            }
+            else
             {
                 Log::error("RESPONSE ERR: " . $errCode);
             }

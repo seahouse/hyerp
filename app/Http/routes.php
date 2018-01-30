@@ -38,6 +38,7 @@ Route::get('app2', function() {
 
 Route::post('dingtalk/receive', 'DingTalkController@receive');
 Route::get('dingtalk/receive', 'DingTalkController@receive');
+Route::any('dingtalk/receivebpms', 'DingTalkController@receivebpms');
 // Route::post('dingtalk/receive', function() {
 //     return '';
 // });
