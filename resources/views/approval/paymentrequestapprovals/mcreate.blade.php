@@ -37,10 +37,6 @@
 
 
 			$("#btnAccept").bind("click", function() {
-                {{--location.href = "{{ url('approval/mindexmyapproval') . '?' . json_encode(parse_url($_SERVER['QUERY_STRING']))   }}";--}}
-					{{--location.href = "{!!  urldecode(parse_url(url('approval/mindexmyapproval') . '?' . ($_SERVER['QUERY_STRING']), PHP_URL_QUERY)) !!}";--}}
-                    {{--location.href = "{{ html_entity_decode(urldecode(parse_url(url('approval/mindexmyapproval') . '?' . ($_SERVER['QUERY_STRING']), PHP_URL_QUERY)))      }}";--}}
-{{--                    location.href = "{!!  urldecode(url('approval/mindexmyapproval') . '?' . ($_SERVER['QUERY_STRING'])) !!}";--}}
 				$.ajax({
 					type: "POST",
 					url: "{{ url('approval/paymentrequestapprovals/mstore') }}",
