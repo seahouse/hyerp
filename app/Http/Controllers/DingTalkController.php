@@ -91,7 +91,7 @@ class DingTalkController extends Controller
 
     public static function getconfig()
     {
-        // Cache::flush();
+//         Cache::flush();
         $nonceStr = str_random(32);
         $timeStamp = time();
         // $url = urldecode(request()->fullurl());

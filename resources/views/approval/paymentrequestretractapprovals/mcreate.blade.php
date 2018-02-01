@@ -78,7 +78,7 @@
 						else
 							alert('操作失败：' + result);
 						$('#acceptModal').modal('toggle');
-						location.href = "{{ url('approval/mindexmyapproval') }}";
+						location.href = "{{ url('approval/mindexmyapproval')  }}";
 					},
 				});
 			});
