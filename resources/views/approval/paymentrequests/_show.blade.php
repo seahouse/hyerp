@@ -246,6 +246,8 @@
     {{--<script src="/js/pdf.min.js"></script>--}}
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
+            $("a").attr("target", "_self");
+            
             DingTalkPC.config({
                 agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
                 corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID
@@ -275,7 +277,6 @@
             DingTalkPC.ready(function(res) {
                 if (DingTalkPC.ua.isInDingTalk)
                 {
-                    $("a").attr("target", "_self");
 
                     $("#showPdf").click(function() {
                         location.href = 'http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf").attr("href");
