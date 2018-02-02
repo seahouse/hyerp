@@ -244,11 +244,11 @@
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
             $("a").attr("target", "_self");
-            
+
             DingTalkPC.config({
                 agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
                 corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID
-                timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
+                timeStamp: "{!! array_get($config, 'timeStamp') !!}", // 必填，生成签名的时间戳
                 nonceStr: "{!! array_get($config, 'nonceStr') !!}", // 必填，生成签名的随机串
                 signature: "{!! array_get($config, 'signature') !!}", // 必填，签名
                 jsApiList: [] // 必填，需要使用的jsapi列表

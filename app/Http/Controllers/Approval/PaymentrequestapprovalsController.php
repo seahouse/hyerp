@@ -44,7 +44,7 @@ class PaymentrequestapprovalsController extends Controller
      */
     public function mcreate($paymentrequestid)
     {
-        //
+        // 
         $paymentrequest = Paymentrequest::findOrFail($paymentrequestid);
         // $config = DingTalkController::getconfig();
         // return view('approval/reimbursementapprovals/mcreate', compact('reimbursement', 'config'));
@@ -55,7 +55,7 @@ class PaymentrequestapprovalsController extends Controller
             return "您无权限审批此审批单";
 
         $agent = new Agent();
-        $config = DingTalkController::getconfig();
+        $config = DingTalkController::getconfig(config('custom.dingtalk.agentidlist.approval'));
         return view('approval/paymentrequestapprovals/mcreate', compact('paymentrequest', 'agent', 'config'));
     }
 

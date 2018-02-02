@@ -89,7 +89,7 @@ class DingTalkController extends Controller
     }
 
 
-    public static function getconfig()
+    public static function getconfig($agentid = '')
     {
 //         Cache::flush();
         $nonceStr = str_random(32);
@@ -99,6 +99,8 @@ class DingTalkController extends Controller
         $corpAccessToken = self::getAccessToken();
         $ticket = self::getTicket($corpAccessToken);
         $signature = self::sign($ticket, $nonceStr, $timeStamp, $url);
+        if ($agentid == '')
+            $agentid = config('custom.dingtalk.agentidlist.' . self::$APPNAME);
 
         $config = array(
             'url' => $url,
@@ -107,7 +109,8 @@ class DingTalkController extends Controller
             'corpId' => config('custom.dingtalk.corpid'),
             'signature' => $signature,
             'ticket' => $ticket,
-            'agentId' => config('custom.dingtalk.agentidlist.' . self::$APPNAME),       // such as: config('custom.dingtalk.agentidlist.approval')      // request('app')
+//            'agentId' => config('custom.dingtalk.agentidlist.' . self::$APPNAME),       // such as: config('custom.dingtalk.agentidlist.approval')      // request('app')
+            'agentId' => $agentid,
             'appname' => self::$APPNAME,
         );
 
