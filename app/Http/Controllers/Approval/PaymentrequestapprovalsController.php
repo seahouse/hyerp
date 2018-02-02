@@ -44,7 +44,7 @@ class PaymentrequestapprovalsController extends Controller
      */
     public function mcreate($paymentrequestid)
     {
-        // 
+        //
         $paymentrequest = Paymentrequest::findOrFail($paymentrequestid);
         // $config = DingTalkController::getconfig();
         // return view('approval/reimbursementapprovals/mcreate', compact('reimbursement', 'config'));
