@@ -237,13 +237,10 @@
     <script type="text/javascript">
         $(function() {
             $('#pdfContainer').media({width:'100%', height:800});
-//            $('#pdfContainer2').media({width:'100%', height:800});
         });
     </script>
 
     <script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
-    {{--<script src="/js/jquery.media.js"></script>--}}
-    {{--<script src="/js/pdf.min.js"></script>--}}
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
             $("a").attr("target", "_self");
@@ -257,11 +254,6 @@
                 jsApiList: [] // 必填，需要使用的jsapi列表
             });
 
-//            $(function() {
-//                $('a.media').media({width:800, height:600});
-//            });
-
-//            console.log($("#showPdf").attr("href"));
             console.log(DingTalkPC.ua.isInDingTalk);
             if (DingTalkPC.ua.isInDingTalk)
                 ;
@@ -269,7 +261,6 @@
             {
                 $("#showPdf").click(function() {
                     $('#myModal').modal();
-//                    location.href = 'http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf").attr("href");
                     return false;
                 });
             }
@@ -280,20 +271,12 @@
 
                     $("#showPdf").click(function() {
                         location.href = 'http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf").attr("href");
-//                        DingTalkPC.biz.util.openLink({
-//                            url: $("#showPdf").attr("href"),
-//                            onSuccess : function(result) {
-//                                /**/
-//                            },
-//                            onFail : function() {}
-//                        });
                         return false;
                     });
 
                     $("#showPaymentnode").click(function() {
                         DingTalkPC.biz.util.openLink({
                             url: $("#showPaymentnode").attr("href"),
-//                            url: "http://www.huaxing-east.cn:2015/HxCgFiles/swht/7592/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf",//要打开链接的地址
                             onSuccess : function(result) {
                                 /**/
                             },
@@ -305,10 +288,7 @@
                 else
                 {
 
-//                    $("#showPdf").display = 'none';
                 }
-
-
             });
 
             function showPdf() {

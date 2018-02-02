@@ -94,8 +94,8 @@ class DingTalkController extends Controller
 //         Cache::flush();
         $nonceStr = str_random(32);
         $timeStamp = time();
-        // $url = urldecode(request()->fullurl());
-        $url = urldecode(request()->url());
+        $url = urldecode(request()->fullurl());
+//        $url = urldecode(request()->url());
         $corpAccessToken = self::getAccessToken();
         $ticket = self::getTicket($corpAccessToken);
         $signature = self::sign($ticket, $nonceStr, $timeStamp, $url);
