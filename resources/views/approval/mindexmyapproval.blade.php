@@ -4,7 +4,7 @@
 
 @section('mindexmyapproval_main')
 
-    {!! Form::open(['url' => '/approval/mindexmyapproval/search', 'method' => 'post', 'role' => 'search', 'class' => 'form-horizontal']) !!}
+    {!! Form::open(['url' => '/approval/mindexmyapproval/search', 'method' => 'post', 'role' => 'search', 'class' => 'form-horizontal', 'id' => 'formConditon']) !!}
     <div class="container-fluid search-area">
         <div class="row">
             <div class="ctrl1">
@@ -22,7 +22,7 @@
         </div>
         <div class="row">
             <button id="btnMore" type="button" class="btn btn-link more-search">展开更多条件</button>
-            {!! Form::submit('搜索', ['class' => 'btn btn-primary search']) !!}
+            {!! Form::submit('搜索', ['class' => 'btn btn-primary search', 'id' => 'btnSearch']) !!}
             {{--<input class="btn btn-primary search" type="submit" value="搜索">--}}
         </div>
         <div id="expandArea" style="display:none;">
@@ -85,6 +85,7 @@
             @endif
 
         $(function() {
+//                window.history.replaceState && window.history.replaceState(null, '', '?pageId=3');
                 var panel = $('#expandArea')[0];
                 $('#btnMore').click(function(){
                     if (panel.style.display == 'none') {
@@ -98,14 +99,10 @@
                 })
             });
 
-
-
-
-
-
-
-
-
+            $('#btnSearch').click(function(){
+                location.href = "{!! url('approval/mindexmyapproval')  !!}" + "?" + $("form#formConditon").serialize();
+                return false;
+            });
 
         });
     </script>
