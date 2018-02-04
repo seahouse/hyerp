@@ -4,7 +4,7 @@
 
 @section('mindexmyapproval_main')
 
-    {!! Form::open(['url' => '/approval/mindexmyapproval/search', 'method' => 'post', 'role' => 'search', 'class' => 'form-horizontal', 'id' => 'formConditon']) !!}
+    {!! Form::open(['url' => '/approval/mindexmyapproval/search', 'method' => 'get', 'role' => 'search', 'class' => 'form-horizontal', 'id' => 'formConditon']) !!}
     <div class="container-fluid search-area">
         <div class="row">
             <div class="ctrl1">
@@ -99,10 +99,10 @@
                 })
             });
 
-            $('#btnSearch').click(function(){
-                location.href = "{!! url('approval/mindexmyapproval')  !!}" + "?" + $("form#formConditon").serialize();
-                return false;
-            });
+            {{--$('#btnSearch').click(function(){--}}
+                {{--location.href = "{!! url('approval/mindexmyapproval')  !!}" + "?" + $("form#formConditon").serialize();--}}
+                {{--return false;--}}
+            {{--});--}}
 
         });
     </script>

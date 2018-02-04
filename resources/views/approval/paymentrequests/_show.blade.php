@@ -272,7 +272,7 @@
                     $("#showPdf").click(function() {
                         location.href = 'http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf").attr("href");
                         return false;
-                    });
+                    }); 
 
                     $("#showPaymentnode").click(function() {
                         DingTalkPC.biz.util.openLink({
