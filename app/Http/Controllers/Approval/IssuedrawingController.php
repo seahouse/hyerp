@@ -63,30 +63,6 @@ class IssuedrawingController extends Controller
     public function mstore(Request $request)
     {
         //
-//        $issuedrawing = Issuedrawing::findOrFail(33);
-//        dd($issuedrawing->approvers());
-//        $imagefiles = $request->file('images') ;
-////        $imagefiles = array_get($request->all(),'images');
-////        dd($imagefiles);
-//        foreach ($imagefiles as $imagefile)
-//        {
-//            $tempimage = array('image' =>  $imagefile);
-////            dd($tempimage);
-//            $rules = array(
-//            'image' => 'mimes:jpeg,jpg,png,gif|required|max:10000' // max 10000kb
-////                'images' => 'image' // max 10000kb
-//            );
-//            $validator = Validator::make($tempimage, $rules);
-//            dd($validator->errors());
-//        }
-//        $rules = array(
-//            '*' => 'required|image|mimes:jpeg,jpg,png,gif|max:10000' // max 10000kb
-////            'images' => 'image' // max 10000kb
-//        );
-//        $validator = Validator::make($imagefiles, $rules);
-//        dd($validator->errors());
-//        $files = $request->input('images');
-//        dd($files);
         $input = $request->all();
 //        $files = array_get($input,'drawingattachments');
 //        $destinationPath = 'uploads/approval/issuedrawing/23/drawingattachments/';
@@ -176,7 +152,6 @@ class IssuedrawingController extends Controller
 
         $issuedrawing = Issuedrawing::create($input);
 
-
         // create drawingattachments
         $drawingattachments_url = [];
         if ($issuedrawing)
@@ -220,7 +195,9 @@ class IssuedrawingController extends Controller
                     if ($file)
                     {
                         $originalName = $file->getClientOriginalName();
-                        Storage::put($destinationPath . $originalName, file_get_contents($file->getRealPath()));
+                        $extension = $file->getClientOriginalExtension();       // .xlsx
+                        $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                        Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
 
                         $extension = $file->getClientOriginalExtension();
                         $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
@@ -232,7 +209,7 @@ class IssuedrawingController extends Controller
                         $issuedrawingattachment->issuedrawing_id = $issuedrawing->id;
                         $issuedrawingattachment->type = "image";
                         $issuedrawingattachment->filename = $originalName;
-                        $issuedrawingattachment->path = "/$destinationPath$originalName";     // add a '/' in the head.
+                        $issuedrawingattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
                         $issuedrawingattachment->save();
 
                         array_push($image_urls, url($destinationPath . $filename));
@@ -275,7 +252,6 @@ class IssuedrawingController extends Controller
                 Storage::put($destinationPath . $filename, file_get_contents($value));
 
                 file_put_contents("$dir/$filename", file_get_contents($value));
-                // file_put_contents('abcd.jpg', file_get_contents($value));
 
                 // response()->download($value);
                 // Storage::put('abcde.jpg', file_get_contents($value));
