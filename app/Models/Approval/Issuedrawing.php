@@ -119,6 +119,26 @@ class Issuedrawing extends Model
                             }
                         }
                     }
+                    elseif ($approversetting->level == 2)
+                    {
+                        $applicant_dtuser = Dtuser::where('user_id', $this::getAttribute('applicant_id'))->first();
+                        if (isset($applicant_dtuser))
+                        {
+                            $departmentList = json_decode($applicant_dtuser->department);
+                            $department_id = 0;
+                            if (count($departmentList) > 0)
+                                $department_id = array_first($departmentList);
+                            if ($department_id > 0)
+                            {
+                                $dtuserid = config('custom.dingtalk.approversettings.issuedrawing.level2.' . $department_id, '');
+                                if (strlen($dtuserid) > 0)
+                                {
+                                    $dtuser = Dtuser::where('userid', $dtuserid)->firstOrFail();
+                                    $user = User::findOrFail($dtuser->user_id);
+                                }
+                            }
+                        }
+                    }
                     elseif ($approversetting->level == 4)
                     {
                         $productioncompany = $this::getAttribute('productioncompany');
@@ -127,6 +147,26 @@ class Issuedrawing extends Model
                         {
                             $dtuser = Dtuser::where('userid', $dtuserid)->firstOrFail();
                             $user = User::findOrFail($dtuser->user_id);
+                        }
+                    }
+                    elseif ($approversetting->level == 5)
+                    {
+                        $applicant_dtuser = Dtuser::where('user_id', $this::getAttribute('applicant_id'))->first();
+                        if (isset($applicant_dtuser))
+                        {
+                            $departmentList = json_decode($applicant_dtuser->department);
+                            $department_id = 0;
+                            if (count($departmentList) > 0)
+                                $department_id = array_first($departmentList);
+                            if ($department_id > 0)
+                            {
+                                $dtuserid = config('custom.dingtalk.approversettings.issuedrawing.level5.' . $department_id, '');
+                                if (strlen($dtuserid) > 0)
+                                {
+                                    $dtuser = Dtuser::where('userid', $dtuserid)->firstOrFail();
+                                    $user = User::findOrFail($dtuser->user_id);
+                                }
+                            }
                         }
                     }
                 }
