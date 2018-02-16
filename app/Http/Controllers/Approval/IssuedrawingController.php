@@ -64,24 +64,6 @@ class IssuedrawingController extends Controller
     {
         //
         $input = $request->all();
-//        $files = array_get($input,'drawingattachments');
-//        $destinationPath = 'uploads/approval/issuedrawing/23/drawingattachments/';
-//        foreach ($files as $key => $file) {
-//            if ($file)
-//            {
-//                $originalName = $file->getClientOriginalName();
-//                Log::info($destinationPath . $originalName);
-//                Log::info($file->getRealPath());
-//                $extension = $file->getClientOriginalExtension();
-//                $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
-//                Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
-//
-//                // $fileName = rand(11111, 99999) . '.' . $extension;
-//                $upload_success = $file->move($destinationPath, $filename);
-//
-//            }
-//        }
-//        dd('aaa');
 //        $image_urls = [];
 //        array_push($image_urls, url('aaa'));
 //        array_push($image_urls, url('bbb'));
@@ -273,15 +255,32 @@ class IssuedrawingController extends Controller
             $input['drawingattachments_url'] = implode(" , ", $drawingattachments_url);
             $input['image_urls'] = json_encode($image_urls);
             $input['approvers'] = $issuedrawing->approvers();
+            if ($input['approvers'] == "")
+                $input['approvers'] = "04090710367573";       // wuceshi for test
             $response = DingTalkController::issuedrawing($input);
+            Log::info($response);
             $responsejson = json_decode($response);
             if ($responsejson->dingtalk_smartwork_bpms_processinstance_create_response->result->ding_open_errcode <> 0)
             {
                 $issuedrawing->forceDelete();
+                Log::info(json_encode($input));
                 dd('钉钉端创建失败: ' . $responsejson->dingtalk_smartwork_bpms_processinstance_create_response->result->error_msg);
             }
             else
             {
+                // save process_instance_id and business_id
+                $process_instance_id = $responsejson->dingtalk_smartwork_bpms_processinstance_create_response->result->process_instance_id;
+
+                $response = DingTalkController::processinstance_get('5380297c-05c5-46e1-9521-3a5ded63a3af');
+                $responsejson = json_decode($response);
+                $business_id = '';
+                if ($responsejson->dingtalk_smartwork_bpms_processinstance_get_response->result->ding_open_errcode == 0)
+                    $business_id = $responsejson->dingtalk_smartwork_bpms_processinstance_get_response->result->process_instance->business_id;
+
+                $issuedrawing->process_instance_id = $process_instance_id;
+                $issuedrawing->business_id = $business_id;
+                $issuedrawing->save();
+
                 // send dingtalk message.
                 $touser = $issuedrawing->nextapprover();
                 if ($touser)

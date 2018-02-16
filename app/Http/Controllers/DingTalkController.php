@@ -1360,4 +1360,31 @@ class DingTalkController extends Controller
         $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
         return $response;
     }
+
+    public static function processinstance_get($process_instance_id)
+    {
+        $method = 'dingtalk.smartwork.bpms.processinstance.get';
+        $session = self::getAccessToken();
+        $timestamp = time('2017-07-19 13:06:00');
+        $format = 'json';
+        $v = '2.0';
+
+//        $process_code = 'PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2';    // huaxing
+//        $originator_user_id = $user->dtuserid;
+//        $departmentList = json_decode($user->dtuser->department);
+//        $dept_id = 0;
+//        if (count($departmentList) > 0)
+//            $dept_id = array_first($departmentList);
+
+        $params = compact('method', 'session', 'v', 'format',
+            'process_instance_id');
+        $data = [
+//            'process_instance_id' => $process_instance_id,
+        ];
+//        Log::info(json_encode($data));
+        $response = HttpDingtalkEco::post("",
+            $params, json_encode($data));
+        return $response;
+
+    }
 }
