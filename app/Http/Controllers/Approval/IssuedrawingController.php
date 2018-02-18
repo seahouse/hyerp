@@ -271,7 +271,7 @@ class IssuedrawingController extends Controller
                 // save process_instance_id and business_id
                 $process_instance_id = $responsejson->dingtalk_smartwork_bpms_processinstance_create_response->result->process_instance_id;
 
-                $response = DingTalkController::processinstance_get('5380297c-05c5-46e1-9521-3a5ded63a3af');
+                $response = DingTalkController::processinstance_get($process_instance_id);
                 $responsejson = json_decode($response);
                 $business_id = '';
                 if ($responsejson->dingtalk_smartwork_bpms_processinstance_get_response->result->ding_open_errcode == 0)
@@ -361,5 +361,15 @@ class IssuedrawingController extends Controller
             return $approvaltype->id;
         }
         return 0;
+    }
+
+    public static function updateStatusByProcessInstanceId($processInstanceId, $status)
+    {
+        $issuedrawing = Issuedrawing::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if ($issuedrawing)
+        {
+            $issuedrawing->status = $status;
+            $issuedrawing->save();
+        }
     }
 }
