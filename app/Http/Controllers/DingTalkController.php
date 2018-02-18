@@ -685,7 +685,7 @@ class DingTalkController extends Controller
 
         // self::$ENCODING_AES_KEY = str_random(43);
         $data = [
-            'call_back_tag' => ['user_add_org', 'user_modify_org', 'user_leave_org'],
+            'call_back_tag' => ['user_add_org', 'user_modify_org', 'user_leave_org', 'bpms_task_change', 'bpms_instance_change'],
             'token' => config('custom.dingtalk.TOKEN'),
             'aes_key' => config('custom.dingtalk.ENCODING_AES_KEY'),
 //            'url' => 'http://139.224.8.136:81/dingtalk/receive'
