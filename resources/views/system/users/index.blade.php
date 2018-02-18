@@ -34,7 +34,6 @@
 
 @if (Auth::user()->email == "admin@admin.com")
         {!! Form::button('与钉钉取消绑定', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnCancelBindDT']) !!}
-        {!! Form::button('3333', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnTest']) !!}
             {!! Form::button('聊天2', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnPickConversation']) !!}
         <a href="{{ URL::to('dingtalk/delete_call_back') }}">与钉钉取消绑定</a>
 
@@ -198,27 +197,6 @@
                 });
             });
 
-            $("#btnTest").click(function() {
-                alert('btnTest');
-                $.ajax({
-                    type: "POST",
-                    url: "{!! url('dingtalk/receive') !!}",
-                    success: function(result) {
-                        // alert(result);
-                        // alert(result.errmsg);
-                        if (result.errcode == 0)
-                        {
-                            alert("取消绑定成功.");
-                        }
-                        else
-                            alert(JSON.stringify(result));
-
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        alert(JSON.stringify(xhr));
-                    }
-                });
-            });
         });
 
         <?php $config = DT::getconfig(); ?>

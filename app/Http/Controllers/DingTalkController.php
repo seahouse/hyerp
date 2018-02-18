@@ -701,6 +701,7 @@ class DingTalkController extends Controller
     }
 
     // register call back approval
+    // do not need this function. not use.
     public static function register_call_back_bpms()
     {
         $access_token = self::getAccessToken();
@@ -928,6 +929,18 @@ class DingTalkController extends Controller
                     UsersController::destroydtuser($userid);
                 }
             }
+            else if ("bpms_instance_change" === $eventType)
+            {
+                Log::info(json_encode($_GET) . "  INFO:bpms_instance_change");
+                $data = json_decode($msg);
+                Log::info("bpms_instance_change: " . $msg);
+            }
+            else if ("bpms_task_change" === $eventType)
+            {
+                Log::info(json_encode($_GET) . "  INFO:bpms_task_change");
+                $data = json_decode($msg);
+                Log::info("bpms_task_change: " . $msg);
+            }
             /**
              * 应用被解除授权的时候，需要删除相应企业的存储信息
              */
@@ -982,6 +995,7 @@ class DingTalkController extends Controller
         }
     }
 
+    // do not need function, not use.
     public function receivebpms()
     {
         $signature = $_GET["signature"];
