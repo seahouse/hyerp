@@ -712,6 +712,7 @@ class DingTalkController extends Controller
             'url' => url('dingtalk/receivebpms')
         ];
 
+        Log::info(json_encode($data));
         $response = self::register_call_back($access_token, $data);
         return $response;
     }

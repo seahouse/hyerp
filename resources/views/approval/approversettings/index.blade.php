@@ -14,6 +14,11 @@
     
     <div class="panel-body">
         <a href="{{ URL::to('approval/approversettings/create') }}" class="btn btn-sm btn-success">新建</a>
+
+        {!! Form::open(['url' => '/approval/bingdingtalk', 'class' => 'pull-right']) !!}
+            {!! Form::submit('与钉钉强绑定', ['class' => 'btn btn-default btn-sm']) !!}
+        {!! Form::close() !!}
+
 {{--        <form class="pull-right" action="/approval/items/search" method="post">
             {!! csrf_field() !!}
             <div class="pull-right">

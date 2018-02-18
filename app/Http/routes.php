@@ -359,6 +359,8 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::post('mstore', 'PaymentrequestretractapprovalController@mstore');
     });
     Route::resource('paymentrequestretractapproval', 'PaymentrequestretractapprovalController');
+
+    Route::post('bingdingtalk', 'ApprovalController@bingdingtalk');
 });
 
 Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' => ['web', 'auth']], function() {

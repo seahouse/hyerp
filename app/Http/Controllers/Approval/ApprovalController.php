@@ -14,6 +14,7 @@ use App\Models\Approval\Paymentrequest;
 use App\Models\Approval\Paymentrequestapproval;
 use Auth, DB;
 use Illuminate\Support\Facades\Input;
+use App\Http\Controllers\DingTalkController;
 
 class ApprovalController extends Controller
 {
@@ -467,5 +468,15 @@ class ApprovalController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function bingdingtalk()
+    {
+        $data = DingTalkController::register_call_back_bpms();
+
+        if ($data->errcode == "0")
+            dd($data->errmsg);
+        else
+            dd($data->errcode . ': ' . $data->errmsg);
     }
 }
