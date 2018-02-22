@@ -64,15 +64,6 @@ class IssuedrawingController extends Controller
     {
         //
         $input = $request->all();
-//        foreach ($input['images'] as $image)
-//        {
-//            if (isset($image))
-//            {
-//                dd(url('uploads/approval/issuedrawing/13/images/02.jpg'));
-//                dd($image->getClientOriginalName());
-//            }
-//        }
-//        dd($input['images']);
 //        $request->file('image_file');
 //        dd($input->file('image_file'));
 //        dd($input);
@@ -132,6 +123,7 @@ class IssuedrawingController extends Controller
 
         // create drawingattachments
         $drawingattachments_url = [];
+        $drawingattachments_url2 = [];
         if ($issuedrawing)
         {
             $files = array_get($input,'drawingattachments');
@@ -156,6 +148,7 @@ class IssuedrawingController extends Controller
                     $issuedrawingattachment->save();
 
                     array_push($drawingattachments_url, url($destinationPath . $filename));
+                    array_push($drawingattachments_url2, url('pdfjs/viewer') . "?file=" . "/$destinationPath$filename");
                 }
             }
         }
@@ -248,7 +241,9 @@ class IssuedrawingController extends Controller
 
         if (isset($issuedrawing))
         {
-            $input['drawingattachments_url'] = implode(" , ", $drawingattachments_url);
+            $input['drawingattachments_url'] = implode(" , ", $drawingattachments_url2);
+//            $input['drawingattachments_url'] = implode(" , ", $drawingattachments_url);
+
             $input['image_urls'] = json_encode($image_urls);
             $input['approvers'] = $issuedrawing->approvers();
             if ($input['approvers'] == "")
