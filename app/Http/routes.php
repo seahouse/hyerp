@@ -122,6 +122,11 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     Route::get('api/dropdown', 'Addr\ProvincesController@getIndex');
 
     Route::get('dingtalk/issuedrawing', 'DingTalkController@issuedrawing');
+
+    Route::get('pdfjs/viewer', function ()
+    {
+        return view('pdfjs/viewer');
+    });
 });
 
 

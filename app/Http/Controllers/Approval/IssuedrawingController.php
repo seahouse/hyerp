@@ -64,10 +64,6 @@ class IssuedrawingController extends Controller
     {
         //
         $input = $request->all();
-//        $image_urls = [];
-//        array_push($image_urls, url('aaa'));
-//        array_push($image_urls, url('bbb'));
-//        dd(json_encode($image_urls));
 //        foreach ($input['images'] as $image)
 //        {
 //            if (isset($image))
