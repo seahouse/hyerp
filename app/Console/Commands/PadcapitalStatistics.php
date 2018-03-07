@@ -75,7 +75,9 @@ class PadcapitalStatistics extends Command
                         'msgcontent'    => urlencode($msg) ,
                     ];
 
-                    $response = DingTalkController::sendCorpMessageText(json_encode($data));
+                    $response = $response = DingTalkController::sendCorpMessageText(json_encode($data));
+                    Log::info($response);
+                    sleep(1);
                 }
             }
             else
@@ -89,6 +91,7 @@ class PadcapitalStatistics extends Command
                         'msgcontent'    => urlencode($msg) ,
                     ];
                     DingTalkController::sendCorpMessageText(json_encode($data));
+                    sleep(1);
 //                        DingTalkController::send($userWuhl->dtuserid, '',
 //                            $msg,
 //                            config('custom.dingtalk.agentidlist.erpmessage'));
@@ -108,6 +111,7 @@ class PadcapitalStatistics extends Command
                 ];
 
                 DingTalkController::sendCorpMessageText(json_encode($data));
+                sleep(1);
             }
         }
         else
@@ -120,6 +124,7 @@ class PadcapitalStatistics extends Command
                     'msgcontent'    => urlencode($msg) ,
                 ];
                 DingTalkController::sendCorpMessageText(json_encode($data));
+                sleep(1);
             }
         }
 //        dd('aaa');
