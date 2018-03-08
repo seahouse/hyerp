@@ -43,17 +43,6 @@ class PadcapitalStatistics extends Command
     public function handle()
     {
         //
-//        $data = [
-//            'aaa' => 'bb1',
-//            'bbb' => 'aa1',
-//            'ccc' => 'dd1',
-//            'ccc' => 'cc1'
-//        ];
-//        $data = array_sort_recursive($data);
-////        $data = array_sort($data, function ($value) {
-////            return $value;
-////        });
-//        dd($data);
 
         $padcapitalTotal = 0.0;
         $orderamountstatisticses = Vorderamountstatistics_hxold::where('padcapital', '>', 0.0)->orderBy('padcapital', 'desc')->get();
