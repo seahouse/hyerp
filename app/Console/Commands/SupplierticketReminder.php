@@ -2,7 +2,9 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Purchase\Payment_hxold;
 use App\Models\Purchase\Purchaseorder_hxold_simple;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use App\Http\Controllers\DingTalkController;
 use App\Models\System\User;
@@ -43,8 +45,11 @@ class SupplierticketReminder extends Command
     public function handle()
     {
         //
-        $query = Purchaseorder_hxold_simple::where('amount_paid', '>', 0.0)->orderBy('id');
-        $query->where('arrival_status', '全部到货');
+        $query = Purchaseorder_hxold_simple::where('amount', '>', 0.0)->orderBy('amount', 'desc');
+        $query->where(function ($query) {
+            $query->where('arrival_status', '全部到货')
+                ->orWhere('arrival_status', '未到货');
+        });
         $query->whereRaw('amount_paid / amount > 0.6')->whereRaw('amount_ticketed < amount_paid');
         $msg = '';
         $query->chunk(200, function ($poheads) {
@@ -52,66 +57,74 @@ class SupplierticketReminder extends Command
             {
                 $this->info($pohead->id . '  ' . $pohead->amount);
                 Log::info($pohead->id . '  ' . $pohead->amount);
-                $msg = '采购订单（' . $pohead->number . '）已付款' . $pohead->amount_paid . '（' . number_format($pohead->amount_paid / $pohead->amount * 100, 2) . '%）且已全部到货，' . '开票金额' . $pohead->amount_ticketed . '，请抓紧向' . $pohead->supplier_name .  '催收剩余票据。';
+                $msg = '采购订单（' . $pohead->number . '）已付款' . $pohead->amount_paid . '（' . number_format($pohead->amount_paid / $pohead->amount * 100, 2) . '%），' . '开票金额' . $pohead->amount_ticketed . '，请抓紧向' . $pohead->supplier_name .  '催收剩余票据。';
                 Log::info($msg);
 
-                if ($this->option('debug'))
+                $needReminder = true;
+                if ($pohead->arrival_status == '未到货')
                 {
-                    $transactor_hxold = Userold::where('user_hxold_id', $pohead->transactor_id)->first();
-                    if (isset($transactor_hxold))
+                    $payment = Payment_hxold::where('pohead_id', $pohead->id)->orderBy('payment_date', 'desc')->firstOrFail();
+                    if (isset($payment))
                     {
-                        $transactor = User::where('id', $transactor_hxold->user_id)->first();
-                        if (isset($transactor))
-                        {
-                            $data = [
-                                'userid'        => $transactor->id,
-                                'msgcontent'    => urlencode($msg) ,
-                            ];
-                            Log::info($transactor->name);
-                        }
-                    }
-
-                    $touser = User::where('email', $this->argument('useremail'))->first();
-                    if (isset($touser))
-                    {
-                        $data = [
-                            'userid'        => $touser->id,
-                            'msgcontent'    => urlencode($msg) ,
-                        ];
-
-                        DingTalkController::sendCorpMessageText(json_encode($data));
-                        sleep(1);
+                        Log::info($payment->payment_date);
+                        $payment_date = Carbon::parse($payment->payment_date);
+                        if (Carbon::now()->gt($payment_date->addMonth(6)))
+                            $needReminder = true;
+                        else
+                            $needReminder = false;
                     }
                 }
-                else
+
+                if ($needReminder)
                 {
-                    $transactor_hxold = Userold::where('user_hxold_id', $pohead->transactor_id)->first();
-                    if (isset($transactor_hxold))
+                    if ($this->option('debug'))
                     {
-                        $transactor = User::where('id', $transactor_hxold->user_id)->first();
-                        if (isset($transactor))
+//                    $transactor_hxold = Userold::where('user_hxold_id', $pohead->transactor_id)->first();
+//                    if (isset($transactor_hxold))
+//                    {
+//                        $transactor = User::where('id', $transactor_hxold->user_id)->first();
+//                        if (isset($transactor))
+//                        {
+//                            $data = [
+//                                'userid'        => $transactor->id,
+//                                'msgcontent'    => urlencode($msg) ,
+//                            ];
+//                            Log::info($transactor->name);
+//                        }
+//                    }
+
+                        $touser = User::where('email', $this->argument('useremail'))->first();
+                        if (isset($touser))
                         {
                             $data = [
-                                'userid'        => $transactor->id,
+                                'userid'        => $touser->id,
                                 'msgcontent'    => urlencode($msg) ,
                             ];
-                            Log::info($transactor->name);
+
                             DingTalkController::sendCorpMessageText(json_encode($data));
                             sleep(1);
                         }
                     }
-
-//                    $userWuhl = User::where('email', 'wuhaolun@huaxing-east.com')->first();
-//                    if (isset($userWuhl))
-//                    {
-//                        $data = [
-//                            'userid'        => $userWuhl->id,
-//                            'msgcontent'    => urlencode($msg) ,
-//                        ];
-//                        DingTalkController::sendCorpMessageText(json_encode($data));
-//                        sleep(1);
-//                    }
+                    else
+                    {
+                        $transactor_hxold = Userold::where('user_hxold_id', $pohead->transactor_id)->first();
+                        if (isset($transactor_hxold))
+                        {
+                            $transactor = User::where('id', $transactor_hxold->user_id)->first();
+                            if (isset($transactor))
+                            {
+                                $data = [
+                                    'userid'        => $transactor->id,
+                                    'msgcontent'    => urlencode($msg) ,
+                                ];
+                                Log::info($transactor->name);
+                                DingTalkController::sendCorpMessageText(json_encode($data));
+                                sleep(1);
+                            }
+                        }
+                    }
                 }
+
             }
         });
     }
