@@ -46,11 +46,72 @@ class SupplierticketReminder extends Command
     {
         //
         $query = Purchaseorder_hxold_simple::where('amount', '>', 0.0)->orderBy('amount', 'desc');
+        $query->whereRaw('amount_paid / amount > 1.0')->whereRaw('amount_ticketed < amount_paid');
+        $msg = '';
+        $query->chunk(200, function ($poheads) {
+            foreach ($poheads as $pohead)
+            {
+                $this->info($pohead->id . '  ' . $pohead->amount);
+                Log::info($pohead->id . '  ' . $pohead->amount);
+                $msg = '采购订单（' . $pohead->number . '）的合同金额为' . $pohead->amount . '，付款金额为' . $pohead->amount_paid . '，付款金额大于合同金额，请检查。';
+                Log::info($msg);
+
+                if ($this->option('debug'))
+                {
+//                    $transactor_hxold = Userold::where('user_hxold_id', $pohead->transactor_id)->first();
+//                    if (isset($transactor_hxold))
+//                    {
+//                        $transactor = User::where('id', $transactor_hxold->user_id)->first();
+//                        if (isset($transactor))
+//                        {
+//                            $data = [
+//                                'userid'        => $transactor->id,
+//                                'msgcontent'    => urlencode($msg) ,
+//                            ];
+//                            Log::info($transactor->name);
+//                        }
+//                    }
+
+                    $touser = User::where('email', $this->argument('useremail'))->first();
+                    if (isset($touser))
+                    {
+                        $data = [
+                            'userid'        => $touser->id,
+                            'msgcontent'    => urlencode($msg) ,
+                        ];
+
+                        DingTalkController::sendCorpMessageText(json_encode($data));
+                        sleep(1);
+                    }
+                }
+                else
+                {
+                    $transactor_hxold = Userold::where('user_hxold_id', $pohead->transactor_id)->first();
+                    if (isset($transactor_hxold))
+                    {
+                        $transactor = User::where('id', $transactor_hxold->user_id)->first();
+                        if (isset($transactor))
+                        {
+                            $data = [
+                                'userid'        => $transactor->id,
+                                'msgcontent'    => urlencode($msg) ,
+                            ];
+                            Log::info($transactor->name);
+                            DingTalkController::sendCorpMessageText(json_encode($data));
+                            sleep(1);
+                        }
+                    }
+                }
+            }
+        });
+
+
+        $query = Purchaseorder_hxold_simple::where('amount', '>', 0.0)->orderBy('amount', 'desc');
         $query->where(function ($query) {
             $query->where('arrival_status', '全部到货')
                 ->orWhere('arrival_status', '未到货');
         });
-        $query->whereRaw('amount_paid / amount > 0.6')->whereRaw('amount_ticketed < amount_paid');
+        $query->whereRaw('amount_paid / amount > 0.6')->whereRaw('amount_paid / amount <= 1.0')->whereRaw('amount_ticketed < amount_paid');
         $msg = '';
         $query->chunk(200, function ($poheads) {
             foreach ($poheads as $pohead)
