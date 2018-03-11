@@ -55,11 +55,12 @@ class SupplierticketReminder extends Command
             foreach ($poheads as $pohead)
             {
                 $this->info($pohead->id . '  ' . $pohead->amount);
-                Log::info($pohead->id . '  ' . $pohead->amount);
+//                Log::info($pohead->id . '  ' . $pohead->amount);
                 $msg = '采购订单（' . $pohead->number . '）的合同金额为' . $pohead->amount . '，付款金额为' . $pohead->amount_paid . '，付款金额大于合同金额，请检查。供应商：' . $pohead->supplier_name;
-                Log::info($msg);
+//                Log::info($msg);
 
                 $this->sendMsg($msg, $pohead->transactor_id);
+                $this->sendMsg($msg, 379);       // to ZhouYP
 
                 $supplier_id = $pohead->vendinfo_id;
                 if (!array_key_exists($supplier_id, $msgWuhl))
@@ -68,50 +69,17 @@ class SupplierticketReminder extends Command
                     $msgWuhl[$supplier_id]["messages"] = [];
                 }
                 array_push($msgWuhl[$supplier_id]["messages"], $pohead->amount_paid - $pohead->amount);
-
-//                if ($this->option('debug'))
-//                {
-//                    $touser = User::where('email', $this->argument('useremail'))->first();
-//                    if (isset($touser))
-//                    {
-//                        $data = [
-//                            'userid'        => $touser->id,
-//                            'msgcontent'    => urlencode($msg) ,
-//                        ];
-//
-//                        DingTalkController::sendCorpMessageText(json_encode($data));
-//                        sleep(1);
-//                    }
-//                }
-//                else
-//                {
-//                    $transactor_hxold = Userold::where('user_hxold_id', $pohead->transactor_id)->first();
-//                    if (isset($transactor_hxold))
-//                    {
-//                        $transactor = User::where('id', $transactor_hxold->user_id)->first();
-//                        if (isset($transactor))
-//                        {
-//                            $data = [
-//                                'userid'        => $transactor->id,
-//                                'msgcontent'    => urlencode($msg) ,
-//                            ];
-//                            Log::info($transactor->name);
-//                            DingTalkController::sendCorpMessageText(json_encode($data));
-//                            sleep(1);
-//                        }
-//                    }
-//                }
             }
         });
 
-        Log:;info(json_encode($msgWuhl));
+//        Log:;info(json_encode($msgWuhl));
         foreach ($msgWuhl as $key => $value)
         {
 //            $value = array_slice($value, 0, 50);        // pre 50
             if (array_sum($value["messages"]) > 50000.0)
             {
                 $msg = $value["name"] . "累计" . count($value["messages"]) . "个采购订单，合计超付" . array_sum($value["messages"]) . "元。";
-                Log::info($msg);
+//                Log::info($msg);
             }
 
             $data = [
@@ -146,9 +114,9 @@ class SupplierticketReminder extends Command
             foreach ($poheads as $pohead)
             {
                 $this->info($pohead->id . '  ' . $pohead->amount);
-                Log::info($pohead->id . '  ' . $pohead->amount);
+//                Log::info($pohead->id . '  ' . $pohead->amount);
                 $msg = '采购订单（' . $pohead->number . '）已付款' . $pohead->amount_paid . '（' . number_format($pohead->amount_paid / $pohead->amount * 100, 2) . '%），' . '开票金额' . $pohead->amount_ticketed . '，请抓紧向' . $pohead->supplier_name .  '催开剩余票据。';
-                Log::info($msg);
+//                Log::info($msg);
 
                 $needReminder = true;
                 if ($pohead->arrival_status == '未到货')
@@ -156,7 +124,7 @@ class SupplierticketReminder extends Command
                     $payment = Payment_hxold::where('pohead_id', $pohead->id)->orderBy('payment_date', 'desc')->firstOrFail();
                     if (isset($payment))
                     {
-                        Log::info($payment->payment_date);
+//                        Log::info($payment->payment_date);
                         $payment_date = Carbon::parse($payment->payment_date);
                         if (Carbon::now()->gt($payment_date->addMonth(6)))
                         {
@@ -222,7 +190,7 @@ class SupplierticketReminder extends Command
             if (array_sum($value["messages"]) > 100000.0)
             {
                 $msg = $value["name"] . "累计" . count($value["messages"]) . "个采购订单，合计欠票" . array_sum($value["messages"]) . "元。";
-                Log::info($msg);
+//                Log::info($msg);
             }
 
             $data = [
@@ -270,7 +238,7 @@ class SupplierticketReminder extends Command
                         'userid'        => $transactor->id,
                         'msgcontent'    => urlencode($msg) ,
                     ];
-                    Log::info($transactor->name);
+//                    Log::info($transactor->name);
                     DingTalkController::sendCorpMessageText(json_encode($data));
                     sleep(1);
                 }
