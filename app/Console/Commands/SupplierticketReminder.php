@@ -18,7 +18,7 @@ class SupplierticketReminder extends Command
      *
      * @var string
      */
-    protected $signature = 'reminder:supplierticket {useremail=admin@admin.com} {--debug}';
+    protected $signature = 'reminder:supplierticket {useremail=admin@admin.com} {--totalto=} {--debug}';
 
     /**
      * The console command description.
@@ -48,10 +48,10 @@ class SupplierticketReminder extends Command
         $msg = '以下消息为超额付款的采购订单：';
         $this->sendMsg($msg);
 
-
+        $msgWuhl = [];
         $query = Purchaseorder_hxold_simple::where('amount', '>', 0.0)->orderBy('amount', 'desc');
         $query->whereRaw('amount_paid / amount > 1.0')->whereRaw('amount_ticketed < amount_paid');
-        $query->chunk(200, function ($poheads) {
+        $query->chunk(200, function ($poheads) use (&$msgWuhl) {
             foreach ($poheads as $pohead)
             {
                 $this->info($pohead->id . '  ' . $pohead->amount);
@@ -59,7 +59,16 @@ class SupplierticketReminder extends Command
                 $msg = '采购订单（' . $pohead->number . '）的合同金额为' . $pohead->amount . '，付款金额为' . $pohead->amount_paid . '，付款金额大于合同金额，请检查。供应商：' . $pohead->supplier_name;
                 Log::info($msg);
 
-                $this->sendMsg($msg);
+                $this->sendMsg($msg, $pohead->transactor_id);
+
+                $supplier_id = $pohead->vendinfo_id;
+                if (!array_key_exists($supplier_id, $msgWuhl))
+                {
+                    $msgWuhl[$supplier_id]["name"] = $pohead->supplier_name;
+                    $msgWuhl[$supplier_id]["messages"] = [];
+                }
+                array_push($msgWuhl[$supplier_id]["messages"], $pohead->amount_paid - $pohead->amount);
+
 //                if ($this->option('debug'))
 //                {
 //                    $touser = User::where('email', $this->argument('useremail'))->first();
@@ -95,9 +104,37 @@ class SupplierticketReminder extends Command
             }
         });
 
+        Log:;info(json_encode($msgWuhl));
+        foreach ($msgWuhl as $key => $value)
+        {
+//            $value = array_slice($value, 0, 50);        // pre 50
+            if (array_sum($value["messages"]) > 50000.0)
+            {
+                $msg = $value["name"] . "累计" . count($value["messages"]) . "个采购订单，合计超付" . array_sum($value["messages"]) . "元。";
+                Log::info($msg);
+            }
+
+            $data = [
+                'userid'        => $key,
+                'msgcontent'    => urlencode($msg),
+            ];
+            if ($this->option('totalto'))
+            {
+                $touser = User::where('email', $this->option('totalto'))->first();
+                if (isset($touser))
+                {
+                    $data['userid'] = $touser->id;
+                    DingTalkController::sendCorpMessageText(json_encode($data));
+                    sleep(1);
+                }
+            }
+        }
+
+
         $msg = '以下消息为需要向供应商催开票据的订单：';
         $this->sendMsg($msg);
 
+        $msgWuhl = [];
         $query = Purchaseorder_hxold_simple::where('amount', '>', 0.0)->orderBy('amount', 'desc');
         $query->where(function ($query) {
             $query->where('arrival_status', '全部到货')
@@ -105,7 +142,7 @@ class SupplierticketReminder extends Command
         });
         $query->whereRaw('amount_paid / amount > 0.6')->whereRaw('amount_paid / amount <= 1.0')->whereRaw('amount_ticketed < amount_paid');
         $msg = '';
-        $query->chunk(200, function ($poheads) {
+        $query->chunk(200, function ($poheads) use (&$msgWuhl) {
             foreach ($poheads as $pohead)
             {
                 $this->info($pohead->id . '  ' . $pohead->amount);
@@ -122,7 +159,17 @@ class SupplierticketReminder extends Command
                         Log::info($payment->payment_date);
                         $payment_date = Carbon::parse($payment->payment_date);
                         if (Carbon::now()->gt($payment_date->addMonth(6)))
+                        {
                             $needReminder = true;
+
+                            $supplier_id = $pohead->vendinfo_id;
+                            if (!array_key_exists($supplier_id, $msgWuhl))
+                            {
+                                $msgWuhl[$supplier_id]["name"] = $pohead->supplier_name;
+                                $msgWuhl[$supplier_id]["messages"] = [];
+                            }
+                            array_push($msgWuhl[$supplier_id]["messages"], $pohead->amount_paid - $pohead->amount_ticketed);
+                        }
                         else
                             $needReminder = false;
                     }
@@ -130,56 +177,69 @@ class SupplierticketReminder extends Command
 
                 if ($needReminder)
                 {
-                    if ($this->option('debug'))
-                    {
-//                    $transactor_hxold = Userold::where('user_hxold_id', $pohead->transactor_id)->first();
-//                    if (isset($transactor_hxold))
+                    $this->sendMsg($msg, $pohead->transactor_id);
+
+//                    if ($this->option('debug'))
 //                    {
-//                        $transactor = User::where('id', $transactor_hxold->user_id)->first();
-//                        if (isset($transactor))
+//                        $touser = User::where('email', $this->argument('useremail'))->first();
+//                        if (isset($touser))
 //                        {
 //                            $data = [
-//                                'userid'        => $transactor->id,
+//                                'userid'        => $touser->id,
 //                                'msgcontent'    => urlencode($msg) ,
 //                            ];
-//                            Log::info($transactor->name);
+//
+//                            DingTalkController::sendCorpMessageText(json_encode($data));
+//                            sleep(1);
 //                        }
 //                    }
-
-                        $touser = User::where('email', $this->argument('useremail'))->first();
-                        if (isset($touser))
-                        {
-                            $data = [
-                                'userid'        => $touser->id,
-                                'msgcontent'    => urlencode($msg) ,
-                            ];
-
-                            DingTalkController::sendCorpMessageText(json_encode($data));
-                            sleep(1);
-                        }
-                    }
-                    else
-                    {
-                        $transactor_hxold = Userold::where('user_hxold_id', $pohead->transactor_id)->first();
-                        if (isset($transactor_hxold))
-                        {
-                            $transactor = User::where('id', $transactor_hxold->user_id)->first();
-                            if (isset($transactor))
-                            {
-                                $data = [
-                                    'userid'        => $transactor->id,
-                                    'msgcontent'    => urlencode($msg) ,
-                                ];
-                                Log::info($transactor->name);
-                                DingTalkController::sendCorpMessageText(json_encode($data));
-                                sleep(1);
-                            }
-                        }
-                    }
+//                    else
+//                    {
+//                        $transactor_hxold = Userold::where('user_hxold_id', $pohead->transactor_id)->first();
+//                        if (isset($transactor_hxold))
+//                        {
+//                            $transactor = User::where('id', $transactor_hxold->user_id)->first();
+//                            if (isset($transactor))
+//                            {
+//                                $data = [
+//                                    'userid'        => $transactor->id,
+//                                    'msgcontent'    => urlencode($msg) ,
+//                                ];
+//                                Log::info($transactor->name);
+//                                DingTalkController::sendCorpMessageText(json_encode($data));
+//                                sleep(1);
+//                            }
+//                        }
+//                    }
                 }
 
             }
         });
+
+        foreach ($msgWuhl as $key => $value)
+        {
+//            $value = array_slice($value, 0, 50);        // pre 50
+            if (array_sum($value["messages"]) > 100000.0)
+            {
+                $msg = $value["name"] . "累计" . count($value["messages"]) . "个采购订单，合计欠票" . array_sum($value["messages"]) . "元。";
+                Log::info($msg);
+            }
+
+            $data = [
+                'userid'        => $key,
+                'msgcontent'    => urlencode($msg),
+            ];
+            if ($this->option('totalto'))
+            {
+                $touser = User::where('email', $this->option('totalto'))->first();
+                if (isset($touser))
+                {
+                    $data['userid'] = $touser->id;
+                    DingTalkController::sendCorpMessageText(json_encode($data));
+                    sleep(1);
+                }
+            }
+        }
     }
 
     public function sendMsg($msg, $userid_hxold = 0)
