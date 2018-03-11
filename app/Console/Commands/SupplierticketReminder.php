@@ -46,7 +46,9 @@ class SupplierticketReminder extends Command
     {
         //
         $msg = '以下消息为超额付款的采购订单：';
-        $this->sendMsg($msg);
+        $this->sendMsg($msg, 379);      // to ZhouYP
+        $this->sendMsg($msg, 8);        // to WuHL
+        $this->sendMsg($msg, 196);      // to LiuHM
 
         $msgWuhl = [];
         $query = Purchaseorder_hxold_simple::where('amount', '>', 0.0)->orderBy('amount', 'desc');
@@ -100,7 +102,9 @@ class SupplierticketReminder extends Command
 
 
         $msg = '以下消息为需要向供应商催开票据的订单：';
-        $this->sendMsg($msg);
+        $this->sendMsg($msg, 379);      // to ZhouYP
+        $this->sendMsg($msg, 8);        // to WuHL
+        $this->sendMsg($msg, 196);      // to LiuHM
 
         $msgWuhl = [];
         $query = Purchaseorder_hxold_simple::where('amount', '>', 0.0)->orderBy('amount', 'desc');
