@@ -281,7 +281,15 @@ class UsersController extends Controller
     {
         $dtuserlocal = Dtuser::where('userid', $dtuserid);
         if (isset($dtuserlocal))
+        {
+            $user = $dtuserlocal->user();
+            if (isset($user))
+            {
+                $user->dtuserid = "";
+                $user->save();
+            }
             $dtuserlocal->delete();
+        }
     }
 
     /**
