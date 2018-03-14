@@ -1373,6 +1373,11 @@ class DingTalkController extends Controller
 //                'value'     => '<a href="http://www.huaxing-east.cn:2016/uploads/approval/issuedrawing/52/drawingattachments/20180218232347132.pdf">aaa</a>',
             ],
             [
+                'name'      => '备注',
+                'value'     => $inputs['remark'],
+//                'value'     => '<a href="http://www.huaxing-east.cn:2016/uploads/approval/issuedrawing/52/drawingattachments/20180218232347132.pdf">aaa</a>',
+            ],
+            [
                 'name'      => '图纸签收回执',
                 'value'     => $inputs['image_urls'],
             ],

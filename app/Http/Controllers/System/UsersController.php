@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DingTalkController;
 use App\Models\System\Userold;
 use App\Models\System\Employee_hxold;
+use Log;
 
 class UsersController extends Controller
 {
@@ -282,7 +283,7 @@ class UsersController extends Controller
         $dtuserlocal = Dtuser::where('userid', $dtuserid);
         if (isset($dtuserlocal))
         {
-            $user = $dtuserlocal->user();
+            $user = $dtuserlocal->first()->user;
             if (isset($user))
             {
                 $user->dtuserid = "";
