@@ -83,9 +83,9 @@ class IssuedrawingController extends Controller
 //            'image_file'            => 'required|image',
 //            'image_file'            => 'required|file|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
         ]);
-        $input = HelperController::skipEmptyValue($input);
-//        DingTalkController::issuedrawing($input);
-//        dd($input);
+//        $input = HelperController::skipEmptyValue($input);
+
+
         // dd($request->hasFile('paymentnodeattachments'));
         // dd($request->file('paymentnodeattachments'));
         // dd($request->file('paymentnodeattachments')->getClientOriginalExtension());
@@ -149,6 +149,17 @@ class IssuedrawingController extends Controller
 
                     array_push($drawingattachments_url, url($destinationPath . $filename));
                     array_push($drawingattachments_url2, url('pdfjs/viewer') . "?file=" . "/$destinationPath$filename");
+//                    array_push($drawingattachments_url2, url('mddauth/pdfjs-viewer') . "?file=" . "/$destinationPath$filename");
+
+//                    DingTalkController::send_link('manager1200', '',
+//                        url('mddauth/pdfjs-viewer') . "?file=" . "/$destinationPath$filename", '',
+//                        '供应商付款审批', '来自的付款申请单需要您审批.',
+//                        config('custom.dingtalk.agentidlist.approval'));
+
+//                    DingTalkController::send_oa_paymentrequest($touser->dtuserid, '',
+//                        url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
+//                        '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', $paymentrequest,
+//                        config('custom.dingtalk.agentidlist.approval'));
                 }
             }
         }
@@ -247,7 +258,7 @@ class IssuedrawingController extends Controller
             $input['image_urls'] = json_encode($image_urls);
             $input['approvers'] = $issuedrawing->approvers();
             if ($input['approvers'] == "")
-                $input['approvers'] = "04090710367573";       // wuceshi for test
+                $input['approvers'] = config('custom.dingtalk.default_approvers');       // wuceshi for test
             $response = DingTalkController::issuedrawing($input);
             Log::info($response);
             $responsejson = json_decode($response);

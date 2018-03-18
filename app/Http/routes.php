@@ -314,6 +314,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('{id}/printpage', 'PaymentrequestsController@printpage');
         Route::get('{id}/pay', 'PaymentrequestsController@pay');
         Route::get('hasrepeat/{pohead_id}/{amount?}', 'PaymentrequestsController@hasrepeat');    // pdfjs viewer.html
+        Route::get('exceedingpay/{pohead_id}/{amount?}', 'PaymentrequestsController@exceedingpay');
         Route::get('indexjson', 'PaymentrequestsController@indexjson');    // pdfjs viewer.html
 //        Route::get('pdfjs/viewer/{pdffile?}', 'PaymentrequestsController@pdfjsviewer');
     });

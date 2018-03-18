@@ -7,7 +7,7 @@
 
 <div class="form-group">
     {!! Form::label('email', '邮箱:') !!}
-    {!! Form::input('email', 'email', null, ['class' => 'form-control', 'readonly' => 'true']) !!}
+    {!! Form::input('email', 'email', null, ['class' => 'form-control']) !!}
 </div>
 
 <div class="form-group">
@@ -24,6 +24,8 @@
     {!! Form::label('avatar', '头像:') !!}
     {!! Form::file('avatar') !!}
 </div>
+
+
 
 {{-- 
 <div class="form-group">

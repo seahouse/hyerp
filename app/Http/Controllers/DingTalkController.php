@@ -1318,7 +1318,8 @@ class DingTalkController extends Controller
 
 //        $process_code = 'PROC-EF6YRO35P2-7MPMNW3BNO0R8DKYN8GX1-2EACCA5J-6';     // hyerp
 //        $process_code = 'PROC-EF6YJDXRN2-V88CLW5WMN8R63JUE7XW3-M0DE5SQI-2K';    // huaxing
-        $process_code = 'PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2';    // huaxing
+//        $process_code = 'PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2';    // huaxing
+        $process_code = config('custom.dingtalk.approval_processcode.issuedrawing');
         $originator_user_id = $user->dtuserid;
         $departmentList = json_decode($user->dtuser->department);
         $dept_id = 0;
@@ -1385,6 +1386,10 @@ class DingTalkController extends Controller
 //        $form_component_values = '{name:\'测试1\', value:\'aaa\'}';
 //        dd(json_encode($formdata));
         $form_component_values = json_encode($formdata);
+        Log::info('process_code: ' . $process_code);
+        Log::info('originator_user_id: ' . $originator_user_id);
+        Log::info('dept_id: ' . $dept_id);
+        Log::info('approvers: ' . $approvers);
         $params = compact('method', 'session', 'v', 'format',
             'process_code', 'originator_user_id', 'dept_id', 'approvers', 'form_component_values');
         $data = [

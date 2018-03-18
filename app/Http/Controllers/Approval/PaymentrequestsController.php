@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Approval;
 
+use App\Models\Purchase\Purchaseorder_hxold_simple;
 use App\Models\System\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -1561,6 +1562,30 @@ class PaymentrequestsController extends Controller
             {
                 $data["code"] = -1;
                 $data["msg"] = "采购订单和付款金额在10天内有重复申请。";
+            }
+        }
+        return response()->json($data);
+    }
+
+    // 判断是否付款是否超额: 如果已付金额加上此次的提交金额大于合同金额，给出提醒
+    public function exceedingpay($pohead_id, $amount = 0)
+    {
+        $data = [
+            "code" => 0,
+            "msg" => ""
+        ];
+        if ($pohead_id <= 0)
+        {
+            $data["code"] = -1;
+            $data["msg"] = "采购订单录入有误，请重新录入。";
+        }
+        else
+        {
+            $pohead = Purchaseorder_hxold_simple::where('id', $pohead_id)->firstOrFail();
+            if ($pohead->amount_paid + $amount > $pohead->amount)
+            {
+                $data["code"] = -2;
+                $data["msg"] = "该采购订单已付款" . $pohead->amount_paid . '元，加上该付款单的' . $amount . '元后，会超过合同金额' . $pohead->amount . '元。';
             }
         }
         return response()->json($data);
