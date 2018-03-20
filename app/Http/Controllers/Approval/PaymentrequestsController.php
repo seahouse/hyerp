@@ -210,11 +210,24 @@ class PaymentrequestsController extends Controller
 
         if ($request->has('approvaldatestart') && $request->has('approvaldateend'))
         {
-            $paymentrequestids = DB::table('paymentrequestapprovals')
-                ->select('paymentrequest_id')
-                ->groupBy('paymentrequest_id')
-                ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'::timestamp + interval \'1D\'')
-                ->pluck('paymentrequest_id');
+            if ($request->has('approver_id_date'))
+            {
+                $paymentrequestids = DB::table('paymentrequestapprovals')
+                    ->where('approver_id', $request->input('approver_id_date'))
+                    ->select('paymentrequest_id')
+                    ->groupBy('paymentrequest_id')
+                    ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'')
+                    ->pluck('paymentrequest_id');
+            }
+            else
+            {
+                $paymentrequestids = DB::table('paymentrequestapprovals')
+                    ->select('paymentrequest_id')
+                    ->groupBy('paymentrequest_id')
+                    ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'')
+                    ->pluck('paymentrequest_id');
+            }
+
             $query->whereIn('id', $paymentrequestids);
 
             // $query->leftJoin('paymentrequestapprovals', 'paymentrequestapprovals.paymentrequest_id', '=', 'paymentrequests.id')

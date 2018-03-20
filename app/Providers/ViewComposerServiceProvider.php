@@ -155,6 +155,12 @@ class ViewComposerServiceProvider extends ServiceProvider
             $view->with('poheadOrderDateyearList_hxold', \App\Models\Sales\Salesorder_hxold::select(DB::raw('datepart(year, orderdate) as dateyear'))->orderby('dateyear', 'asc')->lists('dateyear', 'dateyear'));
 //            $view->with('poheadOrderDateyearList_hxold', DB::connection('sqlsrv')->select(DB::raw('select distinct datepart(year, orderdate) from vorder'))->lists('projectjc', 'id'));
         });
+
+        // approvers_paymentrequest
+        view()->composer(array('approval.paymentrequests.index'), function($view) {
+            $ids = \App\Models\Approval\Paymentrequestapproval::select('approver_id')->distinct()->get();
+            $view->with('approvers_paymentrequest', \App\Models\System\User::whereIn('id', $ids)->lists('name', 'id'));
+        });
     }
 
     /**

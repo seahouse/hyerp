@@ -32,12 +32,14 @@
                     <button class="btn btn-default btn-sm" id="btnExport">导出</button>
                 </div>
         --}}
+
         {!! Form::open(['url' => '/approval/paymentrequests/search', 'class' => 'pull-right form-inline']) !!}
             <div class="form-group-sm">
-                {!! Form::label('approvaldatelabel', '审批时间:', ['class' => 'control-label']); !!}
-                {!! Form::date('approvaldatestart', null, ['class' => 'form-control']); !!}
-                {!! Form::label('approvaldatelabelto', '-', ['class' => 'control-label']); !!}
-                {!! Form::date('approvaldateend', null, ['class' => 'form-control']); !!}
+                {!! Form::label('approvaldatelabel', '审批时间:', ['class' => 'control-label']) !!}
+                {!! Form::date('approvaldatestart', null, ['class' => 'form-control']) !!}
+                {!! Form::label('approvaldatelabelto', '-', ['class' => 'control-label']) !!}
+                {!! Form::date('approvaldateend', null, ['class' => 'form-control']) !!}
+                {!! Form::select('approver_id_date', $approvers_paymentrequest, null, ['class' => 'form-control', 'placeholder' => '--审批人（审批时间）--']); !!}
                 
                 {!! Form::select('paymentmethod', ['支票' => '支票', '贷记' => '贷记', '电汇' => '电汇', '汇票' => '汇票', '现金' => '现金', '银行卡' => '银行卡', '其他' => '其他'], null, ['class' => 'form-control', 'placeholder' => '--付款方式--']) !!}
 
