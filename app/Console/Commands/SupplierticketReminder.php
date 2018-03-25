@@ -130,7 +130,7 @@ class SupplierticketReminder extends Command
                     {
 //                        Log::info($payment->payment_date);
                         $payment_date = Carbon::parse($payment->payment_date);
-                        if (Carbon::now()->gt($payment_date->addMonth(6)))
+                        if (Carbon::now()->gt($payment_date->addDays(20)))
                         {
                             $needReminder = true;
 
