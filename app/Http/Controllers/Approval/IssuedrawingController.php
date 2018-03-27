@@ -133,6 +133,7 @@ class IssuedrawingController extends Controller
                 {
                     $originalName = $file->getClientOriginalName();         // aa.xlsx
                     $extension = $file->getClientOriginalExtension();       // .xlsx
+                    Log::info('extension: ' . $extension);
                     $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
                     Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
 
@@ -148,13 +149,15 @@ class IssuedrawingController extends Controller
                     $issuedrawingattachment->save();
 
                     array_push($drawingattachments_url, url($destinationPath . $filename));
-                    array_push($drawingattachments_url2, url('pdfjs/viewer') . "?file=" . "/$destinationPath$filename");
+                    if (strcasecmp($extension, "pdf") == 0)
+                        array_push($drawingattachments_url2, url('pdfjs/viewer') . "?file=" . "/$destinationPath$filename");
+                    else
+                    {
+                        $filename2 = str_replace(".", "_", $filename);
+                        array_push($drawingattachments_url2, url("$destinationPath$filename2"));
+                    }
 //                    array_push($drawingattachments_url2, url('mddauth/pdfjs-viewer') . "?file=" . "/$destinationPath$filename");
 
-//                    DingTalkController::send_link('manager1200', '',
-//                        url('mddauth/pdfjs-viewer') . "?file=" . "/$destinationPath$filename", '',
-//                        '供应商付款审批', '来自的付款申请单需要您审批.',
-//                        config('custom.dingtalk.agentidlist.approval'));
 
 //                    DingTalkController::send_oa_paymentrequest($touser->dtuserid, '',
 //                        url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',

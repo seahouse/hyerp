@@ -127,6 +127,11 @@ Route::group(['middleware' => ['web', 'auth']], function () {
     {
         return view('pdfjs/viewer');
     });
+    Route::get('uploads/approval/issuedrawing/{id}/drawingattachments/{filename}', function ($id, $filename) {
+        $filename = str_replace("_", ".", $filename);
+        return redirect(url("uploads/approval/issuedrawing/$id/drawingattachments/$filename"));
+    });
+
 });
 
 

@@ -44,6 +44,8 @@ return array(
     'CreateItemsitesTable' => $baseDir . '/database/migrations/2015_08_31_012251_create_itemsites_table.php',
     'CreateItemtypesTable' => $baseDir . '/database/migrations/2015_07_10_071426_create_itemtypes_table.php',
     'CreateLocationsTable' => $baseDir . '/database/migrations/2017_04_30_092054_create_locations_table.php',
+    'CreateMcitempurchaseitemsTable' => $baseDir . '/database/migrations/2018_03_26_153429_create_mcitempurchaseitems_table.php',
+    'CreateMcitempurchasesTable' => $baseDir . '/database/migrations/2018_03_26_152440_create_mcitempurchases_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
     'CreatePaymentrequestapprovalsTable' => $baseDir . '/database/migrations/2016_09_05_093746_create_paymentrequestapprovals_table.php',
     'CreatePaymentrequestattachmentsTable' => $baseDir . '/database/migrations/2016_09_13_110408_create_paymentrequestattachments_table.php',
