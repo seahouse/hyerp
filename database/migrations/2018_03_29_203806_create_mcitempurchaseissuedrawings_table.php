@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMcitempurchaseitemsTable extends Migration
+class CreateMcitempurchaseissuedrawingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,15 +12,11 @@ class CreateMcitempurchaseitemsTable extends Migration
      */
     public function up()
     {
-        Schema::create('mcitempurchaseitems', function (Blueprint $table) {
+        Schema::create('mcitempurchaseissuedrawings', function (Blueprint $table) {
             $table->increments('id');
 
             $table->integer('mcitempurchase_id')->nullable();
-            $table->integer('item_id')->nullable();
-            $table->decimal('unitprice', 18, 2)->default(0.0);
-            $table->decimal('quantity', 18, 2)->default(0.0);
-            $table->decimal('weight', 18, 2)->default(0.0);
-            $table->integer('seq')->default(0);
+            $table->integer('issuedrawing_id')->nullable();
 
             $table->timestamps();
 
@@ -35,6 +31,6 @@ class CreateMcitempurchaseitemsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('mcitempurchaseitems');
+        Schema::drop('mcitempurchaseissuedrawings');
     }
 }

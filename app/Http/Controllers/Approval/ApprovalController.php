@@ -12,7 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Approval\Reimbursement;
 use App\Models\Approval\Paymentrequest;
 use App\Models\Approval\Paymentrequestapproval;
-use Auth, DB;
+use Auth, DB, Log;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\DingTalkController;
 
@@ -478,5 +478,111 @@ class ApprovalController extends Controller
             dd($data->errmsg);
         else
             dd($data->errcode . ': ' . $data->errmsg);
+    }
+
+    public static function mcitempurchase($inputs)
+    {
+        $user = Auth::user();
+        $method = 'dingtalk.smartwork.bpms.processinstance.create';
+        $session = DingTalkController::getAccessToken();
+        $timestamp = time('2017-07-19 13:06:00');
+        $format = 'json';
+        $v = '2.0';
+
+//        $process_code = 'PROC-EF6YRO35P2-7MPMNW3BNO0R8DKYN8GX1-2EACCA5J-6';     // hyerp
+//        $process_code = 'PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2';    // huaxing
+        $process_code = config('custom.dingtalk.approval_processcode.mcitempurchase');
+        $originator_user_id = $user->dtuserid;
+        $departmentList = json_decode($user->dtuser->department);
+        $dept_id = 0;
+        if (count($departmentList) > 0)
+            $dept_id = array_first($departmentList);
+        $approvers = $inputs['approvers'];
+//        $approvers = $user->dtuserid;
+        $detail_array = [];
+        $mcitempurchase_items = json_decode($inputs['items_string']);
+        foreach ($mcitempurchase_items as $value) {
+            if ($value->item_id > 0)
+            {
+                $item_array = [
+                    [
+                        'name'      => '物品名称',
+                        'value'     => $value->item_name,
+                    ],
+                    [
+                        'name'      => '规格型号',
+                        'value'     => $value->item_spec,
+                    ],
+                    [
+                        'name'      => '单价（可不填）',
+                        'value'     => $value->unitprice,
+                    ],
+                    [
+                        'name'      => '单位',
+                        'value'     => $value->unit,
+                    ],
+                    [
+                        'name'      => '数量',
+                        'value'     => $value->quantity,
+                    ],
+                    [
+                        'name'      => '重量（吨）',
+                        'value'     => $value->weight,
+                    ],
+                ];
+                array_push($detail_array, $item_array);
+            }
+        }
+        $formdata = [
+            [
+                'name'      => '所属制造中心',
+                'value'     => $inputs['manufacturingcenter'],
+            ],
+            [
+                'name'      => '申购物品类型',
+                'value'     => $inputs['itemtype'],
+            ],
+            [
+                'name'      => '要求最晚到货时间',
+                'value'     => $inputs['expirationdate'],
+            ],
+            [
+                'name'      => '项目编号',
+                'value'     => $inputs['sohead_number'],
+            ],
+            [
+                'name'      => '下发图纸审批单号',
+                'value'     => $inputs['issuedrawing_numbers'],
+            ],
+            [
+                'name'      => '总价（元）',
+                'value'     => $inputs['totalprice'],
+            ],
+            [
+                'name'      => '采购物品详细用途',
+                'value'     => $inputs['detailuse'],
+            ],
+            [
+                'name'      => '上传图片',
+                'value'     => $inputs['image_urls'],
+            ],
+            [
+                'name'      => '明细',
+                'value'     => json_encode($detail_array),
+            ],
+        ];
+        $form_component_values = json_encode($formdata);
+        Log::info('process_code: ' . $process_code);
+        Log::info('originator_user_id: ' . $originator_user_id);
+        Log::info('dept_id: ' . $dept_id);
+        Log::info('approvers: ' . $approvers);
+//        Log::info('form_component_values: ' . $form_component_values);
+        $params = compact('method', 'session', 'v', 'format',
+            'process_code', 'originator_user_id', 'dept_id', 'approvers', 'form_component_values');
+        $data = [
+//            'process_code' => '001'
+        ];
+        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+        return $response;
     }
 }

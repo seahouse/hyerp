@@ -69,9 +69,9 @@
 		</div>
 		<div class="btn-group btn-group-justified" role="group" aria-label="...">
 			<div class="btn-group" role="group">
-				<a href="#" class="btn btn-default btn-lg">
+				<a href="{{ url('/approval/mcitempurchase/mcreate') }}" class="btn btn-default btn-lg">
 					<i class="icon iconfont btn-menu-2 color-grey icon-dingding"></i>
-					<span class="labble">XXX</span>
+					<span class="labble">制造中心物品申购</span>
 				</a>
 			</div>
 			<div class="btn-group" role="group">

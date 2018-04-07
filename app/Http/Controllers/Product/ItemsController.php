@@ -140,6 +140,14 @@ class ItemsController extends Controller
         return $items;
     }
 
+    public function getitemsbykey($key)
+    {
+        //
+        $items = Itemp_hxold::where('goods_name', $key)
+            ->paginate(50);
+        return $items;
+    }
+
     /**
      * Show the form for creating a new resource.
      *

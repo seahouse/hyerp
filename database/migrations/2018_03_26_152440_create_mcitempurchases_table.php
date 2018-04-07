@@ -19,7 +19,8 @@ class CreateMcitempurchasesTable extends Migration
             $table->string('manufacturingcenter');
             $table->string('itemtype');
             $table->date('expirationdate');
-            $table->integer('issuedrawing_id')->nullable();
+            $table->integer('sohead_id');
+//            $table->integer('issuedrawing_id')->nullable();
             $table->decimal('totalprice', 18, 2)->default(0.0);
             $table->string('detailuse')->default('');
             $table->integer('applicant_id');
@@ -32,7 +33,7 @@ class CreateMcitempurchasesTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('issuedrawing_id')->references('id')->on('issuedrawings')->onDelete('cascade');
+//            $table->foreign('issuedrawing_id')->references('id')->on('issuedrawings')->onDelete('cascade');
         });
     }
 

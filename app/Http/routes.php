@@ -158,7 +158,8 @@ Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => [
     Route::post('items/search', 'ItemsController@search');
     Route::group(['prefix' => 'items'], function() {
         Route::get('mmindex', 'ItemsController@mmindex');
-        Route::get('mindex', 'ItemsController@mindex');        
+        Route::get('mindex', 'ItemsController@mindex');
+        Route::get('getitemsbykey/{key}', 'ItemsController@getitemsbykey');
     });
     Route::group(['prefix' => 'items/{id}'], function() {
         Route::get('receiptitems', 'ItemsController@receiptitems');
@@ -325,6 +326,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     });
     Route::resource('paymentrequests', 'PaymentrequestsController');
     Route::group(['prefix' => 'issuedrawing'], function() {
+        Route::get('getitemsbysoheadid/{sohead_id}', 'IssuedrawingController@getitemsbysoheadid');
         Route::get('mcreate', 'IssuedrawingController@mcreate');
         Route::post('mstore', 'IssuedrawingController@mstore');
     });
@@ -370,6 +372,15 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::post('mstore', 'PaymentrequestretractapprovalController@mstore');
     });
     Route::resource('paymentrequestretractapproval', 'PaymentrequestretractapprovalController');
+
+    Route::group(['prefix' => 'mcitempurchase'], function() {
+        Route::get('mcreate', 'McitempurchaseController@mcreate');
+        Route::post('mstore', 'McitempurchaseController@mstore');
+    });
+    Route::resource('mcitempurchase', 'McitempurchaseController');
+    Route::resource('mcitempurchaseattachment', 'McitempurchaseattachmentController');
+    Route::resource('mcitempurchaseissuedrawing', 'McitempurchaseissuedrawingController');
+    Route::resource('mcitempurchaseitem', 'McitempurchaseitemController');
 
     Route::post('bingdingtalk', 'ApprovalController@bingdingtalk');
 });

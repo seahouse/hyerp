@@ -29,6 +29,14 @@ class IssuedrawingController extends Controller
         //
     }
 
+    public function getitemsbysoheadid($sohead_id)
+    {
+        //
+        $issuedrawings = Issuedrawing::where('sohead_id', $sohead_id)
+            ->paginate(50);
+        return $issuedrawings;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -64,7 +72,6 @@ class IssuedrawingController extends Controller
     {
         //
         $input = $request->all();
-//        $request->file('image_file');
 //        dd($input->file('image_file'));
 //        dd($input);
         $this->validate($request, [
@@ -78,7 +85,9 @@ class IssuedrawingController extends Controller
             'requestdeliverydate'   => 'required',
             'drawingcount'          => 'required|integer|min:1',
             'drawingattachments.*'  => 'required|file',
+//            'images.*'                => 'required|file',
             'images.*'                => 'required|image',
+//            'images.*'                => 'required|image|mimetypes:application/octet-stream',
 //            'images.*'                => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
 //            'image_file'            => 'required|image',
 //            'image_file'            => 'required|file|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
