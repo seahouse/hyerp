@@ -61,7 +61,7 @@ class McitempurchaseController extends Controller
     {
         //
         $input = $request->all();
-        dd($input);
+//        dd($input);
         $this->validate($request, [
             'manufacturingcenter'       => 'required',
             'itemtype'                    => 'required',
