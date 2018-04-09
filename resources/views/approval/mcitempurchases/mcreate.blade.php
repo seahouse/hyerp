@@ -212,7 +212,17 @@
                 });
                 $("#items_string").val(JSON.stringify(itemArray));
 
-                 $("form#formMain").submit();
+//                alert($("#sohead_id").val());
+                if ($("#sohead_id").val() != 7550)
+				{
+				    if ($("#issuedrawing_values").val() == "")
+					{
+                        $('#submitModal').modal('toggle');
+                        $("#dataDefine").empty().append('未选择下图单');
+                        return false;
+					}
+				}
+				$("form#formMain").submit();
 
                  {{--$.post("{{ url('approval/mcitempurchase/weightvalid') }}", $("form#formMain").serialize(), function (data) {--}}
                      {{--if (data.code < 0)--}}

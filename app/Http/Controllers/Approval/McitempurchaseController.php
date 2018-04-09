@@ -61,13 +61,13 @@ class McitempurchaseController extends Controller
     {
         //
         $input = $request->all();
-//        dd($input);
+        dd($input);
         $this->validate($request, [
             'manufacturingcenter'       => 'required',
             'itemtype'                    => 'required',
             'expirationdate'             => 'required',
             'sohead_id'                   => 'required|integer|min:1',
-            'issuedrawing_values'       => 'required',
+//            'issuedrawing_values'       => 'required',
             'items_string'               => 'required',
 //            'tonnage'               => 'required|numeric',
 //            'drawingchecker_id'     => 'required|integer|min:1',
@@ -88,33 +88,35 @@ class McitempurchaseController extends Controller
         }
         if ($weight_purchase <= 0.0)
             dd('申购重量不能为0');
-        $weight_issuedrawing = 0.0;
-        $issuedrawing_values = $input['issuedrawing_values'];
-        foreach (explode(",", $issuedrawing_values) as $value) {
-            if ($value > 0)
-            {
-                $issuedrawing = Issuedrawing::where('id', $value)->first();
-                if (isset($issuedrawing))
-                    $weight_issuedrawing += $issuedrawing->tonnage;
+        if ($input['sohead_id'] <> "7550")
+        {
+            $weight_issuedrawing = 0.0;
+            $issuedrawing_values = $input['issuedrawing_values'];
+            foreach (explode(",", $issuedrawing_values) as $value) {
+                if ($value > 0)
+                {
+                    $issuedrawing = Issuedrawing::where('id', $value)->first();
+                    if (isset($issuedrawing))
+                        $weight_issuedrawing += $issuedrawing->tonnage;
+                }
             }
+            if ($weight_purchase > $weight_issuedrawing)
+                dd('申购重量超过了图纸重量');
+            $weight_sohead_issuedrawing = 0.0;
+            $weight_sohead_purchase = 0.0;
+            $issuedrawings = Issuedrawing::where('sohead_id', $input['sohead_id'])->get();
+            foreach ($issuedrawings as $issuedrawing)
+            {
+                $weight_sohead_issuedrawing += $issuedrawing->tonnage;
+            }
+            $mcitempurchases = Mcitempurchase::where('sohead_id', $input['sohead_id'])->get();
+            foreach ($mcitempurchases as $mcitempurchase)
+            {
+                $weight_sohead_purchase += $mcitempurchase->mcitempurchaseitems->sum('weight');
+            }
+            if ($weight_sohead_purchase + $weight_purchase > $weight_sohead_issuedrawing)
+                dd('该订单的申购重量之和超过了图纸重量之和');
         }
-        if ($weight_purchase > $weight_issuedrawing)
-            dd('申购重量超过了图纸重量');
-        $weight_sohead_issuedrawing = 0.0;
-        $weight_sohead_purchase = 0.0;
-        $issuedrawings = Issuedrawing::where('sohead_id', $input['sohead_id'])->get();
-        foreach ($issuedrawings as $issuedrawing)
-        {
-            $weight_sohead_issuedrawing += $issuedrawing->tonnage;
-        }
-        $mcitempurchases = Mcitempurchase::where('sohead_id', $input['sohead_id'])->get();
-        foreach ($mcitempurchases as $mcitempurchase)
-        {
-            $weight_sohead_purchase += $mcitempurchase->mcitempurchaseitems->sum('weight');
-        }
-        if ($weight_sohead_purchase + $weight_purchase > $weight_sohead_issuedrawing)
-            dd('该订单的申购重量之和超过了图纸重量之和');
-
 
         if ($input['totalprice'] == "")
             $input['totalprice'] = 0.0;
