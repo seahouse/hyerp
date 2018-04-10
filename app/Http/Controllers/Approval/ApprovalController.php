@@ -499,6 +499,15 @@ class ApprovalController extends Controller
             $dept_id = array_first($departmentList);
         $approvers = $inputs['approvers'];
 //        $approvers = $user->dtuserid;
+        // if originator_user_id in approvers, skip pre approvers
+        $approver_array = explode(',', $approvers);
+        if (in_array($originator_user_id, $approver_array))
+        {
+            $offset = array_search($originator_user_id, $approver_array);
+            $approver_array = array_slice($approver_array, $offset+1);
+            $approvers = implode(",", $approver_array);
+        }
+
         $detail_array = [];
         $mcitempurchase_items = json_decode($inputs['items_string']);
         foreach ($mcitempurchase_items as $value) {
