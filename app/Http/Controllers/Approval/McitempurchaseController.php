@@ -245,8 +245,6 @@ class McitempurchaseController extends Controller
 
             $input['image_urls'] = json_encode($image_urls);
             $input['approvers'] = $mcitempurchase->approvers();
-            if ($input['approvers'] == "")
-                $input['approvers'] = config('custom.dingtalk.default_approvers');       // wuceshi for test
             $response = ApprovalController::mcitempurchase($input);
             Log::info($response);
 //            dd($response);

@@ -507,6 +507,8 @@ class ApprovalController extends Controller
             $approver_array = array_slice($approver_array, $offset+1);
             $approvers = implode(",", $approver_array);
         }
+        if ($approvers == "")
+            $approvers = config('custom.dingtalk.default_approvers');       // wuceshi for test
 
         $detail_array = [];
         $mcitempurchase_items = json_decode($inputs['items_string']);

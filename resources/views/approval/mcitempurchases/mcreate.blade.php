@@ -202,6 +202,8 @@
                     itemObject.item_spec = container.find("input[name='item_spec']").val();
                     itemObject.unit = container.find("input[name='unit']").val();
                     itemObject.unitprice = container.find("input[name='unitprice']").val();
+                    if (itemObject.unitprice == "")
+                        itemObject.unitprice = 0.0;
                     itemObject.quantity = container.find("input[name='quantity']").val();
                     itemObject.weight = container.find("input[name='weight']").val();
 
