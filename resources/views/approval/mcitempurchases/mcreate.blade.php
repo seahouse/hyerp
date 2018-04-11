@@ -206,6 +206,8 @@
                         itemObject.unitprice = 0.0;
                     itemObject.quantity = container.find("input[name='quantity']").val();
                     itemObject.weight = container.find("input[name='weight']").val();
+                    if (itemObject.weight == "")
+                        itemObject.weight = 0.0;
 
                     itemArray.push(itemObject);
 

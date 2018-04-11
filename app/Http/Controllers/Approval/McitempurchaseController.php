@@ -100,7 +100,7 @@ class McitempurchaseController extends Controller
                         $weight_issuedrawing += $issuedrawing->tonnage;
                 }
             }
-            if ($weight_purchase > $weight_issuedrawing)
+            if ($weight_purchase * 1.3 > $weight_issuedrawing)
                 dd('申购重量超过了图纸重量');
             $weight_sohead_issuedrawing = 0.0;
             $weight_sohead_purchase = 0.0;
@@ -114,7 +114,7 @@ class McitempurchaseController extends Controller
             {
                 $weight_sohead_purchase += $mcitempurchase->mcitempurchaseitems->sum('weight');
             }
-            if ($weight_sohead_purchase + $weight_purchase > $weight_sohead_issuedrawing)
+            if (($weight_sohead_purchase + $weight_purchase) * 1.2 > $weight_sohead_issuedrawing)
                 dd('该订单的申购重量之和超过了图纸重量之和');
         }
 
