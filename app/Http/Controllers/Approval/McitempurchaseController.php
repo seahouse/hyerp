@@ -86,8 +86,9 @@ class McitempurchaseController extends Controller
                 $weight_purchase += $value->weight;
             }
         }
-        if ($weight_purchase <= 0.0)
-            dd('申购重量不能为0');
+//        if ($weight_purchase <= 0.0)
+//            dd('申购重量不能为0');
+
         if ($input['sohead_id'] <> "7550")
         {
             $weight_issuedrawing = 0.0;
