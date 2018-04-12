@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Approval;
 
+use App\Http\Controllers\util\HttpDingtalkEco;
+use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
+use App\Http\Controllers\util\taobaosdk\dingtalk\domain\FormComponentValueVo;
+use App\Http\Controllers\util\taobaosdk\dingtalk\request\SmartworkBpmsProcessinstanceCreateRequest;
 use App\Models\Approval\Approvaltype;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Paymentrequestretract;
@@ -587,17 +591,39 @@ class ApprovalController extends Controller
             ],
         ];
         $form_component_values = json_encode($formdata);
+        $form_component_values = str_replace('#', '%23', $form_component_values);
+//        dd(json_decode(json_decode($form_component_values)[9]->value));
         Log::info('process_code: ' . $process_code);
         Log::info('originator_user_id: ' . $originator_user_id);
         Log::info('dept_id: ' . $dept_id);
         Log::info('approvers: ' . $approvers);
-//        Log::info('form_component_values: ' . $form_component_values);
+        Log::info('form_component_values: ' . $form_component_values);
         $params = compact('method', 'session', 'v', 'format',
             'process_code', 'originator_user_id', 'dept_id', 'approvers', 'form_component_values');
         $data = [
-//            'process_code' => '001'
+//            'form_component_values' => $form_component_values,
         ];
-        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+
+//        Log::info(app_path());
+//        $c = new DingTalkClient();
+//        $req = new SmartworkBpmsProcessinstanceCreateRequest();
+////        $req->setAgentId("41605932");
+//        $req->setProcessCode($process_code);
+//        $req->setOriginatorUserId($originator_user_id);
+//        $req->setDeptId($dept_id);
+//        $req->setApprovers($approvers);
+////        $req->setCcList("zhangsan,lisi");
+////        $req->setCcPosition("START");
+//        $form_component_values = new FormComponentValueVo();
+//        $form_component_values->name="请假类型";
+//        $form_component_values->value="事假";
+//        $form_component_values->ext_value="总天数:1";
+//        $req->setFormComponentValues($form_component_values);
+//        $response = $c->execute($req, $session);
+
+//        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+        $response = HttpDingtalkEco::post("", $params, json_encode($data));
+
         return $response;
     }
 }

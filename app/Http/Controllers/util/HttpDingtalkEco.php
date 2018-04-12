@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\util;
 
-use Config;
+use Config, Log;
 
 Class HttpDingtalkEco
 {
@@ -24,6 +24,7 @@ Class HttpDingtalkEco
 	public static function post($path, $params, $data)
 	{
 		$url = self::joinParams($path, $params);
+//        Log::info("url: " . $url);
 		$response = \Httpful\Request::post($url)
 			->body($data)
 			->sendsJson()
@@ -55,6 +56,7 @@ Class HttpDingtalkEco
 				$url = substr($url, 0, $length - 1);
 			}
 		}
+//		Log::info("1111: " . $url);
 		return $url;
 	}
 }

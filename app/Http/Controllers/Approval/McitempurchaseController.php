@@ -62,6 +62,19 @@ class McitempurchaseController extends Controller
         //
         $input = $request->all();
 //        dd($input);
+//        $input = array(
+//            '_token' => 'TYAahOiX3Sx0iaTjmYMyo1hcdGZMkPnF6LlitWuF',
+//            'manufacturingcenter' => '无锡制造中心机械车间',
+//            'itemtype' => '材料类', 'expirationdate' => '2018-04-12',
+//            'project_name' => '衡水市生态循环产业园烟气净化系统',
+//            'sohead_id' => '7550', 'sohead_number' => 'JS-GC-00E-2016-04-0025',
+//            'issuedrawing_numbers' => '201804121432000044754', 'issuedrawing_values' => '67', 'item_name' => '扁钢', 'item_id' => '2682', 'item_spec' => '30＃', 'unit' => 'kg',
+//            'unitprice' => '', 'quantity' => '11', 'weight' => '11',
+//            'items_string' => '[{"item_id":"10635","item_name":"角钢","item_spec":"100*10","unit":"kg","unitprice":0,"quantity":"12","weight":"1"},{"item_id":"486","item_name":"铁板","item_spec":"20-30mm","unit":"kg","unitprice":0,"quantity":"10","weight":"1"},{"item_id":"551","item_name":"铁板","item_spec":"1500×6000×6mm","unit":"kg","unitprice":0,"quantity":"11","weight":"1"},{"item_id":"552","item_name":"铁板","item_spec":"8.2mm","unit":"kg","unitprice":0,"quantity":"11","weight":"1"},{"item_id":"553","item_name":"铁板","item_spec":"3.75mm","unit":"kg","unitprice":0,"quantity":"11","weight":"1"},{"item_id":"2230","item_name":"扁钢","item_spec":"40×10","unit":"kg","unitprice":0,"quantity":"11","weight":"1"},{"item_id":"4884","item_name":"不等边角钢","item_spec":"10×63","unit":"kg","unitprice":0,"quantity":"11","weight":"1"},{"item_id":"1598","item_name":"槽钢","item_spec":"6.3#","unit":"kg","unitprice":0,"quantity":"11","weight":"1"},{"item_id":"1415","item_name":"角钢","item_spec":"4.0#","unit":"kg","unitprice":0,"quantity":"11","weight":"1"},{"item_id":"2682","item_name":"扁钢","item_spec":"30＃","unit":"kg","unitprice":0,"quantity":"11","weight":"11"}]',
+////            'items_string' => '[{"item_id":"10635","item_name":"角钢","item_spec":"100*10","unit":"kg","unitprice":0,"quantity":"12","weight":"1"},{"item_id":"486","item_name":"铁板","item_spec":"20-30mm","unit":"kg","unitprice":0,"quantity":"10","weight":"1"},{"item_id":"551","item_name":"铁板","item_spec":"1500×6000×6mm","unit":"kg","unitprice":0,"quantity":"11","weight":"1"},{"item_id":"552","item_name":"铁板","item_spec":"8.2mm","unit":"kg","unitprice":0,"quantity":"11","weight":"1"},{"item_id":"553","item_name":"铁板","item_spec":"3.75mm","unit":"kg","unitprice":0,"quantity":"11","weight":"1"},{"item_id":"2230","item_name":"扁钢","item_spec":"40×10","unit":"kg","unitprice":0,"quantity":"11","weight":"1"},{"item_id":"4884","item_name":"不等边角钢","item_spec":"10×63","unit":"kg","unitprice":0,"quantity":"11","weight":"1"},{"item_id":"1598","item_name":"槽钢","item_spec":"6.3#","unit":"kg","unitprice":0,"quantity":"11","weight":"1"},{"item_id":"1415","item_name":"角钢","item_spec":"4#","unit":"kg","unitprice":0,"quantity":"11","weight":"1"},{"item_id":"2682","item_name":"扁钢","item_spec":"30＃","unit":"kg","unitprice":0,"quantity":"11","weight":"11"}]',
+//            'totalprice' => '0', 'detailuse' => '', 'applicant_id' => '100', 'approversetting_id' => '-1',
+//            'images' => array(null), 'approvers' => 'manager1200');
+        
         $this->validate($request, [
             'manufacturingcenter'       => 'required',
             'itemtype'                    => 'required',
