@@ -529,6 +529,10 @@ class ApprovalController extends Controller
                         'value'     => $value->item_spec,
                     ],
                     [
+                        'name'      => '尺寸',
+                        'value'     => $value->size,
+                    ],
+                    [
                         'name'      => '单价（可不填）',
                         'value'     => $value->unitprice,
                     ],
@@ -591,8 +595,8 @@ class ApprovalController extends Controller
             ],
         ];
         $form_component_values = json_encode($formdata);
-        $form_component_values = str_replace('#', '%23', $form_component_values);
-        $form_component_values = str_replace(' ', '%20', $form_component_values);
+//        $form_component_values = str_replace('#', '%23', $form_component_values);
+//        $form_component_values = str_replace(' ', '%20', $form_component_values);
 //        dd(json_decode(json_decode($form_component_values)[9]->value));
         Log::info('process_code: ' . $process_code);
         Log::info('originator_user_id: ' . $originator_user_id);
@@ -605,25 +609,28 @@ class ApprovalController extends Controller
 //            'form_component_values' => $form_component_values,
         ];
 
-//        Log::info(app_path());
-//        $c = new DingTalkClient();
-//        $req = new SmartworkBpmsProcessinstanceCreateRequest();
-////        $req->setAgentId("41605932");
-//        $req->setProcessCode($process_code);
-//        $req->setOriginatorUserId($originator_user_id);
-//        $req->setDeptId($dept_id);
-//        $req->setApprovers($approvers);
-////        $req->setCcList("zhangsan,lisi");
-////        $req->setCcPosition("START");
+        Log::info(app_path());
+        $c = new DingTalkClient();
+        $req = new SmartworkBpmsProcessinstanceCreateRequest();
+//        $req->setAgentId("41605932");
+        $req->setProcessCode($process_code);
+        $req->setOriginatorUserId($originator_user_id);
+        $req->setDeptId("$dept_id");
+        $req->setApprovers($approvers);
+//        $req->setCcList("zhangsan,lisi");
+//        $req->setCcPosition("START");
 //        $form_component_values = new FormComponentValueVo();
 //        $form_component_values->name="请假类型";
 //        $form_component_values->value="事假";
 //        $form_component_values->ext_value="总天数:1";
-//        $req->setFormComponentValues($form_component_values);
-//        $response = $c->execute($req, $session);
+        $req->setFormComponentValues("$form_component_values");
+        $response = $c->execute($req, $session);
+        return json_encode($response);
+        dd(json_encode($response, JSON_UNESCAPED_UNICODE));
+        return response()->json($response);
 
 //        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
-        $response = HttpDingtalkEco::post("", $params, json_encode($data));
+//        $response = HttpDingtalkEco::post("", $params, json_encode($data));
 
         return $response;
     }

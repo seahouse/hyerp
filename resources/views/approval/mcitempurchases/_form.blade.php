@@ -234,6 +234,13 @@
             </div>
 
             <div class="form-group">
+                {!! Form::label('size', '尺寸:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::text('size', null, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'size_1']) !!}
+                </div>
+            </div>
+
+            <div class="form-group">
                 {!! Form::label('unitprice', '单价（可不填）:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
                 <div class='col-xs-8 col-sm-10'>
                     {!! Form::text('unitprice', null, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'unitprice_1']) !!}

@@ -201,6 +201,7 @@
                     itemObject.item_name = container.find("input[name='item_name']").val();
                     itemObject.item_spec = container.find("input[name='item_spec']").val();
                     itemObject.unit = container.find("input[name='unit']").val();
+                    itemObject.size = container.find("input[name='size']").val();
                     itemObject.unitprice = container.find("input[name='unitprice']").val();
                     if (itemObject.unitprice == "")
                         itemObject.unitprice = 0.0;
@@ -556,6 +557,12 @@
 							<label for="unit" class="col-xs-4 col-sm-2 control-label">单位:</label>\
 							<div class="col-sm-10 col-xs-8">\
 							<input class="form-control" readonly="readonly" name="unit" type="text" id="unit_' + String(item_num) + '">\
+							</div>\
+						</div>\
+						<div class="form-group">\
+							<label for="size" class="col-xs-4 col-sm-2 control-label">尺寸:</label>\
+							<div class="col-sm-10 col-xs-8">\
+							<input class="form-control" name="size" type="text"  id="size_' + String(item_num) + '">\
 							</div>\
 						</div>\
 						<div class="form-group">\
