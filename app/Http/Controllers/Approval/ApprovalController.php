@@ -592,6 +592,7 @@ class ApprovalController extends Controller
         ];
         $form_component_values = json_encode($formdata);
         $form_component_values = str_replace('#', '%23', $form_component_values);
+        $form_component_values = str_replace(' ', '%20', $form_component_values);
 //        dd(json_decode(json_decode($form_component_values)[9]->value));
         Log::info('process_code: ' . $process_code);
         Log::info('originator_user_id: ' . $originator_user_id);
