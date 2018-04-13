@@ -143,8 +143,11 @@ class ItemsController extends Controller
     public function getitemsbykey($key)
     {
         //
-        $items = Itemp_hxold::where('goods_name', $key)
-            ->paginate(50);
+        $items = Itemp_hxold::where('goods_id', -1)->paginate(50);
+        if ($key <> "")
+            $items = Itemp_hxold::where('goods_name', $key)
+                ->paginate(500);
+
         return $items;
     }
 
