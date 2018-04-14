@@ -17,6 +17,7 @@ class CreateMcitempurchaseitemsTable extends Migration
 
             $table->integer('mcitempurchase_id')->nullable();
             $table->integer('item_id')->nullable();
+            $table->string('size')->default('');
             $table->decimal('unitprice', 18, 2)->default(0.0);
             $table->decimal('quantity', 18, 2)->default(0.0);
             $table->decimal('weight', 18, 2)->default(0.0);

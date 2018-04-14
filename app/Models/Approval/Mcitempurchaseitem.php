@@ -10,6 +10,7 @@ class Mcitempurchaseitem extends Model
     protected $fillable = [
         'mcitempurchase_id',
         'item_id',
+        'size',
         'unitprice',
         'quantity',
         'weight',

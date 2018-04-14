@@ -609,7 +609,7 @@ class ApprovalController extends Controller
 //            'form_component_values' => $form_component_values,
         ];
 
-        Log::info(app_path());
+//        Log::info(app_path());
         $c = new DingTalkClient();
         $req = new SmartworkBpmsProcessinstanceCreateRequest();
 //        $req->setAgentId("41605932");
@@ -617,8 +617,12 @@ class ApprovalController extends Controller
         $req->setOriginatorUserId($originator_user_id);
         $req->setDeptId("$dept_id");
         $req->setApprovers($approvers);
-//        $req->setCcList("zhangsan,lisi");
-//        $req->setCcPosition("START");
+        $cc_list = config('custom.dingtalk.approversettings.mcitempurchase.cc_list');
+        if ($cc_list <> "")
+        {
+            $req->setCcList($cc_list);
+            $req->setCcPosition("FINISH");
+        }
 //        $form_component_values = new FormComponentValueVo();
 //        $form_component_values->name="请假类型";
 //        $form_component_values->value="事假";
