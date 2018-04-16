@@ -145,7 +145,7 @@ class ItemsController extends Controller
         //
         $items = Itemp_hxold::where('goods_id', -1)->paginate(50);
         if ($key <> "")
-            $items = Itemp_hxold::where('goods_name', $key)
+            $items = Itemp_hxold::where('goods_name', 'like', '%' . $key . '%')
                 ->paginate(500);
 
         return $items;
