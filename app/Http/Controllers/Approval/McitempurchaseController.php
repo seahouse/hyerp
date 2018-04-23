@@ -9,11 +9,12 @@ use App\Models\Approval\Mcitempurchase;
 use App\Models\Approval\Mcitempurchaseattachment;
 use App\Models\Approval\Mcitempurchaseissuedrawing;
 use App\Models\Approval\Mcitempurchaseitem;
+use App\Models\Product\Itemp_hxold;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Auth, Log, Storage;
+use Auth, Log, Storage, Excel;
 
 class McitempurchaseController extends Controller
 {
@@ -62,6 +63,11 @@ class McitempurchaseController extends Controller
         //
         $input = $request->all();
 //        dd($input);
+        $itemsArray = array_merge(json_decode($input['items_string2']), json_decode($input['items_string']));
+        $input['items_string'] = json_encode($itemsArray);
+//        dd($itemsArray);
+//        dd($input['items_string']);
+
 //        $input = array('_token' => 'oVcISwHbRPj8N4JOCTbVyYOqczVghVHcnGMx5RVY',
 //            'manufacturingcenter' => '无锡制造中心机械车间', 'itemtype' => '消耗品类－如焊条',
 //            'expirationdate' => '2018-04-13', 'project_name' => '厂部管理费用', 'sohead_id' => '7550',
@@ -94,6 +100,7 @@ class McitempurchaseController extends Controller
 //            'images.*'                => 'required|image',
         ]);
 //        $input = HelperController::skipEmptyValue($input);
+
 
         // valid
         $weight_purchase = 0.0;
@@ -314,6 +321,104 @@ class McitempurchaseController extends Controller
 
         dd('创建成功.');
         return redirect('approval/mindexmy');
+    }
+
+    public function uploadparseexcel(Request $request)
+    {
+        //
+        Log::info("uploadparseexcel 01");
+        $input = $request->all();
+//        dd($input);
+
+        $file = array_get($input,'items_excelfile');
+//        Log::info($file);
+//        dd($file);
+        if ($file)
+        {
+            $destinationPath = 'uploads/approval/mcitempurchase/itemsexcel/';
+            $originalName = $file->getClientOriginalName();         // aa.xlsx
+            $extension = $file->getClientOriginalExtension();       // .xlsx
+            Log::info('extension: ' . $extension);
+            $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+            Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
+            $upload_success = $file->move($destinationPath, $filename);
+
+//            dd(Storage::get($destinationPath . $filename));
+//            echo asset($destinationPath . $filename);
+//            dd(Storage::url($destinationPath . $filename));
+//            dd(file_get_contents(Storage::disk()->url($destinationPath . $filename)));
+
+            $excel = [];
+            Excel::load($destinationPath . $filename, function ($reader) use (&$excel) {
+                $objExcel = $reader->getExcel();
+                $sheet = $objExcel->getSheet(0);
+                $highestRow = $sheet->getHighestRow();
+                $highestColumn = $sheet->getHighestColumn();
+
+                //  Loop through each row of the worksheet in turn
+                for ($row = 1; $row <= $highestRow; $row++)
+                {
+                    //  Read a row of data into an array
+                    $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                        NULL, TRUE, FALSE);
+
+                    $excel[] = $rowData[0];
+                }
+
+//                $reader->each(function($sheet) {
+//                    // Loop through all rows
+//                    $sheet->each(function($row) {
+//                        dd($row->firstname);
+//                    });
+//                });
+
+//                $data = $reader->first();
+//                dd($data);
+            });
+
+        }
+
+        $items = [];
+        foreach ($excel as $key => $row)
+        {
+            if ($key == 0) continue;
+            $name = $row[1];
+            $spec = $row[2];
+            if ($name <> "")
+            {
+                $query = Itemp_hxold::where('goods_name', $name);
+                if ($spec <> "")
+                {
+                    $query->where('goods_spec', $spec);
+                }
+                $item = $query->first();
+                if (isset($item))
+                {
+                    $itemArray = [
+                        'item_id'       => $item->goods_id,
+                        'item_name'     => $item->goods_name,
+                        'item_spec'     => $item->goods_spec,
+                        'unit'           => $item->goods_unit_name,
+                        'size'           => isset($row[3]) ? $row[3] : '',
+                        'unitprice'     => 0.0,
+                        'quantity'      => isset($row[5]) ? $row[5] : 0.0,
+                        'weight'        => isset($row[6]) ? $row[6] : 0.0,
+                    ];
+                    array_push($items, $itemArray);
+                }
+//                dd($item);
+            }
+        }
+//        dd($items);
+        return response()->json($items);
+
+
+
+
+
+
+
+
     }
 
     /**

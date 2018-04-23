@@ -177,6 +177,16 @@
     </div>
 </div>
 
+	{{-- upload and parse excel file form --}}
+	<form id="formUploadParseExcel" method="post" action="{{ url('approval/mcitempurchase/uploadparseexcel') }}"  class="form-horizontal" enctype="multipart/form-data">
+		<div class="form-group">
+			{!! Form::label('items_excelfile', '解析明细模板文件:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+			<div class='col-xs-8 col-sm-10'>
+				{!! Form::file('items_excelfile', []) !!}
+				{!! Form::button('解析Excel', ['class' => 'btn btn-sm', 'id' => 'btnParseExcel']) !!}
+			</div>
+		</div>
+	</form>
 
 @endsection
 
@@ -206,6 +216,8 @@
                     if (itemObject.unitprice == "")
                         itemObject.unitprice = 0.0;
                     itemObject.quantity = container.find("input[name='quantity']").val();
+                    if (itemObject.quantity == "")
+                        itemObject.quantity = 0.0;
                     itemObject.weight = container.find("input[name='weight']").val();
                     if (itemObject.weight == "")
                         itemObject.weight = 0.0;
@@ -597,19 +609,58 @@
                 });
             }
 
-			// $("#btnSelectImage").click(function() {
-			// 	var images = ['http://static.dingtalk.com/media/lADODGPhgM0CHM0DwA_960_540.jpg', 'http://static.dingtalk.com/media/lALODL7StM0DwM0CHA_540_960.png'];
-			// 	var imageHtml = '';
-			// 	for (var i in images) {
-			// 		imageHtml += '<div class="col-xs-6 col-md-3">';
-			// 		imageHtml += '<div class="thumbnail">';
-			// 		imageHtml += '<img src=' + images[i] + ' />';
-			// 		imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
-			// 		imageHtml += '</div>';
-			// 		imageHtml += '</div>';
-			// 	}
-			// 	$("#previewimage").empty().append(imageHtml);
-			// });
+			 $("#btnParseExcel").click(function() {
+//                 $('#formUploadParseExcel').append($(this).parent().children());
+//                 return false;
+//                 $('#formUploadParseExcel').submit();
+                 var formData = new FormData();
+                 formData.append('items_excelfile', $('#items_excelfile')[0].files[0]);
+                 $.ajax({
+                     type: "POST",
+                     url: "{!! url('approval/mcitempurchase/uploadparseexcel') !!}",
+					 data: formData,
+                     processData: false,
+                     contentType: false,
+                     success: function(result) {
+                         $("#items_string2").val(JSON.stringify(result));
+//                         alert(JSON.stringify(result));
+                         var strhtml = '';
+                         strhtml += '<table class="table table-striped table-hover table-condensed">';
+                         if (result.length > 0)
+						 {
+                             strhtml += '<thead><tr><th>物品名称</th><th>型号</th><th>单位</th><th>尺寸</th><th>数量</th><th>重量</th></tr></thead>';
+						     strhtml += '<tbody>';
+						 }
+
+                         $.each(result, function(i, field) {
+//                             alert(field.item_name);
+                             strhtml += '<tr><td>' + field.item_name + '</td><td>' + field.item_spec + '</td><td>' + field.unit + '</td><td>' + field.size + '</td><td>' + field.quantity + '</td><td>' + field.weight + '</td></tr>'
+//                             $.each(field, function(j, item) {
+//                                 if (j == 'item_name')
+//                                     alert(item);
+////                                 btnId = 'btnSelectDrawingchecker_' + String(i);
+////                                 strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.name + "</h4></button>"
+//                             });
+//                             btnId = 'btnSelectDrawingchecker_' + String(i);
+//                             strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.name + "</h4></button>"
+                         });
+                         if (result.length > 0)
+                             strhtml += '</tbody>';
+                         strhtml += '</table>';
+                         if (strhtml == '')
+                             strhtml = '无记录。';
+                         $("#items_excel").empty().append(strhtml);
+
+//                         $.each(result.data, function(i, field) {
+//                             btnId = 'btnSelectDrawingchecker_' + String(i);
+//                             addBtnClickEvent(btnId, field);
+//                         });
+                     },
+                     error: function(xhr, ajaxOptions, thrownError) {
+                         alert('error');
+                     }
+                 });
+			 });
 
 			dd.config({
 			    agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID

@@ -208,6 +208,13 @@
                 </div>
             </div>
 
+
+
+
+        <div id="items_excel">
+
+        </div>
+
             <p class="bannerTitle">明细(1)</p>
 
         <div name="container_item">
@@ -279,6 +286,7 @@
 
 @endif
         {!! Form::hidden('items_string', null, ['id' => 'items_string']) !!}
+        {!! Form::hidden('items_string2', null, ['id' => 'items_string2']) !!}
 
 <div class="form-group">
     {!! Form::label('totalprice', '总价（元）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}

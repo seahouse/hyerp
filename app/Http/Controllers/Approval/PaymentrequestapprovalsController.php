@@ -159,7 +159,15 @@ class PaymentrequestapprovalsController extends Controller
             $str_result = $input['status'] == '0' ? '通过' : '未通过';
             DingTalkController::send($paymentrequest->applicant->dtuserid, '', 
                 $user->name . ' 审批了您的(' . $paymentrequest->paymenttype . ' | ' . $paymentrequest->amount . ')付款单，审批结果：' . $str_result, 
-                config('custom.dingtalk.agentidlist.approval')); 
+                config('custom.dingtalk.agentidlist.approval'));
+
+//            if ($paymentrequest->approversetting_id == 0)
+//            {
+//                DingTalkController::send_link(config('custom.dingtalk.approversettings.paymentrequest.cc_list'), '',
+//                    url('mddauth/approval/approval-paymentrequests-' . $paymentrequest->id . ''), '',
+//                    '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单已经审批通过.',
+//                    config('custom.dingtalk.agentidlist.approval'));
+//            }
         }
 
         return 'success';

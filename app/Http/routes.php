@@ -56,6 +56,8 @@ Route::post('cloudwalk/face_tool_detect', 'CloudwalkController@face_tool_detect'
 // because not need cref, so not in middle web
 Route::any('dingtalk/message/send_erp/{strJson}',  'DingTalkController@send_erp');
 
+Route::post('approval/mcitempurchase/uploadparseexcel', 'Approval\McitempurchaseController@uploadparseexcel');
+
 Route::group(['middleware' => ['web']], function () {
     // Route::get('mddauth', function() { return view('mddauth'); });
     Route::get('mddauth/{appname?}/{url?}', 'DingTalkController@mddauth');
@@ -376,6 +378,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::group(['prefix' => 'mcitempurchase'], function() {
         Route::get('mcreate', 'McitempurchaseController@mcreate');
         Route::post('mstore', 'McitempurchaseController@mstore');
+
     });
     Route::resource('mcitempurchase', 'McitempurchaseController');
     Route::resource('mcitempurchaseattachment', 'McitempurchaseattachmentController');
