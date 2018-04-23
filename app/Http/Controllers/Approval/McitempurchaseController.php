@@ -63,7 +63,11 @@ class McitempurchaseController extends Controller
         //
         $input = $request->all();
 //        dd($input);
-        $itemsArray = array_merge(json_decode($input['items_string2']), json_decode($input['items_string']));
+        $itemsArray = json_decode($input['items_string']);
+        if (is_array(json_decode($input['items_string2'])) && is_array(json_decode($input['items_string'])))
+            $itemsArray = array_merge(json_decode($input['items_string2']), json_decode($input['items_string']));
+        elseif (is_array(json_decode($input['items_string2'])) && !is_array(json_decode($input['items_string'])))
+            $itemsArray = json_decode($input['items_string2']);
         $input['items_string'] = json_encode($itemsArray);
 //        dd($itemsArray);
 //        dd($input['items_string']);
