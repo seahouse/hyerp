@@ -479,4 +479,14 @@ class McitempurchaseController extends Controller
         }
         return 0;
     }
+
+    public static function updateStatusByProcessInstanceId($processInstanceId, $status)
+    {
+        $mcitempurchase = Mcitempurchase::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if ($mcitempurchase)
+        {
+            $mcitempurchase->status = $status;
+            $mcitempurchase->save();
+        }
+    }
 }

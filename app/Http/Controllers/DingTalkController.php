@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Approval\IssuedrawingController;
+use App\Http\Controllers\Approval\McitempurchaseController;
 use App\Http\Controllers\util\HttpDingtalkEco;
 use App\Models\System\User;
 use App\Models\System\Userold;
@@ -940,11 +941,15 @@ class DingTalkController extends Controller
                 {
                     if ($data->processCode == "PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2")
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
+                        McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
                 }
                 elseif ($data->type == "finish" && $data->result == "refuse")
                 {
                     if ($data->processCode == "PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2")
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
+                        McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
                 }
             }
             else if ("bpms_task_change" === $eventType)
