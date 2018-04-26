@@ -171,7 +171,7 @@
     </div>
 </div>
 
-@can('test')
+@can('approval_paymentrequest_recvdetail_view')
 
 <div class="form-group">
     <div class='col-xs-4 col-sm-2'>

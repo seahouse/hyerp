@@ -9,6 +9,7 @@ use App\Http\Controllers\util\taobaosdk\dingtalk\request\SmartworkBpmsProcessins
 use App\Models\Approval\Approvaltype;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Paymentrequestretract;
+use App\Models\System\User;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -174,6 +175,11 @@ class ApprovalController extends Controller
         // 获取当前登录人员的审批设置中的id
         $user = Auth::user();
         $userid = Auth::user()->id;
+        
+        // if WuHL, set it to LiuYJ
+        if ($inputs['approvaltype'] == "供应商付款" && Auth::user()->email == "wuhaolun@huaxing-east.com")
+            $userid = User::where("email", "liuyujiao@huaxing-east.com")->first()->id;
+
         $ids_approversetting = Approversetting::where('approver_id', $userid)
             ->where('approvaltype_id', $approvaltype_id)
             ->select('id')->pluck('id');
