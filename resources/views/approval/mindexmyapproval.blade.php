@@ -58,13 +58,21 @@
     --}}
     {!! Form::close() !!}
 
-    @include('approval._list',
-        [
-            'href_pre' => '/approval/reimbursementapprovals/', 'href_suffix' => '/mcreate',
-            'href_pre_paymentrequest' => '/approval/paymentrequestapprovals/',
-            'href_pre_paymentrequestretract' => '/approval/paymentrequestretractapproval/'
-        ])
-
+    @if ($inputs['approvaltype'] == "供应商付款" && Auth::user()->email == "wuhaolun@huaxing-east.com")
+        @include('approval._list',
+            [
+                'href_pre' => '/approval/reimbursementapprovals/', 'href_suffix' => '',
+                'href_pre_paymentrequest' => '/approval/paymentrequests/',
+                'href_pre_paymentrequestretract' => '/approval/paymentrequestretractapproval/'
+            ])
+    @else
+        @include('approval._list',
+            [
+                'href_pre' => '/approval/reimbursementapprovals/', 'href_suffix' => '/mcreate',
+                'href_pre_paymentrequest' => '/approval/paymentrequestapprovals/',
+                'href_pre_paymentrequestretract' => '/approval/paymentrequestretractapproval/'
+            ])
+    @endif
 
     {{--
         {!! $paymentrequests->links() !!}
