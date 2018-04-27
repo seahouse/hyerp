@@ -1,4 +1,4 @@
-@if (Auth::user()->isSuperAdmin())
+@can('approval_paymentrequest_amountstatics_view')
 	<div id="tabid1" class="tabid">
 		@if ($sohead)
 			<p>销售订单编号：{{ $sohead->number }}</p>
@@ -37,10 +37,7 @@
 			@endif
 		@endif
 	</div>
-@endif
-
-
-
+@endcan
 
 
 
