@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Approval;
 
+use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
+use App\Http\Controllers\util\taobaosdk\dingtalk\request\CorpMessageCorpconversationAsyncsendRequest;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -161,13 +163,70 @@ class PaymentrequestapprovalsController extends Controller
                 $user->name . ' 审批了您的(' . $paymentrequest->paymenttype . ' | ' . $paymentrequest->amount . ')付款单，审批结果：' . $str_result, 
                 config('custom.dingtalk.agentidlist.approval'));
 
-            // when approver is LiuYJ( level 2), send message to WuHl
-            if ($input['level'] == 2)
+            // when approval has passed, send message to WuHl
+            if ($paymentrequest->approversetting_id == 0)
             {
-                DingTalkController::send_link(config('custom.dingtalk.approversettings.paymentrequest.cc_list'), '',
-                    url('mddauth/approval/approval-paymentrequests-' . $paymentrequest->id . ''), '',
-                    '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单已经审批通过.',
-                    config('custom.dingtalk.agentidlist.approval'));
+//                DingTalkController::send_link(config('custom.dingtalk.approversettings.paymentrequest.cc_list'), '',
+//                    url('mddauth/approval/approval-paymentrequests-' . $paymentrequest->id . ''), '',
+//                    '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单已经审批通过.',
+//                    config('custom.dingtalk.agentidlist.approval'));
+
+                $data = [
+                    [
+                        'key' => '申请人:',
+                        'value' => $paymentrequest->applicant->name,
+                    ],
+                    [
+                        'key' => '付款对象:',
+                        'value' => isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '',
+                    ],
+                    [
+                        'key' => '金额:',
+                        'value' => $paymentrequest->amount,
+                    ],
+                    [
+                        'key' => '付款类型:',
+                        'value' => $paymentrequest->paymenttype,
+                    ],
+                    [
+                        'key' => '对应项目:',
+                        'value' => isset($paymentrequest->purchaseorder_hxold->sohead->projectjc) ? $paymentrequest->purchaseorder_hxold->sohead->projectjc : '',
+                    ],
+                    [
+                        'key' => '商品:',
+                        'value' => isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '',
+                    ],
+                ];
+//                DingTalkController::send_oa(config('custom.dingtalk.approversettings.paymentrequest.cc_list'), '',
+//                    url('mddauth/approval/approval-paymentrequests-' . $paymentrequest->id . ''), '',
+//                    '', $paymentrequest->applicant->name . '提交的供应商付款审批已通过，抄送给你，请知晓。',
+//                    $data, config('custom.dingtalk.agentidlist.approval'));
+
+                $msgcontent_data = [
+                    'message_url' => url('mddauth/approval/approval-paymentrequests-' . $paymentrequest->id . ''),
+                    'pc_message_url' => '',
+                    'head' => [
+                        'bgcolor' => 'FFBBBBBB',
+                        'text' => $paymentrequest->applicant->name . '的供应商付款审批'
+                    ],
+                    'body' => [
+                        'title' => $paymentrequest->applicant->name . '提交的供应商付款审批已通过，抄送给你，请知晓。',
+                        'form' => $data
+                    ]
+                ];
+                $msgcontent = json_encode($msgcontent_data);
+                $access_token = DingTalkController::getAccessToken();
+
+                $c = new DingTalkClient;
+                $req = new CorpMessageCorpconversationAsyncsendRequest;
+                $req->setMsgtype("oa");
+                $req->setAgentId(config('custom.dingtalk.agentidlist.approval'));
+                $req->setUseridList(config('custom.dingtalk.approversettings.paymentrequest.cc_list'));
+//                $req->setDeptIdList("");
+                $req->setToAllUser("false");
+                $req->setMsgcontent("$msgcontent");
+                $resp = $c->execute($req, $access_token);
+//                Log::info(json_encode($resp));
             }
         }
 

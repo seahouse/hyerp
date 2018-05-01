@@ -1,4 +1,9 @@
 <?php
+
+namespace App\Http\Controllers\util\taobaosdk\dingtalk\request;
+
+use App\Http\Controllers\util\taobaosdk\top\RequestCheckUtil;
+
 /**
  * dingtalk API: dingtalk.corp.message.corpconversation.asyncsend request
  * 
