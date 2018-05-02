@@ -141,31 +141,81 @@ class PaymentrequestapprovalsController extends Controller
             //     '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
             //     config('custom.dingtalk.agentidlist.approval'));
 
-            // DingTalkController::send_link($touser->dtuserid, '', 
-            //     url('approval/paymentrequestapprovals/' . $input['paymentrequest_id'] . '/mcreate'), '',
-            //     '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
-            //     config('custom.dingtalk.agentidlist.approval'));
+            $data = [
+                [
+                    'key' => '申请人:',
+                    'value' => $paymentrequest->applicant->name,
+                ],
+                [
+                    'key' => '付款对象:',
+                    'value' => isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '',
+                ],
+                [
+                    'key' => '金额:',
+                    'value' => $paymentrequest->amount,
+                ],
+                [
+                    'key' => '付款类型:',
+                    'value' => $paymentrequest->paymenttype,
+                ],
+                [
+                    'key' => '对应项目:',
+                    'value' => isset($paymentrequest->purchaseorder_hxold->sohead->projectjc) ? $paymentrequest->purchaseorder_hxold->sohead->projectjc : '',
+                ],
+                [
+                    'key' => '商品:',
+                    'value' => isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '',
+                ],
+            ];
+//                DingTalkController::send_oa(config('custom.dingtalk.approversettings.paymentrequest.cc_list'), '',
+//                    url('mddauth/approval/approval-paymentrequests-' . $paymentrequest->id . ''), '',
+//                    '', $paymentrequest->applicant->name . '提交的供应商付款审批已通过，抄送给你，请知晓。',
+//                    $data, config('custom.dingtalk.agentidlist.approval'));
 
-            // Log::info($touser->dtuserid);
-            DingTalkController::send_link($touser->dtuserid, '', 
-                url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
-                '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
-                config('custom.dingtalk.agentidlist.approval'));            
-            // Log::info($paymentrequest->id);
+            $msgcontent_data = [
+                'message_url' => url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'),
+                'pc_message_url' => '',
+                'head' => [
+                    'bgcolor' => 'FFBBBBBB',
+                    'text' => $paymentrequest->applicant->name . '的供应商付款审批'
+                ],
+                'body' => [
+                    'title' => $paymentrequest->applicant->name . '提交的供应商付款审批需要您审批。',
+                    'form' => $data
+                ]
+            ];
+            $msgcontent = json_encode($msgcontent_data);
+            $access_token = DingTalkController::getAccessToken();
+
+            $c = new DingTalkClient;
+            $req = new CorpMessageCorpconversationAsyncsendRequest;
+            $req->setMsgtype("oa");
+            $req->setAgentId(config('custom.dingtalk.agentidlist.approval'));
+            $req->setUseridList($touser->dtuserid);
+//                $req->setDeptIdList("");
+            $req->setToAllUser("false");
+            $req->setMsgcontent("$msgcontent");
+            $resp = $c->execute($req, $access_token);
+
+//            DingTalkController::send_link($touser->dtuserid, '',
+//                url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
+//                '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.',
+//                config('custom.dingtalk.agentidlist.approval'));
 
         }
 
         if ($paymentrequestapproval)
         {
             // send dingtalk message to applicant
-            $str_result = $input['status'] == '0' ? '通过' : '未通过';
-            DingTalkController::send($paymentrequest->applicant->dtuserid, '', 
-                $user->name . ' 审批了您的(' . $paymentrequest->paymenttype . ' | ' . $paymentrequest->amount . ')付款单，审批结果：' . $str_result, 
-                config('custom.dingtalk.agentidlist.approval'));
+//            $str_result = $input['status'] == '0' ? '通过' : '未通过';
+//            DingTalkController::send($paymentrequest->applicant->dtuserid, '',
+//                $user->name . ' 审批了您的(' . $paymentrequest->paymenttype . ' | ' . $paymentrequest->amount . ')付款单，审批结果：' . $str_result,
+//                config('custom.dingtalk.agentidlist.approval'));
 
             // when approval has passed, send message to WuHl
-            if ($paymentrequest->approversetting_id == 0)
+            if ($paymentrequest->approversetting_id <= 0)
             {
+                $str_result = $paymentrequest->approversetting_id == 0 ? '已通过' : '未通过';
 //                DingTalkController::send_link(config('custom.dingtalk.approversettings.paymentrequest.cc_list'), '',
 //                    url('mddauth/approval/approval-paymentrequests-' . $paymentrequest->id . ''), '',
 //                    '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单已经审批通过.',
@@ -210,7 +260,7 @@ class PaymentrequestapprovalsController extends Controller
                         'text' => $paymentrequest->applicant->name . '的供应商付款审批'
                     ],
                     'body' => [
-                        'title' => $paymentrequest->applicant->name . '提交的供应商付款审批已通过，抄送给你，请知晓。',
+                        'title' => $paymentrequest->applicant->name . '提交的供应商付款审批' . $str_result .'，抄送给你，请知晓。',
                         'form' => $data
                     ]
                 ];
@@ -226,7 +276,11 @@ class PaymentrequestapprovalsController extends Controller
                 $req->setToAllUser("false");
                 $req->setMsgcontent("$msgcontent");
                 $resp = $c->execute($req, $access_token);
-//                Log::info(json_encode($resp));
+                Log::info(json_encode($resp));
+
+                $req->setUseridList($paymentrequest->applicant->dtuserid);
+                $resp = $c->execute($req, $access_token);
+                Log::info(json_encode($resp));
             }
         }
 

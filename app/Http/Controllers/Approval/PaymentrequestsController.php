@@ -28,6 +28,8 @@ use App\Models\System\Employee_hxold_t;
 use App\Models\Inventory\Rwrecord_hxold;
 use Response;
 use Datatables;
+use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
+use App\Http\Controllers\util\taobaosdk\dingtalk\request\CorpMessageCorpconversationAsyncsendRequest;
 
 class PaymentrequestsController extends Controller
 {
@@ -861,23 +863,71 @@ class PaymentrequestsController extends Controller
                 //     '来自' . $paymentrequest->applicant->name . '的付款单需要您审批.', 
                 //     config('custom.dingtalk.agentidlist.approval'));     
 
-                // DingTalkController::send_link($touser->dtuserid, '', 
-                //     url('approval/paymentrequestapprovals/' . $input['paymentrequest_id'] . '/mcreate'), '',
-                //     '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
-                //     config('custom.dingtalk.agentidlist.approval'));    
+                $data = [
+                    [
+                        'key' => '申请人:',
+                        'value' => $paymentrequest->applicant->name,
+                    ],
+                    [
+                        'key' => '付款对象:',
+                        'value' => isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '',
+                    ],
+                    [
+                        'key' => '金额:',
+                        'value' => $paymentrequest->amount,
+                    ],
+                    [
+                        'key' => '付款类型:',
+                        'value' => $paymentrequest->paymenttype,
+                    ],
+                    [
+                        'key' => '对应项目:',
+                        'value' => isset($paymentrequest->purchaseorder_hxold->sohead->projectjc) ? $paymentrequest->purchaseorder_hxold->sohead->projectjc : '',
+                    ],
+                    [
+                        'key' => '商品:',
+                        'value' => isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '',
+                    ],
+                ];
 
-                DingTalkController::send_link($touser->dtuserid, '', 
-                    url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
-                    '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', 
-                    config('custom.dingtalk.agentidlist.approval'));
+                $msgcontent_data = [
+                    'message_url' => url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'),
+                    'pc_message_url' => '',
+                    'head' => [
+                        'bgcolor' => 'FFBBBBBB',
+                        'text' => $paymentrequest->applicant->name . '的供应商付款审批'
+                    ],
+                    'body' => [
+                        'title' => $paymentrequest->applicant->name . '提交的供应商付款审批需要您审批。',
+                        'form' => $data
+                    ]
+                ];
+                $msgcontent = json_encode($msgcontent_data);
+                $access_token = DingTalkController::getAccessToken();
 
-                if (Auth::user()->email == "admin@admin.com")
-                {
-                    DingTalkController::send_oa_paymentrequest($touser->dtuserid, '', 
-                        url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
-                        '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', $paymentrequest,
-                        config('custom.dingtalk.agentidlist.approval'));
-                }
+                $c = new DingTalkClient;
+                $req = new CorpMessageCorpconversationAsyncsendRequest;
+                $req->setMsgtype("oa");
+                $req->setAgentId(config('custom.dingtalk.agentidlist.approval'));
+                $req->setUseridList($touser->dtuserid);
+//                $req->setDeptIdList("");
+                $req->setToAllUser("false");
+                $req->setMsgcontent("$msgcontent");
+                $resp = $c->execute($req, $access_token);
+//                Log::info(json_encode($resp));
+
+//                DingTalkController::send_link($touser->dtuserid, '',
+//                    url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
+//                    '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.',
+//                    config('custom.dingtalk.agentidlist.approval'));
+
+//                if (Auth::user()->email == "admin@admin.com")
+//                {
+//                    DingTalkController::send_oa_paymentrequest($touser->dtuserid, '',
+//                        url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
+//                        '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', $paymentrequest,
+//                        config('custom.dingtalk.agentidlist.approval'));
+//                }
 
             }
 
