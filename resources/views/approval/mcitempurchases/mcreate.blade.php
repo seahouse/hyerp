@@ -221,6 +221,7 @@
                     itemObject.weight = container.find("input[name='weight']").val();
                     if (itemObject.weight == "")
                         itemObject.weight = 0.0;
+                    itemObject.remark = container.find("input[name='remark']").val();
 
                     itemArray.push(itemObject);
 
@@ -593,6 +594,12 @@
 							<label for="weight" class="col-xs-4 col-sm-2 control-label">重量（吨）:</label>\
 							<div class="col-sm-10 col-xs-8">\
 							<input class="form-control" name="weight" type="text" id="weight_' + String(item_num) + '">\
+							</div>\
+						</div>\
+						<div class="form-group">\
+							<label for="remark" class="col-xs-4 col-sm-2 control-label">备注:</label>\
+							<div class="col-sm-10 col-xs-8">\
+							<input class="form-control" name="remark" type="text"  id="remark_' + String(item_num) + '">\
 							</div>\
 						</div>\
 					</div>\

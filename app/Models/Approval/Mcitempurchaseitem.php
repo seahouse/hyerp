@@ -14,6 +14,7 @@ class Mcitempurchaseitem extends Model
         'unitprice',
         'quantity',
         'weight',
+        'remark',
         'seq',
     ];
 }

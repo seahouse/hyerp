@@ -267,6 +267,13 @@
                     {!! Form::text('weight', null, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'weight_1']) !!}
                 </div>
             </div>
+
+            <div class="form-group">
+                {!! Form::label('remark', '备注:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::text('remark', null, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'remark_1']) !!}
+                </div>
+            </div>
         </div>
 
 

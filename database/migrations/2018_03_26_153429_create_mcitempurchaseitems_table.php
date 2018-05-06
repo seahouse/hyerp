@@ -21,6 +21,7 @@ class CreateMcitempurchaseitemsTable extends Migration
             $table->decimal('unitprice', 18, 2)->default(0.0);
             $table->decimal('quantity', 18, 2)->default(0.0);
             $table->decimal('weight', 18, 2)->default(0.0);
+            $table->string('remark')->default('');
             $table->integer('seq')->default(0);
 
             $table->timestamps();

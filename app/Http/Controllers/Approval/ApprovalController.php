@@ -554,6 +554,10 @@ class ApprovalController extends Controller
                         'name'      => '重量（吨）',
                         'value'     => $value->weight,
                     ],
+                    [
+                        'name'      => '备注',
+                        'value'     => $value->remark,
+                    ],
                 ];
                 array_push($detail_array, $item_array);
             }
