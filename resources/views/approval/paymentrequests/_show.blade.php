@@ -64,12 +64,6 @@
             ])
     {!! Form::close() !!}
 
-{{--<div id="container" style="display: none;">--}}
-    {{--<div class="lightbox"></div>--}}
-    {{--<div id="pop" class="pop">--}}
-        {{--<canvas id="the-canvas"></canvas>--}}
-    {{--</div>--}}
-{{--</div>--}}
 
     {!! Form::model($paymentrequest, ['class' => 'form-horizontal']) !!}
         @include('approval.paymentrequests._approvals', 
@@ -268,7 +262,6 @@
             DingTalkPC.ready(function(res) {
                 if (DingTalkPC.ua.isInDingTalk)
                 {
-
                     $("#showPdf").click(function() {
                         location.href = 'http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf").attr("href");
                         return false;
