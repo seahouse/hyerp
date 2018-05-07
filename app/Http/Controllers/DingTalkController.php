@@ -96,19 +96,21 @@ class DingTalkController extends Controller
 //         Cache::flush();
         $nonceStr = str_random(32);
         $timeStamp = time();
-//        $url = urldecode(request()->fullurl());
-        $url = request()->url();
-        if (request()->getQueryString() <> '')
-            $url .= urldecode('?' . request()->getQueryString());
-        Log::info(request()->url());
-        Log::info(urldecode(request()->getQueryString()));
-        Log::info($url);
+        $url = urldecode(request()->fullurl());
+//        $url = request()->url();
+//        if (request()->getQueryString() <> '')
+//            $url .= urldecode('?' . request()->getQueryString());
+//        Log::info(request()->url());
+//        Log::info(urldecode(request()->getQueryString()));
+//        Log::info(request()->query());
+//        Log::info(http_build_query(request()->query()));
+//        Log::info($url);
         $corpAccessToken = self::getAccessToken();
         $ticket = self::getTicket($corpAccessToken);
         $signature = self::sign($ticket, $nonceStr, $timeStamp, $url);
         if ($agentid == '')
             $agentid = config('custom.dingtalk.agentidlist.' . self::$APPNAME);
-        Log::info($agentid);
+//        Log::info($agentid);
 
         $config = array(
             'url' => $url,
