@@ -589,10 +589,10 @@
 						</div>\
 						<div class="form-group">\
 							<label for="quantity" class="col-xs-4 col-sm-2 control-label">数量:</label>\
-							<div class="col-sm-9 col-xs-5">\
+							<div class="col-sm-8 col-xs-5">\
 							<input class="form-control" name="quantity" type="text" id="quantity_' + String(item_num) + '">\
 							</div>\
-							<div class="col-sm-1 col-xs-3">{{ Form::select("unit_id", $unitList_hxold, null, ["class" => "form-control", "placeholder" => "--默认--"]) }}</div>\
+							<div class="col-sm-2 col-xs-3">{{ Form::select("unit_id", $unitList_hxold, null, ["class" => "form-control", "placeholder" => "--默认--"]) }}</div>\
 						</div>\
 						<div class="form-group">\
 							<label for="weight" class="col-xs-4 col-sm-2 control-label">重量（吨）:</label>\
@@ -645,7 +645,7 @@
 
                          $.each(result, function(i, field) {
 //                             alert(field.item_name);
-                             strhtml += '<tr><td>' + field.item_name + '</td><td>' + field.item_spec + '</td><td>' + field.unit + '</td><td>' + field.size + '</td><td>' + field.quantity + '</td><td>' + field.weight + '</td><td>' + field.remark + '</td></tr>'
+                             strhtml += '<tr><td>' + field.item_name + '</td><td>' + field.item_spec + '</td><td>' + field.unit_name + '</td><td>' + field.size + '</td><td>' + field.quantity + '</td><td>' + field.weight + '</td><td>' + field.remark + '</td></tr>'
 //                             $.each(field, function(j, item) {
 //                                 if (j == 'item_name')
 //                                     alert(item);

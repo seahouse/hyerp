@@ -256,10 +256,10 @@
 
             <div class="form-group">
                 {!! Form::label('quantity', '数量:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-                <div class='col-xs-5 col-sm-9'>
+                <div class='col-xs-5 col-sm-8'>
                     {!! Form::text('quantity', null, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'quantity_1']) !!}
                 </div>
-                <div class='col-xs-3 col-sm-1'>
+                <div class='col-xs-3 col-sm-2'>
                     {!! Form::select('unit_id', $unitList_hxold, null, ['class' => 'form-control', 'placeholder' => '--默认--']) !!}
                 </div>
             </div>

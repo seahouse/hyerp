@@ -608,11 +608,11 @@ class ApprovalController extends Controller
 //        $form_component_values = str_replace('#', '%23', $form_component_values);
 //        $form_component_values = str_replace(' ', '%20', $form_component_values);
 //        dd(json_decode(json_decode($form_component_values)[9]->value));
-        Log::info('process_code: ' . $process_code);
-        Log::info('originator_user_id: ' . $originator_user_id);
-        Log::info('dept_id: ' . $dept_id);
-        Log::info('approvers: ' . $approvers);
-        Log::info('form_component_values: ' . $form_component_values);
+//        Log::info('process_code: ' . $process_code);
+//        Log::info('originator_user_id: ' . $originator_user_id);
+//        Log::info('dept_id: ' . $dept_id);
+//        Log::info('approvers: ' . $approvers);
+//        Log::info('form_component_values: ' . $form_component_values);
         $params = compact('method', 'session', 'v', 'format',
             'process_code', 'originator_user_id', 'dept_id', 'approvers', 'form_component_values');
         $data = [
@@ -627,7 +627,9 @@ class ApprovalController extends Controller
         $req->setOriginatorUserId($originator_user_id);
         $req->setDeptId("$dept_id");
         $req->setApprovers($approvers);
-        $cc_list = config('custom.dingtalk.approversettings.mcitempurchase.cc_list');
+        $cc_list = config('custom.dingtalk.approversettings.mcitempurchase.cc_list.' . $inputs['manufacturingcenter']);
+        if (strlen($cc_list) == 0)
+            $cc_list = config('custom.dingtalk.approversettings.mcitempurchase.cc_list.default');
         if ($cc_list <> "")
         {
             $req->setCcList($cc_list);

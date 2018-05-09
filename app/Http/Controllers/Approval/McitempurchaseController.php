@@ -408,7 +408,7 @@ class McitempurchaseController extends Controller
                         'unitprice'     => 0.0,
                         'quantity'      => isset($row[5]) ? $row[5] : 0.0,
                         'unit_id'       => $unit_id,
-                        'unit_name'     => $unit_name,
+                        'unit_name'     => strlen($unit_id) > 0 ?  $unit_name : '',
                         'weight'        => isset($row[6]) ? $row[6] : 0.0,
                         'remark'        => isset($row[7]) ? $row[7] : '',
                     ];
