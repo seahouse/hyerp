@@ -132,7 +132,7 @@ class McitempurchaseController extends Controller
             {
                 $weight_sohead_issuedrawing += $issuedrawing->tonnage;
             }
-            $mcitempurchases = Mcitempurchase::where('sohead_id', $input['sohead_id'])->get();
+            $mcitempurchases = Mcitempurchase::where('sohead_id', $input['sohead_id'])->where('status', '>=', 0)->get();
             foreach ($mcitempurchases as $mcitempurchase)
             {
                 $weight_sohead_purchase += $mcitempurchase->mcitempurchaseitems->sum('weight');
