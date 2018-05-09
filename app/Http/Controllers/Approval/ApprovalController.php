@@ -548,7 +548,7 @@ class ApprovalController extends Controller
                     ],
                     [
                         'name'      => '数量',
-                        'value'     => $value->quantity,
+                        'value'     => $value->quantity . (strlen($value->unit_id) > 0 ? ' ' . $value->unit_name : ''),
                     ],
                     [
                         'name'      => '重量（吨）',

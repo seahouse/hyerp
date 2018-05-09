@@ -13,6 +13,7 @@ class Mcitempurchaseitem extends Model
         'size',
         'unitprice',
         'quantity',
+        'unit_id',
         'weight',
         'remark',
         'seq',

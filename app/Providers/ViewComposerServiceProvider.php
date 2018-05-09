@@ -161,6 +161,11 @@ class ViewComposerServiceProvider extends ServiceProvider
             $ids = \App\Models\Approval\Paymentrequestapproval::select('approver_id')->distinct()->get();
             $view->with('approvers_paymentrequest', \App\Models\System\User::whereIn('id', $ids)->lists('name', 'id'));
         });
+
+        // unitList_hxold
+        view()->composer(array('approval.mcitempurchases.mcreate'), function($view) {
+            $view->with('unitList_hxold', \App\Models\Product\Unit_hxold::orderby('id', 'asc')->lists('name', 'id'));
+        });
     }
 
     /**

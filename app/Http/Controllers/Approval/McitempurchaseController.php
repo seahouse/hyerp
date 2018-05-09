@@ -10,6 +10,7 @@ use App\Models\Approval\Mcitempurchaseattachment;
 use App\Models\Approval\Mcitempurchaseissuedrawing;
 use App\Models\Approval\Mcitempurchaseitem;
 use App\Models\Product\Itemp_hxold;
+use App\Models\Product\Unit_hxold;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -322,7 +323,6 @@ class McitempurchaseController extends Controller
     public function uploadparseexcel(Request $request)
     {
         //
-        Log::info("uploadparseexcel 01");
         $input = $request->all();
 //        dd($input);
 
@@ -390,6 +390,15 @@ class McitempurchaseController extends Controller
                 $item = $query->first();
                 if (isset($item))
                 {
+                    $unit_id = '';
+                    $unit_name = isset($row[4]) ? $row[4] : '';
+                    if (strlen($unit_name) > 0)
+                    {
+                        $unit_hxold = Unit_hxold::where('name', $unit_name)->first();
+                        if (isset($unit_hxold))
+                            $unit_id = $unit_hxold->id;
+                    }
+                    
                     $itemArray = [
                         'item_id'       => $item->goods_id,
                         'item_name'     => $item->goods_name,
@@ -398,11 +407,13 @@ class McitempurchaseController extends Controller
                         'size'           => isset($row[3]) ? $row[3] : '',
                         'unitprice'     => 0.0,
                         'quantity'      => isset($row[5]) ? $row[5] : 0.0,
+                        'unit_id'       => $unit_id,
+                        'unit_name'     => $unit_name,
                         'weight'        => isset($row[6]) ? $row[6] : 0.0,
+                        'remark'        => isset($row[7]) ? $row[7] : '',
                     ];
                     array_push($items, $itemArray);
                 }
-//                dd($item);
             }
         }
 //        dd($items);

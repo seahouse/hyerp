@@ -218,6 +218,8 @@
                     itemObject.quantity = container.find("input[name='quantity']").val();
                     if (itemObject.quantity == "")
                         itemObject.quantity = 0.0;
+                    itemObject.unit_id = container.find("select[name='unit_id']").val();
+                    itemObject.unit_name = container.find("select[name='unit_id']").find("option:selected").text();
                     itemObject.weight = container.find("input[name='weight']").val();
                     if (itemObject.weight == "")
                         itemObject.weight = 0.0;
@@ -226,6 +228,7 @@
                     itemArray.push(itemObject);
 
 //                    alert(JSON.stringify(itemArray));
+//                    return false;
 //                    alert($("form#formMain").serialize());
                 });
                 $("#items_string").val(JSON.stringify(itemArray));
@@ -586,9 +589,10 @@
 						</div>\
 						<div class="form-group">\
 							<label for="quantity" class="col-xs-4 col-sm-2 control-label">数量:</label>\
-							<div class="col-sm-10 col-xs-8">\
+							<div class="col-sm-9 col-xs-5">\
 							<input class="form-control" name="quantity" type="text" id="quantity_' + String(item_num) + '">\
 							</div>\
+							<div class="col-sm-1 col-xs-3">{{ Form::select("unit_id", $unitList_hxold, null, ["class" => "form-control", "placeholder" => "--默认--"]) }}</div>\
 						</div>\
 						<div class="form-group">\
 							<label for="weight" class="col-xs-4 col-sm-2 control-label">重量（吨）:</label>\
@@ -635,13 +639,13 @@
                          strhtml += '<table class="table table-striped table-hover table-condensed">';
                          if (result.length > 0)
 						 {
-                             strhtml += '<thead><tr><th>物品名称</th><th>型号</th><th>单位</th><th>尺寸</th><th>数量</th><th>重量</th></tr></thead>';
+                             strhtml += '<thead><tr><th>物品名称</th><th>型号</th><th>单位</th><th>尺寸</th><th>数量</th><th>重量</th><th>备注</th></tr></thead>';
 						     strhtml += '<tbody>';
 						 }
 
                          $.each(result, function(i, field) {
 //                             alert(field.item_name);
-                             strhtml += '<tr><td>' + field.item_name + '</td><td>' + field.item_spec + '</td><td>' + field.unit + '</td><td>' + field.size + '</td><td>' + field.quantity + '</td><td>' + field.weight + '</td></tr>'
+                             strhtml += '<tr><td>' + field.item_name + '</td><td>' + field.item_spec + '</td><td>' + field.unit + '</td><td>' + field.size + '</td><td>' + field.quantity + '</td><td>' + field.weight + '</td><td>' + field.remark + '</td></tr>'
 //                             $.each(field, function(j, item) {
 //                                 if (j == 'item_name')
 //                                     alert(item);
