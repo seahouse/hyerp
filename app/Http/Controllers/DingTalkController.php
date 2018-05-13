@@ -942,7 +942,7 @@ class DingTalkController extends Controller
             }
             else if ("bpms_instance_change" === $eventType)
             {
-                Log::info(json_encode($_GET) . "  INFO:bpms_instance_change");
+//                Log::info(json_encode($_GET) . "  INFO:bpms_instance_change");
                 $data = json_decode($msg);
                 Log::info("bpms_instance_change: " . $msg);
                 if ($data->type == "finish" && $data->result == "agree")
@@ -958,6 +958,13 @@ class DingTalkController extends Controller
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
                         McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
+                }
+                elseif ($data->type == "terminate")
+                {
+                    if ($data->processCode == "PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2")
+                        IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
+                        McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
                 }
             }
             else if ("bpms_task_change" === $eventType)
