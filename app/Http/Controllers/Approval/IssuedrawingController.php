@@ -386,4 +386,13 @@ class IssuedrawingController extends Controller
             $issuedrawing->save();
         }
     }
+
+    public static function deleteByProcessInstanceId($processInstanceId)
+    {
+        $issuedrawing = Issuedrawing::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if ($issuedrawing)
+        {
+            $issuedrawing->forceDelete();
+        }
+    }
 }

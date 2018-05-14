@@ -492,4 +492,13 @@ class McitempurchaseController extends Controller
             $mcitempurchase->save();
         }
     }
+
+    public static function deleteByProcessInstanceId($processInstanceId)
+    {
+        $mcitempurchase = Mcitempurchase::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if ($mcitempurchase)
+        {
+            $mcitempurchase->forceDelete();
+        }
+    }
 }
