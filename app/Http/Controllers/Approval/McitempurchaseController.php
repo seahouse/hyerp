@@ -108,6 +108,7 @@ class McitempurchaseController extends Controller
                 $weight_purchase += $value->weight;
             }
         }
+        $input['totalweight'] = $weight_purchase;
 //        if ($weight_purchase <= 0.0)
 //            dd('申购重量不能为0');
 

@@ -592,6 +592,10 @@ class ApprovalController extends Controller
                 'value'     => $inputs['totalprice'],
             ],
             [
+                'name'      => '总重量',
+                'value'     => $inputs['totalweight'],
+            ],
+            [
                 'name'      => '采购物品详细用途',
                 'value'     => $inputs['detailuse'],
             ],

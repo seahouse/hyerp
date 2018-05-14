@@ -87,7 +87,7 @@
 			</div>
 			<div class="modal-body">
 				<div class="input-group">
-					{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '员工姓名', 'id' => 'keyDrawingchecker']) !!}
+					{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '', 'id' => 'keyDrawingchecker']) !!}
 					<span class="input-group-btn">
                    		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchDrawingchecker']) !!}
                    	</span>

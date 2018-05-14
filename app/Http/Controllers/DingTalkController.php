@@ -969,7 +969,7 @@ class DingTalkController extends Controller
                 elseif ($data->type == "delete")
                 {
                     if ($data->processCode == "PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2")
-                        IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
+                        IssuedrawingController::deleteByProcessInstanceId($data->processInstanceId);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
                         McitempurchaseController::deleteByProcessInstanceId($data->processInstanceId);
                 }
