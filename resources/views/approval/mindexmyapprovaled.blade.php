@@ -6,11 +6,11 @@
    
     {!! Form::open(['url' => '/approval/mindexmyapprovaled/search', 'method' => 'post', 'role' => 'search']) !!}
         <div class="container-fluid search-area">
-            <div class="row">
-                <div class="ctrl1">
-                    {!! Form::select('approvaltype', array('供应商付款' => '供应商付款', '供应商付款撤回' => '供应商付款撤回'), null, ['class' => 'form-control ctrl1', 'id' => 'approvaltype']) !!}
-                </div>
-            </div>
+            {{--<div class="row">--}}
+                {{--<div class="ctrl1">--}}
+                    {{--{!! Form::select('approvaltype', array('供应商付款' => '供应商付款', '供应商付款撤回' => '供应商付款撤回'), null, ['class' => 'form-control ctrl1', 'id' => 'approvaltype']) !!}--}}
+                {{--</div>--}}
+            {{--</div>--}}
             <div class="row">
                 <div class="col-xs-8 col-sm-8 ctrl1">
                     {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称、商品名称']) !!}
@@ -73,9 +73,9 @@
 @section('script')
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
-            @if (isset($inputs['approvaltype']))
-                $('#approvaltype').val("{{ $inputs['approvaltype'] }}");
-            @endif
+            {{--@if (isset($inputs['approvaltype']))--}}
+                {{--$('#approvaltype').val("{{ $inputs['approvaltype'] }}");--}}
+            {{--@endif--}}
 
         $(function() {
                 var panel = $('#expandArea')[0];

@@ -325,7 +325,9 @@ class ApprovalController extends Controller
         $userid = Auth::user()->id;
 
         // 特殊处理: if WuHL, set it to LiuYJ
-        if ($inputs['approvaltype'] == "供应商付款" && Auth::user()->email == "wuhaolun@huaxing-east.com")
+//        if ($inputs['approvaltype'] == "供应商付款" && Auth::user()->email == "wuhaolun@huaxing-east.com")
+//            $userid = User::where("email", "liuyujiao@huaxing-east.com")->first()->id;
+        if (Auth::user()->email == "wuhaolun@huaxing-east.com")
             $userid = User::where("email", "liuyujiao@huaxing-east.com")->first()->id;
 
         $ids = [];      // 报销id数组
