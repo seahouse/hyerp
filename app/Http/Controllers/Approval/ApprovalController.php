@@ -322,7 +322,12 @@ class ApprovalController extends Controller
         $inputs = $request->all();
 
         // 获取当前操作人员的报销审批层次
-        $userid = Auth::user()->id;        
+        $userid = Auth::user()->id;
+
+        // 特殊处理: if WuHL, set it to LiuYJ
+        if ($inputs['approvaltype'] == "供应商付款" && Auth::user()->email == "wuhaolun@huaxing-east.com")
+            $userid = User::where("email", "liuyujiao@huaxing-east.com")->first()->id;
+
         $ids = [];      // 报销id数组
         $ids_paymentrequest = [];      // 报销id数组
 
