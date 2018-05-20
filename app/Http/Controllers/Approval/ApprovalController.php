@@ -322,27 +322,28 @@ class ApprovalController extends Controller
         $inputs = $request->all();
 
         // 获取当前操作人员的报销审批层次
+        $userids = [];
         $userid = Auth::user()->id;
+        array_push($userids, $userid);
 
         // 特殊处理: if WuHL, set it to LiuYJ
 //        if ($inputs['approvaltype'] == "供应商付款" && Auth::user()->email == "wuhaolun@huaxing-east.com")
 //            $userid = User::where("email", "liuyujiao@huaxing-east.com")->first()->id;
         if (Auth::user()->email == "wuhaolun@huaxing-east.com")
+        {
             $userid = User::where("email", "liuyujiao@huaxing-east.com")->first()->id;
+            array_push($userids, $userid);
+        }
+        elseif (Auth::user()->email == "liuyujiao@huaxing-east.com")
+        {
+            $userid = User::where("email", "wuhaolun@huaxing-east.com")->first()->id;
+            array_push($userids, $userid);
+        }
 
         $ids = [];      // 报销id数组
         $ids_paymentrequest = [];      // 报销id数组
 
-        //  // 获取需要我审批的报销id数组
-        // $reimbursementids = Reimbursement::leftJoin('reimbursementapprovals', 'reimbursements.id', '=', 'reimbursementapprovals.reimbursement_id')
-        //     ->select('reimbursements.id', 
-        //         DB::raw('(select count(approver_id) from reimbursementapprovals where reimbursements.id=reimbursementapprovals.reimbursement_id and reimbursementapprovals.approver_id=' . $userid . ' limit 1) as myapprovaled'))     // 最后一次审批的状态
-        //     ->get();
 
-        // foreach ($reimbursementids as $reimbursementid) {
-        //     if ($reimbursementid->myapprovaled > 0)
-        //         $ids = array_prepend($ids, $reimbursementid->id);
-        // }
 
         // $reimbursements = Reimbursement::latest('created_at')->whereIn('id', $ids)->paginate(10);
         
@@ -350,10 +351,11 @@ class ApprovalController extends Controller
 
         $query = Paymentrequest::latest('created_at');
 //        $query->whereIn('id', $ids_paymentrequest);
-        $query->whereExists(function ($query) use ($userid) {
+        $query->whereExists(function ($query) use ($userid, $userids) {
             $query->select(DB::raw(1))
                 ->from('paymentrequestapprovals')
-                ->whereRaw('paymentrequestapprovals.approver_id=' . $userid . ' and paymentrequestapprovals.paymentrequest_id=paymentrequests.id ');
+//                ->whereRaw('paymentrequestapprovals.approver_id=' . $userid . ' and paymentrequestapprovals.paymentrequest_id=paymentrequests.id ');
+                ->whereRaw('paymentrequestapprovals.approver_id in (' . implode(",", $userids) . ') and paymentrequestapprovals.paymentrequest_id=paymentrequests.id ');
         });
 
         if (strlen($key) > 0)
