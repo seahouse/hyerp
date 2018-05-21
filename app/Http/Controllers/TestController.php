@@ -130,7 +130,7 @@ class TestController extends Controller
     public function test()
     {
         $config = $this->getconfig('test');
-        return view('test');
+        return view('test', compact('config'));
     }
     
     public function index()

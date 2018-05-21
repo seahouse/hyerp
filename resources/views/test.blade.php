@@ -23,6 +23,10 @@ APP跳转
     <script src="https://g.alicdn.com/dingding/open-develop/1.9.0/dingtalk.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function () {
+            var appname = '{{ config('custom.dingtalk.thirdapps.aishu.android') }}';
+            if ({{ Agent::is('iPhone') }})
+                appname = '{{ config('custom.dingtalk.thirdapps.aishu.ios') }}';
+
             dd.config({
                 agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
                 corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID
@@ -51,8 +55,9 @@ APP跳转
 //                });
 //            }
 
+
             dd.device.launcher.launchApp({
-                app: '{{ config('custom.dingtalk.thirdapps.aishu.android') }}', //iOS:应用scheme;Android:应用包名
+                app: appname, //iOS:应用scheme;Android:应用包名
 //                activity :'DetailActivity', //仅限Android，打开指定Activity，可不传。如果为空，就打开App的Main入口Activity
                 onSuccess : function(data) {
                     /*
@@ -61,7 +66,9 @@ APP跳转
                      }
                      */
                 },
-                onFail : function(err) {}
+                onFail : function(err) {
+                    alert('打开app失败.');
+                }
             });
         });
 
