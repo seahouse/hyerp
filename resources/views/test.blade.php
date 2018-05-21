@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('title')
-身份验证
+APP跳转
 @endsection
 
 @section('main')
@@ -13,7 +13,6 @@
 <div id="tmPlayer" class="tmPlayer" style="height: 557px; width: 100%; height: 100%"></div>
 
 
-
 </body>
 </html>
 
@@ -21,30 +20,72 @@
     @endsection
 
 @section('script')
-    <script src="/pdfjs/build/pdf.js"></script>
-    <script src="/pdfjs/build/pdf.worker.js"></script>
+    <script src="https://g.alicdn.com/dingding/open-develop/1.9.0/dingtalk.js"></script>
     <script type="text/javascript">
-        {{--var var_filepath = decodeURIComponent("@filepath");//不能跨域--}}
-        var var_filepath = '/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf';//不能跨域
-        var var_win_height = 500;
-
         jQuery(document).ready(function () {
-            resetPlayerSize();
+            dd.config({
+                agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
+                corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID
+                timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
+                nonceStr: "{!! array_get($config, 'nonceStr') !!}", // 必填，生成签名的随机串
+                signature: "{!! array_get($config, 'signature') !!}", // 必填，签名
+                jsApiList: ['runtime.info',
+                    'device.launcher.launchApp',
+                    'device.notification.confirm',
+                    'biz.navigation.close'] // 必填，需要使用的jsapi列表
+            });
         });
 
-        $(window).resize(function () {
-            resetPlayerSize();
+        dd.ready(function() {
+
+//            // if the page is not first history.back, exit it.
+//            if (history.length > 1)
+//            {
+//                dd.biz.navigation.close({
+//                    onSuccess : function(result) {
+//                        /*result结构
+//                         {}
+//                         */
+//                    },
+//                    onFail : function(err) {}
+//                });
+//            }
+
+            dd.device.launcher.launchApp({
+                app: '{{ config('custom.dingtalk.thirdapps.aishu.android') }}', //iOS:应用scheme;Android:应用包名
+//                activity :'DetailActivity', //仅限Android，打开指定Activity，可不传。如果为空，就打开App的Main入口Activity
+                onSuccess : function(data) {
+                    /*
+                     {
+                     result: true //true 唤起成功 false 唤起失败
+                     }
+                     */
+                },
+                onFail : function(err) {}
+            });
         });
 
-        function resetPlayerSize() {
-            var_win_height = $(window).height();
-            $(".tmPlayer").css({ "height": var_win_height + "px" });
-        }
+        dd.error(function(error) {
+            alert('dd.error: ' + JSON.stringify(error));
+            {{ Cache::flush() }}       // add by seahouse, 2018/1/10
+            {{--
+            $.ajax({
+                type:"GET",
+                url:"{{ url('dingtalk/cacheflush') }}",
+                error:function(xhr, ajaxOptions, thrownError){
+                    alert('error');
+                    alert(xhr.status);
+                    alert(xhr.responseText);
+                    alert(ajaxOptions);
+                    alert(thrownError);
+                },
+                success:function(){
+                    {{ Log::info('cacheflush') }}
+                },
+            });
+            --}}
+        });
+
     </script>
 
-    <script type="text/javascript">
-        $('.tmPlayer').html('<iframe frameBorder="0" scrolling="no" src="/pdfjs/build/generic/web/viewer.html?file=' +
-            var_filepath +
-            '" style="width:100%; height:100%;"></iframe>');
-    </script>
 @endsection

@@ -129,7 +129,7 @@ class TestController extends Controller
 
     public function test()
     {
-//        dd(request()->fullurl());
+        $config = $this->getconfig('test');
         return view('test');
     }
     
