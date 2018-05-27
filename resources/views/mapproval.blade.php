@@ -75,9 +75,9 @@
 				</a>
 			</div>
 			<div class="btn-group" role="group">
-				<a href="#" class="btn btn-default btn-lg">
+				<a href="{{ url('/approval/pppayment/mcreate') }}" class="btn btn-default btn-lg">
 					<i class="icon iconfont btn-menu-2 color-grey icon-dingding"></i>
-					<span class="labble">XXX</span>
+					<span class="labble">生产加工单结算付款</span>
 				</a>
 			</div>
 			<div class="btn-group" role="group">

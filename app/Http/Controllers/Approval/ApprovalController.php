@@ -663,4 +663,165 @@ class ApprovalController extends Controller
 
         return $response;
     }
+
+    public static function pppayment($inputs)
+    {
+        $user = Auth::user();
+        $method = 'dingtalk.smartwork.bpms.processinstance.create';
+        $session = DingTalkController::getAccessToken();
+        $timestamp = time('2017-07-19 13:06:00');
+        $format = 'json';
+        $v = '2.0';
+
+//        $process_code = 'PROC-EF6YRO35P2-7MPMNW3BNO0R8DKYN8GX1-2EACCA5J-6';     // hyerp
+//        $process_code = 'PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2';    // huaxing
+        $process_code = config('custom.dingtalk.approval_processcode.pppayment');
+        $originator_user_id = $user->dtuserid;
+        $departmentList = json_decode($user->dtuser->department);
+        $dept_id = 0;
+        if (count($departmentList) > 0)
+            $dept_id = array_first($departmentList);
+        $approvers = $inputs['approvers'];
+//        $approvers = $user->dtuserid;
+        // if originator_user_id in approvers, skip pre approvers
+        $approver_array = explode(',', $approvers);
+        if (in_array($originator_user_id, $approver_array))
+        {
+            $offset = array_search($originator_user_id, $approver_array);
+            $approver_array = array_slice($approver_array, $offset+1);
+            $approvers = implode(",", $approver_array);
+        }
+        if ($approvers == "")
+            $approvers = config('custom.dingtalk.default_approvers');       // wuceshi for test
+
+        $detail_array = [];
+        $mcitempurchase_items = json_decode($inputs['items_string']);
+        foreach ($mcitempurchase_items as $value) {
+            if ($value->sohead_id > 0)
+            {
+                $item_array = [
+                    [
+                        'name'      => '所属项目编号',
+                        'value'     => $value->sohead_number,
+                    ],
+                    [
+                        'name'      => '所属项目名称',
+                        'value'     => $value->project_name,
+                    ],
+                    [
+                        'name'      => '制作概述',
+                        'value'     => $value->productionoverview,
+                    ],
+                    [
+                        'name'      => '吨位',
+                        'value'     => $value->tonnage,
+                    ],
+                    [
+                        'name'      => '图纸下发单号',
+                        'value'     => $value->issuedrawing_numbers,
+                    ],
+                    [
+                        'name'      => '上传质检签收单',
+                        'value'     => $inputs[$value->imagesname],
+                    ],
+                ];
+                array_push($detail_array, $item_array);
+            }
+        }
+        $formdata = [
+            [
+                'name'      => '制作公司',
+                'value'     => $inputs['productioncompany'],
+            ],
+            [
+                'name'      => '设计部门',
+                'value'     => $inputs['designdepartment'],
+            ],
+            [
+                'name'      => '付款事由',
+                'value'     => $inputs['paymentreason'],
+            ],
+            [
+                'name'      => '总吨位',
+                'value'     => $inputs['totaltonnage'],
+            ],
+            [
+                'name'      => '发票开具情况',
+                'value'     => $inputs['invoicingsituation'],
+            ],
+            [
+                'name'      => '该加工单已付款总额',
+                'value'     => $inputs['totalpaid'],
+            ],
+            [
+                'name'      => '本次申请付款总额',
+                'value'     => $inputs['amount'],
+            ],
+            [
+                'name'      => '支付日期',
+                'value'     => $inputs['paymentdate'],
+            ],
+            [
+                'name'      => '支付对象',
+                'value'     => $inputs['supplier_name'],
+            ],
+            [
+                'name'      => '开户行',
+                'value'     => $inputs['supplier_bank'],
+            ],
+            [
+                'name'      => '银行账户',
+                'value'     => $inputs['supplier_bankaccountnumber'],
+            ],
+            [
+                'name'      => '加工明细',
+                'value'     => json_encode($detail_array),
+            ],
+        ];
+        $form_component_values = json_encode($formdata);
+//        $form_component_values = str_replace('#', '%23', $form_component_values);
+//        $form_component_values = str_replace(' ', '%20', $form_component_values);
+//        dd(json_decode(json_decode($form_component_values)[9]->value));
+//        Log::info('process_code: ' . $process_code);
+//        Log::info('originator_user_id: ' . $originator_user_id);
+//        Log::info('dept_id: ' . $dept_id);
+//        Log::info('approvers: ' . $approvers);
+        Log::info('form_component_values: ' . $form_component_values);
+        $params = compact('method', 'session', 'v', 'format',
+            'process_code', 'originator_user_id', 'dept_id', 'approvers', 'form_component_values');
+        $data = [
+//            'form_component_values' => $form_component_values,
+        ];
+
+//        Log::info(app_path());
+        $c = new DingTalkClient();
+        $req = new SmartworkBpmsProcessinstanceCreateRequest();
+//        $req->setAgentId("41605932");
+        $req->setProcessCode($process_code);
+        $req->setOriginatorUserId($originator_user_id);
+        $req->setDeptId("$dept_id");
+        $req->setApprovers($approvers);
+        $cc_list = config('custom.dingtalk.approversettings.pppayment.cc_list.' . $inputs['designdepartment']);
+        if (strlen($cc_list) == 0)
+            $cc_list = config('custom.dingtalk.approversettings.mcitempurchase.cc_list.default');
+        if ($cc_list <> "")
+        {
+            $req->setCcList($cc_list);
+            $req->setCcPosition("FINISH");
+        }
+//        $form_component_values = new FormComponentValueVo();
+//        $form_component_values->name="请假类型";
+//        $form_component_values->value="事假";
+//        $form_component_values->ext_value="总天数:1";
+        $req->setFormComponentValues("$form_component_values");
+        $response = $c->execute($req, $session);
+        return json_encode($response);
+        dd(json_encode($response, JSON_UNESCAPED_UNICODE));
+        return response()->json($response);
+
+//        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+//        $response = HttpDingtalkEco::post("", $params, json_encode($data));
+
+        return $response;
+    }
 }

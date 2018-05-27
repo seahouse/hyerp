@@ -385,6 +385,16 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::resource('mcitempurchaseissuedrawing', 'McitempurchaseissuedrawingController');
     Route::resource('mcitempurchaseitem', 'McitempurchaseitemController');
 
+    Route::group(['prefix' => 'pppayment'], function() {
+        Route::get('mcreate', 'PppaymentController@mcreate');
+        Route::post('mstore', 'PppaymentController@mstore');
+
+    });
+    Route::resource('pppayment', 'PppaymentController');
+    Route::resource('pppaymentitem', 'PppaymentitemController');
+    Route::resource('pppaymentitemissuedrawing', 'PppaymentitemissuedrawingController');
+    Route::resource('pppaymentitemattachment', 'PppaymentitemattachmentController');
+
     Route::post('bingdingtalk', 'ApprovalController@bingdingtalk');
 });
 

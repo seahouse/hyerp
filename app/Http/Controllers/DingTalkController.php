@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Approval\IssuedrawingController;
 use App\Http\Controllers\Approval\McitempurchaseController;
+use App\Http\Controllers\Approval\PppaymentController;
 use App\Http\Controllers\util\HttpDingtalkEco;
 use App\Models\System\User;
 use App\Models\System\Userold;
@@ -951,6 +952,8 @@ class DingTalkController extends Controller
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
                         McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.pppayment'))
+                        PppaymentController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
                 }
                 elseif ($data->type == "finish" && $data->result == "refuse")
                 {
@@ -958,6 +961,8 @@ class DingTalkController extends Controller
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
                         McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.pppayment'))
+                        PppaymentController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
                 }
                 elseif ($data->type == "terminate")
                 {
@@ -965,6 +970,8 @@ class DingTalkController extends Controller
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
                         McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.pppayment'))
+                        PppaymentController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
                 }
                 elseif ($data->type == "delete")
                 {
@@ -972,6 +979,8 @@ class DingTalkController extends Controller
                         IssuedrawingController::deleteByProcessInstanceId($data->processInstanceId);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
                         McitempurchaseController::deleteByProcessInstanceId($data->processInstanceId);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.pppayment'))
+                        PppaymentController::deleteByProcessInstanceId($data->processInstanceId);
                 }
             }
             else if ("bpms_task_change" === $eventType)

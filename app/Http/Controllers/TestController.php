@@ -78,13 +78,7 @@ class TestController extends Controller
 
     public function getuserinfo($code)
     {
-        $corpid = 'ding6ed55e00b5328f39';
-        $corpsecret = 'gdQvzBl7IW5f3YUSMIkfEIsivOVn8lcXUL_i1BIJvbP4kPJh8SU8B8JuNe8U9JIo';
 
-        // $url = 'https://oapi.dingtalk.com/gettoken';
-        // $params = compact('corpid', 'corpsecret');
-        // $reply = $this->get($url, $params);
-        // $access_token = $reply->access_token;
         $access_token = self::getAccessToken();
 
         // Get user info
