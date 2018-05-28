@@ -258,7 +258,7 @@
                     {!! Form::label('images', '上传质检签收单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
                     <div class='col-xs-8 col-sm-10'>
-                        <div class="row" id="previewimage">
+                        <div class="row" id="previewimage_1">
                         </div>
                         @if (isset($paymentrequest))
                             <div class="row" id="previewimage2">
@@ -273,10 +273,11 @@
                         @else
                             @if (Agent::isDesktop())
                                 {!! Form::file('images_1[]', ['multiple', 'id' => 'images_1']) !!}
+                                {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage', 'value' => '1']) !!}
                                 {!! Form::hidden('imagesname', 'images_1', ['class' => 'btn btn-sm', 'id' => 'imagesname_1']) !!}
                             @else
-                                {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
-                                {!! Form::hidden('imagesname', 'images_1', ['class' => 'btn btn-sm', 'id' => 'imagesname_1']) !!}
+                                {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage', 'value' => '1']) !!}  {{-- value for num --}}
+                                {!! Form::hidden('imagesname_mobile', null, ['class' => 'btn btn-sm', 'id' => 'imagesname_mobile_1']) !!}
                             @endif
                         @endif
 

@@ -940,9 +940,10 @@
 
 			dd.ready(function() {
 				$("#btnSelectImage").click(function() {
+                    alert($(this).val());
 					dd.biz.util.uploadImage({
 						multiple: true,
-						max: 5,
+						max: 9,
 						onSuccess: function(result) {
 							var images = result;	// result.split(',');
 							var imageHtml = '';
@@ -954,6 +955,7 @@
 								imageHtml += '</div>';
 								imageHtml += '</div>';
 							}
+                            alert($(this).val());
 							$("#previewimage").empty().append(imageHtml);
 						},
 						onFail: function(err) {
