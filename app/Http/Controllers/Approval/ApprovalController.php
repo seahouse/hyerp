@@ -669,12 +669,10 @@ class ApprovalController extends Controller
         $user = Auth::user();
         $method = 'dingtalk.smartwork.bpms.processinstance.create';
         $session = DingTalkController::getAccessToken();
-        $timestamp = time('2017-07-19 13:06:00');
+//        $timestamp = time('2017-07-19 13:06:00');
         $format = 'json';
         $v = '2.0';
 
-//        $process_code = 'PROC-EF6YRO35P2-7MPMNW3BNO0R8DKYN8GX1-2EACCA5J-6';     // hyerp
-//        $process_code = 'PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2';    // huaxing
         $process_code = config('custom.dingtalk.approval_processcode.pppayment');
         $originator_user_id = $user->dtuserid;
         $departmentList = json_decode($user->dtuser->department);
@@ -803,7 +801,7 @@ class ApprovalController extends Controller
         $req->setApprovers($approvers);
         $cc_list = config('custom.dingtalk.approversettings.pppayment.cc_list.' . $inputs['designdepartment']);
         if (strlen($cc_list) == 0)
-            $cc_list = config('custom.dingtalk.approversettings.mcitempurchase.cc_list.default');
+            $cc_list = config('custom.dingtalk.approversettings.pppayment.cc_list.default');
         if ($cc_list <> "")
         {
             $req->setCcList($cc_list);
