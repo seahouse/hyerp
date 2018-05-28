@@ -237,7 +237,7 @@ class PppaymentController extends Controller
 
                             // add image record
                             $pppaymentitemattachment = new Pppaymentitemattachment;
-                            $pppaymentitemattachment->mcitempurchase_id = $pppaymentitem->id;
+                            $pppaymentitemattachment->pppaymentitem_id = $pppaymentitem->id;
                             $pppaymentitemattachment->type = "image";     // add a '/' in the head.
                             $pppaymentitemattachment->path = "/$dir$filename";     // add a '/' in the head.
                             $pppaymentitemattachment->save();
@@ -250,7 +250,6 @@ class PppaymentController extends Controller
                 }
             }
         }
-
 
 
 
