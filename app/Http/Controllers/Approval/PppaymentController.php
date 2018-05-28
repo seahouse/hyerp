@@ -200,6 +200,52 @@ class PppaymentController extends Controller
                             }
                         }
                     }
+
+                    // create images from dingtalk mobile
+                    if ($pppaymentitem)
+                    {
+                        $images = array_where($input, function($key, $value) {
+                            if (substr_compare($key, 'image_', 0, 6) == 0)
+                                return $value;
+                        });
+
+                        $destinationPath = 'uploads/approval/pppayment/' . $pppayment->id . '/images/';
+                        foreach ($images as $key => $value) {
+                            # code...
+
+                            // save image file.
+                            $sExtension = substr($value, strrpos($value, '.') + 1);
+                            // $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                            // Storage::disk('local')->put($sFilename, file_get_contents($value));
+                            // Storage::move($sFilename, '../abcd.jpg');
+                            $dir = 'images/approval/pppayment/' . $pppayment->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                            $parts = explode('/', $dir);
+                            $filename = array_pop($parts);
+                            $dir = '';
+                            foreach ($parts as $part) {
+                                # code...
+                                $dir .= "$part/";
+                                if (!is_dir($dir)) {
+                                    mkdir($dir);
+                                }
+                            }
+
+                            Storage::put($destinationPath . $filename, file_get_contents($value));
+
+                            file_put_contents("$dir/$filename", file_get_contents($value));
+
+
+                            // add image record
+                            $pppaymentitemattachment = new Pppaymentitemattachment;
+                            $pppaymentitemattachment->mcitempurchase_id = $pppaymentitem->id;
+                            $pppaymentitemattachment->type = "image";     // add a '/' in the head.
+                            $pppaymentitemattachment->path = "/$dir$filename";     // add a '/' in the head.
+                            $pppaymentitemattachment->save();
+
+                            array_push($image_urls, url($destinationPath . $value));
+                        }
+                    }
+
                     $input[$pppayment_item->imagesname] = json_encode($image_urls);
                 }
             }
@@ -207,51 +253,7 @@ class PppaymentController extends Controller
 
 
 
-        // create images from dingtalk mobile
-        if ($pppayment)
-        {
-            $images = array_where($input, function($key, $value) {
-                if (substr_compare($key, 'image_', 0, 6) == 0)
-                    return $value;
-            });
 
-            $destinationPath = 'uploads/approval/mcitempurchase/' . $pppayment->id . '/images/';
-            foreach ($images as $key => $value) {
-                # code...
-
-                // save image file.
-                $sExtension = substr($value, strrpos($value, '.') + 1);
-                // $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
-                // Storage::disk('local')->put($sFilename, file_get_contents($value));
-                // Storage::move($sFilename, '../abcd.jpg');
-                $dir = 'images/approval/mcitempurchase/' . $pppayment->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
-                $parts = explode('/', $dir);
-                $filename = array_pop($parts);
-                $dir = '';
-                foreach ($parts as $part) {
-                    # code...
-                    $dir .= "$part/";
-                    if (!is_dir($dir)) {
-                        mkdir($dir);
-                    }
-                }
-
-//                $originalName = $file->getClientOriginalName();
-                Storage::put($destinationPath . $filename, file_get_contents($value));
-
-                file_put_contents("$dir/$filename", file_get_contents($value));
-
-
-                // add image record
-                $mcitempurchaseattachment = new Mcitempurchaseattachment;
-                $mcitempurchaseattachment->mcitempurchase_id = $pppayment->id;
-                $mcitempurchaseattachment->type = "image";     // add a '/' in the head.
-                $mcitempurchaseattachment->path = "/$dir$filename";     // add a '/' in the head.
-                $mcitempurchaseattachment->save();
-
-                array_push($image_urls, url($destinationPath . $value));
-            }
-        }
 
         if (isset($pppayment))
         {
