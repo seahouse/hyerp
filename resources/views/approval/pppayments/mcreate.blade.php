@@ -953,12 +953,12 @@
 								imageHtml += '<div class="col-xs-6 col-md-3">';
 								imageHtml += '<div class="thumbnail">';
 								imageHtml += '<img src=' + images[i] + ' />';
-								imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
+								//imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
 								imageHtml += '</div>';
 								imageHtml += '</div>';
 							}
 //                            alert($(this).val());
-                            $("#imagesname_mobile_" + String(num)).val(result.split(','));
+                            $("#imagesname_mobile_" + String(num)).val(result);
 							$("#previewimage_" + String(num)).empty().append(imageHtml);
 						},
 						onFail: function(err) {

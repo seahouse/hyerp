@@ -204,20 +204,19 @@ class PppaymentController extends Controller
                     // create images from dingtalk mobile
                     if ($pppaymentitem)
                     {
-                        $images = array_where($input, function($key, $value) {
-                            if (substr_compare($key, 'image_', 0, 6) == 0)
-                                return $value;
-                        });
+                        $imagesname_mobile = $pppayment_item->imagesname_mobile;
+
+//                        $images = array_where($input, function($key, $value) {
+//                            if (substr_compare($key, 'image_', 0, 6) == 0)
+//                                return $value;
+//                        });
 
                         $destinationPath = 'uploads/approval/pppayment/' . $pppayment->id . '/images/';
-                        foreach ($images as $key => $value) {
+                        foreach (explode(",", $imagesname_mobile) as $imagesname_mobile_item) {
                             # code...
 
                             // save image file.
-                            $sExtension = substr($value, strrpos($value, '.') + 1);
-                            // $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
-                            // Storage::disk('local')->put($sFilename, file_get_contents($value));
-                            // Storage::move($sFilename, '../abcd.jpg');
+                            $sExtension = substr($imagesname_mobile_item, strrpos($imagesname_mobile_item, '.') + 1);
                             $dir = 'images/approval/pppayment/' . $pppayment->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
                             $parts = explode('/', $dir);
                             $filename = array_pop($parts);
@@ -230,9 +229,9 @@ class PppaymentController extends Controller
                                 }
                             }
 
-                            Storage::put($destinationPath . $filename, file_get_contents($value));
+                            Storage::put($destinationPath . $filename, file_get_contents($imagesname_mobile_item));
 
-                            file_put_contents("$dir/$filename", file_get_contents($value));
+                            file_put_contents("$dir/$filename", file_get_contents($imagesname_mobile_item));
 
 
                             // add image record
@@ -242,7 +241,7 @@ class PppaymentController extends Controller
                             $pppaymentitemattachment->path = "/$dir$filename";     // add a '/' in the head.
                             $pppaymentitemattachment->save();
 
-                            array_push($image_urls, url($destinationPath . $value));
+                            array_push($image_urls, url($destinationPath . $imagesname_mobile_item));
                         }
                     }
 
