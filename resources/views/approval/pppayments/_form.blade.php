@@ -271,7 +271,7 @@
                                 @endforeach
                             </div>
                         @else
-                            {!! Form::hidden('imagenames', 'images_1', ['class' => 'btn btn-sm', 'id' => 'imagesname_1']) !!}
+                            {!! Form::hidden('imagesname', 'images_1', ['class' => 'btn btn-sm', 'id' => 'imagesname_1']) !!}
                             @if (Agent::isDesktop())
                                 {!! Form::file('images_1[]', ['multiple', 'id' => 'images_1']) !!}
                             @else
