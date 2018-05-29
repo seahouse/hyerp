@@ -241,7 +241,7 @@ class PppaymentController extends Controller
                             $pppaymentitemattachment->path = "/$dir$filename";     // add a '/' in the head.
                             $pppaymentitemattachment->save();
 
-                            array_push($image_urls, url($destinationPath . $imagesname_mobile_item));
+                            array_push($image_urls, $imagesname_mobile_item);
                         }
                     }
 
