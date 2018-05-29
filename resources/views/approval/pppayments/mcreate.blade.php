@@ -940,6 +940,7 @@
 
 			dd.ready(function() {
 				$("#btnSelectImage").click(function() {
+				    var num = $(this).val();
 //                    alert($(this).val());
 					dd.biz.util.uploadImage({
 						multiple: true,
@@ -956,7 +957,8 @@
 								imageHtml += '</div>';
 							}
 //                            alert($(this).val());
-							$("#previewimage_" + $(this).val()).empty().append(imageHtml);
+                            $("#imagesname_mobile_" + num).val(result.split(','));
+							$("#previewimage_" + num).empty().append(imageHtml);
 						},
 						onFail: function(err) {
 							alert('select image failed: ' + JSON.stringify(err));
