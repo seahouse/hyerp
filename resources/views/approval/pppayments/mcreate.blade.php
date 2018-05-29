@@ -838,7 +838,7 @@
 							\@if (Agent::isDesktop())
 							<input multiple="multiple" id="images_' + String(item_num) + '" name="images_' + String(item_num) + '[]" type="file">\
 							\@else
-                            <button class="btn btn-sm" id="btnSelectImage" value="' + String(item_num) + '" type="button">+</button>\
+                            <button class="btn btn-sm" id="btnSelectImage_' + String(item_num) + '" value="' + String(item_num) + '" type="button">+</button>\
                         \<input class="btn btn-sm" id="imagesname_mobile_' + String(item_num) + '" name="imagesname_mobile" type="hidden">\
                         @endif
 							</div>\
@@ -971,6 +971,33 @@
 						}
 					});
 				});
+
+				function selectImage_Mobile() {
+                    var num = $(this).val();
+//                    alert($(this).val());
+                    dd.biz.util.uploadImage({
+                        multiple: true,
+                        max: 9,
+                        onSuccess: function(result) {
+                            var images = result;	// result.split(',');
+                            var imageHtml = '';
+                            for (var i in images) {
+                                imageHtml += '<div class="col-xs-6 col-md-3">';
+                                imageHtml += '<div class="thumbnail">';
+                                imageHtml += '<img src=' + images[i] + ' />';
+                                //imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
+                                imageHtml += '</div>';
+                                imageHtml += '</div>';
+                            }
+//                            alert($(this).val());
+                            $("#imagesname_mobile_" + String(num)).val(result);
+                            $("#previewimage_" + String(num)).empty().append(imageHtml);
+                        },
+                        onFail: function(err) {
+                            alert('select image failed: ' + JSON.stringify(err));
+                        }
+                    });
+                }
 
 				// // 上传附件
 				// $("#btnSelectPaymentnodeattachment").click(function() {

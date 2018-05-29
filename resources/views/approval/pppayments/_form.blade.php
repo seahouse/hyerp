@@ -275,7 +275,7 @@
                             @if (Agent::isDesktop())
                                 {!! Form::file('images_1[]', ['multiple', 'id' => 'images_1']) !!}
                             @else
-                                {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage', 'value' => '1']) !!}  {{-- value for num --}}
+                                {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage', 'value' => '1', 'onclick' => 'selectImage_Mobile()']) !!}  {{-- value for num --}}
                                 {!! Form::hidden('imagesname_mobile', null, ['class' => 'btn btn-sm', 'id' => 'imagesname_mobile_1']) !!}
                             @endif
                         @endif
