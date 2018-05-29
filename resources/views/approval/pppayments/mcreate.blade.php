@@ -314,6 +314,7 @@
                     itemObject.issuedrawing_numbers = container.find("input[name='issuedrawing_numbers']").val();
                     itemObject.issuedrawing_values = container.find("input[name='issuedrawing_values']").val();
                     itemObject.imagesname = container.find("input[name='imagesname']").val();
+                    itemObject.imagesname_mobile = container.find("input[name='imagesname_mobile']").val();
 //                    itemObject.unit_id = container.find("select[name='unit_id']").val();
 //                    itemObject.unit_name = container.find("select[name='unit_id']").find("option:selected").text();
 //                    itemObject.weight = container.find("input[name='weight']").val();
@@ -957,8 +958,8 @@
 								imageHtml += '</div>';
 							}
 //                            alert($(this).val());
-                            $("#imagesname_mobile_" + num).val(result.split(','));
-							$("#previewimage_" + num).empty().append(imageHtml);
+                            $("#imagesname_mobile_" + String(num)).val(result.split(','));
+							$("#previewimage_" + String(num)).empty().append(imageHtml);
 						},
 						onFail: function(err) {
 							alert('select image failed: ' + JSON.stringify(err));
