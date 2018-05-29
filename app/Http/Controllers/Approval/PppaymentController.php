@@ -167,7 +167,7 @@ class PppaymentController extends Controller
 
                     $image_urls = [];
                     // create images in the desktop
-                    if ($pppaymentitem)
+                    if ($pppaymentitem && isset($pppayment_item->imagesname))
                     {
                         $files = array_get($input, $pppayment_item->imagesname);
 //                        $files = array_get($input,'images');
@@ -202,7 +202,7 @@ class PppaymentController extends Controller
                     }
 
                     // create images from dingtalk mobile
-                    if ($pppaymentitem)
+                    if ($pppaymentitem && isset($pppayment_item->imagesname_mobile))
                     {
                         $imagesname_mobile = $pppayment_item->imagesname_mobile;
 
