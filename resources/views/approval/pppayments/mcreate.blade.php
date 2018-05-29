@@ -838,7 +838,7 @@
 							\@if (Agent::isDesktop())
 							<input multiple="multiple" id="images_' + String(item_num) + '" name="images_' + String(item_num) + '[]" type="file">\
 							\@else
-                            <button class="btn btn-sm" id="btnSelectImage_' + String(item_num) + '" value="' + String(item_num) + '" type="button">+</button>\
+                                <button class="btn btn-sm" id="btnSelectImage_' + String(item_num) + '" value="' + String(item_num) + '" name="aaaaaa" type="button">+</button>\
                         \<input class="btn btn-sm" id="imagesname_mobile_' + String(item_num) + '" name="imagesname_mobile" type="hidden">\
                         @endif
 							</div>\
@@ -919,29 +919,21 @@
 			    jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile'] // 必填，需要使用的jsapi列表
 			});
 
-			// $.ajax({
-			// 	type: "GET",
-			// 	url: "{{ url('dingtalk/getconfig') }}",
-			// 	error:function(xhr, ajaxOptions, thrownError){
-   //           		alert('getConfig failed.');
-   //           	    alert('error');
-			// 		alert(xhr.status);
-			// 		alert(xhr.responseText);
-			// 		alert(ajaxOptions);
-			// 		alert(thrownError);
-   //           	},
-   //           	success:function(result){
-   //           		alert('getConfig success. signature:' + result.signature);
-   //           		dd.config({
-			// 		    agentId: '13231599', // 必填，微应用ID
-			// 		    corpId: 'ding6ed55e00b5328f39',//必填，企业ID
-			// 		    timeStamp: result.timeStamp, // 必填，生成签名的时间戳
-			// 		    nonceStr: result.nonceStr, // 必填，生成签名的随机串
-			// 		    signature: result.signature, // 必填，签名
-			// 		    jsApiList: ['device.notification.alert', 'device.notification.confirm', 'biz.util.uploadImage'] // 必填，需要使用的jsapi列表
-			// 		});
-   //              },
-			// });
+            selectImage_Mobile = function(i) {
+//                alert('aaa');
+                alert(i);
+//                var num = $(this).val();
+//                    alert($(this).val());
+            }
+
+//            function selectImage_Mobile() {
+//                alert('aaa');
+//            }
+
+//            $("button[name=aaaaaa]").click(function() {
+//                var num = $(this).val();
+//                    alert($(this).val());
+//            });
 
 
 			dd.ready(function() {
@@ -972,8 +964,8 @@
 					});
 				});
 
-				function selectImage_Mobile() {
-                    var num = $(this).val();
+                selectImage_Mobile = function (num) {
+//                    var num = $(this).val();
 //                    alert($(this).val());
                     dd.biz.util.uploadImage({
                         multiple: true,
