@@ -838,7 +838,7 @@
 							\@if (Agent::isDesktop())
 							<input multiple="multiple" id="images_' + String(item_num) + '" name="images_' + String(item_num) + '[]" type="file">\
 							\@else
-                                <button class="btn btn-sm" id="btnSelectImage_' + String(item_num) + '" value="' + String(item_num) + '" name="aaaaaa" type="button">+</button>\
+                                <button class="btn btn-sm" id="btnSelectImage" value="1" onclick="selectImage_Mobile(' + String(item_num) + ')" type="button">+</button>\
                         \<input class="btn btn-sm" id="imagesname_mobile_' + String(item_num) + '" name="imagesname_mobile" type="hidden">\
                         @endif
 							</div>\
@@ -919,12 +919,13 @@
 			    jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile'] // 必填，需要使用的jsapi列表
 			});
 
-            selectImage_Mobile = function(i) {
-//                alert('aaa');
-                alert(i);
-//                var num = $(this).val();
+//            window.selectImage_Mobile = function(evt) {
+////                alert('aaa');
+//                alert(i);
+//                var target = evt.srcElement|evt.target;
+////                var num = $(this).val();
 //                    alert($(this).val());
-            }
+//            }
 
 //            function selectImage_Mobile() {
 //                alert('aaa');
@@ -937,32 +938,32 @@
 
 
 			dd.ready(function() {
-				$("#btnSelectImage").click(function() {
-				    var num = $(this).val();
-//                    alert($(this).val());
-					dd.biz.util.uploadImage({
-						multiple: true,
-						max: 9,
-						onSuccess: function(result) {
-							var images = result;	// result.split(',');
-							var imageHtml = '';
-							for (var i in images) {
-								imageHtml += '<div class="col-xs-6 col-md-3">';
-								imageHtml += '<div class="thumbnail">';
-								imageHtml += '<img src=' + images[i] + ' />';
-								//imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
-								imageHtml += '</div>';
-								imageHtml += '</div>';
-							}
-//                            alert($(this).val());
-                            $("#imagesname_mobile_" + String(num)).val(result);
-							$("#previewimage_" + String(num)).empty().append(imageHtml);
-						},
-						onFail: function(err) {
-							alert('select image failed: ' + JSON.stringify(err));
-						}
-					});
-				});
+//				$("#btnSelectImage").click(function() {
+//				    var num = $(this).val();
+////                    alert($(this).val());
+//					dd.biz.util.uploadImage({
+//						multiple: true,
+//						max: 9,
+//						onSuccess: function(result) {
+//							var images = result;	// result.split(',');
+//							var imageHtml = '';
+//							for (var i in images) {
+//								imageHtml += '<div class="col-xs-6 col-md-3">';
+//								imageHtml += '<div class="thumbnail">';
+//								imageHtml += '<img src=' + images[i] + ' />';
+//								//imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
+//								imageHtml += '</div>';
+//								imageHtml += '</div>';
+//							}
+////                            alert($(this).val());
+//                            $("#imagesname_mobile_" + String(num)).val(result);
+//							$("#previewimage_" + String(num)).empty().append(imageHtml);
+//						},
+//						onFail: function(err) {
+//							alert('select image failed: ' + JSON.stringify(err));
+//						}
+//					});
+//				});
 
                 selectImage_Mobile = function (num) {
 //                    var num = $(this).val();
