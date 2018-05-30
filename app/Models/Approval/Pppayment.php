@@ -28,7 +28,7 @@ class Pppayment extends Model
     ];
 
     public function approvers() {
-        $approvers = config('custom.dingtalk.approversettings.pppayment.' . $this::getAttribute('manufacturingcenter'), '');
+        $approvers = config('custom.dingtalk.approversettings.pppayment.' . $this::getAttribute('designdepartment'), '');
         return $approvers;
     }
 }
