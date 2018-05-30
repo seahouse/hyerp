@@ -834,6 +834,7 @@
 						<div class="form-group">\
 							<label for="images" class="col-xs-4 col-sm-2 control-label">上传质检签收单:</label>\
 							<div class="col-sm-10 col-xs-8">\
+							\<div class="row" id="previewimage_' + String(item_num) + '"></div>\
 							\<input class="btn btn-sm" id="imagesname_' + String(item_num) + '" name="imagesname" type="hidden" value="images_' + String(item_num) + '">\
 							\@if (Agent::isDesktop())
 							<input multiple="multiple" id="images_' + String(item_num) + '" name="images_' + String(item_num) + '[]" type="file">\
