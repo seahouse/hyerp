@@ -57,7 +57,6 @@ class SupplierticketReminder extends Command
             foreach ($poheads as $pohead)
             {
                 $this->info($pohead->id . '  ' . $pohead->amount);
-//                Log::info($pohead->id . '  ' . $pohead->amount);
                 $msg = '采购订单（' . $pohead->number . '）的合同金额为' . $pohead->amount . '，付款金额为' . $pohead->amount_paid . '，付款金额大于合同金额，请检查。供应商：' . $pohead->supplier_name;
 //                Log::info($msg);
 
@@ -75,6 +74,9 @@ class SupplierticketReminder extends Command
         });
 
 //        Log:;info(json_encode($msgWuhl));
+        $msgWuhl = array_sort($msgWuhl, function ($value) {
+            return 0 - array_sum($value["messages"]);
+        });
         foreach ($msgWuhl as $key => $value)
         {
 //            $value = array_slice($value, 0, 50);        // pre 50
@@ -118,7 +120,6 @@ class SupplierticketReminder extends Command
             foreach ($poheads as $pohead)
             {
                 $this->info($pohead->id . '  ' . $pohead->amount);
-//                Log::info($pohead->id . '  ' . $pohead->amount);
                 $msg = '采购订单（' . $pohead->number . '）已付款' . $pohead->amount_paid . '（' . number_format($pohead->amount_paid / $pohead->amount * 100, 2) . '%），' . '开票金额' . $pohead->amount_ticketed . '，请抓紧向' . $pohead->supplier_name .  '催开剩余票据。';
 //                Log::info($msg);
 
@@ -188,6 +189,12 @@ class SupplierticketReminder extends Command
             }
         });
 
+        // sort by total messages amount.
+//        Log::info(json_encode($msgWuhl));
+        $msgWuhl = array_sort($msgWuhl, function ($value) {
+            return 0 - array_sum($value["messages"]);
+        });
+//        Log::info(json_encode($msgWuhl));
         foreach ($msgWuhl as $key => $value)
         {
 //            $value = array_slice($value, 0, 50);        // pre 50

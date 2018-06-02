@@ -24,7 +24,6 @@ Class HttpDingtalkEco
 	public static function post($path, $params, $data)
 	{
 		$url = self::joinParams($path, $params);
-        Log::info("url: " . $url);
 		$response = \Httpful\Request::post($url)
 			->body($data)
 			->sendsJson()
