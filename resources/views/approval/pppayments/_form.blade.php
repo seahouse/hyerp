@@ -312,7 +312,7 @@
         <div class="form-group">
             {!! Form::label('amount', '本次申请付款总额:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::text('amount', null, ['class' => 'form-control', 'placeholder' => '请输入', $attr]) !!}
+                {!! Form::text('amount', null, ['class' => 'form-control', 'placeholder' => '会根据单价明细自动计算', $attr, 'readonly']) !!}
             </div>
         </div>
 

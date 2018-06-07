@@ -266,9 +266,11 @@ class PppaymentController extends Controller
                         }
                     }
                     $input[$pppayment_item->unitprice_inputname] = implode( '; ', $dtunitpricedetail);
-                    Log::info('totalprice:' . $totalprice);
+//                    Log::info('totalprice:' . $totalprice);
                     $input['amount'] = $totalprice;
-                    Log::info('amount:' . $input['amount']);
+//                    Log::info('amount:' . $input['amount']);
+                    $pppayment->amount = $totalprice;
+                    $pppayment->save();
                 }
             }
         }
@@ -280,9 +282,9 @@ class PppaymentController extends Controller
         {
             $input['image_urls'] = json_encode($image_urls);
             $input['approvers'] = $pppayment->approvers();
-            Log::info('amount2:' . $input['amount']);
+//            Log::info('amount2:' . $input['amount']);
             $response = ApprovalController::pppayment($input);
-            Log::info($response);
+//            Log::info($response);
 //            dd($response);
             $responsejson = json_decode($response);
             if ($responsejson->result->ding_open_errcode <> 0)

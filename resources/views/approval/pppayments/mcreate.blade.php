@@ -911,7 +911,7 @@
                                 <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="抛丸">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="90">\
+                            <input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="90" readonly="readonly">\
                             </div>\
                         </div>\
                         ';
@@ -924,7 +924,7 @@
                                 <input class="form-control" placeholder="吨数" ="" id="hanjiegj_weight_' + String(num) + '" name="tonnage" type="text" data-name="焊接钢架">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="hanjiegj_unitprice_' + String(num) + '" name="unitprice" type="text" value="460">\
+                            <input class="form-control" placeholder="单价" ="" id="hanjiegj_unitprice_' + String(num) + '" name="unitprice" type="text" value="460" readonly="readonly">\
                             </div>\
                         </div>\
                         \<div class="form-group" name="div_unitpriceitem">\
@@ -933,7 +933,7 @@
                                 <input class="form-control" placeholder="吨数" ="" id="guanleict_weight_' + String(num) + '" name="tonnage" type="text" data-name="罐类仓体">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="guanleict_unitprice_' + String(num) + '" name="unitprice" type="text" value="360">\
+                            <input class="form-control" placeholder="单价" ="" id="guanleict_unitprice_' + String(num) + '" name="unitprice" type="text" value="360" readonly="readonly">\
                             </div>\
                         </div>\
                         \<div class="form-group" name="div_unitpriceitem">\
@@ -942,7 +942,7 @@
                                 <input class="form-control" placeholder="吨数" ="" id="buxiugg_weight_' + String(num) + '" name="tonnage" type="text" data-name="不锈钢罐">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="buxiugg_unitprice_' + String(num) + '" name="unitprice" type="text" value="130">\
+                            <input class="form-control" placeholder="单价" ="" id="buxiugg_unitprice_' + String(num) + '" name="unitprice" type="text" value="130" readonly="readonly">\
                             </div>\
                         </div>\
                         \<div class="form-group" name="div_unitpriceitem">\
@@ -951,7 +951,7 @@
                                 <input class="form-control" placeholder="吨数" ="" id="luoshuangj_weight_' + String(num) + '" name="tonnage" type="text"  data-name="螺栓钢架">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="luoshuangj_unitprice_' + String(num) + '" name="unitprice" type="text" value="500">\
+                            <input class="form-control" placeholder="单价" ="" id="luoshuangj_unitprice_' + String(num) + '" name="unitprice" type="text" value="500" readonly="readonly">\
                             </div>\
                         </div>\
                         ';
@@ -964,7 +964,7 @@
                                 <input class="form-control" placeholder="吨数" ="" id="rengong_weight_' + String(num) + '" name="tonnage" type="text"   data-name="人工">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="rengong_unitprice_' + String(num) + '" name="unitprice" type="text" value="250">\
+                            <input class="form-control" placeholder="单价" ="" id="rengong_unitprice_' + String(num) + '" name="unitprice" type="text" value="250" readonly="readonly">\
                             </div>\
                         </div>\
                         ';
@@ -977,7 +977,7 @@
                                 <input class="form-control" placeholder="吨数" ="" id="jinfengsaztt_weight_' + String(num) + '" name="tonnage" type="text" data-name="进风栅安装套筒">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="jinfengsaztt_unitprice_' + String(num) + '" name="unitprice" type="text" value="1207">\
+                            <input class="form-control" placeholder="单价" ="" id="jinfengsaztt_unitprice_' + String(num) + '" name="unitprice" type="text" value="1207" readonly="readonly">\
                             </div>\
                         </div>\
                         \<div class="form-group" name="div_unitpriceitem">\
@@ -986,7 +986,7 @@
                                 <input class="form-control" placeholder="吨数" ="" id="hanjiegj_weight_' + String(num) + '" name="tonnage" type="text" data-name="焊接钢架">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="hanjiegj_unitprice_' + String(num) + '" name="unitprice" type="text" value="812">\
+                            <input class="form-control" placeholder="单价" ="" id="hanjiegj_unitprice_' + String(num) + '" name="unitprice" type="text" value="812" readonly="readonly">\
                             </div>\
                         </div>\
                         \<div class="form-group" name="div_unitpriceitem">\
@@ -995,7 +995,7 @@
                                 <input class="form-control" placeholder="吨数" ="" id="huidouzxt_weight_' + String(num) + '" name="tonnage" type="text" data-name="灰斗中箱体">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="huidouzxt_unitprice_' + String(num) + '" name="unitprice" type="text" value="976">\
+                            <input class="form-control" placeholder="单价" ="" id="huidouzxt_unitprice_' + String(num) + '" name="unitprice" type="text" value="976" readonly="readonly">\
                             </div>\
                         </div>\
                         \<div class="form-group" name="div_unitpriceitem">\
@@ -1004,7 +1004,7 @@
                                 <input class="form-control" placeholder="吨数" ="" id="pingtaiptlg_weight_' + String(num) + '" name="tonnage" type="text" data-name="平台爬梯栏杆">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="pingtaiptlg_unitprice_' + String(num) + '" name="unitprice" type="text" value="985">\
+                            <input class="form-control" placeholder="单价" ="" id="pingtaiptlg_unitprice_' + String(num) + '" name="unitprice" type="text" value="985" readonly="readonly">\
                             </div>\
                         </div>\
                         \<div class="form-group" name="div_unitpriceitem">\
@@ -1013,7 +1013,7 @@
                                 <input class="form-control" placeholder="吨数" ="" id="shoutabt_weight_' + String(num) + '" name="tonnage" type="text" data-name="收塔本体">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="shoutabt_unitprice_' + String(num) + '" name="unitprice" type="text" value="976">\
+                            <input class="form-control" placeholder="单价" ="" id="shoutabt_unitprice_' + String(num) + '" name="unitprice" type="text" value="976" readonly="readonly">\
                             </div>\
                         </div>\
                         \<div class="form-group" name="div_unitpriceitem">\
@@ -1022,7 +1022,7 @@
                                 <input class="form-control" placeholder="吨数" ="" id="woke_weight_' + String(num) + '" name="tonnage" type="text" data-name="蜗壳">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="woke_unitprice_' + String(num) + '" name="unitprice" type="text" value="976">\
+                            <input class="form-control" placeholder="单价" ="" id="woke_unitprice_' + String(num) + '" name="unitprice" type="text" value="976" readonly="readonly">\
                             </div>\
                         </div>\
                         \<div class="form-group" name="div_unitpriceitem">\
@@ -1031,7 +1031,7 @@
                                 <input class="form-control" placeholder="吨数" ="" id="huadongzj_weight_' + String(num) + '" name="tonnage" type="text" data-name="滑动支架">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="huadongzj_unitprice_' + String(num) + '" name="unitprice" type="text" value="1136">\
+                            <input class="form-control" placeholder="单价" ="" id="huadongzj_unitprice_' + String(num) + '" name="unitprice" type="text" value="1136" readonly="readonly">\
                             </div>\
                         </div>\
                         \<div class="form-group" name="div_unitpriceitem">\
@@ -1040,7 +1040,7 @@
                                 <input class="form-control" placeholder="吨数" ="" id="buxiugg_weight_' + String(num) + '" name="tonnage" type="text" data-name="不锈钢罐">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="buxiugg_unitprice_' + String(num) + '" name="unitprice" type="text" value="1713">\
+                            <input class="form-control" placeholder="单价" ="" id="buxiugg_unitprice_' + String(num) + '" name="unitprice" type="text" value="1713" readonly="readonly">\
                             </div>\
                         </div>\
                         \<div class="form-group" name="div_unitpriceitem">\
@@ -1049,7 +1049,7 @@
                                 <input class="form-control" placeholder="吨数" ="" id="shangxiangt_weight_' + String(num) + '" name="tonnage" type="text" data-name="上箱体">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="shangxiangt_unitprice_' + String(num) + '" name="unitprice" type="text" value="1236">\
+                            <input class="form-control" placeholder="单价" ="" id="shangxiangt_unitprice_' + String(num) + '" name="unitprice" type="text" value="1236" readonly="readonly">\
                             </div>\
                         </div>\
                         \<div class="form-group" name="div_unitpriceitem">\
@@ -1058,7 +1058,7 @@
                                 <input class="form-control" placeholder="吨数" ="" id="luoshuangj_weight_' + String(num) + '" name="tonnage" type="text" data-name="螺栓钢架">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="luoshuangj_unitprice_' + String(num) + '" name="unitprice" type="text" value="1050">\
+                            <input class="form-control" placeholder="单价" ="" id="luoshuangj_unitprice_' + String(num) + '" name="unitprice" type="text" value="1050" readonly="readonly">\
                             </div>\
                         </div>\
                         ';
