@@ -266,7 +266,7 @@ class PppaymentController extends Controller
                             $totalprice += $pppaymentitemunitprice->unitprice * $pppaymentitemunitprice->tonnage;
                         }
                     }
-                    $input[$pppayment_item->unitprice_inputname] = implode( '; ', $dtunitpricedetail);
+                    $input[$pppayment_item->unitprice_inputname] = implode("\n", $dtunitpricedetail);
 //                    Log::info('totalprice:' . $totalprice);
                     $input['amount'] = $totalprice;
 //                    Log::info('amount:' . $input['amount']);
