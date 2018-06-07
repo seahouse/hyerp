@@ -147,6 +147,7 @@ class PppaymentController extends Controller
 
         // create mcitempurchaseitems
         $pppayment_items = json_decode($input['items_string']);
+        $totalprice = 0.0;
         foreach ($pppayment_items as $pppayment_item) {
             if ($pppayment_item->sohead_id > 0)
             {
@@ -253,7 +254,6 @@ class PppaymentController extends Controller
                     $strunitprices = $pppayment_item->unitprice_array;
 //                    dd($strunitprices);
 //                    $unitprice_items = json_decode($strunitprices);
-                    $totalprice = 0.0;
                     $dtunitpricedetail = [];
                     foreach ($strunitprices as $unitprice_item) {
                         $unitprice_array = json_decode(json_encode($unitprice_item), true);
@@ -267,15 +267,12 @@ class PppaymentController extends Controller
                         }
                     }
                     $input[$pppayment_item->unitprice_inputname] = implode("\n", $dtunitpricedetail);
-//                    Log::info('totalprice:' . $totalprice);
-                    $input['amount'] = $totalprice;
-//                    Log::info('amount:' . $input['amount']);
                     $pppayment->amount = $totalprice;
                     $pppayment->save();
                 }
             }
         }
-
+        $input['amount'] = $totalprice;
 
 
 
