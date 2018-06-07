@@ -215,6 +215,7 @@ class PppaymentController extends Controller
                         $destinationPath = 'uploads/approval/pppayment/' . $pppayment->id . '/images/';
                         foreach (explode(",", $imagesname_mobile) as $imagesname_mobile_item) {
                             # code...
+                            if (strlen(trim($imagesname_mobile_item)) == 0) continue;
 
                             // save image file.
                             $sExtension = substr($imagesname_mobile_item, strrpos($imagesname_mobile_item, '.') + 1);
