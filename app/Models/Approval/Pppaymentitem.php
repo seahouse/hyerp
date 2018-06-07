@@ -12,6 +12,8 @@ class Pppaymentitem extends Model
         'sohead_id',
         'productionoverview',
         'tonnage',
+        'area',
+        'type',
         'seq',
     ];
 }

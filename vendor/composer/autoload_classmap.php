@@ -60,6 +60,7 @@ return array(
     'CreatePppaymentitemattachmentsTable' => $baseDir . '/database/migrations/2018_05_23_140522_create_pppaymentitemattachments_table.php',
     'CreatePppaymentitemissuedrawingsTable' => $baseDir . '/database/migrations/2018_05_23_140248_create_pppaymentitemissuedrawings_table.php',
     'CreatePppaymentitemsTable' => $baseDir . '/database/migrations/2018_05_23_134958_create_pppaymentitems_table.php',
+    'CreatePppaymentitemunitpricesTable' => $baseDir . '/database/migrations/2018_06_04_164350_create_pppaymentitemunitprices_table.php',
     'CreatePppaymentsTable' => $baseDir . '/database/migrations/2018_05_23_132147_create_pppayments_table.php',
     'CreateProvincesTable' => $baseDir . '/database/migrations/2015_08_14_020719_create_provinces_table.php',
     'CreateReceiptpaymentsTable' => $baseDir . '/database/migrations/2015_09_14_161422_create_receiptpayments_table.php',

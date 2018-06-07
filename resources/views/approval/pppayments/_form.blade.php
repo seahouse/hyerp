@@ -207,40 +207,31 @@
                         {!! Form::hidden('issuedrawing_values', null, ['class' => 'btn btn-sm', 'id' => 'issuedrawing_values_1']) !!}
                     </div>
                 </div>
+
+                <div class="form-group">
+                    {!! Form::label('area', '地区:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                    <div class='col-xs-8 col-sm-10'>
+                        {!! Form::select('area', array('国内' => '国内', '国外' => '国外'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, 'id' => 'area_1']) !!}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {!! Form::label('type', '类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                    <div class='col-xs-8 col-sm-10'>
+                        {!! Form::select('type', array('抛丸' => '抛丸', '油漆' => '油漆', '人工' => '人工', '铆焊' => '铆焊'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, 'id' => 'type_1', 'onchange' => 'selectTypeChange(this.dataset.num)', 'data-num' => '1']) !!}
+                    </div>
+                </div>
+                {!! Form::hidden('unitprice_inputname', 'unitprice_inputname_1', ['class' => 'btn btn-sm', 'id' => 'unitprice_inputname_1']) !!}
+
+                <div id="pppaymentitemtypecontainer_1" name="pppaymentitemtypecontainer"></div>
 {{--
-            <div class="form-group">
-                {!! Form::label('item_name', '物品名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-                <div class='col-xs-8 col-sm-10'>
-                    {!! Form::text('item_name', $item_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectItemModal', 'data-name' => 'project_name', 'data-num' => '1', 'id' => 'item_name_1']) !!}
-                    {!! Form::hidden('item_id', 0, ['class' => 'btn btn-sm', 'id' => 'item_id_1']) !!}
-                </div>
-            </div>
 
-            <div class="form-group">
-                {!! Form::label('item_spec', '规格型号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-                <div class='col-xs-8 col-sm-10'>
-                    {!! Form::text('item_spec', null, ['class' => 'form-control', 'readonly', $attr, 'id' => 'item_spec_1']) !!}
-                </div>
-            </div>
 
-            <div class="form-group">
-                {!! Form::label('unit', '单位:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-                <div class='col-xs-8 col-sm-10'>
-                    {!! Form::text('unit', null, ['class' => 'form-control', 'readonly', $attr, 'id' => 'unit_1']) !!}
-                </div>
-            </div>
 
             <div class="form-group">
                 {!! Form::label('size', '尺寸:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
                 <div class='col-xs-8 col-sm-10'>
                     {!! Form::text('size', null, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'size_1']) !!}
-                </div>
-            </div>
-
-            <div class="form-group">
-                {!! Form::label('unitprice', '单价（可不填）:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-                <div class='col-xs-8 col-sm-10'>
-                    {!! Form::text('unitprice', null, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'unitprice_1']) !!}
                 </div>
             </div>
 

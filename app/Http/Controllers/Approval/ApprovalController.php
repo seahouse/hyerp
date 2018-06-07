@@ -719,6 +719,18 @@ class ApprovalController extends Controller
                         'value'     => $value->issuedrawing_numbers,
                     ],
                     [
+                        'name'      => '地区',
+                        'value'     => $value->area,
+                    ],
+                    [
+                        'name'      => '类型',
+                        'value'     => $value->type,
+                    ],
+                    [
+                        'name'      => '单价明细',
+                        'value'     => $inputs[$value->unitprice_inputname],
+                    ],
+                    [
                         'name'      => '上传质检签收单',
                         'value'     => $inputs[$value->imagesname],
                     ],

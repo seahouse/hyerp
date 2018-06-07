@@ -8,6 +8,7 @@ use App\Models\Approval\Pppayment;
 use App\Models\Approval\Pppaymentitem;
 use App\Models\Approval\Pppaymentitemattachment;
 use App\Models\Approval\Pppaymentitemissuedrawing;
+use App\Models\Approval\Pppaymentitemunitprice;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -246,6 +247,28 @@ class PppaymentController extends Controller
                     }
 
                     $input[$pppayment_item->imagesname] = json_encode($image_urls);
+
+                    // create pppaymentitem unitprices
+                    $strunitprices = $pppayment_item->unitprice_array;
+//                    dd($strunitprices);
+//                    $unitprice_items = json_decode($strunitprices);
+                    $totalprice = 0.0;
+                    $dtunitpricedetail = [];
+                    foreach ($strunitprices as $unitprice_item) {
+                        $unitprice_array = json_decode(json_encode($unitprice_item), true);
+                        $unitprice_array['pppaymentitem_id'] = $pppaymentitem->id;
+                        $pppaymentitemunitprice = Pppaymentitemunitprice::create($unitprice_array);
+
+                        if (isset($pppaymentitemunitprice))
+                        {
+                            array_push($dtunitpricedetail, $pppaymentitemunitprice->name . ':重量' . $pppaymentitemunitprice->tonnage . '吨,单价' . $pppaymentitemunitprice->unitprice . '元');
+                            $totalprice += $pppaymentitemunitprice->unitprice * $pppaymentitemunitprice->tonnage;
+                        }
+                    }
+                    $input[$pppayment_item->unitprice_inputname] = implode( '; ', $dtunitpricedetail);
+                    Log::info('totalprice:' . $totalprice);
+                    $input['amount'] = $totalprice;
+                    Log::info('amount:' . $input['amount']);
                 }
             }
         }
@@ -257,6 +280,7 @@ class PppaymentController extends Controller
         {
             $input['image_urls'] = json_encode($image_urls);
             $input['approvers'] = $pppayment->approvers();
+            Log::info('amount2:' . $input['amount']);
             $response = ApprovalController::pppayment($input);
             Log::info($response);
 //            dd($response);

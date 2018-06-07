@@ -19,6 +19,8 @@ class CreatePppaymentitemsTable extends Migration
             $table->integer('sohead_id')->nullable();
             $table->string('productionoverview')->default('');
             $table->decimal('tonnage', 18, 2)->default(0.0);
+            $table->string('area')->default('');
+            $table->string('type')->default('');
 //            $table->decimal('quantity', 18, 2)->default(0.0);
 //            $table->integer('unit_id')->nullable();
 //            $table->decimal('weight', 18, 2)->default(0.0);
