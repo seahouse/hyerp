@@ -974,9 +974,9 @@
                 else if (selecttype.val() == "铆焊")
                 {
                     strhtml += '<div class="form-group" name="div_unitpriceitem">\
-                            <label for="jinfengsaztt" class="col-xs-4 col-sm-2 control-label">进风栅安装套筒:</label>\
+                            <label for="jinfengsaztt" class="col-xs-4 col-sm-2 control-label">风栅套筒:</label>\
                             <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="jinfengsaztt_weight_' + String(num) + '" name="tonnage" type="text" data-name="进风栅安装套筒">\
+                                <input class="form-control" placeholder="吨数" ="" id="jinfengsaztt_weight_' + String(num) + '" name="tonnage" type="text" data-name="风栅套筒">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
                             <input class="form-control" placeholder="单价" ="" id="jinfengsaztt_unitprice_' + String(num) + '" name="unitprice" type="text" value="1207" readonly="readonly">\
@@ -992,18 +992,18 @@
                             </div>\
                         </div>\
                         \<div class="form-group" name="div_unitpriceitem">\
-                            <label for="huidouzxt" class="col-xs-4 col-sm-2 control-label">灰斗中箱体:</label>\
+                            <label for="huidouzxt" class="col-xs-4 col-sm-2 control-label">灰斗箱体:</label>\
                             <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="huidouzxt_weight_' + String(num) + '" name="tonnage" type="text" data-name="灰斗中箱体">\
+                                <input class="form-control" placeholder="吨数" ="" id="huidouzxt_weight_' + String(num) + '" name="tonnage" type="text" data-name="灰斗箱体">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
                             <input class="form-control" placeholder="单价" ="" id="huidouzxt_unitprice_' + String(num) + '" name="unitprice" type="text" value="976" readonly="readonly">\
                             </div>\
                         </div>\
                         \<div class="form-group" name="div_unitpriceitem">\
-                            <label for="pingtaiptlg" class="col-xs-4 col-sm-2 control-label">平台爬梯栏杆:</label>\
+                            <label for="pingtaiptlg" class="col-xs-4 col-sm-2 control-label">平台爬梯:</label>\
                             <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="pingtaiptlg_weight_' + String(num) + '" name="tonnage" type="text" data-name="平台爬梯栏杆">\
+                                <input class="form-control" placeholder="吨数" ="" id="pingtaiptlg_weight_' + String(num) + '" name="tonnage" type="text" data-name="平台爬梯">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
                             <input class="form-control" placeholder="单价" ="" id="pingtaiptlg_unitprice_' + String(num) + '" name="unitprice" type="text" value="985" readonly="readonly">\
@@ -1019,9 +1019,9 @@
                             </div>\
                         </div>\
                         \<div class="form-group" name="div_unitpriceitem">\
-                            <label for="woke" class="col-xs-4 col-sm-2 control-label">蜗壳:</label>\
+                            <label for="woke" class="col-xs-4 col-sm-2 control-label">进风烟道:</label>\
                             <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="woke_weight_' + String(num) + '" name="tonnage" type="text" data-name="蜗壳">\
+                                <input class="form-control" placeholder="吨数" ="" id="woke_weight_' + String(num) + '" name="tonnage" type="text" data-name="进风烟道">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
                             <input class="form-control" placeholder="单价" ="" id="woke_unitprice_' + String(num) + '" name="unitprice" type="text" value="976" readonly="readonly">\

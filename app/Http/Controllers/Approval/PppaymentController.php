@@ -262,7 +262,7 @@ class PppaymentController extends Controller
                         {
                             $price = $pppaymentitemunitprice->unitprice * $pppaymentitemunitprice->tonnage;
                             $totalprice += $price;
-                            array_push($dtunitpricedetail, $pppaymentitemunitprice->name . ':重量' . $pppaymentitemunitprice->tonnage . '吨,单价' . $pppaymentitemunitprice->unitprice . '元, 共' . $price . '元');
+                            array_push($dtunitpricedetail, $pppaymentitemunitprice->name . ':' . $pppaymentitemunitprice->tonnage . '吨*' . $pppaymentitemunitprice->unitprice . '元=' . $price . '元');
                         }
                     }
                     $totaltotalprice += $totalprice;
