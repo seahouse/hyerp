@@ -222,6 +222,7 @@
                     </div>
                 </div>
                 {!! Form::hidden('unitprice_inputname', 'unitprice_inputname_1', ['class' => 'btn btn-sm', 'id' => 'unitprice_inputname_1']) !!}
+                {!! Form::hidden('totalprice_inputname', 'totalprice_inputname_1', ['class' => 'btn btn-sm']) !!}
 
                 <div id="pppaymentitemtypecontainer_1" name="pppaymentitemtypecontainer"></div>
 {{--

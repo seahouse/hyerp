@@ -51,7 +51,6 @@ class PppaymentController extends Controller
     {
         //
         $input = $request->all();
-//        dd($input);
         $itemsArray = json_decode($input['items_string']);
         if (is_array(json_decode($input['items_string2'])) && is_array(json_decode($input['items_string'])))
             $itemsArray = array_merge(json_decode($input['items_string2']), json_decode($input['items_string']));
@@ -147,7 +146,7 @@ class PppaymentController extends Controller
 
         // create mcitempurchaseitems
         $pppayment_items = json_decode($input['items_string']);
-        $totalprice = 0.0;
+        $totaltotalprice = 0.0;
         foreach ($pppayment_items as $pppayment_item) {
             if ($pppayment_item->sohead_id > 0)
             {
@@ -252,9 +251,8 @@ class PppaymentController extends Controller
 
                     // create pppaymentitem unitprices
                     $strunitprices = $pppayment_item->unitprice_array;
-//                    dd($strunitprices);
-//                    $unitprice_items = json_decode($strunitprices);
                     $dtunitpricedetail = [];
+                    $totalprice = 0.0;
                     foreach ($strunitprices as $unitprice_item) {
                         $unitprice_array = json_decode(json_encode($unitprice_item), true);
                         $unitprice_array['pppaymentitem_id'] = $pppaymentitem->id;
@@ -262,17 +260,21 @@ class PppaymentController extends Controller
 
                         if (isset($pppaymentitemunitprice))
                         {
-                            array_push($dtunitpricedetail, $pppaymentitemunitprice->name . ':重量' . $pppaymentitemunitprice->tonnage . '吨,单价' . $pppaymentitemunitprice->unitprice . '元');
-                            $totalprice += $pppaymentitemunitprice->unitprice * $pppaymentitemunitprice->tonnage;
+                            $price = $pppaymentitemunitprice->unitprice * $pppaymentitemunitprice->tonnage;
+                            $totalprice += $price;
+                            array_push($dtunitpricedetail, $pppaymentitemunitprice->name . ':重量' . $pppaymentitemunitprice->tonnage . '吨,单价' . $pppaymentitemunitprice->unitprice . '元, 共' . $price . '元');
                         }
                     }
+                    $totaltotalprice += $totalprice;
                     $input[$pppayment_item->unitprice_inputname] = implode("\n", $dtunitpricedetail);
-                    $pppayment->amount = $totalprice;
-                    $pppayment->save();
+                    $input[$pppayment_item->totalprice_inputname] = $totalprice;
                 }
             }
         }
-        $input['amount'] = $totalprice;
+        $input['amount'] = $totaltotalprice;
+
+        $pppayment->amount = $totaltotalprice;
+        $pppayment->save();
 
 
 

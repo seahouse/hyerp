@@ -731,6 +731,10 @@ class ApprovalController extends Controller
                         'value'     => $inputs[$value->unitprice_inputname],
                     ],
                     [
+                        'name'      => '合计',
+                        'value'     => $inputs[$value->totalprice_inputname],
+                    ],
+                    [
                         'name'      => '上传质检签收单',
                         'value'     => $inputs[$value->imagesname],
                     ],

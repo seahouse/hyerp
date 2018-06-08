@@ -324,6 +324,7 @@
                     itemObject.area = container.find("select[name='area']").val();
                     itemObject.type = container.find("select[name='type']").val();
                     itemObject.unitprice_inputname = container.find("input[name='unitprice_inputname']").val();
+                    itemObject.totalprice_inputname = container.find("input[name='totalprice_inputname']").val();
 
                     var unitpriceArray = new Array();
                     var pppaymentitemtypecontainer = container.find("div[name='pppaymentitemtypecontainer']");
@@ -869,6 +870,7 @@
 							<div class="col-sm-10 col-xs-8">\
 							    <select class="form-control" ="" id="type_' + String(item_num) + '" onchange="selectTypeChange(this.dataset.num)" data-num="' + String(item_num) + '" name="type"><option selected="selected" value="">--请选择--</option><option value="抛丸">抛丸</option><option value="油漆">油漆</option><option value="人工">人工</option><option value="铆焊">铆焊</option></select>\
 							    <input class="btn btn-sm" id="unitprice_inputname_' + String(item_num) + '" name="unitprice_inputname" type="hidden" value="unitprice_inputname_' + String(item_num) + '">\
+							    <input class="btn btn-sm" name="totalprice_inputname" type="hidden" value="totalprice_inputname_' + String(item_num) + '">\
 							</div>\
 						</div>\
 						\<div id="pppaymentitemtypecontainer_' + String(item_num) + '" name="pppaymentitemtypecontainer"></div>\
