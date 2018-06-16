@@ -382,30 +382,6 @@
 				 {{--return false;--}}
 			 });
 
-			{{--$('#submitModal').on('shown.bs.modal', function (e) {--}}
-				{{--$("#btnSubmitContinue").attr('disabled',true);--}}
-				{{--$.ajax({--}}
-					{{--type: "POST",--}}
-					{{--url: "{{ url('approval/paymentrequests/check') }}",--}}
-					{{--data: $("form#formMain").serialize(),--}}
-					{{--dataType: "json",--}}
-					{{--error:function(xhr, ajaxOptions, thrownError){--}}
-						{{--alert('error');--}}
-					{{--},--}}
-					{{--success:function(msg){--}}
-						{{--var strhtml = '';--}}
-						{{--strhtml += "生活补贴合计: " + String(msg.mealamount) + "<br />";--}}
-						{{--strhtml += "交通费合计: " + String(msg.ticketamount) + "<br />";--}}
-						{{--strhtml += "总费用: " + String(msg.amountTotal) + "<br />";--}}
-						{{--strhtml += "平均每日住宿费: " + String(msg.stayamountPer) + "<br />";--}}
-						{{--strhtml += "平均每日合计: " + String(msg.amountPer) + "<br />";--}}
-						{{--$("#dataDefine").empty().append(strhtml);--}}
-
-						{{--if (msg.status == "OK")--}}
-							{{--$("#btnSubmitContinue").attr('disabled', false);--}}
-					{{--},--}}
-				{{--});				--}}
-			{{--});--}}
 
 			$("#btnSubmitContinue").click(function() {
 				$("form#formMain").submit();
@@ -902,9 +878,86 @@
             }
 
             selectTypeChange = function (num) {
+                var productioncompany = $("#productioncompany").val();
 //                $("#pppaymentitemtypecontainer_1" + String(num)).empty();
                 var strhtml = '';
+                var strhtml2 = '';
                 var selecttype = $("#type_" + String(num));
+
+                if (selecttype.val() == "抛丸")
+                {
+                    @foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.抛丸') as $key => $value)
+                        {{--alert('{!! $key !!}');--}}
+                        strhtml2 += '<div class="form-group" name="div_unitpriceitem">';
+                        strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\
+                            <div class="col-sm-5 col-xs-4">\
+                            <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\
+                            \</div>\
+                            \<div class="col-sm-5 col-xs-4">';
+                        if (productioncompany == "泰州分公司")
+                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['泰州分公司'] !!}" readonly="readonly">';
+                        else if (productioncompany == "胶州分公司")
+                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';
+                        strhtml2 += '\</div>';
+                        strhtml2 += '</div>';
+                    @endforeach
+                }
+                else if (selecttype.val() == "油漆")
+                {
+                    @foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.油漆') as $key => $value)
+                            {{--alert('{!! $key !!}');--}}
+                        strhtml2 += '<div class="form-group" name="div_unitpriceitem">';
+                        strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\
+                            <div class="col-sm-5 col-xs-4">\
+                            <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\
+                            \</div>\
+                            \<div class="col-sm-5 col-xs-4">';
+                        if (productioncompany == "泰州分公司")
+                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['泰州分公司'] !!}" readonly="readonly">';
+                        else if (productioncompany == "胶州分公司")
+                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';
+                        strhtml2 += '\</div>';
+                        strhtml2 += '</div>';
+                    @endforeach
+                }
+                else if (selecttype.val() == "人工")
+                {
+                    @foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.人工') as $key => $value)
+                            {{--alert('{!! $key !!}');--}}
+                        strhtml2 += '<div class="form-group" name="div_unitpriceitem">';
+                        strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\
+                            <div class="col-sm-5 col-xs-4">\
+                            <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\
+                            \</div>\
+                            \<div class="col-sm-5 col-xs-4">';
+                        if (productioncompany == "泰州分公司")
+                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['泰州分公司'] !!}" readonly="readonly">';
+                        else if (productioncompany == "胶州分公司")
+                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';
+                        strhtml2 += '\</div>';
+                        strhtml2 += '</div>';
+                    @endforeach
+                }
+                else if (selecttype.val() == "铆焊")
+                {
+                    @foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.铆焊') as $key => $value)
+                            {{--alert('{!! $key !!}');--}}
+                        strhtml2 += '<div class="form-group" name="div_unitpriceitem">';
+                        strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\
+                            <div class="col-sm-5 col-xs-4">\
+                            <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\
+                            \</div>\
+                            \<div class="col-sm-5 col-xs-4">';
+                        if (productioncompany == "泰州分公司")
+                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['泰州分公司'] !!}" readonly="readonly">';
+                        else if (productioncompany == "胶州分公司")
+                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';
+                        strhtml2 += '\</div>';
+                        strhtml2 += '</div>';
+                    @endforeach
+                }
+
+
                 if (selecttype.val() == "抛丸")
                 {
                     strhtml += '<div class="form-group" name="div_unitpriceitem">\
@@ -913,7 +966,7 @@
                                 <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="抛丸">\
                             </div>\
                             \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="90" readonly="readonly">\
+                            <input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! config('custom.dingtalk.approversettings.pppayment.pricedetail.抛丸.抛丸.泰州分公司') !!}" readonly="readonly">\
                             </div>\
                         </div>\
                         ';
@@ -1065,7 +1118,7 @@
                         </div>\
                         ';
                 }
-                $("#pppaymentitemtypecontainer_" + String(num)).empty().append(strhtml);
+                $("#pppaymentitemtypecontainer_" + String(num)).empty().append(strhtml2);
 
             }
 

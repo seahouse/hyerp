@@ -11,6 +11,7 @@ class Mcitempurchaseitem extends Model
         'mcitempurchase_id',
         'item_id',
         'size',
+        'material',
         'unitprice',
         'quantity',
         'unit_id',

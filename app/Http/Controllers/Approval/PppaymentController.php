@@ -51,6 +51,7 @@ class PppaymentController extends Controller
     {
         //
         $input = $request->all();
+//        dd($input);
         $itemsArray = json_decode($input['items_string']);
         if (is_array(json_decode($input['items_string2'])) && is_array(json_decode($input['items_string'])))
             $itemsArray = array_merge(json_decode($input['items_string2']), json_decode($input['items_string']));
@@ -71,7 +72,7 @@ class PppaymentController extends Controller
         $this->validate($request, [
             'productioncompany'         => 'required',
             'designdepartment'          => 'required',
-//            'sohead_id'                   => 'required|integer|min:1',
+            'paymentreason'              => 'required',
             'items_string'               => 'required',
 //            'drawingattachments.*'  => 'required|file',
 //            'images.*'                => 'required|image',

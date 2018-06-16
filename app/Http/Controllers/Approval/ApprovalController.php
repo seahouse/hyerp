@@ -548,6 +548,10 @@ class ApprovalController extends Controller
                         'value'     => $value->size,
                     ],
                     [
+                        'name'      => '材质',
+                        'value'     => $value->material,
+                    ],
+                    [
                         'name'      => '单价（可不填）',
                         'value'     => $value->unitprice,
                     ],

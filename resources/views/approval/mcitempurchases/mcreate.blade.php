@@ -212,6 +212,7 @@
                     itemObject.item_spec = container.find("input[name='item_spec']").val();
                     itemObject.unit = container.find("input[name='unit']").val();
                     itemObject.size = container.find("input[name='size']").val();
+                    itemObject.material = container.find("input[name='material']").val();
                     itemObject.unitprice = container.find("input[name='unitprice']").val();
                     if (itemObject.unitprice == "")
                         itemObject.unitprice = 0.0;
@@ -579,6 +580,12 @@
 							<label for="size" class="col-xs-4 col-sm-2 control-label">尺寸:</label>\
 							<div class="col-sm-10 col-xs-8">\
 							<input class="form-control" name="size" type="text"  id="size_' + String(item_num) + '">\
+							</div>\
+						</div>\
+						<div class="form-group">\
+							<label for="material" class="col-xs-4 col-sm-2 control-label">材质:</label>\
+							<div class="col-sm-10 col-xs-8">\
+							<input class="form-control" name="material" type="text"  id="material_' + String(item_num) + '">\
 							</div>\
 						</div>\
 						<div class="form-group">\

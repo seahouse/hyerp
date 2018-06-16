@@ -406,6 +406,7 @@ class McitempurchaseController extends Controller
                         'item_spec'     => $item->goods_spec,
                         'unit'           => $item->goods_unit_name,
                         'size'           => isset($row[3]) ? $row[3] : '',
+                        'material'      => isset($row[8]) ? $row[8] : '',
                         'unitprice'     => 0.0,
                         'quantity'      => isset($row[5]) ? $row[5] : 0.0,
                         'unit_id'       => $unit_id,
