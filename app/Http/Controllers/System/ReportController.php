@@ -128,11 +128,9 @@ class ReportController extends Controller
         return redirect('system/report');
     }
 
-    public function statistics($id)
+    public function statistics($id, $autostatistics = 1)
     {
         //
-//        dd(\App\Models\Sales\Salesorder_hxold::select(DB::raw('datepart(year, orderdate) as dateyear'))->orderby('dateyear', 'asc')->lists('dateyear', 'dateyear'));
-
         $report = Report::findOrFail($id);
 
         $request = Request();
@@ -149,7 +147,9 @@ class ReportController extends Controller
 //        }
 //        $param = count($input) > 0 ? substr($param, 0, strlen($param) - 1) : $param;
 //        $items_t = DB::connection('sqlsrv')->select($report->statement . ' ' . $param);
-        $items_t = $this->search(Request(), $report);
+        $items_t = [];
+        if ($autostatistics == 1)
+            $items_t = $this->search(Request(), $report);
 //        dd($items_t);
 //        dd(json_decode(json_encode($items_t), true));
 

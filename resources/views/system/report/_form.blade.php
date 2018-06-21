@@ -34,6 +34,21 @@
     </div>
 </div>
 
+<div class="form-group">
+    {!! Form::label('autostatistics', '有效性:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class='col-sm-10'>
+        {!! Form::radio('autostatistics', 1, true) !!}开启
+        {!! Form::radio('autostatistics', 0) !!}关闭
+        {{--
+        {!! Form::checkbox('active') !!}
+
+        {!! Form::select('active', array(true => '有效', '' => '无效'), null, ['class' => 'form-control']) !!}
+
+        {{ $report->active }}
+        --}}
+    </div>
+</div>
+
 
 <div class="form-group">
     {!! Form::label('descrip', '描述:', ['class' => 'col-sm-2 control-label']) !!}

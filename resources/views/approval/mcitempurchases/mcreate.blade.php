@@ -646,13 +646,13 @@
                          strhtml += '<table class="table table-striped table-hover table-condensed">';
                          if (result.length > 0)
 						 {
-                             strhtml += '<thead><tr><th>物品名称</th><th>型号</th><th>单位</th><th>尺寸</th><th>数量</th><th>重量</th><th>备注</th></tr></thead>';
+                             strhtml += '<thead><tr><th>物品名称</th><th>型号</th><th>单位</th><th>尺寸</th><th>数量</th><th>重量</th><th>备注</th><th>材质</th></tr></thead>';
 						     strhtml += '<tbody>';
 						 }
 
                          $.each(result, function(i, field) {
 //                             alert(field.item_name);
-                             strhtml += '<tr><td>' + field.item_name + '</td><td>' + field.item_spec + '</td><td>' + field.unit_name + '</td><td>' + field.size + '</td><td>' + field.quantity + '</td><td>' + field.weight + '</td><td>' + field.remark + '</td></tr>'
+                             strhtml += '<tr><td>' + field.item_name + '</td><td>' + field.item_spec + '</td><td>' + field.unit_name + '</td><td>' + field.size + '</td><td>' + field.quantity + '</td><td>' + field.weight + '</td><td>' + field.remark + '</td><td>' + field.material + '</td></tr>'
 //                             $.each(field, function(j, item) {
 //                                 if (j == 'item_name')
 //                                     alert(item);

@@ -42,7 +42,7 @@
                         {{ $report->descrip }}
                     </td>
                     <td>
-                        <a href="{{ URL::to('/system/report/'.$report->id.'/statistics') }}" class="btn btn-success btn-sm" target="_blank">统计</a>
+                        <a href="{{ URL::to('/system/report/'.$report->id.'/statistics/' . $report->autostatistics) }}" class="btn btn-success btn-sm" target="_blank">统计</a>
                     </td>
                     @if (!isset($readonly))
                     <td>

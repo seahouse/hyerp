@@ -107,6 +107,7 @@ class SupplierticketReminder extends Command
         $this->sendMsg($msg, 379);      // to ZhouYP
         $this->sendMsg($msg, 8);        // to WuHL
         $this->sendMsg($msg, 196);      // to LiuHM
+        $this->sendMsg($msg, 186);      // to LiuYJ
 
         $msgWuhl = [];
         $query = Purchaseorder_hxold_simple::where('amount', '>', 0.0)->orderBy('amount', 'desc');
@@ -151,39 +152,8 @@ class SupplierticketReminder extends Command
                 if ($needReminder)
                 {
                     $this->sendMsg($msg, $pohead->transactor_id);
+                    $this->sendMsg($msg, 186);      // to LiuYJ
 
-//                    if ($this->option('debug'))
-//                    {
-//                        $touser = User::where('email', $this->argument('useremail'))->first();
-//                        if (isset($touser))
-//                        {
-//                            $data = [
-//                                'userid'        => $touser->id,
-//                                'msgcontent'    => urlencode($msg) ,
-//                            ];
-//
-//                            DingTalkController::sendCorpMessageText(json_encode($data));
-//                            sleep(1);
-//                        }
-//                    }
-//                    else
-//                    {
-//                        $transactor_hxold = Userold::where('user_hxold_id', $pohead->transactor_id)->first();
-//                        if (isset($transactor_hxold))
-//                        {
-//                            $transactor = User::where('id', $transactor_hxold->user_id)->first();
-//                            if (isset($transactor))
-//                            {
-//                                $data = [
-//                                    'userid'        => $transactor->id,
-//                                    'msgcontent'    => urlencode($msg) ,
-//                                ];
-//                                Log::info($transactor->name);
-//                                DingTalkController::sendCorpMessageText(json_encode($data));
-//                                sleep(1);
-//                            }
-//                        }
-//                    }
                 }
 
             }

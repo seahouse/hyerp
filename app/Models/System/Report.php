@@ -12,6 +12,7 @@ class Report extends Model
         'module',
         'titleshow',
         'active',
+        'autostatistics',
         'descrip',
         'statement'
     ];

@@ -445,8 +445,8 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
         Route::delete('destroy/{permission}', 'RolepermissionsController@destroy');
     });
     Route::post('rolepermissions/store', 'RolepermissionsController@store');
-    Route::get('report/{id}/statistics', 'ReportController@statistics');
-    Route::post('report/{id}/statistics', 'ReportController@statistics');
+    Route::get('report/{id}/statistics/{autostatistics}', 'ReportController@statistics');
+    Route::any('report/{id}/statistics', 'ReportController@statistics');
     Route::post('report/{id}/export', 'ReportController@export');
     Route::resource('report', 'ReportController');
 
