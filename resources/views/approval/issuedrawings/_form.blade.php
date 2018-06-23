@@ -9,53 +9,44 @@
 
 
 
-@if (isset($paymentrequest))
+@if (isset($issuedrawing))
 <div class="form-group">
-    {!! Form::label('supplier_name', '支付对象:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('project_name', '所属项目:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->supplier_hxold->name))
-
-        {!! Form::text('supplier_name', $paymentrequest->supplier_hxold->name, ['class' => 'form-control', $attr]) !!}
-
+    @if (isset($issuedrawing->sohead_hxold->descrip))
+        {!! Form::text('project_name', $issuedrawing->sohead_hxold->descrip, ['class' => 'form-control', $attr]) !!}
     @else
-        {!! Form::text('supplier_name', null, ['class' => 'form-control', $attr]) !!}
+        {!! Form::text('project_name', null, ['class' => 'form-control', $attr]) !!}
     @endif
     </div>
 </div>
 
+
 <div class="form-group">
-    {!! Form::label('pohead_number', '采购合同:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('sohead_number', '项目编号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->number)) 
-         {!! Form::text('pohead_number', $paymentrequest->purchaseorder_hxold->number, ['class' => 'form-control', $attr]) !!}
+    @if (isset($issuedrawing->sohead_hxold->number))
+         {!! Form::text('sohead_number', $issuedrawing->sohead_hxold->number, ['class' => 'form-control', $attr]) !!}
     @else
-        {!! Form::text('pohead_number', null, ['class' => 'form-control', $attr]) !!}
+        {!! Form::text('sohead_number', null, ['class' => 'form-control', $attr]) !!}
     @endif
     </div>
 </div>
 
+
 <div class="form-group">
-    {!! Form::label('pohead_descrip', '对应工程名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('drawingchecker', '图纸校核人:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->sohead->custinfo->name)) 
-         {!! Form::textarea('pohead_descrip', $paymentrequest->purchaseorder_hxold->sohead->custinfo->name . ' | ' . $paymentrequest->purchaseorder_hxold->sohead->descrip, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
+    @if (isset($issuedrawing->drawingchecker->name))
+         {!! Form::text('drawingchecker', $issuedrawing->drawingchecker->name, ['class' => 'form-control', $attr]) !!}
     @else
-        {!! Form::textarea('pohead_descrip', null, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
+        {!! Form::text('drawingchecker', null, ['class' => 'form-control', $attr]) !!}
     @endif
     </div>
 </div>
 
-<div class="form-group">
-    {!! Form::label('pohead_amount', '合同金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount)) 
-         {!! Form::text('pohead_amount', $paymentrequest->purchaseorder_hxold->amount, ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('pohead_amount', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-</div>
 
+{{--
 <div class="form-group">
     {!! Form::label('pohead_amount_paid', '已付金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-5 col-sm-9'>
@@ -138,38 +129,8 @@
     @endif
     </div>
 </div>
+--}}
 
-@can('test')
-
-<div class="form-group">
-    <div class='col-xs-4 col-sm-2'>
-    </div>
-    <div class='col-xs-8 col-sm-10'>
-@if (Auth::user()->email == "admin@admin.com")
-    @if (isset($paymentrequest->purchaseorder_hxold->id))
-        <a href="{{ URL::to('/purchase/purchaseorders/' . $paymentrequest->purchaseorder_hxold->id . '/detail_hxold') }}" target="_blank">入库价格明细</a>
-    @endif
-@endif
-    <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail') }}" target="_blank" class="btn btn-default btn-sm" id="t1">入库价格明细</a>
-    <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail2') }}" target="_blank" class="btn btn-default btn-sm">入库价格明细2</a>
-    <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail3') }}" target="_blank" class="btn btn-default btn-sm">入库价格明细3</a>
-    <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail4') . "?dd_orientation=landscape" }}" target="_blank" class="btn btn-default btn-sm">入库明细</a>
-    @if (Auth::user()->email == "admin@admin.com")
-    <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail5') . "?dd_orientation=landscape" }}" target="_blank" class="btn btn-default btn-sm">入库明细(新版)</a>
-    @endif
-    </div>
-</div>
-
-<div class="form-group">
-    <div class='col-xs-4 col-sm-2'>
-    </div>
-    <div class='col-xs-8 col-sm-10'>
-        @if (isset($paymentrequest->purchaseorder_hxold->sohead->id))
-            <a href="{{ URL::to('/sales/salesorders/' . $paymentrequest->purchaseorder_hxold->sohead->id . '/mstatistics') }}" target="_blank" class="btn btn-default btn-sm">对应的销售订单金额数据统计</a>
-        @endif
-    </div>
-</div>
-@endcan
 
 @else
 <div class="form-group">
@@ -254,42 +215,22 @@
             </div>
         </div>
 
-@if (isset($paymentrequest))
-<div class="form-group">
-    {!! Form::label('supplier_bank', '开户行:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->vendbank_hxold->bankname)) 
-        {!! Form::text('supplier_bank', $paymentrequest->vendbank_hxold->bankname, ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('supplier_bank', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-</div>
+@if (isset($issuedrawing))
 
-<div class="form-group">
-    {!! Form::label('supplier_bankaccountnumber', '银行账号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->vendbank_hxold->accountnum)) 
-        {!! Form::text('supplier_bankaccountnumber', $paymentrequest->vendbank_hxold->accountnum, ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('supplier_bankaccountnumber', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-</div>
 
 <div class="form-group">
     {!! Form::label('created_at', '发起时间:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('created_at', $paymentrequest->created_at, ['class' => 'form-control', $attr]) !!}
+        {!! Form::text('created_at', $issuedrawing->created_at, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
-@if ($paymentrequest->approversetting_id === 0)
-    @if ($paymentrequest->paymentrequestapprovals->count())
+@if ($issuedrawing->approversetting_id === 0)
+    @if ($issuedrawing->paymentrequestapprovals->count())
         <div class="form-group">
             {!! Form::label('last_approval_created_at', '审批时间:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::text('last_approval_created_at', $paymentrequest->paymentrequestapprovals->last()->created_at, ['class' => 'form-control', $attr]) !!}
+                {!! Form::text('last_approval_created_at', $issuedrawing->paymentrequestapprovals->last()->created_at, ['class' => 'form-control', $attr]) !!}
             </div>
         </div>
     @endif
@@ -304,9 +245,9 @@
     {!! Form::label('drawingattachment', '目录上传，图纸邮寄:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
     <div class='col-xs-8 col-sm-10'>
-        @if (isset($paymentrequest))
-            @foreach ($paymentrequest->paymentnodes() as $paymentnode)
-                 <a href="{!! URL($paymentnode->path) !!}" target="_blank" id="showPaymentnode">{{ $paymentnode->filename }}</a> <br>
+        @if (isset($issuedrawing))
+            @foreach ($issuedrawing->drawingattachments() as $drawingattachment)
+                 <a href="{!! URL($drawingattachment->path) !!}" target="_blank" id="showPaymentnode">{{ $drawingattachment->filename }}</a> <br>
             @endforeach
         @else
             {!! Form::file('drawingattachments[]', ['multiple']) !!}
@@ -327,12 +268,12 @@
     <div class='col-xs-8 col-sm-10'>
         <div class="row" id="previewimage">
         </div>
-        @if (isset($paymentrequest))
+        @if (isset($issuedrawing))
             <div class="row" id="previewimage2">
-                @foreach ($paymentrequest->paymentrequestimages() as $paymentrequestimage)
+                @foreach ($issuedrawing->images() as $image)
                     <div class="col-xs-6 col-md-3">
                         <div class="thumbnail">
-                            <img src="{!! $paymentrequestimage->path !!}" />
+                            <img src="{!! $image->path !!}" />
                         </div>
                     </div>
                 @endforeach

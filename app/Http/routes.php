@@ -331,6 +331,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('getitemsbysoheadid/{sohead_id}', 'IssuedrawingController@getitemsbysoheadid');
         Route::get('mcreate', 'IssuedrawingController@mcreate');
         Route::post('mstore', 'IssuedrawingController@mstore');
+        Route::get('{id}/modifyweight', 'IssuedrawingController@modifyweight');
     });
     Route::resource('issuedrawing', 'IssuedrawingController');
     Route::resource('approversettings', 'ApproversettingsController');

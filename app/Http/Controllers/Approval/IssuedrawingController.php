@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\DingTalkController;
-use Auth, Log;
+use Auth, Log, Agent;
 use Validator, Storage;
 
 class IssuedrawingController extends Controller
@@ -27,6 +27,31 @@ class IssuedrawingController extends Controller
     public function index()
     {
         //
+        $request = request();
+        $key = $request->input('key', '');
+        $approvalstatus = $request->input('approvalstatus', '');
+        $paymentstatus = $request->input('paymentstatus');
+        $inputs = $request->all();
+        if (null !== request('key'))
+            $issuedrawings = $this->searchrequest($request);
+        else
+            $issuedrawings = Issuedrawing::latest('created_at')->paginate(10);
+//        $purchaseorders = Purchaseorder_hxold::whereIn('id', $issuedrawings->pluck('pohead_id'))->get();
+//        $totalamount = Issuedrawing::sum('amount');
+
+//        return view('approval.paymentrequests.index');
+
+        // if ($request->has('key'))
+        // use request('key') for null compare, not $request->has('key')
+
+        if (null !== request('key'))
+        {
+            return view('approval.issuedrawings.index', compact('issuedrawings', 'key', 'inputs', 'purchaseorders', 'totalamount'));
+        }
+        else
+        {
+            return view('approval.issuedrawings.index', compact('issuedrawings', 'purchaseorders', 'totalamount'));
+        }
     }
 
     public function getitemsbysoheadid($sohead_id)
@@ -331,6 +356,10 @@ class IssuedrawingController extends Controller
     public function show($id)
     {
         //
+        $issuedrawing = Issuedrawing::findOrFail($id);
+//        $agent = new Agent();
+        $config = DingTalkController::getconfig();
+        return view('approval.issuedrawings.show', compact('issuedrawing', 'config'));
     }
 
     /**
@@ -354,6 +383,17 @@ class IssuedrawingController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $issuedrawing = Issuedrawing::findOrFail($id);
+        $issuedrawing->update($request->all());
+        return redirect('approval/issuedrawing');
+    }
+
+    public function updateweight(Request $request, $id)
+    {
+        //
+        $issuedrawing = Issuedrawing::findOrFail($id);
+        $issuedrawing->update($request->all());
+        return redirect('approval/issuedrawing');
     }
 
     /**
@@ -394,5 +434,12 @@ class IssuedrawingController extends Controller
         {
             $issuedrawing->forceDelete();
         }
+    }
+
+    public function modifyweight($id)
+    {
+        //
+        $issuedrawing = Issuedrawing::findOrFail($id);
+        return view('approval.issuedrawings.modifyweight', compact('issuedrawing'));
     }
 }

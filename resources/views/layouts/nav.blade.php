@@ -109,6 +109,9 @@
                         @can('module_approval')
 @if (isset(Auth::user()->email) and Auth::user()->email == "admin@admin.com")
                         <li><a href="/approval/paymentrequestapprovals">供应商付款审批记录</a></li>
+                                    @can('approval_issuedrawing_view')
+                                        <li><a href="/approval/issuedrawing">下发图纸</a></li>
+                                    @endcan
 @endif
                         <li role="separator" class="divider"></li>
                         <li><a href="/approval/approversettings">设置</a></li>

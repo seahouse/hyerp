@@ -178,4 +178,28 @@ class Issuedrawing extends Model
         $approvers = implode(',', $approverArray);
         return $approvers;
     }
+
+    public function sohead_hxold() {
+        return $this->hasOne('\App\Models\Sales\Salesorder_hxold', 'id', 'sohead_id');
+    }
+
+    public function drawingchecker() {
+        return $this->hasOne('\App\Models\System\User', 'id', 'drawingchecker_id');
+    }
+
+    public function applicant() {
+        return $this->hasOne('\App\Models\System\User', 'id', 'applicant_id');
+    }
+
+    public function issuedrawingattachments() {
+        return $this->hasMany('\App\Models\Approval\Issuedrawingattachment', 'issuedrawing_id', 'id');
+    }
+
+    public function drawingattachments() {
+        return $this->issuedrawingattachments->where('type', 'drawingattachment');
+    }
+
+    public function images() {
+        return $this->issuedrawingattachments->where('type', 'image');
+    }
 }
