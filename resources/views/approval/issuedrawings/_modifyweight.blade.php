@@ -32,29 +32,9 @@
     {!! Form::close() !!}
 
 
-{{--<div id="container" style="display: none;">--}}
-    {{--<div class="lightbox"></div>--}}
-    {{--<div id="pop" class="pop">--}}
-        {{--<canvas id="the-canvas"></canvas>--}}
-    {{--</div>--}}
-{{--</div>--}}
 
-    {!! Form::model($issuedrawing, ['class' => 'form-horizontal']) !!}
-        @include('approval.issuedrawings._approvals',
-            [
-                'attr' => 'readonly',
-                'attrdisable' => 'disabled',
-                'btnclass' => 'hidden',
-            ])
-    {!! Form::close() !!}
 
-    {!! Form::model($issuedrawing, ['class' => 'form-horizontal']) !!}
-        @include('approval.issuedrawings._approvers',
-            [
-                'attr' => 'readonly',
-            ])
-    {!! Form::close() !!}
-<!--endprint-->
+
 
     @yield('for_issuedrawingapprovals_create')
 
