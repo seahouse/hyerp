@@ -27,23 +27,25 @@
         </form>
         @endif
 
-        {{--
+
         {!! Form::open(['url' => '/approval/issuedrawing/search', 'class' => 'pull-right form-inline']) !!}
             <div class="form-group-sm">
+                {{--
                 {!! Form::label('approvaldatelabel', '审批时间:', ['class' => 'control-label']); !!}
                 {!! Form::date('approvaldatestart', null, ['class' => 'form-control']); !!}
                 {!! Form::label('approvaldatelabelto', '-', ['class' => 'control-label']); !!}
                 {!! Form::date('approvaldateend', null, ['class' => 'form-control']); !!}
-                
+
                 {!! Form::select('paymentmethod', ['支票' => '支票', '贷记' => '贷记', '电汇' => '电汇', '汇票' => '汇票', '现金' => '现金', '银行卡' => '银行卡', '其他' => '其他'], null, ['class' => 'form-control', 'placeholder' => '--付款方式--']) !!}
 
                 {!! Form::select('paymentstatus', ['0' => '已付款', '-1' => '未付款'], null, ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}
                 {!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']); !!}
-                {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称、申请人']); !!}
-                {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']); !!}
+                --}}
+                {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '审批编号']) !!}
+                {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
             </div>
         {!! Form::close() !!}
-        --}}
+
 
     </div>
 
@@ -53,6 +55,7 @@
         <thead>
             <tr>
                 <th>申请日期</th>
+                <th>编号</th>
                 <th>吨数</th>
 
                 @if (Agent::isDesktop())
@@ -79,15 +82,18 @@
                         @endif
                     </td>
                     <td>
+                        {{ $issuedrawing->business_id }}
+                    </td>
+                    <td>
                         {{ $issuedrawing->tonnage }}
                     </td>
                     @if (Agent::isDesktop())
-                    <td title="@if (isset($issuedrawing->sohead_hxold->descrip)) {{ $issuedrawing->sohead_hxold->descrip }} @else @endif">
-                        @if (isset($issuedrawing->sohead_hxold->projectjc)) {{ str_limit($issuedrawing->sohead_hxold->projectjc, 40) }} @else @endif
-                    </td>
+                        <td title="@if (isset($issuedrawing->sohead_hxold->descrip)) {{ $issuedrawing->sohead_hxold->descrip }} @else @endif">
+                            @if (isset($issuedrawing->sohead_hxold->projectjc)) {{ str_limit($issuedrawing->sohead_hxold->projectjc, 40) }} @else @endif
+                        </td>
                     @endif
                     <td>
-                        {{ $issuedrawing->applicant->name }}
+                        {{ isset($issuedrawing->applicant->name) ? $issuedrawing->applicant->name : '' }}
                     </td>
                     <td>
                         @if ($issuedrawing->status == 1)
@@ -103,15 +109,15 @@
                         @endif
                     </td>
                     @if (Agent::isDesktop())
-                    <td>
-                    @can('approval_issuedrawing_modifyweight')
-                        <a href="{{ url('/approval/issuedrawing/' . $issuedrawing->id . '/modifyweight') }}" target="_blank" class="btn btn-success btn-sm pull-left
+                        <td>
+                            @can('approval_issuedrawing_modifyweight')
+                                <a href="{{ url('/approval/issuedrawing/' . $issuedrawing->id . '/modifyweight') }}" target="_blank" class="btn btn-success btn-sm pull-left
                         @if ($issuedrawing->status == 0)
-                            @else
-                                disabled
-                        @endif
-                        ">修改重量</a>
-                    @endcan
+                                @else
+                                        disabled
+                                @endif
+                                        ">修改重量</a>
+                            @endcan
 
                             @can('approval_issuedrawing_delete')
                                 {{--
@@ -121,7 +127,7 @@
                         --}}
                             @endcan
 
-                    </td>
+                        </td>
                     @endif
                 </tr>
             @endforeach
@@ -163,14 +169,7 @@
 
 
     @if (isset($key))
-        {!! $issuedrawings->setPath('/approval/issuedrawing')->appends([
-            'key' => $key, 
-            'approvalstatus' => $inputs['approvalstatus'], 
-            'paymentstatus' => $inputs['paymentstatus'],
-            'approvaldatestart' => $inputs['approvaldatestart'],
-            'approvaldateend' => $inputs['approvaldateend'],
-            'paymentmethod' => $inputs['paymentmethod']
-        ])->links() !!}
+        {!! $issuedrawings->setPath('/approval/issuedrawing')->appends($inputs)->links() !!}
     @else
         {!! $issuedrawings->setPath('/approval/issuedrawing')->links() !!}
     @endif

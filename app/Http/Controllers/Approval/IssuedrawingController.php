@@ -63,6 +63,132 @@ class IssuedrawingController extends Controller
         return $issuedrawings;
     }
 
+    public function search(Request $request)
+    {
+        $key = $request->input('key');
+        $approvalstatus = $request->input('approvalstatus');
+        $paymentstatus = $request->input('paymentstatus');
+        $inputs = $request->all();
+        $issuedrawings = $this->searchrequest($request);
+//        $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
+//        $totalamount = Paymentrequest::sum('amount');
+
+        return view('approval.issuedrawings.index', compact('issuedrawings', 'key', 'inputs', 'purchaseorders', 'totalamount'));
+    }
+
+    public function searchrequest($request)
+    {
+        $key = $request->input('key');
+        $approvalstatus = $request->input('approvalstatus');
+
+        $supplier_ids = [];
+        $purchaseorder_ids = [];
+//        if (strlen($key) > 0)
+//        {
+//            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
+//        }
+
+        $query = Issuedrawing::latest('created_at');
+
+        if (strlen($key) > 0)
+        {
+            $query->where('business_id', 'like', '%'.$key.'%');
+        }
+
+//        if ($approvalstatus <> '')
+//        {
+//            if ($approvalstatus == "1")
+//                $query->where('approversetting_id', '>', '0');
+//            else
+//                $query->where('approversetting_id', $approvalstatus);
+//        }
+//
+//        if ($request->has('approvaldatestart') && $request->has('approvaldateend'))
+//        {
+//            if ($request->has('approver_id_date'))
+//            {
+//                $paymentrequestids = DB::table('paymentrequestapprovals')
+//                    ->where('approver_id', $request->input('approver_id_date'))
+//                    ->select('paymentrequest_id')
+//                    ->groupBy('paymentrequest_id')
+//                    ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'')
+//                    ->pluck('paymentrequest_id');
+//            }
+//            else
+//            {
+//                $paymentrequestids = DB::table('paymentrequestapprovals')
+//                    ->select('paymentrequest_id')
+//                    ->groupBy('paymentrequest_id')
+//                    ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'')
+//                    ->pluck('paymentrequest_id');
+//            }
+//
+//            $query->whereIn('id', $paymentrequestids);
+//
+//
+//        }
+
+//        // paymentmethod
+//        if ($request->has('paymentmethod'))
+//        {
+//            $query->where('paymentmethod', $request->input('paymentmethod'));
+//        }
+//
+//        // payment status
+//        // because need search hxold database, so select this condition last.
+//        if ($request->has('paymentstatus'))
+//        {
+//            $paymentstatus = $request->input('paymentstatus');
+//            if ($paymentstatus == 0)
+//            {
+//                $query->where('approversetting_id', '0');
+//
+//                $paymentrequestids = [];
+//                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
+//                    foreach ($paymentrequests as $paymentrequest) {
+//                        # code...
+//                        if (isset($paymentrequest->purchaseorder_hxold->payments))
+//                        {
+//                            if ($paymentrequest->paymentrequestapprovals->max('created_at') < $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
+//                                array_push($paymentrequestids, $paymentrequest->id);
+//                        }
+//                    }
+//                });
+//
+//                // dd($paymentrequestids);
+//                $query->whereIn('id', $paymentrequestids);
+//            }
+//            elseif ($paymentstatus == -1)
+//            {
+//                $query->where('approversetting_id', '0');
+//
+//                $paymentrequestids = [];
+//                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
+//                    foreach ($paymentrequests as $paymentrequest) {
+//                        # code...
+//                        if (isset($paymentrequest->purchaseorder_hxold->payments))
+//                        {
+//                            if ($paymentrequest->paymentrequestapprovals->max('created_at') > $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
+//                                array_push($paymentrequestids, $paymentrequest->id);
+//                        }
+//                    }
+//                });
+//
+//                $query->whereIn('id', $paymentrequestids);
+//            }
+//        }
+
+
+        $issuedrawings = $query->select('issuedrawings.*')
+            ->paginate(10);
+
+        // $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
+        // dd($purchaseorders->pluck('id'));
+
+        return $issuedrawings;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
