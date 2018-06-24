@@ -332,6 +332,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('mcreate', 'IssuedrawingController@mcreate');
         Route::post('mstore', 'IssuedrawingController@mstore');
         Route::get('{id}/modifyweight', 'IssuedrawingController@modifyweight');
+        Route::post('{id}/updateweight', 'IssuedrawingController@updateweight');
     });
     Route::resource('issuedrawing', 'IssuedrawingController');
     Route::resource('approversettings', 'ApproversettingsController');
@@ -455,6 +456,8 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
         Route::get('hasrepeatoldid/{oldid}', 'UseroldController@hasrepeatoldid');
     });
     Route::resource('userold', 'UseroldController');
+
+    Route::resource('operationlog', 'OperationlogController');
 });
 
 Route::group(['prefix' => 'teaching', 'namespace' => 'Teaching', 'middleware' => ['web', 'auth']], function() {

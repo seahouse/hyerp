@@ -48,6 +48,7 @@ return array(
     'CreateMcitempurchaseissuedrawingsTable' => $baseDir . '/database/migrations/2018_03_29_203806_create_mcitempurchaseissuedrawings_table.php',
     'CreateMcitempurchaseitemsTable' => $baseDir . '/database/migrations/2018_03_26_153429_create_mcitempurchaseitems_table.php',
     'CreateMcitempurchasesTable' => $baseDir . '/database/migrations/2018_03_26_152440_create_mcitempurchases_table.php',
+    'CreateOperationlogsTable' => $baseDir . '/database/migrations/2018_06_24_135617_create_operationlogs_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
     'CreatePaymentrequestapprovalsTable' => $baseDir . '/database/migrations/2016_09_05_093746_create_paymentrequestapprovals_table.php',
     'CreatePaymentrequestattachmentsTable' => $baseDir . '/database/migrations/2016_09_13_110408_create_paymentrequestattachments_table.php',

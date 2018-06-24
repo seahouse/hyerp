@@ -2,7 +2,7 @@
 
 
 
-    {!! Form::model($issuedrawing, ['method' => 'PATCH', 'action' => ['Approval\IssuedrawingController@update', $issuedrawing->id], 'class' => 'form-horizontal']) !!}
+    {!! Form::model($issuedrawing, ['method' => 'POST', 'url' => url('approval/issuedrawing/' . $issuedrawing->id . '/updateweight'), 'class' => 'form-horizontal']) !!}
         @include('approval.issuedrawings._form_modifyweight',
                      [
                 'submitButtonText' => '提交',
