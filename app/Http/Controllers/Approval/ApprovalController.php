@@ -95,11 +95,16 @@ class ApprovalController extends Controller
     public function mindexmying()
     {
         //
-        // return $this->searchmindexmy(request());
-        $paymentrequests = PaymentrequestsController::mying();
-        
-
-        return view('approval.mindexmy', compact('paymentrequests'));
+//        $inputs = request()->all();
+//
+//        if (!array_key_exists('approvaltype', $inputs))
+//            $inputs['approvaltype'] = '供应商付款';
+//        $approvaltype = $inputs['approvaltype'];
+         return $this->searchmindexmy(request());
+//        $paymentrequests = PaymentrequestsController::mying();
+//
+//
+//        return view('approval.mindexmy', compact('paymentrequests'));
     }
 
     /**
@@ -125,7 +130,7 @@ class ApprovalController extends Controller
     public function searchmindexmy(Request $request)
     {
         //
-//        $key = $request->input($request);
+        $key = $request->input($request);
         $inputs = $request->all();
 
         if (!array_key_exists('approvaltype', $inputs))
