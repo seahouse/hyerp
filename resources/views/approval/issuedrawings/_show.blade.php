@@ -44,13 +44,8 @@
             ])
     {!! Form::close() !!}
 
-{{--<div id="container" style="display: none;">--}}
-    {{--<div class="lightbox"></div>--}}
-    {{--<div id="pop" class="pop">--}}
-        {{--<canvas id="the-canvas"></canvas>--}}
-    {{--</div>--}}
-{{--</div>--}}
 
+{{--
     {!! Form::model($issuedrawing, ['class' => 'form-horizontal']) !!}
         @include('approval.issuedrawings._approvals',
             [
@@ -66,10 +61,10 @@
                 'attr' => 'readonly',
             ])
     {!! Form::close() !!}
-<!--endprint-->
+    --}}
 
     @yield('for_issuedrawingapprovals_create')
-
+ 
 {{-- 撤回审批记录 --}}
 <?php $issuedrawingretract = $issuedrawing->issuedrawingretract; ?>
 
