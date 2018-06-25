@@ -145,7 +145,7 @@ class ApprovalController extends Controller
         }
         elseif ($approvaltype == '下发图纸')
         {
-            $items = IssuedrawingController::searchrequest($request);
+            $items = IssuedrawingController::my($request);
             return view('approval.mindexmy', compact('items', 'inputs'));
         }
         return view('approval.mindexmy', compact('items', 'inputs'));
