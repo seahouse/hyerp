@@ -333,7 +333,9 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::post('mstore', 'IssuedrawingController@mstore');
         Route::get('{id}/modifyweight', 'IssuedrawingController@modifyweight');
         Route::post('{id}/updateweight', 'IssuedrawingController@updateweight');
+        Route::post('{id}/mupdateweight', 'IssuedrawingController@mupdateweight');
         Route::any('search', 'IssuedrawingController@search');              // 搜索功能
+        Route::get('mshow/{id}', 'IssuedrawingController@mshow');
     });
     Route::resource('issuedrawing', 'IssuedrawingController');
     Route::resource('approversettings', 'ApproversettingsController');

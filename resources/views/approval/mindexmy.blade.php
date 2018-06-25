@@ -7,6 +7,11 @@
     {!! Form::open(['url' => '/approval/mindexmy/search', 'method' => 'post', 'role' => 'search']) !!}
         <div class="container-fluid search-area">
             <div class="row">
+                <div class="ctrl1">
+                    {!! Form::select('approvaltype', array('供应商付款' => '供应商付款', '下发图纸' => '下发图纸'), null, ['class' => 'form-control ctrl1', 'id' => 'approvaltype']) !!}
+                </div>
+            </div>
+            <div class="row">
                 <div class="col-xs-8 col-sm-8 ctrl1">
                 {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称']) !!}
                 </div>
@@ -43,13 +48,14 @@
     @include('approval._list',
         [
             'href_pre' => '/approval/reimbursements/mshow/', 'href_suffix' => '',
-            'href_pre_paymentrequest' => '/approval/paymentrequests/mshow/'
+            'href_pre_paymentrequest' => '/approval/paymentrequests/mshow/',
+            'href_pre_issuedrawing' => '/approval/issuedrawing/mshow/'
         ])
 
     @if (isset($inputs))
-        {!! $paymentrequests->setPath('/approval/mindexmy')->appends($inputs)->links() !!}
+        {!! $items->setPath('/approval/mindexmy')->appends($inputs)->links() !!}
     @else
-        {!! $paymentrequests->links() !!}
+        {!! $items->links() !!}
     @endif
 
 

@@ -128,10 +128,22 @@ class ApprovalController extends Controller
 //        $key = $request->input($request);
         $inputs = $request->all();
 
-        $paymentrequests = PaymentrequestsController::my($request);
-        // dd($paymentrequests);
+        if (!array_key_exists('approvaltype', $inputs))
+            $inputs['approvaltype'] = '供应商付款';
+        $approvaltype = $inputs['approvaltype'];
 
-        return view('approval.mindexmy', compact('paymentrequests', 'inputs'));
+        $items = null;
+        if ($approvaltype == '供应商付款')
+        {
+            $items = PaymentrequestsController::my($request);
+//            return view('approval.mindexmy', compact('paymentrequests', 'inputs'));
+        }
+        elseif ($approvaltype == '下发图纸')
+        {
+            $items = IssuedrawingController::searchrequest($request);
+            return view('approval.mindexmy', compact('items', 'inputs'));
+        }
+        return view('approval.mindexmy', compact('items', 'inputs'));
     }
     
 

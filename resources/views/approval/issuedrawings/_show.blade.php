@@ -96,52 +96,56 @@
 
     @yield('for_issuedrawingretractapprovals_create')
 
-    <!-- when next approver level is 1 or next approver is nothing, can destory -->
-    @if (Auth::user()->id == $issuedrawing->applicant_id and isset($issuedrawing->approversetting->level) and $issuedrawing->approversetting->level == 1)
+    <!-- when the approval status is passed, can modify tongue -->
+{{--
+    @if (Auth::user()->id == $issuedrawing->applicant_id and isset($issuedrawing->status) and $issuedrawing->status == 0)
          {!! Form::open(array('url' => 'approval/issuedrawing/mdestroy/' . $issuedrawing->id, 'method' => 'delete', 'onsubmit' => 'return confirm("确定撤销此记录?");')) !!}
             {!! Form::submit('撤销', ['class' => 'btn btn-danger btn-sm']) !!}
         {!! Form::close() !!}
     @endif
+--}}
 
-<div class="modal fade" id="retractModal" tabindex="-1" role="dialog">
+<div class="modal fade" id="modifyweightModal" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">请输入撤回的理由</h4>
+                <h4 class="modal-title">修改重量</h4>
             </div>
             <div class="modal-body">
-                {{--
-                {!! Form::open(array('url' => 'approval/issuedrawingretract')) !!}
-                    {!! Form::text('retractreason', null, ['class' => 'form-control']) !!}
-                    {!! Form::hidden('issuedrawing_id', $issuedrawing->id, ['class' => 'form-control']) !!}
-                    {!! Form::submit('确定', ['class' => 'btn btn-sm']) !!}
-                {!! Form::close() !!}
-                --}}
-                <form id="formRetract">
+                <form id="formModifyweight" class="form-horizontal">
                     {!! csrf_field() !!}
-                    {!! Form::text('description', null, ['class' => 'form-control']) !!}
+                    <div class="form-group">
+                        {!! Form::label('oldtonnage', '原吨位（吨）:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                        <div class='col-xs-8 col-sm-10'>
+                            {!! Form::text('oldtonnage', $issuedrawing->tonnage, ['class' => 'form-control', 'readonly']) !!}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('tonnage', '新吨位（吨）:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                        <div class='col-xs-8 col-sm-10'>
+                            {!! Form::text('tonnage', null, ['class' => 'form-control']) !!}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {!! Form::label('reason', '修改原因:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                        <div class='col-xs-8 col-sm-10'>
+                            {!! Form::text('reason', null, ['class' => 'form-control']) !!}
+                        </div>
+                    </div>
                     {!! Form::hidden('issuedrawing_id', $issuedrawing->id, ['class' => 'form-control']) !!}
-                    {!! Form::hidden('status', -1, ['class' => 'form-control']) !!}
                 </form>
             </div>
             <div class="modal-footer">
                 {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
-                {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnRetract']) !!}
+                {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnModifyweight']) !!}
             </div>
         </div>
     </div>
 </div>
 
-    {{-- 审批通过后，发起人可以申请撤回 --}}
-    {{-- todo: 已撤回的审批单，无法再次撤回 --}}
-    @if (Auth::user()->id == $issuedrawing->applicant_id and $issuedrawing->approversetting_id == 0)
-        {!! Form::button('申请撤回', ['class' => 'btn btn-warning btn-sm', 'data-toggle' => 'modal', 'data-target' => '#retractModal']) !!}
-        {!! Form::open(array('url' => 'approval/issuedrawing/retract/' . $issuedrawing->id)) !!}
-            {{--
-            {!! Form::submit('申请撤回', ['class' => 'btn btn-warning btn-sm']) !!}
-            {!! Form::button('申请撤回', ['class' => 'btn btn-warning btn-sm', 'data-toggle' => 'modal', 'data-target' => '#retractModal']) !!}
-            --}}
-        {!! Form::close() !!}
+<!-- when the approval status is passed, can modify tongue -->
+    @if (Auth::user()->id == $issuedrawing->applicant_id and $issuedrawing->status == 0)
+        {!! Form::button('修改重量', ['class' => 'btn btn-warning btn-sm', 'data-toggle' => 'modal', 'data-target' => '#modifyweightModal']) !!}
     @endif
 
     {{-- pdf 预览 --}}
@@ -187,14 +191,14 @@
                 window.print();
             });
 
-            $("#btnRetract").bind("click", function() {
+            $("#btnModifyweight").bind("click", function() {
                 $.ajax({
                     type: "POST",
-                    url: "{{ url('approval/issuedrawingretract') }}",
-                    data: $("form#formRetract").serialize(),
+                    url: "{{ url('approval/issuedrawing/' . $issuedrawing->id . '/mupdateweight') }}",
+                    data: $("form#formModifyweight").serialize(),
                     contentType:"application/x-www-form-urlencoded",
                     error: function(xhr, ajaxOptions, thrownError) {
-                        alert($("form#formRetract").serialize());
+                        alert($("form#formModifyweight").serialize());
                         alert('error');
                         alert(xhr.status);
                         alert(xhr.responseText);
@@ -203,7 +207,7 @@
                     },
                     success: function(result) {
 //                        alert('操作完成.');
-                        $('#rejectModal').modal('toggle');
+                        $('#modifyweightModal').modal('toggle');
 {{--                        location.href = "{{ url('approval/mindexmyapproval') }}";--}}
                         location.reload(true);
                     },

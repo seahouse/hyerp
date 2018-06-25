@@ -7,6 +7,7 @@ use App\Models\Approval\Approvaltype;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Issuedrawing;
 use App\Models\Approval\Issuedrawingattachment;
+use App\Models\Approval\Issuedrawingmodifyweightlog;
 use App\Models\System\Operationlog;
 use Illuminate\Http\Request;
 
@@ -76,7 +77,7 @@ class IssuedrawingController extends Controller
         return view('approval.issuedrawings.index', compact('issuedrawings', 'key', 'inputs', 'purchaseorders', 'totalamount'));
     }
 
-    public function searchrequest($request)
+    public static function searchrequest($request)
     {
         $key = $request->input('key');
         $approvalstatus = $request->input('approvalstatus');
@@ -489,6 +490,14 @@ class IssuedrawingController extends Controller
         return view('approval.issuedrawings.show', compact('issuedrawing', 'config'));
     }
 
+    public function mshow($id)
+    {
+        //
+        $issuedrawing = Issuedrawing::findOrFail($id);
+        $config = DingTalkController::getconfig();
+        return view('approval.issuedrawings.mshow', compact('issuedrawing', 'config'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -521,13 +530,32 @@ class IssuedrawingController extends Controller
         $issuedrawing = Issuedrawing::findOrFail($id);
         $issuedrawing->update($request->all());
 
-        Operationlog::create(['table_name' => Operationlog::$ISSUEDRAWING,
-            'table_id' => $issuedrawing->id,
-            'operation'     => '重量由' . $request->input('tonnage_before') . '更新为' . $request->input('tonnage'),
-            'operator_id'   => Auth::user()->id,
-        ]);
+        $input = $request->all();
+        $input['operator_id'] = Auth::user()->id;
+
+        Issuedrawingmodifyweightlog::create($input);
+
+//        Operationlog::create(['table_name' => Operationlog::$ISSUEDRAWING,
+//            'table_id' => $issuedrawing->id,
+//            'operation'     => '重量由' . $request->input('tonnage_before') . '更新为' . $request->input('tonnage'),
+//            'operator_id'   => Auth::user()->id,
+//        ]);
 
         return redirect('approval/issuedrawing');
+    }
+
+    public function mupdateweight(Request $request, $id)
+    {
+        //
+        $issuedrawing = Issuedrawing::findOrFail($id);
+        $issuedrawing->update($request->all());
+
+        $input = $request->all();
+        $input['operator_id'] = Auth::user()->id;
+
+        Issuedrawingmodifyweightlog::create($input);
+
+        return 'success';
     }
 
     /**
