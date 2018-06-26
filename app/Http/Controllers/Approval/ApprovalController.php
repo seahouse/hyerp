@@ -338,6 +338,9 @@ class ApprovalController extends Controller
         $suppliername = $request->input('suppliername');
         $inputs = $request->all();
 
+        if (!array_key_exists('approvaltype', $inputs))
+            $inputs['approvaltype'] = '供应商付款';
+
         // 获取当前操作人员的报销审批层次
         $userids = [];
         $userid = Auth::user()->id;
