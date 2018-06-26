@@ -235,6 +235,52 @@ class IssuedrawingController extends Controller
         return $issuedrawings;
     }
 
+    public static function myed(Request $request)
+    {
+        $userid = Auth::user()->id;
+
+        $key = $request->input('key');
+
+        $query = Issuedrawing::latest('created_at');
+        $query->where('applicant_id', $userid);
+        $query->where('status', '<=', 0);
+
+        if (strlen($key) > 0)
+        {
+            $query->where('business_id', 'like', '%'.$key.'%');
+        }
+
+//        if (strlen($paymenttype) > 0)
+//        {
+//            $query->where('paymenttype', $paymenttype);
+//        }
+//
+//        if (strlen($projectname) > 0)
+//        {
+//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+//                ->where('descrip', 'like', '%'.$projectname .'%')
+//                ->pluck('id');
+//            $query->whereIn('pohead_id', $purchaseorder_ids);
+//        }
+//
+//        if (strlen($productname) > 0)
+//        {
+//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+//                ->where('productname', 'like', '%'.$productname .'%')
+//                ->pluck('id');
+//            $query->whereIn('pohead_id', $purchaseorder_ids);
+//        }
+//
+//        if (strlen($suppliername) > 0)
+//        {
+//            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$suppliername.'%')->pluck('id');
+//            $query->whereIn('supplier_id', $supplier_ids);
+//        }
+
+        $issuedrawings = $query->select()->paginate(10);
+        return $issuedrawings;
+    }
+
     /**
      * Show the form for creating a new resource.
      *

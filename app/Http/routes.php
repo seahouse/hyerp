@@ -355,7 +355,10 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::post('search/{key?}', 'ApprovalController@searchmindexmy');      // 我发起的
     });
     Route::get('mindexmying', 'ApprovalController@mindexmying');      // 我发起的
-    Route::get('mindexmyed', 'ApprovalController@mindexmyed');      // 我发起的
+    Route::group(['prefix' => 'mindexmyed'], function() {
+        Route::get('', 'ApprovalController@mindexmyed');      // 我发起的
+        Route::post('search/{key?}', 'ApprovalController@searchmindexmyed');      // 我发起的
+    });
     Route::group(['prefix' => 'mindexmyapproval', 'as' => 'approval/mindexmyapproval'], function() {
         Route::any('', 'ApprovalController@mindexmyapproval');      // 待我审批的
         Route::any('search/{key?}', 'ApprovalController@searchmindexmyapproval');      // 待我审批的
