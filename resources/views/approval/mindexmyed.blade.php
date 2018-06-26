@@ -33,7 +33,7 @@
         ])
 
     @if (isset($key))
-        {!! $items->setPath('/approval/mindexmyed')->appends(['key' => $key])->links() !!}
+        {!! $items->setPath('/approval/mindexmyed')->appends($inputs)->links() !!}
     @else
         {!! $items->links() !!}
     @endif

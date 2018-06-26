@@ -198,6 +198,7 @@ class IssuedrawingController extends Controller
 
         $query = Issuedrawing::latest('created_at');
         $query->where('applicant_id', $userid);
+        $query->where('status', '>', 0);
 
         if (strlen($key) > 0)
         {
