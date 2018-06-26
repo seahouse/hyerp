@@ -62,9 +62,9 @@
     {!! $paymentrequests->links() !!}
 --}}
     @if (isset($inputs))
-        {!! $paymentrequests->setPath('/approval/mindexmyapprovaled')->appends($inputs)->links() !!}
+        {!! $items->setPath('/approval/mindexmyapprovaled')->appends($inputs)->links() !!}
     @else
-        {!! $paymentrequests->setPath('/approval/mindexmyapprovaled')->links() !!}
+        {!! $items->setPath('/approval/mindexmyapprovaled')->links() !!}
     @endif
 
 

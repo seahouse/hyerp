@@ -116,10 +116,10 @@ class ApprovalController extends Controller
     {
         //
         // return $this->searchmindexmy(request());
-        $paymentrequests = PaymentrequestsController::myed();
-        
+//        $paymentrequests = PaymentrequestsController::myed();
+        return $this->searchmindexmyed(request());
 
-        return view('approval.mindexmy', compact('paymentrequests'));
+//        return view('approval.mindexmy', compact('paymentrequests'));
     }
 
     /**
@@ -149,6 +149,30 @@ class ApprovalController extends Controller
             return view('approval.mindexmy', compact('items', 'inputs'));
         }
         return view('approval.mindexmy', compact('items', 'inputs'));
+    }
+
+    public function searchmindexmyed(Request $request)
+    {
+        //
+        $key = $request->input($request);
+        $inputs = $request->all();
+
+        if (!array_key_exists('approvaltype', $inputs))
+            $inputs['approvaltype'] = '供应商付款';
+        $approvaltype = $inputs['approvaltype'];
+
+        $items = null;
+        if ($approvaltype == '供应商付款')
+        {
+            $items = PaymentrequestsController::myed($request->input('key'));
+//            return view('approval.mindexmy', compact('paymentrequests', 'inputs'));
+        }
+        elseif ($approvaltype == '下发图纸')
+        {
+            $items = IssuedrawingController::myed($request);
+            return view('approval.mindexmy', compact('items', 'inputs'));
+        }
+        return view('approval.mindexmyed', compact('items', 'inputs'));
     }
     
 
@@ -249,7 +273,7 @@ class ApprovalController extends Controller
             $query->whereIn('supplier_id', $supplier_ids);
         }
 
-        $paymentrequests = $query->select()->paginate(10);
+        $items = $query->select()->paginate(10);
 
 
 //        if ('' == $key)
@@ -293,7 +317,7 @@ class ApprovalController extends Controller
 //        return route('/approval/mindexmyapproval', $inputs);
 //        return redirect()->route('approval.mindexmyapproval', $inputs)->with('reimbursements', 'paymentrequests', 'paymentrequestretracts', 'key', 'inputs');
 //        return response()->view('approval.mindexmyapproval' , compact('reimbursements', 'paymentrequests', 'paymentrequestretracts', 'key', 'inputs'))->header('query', http_build_query($inputs));
-        return view('approval.mindexmyapproval' , compact('reimbursements', 'paymentrequests', 'paymentrequestretracts', 'key', 'inputs'));
+        return view('approval.mindexmyapproval' , compact('reimbursements', 'items', 'paymentrequestretracts', 'key', 'inputs'));
     }
 
     /**
@@ -418,7 +442,7 @@ class ApprovalController extends Controller
             $query->whereIn('supplier_id', $supplier_ids);
         }
 
-        $paymentrequests = $query->select()->paginate(10);
+        $items = $query->select()->paginate(10);
 
 //        if ('' == $key)
 //            $paymentrequests = Paymentrequest::latest('created_at')->whereIn('id', $ids_paymentrequest)->paginate(10);
@@ -440,7 +464,7 @@ class ApprovalController extends Controller
 //                ->paginate(10);
 //        }
 
-        return view('approval.mindexmyapprovaled', compact('reimbursements', 'paymentrequests', 'inputs'));
+        return view('approval.mindexmyapprovaled', compact('reimbursements', 'items', 'inputs'));
     }
 
     /**

@@ -27,9 +27,9 @@
         ])
 
     @if (isset($key))
-        {!! $paymentrequests->setPath('/approval/mindexmy')->appends(['key' => $key])->links() !!}
+        {!! $items->setPath('/approval/mindexmyed')->appends(['key' => $key])->links() !!}
     @else
-        {!! $paymentrequests->links() !!}
+        {!! $items->links() !!}
     @endif
         
 
