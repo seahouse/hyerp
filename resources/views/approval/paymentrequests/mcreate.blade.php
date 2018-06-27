@@ -201,7 +201,7 @@
 //			var travelNum = 1;
 
 			 $("#btnSubmit").click(function() {
-//			 	$('#submitModal').modal('toggle');
+                 $("#btnSubmit").attr("disabled", true);
                  $.get("{{ url('approval/paymentrequests/hasrepeat/') }}" +  "/" + $('#pohead_id').val() + "/" + $('#amount').val(), function (data) {
                      if (data.code < 0)
 					 {
@@ -222,6 +222,7 @@
 //                         $("form#formMain").submit();
 					 }
                  });
+//                 $("#btnSubmit").removeAttr("disabled");
 
 				 return false;
 			 });
