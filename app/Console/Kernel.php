@@ -22,6 +22,7 @@ class Kernel extends ConsoleKernel
         Commands\TaxrateinputReminder::class,
         Commands\PadcapitalStatistics::class,
         Commands\SupplierticketReminder::class,
+        Commands\DeleteExpirationApproval::class,
     ];
 
     /**

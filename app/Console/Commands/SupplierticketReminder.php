@@ -115,7 +115,13 @@ class SupplierticketReminder extends Command
             $query->where('arrival_status', '全部到货')
                 ->orWhere('arrival_status', '未到货');
         });
-        $query->whereRaw('amount_paid / amount > 0.6')->whereRaw('amount_paid / amount <= 1.0')->whereRaw('amount_ticketed < amount_paid');
+        // 付款超过70%后，发票按照100%算；付款低于70%的，发票按照已付款金额为标准
+//        $query->whereRaw('amount_paid / amount > 0.6')->whereRaw('amount_paid / amount <= 1.0')->whereRaw('amount_ticketed < amount_paid');
+        $query->where(function ($query) {
+            $query->whereRaw('amount_paid / amount >= 0.7 and amount_ticketed < amount')
+                ->orWhereRaw('amount_paid / amount < 0.7 and amount_ticketed < amount_paid');
+        });
+
         $msg = '';
         $query->chunk(200, function ($poheads) use (&$msgWuhl) {
             foreach ($poheads as $pohead)
@@ -140,9 +146,15 @@ class SupplierticketReminder extends Command
                             if (!array_key_exists($supplier_id, $msgWuhl))
                             {
                                 $msgWuhl[$supplier_id]["name"] = $pohead->supplier_name;
-                                $msgWuhl[$supplier_id]["messages"] = [];
+                                $msgWuhl[$supplier_id]["unticketedamountlist"] = [];
+                                $msgWuhl[$supplier_id]["paidamountlist"] = [];
+                                $msgWuhl[$supplier_id]["ticketedamountlist"] = [];
                             }
-                            array_push($msgWuhl[$supplier_id]["messages"], $pohead->amount_paid - $pohead->amount_ticketed);
+                            // 付款超过70%后，发票按照100%算；付款低于70%的，发票按照已付款金额为标准
+//                            array_push($msgWuhl[$supplier_id]["unticketedamountlist"], $pohead->amount_paid - $pohead->amount_ticketed);
+                            array_push($msgWuhl[$supplier_id]["unticketedamountlist"], $pohead->amount_paid / $pohead->amount >= 0.7 ? $pohead->amount - $pohead->amount_ticketed : $pohead->amount_paid - $pohead->amount_ticketed);
+                            array_push($msgWuhl[$supplier_id]["paidamountlist"], $pohead->amount_paid);
+                            array_push($msgWuhl[$supplier_id]["ticketedamountlist"], $pohead->amount_ticketed);
                         }
                         else
                             $needReminder = false;
@@ -159,18 +171,18 @@ class SupplierticketReminder extends Command
             }
         });
 
-        // sort by total messages amount.
+        // sort by total unticketedamountlist amount.
 //        Log::info(json_encode($msgWuhl));
         $msgWuhl = array_sort($msgWuhl, function ($value) {
-            return 0 - array_sum($value["messages"]);
+            return 0 - array_sum($value["unticketedamountlist"]);
         });
 //        Log::info(json_encode($msgWuhl));
         foreach ($msgWuhl as $key => $value)
         {
 //            $value = array_slice($value, 0, 50);        // pre 50
-            if (array_sum($value["messages"]) > 100000.0)
+            if (array_sum($value["unticketedamountlist"]) > 100000.0)
             {
-                $msg = $value["name"] . "累计" . count($value["messages"]) . "个采购订单，合计欠票" . array_sum($value["messages"]) . "元。";
+                $msg = $value["name"] . "累计" . count($value["unticketedamountlist"]) . "个采购订单，合计欠票" . array_sum($value["unticketedamountlist"]) . "元。";
 //                Log::info($msg);
             }
 

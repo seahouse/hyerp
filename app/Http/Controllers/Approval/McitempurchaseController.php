@@ -175,13 +175,17 @@ class McitempurchaseController extends Controller
 
         // create mcitempurchaseissuedrawings
         $issuedrawing_values = $input['issuedrawing_values'];
+        $issuedrawing_weights = [];
         foreach (explode(",", $issuedrawing_values) as $value) {
             if ($value > 0)
             {
                 Mcitempurchaseissuedrawing::create(array('mcitempurchase_id' => $mcitempurchase->id, 'issuedrawing_id' => $value));
+                $issuedrawing = Issuedrawing::where('id', $value)->first();
+                if (isset($issuedrawing))
+                    array_push($issuedrawing_weights, $issuedrawing->tonnage);
             }
         }
-
+        $input['issuedrawing_weights'] = implode("+", $issuedrawing_weights) . "=" . array_sum($issuedrawing_weights);
 
         $image_urls = [];
         // create images in the desktop
