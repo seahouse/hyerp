@@ -190,12 +190,18 @@ Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => [
     });
 });
 
+Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web']], function() {
+    Route::group(['prefix' => 'salesorders'], function() {
+        Route::get('getitemsbykey/{key}/{customerid?}', 'SalesordersController@getitemsbykey');
+    });
+});
+
 Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web', 'auth']], function() {
     Route::get('salesorders/{id}/ship', 'SalesordersController@ship');
     Route::post('salesorders/search', 'SalesordersController@search');
     Route::group(['prefix' => 'salesorders'], function() {
         Route::get('mindex', 'SalesordersController@mindex');
-        Route::get('getitemsbykey/{key}/{customerid?}', 'SalesordersController@getitemsbykey');
+//        Route::get('getitemsbykey/{key}/{customerid?}', 'SalesordersController@getitemsbykey');
         Route::get('getitembyid/{id}', 'SalesordersController@getitembyid');
         Route::get('getsohx', 'SalesordersController@getsohx');
         Route::get('{id}/mstatistics', 'SalesordersController@mstatistics');
