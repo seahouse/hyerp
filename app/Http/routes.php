@@ -365,7 +365,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     });
     Route::group(['prefix' => 'mindexmyapprovaled'], function() {
         Route::get('', 'ApprovalController@mindexmyapprovaled');      // 我已审批的
-        Route::post('search/{key?}', 'ApprovalController@searchmindexmyapprovaled');      // 我已审批的
+        Route::any('search/{key?}', 'ApprovalController@searchmindexmyapprovaled');      // 我已审批的
     });
     // Route::get('mindexmyapprovaled', 'ApprovalController@mindexmyapprovaled');      // 我已审批的
 
