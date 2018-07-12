@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Sales\Salesorder;
 use App\Http\Requests\Sales\SalesorderRequest;
+use Httpful\Response;
 use Request;
 use App\Inventory\Itemsite;
 use Carbon\Carbon;
@@ -63,13 +64,10 @@ class SalesOrdersController extends Controller
                 ->orWhere('descrip', 'like', '%'.$key.'%');
         });
         $salesorders = $query->paginate(20);
-//        $salesorders = Salesorder_hxold::where('custinfo_id', $customerid)
-//            ->where(function ($query) use ($key) {
-//                $query->where('number', 'like', '%'.$key.'%')
-//                    ->orWhere('descrip', 'like', '%'.$key.'%');
-//            })
-//            ->paginate(20);
-        return $salesorders;
+
+//        return $salesorders;
+        return response($salesorders)
+            ->header('Access-Control-Allow-Origin', '*');
     }
 
     /**
