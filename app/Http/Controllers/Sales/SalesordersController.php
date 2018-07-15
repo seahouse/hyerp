@@ -67,7 +67,7 @@ class SalesOrdersController extends Controller
 
 //        return $salesorders;
         return response($salesorders)
-            ->header('Access-Control-Allow-Origin', '*');
+            ->header('Access-Control-Allow-Origin', 'http://www.huaxing-east.cn:2016');
     }
 
     /**

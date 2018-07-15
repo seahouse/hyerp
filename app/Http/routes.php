@@ -197,6 +197,10 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
 });
 
 Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web', 'auth']], function() {
+    Route::group(['prefix' => 'projects'], function() {
+        Route::get('{id}/mstatistics', 'ProjectController@mstatistics');
+    });
+    Route::resource('projects', 'ProjectController');
     Route::get('salesorders/{id}/ship', 'SalesordersController@ship');
     Route::post('salesorders/search', 'SalesordersController@search');
     Route::group(['prefix' => 'salesorders'], function() {
@@ -358,12 +362,12 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::resource('paymentrequestapprovals', 'PaymentrequestapprovalsController');
     Route::group(['prefix' => 'mindexmy'], function() {
         Route::get('', 'ApprovalController@mindexmy');      // 我发起的
-        Route::post('search/{key?}', 'ApprovalController@searchmindexmy');      // 我发起的
+        Route::any('search/{key?}', 'ApprovalController@searchmindexmy');      // 我发起的
     });
     Route::get('mindexmying', 'ApprovalController@mindexmying');      // 我发起的
     Route::group(['prefix' => 'mindexmyed'], function() {
         Route::get('', 'ApprovalController@mindexmyed');      // 我发起的
-        Route::post('search/{key?}', 'ApprovalController@searchmindexmyed');      // 我发起的
+        Route::any('search/{key?}', 'ApprovalController@searchmindexmyed');      // 我发起的
     });
     Route::group(['prefix' => 'mindexmyapproval', 'as' => 'approval/mindexmyapproval'], function() {
         Route::any('', 'ApprovalController@mindexmyapproval');      // 待我审批的

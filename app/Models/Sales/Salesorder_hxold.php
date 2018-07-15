@@ -69,4 +69,8 @@ class Salesorder_hxold extends Model
     public function temTaxamountstatistics() {
         return $this->hasOne('App\Models\Sales\Tem_Taxamountstatistics_hxold', 'sohead_id', 'id');
     }
+
+    public function projects() {
+        return $this->belongsToMany('App\Models\Sales\Project_hxold', 'projectorders', 'order_id', 'project_id');
+    }
 }
