@@ -4,7 +4,7 @@
 
 @section('mindexmyapproval_main')
    
-    {!! Form::open(['url' => '/approval/mindexmyapprovaled/search', 'method' => 'post', 'role' => 'search']) !!}
+    {!! Form::open(['url' => '/approval/mindexmyapprovaled/search', 'method' => 'get', 'role' => 'search']) !!}
         <div class="container-fluid search-area">
             {{--<div class="row">--}}
                 {{--<div class="ctrl1">--}}
