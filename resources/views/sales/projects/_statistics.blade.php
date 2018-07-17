@@ -2,7 +2,6 @@
 	<div id="tabid1" class="tabid">
 		@if (isset($project))
 			<p>项目名称：{{ $project->name }}</p>
-			<p>客户：{{ $project->custinfo->name }}</p>
             <?php $totalamount = 0.0; ?>
             <?php $sohead_receiptpayments_total = 0.0; ?>
             <?php $pohead_amount_total = 0.0; ?>

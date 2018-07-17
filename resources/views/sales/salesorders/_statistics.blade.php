@@ -27,8 +27,8 @@
 			@else
 				<p>采购成本比例：-</p>
 			@endif
-		@if (isset($sohead->projects->first()->id))
-			<a href="{{ URL::to('/sales/projects/' . $sohead->projects->first()->id . '/mstatistics') }}" target="_blank" class="btn btn-default btn-sm">备注</a>
+		@if (isset($sohead->project->id))
+			<a href="{{ URL::to('/sales/projects/' . $sohead->project->id . '/mstatistics') }}" target="_blank" class="btn btn-default btn-sm">备注</a>
 		@endif
 			<?php $pohead_amount_payment_total = $sohead->payments->sum('amount'); ?>
 			<p>采购订单付款总金额：{{ number_format($pohead_amount_payment_total / 10000.0, 4) }}万</p>
