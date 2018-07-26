@@ -648,6 +648,10 @@ class ApprovalController extends Controller
                 'value'     => $inputs['issuedrawing_weights'],
             ],
             [
+                'name'      => '下图单制作概述',
+                'value'     => $inputs['issuedrawing_overviews'],
+            ],
+            [
                 'name'      => '总价（元）',
                 'value'     => $inputs['totalprice'],
             ],
