@@ -165,7 +165,6 @@ class SupplierticketReminder extends Command
                 {
                     $this->sendMsg($msg, $pohead->transactor_id);
                     $this->sendMsg($msg, 186);      // to LiuYJ
-
                 }
 
             }
@@ -198,6 +197,7 @@ class SupplierticketReminder extends Command
                     $data['userid'] = $touser->id;
                     DingTalkController::sendCorpMessageText(json_encode($data));
                     sleep(1);
+                    $this->sendMsg($msg, 186);      // to LiuYJ
                 }
             }
         }
