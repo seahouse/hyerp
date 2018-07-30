@@ -357,6 +357,16 @@
                                         else
                                             location.href = "{{ url('/mapproval') }}";
                                     }
+                                    else if ("{!! array_get($config, 'appname') !!}" == "erp")
+                                    {
+                                        var url = '{!! $url !!}';
+                                        if ('{!! $url !!}' != '')
+                                        {
+                                            location.href = "{!! url('/') !!}" + "/" + url;
+                                        }
+                                        else
+                                            location.href = "{{ url('/') }}";
+                                    }
                                     // else
                                     // 	console.log('else ~~');
                                 },
