@@ -640,6 +640,10 @@ class ApprovalController extends Controller
                 'value'     => $inputs['project_name'],
             ],
             [
+                'name'      => '项目吨数',
+                'value'     => $inputs['projecttonnage'],
+            ],
+            [
                 'name'      => '下发图纸审批单号',
                 'value'     => $inputs['issuedrawing_numbers'],
             ],

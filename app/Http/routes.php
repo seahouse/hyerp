@@ -506,6 +506,13 @@ Route::group(['prefix' => 'teaching', 'namespace' => 'Teaching', 'middleware' =>
     // Route::resource('approvaltypes', 'ApprovaltypesController');
 });
 
+Route::group(['prefix' => 'my', 'namespace' => 'My', 'middleware' => ['web', 'auth']], function() {
+    Route::group(['prefix' => 'bonus'], function() {
+        Route::any('', 'MyController@bonus');
+//        Route::any('search', 'MyController@searchbonus');
+    });
+});
+
 Route::group(['middleware' => 'web'], function () {
     Route::auth();
 

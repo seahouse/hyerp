@@ -33,11 +33,13 @@
     </style>
 </head>
 <body id="app-layout">
-    @include('layouts.nav')
 
     {{-- do not consider Dingtalk agnet, by liangyi, 2018/7/30 --}}
     @if (!str_contains(Agent::getUserAgent(), 'DingTalk'))
-
+        @include('layouts.nav')
+        {{--@include('layouts.nav_dingtalk')--}}
+    @else
+        @include('layouts.nav_dingtalk')
     @endif
 
     @yield('content')
