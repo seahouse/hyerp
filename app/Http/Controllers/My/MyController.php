@@ -68,7 +68,10 @@ class MyController extends Controller
 
 
         if (isset(Auth::user()->userold))
-            $query->where('vorder.salesmanager_id', Auth::user()->userold->user_hxold_id);
+        {
+            $query->where('vorder.salesmanager_id', 26);
+//            $query->where('vorder.salesmanager_id', Auth::user()->userold->user_hxold_id);
+        }
 
 //        if (strlen($key) > 0)
 //        {
