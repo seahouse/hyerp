@@ -86,7 +86,7 @@
                         {{ substr($item->date, 0, 10) }}
                     </td>
                     <td>
-                        {{ $item->order_bonusfactor }}
+                        {{ $item->sohead->getBonusfactorByPolicy() }}
                     </td>
                     <td>
                         {{--{{ $item->bonus }}--}}
