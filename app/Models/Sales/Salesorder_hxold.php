@@ -178,7 +178,7 @@ class Salesorder_hxold extends Model
 
     private function getBonusfactorByReceiptpaymentPercent($mixbonusfactor, $maxbonusfactor)
     {
-        $bonusfactor = $maxbonusfactor;
+        $bonusfactor = $mixbonusfactor;
         $offset = ($maxbonusfactor - $mixbonusfactor) / 4;
         if ($this->amount > 0.0)
         {
@@ -186,14 +186,17 @@ class Salesorder_hxold extends Model
             $poheadamounttotal = $this->poheads_simple->sum('amount') / 10000.0;
             $receiptpaymenttotal = $this->receiptpayments->sum('amount');
             $poheadamounpercent = $poheadamounttotal / $amount;
-            if ($poheadamounpercent >= 0.5 && $poheadamounpercent < 0.6)
-                $bonusfactor = $bonusfactor - $offset;
-            elseif ($poheadamounpercent >= 0.6 && $poheadamounpercent < 0.7)
-                $bonusfactor = $bonusfactor - $offset * 2;
-            elseif ($poheadamounpercent >= 0.7 && $poheadamounpercent < 0.8)
-                $bonusfactor = $bonusfactor - $offset * 3;
-            elseif ($poheadamounpercent / $amount >= 0.8)
-                $bonusfactor = $mixbonusfactor;
+            if ($receiptpaymenttotal / $amount >= 0.6)
+            {
+                if ($poheadamounpercent >= 0.5 && $poheadamounpercent < 0.6)
+                    $bonusfactor = $bonusfactor - $offset;
+                elseif ($poheadamounpercent >= 0.6 && $poheadamounpercent < 0.7)
+                    $bonusfactor = $bonusfactor - $offset * 2;
+                elseif ($poheadamounpercent >= 0.7 && $poheadamounpercent < 0.8)
+                    $bonusfactor = $bonusfactor - $offset * 3;
+                elseif ($poheadamounpercent / $amount >= 0.8)
+                    $bonusfactor = $mixbonusfactor;
+            }
         }
         return $bonusfactor;
     }

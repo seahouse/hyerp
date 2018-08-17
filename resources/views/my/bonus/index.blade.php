@@ -46,7 +46,7 @@
 
 
     @if ($items->count())
-
+    <?php $totalbonus = 0.0; ?>
     <table id="userDataTable" class="table table-striped table-hover table-condensed">
         <thead>
             <tr>
@@ -89,13 +89,16 @@
                         {{ $item->sohead->getBonusfactorByPolicy() }}
                     </td>
                     <td>
-                        {{--{{ $item->bonus }}--}}
                         {{--{{ dd(array_first($item->sohead->getAmountpertenthousandBySohead())) }}--}}
-                        {{ $item->amount * $item->sohead->getBonusfactorByPolicy() * array_first($item->sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead }}
+                        <?php
+                            $bonus = $item->amount * $item->sohead->getBonusfactorByPolicy() * array_first($item->sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+                            $totalbonus += $bonus;
+                        ?>
+                        {{ $bonus }}
                     </td>
                     {{--
                     <td>
-                        {{ $item->sohead->poheads_simple->sum('amount') / 10000.0 / $item->sohead->amount }}
+                        {{ $item->sohead->receiptpayments->sum('amount') / $item->sohead->amount }}
                     </td>
                     --}}
                     {{--
@@ -167,7 +170,8 @@
                 <td></td>
                 <td></td>
                 <td>
-                    {{ number_format($items->sum('bonus'), 2) }}
+                    {{--{{ number_format($items->sum('bonus'), 2) }}--}}
+                    {{ $totalbonus }}
                 </td>
                 {{--
                 <td>
