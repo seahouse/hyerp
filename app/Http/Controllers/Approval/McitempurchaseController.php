@@ -192,8 +192,8 @@ class McitempurchaseController extends Controller
         $input['issuedrawing_weights'] = implode("+", $issuedrawing_weights) . "=" . array_sum($issuedrawing_weights);
         $input['issuedrawing_overviews'] = implode("\n", $issuedrawing_overviews);
 
-        $projecttonnagetotal = Issuedrawing::where('sohead_id', $input['sohead_id'])->sum('tonnage');
-        $mcitempurchaseidlist = Mcitempurchase::where('sohead_id', $input['sohead_id'])->pluck('id');
+        $projecttonnagetotal = Issuedrawing::where('sohead_id', $input['sohead_id'])->where('status', 0)->sum('tonnage');
+        $mcitempurchaseidlist = Mcitempurchase::where('sohead_id', $input['sohead_id'])->where('status', 0)->pluck('id');
         $projecttonnagedonetotal = Mcitempurchaseitem::whereIn('mcitempurchase_id', $mcitempurchaseidlist)->sum('weight');
         $input['projecttonnage'] = '项目总吨数' . $projecttonnagetotal . '吨，已申购' . $projecttonnagedonetotal . '吨。';
 
