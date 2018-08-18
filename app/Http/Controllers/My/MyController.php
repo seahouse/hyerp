@@ -69,7 +69,7 @@ class MyController extends Controller
 
         if (isset(Auth::user()->userold))
         {
-            $query->where('vorder.salesmanager_id', 26);
+            $query->where('vorder.salesmanager_id', 15);
 //            $query->where('vorder.salesmanager_id', Auth::user()->userold->user_hxold_id);
         }
 
