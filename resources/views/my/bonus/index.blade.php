@@ -86,7 +86,7 @@
                         {{ substr($item->date, 0, 10) }}
                     </td>
                     <td>
-                        {{ $item->sohead->getBonusfactorByPolicy() }}
+                        {{ $item->sohead->getBonusfactorByPolicy() * 100.0 . '%' }}
                     </td>
                     <td>
                         {{--{{ dd(array_first($item->sohead->getAmountpertenthousandBySohead())) }}--}}
