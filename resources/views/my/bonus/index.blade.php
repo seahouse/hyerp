@@ -50,8 +50,8 @@
     <table id="userDataTable" class="table table-striped table-hover table-condensed">
         <thead>
             <tr>
-                <th>项目编号</th>
-                <th>客户</th>
+                <th>订单名称</th>
+                <th>订单金额</th>
 
                 <th>区间收款</th>
                 <th>收款日期</th>
@@ -74,10 +74,10 @@
             @foreach($items as $item)
                 <tr>
                     <td>
-                        {{ $item->order_number }}
+                        {{ $item->sohead->projectjc }}
                     </td>
                     <td>
-                        {{ $item->customer_name }}
+                        {{ $item->sohead->amount }}
                     </td>
                     <td>
                         {{ $item->amount }}
