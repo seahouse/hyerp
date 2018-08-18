@@ -47,6 +47,7 @@
 
     @if ($items->count())
     <?php $totalbonus = 0.0; ?>
+    <?php $totalaamountperiod = 0.0; ?>
     <table id="userDataTable" class="table table-striped table-hover table-condensed">
         <thead>
             <tr>
@@ -77,10 +78,12 @@
                         {{ $item->sohead->projectjc }}
                     </td>
                     <td>
-                        {{ $item->sohead->amount }}
+                        {{ number_format($item->sohead->amount, 4)  }}
                     </td>
                     <td>
-                        {{ $item->amount }}
+                        <?php $amountperiod = $item->amount; ?>
+                        <?php $totalaamountperiod += $amountperiod; ?>
+                        {{ number_format($amountperiod, 4) }}
                     </td>
                     <td>
                         {{ substr($item->date, 0, 10) }}
@@ -166,7 +169,7 @@
             <tr class="info">
                 <td>合计</td>
                 <td></td>
-                <td></td>
+                <td>{{ $totalaamountperiod }}</td>
                 <td></td>
                 <td></td>
                 <td>
