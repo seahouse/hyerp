@@ -79,8 +79,12 @@ class Salesorder_hxold extends Model
         return $this->belongsToMany('App\Models\Sales\Equipmenttype_hxold', 'equipmenttypeass', 'equipmenttypeass_order_id', 'equipmenttypeass_equipmenttype_id');
     }
 
-    // 奖金系数/折扣，根据政策动态生成，不取字段值
+    // 奖金系数/折扣 如果没有字段值，则根据政策动态生成，不取字段值
+
     public function getBonusfactorByPolicy() {
+        if ($this->bonusfactor > 0.0)
+            return $this->bonusfactor;
+        
         $bonusfactor = 0.0;
         $equipmenttype = $this->equipmenttypes->first();
         if (isset($equipmenttype))
