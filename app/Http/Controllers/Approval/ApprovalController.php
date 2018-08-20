@@ -786,7 +786,7 @@ class ApprovalController extends Controller
                         'value'     => $value->type,
                     ],
                     [
-                        'name'      => '单价明细',
+                        'name'      => '奖金明细',
                         'value'     => $inputs[$value->unitprice_inputname],
                     ],
                     [
