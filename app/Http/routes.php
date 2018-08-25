@@ -509,8 +509,14 @@ Route::group(['prefix' => 'teaching', 'namespace' => 'Teaching', 'middleware' =>
 Route::group(['prefix' => 'my', 'namespace' => 'My', 'middleware' => ['web', 'auth']], function() {
     Route::group(['prefix' => 'bonus'], function() {
         Route::any('', 'MyController@bonus');
+        Route::any('byorder', 'MyController@bonusbyorder');
+        Route::get('indexjsonbyorder', 'MyController@indexjsonbyorder');
+        Route::get('detailjsonbyorder/{sohead_id}', 'MyController@detailjsonbyorder');
 //        Route::any('search', 'MyController@searchbonus');
     });
+//    Route::group(['prefix' => 'bonusbyorder'], function() {
+//        Route::get('', 'MyController@bonusbyorder');
+//    });
 });
 
 Route::group(['middleware' => 'web'], function () {

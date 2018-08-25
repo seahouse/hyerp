@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\My;
 
 use App\Models\Sales\Receiptpayment_hxold;
+use App\Models\Sales\Salesorder_hxold;
 use App\Models\System\Userold;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use DB, Auth;
+use DB, Auth, Datatables;
 
 class MyController extends Controller
 {
@@ -156,5 +157,75 @@ class MyController extends Controller
             ->paginate(10);
 
         return $items;
+    }
+
+    public function bonusbyorder()
+    {
+        $input = request()->all();
+//
+//        $query = Salesorder_hxold::latest('vorder.orderdate');
+//        $query->leftJoin('vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
+//        $query->leftJoin('outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
+//
+//
+//        if (isset(Auth::user()->userold))
+//            $query->where('vorder.salesmanager_id', 15);
+//
+//        $items = $query->select('vorder.*',
+//            'vcustomer.name as customer_name')
+//            ->paginate(10);
+
+        return view('my.bonus.index_byorder', compact('input'));
+    }
+
+    public function indexjsonbyorder()
+    {
+        $query = Salesorder_hxold::whereRaw('1=1');
+        $query->leftJoin('vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
+        $query->leftJoin('outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
+
+//        $query->whereRaw('vreceiptpayment.date between \'2018/1/1\' and \'2018/8/1\'');
+
+        if (isset(Auth::user()->userold))
+            $query->where('vorder.salesmanager_id', 15);
+
+//        $items = $query->select('vorder.*',
+//            'vcustomer.name as customer_name')
+//            ->paginate(10);
+
+        return Datatables::of($query->select('vorder.*', DB::raw('(select SUM(amount) from vreceiptpayment where sohead_id=vorder.id) as amountperiod'),
+            'vcustomer.name as customer_name'))
+            ->addColumn('bonusfactor', function (Salesorder_hxold $sohead) {
+                return $sohead->getBonusfactorByPolicy() * 100.0 . '%';
+            })
+            ->addColumn('bonus', function (Salesorder_hxold $sohead) {
+                return $sohead->receiptpayments->sum('amount') * $sohead->getBonusfactorByPolicy() * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+            })->make(true);
+
+//        $paymentrequests = Paymentrequest::latest('created_at')->paginate(10);
+//        dd($paymentrequests);
+//        $data = [
+//            'draw' => 1,
+//            'recordsTotal'  => 300,
+//            'recordsFiltered'   =>300,
+//        ];
+//        return json_encode($data);
+    }
+
+    public function detailjsonbyorder($sohead_id)
+    {
+        $query = Receiptpayment_hxold::whereRaw('1=1');
+        $query->where('sohead_id', $sohead_id);
+//        $query->leftJoin('vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
+//        $query->leftJoin('outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
+
+//        $query->whereRaw('vreceiptpayment.date between \'2018/1/1\' and \'2018/8/1\'');
+
+
+//        $items = $query->select('vorder.*',
+//            'vcustomer.name as customer_name')
+//            ->paginate(10);
+
+        return Datatables::of($query->select('vreceiptpayment.*', Db::raw('convert(varchar(100), vreceiptpayment.date, 23) as receiptdate')))->make(true);
     }
 }

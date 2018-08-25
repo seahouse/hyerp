@@ -161,6 +161,7 @@
 
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="{{ url('/my/bonus') }}"><i class="fa fa-btn fa-sign-out"></i>我的提成</a></li>
+                            <li><a href="{{ url('/my/bonusbyorder') }}"><i class="fa fa-btn fa-sign-out"></i>我的提成（按订单）</a></li>
                             @if (Auth::user()->email == "admin@admin.com")
                                 <li><a href="{{ url('/changeuser') }}"><i class="fa fa-btn fa-sign-out"></i>切换用户</a></li>
                             @endif
