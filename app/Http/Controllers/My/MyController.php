@@ -186,8 +186,8 @@ class MyController extends Controller
 
 //        $query->whereRaw('vreceiptpayment.date between \'2018/1/1\' and \'2018/8/1\'');
 
-        if (isset(Auth::user()->userold))
-            $query->where('vorder.salesmanager_id', 15);
+//        if (isset(Auth::user()->userold))
+//            $query->where('vorder.salesmanager_id', 15);
 
 //        $items = $query->select('vorder.*',
 //            'vcustomer.name as customer_name')
