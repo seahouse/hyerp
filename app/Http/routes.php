@@ -232,6 +232,12 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
     });
     Route::resource('custinfos', 'CustinfosController');
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexsales');
+    Route::group(['prefix' => '{sohead_id}/bonuspayment'], function () {
+//        Route::get('/', 'ReceiptpaymentsController@index');
+        Route::get('create', 'BonuspaymentController@create');
+        Route::post('store', 'BonuspaymentController@store');
+//        Route::delete('destroy/{receiptpayment}', 'ReceiptpaymentsController@destroy');
+    });
 });
 
 Route::group(['prefix' => 'sales', 'namespace' => 'Sales'], function() {

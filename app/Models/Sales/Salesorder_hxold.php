@@ -217,4 +217,8 @@ class Salesorder_hxold extends Model
 //        return 250;
         return DB::connection('sqlsrv')->select('select dbo.getAmountpertenthousandBySohead(' . $this->id . ') as amountpertenthousandbysohead');
     }
+
+    public function bonuspayments() {
+        return $this->hasMany('App\Models\Sales\Bonuspayment_hxold', 'sohead_id', 'id');
+    }
 }

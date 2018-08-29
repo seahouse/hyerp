@@ -200,6 +200,12 @@ class MyController extends Controller
             })
             ->addColumn('bonus', function (Salesorder_hxold $sohead) {
                 return $sohead->receiptpayments->sum('amount') * $sohead->getBonusfactorByPolicy() * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+            })
+            ->addColumn('bonuspaid', function (Salesorder_hxold $sohead) {
+                return $sohead->bonuspayments->sum('amount');
+            })
+            ->addColumn('paybonus', function (Salesorder_hxold $sohead) {
+                return '<a href="'. url('sales/' . $sohead->id . '/bonuspayment/create') .'" target="_blank" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> 支付</a>';
             })->make(true);
 
 //        $paymentrequests = Paymentrequest::latest('created_at')->paginate(10);
@@ -226,6 +232,12 @@ class MyController extends Controller
 //            'vcustomer.name as customer_name')
 //            ->paginate(10);
 
-        return Datatables::of($query->select('vreceiptpayment.*', Db::raw('convert(varchar(100), vreceiptpayment.date, 23) as receiptdate')))->make(true);
+        return Datatables::of($query->select('vreceiptpayment.*', Db::raw('convert(varchar(100), vreceiptpayment.date, 23) as receiptdate')))
+            ->addColumn('bonusfactor', function (Receiptpayment_hxold $receiptpayment) {
+                return $receiptpayment->sohead->getBonusfactorByPolicy() * 100.0 . '%';
+            })
+            ->addColumn('bonus', function (Receiptpayment_hxold $receiptpayment) {
+                return $receiptpayment->amount * $receiptpayment->sohead->getBonusfactorByPolicy() * array_first($receiptpayment->sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+            })->make(true);
     }
 }

@@ -69,6 +69,7 @@
             <th>奖金系数</th>
             <th>应发奖金</th>
             <th>已发奖金</th>
+            <th>支付奖金</th>
         </tr>
         </thead>
     </table>
@@ -112,6 +113,8 @@
                     '<tr>' +
                     '<th>收款日期</th>' +
                     '<th>收款金额</th>' +
+                    '<th>奖金系数</th>' +
+                    '<th>应发奖金</th>' +
                     '</tr>'+
                     '</thead>'+
                     '</table>';
@@ -136,6 +139,8 @@
                     {"data": "amountperiod", "name": "amountperiod"},
                     {"data": "bonusfactor", "name": "bonusfactor"},
                     {"data": "bonus", "name": "bonus"},
+                    {"data": "bonuspaid", "name": "bonuspaid"},
+                    {"data": "paybonus", "name": "paybonus"},
                 ],
 //                "fnCreatedRow": function(nRow, aData, iDataIndex) {
 //                    $('td:eq(0)', nRow).html("<span class='row-details row-details-close' data_id='" + aData[1] + "'></span>&nbsp;" + aData[0]);
@@ -168,7 +173,9 @@
                     ajax: "{{ url('my/bonus/detailjsonbyorder') }}/" + data.id,
                     columns: [
                         { data: 'receiptdate', name: 'receiptdate' },
-                        { data: 'amount', name: 'amount' }
+                        { data: 'amount', name: 'amount' },
+                        { data: 'bonusfactor', name: 'bonusfactor' },
+                        { data: 'bonus', name: 'bonus' },
                     ]
                 })
             }
