@@ -205,7 +205,7 @@ class MyController extends Controller
                 return $sohead->bonuspayments->sum('amount');
             })
             ->addColumn('paybonus', function (Salesorder_hxold $sohead) {
-                return '<a href="'. url('sales/' . $sohead->id . '/bonuspayment/create') .'" target="_blank" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> 支付</a>';
+                return '<a href="'. url('sales/' . $sohead->id . '/bonuspayment/create') .'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> 支付</a>';
             })->make(true);
 
 //        $paymentrequests = Paymentrequest::latest('created_at')->paginate(10);
