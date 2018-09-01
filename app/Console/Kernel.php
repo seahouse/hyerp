@@ -23,6 +23,7 @@ class Kernel extends ConsoleKernel
         Commands\PadcapitalStatistics::class,
         Commands\SupplierticketReminder::class,
         Commands\DeleteExpirationApproval::class,
+        Commands\ReceiptrepeatReminder::class,
     ];
 
     /**
