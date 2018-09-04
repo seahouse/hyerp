@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Http\Controllers\DingTalkController;
 use App\Models\Sales\Receiptpayment_hxold;
 use App\Models\System\User;
+use App\Models\System\Userold;
 use Illuminate\Console\Command;
 use Log;
 
