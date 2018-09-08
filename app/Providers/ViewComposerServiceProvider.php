@@ -166,6 +166,11 @@ class ViewComposerServiceProvider extends ServiceProvider
         view()->composer(array('approval.mcitempurchases.mcreate'), function($view) {
             $view->with('unitList_hxold', \App\Models\Product\Unit_hxold::orderby('id', 'asc')->lists('name', 'id'));
         });
+
+        // salesmanagerList_hxold
+        view()->composer(array('my.bonus.index_byorder'), function($view) {
+            $view->with('salesmanagerList_hxold', \App\Models\Sales\Salesorder_hxold::orderby('id', 'asc')->lists('salesmanager', 'salesmanager'));
+        });
     }
 
     /**

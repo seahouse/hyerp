@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use DB, Auth, Datatables;
+use DB, Auth, Datatables, Log;
 
 class MyController extends Controller
 {
@@ -178,11 +178,18 @@ class MyController extends Controller
         return view('my.bonus.index_byorder', compact('input'));
     }
 
-    public function indexjsonbyorder()
+    public function indexjsonbyorder(Request $request)
     {
         $query = Salesorder_hxold::whereRaw('1=1');
         $query->leftJoin('vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
         $query->leftJoin('outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
+
+//        $input = $request->all();
+//        Log::info($request->get('salesmanager'));
+//        if ($request->has('receivedatestart') && $request->has('receivedateend'))
+//        {
+//            $query->whereRaw('vreceiptpayment.date between \'' . $request->input('receivedatestart') . '\' and \'' . $request->input('receivedateend')  . '\'');
+//        }
 
 //        $query->whereRaw('vreceiptpayment.date between \'2018/1/1\' and \'2018/8/1\'');
 
@@ -195,11 +202,43 @@ class MyController extends Controller
 
         return Datatables::of($query->select('vorder.*', DB::raw('(select SUM(amount) from vreceiptpayment where sohead_id=vorder.id) as amountperiod'),
             'vcustomer.name as customer_name'))
+            ->filter(function ($query) use ($request) {
+                if ($request->has('salesmanager') && strlen($request->get('salesmanager')) > 0) {
+                    $query->where('vorder.salesmanager', "{$request->get('salesmanager')}");
+                }
+
+//                if ($request->has('email')) {
+//                    $query->where('email', 'like', "%{$request->get('email')}%");
+//                }
+            })
+            ->addColumn('amountperiod2', function (Salesorder_hxold $sohead) use ($request) {
+                if ($request->has('receivedatestart') && $request->has('receivedateend'))
+                {
+                    return $sohead->receiptpayments->sum(function ($receiptpayment) use ($request) {
+                        if ($receiptpayment->date >= $request->get('receivedatestart') && $receiptpayment->date <= $request->get('receivedateend'))
+                            return $receiptpayment->amount;
+                        else
+                            return 0.0;
+                    });
+                }
+                else
+                    return $sohead->receiptpayments->sum('amount');
+            })
             ->addColumn('bonusfactor', function (Salesorder_hxold $sohead) {
                 return $sohead->getBonusfactorByPolicy() * 100.0 . '%';
             })
-            ->addColumn('bonus', function (Salesorder_hxold $sohead) {
-                return $sohead->receiptpayments->sum('amount') * $sohead->getBonusfactorByPolicy() * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+            ->addColumn('bonus', function (Salesorder_hxold $sohead) use ($request) {
+                if ($request->has('receivedatestart') && $request->has('receivedateend'))
+                {
+                    return $sohead->receiptpayments->sum(function ($receiptpayment) use ($request, $sohead) {
+                        if ($receiptpayment->date >= $request->get('receivedatestart') && $receiptpayment->date <= $request->get('receivedateend'))
+                            return $receiptpayment->amount * $sohead->getBonusfactorByPolicy() * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+                        else
+                            return 0.0;
+                    });
+                }
+                else
+                    return $sohead->receiptpayments->sum('amount') * $sohead->getBonusfactorByPolicy() * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
             })
             ->addColumn('bonuspaid', function (Salesorder_hxold $sohead) {
                 return $sohead->bonuspayments->sum('amount');
@@ -218,7 +257,7 @@ class MyController extends Controller
 //        return json_encode($data);
     }
 
-    public function detailjsonbyorder($sohead_id)
+    public function detailjsonbyorder(Request $request, $sohead_id)
     {
         $query = Receiptpayment_hxold::whereRaw('1=1');
         $query->where('sohead_id', $sohead_id);
@@ -233,6 +272,11 @@ class MyController extends Controller
 //            ->paginate(10);
 
         return Datatables::of($query->select('vreceiptpayment.*', Db::raw('convert(varchar(100), vreceiptpayment.date, 23) as receiptdate')))
+            ->filter(function ($query) use ($request) {
+                if ($request->has('receivedatestart') && $request->has('receivedateend')) {
+                    $query->whereRaw('vreceiptpayment.date between \'' . $request->get('receivedatestart') . '\' and \'' . $request->get('receivedateend') . '\'');
+                }
+            })
             ->addColumn('bonusfactor', function (Receiptpayment_hxold $receiptpayment) {
                 return $receiptpayment->sohead->getBonusfactorByPolicy() * 100.0 . '%';
             })

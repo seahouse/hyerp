@@ -36,8 +36,9 @@
             </form>
         @endif
 
-        {!! Form::open(['url' => '/my/bonus', 'class' => 'pull-right form-inline']) !!}
+        {!! Form::open(['url' => '/my/bonus/byorder', 'class' => 'pull-right form-inline', 'id' => 'frmSearch']) !!}
         <div class="form-group-sm">
+            {!! Form::select('salesmanager', $salesmanagerList_hxold, null, ['class' => 'form-control', 'placeholder' => '--销售经理--', 'id' => 'salesmanager']) !!}
             {!! Form::label('receivedatelabel', '收款时间:', ['class' => 'control-label']) !!}
             {!! Form::date('receivedatestart', null, ['class' => 'form-control']) !!}
             {!! Form::label('receiveldatelabelto', '-', ['class' => 'control-label']) !!}
@@ -64,6 +65,7 @@
             <th>订单编号</th>
             <th>订单名称</th>
             <th>订单金额</th>
+            <th>销售经理</th>
 
             <th>区间收款</th>
             <th>奖金系数</th>
@@ -124,7 +126,15 @@
             var table = $('#userDataTable').DataTable({
                 "processing": true,
                 "serverSide": true,
-                "ajax": "{{ url('my/bonus/indexjsonbyorder') }}",
+                {{--"ajax": "{{ url('my/bonus/indexjsonbyorder') }}",--}}
+                "ajax": {
+                    "url": "{{ url('my/bonus/indexjsonbyorder') }}",
+                    "data": function (d) {
+                        d.salesmanager = $('select[name=salesmanager]').val();
+                        d.receivedatestart = $('input[name=receivedatestart]').val();
+                        d.receivedateend = $('input[name=receivedateend]').val();
+                    }
+                },
                 "columns": [
                     {
                         "className":      'details-control',
@@ -136,7 +146,8 @@
                     {"data": "number", "name": "number"},
                     {"data": "projectjc", "name": "projectjc"},
                     {"data": "amount", "name": "amount"},
-                    {"data": "amountperiod", "name": "amountperiod"},
+                    {"data": "salesmanager", "name": "salesmanager"},
+                    {"data": "amountperiod2", "name": "amountperiod2"},
                     {"data": "bonusfactor", "name": "bonusfactor"},
                     {"data": "bonus", "name": "bonus"},
                     {"data": "bonuspaid", "name": "bonuspaid"},
@@ -170,7 +181,14 @@
                 $('#' + tableId).DataTable({
                     processing: true,
                     serverSide: true,
-                    ajax: "{{ url('my/bonus/detailjsonbyorder') }}/" + data.id,
+                    {{--ajax: "{{ url('my/bonus/detailjsonbyorder') }}/" + data.id,--}}
+                    "ajax": {
+                        "url": "{{ url('my/bonus/detailjsonbyorder') }}/" + data.id,
+                        "data": function (d) {
+                            d.receivedatestart = $('input[name=receivedatestart]').val();
+                            d.receivedateend = $('input[name=receivedateend]').val();
+                        }
+                    },
                     columns: [
                         { data: 'receiptdate', name: 'receiptdate' },
                         { data: 'amount', name: 'amount' },
@@ -178,7 +196,12 @@
                         { data: 'bonus', name: 'bonus' },
                     ]
                 })
-            }
+            };
+
+            $('#frmSearch').on('submit', function (e) {
+                table.draw();
+                e.preventDefault();
+            })
         });
     </script>
 @endsection
