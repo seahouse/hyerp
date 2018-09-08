@@ -5,6 +5,7 @@ namespace App\Http\Controllers\My;
 use App\Models\Sales\Receiptpayment_hxold;
 use App\Models\Sales\Salesorder_hxold;
 use App\Models\System\Userold;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -224,15 +225,18 @@ class MyController extends Controller
                 else
                     return $sohead->receiptpayments->sum('amount');
             })
-            ->addColumn('bonusfactor', function (Salesorder_hxold $sohead) {
-                return $sohead->getBonusfactorByPolicy() * 100.0 . '%';
+            ->addColumn('bonusfactor', function (Salesorder_hxold $sohead) use ($request) {
+                if ($request->has('receivedatestart') && $request->has('receivedateend'))
+                    return $sohead->getBonusfactorByPolicy($request->get('receivedateend')) * 100.0 . '%';
+                else
+                    return $sohead->getBonusfactorByPolicy() * 100.0 . '%';
             })
             ->addColumn('bonus', function (Salesorder_hxold $sohead) use ($request) {
                 if ($request->has('receivedatestart') && $request->has('receivedateend'))
                 {
                     return $sohead->receiptpayments->sum(function ($receiptpayment) use ($request, $sohead) {
                         if ($receiptpayment->date >= $request->get('receivedatestart') && $receiptpayment->date <= $request->get('receivedateend'))
-                            return $receiptpayment->amount * $sohead->getBonusfactorByPolicy() * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+                            return $receiptpayment->amount * $sohead->getBonusfactorByPolicy($request->get('receivedateend')) * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
                         else
                             return 0.0;
                     });

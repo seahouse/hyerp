@@ -24,6 +24,7 @@ class Kernel extends ConsoleKernel
         Commands\SupplierticketReminder::class,
         Commands\DeleteExpirationApproval::class,
         Commands\ReceiptrepeatReminder::class,
+        Commands\BonusfactorStatistics::class,
     ];
 
     /**

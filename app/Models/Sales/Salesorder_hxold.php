@@ -2,8 +2,9 @@
 
 namespace App\Models\Sales;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use DB;
+use DB, Log;
 
 class Salesorder_hxold extends Model
 {
@@ -80,8 +81,13 @@ class Salesorder_hxold extends Model
     }
 
     // 奖金系数/折扣 如果没有字段值，则根据政策动态生成，不取字段值
-
-    public function getBonusfactorByPolicy() {
+    public function getBonusfactorByPolicy($date = '') {
+        if (strlen($date) > 0)
+        {
+            $bonusfactor_hxold = Bonusfactor_hxold::where('sohead_id', $this->id)->where('date', Carbon::parse($date))->first();
+            if ($bonusfactor_hxold)
+                return $bonusfactor_hxold->value;
+        }
         if ($this->bonusfactor > 0.0)
             return $this->bonusfactor;
         
