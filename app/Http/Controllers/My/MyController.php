@@ -4,6 +4,7 @@ namespace App\Http\Controllers\My;
 
 use App\Models\Sales\Receiptpayment_hxold;
 use App\Models\Sales\Salesorder_hxold;
+use App\Models\System\Employee_hxold;
 use App\Models\System\Userold;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -287,5 +288,106 @@ class MyController extends Controller
             ->addColumn('bonus', function (Receiptpayment_hxold $receiptpayment) {
                 return $receiptpayment->amount * $receiptpayment->sohead->getBonusfactorByPolicy() * array_first($receiptpayment->sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
             })->make(true);
+    }
+
+    public function bonusbysalesmanager()
+    {
+        return view('my.bonus.index_bonusbysalesmanager');
+    }
+
+    public function indexjsonbysalesmanager(Request $request)
+    {
+        $query = Employee_hxold::where('dept_id', 3);
+//        $query->leftJoin('vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
+//        $query->leftJoin('outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
+
+
+        return Datatables::of($query->select('vemployee.*'))
+//            ->filter(function ($query) use ($request) {
+//                if ($request->has('salesmanager') && strlen($request->get('salesmanager')) > 0) {
+//                    $query->where('vorder.salesmanager', "{$request->get('salesmanager')}");
+//                }
+//
+////                if ($request->has('email')) {
+////                    $query->where('email', 'like', "%{$request->get('email')}%");
+////                }
+//            })
+            ->addColumn('orderamounttotal', function (Employee_hxold $salesmanager) use ($request) {
+                return Salesorder_hxold::where('salesmanager_id', $salesmanager->id)->sum('amount');
+            })
+            ->addColumn('receiptamountperiod', function (Employee_hxold $salesmanager) use ($request) {
+                $soheads = Salesorder_hxold::where('salesmanager_id', $salesmanager->id)->get();
+                $receiptamountperiod = 0.0;
+                foreach ($soheads as $sohead)
+                {
+                    if ($request->has('receivedatestart') && $request->has('receivedateend'))
+                    {
+                        $receiptamountperiod += $sohead->receiptpayments->sum(function ($receiptpayment) use ($request, &$receiptamountperiod) {
+                            if ($receiptpayment->date >= $request->get('receivedatestart') && $receiptpayment->date <= $request->get('receivedateend'))
+                                $receiptamountperiod += $receiptpayment->amount;
+                            else
+                                $receiptamountperiod += 0.0;
+                        });
+                    }
+                    else
+                        $receiptamountperiod += $sohead->receiptpayments->sum('amount');
+                }
+                return $receiptamountperiod;
+            })
+//            ->addColumn('bonusfactor', function (Salesorder_hxold $sohead) use ($request) {
+//                if ($request->has('receivedatestart') && $request->has('receivedateend'))
+//                    return $sohead->getBonusfactorByPolicy($request->get('receivedateend')) * 100.0 . '%';
+//                else
+//                    return $sohead->getBonusfactorByPolicy() * 100.0 . '%';
+//            })
+            ->addColumn('bonus', function (Employee_hxold $salesmanager) use ($request) {
+                $soheads = Salesorder_hxold::where('salesmanager_id', $salesmanager->id)->get();
+                $bonus = 0.0;
+                foreach ($soheads as $sohead)
+                {
+                    if ($request->has('receivedatestart') && $request->has('receivedateend'))
+                    {
+                        $bonus += $sohead->receiptpayments->sum(function ($receiptpayment) use ($request, $sohead, &$bonus) {
+                            if ($receiptpayment->date >= $request->get('receivedatestart') && $receiptpayment->date <= $request->get('receivedateend'))
+                                $bonus += $receiptpayment->amount * $sohead->getBonusfactorByPolicy($request->get('receivedateend')) * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+                            else
+                                $bonus += 0.0;
+                        });
+                    }
+                    else
+                        $bonus += $sohead->receiptpayments->sum('amount') * $sohead->getBonusfactorByPolicy() * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+                }
+                return $bonus;
+            })
+            ->addColumn('bonuspaid', function (Employee_hxold $salesmanager) use ($request) {
+                $soheads = Salesorder_hxold::where('salesmanager_id', $salesmanager->id)->get();
+                $bonuspaid = 0.0;
+                foreach ($soheads as $sohead)
+                {
+                    $bonuspaid += $sohead->bonuspayments->sum('amount');
+                }
+                return $bonuspaid;
+            })
+            ->addColumn('bonuspaidperiod', function (Employee_hxold $salesmanager) use ($request) {
+                $soheads = Salesorder_hxold::where('salesmanager_id', $salesmanager->id)->get();
+                $bonuspaid = 0.0;
+                foreach ($soheads as $sohead)
+                {
+                    if ($request->has('receivedatestart') && $request->has('receivedateend'))
+                    {
+                        $bonuspaid += $sohead->bonuspayments->sum(function ($bonuspayment) use ($request, &$bonuspaid) {
+                            if ($bonuspayment->paymentdate >= $request->get('receivedatestart') && $bonuspayment->paymentdate <= $request->get('receivedateend'))
+                                $bonuspaid += $bonuspayment->amount;
+                            else
+                                $bonuspaid += 0.0;
+                        });
+                    }
+                    else
+                        $bonuspaid += $sohead->bonuspayments->sum('amount');
+                }
+                return $bonuspaid;
+            })
+            ->make(true);
+
     }
 }

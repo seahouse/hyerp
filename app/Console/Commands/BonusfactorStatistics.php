@@ -21,7 +21,7 @@ class BonusfactorStatistics extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = '统计: 统计销售订单当天的奖金折扣, 保存到指定的数据表';
 
     /**
      * Create a new command instance.

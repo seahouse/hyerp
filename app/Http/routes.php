@@ -232,6 +232,10 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
     });
     Route::resource('custinfos', 'CustinfosController');
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexsales');
+    Route::group(['prefix' => 'report2'], function() {
+        Route::get('bonusbysalesmanager', '\App\Http\Controllers\My\MyController@bonusbysalesmanager');
+    });
+    Route::any('', 'MyController@bonusbyorder');
     Route::group(['prefix' => '{sohead_id}/bonuspayment'], function () {
 //        Route::get('/', 'ReceiptpaymentsController@index');
         Route::get('create', 'BonuspaymentController@create');
@@ -518,6 +522,7 @@ Route::group(['prefix' => 'my', 'namespace' => 'My', 'middleware' => ['web', 'au
         Route::any('byorder', 'MyController@bonusbyorder');
         Route::get('indexjsonbyorder', 'MyController@indexjsonbyorder');
         Route::get('detailjsonbyorder/{sohead_id}', 'MyController@detailjsonbyorder');
+        Route::get('indexjsonbysalesmanager', 'MyController@indexjsonbysalesmanager');
 //        Route::any('search', 'MyController@searchbonus');
     });
 //    Route::group(['prefix' => 'bonusbyorder'], function() {
