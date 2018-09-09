@@ -297,7 +297,10 @@ class MyController extends Controller
 
     public function indexjsonbysalesmanager(Request $request)
     {
-        $query = Employee_hxold::where('dept_id', 3);
+        $query = Employee_hxold::where('dept_id', 3)
+            ->orWhere('id', 8)              // WuHL
+            ->orWhere('id', 16)             // LiY
+        ;
 //        $query->leftJoin('vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
 //        $query->leftJoin('outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
 
@@ -334,12 +337,6 @@ class MyController extends Controller
                 }
                 return $receiptamountperiod;
             })
-//            ->addColumn('bonusfactor', function (Salesorder_hxold $sohead) use ($request) {
-//                if ($request->has('receivedatestart') && $request->has('receivedateend'))
-//                    return $sohead->getBonusfactorByPolicy($request->get('receivedateend')) * 100.0 . '%';
-//                else
-//                    return $sohead->getBonusfactorByPolicy() * 100.0 . '%';
-//            })
             ->addColumn('bonus', function (Employee_hxold $salesmanager) use ($request) {
                 $soheads = Salesorder_hxold::where('salesmanager_id', $salesmanager->id)->get();
                 $bonus = 0.0;
