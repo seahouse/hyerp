@@ -171,6 +171,12 @@ class ViewComposerServiceProvider extends ServiceProvider
         view()->composer(array('my.bonus.index_byorder', 'my.bonus.index_bonusbysalesmanager'), function($view) {
             $view->with('salesmanagerList_hxold', \App\Models\Sales\Salesorder_hxold::orderby('id', 'asc')->lists('salesmanager', 'salesmanager'));
         });
+
+        // projectList
+        view()->composer(array('system.report.statisticsindex'), function($view) {
+            $view->with('projectList', \App\Models\Sales\Project_hxold::orderby('id', 'asc')->lists('name', 'id'));
+//            $view->with('poheadOrderDateyearList_hxold', DB::connection('sqlsrv')->select(DB::raw('select distinct datepart(year, orderdate) from vorder'))->lists('projectjc', 'id'));
+        });
     }
 
     /**

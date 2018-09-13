@@ -46,6 +46,8 @@
                 {!! Form::select('orderid', $poheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
             @elseif ($report->name == "so_amount_statistics")
                 {!! Form::select('dateyear', $poheadOrderDateyearList_hxold, null, ['class' => 'form-control', 'placeholder' => '--年份--']) !!}
+            @elseif ($report->name == "so_projectengineeringlist_statistics")
+                {!! Form::select('projectid', $projectList, null, ['class' => 'form-control', 'placeholder' => '--项目--']) !!}
             @endif
 
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
