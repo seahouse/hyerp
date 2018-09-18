@@ -1362,7 +1362,15 @@ class DingTalkController extends Controller
         if (count($departmentList) > 0)
             $dept_id = array_first($departmentList);
         $approvers = $inputs['approvers'];
-//        $approvers = $user->dtuserid;
+        $cc_list = config('custom.dingtalk.approversettings.issuedrawing.cc_list.' . $inputs['productioncompany']);
+        $cc_position = "FINISH";
+//        if (strlen($cc_list) == 0)
+//            $cc_list = config('custom.dingtalk.approversettings.mcitempurchase.cc_list.default');
+//        if ($cc_list <> "")
+//        {
+//            $req->setCcList($cc_list);
+//            $req->setCcPosition("FINISH");
+//        }
         $formdata = [
             [
                 'name'      => '设计部门',
@@ -1427,7 +1435,7 @@ class DingTalkController extends Controller
         Log::info('dept_id: ' . $dept_id);
         Log::info('approvers: ' . $approvers);
         $params = compact('method', 'session', 'v', 'format',
-            'process_code', 'originator_user_id', 'dept_id', 'approvers', 'form_component_values');
+            'process_code', 'originator_user_id', 'dept_id', 'approvers', 'cc_list', 'cc_position', 'form_component_values');
         $data = [
 //            'process_code' => '001'
         ];
