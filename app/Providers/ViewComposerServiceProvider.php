@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\System\Userold;
 use Illuminate\Support\ServiceProvider;
-use DB;
+use DB, Auth;
 
 class ViewComposerServiceProvider extends ServiceProvider
 {
@@ -175,6 +176,20 @@ class ViewComposerServiceProvider extends ServiceProvider
         // projectList
         view()->composer(array('system.report.statisticsindex'), function($view) {
             $view->with('projectList', \App\Models\Sales\Project_hxold::orderby('id', 'asc')->lists('name', 'id'));
+//            $view->with('poheadOrderDateyearList_hxold', DB::connection('sqlsrv')->select(DB::raw('select distinct datepart(year, orderdate) from vorder'))->lists('projectjc', 'id'));
+        });
+
+        // myprojectListByProjectengineer
+        view()->composer(array('system.report.statisticsindex'), function($view) {
+            $projectengineer_id = 0;
+            $user = Auth::user();
+            if ($user)
+            {
+                $userold = Userold::where('user_id', $user->id)->first();
+                if ($userold)
+                    $projectengineer_id = $userold->user_hxold_id;
+            }
+            $view->with('myprojectListByProjectengineer', \App\Models\Sales\Salesorder_hxold::where('projectengineer_id', $projectengineer_id)->orderby('id', 'asc')->lists('projectjc', 'id'));
 //            $view->with('poheadOrderDateyearList_hxold', DB::connection('sqlsrv')->select(DB::raw('select distinct datepart(year, orderdate) from vorder'))->lists('projectjc', 'id'));
         });
     }

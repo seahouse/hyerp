@@ -47,7 +47,7 @@
             @elseif ($report->name == "so_amount_statistics")
                 {!! Form::select('dateyear', $poheadOrderDateyearList_hxold, null, ['class' => 'form-control', 'placeholder' => '--年份--']) !!}
             @elseif ($report->name == "so_projectengineeringlist_statistics")
-                {!! Form::select('projectid', $projectList, null, ['class' => 'form-control', 'placeholder' => '--项目--']) !!}
+                {!! Form::select('projectid', $myprojectListByProjectengineer, null, ['class' => 'form-control', 'placeholder' => '--项目--']) !!}
             @endif
 
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
@@ -60,6 +60,10 @@
         @can('system_report_so_projectengineeringlist_statistics')
             <?php $hasright = true; ?>
         @endcan
+    @else
+        @if (Auth::user()->isSuperAdmin())
+            <?php $hasright = true; ?>
+        @endif
     @endif
 
     @if ($hasright)
@@ -98,5 +102,7 @@
             {{'无记录', [], 'layouts'}}
         </div>
         @endif
+    @else
+        无权限。
     @endif
 @stop
