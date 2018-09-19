@@ -55,41 +55,48 @@
         {!! Form::close() !!}
     </div>
 
-    
-    @if ($items->count())
-    <table class="table table-striped table-hover table-condensed">
-        <thead>
-            <tr>
-                @if (count($titleshows) > 1)
-                    @foreach($titleshows as $titleshow)
-                        <th>{{ $titleshow }}</th>
-                    @endforeach
-                @else
-                    @foreach(array_first($items->items()) as $key=>$value)
-                        <th>{{$key}}</th>
-                    @endforeach
-                @endif
-            </tr>
-        </thead>
-        <tbody>
-        @foreach($items as $item)
-            <tr>
-                @foreach($item as $value)
-                <td>
-                    {{ $value }}
-                </td>
-                @endforeach
-            </tr>
-        @endforeach
-        </tbody>
+    <?php $hasright = false; ?>
+    @if ($report->name == "so_projectengineeringlist_statistics")
+        @can('system_report_so_projectengineeringlist_statistics')
+            <?php $hasright = true; ?>
+        @endcan
+    @endif
 
-    </table>
-    {!! $items->setPath('/system/report/' . $report->id . '/statistics')->appends($input)->links() !!}
-    @else
-    <div class="alert alert-warning alert-block">
-        <i class="fa fa-warning"></i>
-        {{'无记录', [], 'layouts'}}
-    </div>
-    @endif    
+    @if ($hasright)
+        @if ($items->count())
+        <table class="table table-striped table-hover table-condensed">
+            <thead>
+                <tr>
+                    @if (count($titleshows) > 1)
+                        @foreach($titleshows as $titleshow)
+                            <th>{{ $titleshow }}</th>
+                        @endforeach
+                    @else
+                        @foreach(array_first($items->items()) as $key=>$value)
+                            <th>{{$key}}</th>
+                        @endforeach
+                    @endif
+                </tr>
+            </thead>
+            <tbody>
+            @foreach($items as $item)
+                <tr>
+                    @foreach($item as $value)
+                    <td>
+                        {{ $value }}
+                    </td>
+                    @endforeach
+                </tr>
+            @endforeach
+            </tbody>
 
+        </table>
+        {!! $items->setPath('/system/report/' . $report->id . '/statistics')->appends($input)->links() !!}
+        @else
+        <div class="alert alert-warning alert-block">
+            <i class="fa fa-warning"></i>
+            {{'无记录', [], 'layouts'}}
+        </div>
+        @endif
+    @endif
 @stop
