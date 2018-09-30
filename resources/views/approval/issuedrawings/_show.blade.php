@@ -100,6 +100,7 @@
     @endif
 --}}
 
+{{--
 <div class="modal fade" id="modifyweightModal" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -137,6 +138,7 @@
         </div>
     </div>
 </div>
+--}}
 
 <!-- when the approval status is passed, can modify tongue -->
     @if (Auth::user()->id == $issuedrawing->applicant_id and $issuedrawing->status == 0)

@@ -8,7 +8,7 @@
 <div class="form-group">
     {!! Form::label('module', '模块:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-        {!! Form::select('module', array('系统' => '系统', '销售' => '销售', '采购' => '采购', '库存' => '库存'), null, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
+        {!! Form::select('module', array('系统' => '系统', '销售' => '销售', '采购' => '采购', '库存' => '库存', '审批' => '审批'), null, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
     </div>
 </div>
 
