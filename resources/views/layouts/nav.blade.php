@@ -114,6 +114,7 @@
 @endif
                         <li role="separator" class="divider"></li>
                         <li><a href="/approval/approversettings">设置</a></li>
+                        <li><a href="/approval/report">报表</a></li>
                         @endcan
                     </ul>
                 </li>

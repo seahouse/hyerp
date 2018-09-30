@@ -424,6 +424,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::resource('pppaymentitemattachment', 'PppaymentitemattachmentController');
 
     Route::post('bingdingtalk', 'ApprovalController@bingdingtalk');
+    Route::get('report', '\App\Http\Controllers\System\ReportController@indexapproval');
 });
 
 Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' => ['web', 'auth']], function() {
