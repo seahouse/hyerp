@@ -126,7 +126,8 @@ class ViewComposerServiceProvider extends ServiceProvider
 
         // userList
         view()->composer(array('approval.approversettings.create', 'approval.approversettings.edit', 
-            'teaching.teachingadministrator.create', 'teaching.teachingadministrator.edit', 'purchase.payments.create_hxold'), function($view) {
+            'teaching.teachingadministrator.create', 'teaching.teachingadministrator.edit', 'purchase.payments.create_hxold',
+            'changeuser'), function($view) {
             $view->with('userList', \App\Models\System\User::orderby('id', 'asc')->lists('name', 'id'));
         });
 

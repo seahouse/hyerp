@@ -134,6 +134,8 @@ Route::group(['middleware' => ['web', 'auth']], function () {
         return redirect(url("uploads/approval/issuedrawing/$id/drawingattachments/$filename"));
     });
 
+    Route::get('changeuser', 'HelperController@changeuser');
+    Route::post('changeuser_store', 'HelperController@changeuser_store');
 });
 
 
@@ -537,7 +539,6 @@ Route::group(['middleware' => 'web'], function () {
     // for admin login
 //    Route::post('login2', 'Auth\AuthController@login2');
     Route::get('login2', 'Auth\AuthController@showLoginForm2');
-    Route::get('changeuser', 'HelperController@changeuser');
 //    Route::get('/home', 'HomeController@index');
 });
 
