@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\System\Report;
 use App\Models\Purchase\Purchaseorder_hxold;
 use App\Http\Controllers\HelperController;
-use DB, Excel;
+use DB, Excel, Gate, Auth;
 
 class ReportController extends Controller
 {
@@ -21,36 +21,56 @@ class ReportController extends Controller
     public function index()
     {
         //
-        $reports = Report::latest('created_at')->paginate(10);
-        return view('system.report.index', compact('reports'));
+        if (Auth::user()->email == 'admin@admin.com')
+        {
+            $reports = Report::latest('created_at')->paginate(10);
+            return view('system.report.index', compact('reports'));
+        }
+        else
+            dd('ddd');
+    }
+
+    public function indexmodule($module)
+    {
+        $query = Report::latest('created_at');
+        $query->where('module', $module)->where('active', 1);
+        if (Gate::denies('system_report_so_projectengineeringlist_statistics'))
+            $query->where('name', '<>', 'so_projectengineeringlist_statistics');
+        $reports = $query->paginate(10);
+        $readonly = true;
+        return view('system.report.index', compact('reports', 'readonly'));
     }
 
     public function indexpurchase()
     {
-        $reports = Report::latest('created_at')->where('module', '采购')->where('active', 1)->paginate(10);
-        $readonly = true;
-        return view('system.report.index', compact('reports', 'readonly'));
+//        $reports = Report::latest('created_at')->where('module', '采购')->where('active', 1)->paginate(10);
+        return $this->indexmodule('采购');
+//        $readonly = true;
+//        return view('system.report.index', compact('reports', 'readonly'));
     }
 
     public function indexsales()
     {
-        $reports = Report::latest('created_at')->where('module', '销售')->where('active', 1)->paginate(10);
-        $readonly = true;
-        return view('system.report.index', compact('reports', 'readonly'));
+        return $this->indexmodule('销售');
+//        $reports = Report::latest('created_at')->where('module', '销售')->where('active', 1)->paginate(10);
+//        $readonly = true;
+//        return view('system.report.index', compact('reports', 'readonly'));
     }
 
     public function indexinventory()
     {
-        $reports = Report::latest('created_at')->where('module', '库存')->where('active', 1)->paginate(10);
-        $readonly = true;
-        return view('system.report.index', compact('reports', 'readonly'));
+        return $this->indexmodule('库存');
+//        $reports = Report::latest('created_at')->where('module', '库存')->where('active', 1)->paginate(10);
+//        $readonly = true;
+//        return view('system.report.index', compact('reports', 'readonly'));
     }
 
     public function indexapproval()
     {
-        $reports = Report::latest('created_at')->where('module', '审批')->where('active', 1)->paginate(10);
-        $readonly = true;
-        return view('system.report.index', compact('reports', 'readonly'));
+        return $this->indexmodule('审批');
+//        $reports = Report::latest('created_at')->where('module', '审批')->where('active', 1)->paginate(10);
+//        $readonly = true;
+//        return view('system.report.index', compact('reports', 'readonly'));
     }
 
     /**
