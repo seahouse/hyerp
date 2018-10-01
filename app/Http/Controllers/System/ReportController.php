@@ -34,8 +34,14 @@ class ReportController extends Controller
     {
         $query = Report::latest('created_at');
         $query->where('module', $module)->where('active', 1);
-        if (Gate::denies('system_report_so_projectengineeringlist_statistics'))
-            $query->where('name', '<>', 'so_projectengineeringlist_statistics');
+        if (!Auth::user()->isSuperAdmin())
+        {
+            $query->where(function ($query) {
+                if (Gate::allows('system_report_so_projectengineeringlist_statistics'))
+                    $query->where('name', 'so_projectengineeringlist_statistics');
+            });
+        }
+
         $reports = $query->paginate(10);
         $readonly = true;
         return view('system.report.index', compact('reports', 'readonly'));
