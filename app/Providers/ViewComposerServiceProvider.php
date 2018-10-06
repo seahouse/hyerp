@@ -190,7 +190,8 @@ class ViewComposerServiceProvider extends ServiceProvider
                 if ($userold)
                     $projectengineer_id = $userold->user_hxold_id;
             }
-            $view->with('myprojectListByProjectengineer', \App\Models\Sales\Salesorder_hxold::where('projectengineer_id', $projectengineer_id)->orderby('id', 'asc')->lists('projectjc', 'id'));
+            $view->with('myprojectListByProjectengineer', \App\Models\Sales\Salesorder_hxold::where('id', '<>', 7550)
+                ->where('projectengineer_id', $projectengineer_id)->orderby('id', 'asc')->lists('projectjc', 'id'));
 //            $view->with('poheadOrderDateyearList_hxold', DB::connection('sqlsrv')->select(DB::raw('select distinct datepart(year, orderdate) from vorder'))->lists('projectjc', 'id'));
         });
     }

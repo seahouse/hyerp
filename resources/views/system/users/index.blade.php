@@ -1,6 +1,7 @@
 @extends('navbarerp')
 
 @section('main')
+    @can('system_user_view')
     <div class="panel-heading">
         @if (Auth::user()->can('system_user_maintain'))
             <a href="users/create" class="btn btn-sm btn-success">新建</a>
@@ -167,8 +168,10 @@
         <i class="fa fa-warning"></i>
         {{'无记录', [], 'layouts'}}
     </div>
-    @endif    
-
+    @endif
+@else
+        无权限。
+@endcan
 @endsection
 
 @section('script')
