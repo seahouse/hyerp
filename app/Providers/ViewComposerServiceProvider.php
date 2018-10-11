@@ -193,7 +193,8 @@ class ViewComposerServiceProvider extends ServiceProvider
             $view->with('myprojectListByProjectengineer', \App\Models\Sales\Salesorder_hxold::where('id', '<>', 7550)
                 ->where(function ($query) use ($projectengineer_id) {
                     // SongJH special handler, can view all order except 7550
-                    if ($projectengineer_id <> 128)
+                    // and WuHL too.
+                    if ($projectengineer_id <> 128 and $projectengineer_id <> 8)
                         $query->where('projectengineer_id', $projectengineer_id);
                 })
                 ->orderby('id', 'asc')->lists('projectjc', 'id'));
