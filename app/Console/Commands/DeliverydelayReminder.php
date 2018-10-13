@@ -8,6 +8,7 @@ use App\Models\System\User;
 use App\Models\System\Userold;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Log;
 
 class DeliverydelayReminder extends Command
 {
@@ -51,26 +52,51 @@ class DeliverydelayReminder extends Command
             if ($sohead->C)
             {
                 $startdate = Carbon::parse($sohead->startDate);
+                $debugenddate = Carbon::parse($sohead->debugend_date);
+                $passgasdate = Carbon::parse($sohead->passgasDate);
+                $performanceacceptdate = Carbon::parse($sohead->performanceAcceptDate);
                 $basedate = Carbon::create(1900, 1, 1, 0, 0, 0);
-                if ($basedate->eq($startdate))
+                if ($basedate->eq($startdate) && $basedate->eq($debugenddate) && $basedate->eq($passgasdate) && $basedate->eq($performanceacceptdate))
                 {
-                    $plandeliverydate = Carbon::parse($sohead->plandeliverydate);
-                    $today = Carbon::today();
-                    $this->info("\t" . $today . "\t" . $sohead->plandeliverydate);
-                    if ($today->addDays(14)->eq($plandeliverydate))
+                    $valid_project = true;
+                    $project = $sohead->project;
+                    if (isset($project))
                     {
-                        $msg = $sohead->projectjc . "（" . $sohead->number . "），距约定交货日期还有14天，如项目延迟进场则请及时与业主沟通延期后的准确时间，如业主无法给出准确时间则告知业主推迟半年，由此造成的涨价和仓储等损失由业主承担。将确定后的时间交财务部上传系统。";
-                        $this->sendMsg($msg, $sohead->salesmanager_id);
+                        $poheads_project = $project->soheads;
+                        foreach ($poheads_project as $pohead_project)
+                        {
+                            $startdate_project = Carbon::parse($sohead->startDate);
+                            $debugenddate_project = Carbon::parse($sohead->debugend_date);
+                            $passgasdate_project = Carbon::parse($sohead->passgasDate);
+                            $performanceacceptdate_project = Carbon::parse($sohead->performanceAcceptDate);
+                            if ($basedate->notEqualTo($startdate_project) || $basedate->notEqualTo($debugenddate_project) || $basedate->notEqualTo($passgasdate_project) || $basedate->notEqualTo($performanceacceptdate_project))
+                            {
+                                $valid_project = false;
+                            }
+                        }
                     }
-                    if ($today->addDays(7)->eq($plandeliverydate))
+
+                    if ($valid_project)
                     {
-                        $msg = $sohead->projectjc . "（" . $sohead->number . "），距约定交货日期还有7天，如项目延迟进场则请及时与业主沟通延期后的准确时间，如业主无法给出准确时间则告知业主推迟半年，由此造成的涨价和仓储等损失由业主承担。将确定后的时间交财务部上传系统。";
-                        $this->sendMsg($msg, $sohead->salesmanager_id);
-                    }
-                    if ($today->gt($plandeliverydate))
-                    {
-                        $msg = $sohead->projectjc . "（" . $sohead->number . "），如项目延迟进场则请及时与业主沟通延期后的准确时间，如业主无法给出准确时间则告知业主推迟半年，由此造成的涨价和仓储等损失由业主承担。将确定后的时间交财务部上传系统。";
-                        $this->sendMsg($msg, $sohead->salesmanager_id);
+                        $plandeliverydate = Carbon::parse($sohead->plandeliverydate);
+                        $today = Carbon::today();
+                        $this->info("\t" . $today . "\t" . $sohead->plandeliverydate);
+                        if ($today->addDays(14)->eq($plandeliverydate))
+                        {
+                            $msg = $sohead->projectjc . "（" . $sohead->number . "），距约定交货日期还有14天，如项目延迟进场则请及时与业主沟通延期后的准确时间，如业主无法给出准确时间则告知业主推迟半年，由此造成的涨价和仓储等损失由业主承担。将确定后的时间交财务部上传系统。";
+                            $this->sendMsg($msg, $sohead->salesmanager_id);
+                        }
+                        if ($today->addDays(7)->eq($plandeliverydate))
+                        {
+                            $msg = $sohead->projectjc . "（" . $sohead->number . "），距约定交货日期还有7天，如项目延迟进场则请及时与业主沟通延期后的准确时间，如业主无法给出准确时间则告知业主推迟半年，由此造成的涨价和仓储等损失由业主承担。将确定后的时间交财务部上传系统。";
+                            $this->sendMsg($msg, $sohead->salesmanager_id);
+                        }
+                        if ($today->gt($plandeliverydate))
+                        {
+                            $this->info("\ttttttttt");
+                            $msg = $sohead->projectjc . "（" . $sohead->number . "），如项目延迟进场则请及时与业主沟通延期后的准确时间，如业主无法给出准确时间则告知业主推迟半年，由此造成的涨价和仓储等损失由业主承担。将确定后的时间交财务部上传系统。";
+                            $this->sendMsg($msg, $sohead->salesmanager_id);
+                        }
                     }
                 }
 
@@ -90,7 +116,8 @@ class DeliverydelayReminder extends Command
                     'msgcontent'    => urlencode($msg) ,
                 ];
 
-                DingTalkController::sendCorpMessageText(json_encode($data));
+                $response = DingTalkController::sendCorpMessageText(json_encode($data));
+//                Log::info(json_encode($response));
                 sleep(1);
             }
         }
