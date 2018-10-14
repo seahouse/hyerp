@@ -55,7 +55,7 @@ Route::post('cloudwalk/face_tool_detect', 'CloudwalkController@face_tool_detect'
 // erp, send dingtalk message
 // because not need cref, so not in middle web
 Route::any('dingtalk/message/send_erp/{strJson}',  'DingTalkController@send_erp');
-Route::any('sales/salesorder/message/afteredit/{strJson}',  'SalesOrdersController@sendmessage_afteredit_hxold');
+Route::any('sales/salesorder/message/afteredit/{strJson}',  'Sales\SalesOrdersController@sendmessage_afteredit_hxold');
 
 Route::post('approval/mcitempurchase/uploadparseexcel', 'Approval\McitempurchaseController@uploadparseexcel');
 
