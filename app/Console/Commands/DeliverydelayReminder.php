@@ -65,10 +65,10 @@ class DeliverydelayReminder extends Command
                         $poheads_project = $project->soheads;
                         foreach ($poheads_project as $pohead_project)
                         {
-                            $startdate_project = Carbon::parse($sohead->startDate);
-                            $debugenddate_project = Carbon::parse($sohead->debugend_date);
-                            $passgasdate_project = Carbon::parse($sohead->passgasDate);
-                            $performanceacceptdate_project = Carbon::parse($sohead->performanceAcceptDate);
+                            $startdate_project = Carbon::parse($pohead_project->startDate);
+                            $debugenddate_project = Carbon::parse($pohead_project->debugend_date);
+                            $passgasdate_project = Carbon::parse($pohead_project->passgasDate);
+                            $performanceacceptdate_project = Carbon::parse($pohead_project->performanceAcceptDate);
                             if ($basedate->notEqualTo($startdate_project) || $basedate->notEqualTo($debugenddate_project) || $basedate->notEqualTo($passgasdate_project) || $basedate->notEqualTo($performanceacceptdate_project))
                             {
                                 $valid_project = false;

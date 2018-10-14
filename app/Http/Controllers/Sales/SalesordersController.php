@@ -208,4 +208,60 @@ class SalesOrdersController extends Controller
 
         return view('sales.salesorders.mstatistics', compact('sohead'));
     }
+
+    public function sendmessage_afteredit_hxold($strJson)
+    {
+        $json = json_decode($strJson);
+        $id = $json->orderid;
+        $sohead = Salesorder_hxold::find($id);
+
+        $startdate = Carbon::parse($sohead->startDate);
+        $debugenddate = Carbon::parse($sohead->debugend_date);
+        $passgasdate = Carbon::parse($sohead->passgasDate);
+        $performanceacceptdate = Carbon::parse($sohead->performanceAcceptDate);
+        $basedate = Carbon::create(1900, 1, 1, 0, 0, 0);
+        if ($basedate->notEqualTo($startdate) || $basedate->notEqualTo($debugenddate) || $basedate->notEqualTo($passgasdate) || $basedate->notEqualTo($performanceacceptdate))
+        {
+            $project = $sohead->project;
+            if (isset($project))
+            {
+                $poheads_project = $project->soheads;
+                foreach ($poheads_project as $pohead_project)
+                {
+                    $startdate_project = Carbon::parse($pohead_project->startDate);
+                    $debugenddate_project = Carbon::parse($pohead_project->debugend_date);
+                    $passgasdate_project = Carbon::parse($pohead_project->passgasDate);
+                    $performanceacceptdate_project = Carbon::parse($pohead_project->performanceAcceptDate);
+                    if ($basedate->eq($startdate_project) && $basedate->eq($debugenddate_project) && $basedate->eq($passgasdate_project) && $basedate->eq($performanceacceptdate_project))
+                    {
+                        $msg = "订单" . $sohead->projectjc . "（" . $sohead->number . "）" . "对应项目下的" .  $pohead_project->projectjc . "（" . $pohead_project->number . "）还未开工";
+                        $data = [
+                            'userid'        => 1,
+                            'msgcontent'    => urlencode($msg) ,
+                        ];
+//                    Log::info($transactor->name);
+                        DingTalkController::sendCorpMessageText(json_encode($data));
+
+//                        $transactor_hxold = Userold::where('user_hxold_id', $userid_hxold)->first();
+//                        if (isset($transactor_hxold))
+//                        {
+//                            $transactor = User::where('id', $transactor_hxold->user_id)->first();
+//                            if (isset($transactor))
+//                            {
+//                                $data = [
+//                                    'userid'        => $transactor->id,
+//                                    'msgcontent'    => urlencode($msg) ,
+//                                ];
+////                    Log::info($transactor->name);
+//                                DingTalkController::sendCorpMessageText(json_encode($data));
+//                                sleep(1);
+//                            }
+//                        }
+                    }
+                }
+            }
+        }
+
+        return view('sales.salesorders.mstatistics', compact('sohead'));
+    }
 }
