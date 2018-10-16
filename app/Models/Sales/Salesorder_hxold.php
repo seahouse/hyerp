@@ -227,4 +227,8 @@ class Salesorder_hxold extends Model
     public function bonuspayments() {
         return $this->hasMany('App\Models\Sales\Bonuspayment_hxold', 'sohead_id', 'id');
     }
+
+    public function senddetails() {
+        return $this->hasMany('App\Models\Sales\Senddetail_hxold', 'sohead_id', 'id');
+    }
 }

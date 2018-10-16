@@ -180,6 +180,13 @@
     </div>
 </div>
 
+        <div class="form-group">
+            {!! Form::label('cabinetname', '柜体名称:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::text('cabinetname', null, ['class' => 'form-control', 'placeholder' => '电气部填写', $attr]) !!}
+            </div>
+        </div>
+
 <div class="form-group">
     {!! Form::label('tonnage', '吨位（吨）:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
@@ -190,7 +197,7 @@
 <div class="form-group">
     {!! Form::label('productioncompany', '制作公司:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::select('productioncompany', array('无锡生产中心' => '无锡生产中心', '苏州生产中心' => '苏州生产中心', '泰州生产中心' => '泰州生产中心', '胶州生产中心' => '胶州生产中心'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+    {!! Form::select('productioncompany', array('无锡生产中心' => '无锡生产中心', '苏州生产中心' => '苏州生产中心', '泰州生产中心' => '泰州生产中心', '胶州生产中心' => '胶州生产中心', '无锡电气生产部' => '无锡电气生产部'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
     </div>
 </div>
 

@@ -58,25 +58,35 @@ class DeliverydelayReminder extends Command
                 $basedate = Carbon::create(1900, 1, 1, 0, 0, 0);
                 if ($basedate->eq($startdate) && $basedate->eq($debugenddate) && $basedate->eq($passgasdate) && $basedate->eq($performanceacceptdate))
                 {
-                    $valid_project = true;
-                    $project = $sohead->project;
-                    if (isset($project))
+                    $needsend = true;
+
+                    // 如果是普通订单（非配件订单），则需要考虑是否已经有发货记录
+                    if ($sohead->type == 0 && $sohead->senddetails->count() > 0)
+                        $needsend = false;
+
+                    if ($needsend)
                     {
-                        $poheads_project = $project->soheads;
-                        foreach ($poheads_project as $pohead_project)
+                        $project = $sohead->project;
+                        if (isset($project))
                         {
-                            $startdate_project = Carbon::parse($pohead_project->startDate);
-                            $debugenddate_project = Carbon::parse($pohead_project->debugend_date);
-                            $passgasdate_project = Carbon::parse($pohead_project->passgasDate);
-                            $performanceacceptdate_project = Carbon::parse($pohead_project->performanceAcceptDate);
-                            if ($basedate->notEqualTo($startdate_project) || $basedate->notEqualTo($debugenddate_project) || $basedate->notEqualTo($passgasdate_project) || $basedate->notEqualTo($performanceacceptdate_project))
+                            $poheads_project = $project->soheads;
+                            foreach ($poheads_project as $pohead_project)
                             {
-                                $valid_project = false;
+                                $startdate_project = Carbon::parse($pohead_project->startDate);
+                                $debugenddate_project = Carbon::parse($pohead_project->debugend_date);
+                                $passgasdate_project = Carbon::parse($pohead_project->passgasDate);
+                                $performanceacceptdate_project = Carbon::parse($pohead_project->performanceAcceptDate);
+                                if ($basedate->notEqualTo($startdate_project) || $basedate->notEqualTo($debugenddate_project) || $basedate->notEqualTo($passgasdate_project) || $basedate->notEqualTo($performanceacceptdate_project) || ($pohead_project->type == 0 && $pohead_project->senddetails->count() > 0))
+                                {
+                                    $needsend = false;
+                                    break;
+                                }
                             }
                         }
                     }
 
-                    if ($valid_project)
+
+                    if ($needsend)
                     {
                         $plandeliverydate = Carbon::parse($sohead->plandeliverydate);
                         $today = Carbon::today();

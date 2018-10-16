@@ -18,6 +18,7 @@ class CreateIssuedrawingsTable extends Migration
             $table->string('designdepartment');
             $table->integer('sohead_id');
             $table->string('overview')->default('');
+            $table->string('cabinetname')->default('');             // 柜体名称
             $table->decimal('tonnage', 18, 4)->default(0.0);
             $table->string('productioncompany');
             $table->string('materialsupplier');
