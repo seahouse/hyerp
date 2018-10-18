@@ -186,7 +186,7 @@
                 {!! Form::text('cabinetname', null, ['class' => 'form-control', 'placeholder' => '电气部填写', $attr]) !!}
             </div>
             <div class='col-xs-3 col-sm-2'>
-                {!! Form::text('quantity', null, ['class' => 'form-control', 'placeholder' => '数量', $attr]) !!}
+                {!! Form::text('cabinetquantity', null, ['class' => 'form-control', 'placeholder' => '数量', $attr]) !!}
             </div>
         </div>
 

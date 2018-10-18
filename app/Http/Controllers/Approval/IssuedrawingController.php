@@ -516,6 +516,7 @@ class IssuedrawingController extends Controller
             $input['approvers'] = $issuedrawing->approvers();
             if ($input['approvers'] == "")
                 $input['approvers'] = config('custom.dingtalk.default_approvers');       // wuceshi for test
+            $input['cabinet'] = $input['cabinetname'] . ":" . $input['cabinetquantity'];
             $response = DingTalkController::issuedrawing($input);
             Log::info($response);
             $responsejson = json_decode($response);

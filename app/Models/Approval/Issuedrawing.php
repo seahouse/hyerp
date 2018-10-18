@@ -19,6 +19,7 @@ class Issuedrawing extends Model
         'sohead_id',
         'overview',
         'cabinetname',
+        'cabinetquantity',
         'tonnage',
         'productioncompany',
         'materialsupplier',
