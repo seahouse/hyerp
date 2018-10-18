@@ -182,8 +182,11 @@
 
         <div class="form-group">
             {!! Form::label('cabinetname', '柜体名称:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
-            <div class='col-xs-8 col-sm-10'>
+            <div class='col-xs-5 col-sm-8'>
                 {!! Form::text('cabinetname', null, ['class' => 'form-control', 'placeholder' => '电气部填写', $attr]) !!}
+            </div>
+            <div class='col-xs-3 col-sm-2'>
+                {!! Form::text('quantity', null, ['class' => 'form-control', 'placeholder' => '数量', $attr]) !!}
             </div>
         </div>
 
