@@ -80,6 +80,10 @@ class Issuedrawing extends Model
     }
 
     public function approvers() {
+        $approvers = config('custom.dingtalk.approversettings.issuedrawing.' . $this::getAttribute('designdepartment'), '');
+        if (strlen($approvers) > 0)
+            return $approvers;
+
         $approverArray = [];
         $approvaltype = Approvaltype::where('name', self::$approvaltype_name)->firstOrFail();
         $approversettings = Approversetting::where('approvaltype_id', $approvaltype->id)->orderBy('level')->get();

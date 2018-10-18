@@ -128,7 +128,7 @@ class ViewComposerServiceProvider extends ServiceProvider
         view()->composer(array('approval.approversettings.create', 'approval.approversettings.edit', 
             'teaching.teachingadministrator.create', 'teaching.teachingadministrator.edit', 'purchase.payments.create_hxold',
             'changeuser'), function($view) {
-            $view->with('userList', \App\Models\System\User::where('email', '<>', 'admin@admin.com')->orderby('id', 'asc')->lists('name', 'id'));
+            $view->with('userList', \App\Models\System\User::where('email', '<>', 'admin@admin.com')->orderby('name', 'asc')->lists('name', 'id'));
         });
 
         // teachingpointList
