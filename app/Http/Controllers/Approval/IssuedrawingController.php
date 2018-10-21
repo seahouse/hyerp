@@ -7,6 +7,7 @@ use App\Models\Approval\Approvaltype;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Issuedrawing;
 use App\Models\Approval\Issuedrawingattachment;
+use App\Models\Approval\Issuedrawingcabinet;
 use App\Models\Approval\Issuedrawingmodifyweightlog;
 use App\Models\System\Operationlog;
 use Illuminate\Http\Request;
@@ -421,6 +422,19 @@ class IssuedrawingController extends Controller
             }
         }
 
+        // create issuedrawingcabinets
+        if (isset($issuedrawing))
+        {
+            $issuedrawingcabinet_items = json_decode($input['items_string']);
+            foreach ($issuedrawingcabinet_items as $issuedrawingcabinet_item) {
+                if (strlen($issuedrawingcabinet_item->name) > 0)
+                {
+                    $item_array = json_decode(json_encode($issuedrawingcabinet_item), true);
+                    $item_array['issuedrawing_id'] = $issuedrawing->id;
+                    $issuedrawingcabinet = Issuedrawingcabinet::create($item_array);
+                }
+            }
+        }
 
         $image_urls = [];
         // create images in the desktop
@@ -516,7 +530,7 @@ class IssuedrawingController extends Controller
             $input['approvers'] = $issuedrawing->approvers();
             if ($input['approvers'] == "")
                 $input['approvers'] = config('custom.dingtalk.default_approvers');       // wuceshi for test
-            $input['cabinet'] = $input['cabinetname'] . ":" . $input['cabinetquantity'];
+//            $input['cabinet'] = $input['cabinetname'] . ":" . $input['cabinetquantity'];
             $response = DingTalkController::issuedrawing($input);
             Log::info($response);
             $responsejson = json_decode($response);

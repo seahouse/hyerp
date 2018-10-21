@@ -116,65 +116,6 @@
     </div>
 </div>
 
-<!-- supplier bank selector -->
-<div class="modal fade" id="selectSupplierBankModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">选择开户行与账号</h4>                
-            </div>
-            <div class="modal-body">
-{{--
-            	<div class="input-group">
-            		{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '供应商名称', 'id' => 'keySupplier']) !!}
-            		<span class="input-group-btn">
-                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchSupplier']) !!}
-                   	</span>
-            	</div>
---}}
-            	{!! Form::hidden('name', null, ['id' => 'name']) !!}
-            	{!! Form::hidden('id', null, ['id' => 'id']) !!}
-            	<p>
-            		<div class="list-group" id="listsupplierbanks">
-
-            		</div>
-            	</p>
-            	<p>
-            		{!! Form::button('新增', ['class' => 'btn btn-sm', 'id' => 'btnShowAddVendbank']) !!}
-	                <form id="formAddVendbank">
-	                    {!! csrf_field() !!}
-						<div class="form-group">
-						    {!! Form::label('bankname', '开户行:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-						    <div class='col-xs-8 col-sm-10'>
-						    {!! Form::text('bankname', null, ['class' => 'form-control', 'placeholder' => '请输入开户行']) !!}
-						    </div>
-						</div>
-						<div class="form-group">
-						    {!! Form::label('accountnum', '银行账号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-						    <div class='col-xs-8 col-sm-10'>
-						    {!! Form::text('accountnum', null, ['class' => 'form-control', 'placeholder' => '请输入银行账号']) !!}
-						    </div>
-						</div>
-						{!! Form::hidden('vendinfo_id', 0, ['id' => 'vendinfo_id']) !!}
-						{!! Form::hidden('isdefault', 1, ['id' => 'isdefault']) !!}
-						{!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnAddVendbank']) !!}
-	{{--
-	                	{!! Form::hidden('reimbursement_id', $reimbursement->id, ['class' => 'form-control']) !!}
-	                    {!! Form::hidden('status', 0, ['class' => 'form-control']) !!} 
-	--}}
-	                </form>
-            	</p>
-            
-            </div>
-{{--
-            <div class="modal-footer">
-                {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
-                {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnAccept']) !!}
-            </div>
---}}   
-        </div>
-    </div>
-</div>
 
 <!-- before submit -->
 <div class="modal fade" id="submitModal" tabindex="-1" role="dialog">
@@ -210,22 +151,43 @@
 
 	<script type="text/javascript">
 		jQuery(document).ready(function(e) {
-//			var travelNum = 1;
+            var item_num = 1;
 
 			 $("#btnSubmit").click(function() {
-                 $("form#formMain").submit();
-				 {{--
-                 $.get("{{ url('approval/paymentrequests/hasrepeat/') }}" +  "/" + $('#pohead_id').val() + "/" + $('#amount').val(), function (data) {
-                     if (data.code < 0)
-					 {
-                         $('#submitModal').modal('toggle');
-                         $("#dataDefine").empty().append(data.msg);
-					 }
-                     else
-                         $("form#formMain").submit();
+                 var itemArray = new Array();
+
+                 $("div[name='container_item']").each(function(i){
+                     var itemObject = new Object();
+                     var container = $(this);
+
+                     itemObject.name = container.find("input[name='cabinet_name']").val();
+                     itemObject.quantity = container.find("input[name='cabinet_quantity']").val();
+
+//                     var unitpriceArray = new Array();
+//                     var pppaymentitemtypecontainer = container.find("div[name='pppaymentitemtypecontainer']");
+//                     pppaymentitemtypecontainer.find("div[name='div_unitpriceitem']").each(function (i) {
+//                         var unitpriceObject = new Object();
+//                         var unitpriceitemcontainer = $(this);
+//                         unitpriceObject.name = unitpriceitemcontainer.find("input[name='tonnage']").data("name");
+//                         unitpriceObject.tonnage = unitpriceitemcontainer.find("input[name='tonnage']").val();
+//                         if (unitpriceObject.tonnage == "")
+//                             unitpriceObject.tonnage = 0.0;
+//                         unitpriceObject.unitprice = unitpriceitemcontainer.find("input[name='unitprice']").val();
+//                         unitpriceArray.push(unitpriceObject);
+//                     });
+//
+//
+//                     itemObject.unitprice_array = unitpriceArray;
+
+                     itemArray.push(itemObject);
+
+//                    alert(JSON.stringify(itemArray));
+//                    return false;
+//                    alert($("form#formMain").serialize());
                  });
-				 return false;
-				 --}}
+                 $("#items_string").val(JSON.stringify(itemArray));
+
+                 $("form#formMain").submit();
 			 });
 
 			{{--$('#submitModal').on('shown.bs.modal', function (e) {--}}
@@ -459,38 +421,38 @@
 				});
 			}
 
-			$("#btnShowAddVendbank").click(function() {
-				$("form#formAddVendbank").show();
-			});
+            $("#btnAddItem").click(function() {
+                item_num++;
+                var btnId = 'btnDeleteItem_' + String(item_num);
+                var divName = 'divClassItem_' + String(item_num);
+                var itemHtml = '<div class="' + divName + '"><p class="bannerTitle">柜体明细(' + String(item_num) + ')&nbsp;<button class="btn btn-sm" id="' + btnId + '" type="button">删除</button></p>\
+                	<div name="container_item">\
+						<div class="form-group">\
+							<label for="cabinet_name" class="col-xs-4 col-sm-2 control-label">柜体名称:</label>\
+							<div class="col-sm-10 col-xs-8">\
+							<input class="form-control" ="" name="cabinet_name" type="text" id="cabinet_name_' + String(item_num) + '">\
+							</div>\
+						</div>\
+						<div class="form-group">\
+							<label for="cabinet_quantity" class="col-xs-4 col-sm-2 control-label">数量:</label>\
+							<div class="col-sm-10 col-xs-8">\
+							<input class="form-control" placeholder="" ="" id="cabinet_quantity_' + String(item_num) + '" name="cabinet_quantity" type="text">\
+							</div>\
+						</div>\
+                </div>\
+                </div>';
+                $("#itemMore").append(itemHtml);
+                addBtnDeleteItemClickEvent(btnId, divName);
+            });
 
-			$("#btnAddVendbank").click(function() {
-				if ($("#selectSupplierBankModal").find("#vendinfo_id").val() == 0)
-				{
-					alert("还未选中供应商。");
-					return;
-				}
-				if ($("#selectSupplierBankModal").find("#bankname").val().trim() == "" || $("#selectSupplierBankModal").find("#accountnum").val().trim() == "")
-				{
-					alert("开户行和银行账号不能为空。");
-					return;
-				}
-				$.ajax({
-					type: "POST",
-					url: "{{ url('purchase/vendbank') }}",
-					data: $("form#formAddVendbank").serialize(),
-					dataType: "json",
-					error:function(xhr, ajaxOptions, thrownError){
-						alert('error');
-					},
-					success:function(result){
-						alert("新增成功。");
-						$('#selectSupplierBankModal').modal('toggle');
-						$("#vendbank_id").val(result.id);
-						$("#supplier_bank").val(result.bankname);
-						$("#supplier_bankaccountnumber").val(result.accountnum);
-					},
-				});	
-			});
+            function addBtnDeleteItemClickEvent(btnId, divName)
+            {
+                $("#" + btnId).bind("click", function() {
+                    // travelNum--; 	// 不需要减法，否则在删除中间段的时候会导致有重复div
+                    $("." + divName).remove();
+                });
+            }
+
 
 			// show amount percent when blur
 			$("#amount").blur(function() {
@@ -502,19 +464,23 @@
 				}
 			});
 
-			// $("#btnSelectImage").click(function() {
-			// 	var images = ['http://static.dingtalk.com/media/lADODGPhgM0CHM0DwA_960_540.jpg', 'http://static.dingtalk.com/media/lALODL7StM0DwM0CHA_540_960.png'];
-			// 	var imageHtml = '';
-			// 	for (var i in images) {
-			// 		imageHtml += '<div class="col-xs-6 col-md-3">';
-			// 		imageHtml += '<div class="thumbnail">';
-			// 		imageHtml += '<img src=' + images[i] + ' />';
-			// 		imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
-			// 		imageHtml += '</div>';
-			// 		imageHtml += '</div>';
-			// 	}
-			// 	$("#previewimage").empty().append(imageHtml);
-			// });
+            selectDesigndepartmentChange = function () {
+                var designdepartment = $("#designdepartment").val();
+//                alert(designdepartment);
+//                $("#pppaymentitemtypecontainer_1" + String(num)).empty();
+                var strhtml = '';
+                var strhtml2 = '';
+
+                if (designdepartment == "电控室")
+                {
+                    $("#cabinet_detail").attr("style", "display:'';");
+                }
+                else
+				{
+                    $("#cabinet_detail").attr("style", "display:none;");
+				}
+
+            }
 
 			dd.config({
 			    agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID

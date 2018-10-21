@@ -3,7 +3,7 @@
 <div class="form-group">
     {!! Form::label('designdepartment', '设计部门:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::select('designdepartment', array('工艺一室' => '工艺一室', '工艺二室' => '工艺二室', '电控室' => '电控室'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+    {!! Form::select('designdepartment', array('工艺一室' => '工艺一室', '工艺二室' => '工艺二室', '电控室' => '电控室'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable, 'onchange' => 'selectDesigndepartmentChange()']) !!}
     </div>
 </div>
 
@@ -47,37 +47,7 @@
 
 
 {{--
-<div class="form-group">
-    {!! Form::label('pohead_amount_paid', '已付金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-5 col-sm-9'>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount_paid)) 
-         {!! Form::text('pohead_amount', $paymentrequest->purchaseorder_hxold->amount_paid, ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('pohead_amount', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount_paid) and isset($paymentrequest->purchaseorder_hxold->amount) and $paymentrequest->purchaseorder_hxold->amount > 0.0)
-        {!! Form::label('amount_paid_percent', number_format($paymentrequest->purchaseorder_hxold->amount_paid / $paymentrequest->purchaseorder_hxold->amount * 100.0, 2, '.', '') . '%', ['class' => 'col-xs-3 col-sm-1 control-label']) !!}
-    @else
-        {!! Form::label('amount_paid_percent', '-', ['class' => 'col-xs-3 col-sm-1 control-label', 'id' => 'amount_paid_percent']) !!}
-    @endif
-</div>
 
-<div class="form-group">
-    {!! Form::label('pohead_amount_ticketed', '已开票金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-5 col-sm-9'>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount_ticketed)) 
-         {!! Form::text('pohead_amount_ticketed', $paymentrequest->purchaseorder_hxold->amount_ticketed, ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('pohead_amount_ticketed', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount_ticketed) and isset($paymentrequest->purchaseorder_hxold->amount) and $paymentrequest->purchaseorder_hxold->amount > 0.0)
-        {!! Form::label('amount_ticketed_percent', number_format($paymentrequest->purchaseorder_hxold->amount_ticketed / $paymentrequest->purchaseorder_hxold->amount * 100.0, 2, '.', '') . '%', ['class' => 'col-xs-3 col-sm-1 control-label']) !!}
-    @else
-        {!! Form::label('amount_ticketed_percent', '-', ['class' => 'col-xs-3 col-sm-1 control-label', 'id' => 'amount_ticketed_percent']) !!}
-    @endif
-</div>
 
 <div class="form-group">
     {!! Form::label('pohead_arrived', '到货情况:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
@@ -180,6 +150,102 @@
     </div>
 </div>
 
+        <div id="cabinet_detail">
+        <p class="bannerTitle">柜体明细(1)</p>
+
+        <div name="container_item">
+
+            <div class="form-group">
+                {!! Form::label('cabinet_name', '柜体名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::text('cabinet_name', null, ['class' => 'form-control', 'placeholder' => '', $attr ,'id' => 'cabinet_name_1']) !!}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {!! Form::label('cabinet_quantity', '数量:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::text('cabinet_quantity', null, ['class' => 'form-control', $attr, 'id' => 'cabinet_quantity_1']) !!}
+                </div>
+            </div>
+
+            {{--
+
+            <div class="form-group">
+                {!! Form::label('tonnage', '吨位:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::text('tonnage', null, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'tonnage_1']) !!}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {!! Form::label('issuedrawing_numbers', '下发图纸审批单号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::text('issuedrawing_numbers', null, ['class' => 'form-control', 'placeholder' => '--点击选择--', 'readonly', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectIssueDrawingsModal', 'data-name' => 'issuedrawing_numbers_1', 'data-id' => 'issuedrawing_values_1', 'data-num' => '1', 'id' => 'issuedrawing_numbers_1']) !!}
+                    {!! Form::hidden('issuedrawing_values', null, ['class' => 'btn btn-sm', 'id' => 'issuedrawing_values_1']) !!}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {!! Form::label('area', '地区:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::select('area', array('国内' => '国内', '国外' => '国外'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, 'id' => 'area_1']) !!}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {!! Form::label('type', '类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::select('type', array('抛丸' => '抛丸', '油漆' => '油漆', '人工' => '人工', '铆焊' => '铆焊'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, 'id' => 'type_1', 'onchange' => 'selectTypeChange(this.dataset.num)', 'data-num' => '1']) !!}
+                </div>
+            </div>
+            {!! Form::hidden('unitprice_inputname', 'unitprice_inputname_1', ['class' => 'btn btn-sm', 'id' => 'unitprice_inputname_1']) !!}
+            {!! Form::hidden('totalprice_inputname', 'totalprice_inputname_1', ['class' => 'btn btn-sm']) !!}
+
+            <div id="pppaymentitemtypecontainer_1" name="pppaymentitemtypecontainer"></div>
+
+            <div class="form-group">
+                {!! Form::label('images', '上传质检签收单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+
+                <div class='col-xs-8 col-sm-10'>
+                    <div class="row" id="previewimage_1">
+                    </div>
+                    @if (isset($paymentrequest))
+                        <div class="row" id="previewimage2">
+                            @foreach ($paymentrequest->paymentrequestimages() as $paymentrequestimage)
+                                <div class="col-xs-6 col-md-3">
+                                    <div class="thumbnail">
+                                        <img src="{!! $paymentrequestimage->path !!}" />
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        {!! Form::hidden('imagesname', 'images_1', ['class' => 'btn btn-sm', 'id' => 'imagesname_1']) !!}
+                        @if (Agent::isDesktop())
+                            {!! Form::file('images_1[]', ['multiple', 'id' => 'images_1']) !!}
+                        @else
+                            {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage', 'value' => '1', 'onclick' => 'selectImage_Mobile(1)']) !!}
+                            {!! Form::hidden('imagesname_mobile', null, ['class' => 'btn btn-sm', 'id' => 'imagesname_mobile_1']) !!}
+                        @endif
+                    @endif
+
+                </div>
+            </div>
+            --}}
+        </div>
+
+
+
+        <div id="itemMore">
+        </div>
+        {{--{!! Form::button('+增加明细', ['class' => 'btn btn-sm', 'id' => 'btnAddTravel']) !!}--}}
+        <a href="javascript:void(0);" class="bannerTitle addMore" id="btnAddItem">+增加明细</a>
+
+        {!! Form::hidden('items_string', null, ['id' => 'items_string']) !!}
+        </div>
+
+        {{--
         <div class="form-group">
             {!! Form::label('cabinetname', '柜体名称:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
             <div class='col-xs-5 col-sm-8'>
@@ -189,6 +255,7 @@
                 {!! Form::text('cabinetquantity', null, ['class' => 'form-control', 'placeholder' => '数量', $attr]) !!}
             </div>
         </div>
+        --}}
 
 <div class="form-group">
     {!! Form::label('tonnage', '吨位（吨）:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}

@@ -1371,6 +1371,26 @@ class DingTalkController extends Controller
 //            $req->setCcList($cc_list);
 //            $req->setCcPosition("FINISH");
 //        }
+
+        $detail_array = [];
+        $issuedrawingcabinet_items = json_decode($inputs['items_string']);
+        foreach ($issuedrawingcabinet_items as $value) {
+            if (strlen($value->name) > 0)
+            {
+                $item_array = [
+                    [
+                        'name'      => '名称',
+                        'value'     => $value->name,
+                    ],
+                    [
+                        'name'      => '数量',
+                        'value'     => $value->quantity,
+                    ],
+                ];
+                array_push($detail_array, $item_array);
+            }
+        }
+
         $formdata = [
             [
                 'name'      => '设计部门',
@@ -1385,8 +1405,8 @@ class DingTalkController extends Controller
                 'value'     => $inputs['overview'],
             ],
             [
-                'name'      => '柜体',
-                'value'     => $inputs['cabinet'],
+                'name'      => '柜体明细',
+                'value'     => json_encode($detail_array),
             ],
             [
                 'name'      => '吨位（吨）',

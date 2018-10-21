@@ -38,6 +38,7 @@ return array(
     'CreateEmployeeTable' => $baseDir . '/database/migrations/2015_08_25_065400_create_employee_table.php',
     'CreateImagesTable' => $baseDir . '/database/migrations/2015_08_21_022329_create_images_table.php',
     'CreateIssuedrawingattachmentsTable' => $baseDir . '/database/migrations/2018_01_08_161809_create_issuedrawingattachments_table.php',
+    'CreateIssuedrawingcabinetsTable' => $baseDir . '/database/migrations/2018_10_20_102057_create_issuedrawingcabinets_table.php',
     'CreateIssuedrawingmodifyweightlogsTable' => $baseDir . '/database/migrations/2018_06_25_203949_create_issuedrawingmodifyweightlogs_table.php',
     'CreateIssuedrawingsTable' => $baseDir . '/database/migrations/2018_01_08_153006_create_issuedrawings_table.php',
     'CreateItemclassesTable' => $baseDir . '/database/migrations/2015_07_08_024921_create_itemclasses_table.php',
