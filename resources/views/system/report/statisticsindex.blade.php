@@ -62,7 +62,7 @@
         @can('system_report_so_projectengineeringlist_statistics')
             <?php $hasright = true; ?>
         @endcan
-    @elseif ($report->name == "so_projectengineeringlist_statistics")
+    @elseif ($report->name == "so_amountstatistics_forfinancedept")
         @can('system_report_so_amountstatistics_forfinancedept')
             <?php $hasright = true; ?>
         @endcan
