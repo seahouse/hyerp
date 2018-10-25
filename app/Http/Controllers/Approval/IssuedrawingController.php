@@ -346,14 +346,6 @@ class IssuedrawingController extends Controller
         // dd($request->file('paymentnodeattachments')->getClientOriginalExtension());
         // dd($request->input('amount', '0.0'));
 
-        // $files = array_get($input,'paymentnodeattachments');
-        // $destinationPath = 'uploads';
-        // foreach ($files as $key => $file) {
-        //     $extension = $file->getClientOriginalExtension();
-        //     $fileName = $file->getClientOriginalName() . '.' . $extension;
-        //     // dd($file->getClientOriginalName());
-        //     $upload_success = $file->move($destinationPath, $fileName);
-        // }
 
 
 
@@ -388,7 +380,7 @@ class IssuedrawingController extends Controller
                 {
                     $originalName = $file->getClientOriginalName();         // aa.xlsx
                     $extension = $file->getClientOriginalExtension();       // .xlsx
-                    Log::info('extension: ' . $extension);
+//                    Log::info('extension: ' . $extension);
                     $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
                     Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
 
@@ -532,7 +524,7 @@ class IssuedrawingController extends Controller
                 $input['approvers'] = config('custom.dingtalk.default_approvers');       // wuceshi for test
 //            $input['cabinet'] = $input['cabinetname'] . ":" . $input['cabinetquantity'];
             $response = DingTalkController::issuedrawing($input);
-            Log::info($response);
+//            Log::info($response);
             $responsejson = json_decode($response);
             if ($responsejson->dingtalk_smartwork_bpms_processinstance_create_response->result->ding_open_errcode <> 0)
             {
