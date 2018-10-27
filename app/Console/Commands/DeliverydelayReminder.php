@@ -95,17 +95,23 @@ class DeliverydelayReminder extends Command
                         {
                             $msg = $sohead->projectjc . "（" . $sohead->number . "），距约定交货日期还有14天，如项目延迟进场则请及时与业主沟通延期后的准确时间，如业主无法给出准确时间则告知业主推迟半年，由此造成的涨价和仓储等损失由业主承担。将确定后的时间交财务部上传系统。";
                             $this->sendMsg($msg, $sohead->salesmanager_id);
+                            $this->sendMsg($msg, 186);      // to LiuYJ
+                            $this->sendMsg($msg, 8);        // to WuHL
                         }
                         if ($today->addDays(7)->eq($plandeliverydate))
                         {
                             $msg = $sohead->projectjc . "（" . $sohead->number . "），距约定交货日期还有7天，如项目延迟进场则请及时与业主沟通延期后的准确时间，如业主无法给出准确时间则告知业主推迟半年，由此造成的涨价和仓储等损失由业主承担。将确定后的时间交财务部上传系统。";
                             $this->sendMsg($msg, $sohead->salesmanager_id);
+                            $this->sendMsg($msg, 186);      // to LiuYJ
+                            $this->sendMsg($msg, 8);        // to WuHL
                         }
                         if ($today->gt($plandeliverydate))
                         {
                             $this->info("\ttttttttt");
                             $msg = $sohead->projectjc . "（" . $sohead->number . "），如项目延迟进场则请及时与业主沟通延期后的准确时间，如业主无法给出准确时间则告知业主推迟半年，由此造成的涨价和仓储等损失由业主承担。将确定后的时间交财务部上传系统。";
                             $this->sendMsg($msg, $sohead->salesmanager_id);
+                            $this->sendMsg($msg, 186);      // to LiuYJ
+                            $this->sendMsg($msg, 8);        // to WuHL
                         }
                     }
                 }
