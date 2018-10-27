@@ -201,6 +201,10 @@ class Issuedrawing extends Model
         return $this->hasMany('\App\Models\Approval\Issuedrawingattachment', 'issuedrawing_id', 'id');
     }
 
+    public function issuedrawingcabinets() {
+        return $this->hasMany('\App\Models\Approval\Issuedrawingcabinet', 'issuedrawing_id', 'id');
+    }
+
     public function drawingattachments() {
         return $this->issuedrawingattachments->where('type', 'drawingattachment');
     }

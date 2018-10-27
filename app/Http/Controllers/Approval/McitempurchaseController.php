@@ -195,7 +195,12 @@ class McitempurchaseController extends Controller
         $projecttonnagetotal = Issuedrawing::where('sohead_id', $input['sohead_id'])->where('status', 0)->sum('tonnage');
         $mcitempurchaseidlist = Mcitempurchase::where('sohead_id', $input['sohead_id'])->where('status', 0)->pluck('id');
         $projecttonnagedonetotal = Mcitempurchaseitem::whereIn('mcitempurchase_id', $mcitempurchaseidlist)->sum('weight');
-        $input['projecttonnage'] = '项目总吨数' . $projecttonnagetotal . '吨，已申购' . $projecttonnagedonetotal . '吨。';
+        $projectcabinettotal = 0.0;
+        foreach (Issuedrawing::where('sohead_id', $input['sohead_id'])->where('status', 0) as $issuedrawing) {
+            $projectcabinettotal += $issuedrawing->issuedrawingcabinets->sum('quantity');
+        }
+        $input['projecttonnage'] = '项目总吨数' . $projecttonnagetotal . '吨，已申购' . $projecttonnagedonetotal . "吨。\n" .
+            "项目电气柜体总数" . $projectcabinettotal . "。" ;
 
         $image_urls = [];
         // create images in the desktop
@@ -284,13 +289,13 @@ class McitempurchaseController extends Controller
             $input['image_urls'] = json_encode($image_urls);
             $input['approvers'] = $mcitempurchase->approvers();
             $response = ApprovalController::mcitempurchase($input);
-            Log::info($response);
+//            Log::info($response);
 //            dd($response);
             $responsejson = json_decode($response);
             if ($responsejson->result->ding_open_errcode <> 0)
             {
                 $mcitempurchase->forceDelete();
-                Log::info(json_encode($input));
+//                Log::info(json_encode($input));
                 dd('钉钉端创建失败: ' . $responsejson->result->error_msg);
             }
             else
@@ -349,7 +354,7 @@ class McitempurchaseController extends Controller
             $destinationPath = 'uploads/approval/mcitempurchase/itemsexcel/';
             $originalName = $file->getClientOriginalName();         // aa.xlsx
             $extension = $file->getClientOriginalExtension();       // .xlsx
-            Log::info('extension: ' . $extension);
+//            Log::info('extension: ' . $extension);
             $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
             Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
             $upload_success = $file->move($destinationPath, $filename);
