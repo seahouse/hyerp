@@ -48,7 +48,8 @@ class ViewComposerServiceProvider extends ServiceProvider
         
         // contactList
         view()->composer(array('sales.custinfos.create', 'sales.custinfos.edit', 'inventory.warehouses.create', 'inventory.warehouses.edit',
-            'purchase.vendinfos.create', 'purchase.vendinfos.edit', 'purchase.purchaseorders.create', 'purchase.purchaseorders.edit'), function($view) {
+            'purchase.vendinfos.create', 'purchase.vendinfos.edit', 'purchase.purchaseorders.create', 'purchase.purchaseorders.edit',
+            'purchase.purchaseorders.create_hx', 'purchase.purchaseorders.edit_hx'), function($view) {
             $view->with('contactList', \App\Models\Crm\Contact::orderby('id', 'asc')->lists('name', 'id'));
         });      
         
@@ -65,7 +66,8 @@ class ViewComposerServiceProvider extends ServiceProvider
         });
         
         // termList
-        view()->composer(array('purchase.vendinfos.create', 'purchase.vendinfos.edit', 'purchase.purchaseorders.create', 'purchase.purchaseorders.edit'), function($view) {
+        view()->composer(array('purchase.vendinfos.create', 'purchase.vendinfos.edit', 'purchase.purchaseorders.create', 'purchase.purchaseorders.edit',
+            'purchase.purchaseorders.create_hx', 'purchase.purchaseorders.edit_hx'), function($view) {
             $view->with('termList', \App\Models\Sales\Term::orderby('id', 'asc')->lists('code', 'id'));
         });
         
@@ -75,12 +77,14 @@ class ViewComposerServiceProvider extends ServiceProvider
         });
         
         // vendinfoList
-        view()->composer(array('purchase.purchaseorders.create', 'purchase.purchaseorders.edit'), function($view) {
+        view()->composer(array('purchase.purchaseorders.create', 'purchase.purchaseorders.edit',
+            'purchase.purchaseorders.create_hx', 'purchase.purchaseorders.edit_hx'), function($view) {
             $view->with('vendinfoList', \App\Models\Purchase\Vendinfo::orderby('id', 'asc')->lists('number', 'id'));
         });
         
         // soheadList
-        view()->composer(array('purchase.purchaseorders.create', 'purchase.purchaseorders.edit'), function($view) {
+        view()->composer(array('purchase.purchaseorders.create', 'purchase.purchaseorders.edit',
+            'purchase.purchaseorders.create_hx', 'purchase.purchaseorders.edit_hx'), function($view) {
             $view->with('soheadList', \App\Models\Sales\Salesorder::orderby('id', 'asc')->lists('number', 'id'));
         });
         

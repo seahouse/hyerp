@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Purchase;
 
+ use App\Models\Purchase\Poheadtaxrateass_hxold;
+ use App\Models\Purchase\Purchaseorder_hx;
+ use App\Models\Sales\Salesorder_hxold;
  use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -35,7 +38,7 @@ class PurchaseordersController extends Controller
     public function index_hx()
     {
         //
-        $purchaseorders = Purchaseorder_hxold::orderBy('id', 'desc')->paginate(10);
+        $purchaseorders = Purchaseorder_hxold::orderBy('id', 'desc')->paginate(15);
         return view('purchase.purchaseorders.index_hx', compact('purchaseorders'));
     }
 
@@ -81,6 +84,12 @@ class PurchaseordersController extends Controller
         return view('purchase.purchaseorders.create');
     }
 
+    public function create_hx()
+    {
+        //
+        return view('purchase.purchaseorders.create_hx');
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -93,6 +102,38 @@ class PurchaseordersController extends Controller
         $input = Request::all();
         Purchaseorder::create($input);
         return redirect('purchase/purchaseorders');
+    }
+
+    public function store_hx(Request $request)
+    {
+        //
+        $this->validate($request, [
+            '对应项目ID'                   => 'integer|min:1',
+            '采购订单状态'                => 'required|integer|min:19',
+        ]);
+
+        $input = $request->all();
+        $input['编号年份'] = Carbon::today()->year;
+        $input['编号数字'] = Purchaseorder_hx::where('编号年份', Carbon::today()->year)->max('编号数字');
+        $input['编号数字'] += 1;
+        $input['编号商品名称'] = "spmc";
+        if ($input['采购订单状态'] == 20)
+        {
+            $input['修造或工程'] = "QT";
+            $input['采购订单编号'] = "QT-" . $input['编号商品名称'] . "-" . Carbon::today()->year . "-" . Carbon::today()->format("m") . "-" . $input['编号数字'];
+        }
+
+        $sohead = Salesorder_hxold::find($input['对应项目ID']);
+        if (isset($sohead))
+        {
+            $input['项目名称'] = $sohead->number . "|" . $sohead->custinfo_name . "|" . $sohead->descrip . "|" . $sohead->amount;
+        }
+
+//        dd($input);
+        Purchaseorder_hx::create($input);
+//        Purchaseorder_hxold::create($input);
+//        Purchaseorder::create($input);
+//        return redirect('purchase/purchaseorders');
     }
 
     /**
@@ -117,6 +158,13 @@ class PurchaseordersController extends Controller
         //
         $purchaseorder = Purchaseorder::findOrFail($id);
         return view('purchase.purchaseorders.edit', compact('purchaseorder'));
+    }
+
+    public function edit_hx($id)
+    {
+        //
+        $purchaseorder = Purchaseorder_hxold_simple::findOrFail($id);
+        return view('purchase.purchaseorders.edit_hx', compact('purchaseorder'));
     }
 
     /**
@@ -243,5 +291,11 @@ class PurchaseordersController extends Controller
         $receiptorders = Purchaseorder_hxold::find($id)->receiptorders;
 //        dd($receiptorders);
         return view('purchase.receiptorders.index_hx', compact('receiptorders'));
+    }
+
+    public function getpoheadtaxrateass_hx($id)
+    {
+        $receiptorders = Poheadtaxrateass_hxold::where('pohead_id', $id)->get();
+        return $receiptorders;
     }
 }

@@ -66,9 +66,11 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">采购<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         @can('module_purchase')
+                            <li><a href="/purchase/purchaseorders/index_hx">采购订单</a></li>
+                            {{--
                         <li><a href="/purchase/purchaseorders">采购订单</a></li>
+                        --}}
                             @if (isset(Auth::user()->email) and Auth::user()->email == "admin@admin.com")
-                        <li><a href="/purchase/purchaseorders/index_hx">采购订单_华星</a></li>
                             @endif
                         <li><a href="/purchase/vendinfos">供应商</a></li>
                         <li role="separator" class="divider"></li>

@@ -3,9 +3,10 @@
 @section('title', '采购订单')
 
 @section('main')
+    @can('purchase_purchaseorder_view')
     <div class="panel-heading">
+        <a href="create_hx" class="btn btn-sm btn-success">新建</a>
         {{--
-        <a href="purchaseorders/create" class="btn btn-sm btn-success">新建</a>
         <div class="pull-right" style="padding-top: 4px;">
             <a href="{{ URL::to('purchase/vendtypes') }}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> {{'客户类型管理', [], 'layouts'}}</a>
         </div>
@@ -70,10 +71,7 @@
                         {{ $purchaseorder->arrival_percent }}
                     </td>
                     <td>
-                        {{ $purchaseorder->sohead->number . '|' . $purchaseorder->sohead->descrip }}
-                        {{--
-                        @if (isset($purchaseorder->sohead->number)) {{ $purchaseorder->sohead->number }} @endif
-                        --}}
+                        @if (isset($purchaseorder->sohead)) {{ $purchaseorder->sohead->number . '|' . $purchaseorder->sohead->descrip }} @else @endif
                     </td>
                     <td>
                         <a href="{{ URL::to('/purchase/purchaseorders/' . $purchaseorder->id . '/receiptorders_hx') }}" target="_blank" class="btn btn-default btn-sm">查看</a>
@@ -84,8 +82,10 @@
                     </td>
                     --}}
                     <td>
+                        @if ($purchaseorder->status == 20)
+                            <a href="{{ URL::to('/purchase/purchaseorders/'.$purchaseorder->id.'/edit_hx') }}" class="btn btn-success btn-sm pull-left">编辑</a>
+                        @endif
                         {{--
-                        <a href="{{ URL::to('/purchase/purchaseorders/'.$purchaseorder->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>
                         <a href="{{ URL::to('/purchase/purchaseorders/' . $purchaseorder->id . '/receiving') }}" class="btn btn-success btn-sm pull-left">收货</a>
                         <a href="{{ URL::to('/purchase/purchaseorders/' . $purchaseorder->id . '/payments') }}" target="_blank" class="btn btn-success btn-sm pull-left">付款</a>
                         {!! Form::open(array('route' => array('purchase.purchaseorders.destroy', $purchaseorder->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
@@ -106,5 +106,7 @@
     </div>
     @endif    
 
-
-@stop
+@else
+    无权限
+@endcan
+@endsection

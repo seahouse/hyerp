@@ -238,7 +238,7 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
     Route::group(['prefix' => 'report2'], function() {
         Route::get('bonusbysalesmanager', '\App\Http\Controllers\My\MyController@bonusbysalesmanager');
     });
-    Route::any('', 'MyController@bonusbyorder');
+//    Route::any('', 'MyController@bonusbyorder');
     Route::group(['prefix' => '{sohead_id}/bonuspayment'], function () {
 //        Route::get('/', 'ReceiptpaymentsController@index');
         Route::get('create', 'BonuspaymentController@create');
@@ -273,6 +273,9 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         Route::get('receiptorders', 'PurchaseordersController@receiptorders');
         Route::get('poitems', 'PurchaseordersController@poitems');
         Route::get('receiptorders_hx', 'PurchaseordersController@receiptorders_hx');
+        Route::get('edit_hx', 'PurchaseordersController@edit_hx');
+        Route::patch('update_hx', 'PurchaseordersController@update_hx');
+        Route::get('getpoheadtaxrateass_hx', 'PurchaseordersController@getpoheadtaxrateass_hx');
     });
     Route::group(['prefix' => 'purchaseorders/{purchaseorder}/payments'], function () {
         Route::get('/', 'PaymentsController@index');
@@ -285,11 +288,16 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
     });
     Route::group(['prefix' => 'purchaseorders'], function() {
         Route::get('getitemsbyorderkey/{key}/{supplierid?}', 'PurchaseordersController@getitemsbyorderkey');
-
         Route::get('index_hx', 'PurchaseordersController@index_hx');
+        Route::get('create_hx', 'PurchaseordersController@create_hx');
+        Route::post('store_hx', 'PurchaseordersController@store_hx');
         Route::post('search_hx', 'PurchaseordersController@search_hx');
     });
+    Route::group(['prefix' => 'poheadtaxrateass'], function() {
+        Route::get('destorybyid/{id}', 'PoheadtaxrateassController@destorybyid');       // use get for page opt.
+    });
     Route::resource('purchaseorders', 'PurchaseordersController');
+    Route::resource('poheadtaxrateass', 'PoheadtaxrateassController');
     Route::get('poitems/{headId}/create', 'PoitemsController@createByPoheadId');
     Route::group(['prefix' => 'poitems/hxold'], function() {
         Route::get('', 'PoitemsController@index_hxold');

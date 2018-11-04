@@ -91,27 +91,30 @@ class DeliverydelayReminder extends Command
                         $plandeliverydate = Carbon::parse($sohead->plandeliverydate);
                         $today = Carbon::today();
                         $this->info("\t" . $today . "\t" . $sohead->plandeliverydate);
-                        if ($today->addDays(14)->eq($plandeliverydate))
+                        if ($today->diffInDays($plandeliverydate, false) == 14)
                         {
-                            $msg = $sohead->projectjc . "（" . $sohead->number . "），距约定交货日期还有14天，如项目延迟进场则请及时与业主沟通延期后的准确时间，如业主无法给出准确时间则告知业主推迟半年，由此造成的涨价和仓储等损失由业主承担。将确定后的时间交财务部上传系统。";
+                            $msg = $sohead->projectjc . "（" . $sohead->number . "），按约定" . $plandeliverydate->toDateString() . "进场，目前已经延迟" . $plandeliverydate->diffInDays($today) . "天，如项目延迟进场则请及时与业主沟通延期后的准确时间，如业主无法给出准确时间则告知业主推迟半年，由此造成的涨价和仓储等损失由业主承担。将确定后的时间交财务部上传系统。";
                             $this->sendMsg($msg, $sohead->salesmanager_id);
                             $this->sendMsg($msg, 186);      // to LiuYJ
                             $this->sendMsg($msg, 8);        // to WuHL
+                            $this->sendMsg($msg, 486);      // to ZhangJY
                         }
-                        if ($today->addDays(7)->eq($plandeliverydate))
+                        if ($today->diffInDays($plandeliverydate, false) == 7)
                         {
-                            $msg = $sohead->projectjc . "（" . $sohead->number . "），距约定交货日期还有7天，如项目延迟进场则请及时与业主沟通延期后的准确时间，如业主无法给出准确时间则告知业主推迟半年，由此造成的涨价和仓储等损失由业主承担。将确定后的时间交财务部上传系统。";
+                            $msg = $sohead->projectjc . "（" . $sohead->number . "），按约定" . $plandeliverydate->toDateString() . "进场，目前已经延迟" . $plandeliverydate->diffInDays($today) . "天，如项目延迟进场则请及时与业主沟通延期后的准确时间，如业主无法给出准确时间则告知业主推迟半年，由此造成的涨价和仓储等损失由业主承担。将确定后的时间交财务部上传系统。";
                             $this->sendMsg($msg, $sohead->salesmanager_id);
                             $this->sendMsg($msg, 186);      // to LiuYJ
                             $this->sendMsg($msg, 8);        // to WuHL
+                            $this->sendMsg($msg, 486);      // to ZhangJY
                         }
-                        if ($today->gt($plandeliverydate))
+                        if ($today->diffInDays($plandeliverydate, false) < 0)
                         {
                             $this->info("\ttttttttt");
-                            $msg = $sohead->projectjc . "（" . $sohead->number . "），如项目延迟进场则请及时与业主沟通延期后的准确时间，如业主无法给出准确时间则告知业主推迟半年，由此造成的涨价和仓储等损失由业主承担。将确定后的时间交财务部上传系统。";
+                            $msg = $sohead->projectjc . "（" . $sohead->number . "），按约定" . $plandeliverydate->toDateString() . "进场，目前已经延迟" . $plandeliverydate->diffInDays($today) . "天，如项目延迟进场则请及时与业主沟通延期后的准确时间，如业主无法给出准确时间则告知业主推迟半年，由此造成的涨价和仓储等损失由业主承担。将确定后的时间交财务部上传系统。";
                             $this->sendMsg($msg, $sohead->salesmanager_id);
                             $this->sendMsg($msg, 186);      // to LiuYJ
                             $this->sendMsg($msg, 8);        // to WuHL
+                            $this->sendMsg($msg, 486);      // to ZhangJY
                         }
                     }
                 }
