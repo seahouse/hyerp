@@ -92,90 +92,98 @@ class Salesorder_hxold extends Model
             return $this->bonusfactor;
         
         $bonusfactor = 0.0;
-        foreach ($this->equipmenttypes as $equipmenttype)
+        if ($this->type == 0)       // 普通订单
         {
-            if (isset($equipmenttype))
+            foreach ($this->equipmenttypes as $equipmenttype)
             {
-                $bonusfactortemp = 0.0;
-                switch ($equipmenttype->id)
+                if (isset($equipmenttype))
                 {
-                    case 1:     // 1
-                        $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
-                        break;
-                    case 2:     // 2
-                        $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
-                        break;
-                    case 4:     // 3
-                        $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.8, 1.2);
-                        break;
-                    case 11:     // 4
-                        $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.8, 1.2);
-                        break;
-                    case 9:     // 5
-                        $bonusfactortemp = $this->getBonusfactorByAmount();
-                        break;
-                    case 10:     // 6
-                        $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
-                        break;
-                    case 17:     // 7
-                        $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
-                        break;
-                    case 18:     // 8
-                        $bonusfactortemp = $this->getBonusfactorByAmount();
-                        break;
-                    case 6:     // 9
-                        $bonusfactortemp = $this->getBonusfactorByAmount();
-                        break;
-                    case 7:     // 10
-                        $bonusfactortemp = $this->getBonusfactorByAmount();
-                        break;
-                    case 19:     // 11
-                        $bonusfactortemp = $this->getBonusfactorByAmount();
-                        break;
-                    case 5:     // 12
-                        $bonusfactortemp = $this->getBonusfactorByAmount();
-                        break;
-                    case 20:     // 13
-                        $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
-                        break;
-                    case 21:     // 14
-                        $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
-                        break;
-                    case 22:     // 15
-                        $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.8, 1.2);
-                        break;
-                    case 23:     // 16
-                        $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.8, 1.2);
-                        break;
-                    case 24:     // 17
-                        $bonusfactortemp = $this->getBonusfactorByAmount();
-                        break;
-                    case 25:     // 18
-                        $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
-                        break;
-                    case 13:     // 19
-                        $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
-                        break;
-                    case 16:     // 20
-                        $bonusfactortemp = $this->getBonusfactorByAmount();
-                        break;
-                    case 26:     // 21
-                        $bonusfactortemp = $this->getBonusfactorByAmount();
-                        break;
-                    case 27:     // 22
-                        $bonusfactortemp = $this->getBonusfactorByAmount();
-                        break;
-                    case 14:     // 23
-                        $bonusfactortemp = $this->getBonusfactorByAmount();
-                        break;
-                    case 12:     // 24
-                        $bonusfactortemp = $this->getBonusfactorByAmount();
-                        break;
+                    $bonusfactortemp = 0.0;
+                    switch ($equipmenttype->id)
+                    {
+                        case 1:     // 1
+                            $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
+                            break;
+                        case 2:     // 2
+                            $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
+                            break;
+                        case 4:     // 3
+                            $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.8, 1.2);
+                            break;
+                        case 11:     // 4
+                            $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.8, 1.2);
+                            break;
+                        case 9:     // 5
+                            $bonusfactortemp = $this->getBonusfactorByAmount();
+                            break;
+                        case 10:     // 6
+                            $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
+                            break;
+                        case 17:     // 7
+                            $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
+                            break;
+                        case 18:     // 8
+                            $bonusfactortemp = $this->getBonusfactorByAmount();
+                            break;
+                        case 6:     // 9
+                            $bonusfactortemp = $this->getBonusfactorByAmount();
+                            break;
+                        case 7:     // 10
+                            $bonusfactortemp = $this->getBonusfactorByAmount();
+                            break;
+                        case 19:     // 11
+                            $bonusfactortemp = $this->getBonusfactorByAmount();
+                            break;
+                        case 5:     // 12
+                            $bonusfactortemp = $this->getBonusfactorByAmount();
+                            break;
+                        case 20:     // 13
+                            $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
+                            break;
+                        case 21:     // 14
+                            $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
+                            break;
+                        case 22:     // 15
+                            $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.8, 1.2);
+                            break;
+                        case 23:     // 16
+                            $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.8, 1.2);
+                            break;
+                        case 24:     // 17
+                            $bonusfactortemp = $this->getBonusfactorByAmount();
+                            break;
+                        case 25:     // 18
+                            $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
+                            break;
+                        case 13:     // 19
+                            $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
+                            break;
+                        case 16:     // 20
+                            $bonusfactortemp = $this->getBonusfactorByAmount();
+                            break;
+                        case 26:     // 21
+                            $bonusfactortemp = $this->getBonusfactorByAmount();
+                            break;
+                        case 27:     // 22
+                            $bonusfactortemp = $this->getBonusfactorByAmount();
+                            break;
+                        case 14:     // 23
+                            $bonusfactortemp = $this->getBonusfactorByAmount();
+                            break;
+                        case 12:     // 24
+                            $bonusfactortemp = $this->getBonusfactorByAmount();
+                            break;
+                    }
+                    if ($bonusfactor == 0.0 || $bonusfactor > $bonusfactortemp)
+                        $bonusfactor = $bonusfactortemp;
                 }
-                if ($bonusfactor == 0.0 || $bonusfactor > $bonusfactortemp)
-                    $bonusfactor = $bonusfactortemp;
             }
         }
+        elseif ($this->type == 1)       // 配件订单
+        {
+            $bonusfactor = $this->getBonusfactorByReceiptpaymentPercent2(0.2, 2);
+        }
+
 //        $equipmenttype = $this->equipmenttypes->first();
 
 //        dd($this->equipmenttypes->first());
@@ -205,6 +213,7 @@ class Salesorder_hxold extends Model
             $poheadamounpercent = $poheadamounttotal / $amount;
             if ($receiptpaymenttotal / $amount >= 0.6)
             {
+                $bonusfactor = $maxbonusfactor;
                 if ($poheadamounpercent >= 0.5 && $poheadamounpercent < 0.6)
                     $bonusfactor = $bonusfactor - $offset;
                 elseif ($poheadamounpercent >= 0.6 && $poheadamounpercent < 0.7)
@@ -218,10 +227,44 @@ class Salesorder_hxold extends Model
         return $bonusfactor;
     }
 
+    // 针对配件订单
+    private function getBonusfactorByReceiptpaymentPercent2($mixbonusfactor, $maxbonusfactor)
+    {
+        $bonusfactor = $mixbonusfactor;
+        $offset = ($maxbonusfactor - $mixbonusfactor) / 6;
+        if ($this->amount > 0.0)
+        {
+            $amount = $this->amount;
+            $poheadamounttotal = $this->poheads_simple->sum('amount') / 10000.0;
+            $receiptpaymenttotal = $this->receiptpayments->sum('amount');
+            $poheadamounpercent = $poheadamounttotal / $amount;
+            if ($receiptpaymenttotal / $amount >= 0.6)
+            {
+                $bonusfactor = $maxbonusfactor;
+                if ($poheadamounpercent >= 0.3 && $poheadamounpercent < 0.4)
+                    $bonusfactor = $bonusfactor - $offset;
+                elseif ($poheadamounpercent >= 0.4 && $poheadamounpercent < 0.5)
+                    $bonusfactor = $bonusfactor - $offset * 2;
+                elseif ($poheadamounpercent >= 0.5 && $poheadamounpercent < 0.6)
+                    $bonusfactor = $bonusfactor - $offset * 3;
+                elseif ($poheadamounpercent >= 0.6 && $poheadamounpercent < 0.7)
+                    $bonusfactor = $bonusfactor - $offset * 4;
+                elseif ($poheadamounpercent >= 0.7 && $poheadamounpercent < 0.8)
+                    $bonusfactor = $bonusfactor - $offset * 5;
+                elseif ($poheadamounpercent / $amount >= 0.8)
+                    $bonusfactor = $mixbonusfactor;
+            }
+        }
+        return $bonusfactor;
+    }
+
     // 奖金比例，根据政策获取，不取字段值
     public function getAmountpertenthousandBySohead() {
 //        return 250;
-        return DB::connection('sqlsrv')->select('select dbo.getAmountpertenthousandBySohead(' . $this->id . ') as amountpertenthousandbysohead');
+        if ($this->type == 0)   // 普通订单
+            return DB::connection('sqlsrv')->select('select dbo.getAmountpertenthousandBySohead(' . $this->id . ') as amountpertenthousandbysohead');
+        else       // 配件订单
+            return DB::connection('sqlsrv')->select('select 300 as amountpertenthousandbysohead');
     }
 
     public function bonuspayments() {
