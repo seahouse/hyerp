@@ -26,7 +26,7 @@
         <div class="form-group">
             {!! Form::label('amountpertenthousandbysohead', '奖金比例:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::text('amountpertenthousandbysohead', array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead, ['class' => 'form-control', 'readonly']) !!}
+                {!! Form::text('amountpertenthousandbysohead', array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead, ['class' => 'form-control']) !!}
             </div>
         </div>
 
@@ -37,28 +37,19 @@
             </div>
         </div>
 
+        <div class="form-group">
+            {!! Form::label('remark', '备注:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::text('remark', null, ['class' => 'form-control']) !!}
+            </div>
+        </div>
+
 @if (isset($paymentrequest))
 
 
 
 
 
-
-<div class="form-group">
-    {!! Form::label('pohead_amount_ticketed', '已开票金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-5 col-sm-9'>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount_ticketed)) 
-         {!! Form::text('pohead_amount_ticketed', $paymentrequest->purchaseorder_hxold->amount_ticketed, ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('pohead_amount_ticketed', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount_ticketed) and isset($paymentrequest->purchaseorder_hxold->amount) and $paymentrequest->purchaseorder_hxold->amount > 0.0)
-        {!! Form::label('amount_ticketed_percent', number_format($paymentrequest->purchaseorder_hxold->amount_ticketed / $paymentrequest->purchaseorder_hxold->amount * 100.0, 2, '.', '') . '%', ['class' => 'col-xs-3 col-sm-1 control-label']) !!}
-    @else
-        {!! Form::label('amount_ticketed_percent', '-', ['class' => 'col-xs-3 col-sm-1 control-label', 'id' => 'amount_ticketed_percent']) !!}
-    @endif
-</div>
 
             <div class="form-group">
                 {!! Form::label('pohead_taxrate_str', '税率信息:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}

@@ -16,5 +16,6 @@ class Bonuspayment_hxold extends Model
         'bonusfactor',
         'amountpertenthousandbysohead',
         'amount',
+        'remark',
     ];
 }
