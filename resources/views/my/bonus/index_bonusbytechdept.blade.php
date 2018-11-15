@@ -1,6 +1,6 @@
 @extends('navbarerp')
 
-@section('title', '销售人员奖金')
+@section('title', '技术人员奖金')
 
 <style>
     td.details-control {
@@ -14,7 +14,7 @@
 
 @section('main')
     <div class="panel-heading">
-        <div class="panel-title">奖金报表
+        <div class="panel-title">技术人员奖金报表
             {{--            <div class="pull-right">
                             <a href="{{ URL::to('product/itemclasses') }}" target="_blank" class="btn btn-sm btn-success">{{'物料类型管理'}}</a>
                             <a href="{{ URL::to('product/characteristics') }}" target="_blank" class="btn btn-sm btn-success">{{'物料属性管理'}}</a>
@@ -53,7 +53,7 @@
     <table id="userDataTable" class="table table-striped table-hover table-full-width"  width="100%">
         <thead>
         <tr>
-            <th>销售经理</th>
+            <th>项目主设</th>
             <th>订单总金额</th>
             <th>区间收款</th>
             <th>应发奖金</th>
@@ -88,20 +88,6 @@
     {{--<script type="text/javascript" src="/DataTables/DataTables-1.10.16/js/jquery.dataTables.js"></script>--}}
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
-            $("#btnExport").click(function() {
-                $.ajax({
-                    type: "POST",
-                    url: "{{ url('approval/paymentrequests/export') }}",
-                    // data: $("form#formAddVendbank").serialize(),
-                    // dataType: "json",
-                    error:function(xhr, ajaxOptions, thrownError){
-                        alert('error');
-                    },
-                    success:function(result){
-                        alert("导出成功:" + result);
-                    },
-                });
-            });
 
             function format ( d ) {
                 // `d` is the original data object for the row
@@ -123,7 +109,7 @@
                 "serverSide": true,
                 {{--"ajax": "{{ url('my/bonus/indexjsonbyorder') }}",--}}
                 "ajax": {
-                    "url": "{{ url('my/bonus/indexjsonbysalesmanager') }}",
+                    "url": "{{ url('my/bonus/indexjsonbytechdept') }}",
                     "data": function (d) {
                         d.salesmanager = $('select[name=salesmanager]').val();
                         d.receivedatestart = $('input[name=receivedatestart]').val();

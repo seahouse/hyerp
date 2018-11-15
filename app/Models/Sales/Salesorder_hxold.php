@@ -267,6 +267,11 @@ class Salesorder_hxold extends Model
             return DB::connection('sqlsrv')->select('select 300 as amountpertenthousandbysohead');
     }
 
+    // 技术部人员奖金系数
+    public function getAmountpertenthousandBySoheadTech() {
+        return 25;
+    }
+
     public function bonuspayments() {
         return $this->hasMany('App\Models\Sales\Bonuspayment_hxold', 'sohead_id', 'id');
     }

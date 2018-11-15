@@ -57,7 +57,8 @@
                         <li><a href="/inventory/inventoryAvailabilityBySalesorder">库存可用量</a></li>
                             <li><a href="/sales/report">报表</a></li>
                         @if (Auth::user()->isSuperAdmin())
-                                <li><a href="/sales/report2/bonusbysalesmanager">奖金报表</a></li>
+                                <li><a href="/sales/report2/bonusbysalesmanager">销售人员奖金报表</a></li>
+                                <li><a href="/sales/report2/bonusbytechdept">技术人员奖金报表</a></li>
                         @endif
                         @endcan
                     </ul>

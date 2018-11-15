@@ -387,4 +387,101 @@ class MyController extends Controller
             ->make(true);
 
     }
+
+    public function bonusbytechdept()
+    {
+        return view('my.bonus.index_bonusbytechdept');
+    }
+
+    public function indexjsonbytechdept(Request $request)
+    {
+        $query = Employee_hxold::where('dept_id', 4)
+            ->orWhere('dept_id', 36)
+        ;
+//        $query->leftJoin('vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
+//        $query->leftJoin('outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
+
+
+        return Datatables::of($query->select('vemployee.*'))
+//            ->filter(function ($query) use ($request) {
+//                if ($request->has('salesmanager') && strlen($request->get('salesmanager')) > 0) {
+//                    $query->where('vorder.salesmanager', "{$request->get('salesmanager')}");
+//                }
+//
+////                if ($request->has('email')) {
+////                    $query->where('email', 'like', "%{$request->get('email')}%");
+////                }
+//            })
+            ->addColumn('orderamounttotal', function (Employee_hxold $designer_tech) use ($request) {
+                return Salesorder_hxold::where('designer_tech1_id', $designer_tech->id)->sum('amount');
+            })
+            ->addColumn('receiptamountperiod', function (Employee_hxold $designer_tech) use ($request) {
+                $soheads = Salesorder_hxold::where('designer_tech1_id', $designer_tech->id)->get();
+                $receiptamountperiod = 0.0;
+                foreach ($soheads as $sohead)
+                {
+                    if ($request->has('receivedatestart') && $request->has('receivedateend'))
+                    {
+                        $receiptamountperiod += $sohead->receiptpayments->sum(function ($receiptpayment) use ($request, &$receiptamountperiod) {
+                            if ($receiptpayment->date >= $request->get('receivedatestart') && $receiptpayment->date <= $request->get('receivedateend'))
+                                $receiptamountperiod += $receiptpayment->amount;
+                            else
+                                $receiptamountperiod += 0.0;
+                        });
+                    }
+                    else
+                        $receiptamountperiod += $sohead->receiptpayments->sum('amount');
+                }
+                return $receiptamountperiod;
+            })
+            ->addColumn('bonus', function (Employee_hxold $designer_tech) use ($request) {
+                $soheads = Salesorder_hxold::where('designer_tech1_id', $designer_tech->id)->get();
+                $bonus = 0.0;
+                foreach ($soheads as $sohead)
+                {
+                    if ($request->has('receivedatestart') && $request->has('receivedateend'))
+                    {
+                        $bonus += $sohead->receiptpayments->sum(function ($receiptpayment) use ($request, $sohead, &$bonus) {
+                            if ($receiptpayment->date >= $request->get('receivedatestart') && $receiptpayment->date <= $request->get('receivedateend'))
+                                $bonus += $receiptpayment->amount * $sohead->getBonusfactorByPolicy($request->get('receivedateend')) * $sohead->getAmountpertenthousandBySoheadTech();
+                            else
+                                $bonus += 0.0;
+                        });
+                    }
+                    else
+                        $bonus += $sohead->receiptpayments->sum('amount') * $sohead->getBonusfactorByPolicy() * $sohead->getAmountpertenthousandBySoheadTech();
+                }
+                return $bonus;
+            })
+            ->addColumn('bonuspaid', function (Employee_hxold $designer_tech) use ($request) {
+                $soheads = Salesorder_hxold::where('designer_tech1_id', $designer_tech->id)->get();
+                $bonuspaid = 0.0;
+                foreach ($soheads as $sohead)
+                {
+                    $bonuspaid += $sohead->bonuspayments->sum('amount');
+                }
+                return $bonuspaid;
+            })
+            ->addColumn('bonuspaidperiod', function (Employee_hxold $designer_tech) use ($request) {
+                $soheads = Salesorder_hxold::where('designer_tech1_id', $designer_tech->id)->get();
+                $bonuspaid = 0.0;
+                foreach ($soheads as $sohead)
+                {
+                    if ($request->has('receivedatestart') && $request->has('receivedateend'))
+                    {
+                        $bonuspaid += $sohead->bonuspayments->sum(function ($bonuspayment) use ($request, &$bonuspaid) {
+                            if ($bonuspayment->paymentdate >= $request->get('receivedatestart') && $bonuspayment->paymentdate <= $request->get('receivedateend'))
+                                $bonuspaid += $bonuspayment->amount;
+                            else
+                                $bonuspaid += 0.0;
+                        });
+                    }
+                    else
+                        $bonuspaid += $sohead->bonuspayments->sum('amount');
+                }
+                return $bonuspaid;
+            })
+            ->make(true);
+
+    }
 }
