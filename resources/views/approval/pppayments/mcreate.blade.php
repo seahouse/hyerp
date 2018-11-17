@@ -838,7 +838,7 @@
 						\<div class="form-group">\
 							<label for="area" class="col-xs-4 col-sm-2 control-label">地区:</label>\
 							<div class="col-sm-10 col-xs-8">\
-							    <select class="form-control" ="" name="area"><option selected="selected" value="">--请选择--</option><option value="国内">国内</option><option value="国外">国外</option></select>\
+							    <select class="form-control" ="" id="area_' + String(item_num) + '" onchange="selectTypeChange(this.dataset.num)" data-num="' + String(item_num) + '" name="area"><option selected="selected" value="">--请选择--</option><option value="国内">国内</option><option value="国外">国外</option></select>\
 							</div>\
 						</div>\
 						\<div class="form-group">\
@@ -883,6 +883,7 @@
                 var strhtml = '';
                 var strhtml2 = '';
                 var selecttype = $("#type_" + String(num));
+                var selectarea = $("#area_" + String(num));
 
                 if (selecttype.val() == "抛丸")
                 {
@@ -941,19 +942,26 @@
                 else if (selecttype.val() == "铆焊")
                 {
                     @foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.铆焊') as $key => $value)
-                            {{--alert('{!! $key !!}');--}}
-                        strhtml2 += '<div class="form-group" name="div_unitpriceitem">';
-                        strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\
+                        var b = true;
+                        if (selectarea.val() == "国内" && "{!! $key !!}" == "包装支架含漆")
+                            b = false;
+                        if (b && selectarea.val() == "国外" && "{!! $key !!}" == "包装支架")
+                            b = false;
+                        if (b)
+                        {
+                            strhtml2 += '<div class="form-group" name="div_unitpriceitem">';
+                            strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\
                             <div class="col-sm-5 col-xs-4">\
                             <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\
                             \</div>\
                             \<div class="col-sm-5 col-xs-4">';
-                        if (productioncompany == "泰州分公司")
-                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['泰州分公司'] !!}" readonly="readonly">';
-                        else if (productioncompany == "胶州分公司")
-                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';
-                        strhtml2 += '\</div>';
-                        strhtml2 += '</div>';
+                            if (productioncompany == "泰州分公司")
+                                strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['泰州分公司'] !!}" readonly="readonly">';
+                            else if (productioncompany == "胶州分公司")
+                                strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';
+                            strhtml2 += '\</div>';
+                            strhtml2 += '</div>';
+                        }
                     @endforeach
                 }
 

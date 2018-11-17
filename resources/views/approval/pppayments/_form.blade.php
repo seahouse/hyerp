@@ -211,7 +211,7 @@
                 <div class="form-group">
                     {!! Form::label('area', '地区:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
                     <div class='col-xs-8 col-sm-10'>
-                        {!! Form::select('area', array('国内' => '国内', '国外' => '国外'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, 'id' => 'area_1']) !!}
+                        {!! Form::select('area', array('国内' => '国内', '国外' => '国外'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, 'id' => 'area_1', 'onchange' => 'selectTypeChange(this.dataset.num)', 'data-num' => '1']) !!}
                     </div>
                 </div>
 
@@ -225,27 +225,15 @@
                 {!! Form::hidden('totalprice_inputname', 'totalprice_inputname_1', ['class' => 'btn btn-sm']) !!}
 
                 <div id="pppaymentitemtypecontainer_1" name="pppaymentitemtypecontainer"></div>
-{{--
-
-
-
-            <div class="form-group">
-                {!! Form::label('size', '尺寸:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-                <div class='col-xs-8 col-sm-10'>
-                    {!! Form::text('size', null, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'size_1']) !!}
-                </div>
-            </div>
 
 
 
 
-            <div class="form-group">
-                {!! Form::label('remark', '备注:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-                <div class='col-xs-8 col-sm-10'>
-                    {!! Form::text('remark', null, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'remark_1']) !!}
-                </div>
-            </div>
---}}
+
+
+
+
+
                 <div class="form-group">
                     {!! Form::label('images', '上传质检签收单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
