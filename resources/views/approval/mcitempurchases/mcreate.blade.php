@@ -453,7 +453,7 @@
                         var strhtml = '';
                         $.each(result.data, function(i, field) {
                             btnId = 'btnSelectItem_' + String(i);
-                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.goods_name + "(" + field.goods_spec + ")</h4></button>"
+                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.goods_name + "(" + field.goods_spec + ")</h4><h5>" + field.goods_old_name + "</h5></button>"
                         });
                         if (strhtml == '')
                             strhtml = '无记录。';

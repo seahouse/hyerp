@@ -95,6 +95,7 @@ class McitempurchaseController extends Controller
 //            'drawingcount'          => 'required|integer|min:1',
 //            'drawingattachments.*'  => 'required|file',
 //            'images.*'                => 'required|image',
+            'detailuse'               => 'required',
         ]);
 //        $input = HelperController::skipEmptyValue($input);
 

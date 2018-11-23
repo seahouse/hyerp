@@ -145,7 +145,11 @@ class ItemsController extends Controller
         //
         $items = Itemp_hxold::where('goods_id', -1)->paginate(50);
         if ($key <> "")
-            $items = Itemp_hxold::where('goods_name', 'like', '%' . $key . '%')
+            $items = Itemp_hxold::where(function ($query) use ($key) {
+                $query->where('goods_name', 'like', '%' . $key . '%')
+                    ->orWhere('goods_old_name', 'like', '%' . $key . '%');
+            })
+                ->whereNull('end_date')
                 ->paginate(500);
 
         return $items;

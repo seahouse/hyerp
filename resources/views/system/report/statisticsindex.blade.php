@@ -50,6 +50,8 @@
                 {!! Form::select('orderid', $myprojectListByProjectengineer, null, ['class' => 'form-control', 'placeholder' => '--项目--']) !!}
             @elseif ($report->name == "so_amountstatistics_forfinancedept")
                 {!! Form::select('dateyear', $soheadOrderDateyearList_hxold, null, ['class' => 'form-control', 'placeholder' => '--年份--']) !!}
+            @elseif ($report->name == "po_statistics_byproject")
+                {!! Form::select('project_id', $projectList, null, ['class' => 'form-control', 'placeholder' => '--项目--']) !!}
             @endif
 
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
