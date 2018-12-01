@@ -437,6 +437,13 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
 
     Route::post('bingdingtalk', 'ApprovalController@bingdingtalk');
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexapproval');
+    Route::group(['prefix' => 'report2'], function() {
+        Route::get('issuedrawingpurchasedetail', 'ApprovalController@issuedrawingpurchasedetail');
+        Route::post('issuedrawingpurchasedetailexport', 'ApprovalController@issuedrawingpurchasedetailexport');
+        Route::get('issuedrawingjson', 'ApprovalController@issuedrawingjson');
+        Route::get('mcitempurchasejson', 'ApprovalController@mcitempurchasejson');
+        Route::get('pppaymentjson', 'ApprovalController@pppaymentjson');
+    });
 });
 
 Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' => ['web', 'auth']], function() {

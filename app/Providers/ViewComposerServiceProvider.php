@@ -152,8 +152,8 @@ class ViewComposerServiceProvider extends ServiceProvider
         });
 
         // poheadList_hxold
-        view()->composer(array('system.report.statisticsindex'), function($view) {
-            $view->with('poheadList_hxold', \App\Models\Sales\Salesorder_hxold::orderby('id', 'asc')->lists('projectjc', 'id'));
+        view()->composer(array('system.report.statisticsindex', 'approval.reports2.issuedrawingpurchasedetail'), function($view) {
+            $view->with('poheadList_hxold', \App\Models\Sales\Salesorder_hxold::where('status', 0)->orderby('id', 'asc')->lists('projectjc', 'id'));
         });
 
          // poheadOrderDateyearList_hxold

@@ -31,4 +31,18 @@ class Pppayment extends Model
         $approvers = config('custom.dingtalk.approversettings.pppayment.' . $this::getAttribute('designdepartment'), '');
         return $approvers;
     }
+
+    public function pppaymentitems()
+    {
+        return $this->hasMany('\App\Models\Approval\Pppaymentitem', 'pppayment_id', 'id');
+    }
+
+    public function pppaymentitemunitprices()
+    {
+        return $this->hasManyThrough('\App\Models\Approval\Pppaymentitemunitprice', '\App\Models\Approval\Pppaymentitem', 'pppayment_id', 'pppaymentitem_id', 'id');
+    }
+
+    public function applicant() {
+        return $this->hasOne('\App\Models\System\User', 'id', 'applicant_id');
+    }
 }

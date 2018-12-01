@@ -8,7 +8,12 @@ use App\Http\Controllers\util\taobaosdk\dingtalk\domain\FormComponentValueVo;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\SmartworkBpmsProcessinstanceCreateRequest;
 use App\Models\Approval\Approvaltype;
 use App\Models\Approval\Approversetting;
+use App\Models\Approval\Issuedrawing;
+use App\Models\Approval\Mcitempurchase;
 use App\Models\Approval\Paymentrequestretract;
+use App\Models\Approval\Pppayment;
+use App\Models\Approval\Pppaymentitem;
+use App\Models\Sales\Salesorder_hxold;
 use App\Models\System\User;
 use Illuminate\Http\Request;
 
@@ -17,7 +22,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Approval\Reimbursement;
 use App\Models\Approval\Paymentrequest;
 use App\Models\Approval\Paymentrequestapproval;
-use Auth, DB, Log;
+use Auth, DB, Log, Datatables, Excel;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\DingTalkController;
 
@@ -896,5 +901,297 @@ class ApprovalController extends Controller
 //        $response = HttpDingtalkEco::post("", $params, json_encode($data));
 
         return $response;
+    }
+
+    public function issuedrawingpurchasedetail()
+    {
+        $issuedrawings = Issuedrawing::all();
+        $mcitempurchases = Mcitempurchase::all();
+        $pppayments = Pppayment::all();
+
+        return view('approval/reports2/issuedrawingpurchasedetail');
+    }
+
+    public function issuedrawingjson(Request $request)
+    {
+        $query = Issuedrawing::whereRaw('1=1');
+        $query->where('status', 0);
+        if ($request->has('sohead_id'))
+            $query->where('sohead_id', $request->get('sohead_id'));
+//        $query->leftJoin('vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
+//        $query->leftJoin('outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
+
+//        $query->whereRaw('vreceiptpayment.date between \'2018/1/1\' and \'2018/8/1\'');
+
+
+//        $items = $query->select('vorder.*',
+//            'vcustomer.name as customer_name')
+//            ->paginate(10);
+
+        return Datatables::of($query->select('issuedrawings.*', Db::raw('convert(varchar(100), issuedrawings.created_at, 23) as created_date')))
+//            ->filter(function ($query) use ($request) {
+//                if ($request->has('receivedatestart') && $request->has('receivedateend')) {
+//                    $query->whereRaw('vreceiptpayment.date between \'' . $request->get('receivedatestart') . '\' and \'' . $request->get('receivedateend') . '\'');
+//                }
+//            })
+            ->addColumn('applicant', function (Issuedrawing $issuedrawing) {
+                return $issuedrawing->applicant->name;
+            })
+//            ->addColumn('bonus', function (Receiptpayment_hxold $receiptpayment) {
+//                return $receiptpayment->amount * $receiptpayment->sohead->getBonusfactorByPolicy() * array_first($receiptpayment->sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+//            })
+            ->make(true);
+    }
+
+    public function mcitempurchasejson(Request $request)
+    {
+        $query = Mcitempurchase::whereRaw('1=1');
+        $query->where('status', 0);
+        if ($request->has('sohead_id'))
+            $query->where('sohead_id', $request->get('sohead_id'));
+//        $query->leftJoin('vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
+//        $query->leftJoin('outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
+
+//        $query->whereRaw('vreceiptpayment.date between \'2018/1/1\' and \'2018/8/1\'');
+
+
+//        $items = $query->select('vorder.*',
+//            'vcustomer.name as customer_name')
+//            ->paginate(10);
+
+        return Datatables::of($query->select('mcitempurchases.*', Db::raw('convert(varchar(100), mcitempurchases.created_at, 23) as created_date')))
+//            ->filter(function ($query) use ($request) {
+//                if ($request->has('receivedatestart') && $request->has('receivedateend')) {
+//                    $query->whereRaw('vreceiptpayment.date between \'' . $request->get('receivedatestart') . '\' and \'' . $request->get('receivedateend') . '\'');
+//                }
+//            })
+            ->addColumn('totalweight', function (Mcitempurchase $mcitempurchase) {
+                return $mcitempurchase->mcitempurchaseitems->sum('weight');
+            })
+//            ->addColumn('bonus', function (Receiptpayment_hxold $receiptpayment) {
+//                return $receiptpayment->amount * $receiptpayment->sohead->getBonusfactorByPolicy() * array_first($receiptpayment->sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+//            })
+            ->make(true);
+    }
+
+    public function pppaymentjson(Request $request)
+    {
+        $query = Pppaymentitem::whereRaw('1=1');
+        $query->leftJoin('pppayments', 'pppaymentitems.pppayment_id', '=', 'pppayments.id');
+        $query->where('pppayments.status', 0);
+//        $query->where('status', 0);
+//        if ($request->has('sohead_id'))
+//            $query->where('sohead_id', $request->get('sohead_id'));
+
+
+//        $items = $query->select('vorder.*',
+//            'vcustomer.name as customer_name')
+//            ->paginate(10);
+
+        return Datatables::of($query->select('pppaymentitems.*', Db::raw('convert(varchar(100), pppaymentitems.created_at, 23) as created_date'),
+                'pppayments.productioncompany', 'pppayments.paymentdate'))
+            ->filter(function ($query) use ($request) {
+                if ($request->has('sohead_id')) {
+                    $query->where('pppaymentitems.sohead_id', $request->get('sohead_id'));
+                }
+            })
+//            ->addColumn('tonnage_paowan', function (Pppayment $pppayment) {
+//                return $pppayment->pppaymentitems->where('type', '抛丸')->sum(function ($pppaymentitem) {
+//                    return $pppaymentitem->pppaymentitemunitprices->sum('tonnage');
+//                });
+//            })
+            ->addColumn('tonnage_paowan', function (Pppaymentitem $pppaymentitem) {
+                return $pppaymentitem->type == "抛丸" ? $pppaymentitem->pppaymentitemunitprices->sum('tonnage') : 0.0;
+            })
+            ->addColumn('tonnage_youqi', function (Pppaymentitem $pppaymentitem) {
+                return $pppaymentitem->type == "油漆" ? $pppaymentitem->pppaymentitemunitprices->sum('tonnage') : 0.0;
+            })
+            ->addColumn('tonnage_rengong', function (Pppaymentitem $pppaymentitem) {
+                return $pppaymentitem->type == "人工" ? $pppaymentitem->pppaymentitemunitprices->sum('tonnage') : 0.0;
+            })
+            ->addColumn('tonnage_maohan', function (Pppaymentitem $pppaymentitem) {
+                return $pppaymentitem->type == "铆焊" ? $pppaymentitem->pppaymentitemunitprices->sum('tonnage') : 0.0;
+            })
+            ->addColumn('applicant', function (Pppaymentitem $pppaymentitem) {
+                return $pppaymentitem->pppayment->applicant->name;
+            })
+//            ->addColumn('bonus', function (Receiptpayment_hxold $receiptpayment) {
+//                return $receiptpayment->amount * $receiptpayment->sohead->getBonusfactorByPolicy() * array_first($receiptpayment->sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+//            })
+            ->make(true);
+    }
+
+    /**
+     * export to excel/pdf.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function issuedrawingpurchasedetailexport(Request $request)
+    {
+        //
+        $filename = "issuedrawingpurchasedetail";
+        if ($request->has('sohead_id'))
+        {
+            $sohead = Salesorder_hxold::find($request->get('sohead_id'));
+            if ($sohead)
+                $filename = $sohead->projectjc;
+        }
+        Excel::create($filename, function($excel) use ($request, $filename) {
+            $excel->sheet('Sheetname', function($sheet) use ($request, $filename) {
+
+                // Sheet manipulation
+                $data = [];
+                $issuedrawings = $this->issuedrawingjson($request);
+//                dd($issuedrawings->getData(true));
+//                dd(json_decode($issuedrawings) );
+                $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                foreach ($issuedrawingsArray as $value)
+                {
+                    $temp = [];
+                    $temp['issuedrawing.created_date']          = $value['created_date'];
+                    $temp['issuedrawing.tonnage']                = $value['tonnage'];
+                    $temp['issuedrawing.applicant']              = $value['applicant'];
+                    $temp['issuedrawing.productioncompany']     = $value['productioncompany'];
+                    $temp['issuedrawing.overview']               = $value['overview'];
+
+                    $temp['mcitempurchase.created_date']         = '';
+                    $temp['mcitempurchase.manufacturingcenter'] = '';
+                    $temp['mcitempurchase.totalweight']          = '';
+                    $temp['mcitempurchase.detailuse']            = '';
+
+                    $temp['pppayment.created_date']             = '';
+                    $temp['pppayment.tonnage_paowan']           = '';
+                    $temp['pppayment.tonnage_youqi']            = '';
+                    $temp['pppayment.tonnage_rengong']          = '';
+                    $temp['pppayment.tonnage_maohan']           = '';
+                    $temp['pppayment.productioncompany']        = '';
+                    $temp['pppayment.productionoverview']       = '';
+                    $temp['pppayment.paymentdate']              = '';
+                    $temp['pppayment.applicant']                = '';
+                    $temp['pppayment.tonnage']                  = '';
+                    array_push($data, $temp);
+                }
+                $mcitempurchases = $this->mcitempurchasejson($request);
+                $mcitempurchasesArray = $mcitempurchases->getData(true)["data"];
+                $data_size = count($data);
+                foreach ($mcitempurchasesArray as $key => $value)
+                {
+                    if ($data_size > $key)
+                    {
+                        $data[$key]['mcitempurchase.created_date']          = $value['created_date'];
+                        $data[$key]['mcitempurchase.manufacturingcenter']  = $value['manufacturingcenter'];
+                        $data[$key]['mcitempurchase.totalweight']           = $value['totalweight'];
+                        $data[$key]['mcitempurchase.detailuse']             = $value['detailuse'];
+                    }
+                    else
+                    {
+                        $temp = [];
+                        $temp['issuedrawing.created_date']          = '';
+                        $temp['issuedrawing.tonnage']                = '';
+                        $temp['issuedrawing.applicant']              = '';
+                        $temp['issuedrawing.productioncompany']     = '';
+                        $temp['issuedrawing.overview']               = '';
+
+                        $temp['mcitempurchase.created_date']         = $value['created_date'];
+                        $temp['mcitempurchase.manufacturingcenter'] = $value['manufacturingcenter'];
+                        $temp['mcitempurchase.totalweight']          = $value['totalweight'];
+                        $temp['mcitempurchase.detailuse']            = $value['detailuse'];
+
+                        $temp['pppayment.created_date']             = '';
+                        $temp['pppayment.tonnage_paowan']           = '';
+                        $temp['pppayment.tonnage_youqi']            = '';
+                        $temp['pppayment.tonnage_rengong']          = '';
+                        $temp['pppayment.tonnage_maohan']           = '';
+                        $temp['pppayment.productioncompany']        = '';
+                        $temp['pppayment.productionoverview']       = '';
+                        $temp['pppayment.paymentdate']              = '';
+                        $temp['pppayment.applicant']                = '';
+                        $temp['pppayment.tonnage']                  = '';
+                        array_push($data, $temp);
+                    }
+                }
+                $pppayments = $this->pppaymentjson($request);
+                $pppaymentsArray = $pppayments->getData(true)["data"];
+                $data_size = count($data);
+                foreach ($pppaymentsArray as $key => $value)
+                {
+                    if ($data_size > $key)
+                    {
+                        $data[$key]['pppayment.created_date']           = $value['created_date'];
+                        $data[$key]['pppayment.tonnage_paowan']         = $value['tonnage_paowan'];
+                        $data[$key]['pppayment.tonnage_youqi']          = $value['tonnage_youqi'];
+                        $data[$key]['pppayment.tonnage_rengong']        = $value['tonnage_rengong'];
+                        $data[$key]['pppayment.tonnage_maohan']          = $value['tonnage_maohan'];
+                        $data[$key]['pppayment.productioncompany']      = $value['productioncompany'];
+                        $data[$key]['pppayment.productionoverview']     = $value['productionoverview'];
+                        $data[$key]['pppayment.paymentdate']             = $value['paymentdate'];
+                        $data[$key]['pppayment.applicant']               = $value['applicant'];
+                        $data[$key]['pppayment.tonnage']                 = $value['tonnage'];
+                    }
+                    else
+                    {
+                        $temp = [];
+                        $temp['issuedrawing.created_date']          = '';
+                        $temp['issuedrawing.tonnage']                = '';
+                        $temp['issuedrawing.applicant']              = '';
+                        $temp['issuedrawing.productioncompany']     = '';
+                        $temp['issuedrawing.overview']               = '';
+
+                        $temp['mcitempurchase.created_date']         = '';
+                        $temp['mcitempurchase.manufacturingcenter'] = '';
+                        $temp['mcitempurchase.totalweight']          = '';
+                        $temp['mcitempurchase.detailuse']            = '';
+
+                        $temp['pppayment.created_date']             = $value['created_date'];
+                        $temp['pppayment.tonnage_paowan']           = $value['tonnage_paowan'];
+                        $temp['pppayment.tonnage_youqi']            = $value['tonnage_youqi'];
+                        $temp['pppayment.tonnage_rengong']          = $value['tonnage_rengong'];
+                        $temp['pppayment.tonnage_maohan']           = $value['tonnage_maohan'];
+                        $temp['pppayment.productioncompany']        = $value['productioncompany'];
+                        $temp['pppayment.productionoverview']       = $value['productionoverview'];
+                        $temp['pppayment.paymentdate']              = $value['paymentdate'];
+                        $temp['pppayment.applicant']                = $value['applicant'];
+                        $temp['pppayment.tonnage']                  = $value['tonnage'];
+                        array_push($data, $temp);
+                    }
+                }
+//                dd($data);
+                $sheet->freezeFirstRow();
+                $sheet->fromArray($data);
+            });
+
+            // Set the title
+            $excel->setTitle($filename);
+
+            // Chain the setters
+            $excel->setCreator('HXERP')
+                ->setCompany('Huaxing East');
+
+            // Call them separately
+//            $excel->setDescription('A demonstration to change the file properties');
+
+        })->export('xlsx');
+
+        // // instantiate and use the dompdf class
+        // $dompdf = new Dompdf();
+        // // $dompdf->loadHtml('hello world');
+        // // $dompdf->set_option('isRemoteEnabled', true);
+        // // $dompdf->loadHtmlFile(url('/approval/paymentrequests/25'));
+        // $dompdf->loadHtmlFile('http://www.baidu.com');
+        // // $html = file_get_contents('http://www.baidu.com');
+        // // return $html;
+
+        // // (Optional) Setup the paper size and orientation
+        // $dompdf->setPaper('A4', 'landscape');
+
+        // // Render the HTML as PDF
+        // $dompdf->render();
+
+        // // Output the generated PDF to Browser
+        // $dompdf->stream();
+
+        // return PDF::loadFile(url('/approval/paymentrequests/25'))->save('/path-to/my_stored_file.pdf')->stream('download.pdf');
+
+        // return 'ssss';
     }
 }

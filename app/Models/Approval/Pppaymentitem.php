@@ -16,4 +16,13 @@ class Pppaymentitem extends Model
         'type',
         'seq',
     ];
+
+    public function pppaymentitemunitprices()
+    {
+        return $this->hasMany('\App\Models\Approval\Pppaymentitemunitprice', 'pppaymentitem_id', 'id');
+    }
+
+    public function pppayment() {
+        return $this->hasOne('\App\Models\Approval\Pppayment', 'id', 'pppayment_id');
+    }
 }

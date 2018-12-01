@@ -414,7 +414,12 @@
         {!! Form::text('created_at', $paymentrequest->created_at, ['class' => 'form-control', $attr]) !!}
     </div>
 
-    @if ($paymentrequest->approversetting_id === 0)
+    {!! Form::label('applicant', '申请人:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
+    <div class='col-xs-4 col-sm-4'>
+        {!! Form::text('applicant', $paymentrequest->applicant->name, ['class' => 'form-control', $attr]) !!}
+    </div>
+    {{--
+    @if ($paymentrequest->approversetting_id == 0)
         @if ($paymentrequest->paymentrequestapprovals->count())
             {!! Form::label('last_approval_created_at', '审批时间:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
             <div class='col-xs-4 col-sm-4'>
@@ -422,41 +427,13 @@
             </div>
         @endif
     @endif
+    --}}
 </div>
 
 
 
-{{--
-<div class="form-group">
-    {!! Form::label('supplier_bankaccountnumber', '银行账号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->vendbank_hxold->accountnum)) 
-        {!! Form::text('supplier_bankaccountnumber', $paymentrequest->vendbank_hxold->accountnum, ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('supplier_bankaccountnumber', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-</div>
---}}
 @else
-<div class="form-group">
-    {!! Form::label('supplier_bank', '开户行:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-{{--
-    {!! Form::text('supplier_bank', null, ['class' => 'form-control', 'readonly', $attr]) !!}
---}}
-    {!! Form::text('supplier_bank', null, ['class' => 'form-control', 'placeholder' => '点击选择', 'readonly', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectSupplierBankModal', 'data-name' => 'supplier_name', 'data-id' => 'supplier_id']) !!}
-
-    {!! Form::hidden('vendbank_id', 0, ['id' => 'vendbank_id']) !!}
-    </div>
-</div>
-
-<div class="form-group">
-    {!! Form::label('supplier_bankaccountnumber', '银行账号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-    {!! Form::text('supplier_bankaccountnumber', null, ['class' => 'form-control', 'readonly', $attr]) !!}
-    </div>
-</div>
+    记录异常，请联系管理员。
 @endif
 
 
