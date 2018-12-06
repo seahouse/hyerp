@@ -13,6 +13,7 @@
 </style>
 
 @section('main')
+    @if (Auth::user()->isSuperAdmin())
     <div class="panel-heading">
         {{--
         <div class="panel-title">我的 -- 奖金
@@ -29,15 +30,20 @@
                 <a href="{{ URL::to('approval/items/create') }}" class="btn btn-sm btn-success">新建</a>
         --}}
 
-        @if (Auth::user()->email === "admin@admin.com")
-            <form class="pull-right" action="/approval/report2/issuedrawingpurchasedetailexport" method="post" id="formExport">
-                {!! csrf_field() !!}
-                <input type="hidden" value="aaa" name="sohead_id" id="sohead_id">
-                <div class="pull-right">
-                    <button type="button" class="btn btn-default btn-sm" id="btnExport">导出</button>
-                </div>
-            </form>
-        @endif
+        {!! Form::open(['url' => '/approval/report2/issuedrawingpurchasedetailexport2', 'class' => 'pull-right form-inline', 'id' => 'formExport2']) !!}
+        <div class="form-group-sm">
+            {!! Form::hidden('sohead_id', null) !!}
+            {!! Form::button('按工厂导出', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport2']) !!}
+        </div>
+        {!! Form::close() !!}
+
+        <form class="pull-right form-inline" action="/approval/report2/issuedrawingpurchasedetailexport" method="post" id="formExport">
+            {!! csrf_field() !!}
+            <input type="hidden" value="aaa" name="sohead_id" id="sohead_id">
+            <div class="pull-right">
+                <button type="button" class="btn btn-default btn-sm" id="btnExport">按订单导出</button>
+            </div>
+        </form>
 
         {!! Form::open(['url' => '/approval/reports2/issuedrawingpurchasedetail', 'class' => 'pull-right form-inline', 'id' => 'frmSearch']) !!}
         <div class="form-group-sm">
@@ -110,8 +116,9 @@
         {!! $items->setPath('/my/bonus')->links() !!}
     @endif
     --}}
-
-
+    @else
+        无权限。
+    @endif
 
 @endsection
 
@@ -136,6 +143,11 @@
                         {{--alert("导出成功:" + result);--}}
                     {{--},--}}
                 {{--});--}}
+            });
+
+            $("#btnExport2").click(function() {
+                $("form#formExport2").find('#sohead_id').val($('select[name=sohead_id]').val());
+                $("form#formExport2").submit();
             });
 
             function format ( d ) {

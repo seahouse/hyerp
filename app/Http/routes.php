@@ -440,6 +440,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::group(['prefix' => 'report2'], function() {
         Route::get('issuedrawingpurchasedetail', 'ApprovalController@issuedrawingpurchasedetail');
         Route::post('issuedrawingpurchasedetailexport', 'ApprovalController@issuedrawingpurchasedetailexport');
+        Route::post('issuedrawingpurchasedetailexport2', 'ApprovalController@issuedrawingpurchasedetailexport2');
         Route::get('issuedrawingjson', 'ApprovalController@issuedrawingjson');
         Route::get('mcitempurchasejson', 'ApprovalController@mcitempurchasejson');
         Route::get('pppaymentjson', 'ApprovalController@pppaymentjson');
