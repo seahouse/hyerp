@@ -49,6 +49,12 @@
     </div>
 </div>
 
+<div class="form-group">
+    {!! Form::label('sumcol', '求和列:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class='col-sm-10'>
+        {!! Form::text('sumcol', null, ['class' => 'form-control']) !!}
+    </div>
+</div>
 
 <div class="form-group">
     {!! Form::label('descrip', '描述:', ['class' => 'col-sm-2 control-label']) !!}

@@ -16,22 +16,23 @@
     <div class="panel-body">
         {!! Form::open(['url' => '/purchase/purchaseorders/search_hx', 'class' => 'pull-right form-inline']) !!}
         <div class="form-group-sm">
-{{--
-            {!! Form::label('arrivaldatelabel', '到货时间:', ['class' => 'control-label']) !!}
-            {!! Form::date('datearravalfrom', null, ['class' => 'form-control']) !!}
-            {!! Form::label('arrivaldatelabelto', '-', ['class' => 'control-label']) !!}
-            {!! Form::date('datearravalto', null, ['class' => 'form-control']) !!}
+            {{--
+            {!! Form::select('sohead_id', $poheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '--订单--']) !!}
+                        {!! Form::label('arrivaldatelabel', '到货时间:', ['class' => 'control-label']) !!}
+                        {!! Form::date('datearravalfrom', null, ['class' => 'form-control']) !!}
+                        {!! Form::label('arrivaldatelabelto', '-', ['class' => 'control-label']) !!}
+                        {!! Form::date('datearravalto', null, ['class' => 'form-control']) !!}
 
-            {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '对应项目名称']) !!}
-            {!! Form::label('signdatelabel', '签订日期:', ['class' => 'control-label']) !!}
-            {!! Form::date('signdatefrom', null, ['class' => 'form-control']) !!}
-            {!! Form::label('signdatelabelto', '-', ['class' => 'control-label']) !!}
-            {!! Form::date('signdateto', null, ['class' => 'form-control']) !!}
-            {!! Form::select('arrivalstatus', array(0 => '未到货', 1 => '部分到货', 2 => '全部到货'), null, ['class' => 'form-control', 'placeholder' => '--到货状态--']) !!}
-            {!! Form::select('paidstatus', array(0 => '未付款', 1 => '部分付款', 2 => '全部付款'), null, ['class' => 'form-control', 'placeholder' => '--付款状态--']) !!}
-            {!! Form::select('ticketedstatus', array(0 => '未开票', 1 => '部分开票', 2 => '全部开票'), null, ['class' => 'form-control', 'placeholder' => '--开票状态--']) !!}
-            {!! Form::text('batch', null, ['class' => 'form-control', 'placeholder' => '批号']) !!}
---}}
+                        {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '对应项目名称']) !!}
+                        {!! Form::label('signdatelabel', '签订日期:', ['class' => 'control-label']) !!}
+                        {!! Form::date('signdatefrom', null, ['class' => 'form-control']) !!}
+                        {!! Form::label('signdatelabelto', '-', ['class' => 'control-label']) !!}
+                        {!! Form::date('signdateto', null, ['class' => 'form-control']) !!}
+                        {!! Form::select('arrivalstatus', array(0 => '未到货', 1 => '部分到货', 2 => '全部到货'), null, ['class' => 'form-control', 'placeholder' => '--到货状态--']) !!}
+                        {!! Form::select('paidstatus', array(0 => '未付款', 1 => '部分付款', 2 => '全部付款'), null, ['class' => 'form-control', 'placeholder' => '--付款状态--']) !!}
+                        {!! Form::select('ticketedstatus', array(0 => '未开票', 1 => '部分开票', 2 => '全部开票'), null, ['class' => 'form-control', 'placeholder' => '--开票状态--']) !!}
+                        {!! Form::text('batch', null, ['class' => 'form-control', 'placeholder' => '批号']) !!}
+            --}}
             {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '采购订单编号']) !!}
 
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
@@ -95,6 +96,33 @@
                     </td>
                 </tr>
             @endforeach
+
+            {{--
+            <tr class="info">
+                <td>合计</td>
+                <td>{{ $purchaseorders->sum('amount') }}</td>
+                @if (Agent::isDesktop())
+                    <td></td>
+                    <td></td>
+                    <td>
+                        @if (Auth::user()->email == "admin@admin.com")
+                            {{ $purchaseorders->sum('amount_ticketed') }}
+                        @endif
+                    </td>
+                    <td>
+                        @if (Auth::user()->email == "admin@admin.com")
+                            {{ $purchaseorders->sum('amount') }}
+                        @endif
+                    </td>
+                @endif
+                <td></td>
+                <td></td>
+                <td></td>
+                @if (Agent::isDesktop())
+                    <td></td>
+                @endif
+            </tr>
+            --}}
         </tbody>
 
     </table>

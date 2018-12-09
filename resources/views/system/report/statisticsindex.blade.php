@@ -100,6 +100,61 @@
                     @endforeach
                 </tr>
             @endforeach
+
+            @if (count($sumcols) > 0 && strlen($sumcols[0]) > 0)
+                <?php $sumvalues = []; ?>
+
+                @foreach($items as $item)
+                    <?php $colnum = 1; ?>
+                    @foreach($item as  $value)
+                        @foreach ($sumcols as $key => $sumcol)
+                            @if ($colnum == $sumcol)
+                                <?php $sumvalues[$key] = array_key_exists($key, $sumvalues) ? $sumvalues[$key] + $value : $value; ?>
+                            @endif
+                        @endforeach
+
+                        <?php $colnum++; ?>
+                    @endforeach
+                @endforeach
+
+                <tr class="info">
+                    @foreach($items as $item)
+                        <?php $colnum = 1; ?>
+                        @foreach($item as  $value)
+                            <td>
+                                @foreach ($sumcols as $key => $sumcol)
+                                    @if ($colnum == $sumcol)
+                                        {{ $sumvalues[$key] }}
+                                    @endif
+                                @endforeach
+                            <?php $colnum++; ?>
+                            </td>
+                        @endforeach
+                        @break
+                    @endforeach
+
+                </tr>
+
+                <tr class="success">
+                    @foreach($items as $item)
+                        <?php $colnum = 1; ?>
+                        <?php $totalindex = 0; ?>
+                        @foreach($item as  $value)
+                            <td>
+                                @foreach ($sumcols as $key => $sumcol)
+                                    @if ($colnum == $sumcol)
+                                        @if (count($sumvalues_total) > $key)
+                                            {{ $sumvalues_total[$sumcol] }}
+                                        @endif
+                                    @endif
+                                @endforeach
+                                <?php $colnum++; ?>
+                            </td>
+                        @endforeach
+                        @break
+                    @endforeach
+                </tr>
+            @endif
             </tbody>
 
         </table>

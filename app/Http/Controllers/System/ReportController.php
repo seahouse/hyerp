@@ -195,7 +195,17 @@ class ReportController extends Controller
 //        dd(array_first(array_first($items->items())));
 
         $titleshows = explode(',', $report->titleshow);
-        return view('system.report.statisticsindex', compact('items', 'report', 'input', 'titleshows'));
+
+        $sumcols = explode(',', $report->sumcol);
+        $sumvalues_total = [];
+        if (count($sumcols) > 0 && strlen($sumcols[0]) > 0)
+        {
+            $sumvalues_total =  $this->search_sum(Request(), $report)[0];
+            $sumvalues_total = json_decode(json_encode($sumvalues_total), true);
+        }
+//        dd($sumvalues_total);
+//        dd($sumcols);
+        return view('system.report.statisticsindex', compact('items', 'report', 'input', 'titleshows', 'sumcols', 'sumvalues_total'));
     }
 
     public function export($id)
@@ -288,6 +298,26 @@ class ReportController extends Controller
         }
         $param = count($input) > 0 ? substr($param, 0, strlen($param) - 1) : $param;
         $items_t = DB::connection('sqlsrv')->select($report->statement . ' ' . $param);
+
+        return $items_t;
+    }
+
+    private function search_sum($request, $report)
+    {
+        $input = $request->all();
+        $input = HelperController::skipEmptyValue($input);
+        $input = array_except($input, '_token');
+        $input = array_except($input, 'page');
+
+        $param = "";
+        foreach ($input as $key=>$value)
+        {
+            $param .= "@" . $key . "='" . $value . "',";
+        }
+        $param .= "@sumcol='" . $report->sumcol . "'";
+//        $param = count($input) > 0 ? substr($param, 0, strlen($param) - 1) : $param;
+//        dd(trim($report->statement) . '_sum ' . $param);
+        $items_t = DB::connection('sqlsrv')->select(trim($report->statement) . '_sum ' . $param);
 
         return $items_t;
     }

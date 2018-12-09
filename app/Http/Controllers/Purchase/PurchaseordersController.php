@@ -46,13 +46,16 @@ class PurchaseordersController extends Controller
     {
         //
 //        dd($request);
+        $query = Purchaseorder_hxold::orderBy('id', 'desc');
         $key = $request->input('key');
         if (strlen($key) > 0)
         {
-            $purchaseorders = Purchaseorder_hxold::orderBy('id', 'desc')->where('number', 'like', '%' . $key . '%')->paginate(10);
+            $query->where('number', 'like', '%' . $key . '%');
         }
-        else
-            $purchaseorders = Purchaseorder_hxold::orderBy('id', 'desc')->paginate(10);
+//        if ($request->has('sohead_id'))
+//            $query->where('sohead_id', $request->get('sohead_id'));
+
+        $purchaseorders = $query->paginate(15);
         return view('purchase.purchaseorders.index_hx', compact('purchaseorders'));
     }
 

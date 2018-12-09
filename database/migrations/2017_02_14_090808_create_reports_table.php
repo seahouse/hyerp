@@ -20,6 +20,7 @@ class CreateReportsTable extends Migration
             $table->string('titleshow')->nullable();
             $table->smallInteger('active')->default(1);
             $table->smallInteger('autostatistics')->default(1);
+            $table->string('sumcol')->default('');
             $table->string('descrip')->default('')->commet('描述');
             $table->string('statement', 1023)->default('')->commet('SQL语句');
 

@@ -13,6 +13,7 @@ class Report extends Model
         'titleshow',
         'active',
         'autostatistics',
+        'sumcol',
         'descrip',
         'statement'
     ];
