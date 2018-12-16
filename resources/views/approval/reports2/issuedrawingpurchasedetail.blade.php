@@ -29,6 +29,12 @@
         {{--
                 <a href="{{ URL::to('approval/items/create') }}" class="btn btn-sm btn-success">新建</a>
         --}}
+        {!! Form::open(['url' => '/approval/report2/issuedrawingpurchasedetailexport3', 'class' => 'pull-right form-inline', 'id' => 'formExport3']) !!}
+        <div class="form-group-sm">
+            {!! Form::hidden('sohead_id', null) !!}
+            {!! Form::button('按项目导出', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport3']) !!}
+        </div>
+        {!! Form::close() !!}
 
         {!! Form::open(['url' => '/approval/report2/issuedrawingpurchasedetailexport2', 'class' => 'pull-right form-inline', 'id' => 'formExport2']) !!}
         <div class="form-group-sm">
@@ -48,11 +54,11 @@
         {!! Form::open(['url' => '/approval/reports2/issuedrawingpurchasedetail', 'class' => 'pull-right form-inline', 'id' => 'frmSearch']) !!}
         <div class="form-group-sm">
             {!! Form::select('sohead_id', $poheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '--订单--']) !!}
+            {!! Form::label('issuedrawingdatelabel', '下图时间:', ['class' => 'control-label']) !!}
+            {!! Form::date('issuedrawingdatestart', null, ['class' => 'form-control']) !!}
+            {!! Form::label('issuedrawingdatelabelto', '-', ['class' => 'control-label']) !!}
+            {!! Form::date('issuedrawingdateend', null, ['class' => 'form-control']) !!}
             {{--
-            {!! Form::label('receivedatelabel', '收款时间:', ['class' => 'control-label']) !!}
-            {!! Form::date('receivedatestart', null, ['class' => 'form-control']) !!}
-            {!! Form::label('receiveldatelabelto', '-', ['class' => 'control-label']) !!}
-            {!! Form::date('receivedateend', null, ['class' => 'form-control']) !!}
             {!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']); !!}
             {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称、申请人']); !!}
             --}}
@@ -67,7 +73,6 @@
     <table id="tableIssuedrawing" class="table table-striped table-hover table-full-width"  width="100%">
         <thead>
         <tr>
-            <th></th>
             <th>下图日期</th>
             <th>吨位</th>
             <th>下图人</th>
@@ -81,7 +86,6 @@
     <table id="tableMcitempurchase" class="table table-striped table-hover table-full-width"  width="100%">
         <thead>
         <tr>
-            <th></th>
             <th>申购日期</th>
             <th>申购工厂</th>
             <th>申购吨位</th>
@@ -94,7 +98,6 @@
     <table id="tablePppayment" class="table table-striped table-hover table-full-width"  width="100%">
         <thead>
         <tr>
-            <th></th>
             <th>结算日期</th>
             <th>抛丸</th>
             <th>油漆</th>
@@ -108,6 +111,7 @@
         </tr>
         </thead>
     </table>
+
 
     {{--
     @if (count($input) > 0)
@@ -150,6 +154,11 @@
                 $("form#formExport2").submit();
             });
 
+            $("#btnExport3").click(function() {
+                $("form#formExport3").find('#sohead_id').val($('select[name=sohead_id]').val());
+                $("form#formExport3").submit();
+            });
+
             function format ( d ) {
                 // `d` is the original data object for the row
                 return '<table class="table details-table" id="detail-' + d.id + '">'+
@@ -173,19 +182,18 @@
                     "url": "{{ url('approval/report2/issuedrawingjson') }}",
                     "data": function (d) {
                         d.sohead_id = $('select[name=sohead_id]').val();
-                        d.receivedatestart = $('input[name=receivedatestart]').val();
-                        d.receivedateend = $('input[name=receivedateend]').val();
+                        d.issuedrawingdatestart = $('input[name=issuedrawingdatestart]').val();
+                        d.issuedrawingdateend = $('input[name=issuedrawingdateend]').val();
                     }
                 },
                 "columns": [
-                    {
-//                        "className":      'details-control',
-                        "orderable":      false,
-                        "searchable":      false,
-                        "data":           null,
-                        "defaultContent": ''
-                    },
-                    {"data": "created_date", "name": "created_date"},
+//                    {
+//                        "orderable":      false,
+//                        "searchable":      false,
+//                        "data":           null,
+//                        "defaultContent": ''
+//                    },
+                    {"data": "created_at", "name": "created_at"},
                     {"data": "tonnage", "name": "tonnage"},
                     {"data": "applicant", "name": "applicant"},
                     {"data": "productioncompany", "name": "productioncompany"},
@@ -198,6 +206,16 @@
 //                "fnCreatedRow": function(nRow, aData, iDataIndex) {
 //                    $('td:eq(0)', nRow).html("<span class='row-details row-details-close' data_id='" + aData[1] + "'></span>&nbsp;" + aData[0]);
 //                }
+                initComplete: function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        var input = document.createElement("input");
+                        $(input).appendTo($(column.footer()).empty())
+                            .on('change', function () {
+                                column.search($(this).val(), false, false, true).draw();
+                            });
+                    });
+                }
             });
 
             $('#tableIssuedrawing tbody').on('click', 'td.details-control', function () {
@@ -253,16 +271,9 @@
                     }
                 },
                 "columns": [
-                    {
-//                        "className":      'details-control',
-                        "orderable":      false,
-                        "searchable":      false,
-                        "data":           null,
-                        "defaultContent": ''
-                    },
-                    {"data": "created_date", "name": "created_date"},
+                    {"data": "created_date", "name": "created_date", "searchable": false},
                     {"data": "manufacturingcenter", "name": "manufacturingcenter"},
-                    {"data": "totalweight", "name": "totalweight"},
+                    {"data": "totalweight", "name": "totalweight", "searchable": false},
                     {"data": "detailuse", "name": "detailuse"},
 //                    {"data": "overview", "name": "overview"},
 //                    {"data": "bonusfactor", "name": "bonusfactor"},
@@ -288,13 +299,6 @@
                     }
                 },
                 "columns": [
-                    {
-//                        "className":      'details-control',
-                        "orderable":      false,
-                        "searchable":      false,
-                        "data":           null,
-                        "defaultContent": ''
-                    },
                     {"data": "created_date", "name": "created_date"},
                     {"data": "tonnage_paowan", "name": "tonnage_paowan"},
                     {"data": "tonnage_youqi", "name": "tonnage_youqi"},
