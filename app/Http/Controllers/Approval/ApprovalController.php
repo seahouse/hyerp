@@ -1118,7 +1118,7 @@ class ApprovalController extends Controller
                     {
                         $temp = [];
                         $temp['下图日期']          = $value['created_date'];
-                        $temp['下图吨数']                = $value['tonnage'];
+                        $temp['下图吨数']                = (double)$value['tonnage'];
                         $temp['下图申请人']              = $value['applicant'];
                         $temp['下图制作公司']     = $value['productioncompany'];
                         $temp['下图概述']               = $value['overview'];
@@ -1529,7 +1529,7 @@ class ApprovalController extends Controller
                     {
                         $temp = [];
                         $temp['下图日期']          = $value['created_date'];
-                        $temp['下图吨数']                = $value['tonnage'];
+                        $temp['下图吨数']                = (double)$value['tonnage'];
                         $temp['下图申请人']              = $value['applicant'];
                         $temp['下图制作公司']     = $value['productioncompany'];
                         $temp['下图概述']               = $value['overview'];
@@ -1648,7 +1648,7 @@ class ApprovalController extends Controller
                     if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
                         $tonnagetotal_out = $sohead_outitems[0]->heights / 10000.0;
 
-//                dd($data);
+//                    dd($data);
                     $sheet->freezeFirstRow();
                     $sheet->fromArray($data);
 
