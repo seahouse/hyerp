@@ -613,6 +613,43 @@ class DingTalkController extends Controller
 
     }
 
+    public static function sendCorpMessageTextReminder($strJson)
+    {
+        $method = 'dingtalk.corp.message.corpconversation.asyncsend';
+        $session = self::getAccessToken();
+        $format = 'json';
+        $v = '2.0';
+
+        $msgtype = 'text';
+        $agent_id = config('custom.dingtalk.agentidlist.erpreminder');
+
+        $userid_list = '';
+        $msgcontent = '';
+
+        $json = json_decode($strJson);
+        $user = User::where('id', $json->userid)->first();
+        if (isset($user))
+        {
+            $userid_list = $user->dtuserid;
+            $msgcontent = '{"content":"' . $json->msgcontent . '"}';
+        }
+
+//        // sent to wuceshi for test
+//        if (strlen($userid_list) > 0)
+//            $userid_list .= ",04090710367573";
+
+        $params = compact('method', 'session', 'v', 'format',
+            'msgtype', 'agent_id', 'userid_list', 'msgcontent');
+        $data = [
+//            'content' => $strJson
+        ];
+
+        $response = HttpDingtalkEco::post("",
+            $params, json_encode($data));
+        return $response;
+        return response()->json($response);
+    }
+
     public function send_erp($strJson)
     {
         $method = 'dingtalk.corp.message.corpconversation.asyncsend';

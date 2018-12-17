@@ -215,7 +215,7 @@ class SupplierticketReminder extends Command
                     'msgcontent'    => urlencode($msg) ,
                 ];
 
-                DingTalkController::sendCorpMessageText(json_encode($data));
+                DingTalkController::sendCorpMessageTextReminder(json_encode($data));
                 sleep(1);
             }
         }
@@ -232,7 +232,7 @@ class SupplierticketReminder extends Command
                         'msgcontent'    => urlencode($msg) ,
                     ];
 //                    Log::info($transactor->name);
-                    DingTalkController::sendCorpMessageText(json_encode($data));
+                    DingTalkController::sendCorpMessageTextReminder(json_encode($data));
                     sleep(1);
                 }
             }

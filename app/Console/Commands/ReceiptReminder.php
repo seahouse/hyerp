@@ -252,46 +252,51 @@ class ReceiptReminder extends Command
                 array_push($receiptPeopleArray[$sohead->salesmanager_id]['msg'], ($sohead->projectjc == "" ? $sohead->descrip : $sohead->projectjc) . $notReceiveAmountForWarning . "万元")  ;
                 $receiptPeopleArray[$salesmanager_id]['total'] += $notReceiveAmountForWarning;
 
-                // 本地测试
-                if ($this->option('debug'))
-                {
-                    $touser = User::where('email', $this->argument('useremail'))->first();
-                    if (isset($touser))
-                    {
-                        DingTalkController::send($touser->dtuserid, '',
-                            $msg,
-                            config('custom.dingtalk.agentidlist.erpmessage'));
-                    }
-                }
-                else
-                {
-                    // 向销售经理发送消息
-                    $salesmanager_hxold = Userold::where('user_hxold_id', $sohead->salesmanager_id)->first();
-                    if (isset($salesmanager_hxold))
-                    {
-                        $salesmanager = User::where('id', $salesmanager_hxold->user_id)->first();
-                        if (isset($salesmanager))
-                            DingTalkController::send($salesmanager->dtuserid, '',
-                                $msg,
-                                config('custom.dingtalk.agentidlist.erpmessage'));
-                    }
+                // 向销售经理发送消息
+                $this->sendMsg($msg, $sohead->salesmanager_id);
+                $this->sendMsg($msg, 8);        // to WuHL
+                $this->sendMsg($msg, 16);       // to LiY
 
-                    // 向吴HL发送消息
-                    if ($toWuHL)
-                    {
-                        $touser = User::where('email', 'wuhaolun@huaxing-east.com')->first();
-                        if (isset($touser))
-                            DingTalkController::send($touser->dtuserid, '',
-                                $msg,
-                                config('custom.dingtalk.agentidlist.erpmessage'));
-
-                        $touser = User::where('email', 'liyao@huaxing-east.com')->first();
-                        if (isset($touser))
-                            DingTalkController::send($touser->dtuserid, '',
-                                $msg,
-                                config('custom.dingtalk.agentidlist.erpmessage'));
-                    }
-                }
+//                // 本地测试
+//                if ($this->option('debug'))
+//                {
+//                    $touser = User::where('email', $this->argument('useremail'))->first();
+//                    if (isset($touser))
+//                    {
+//                        DingTalkController::send($touser->dtuserid, '',
+//                            $msg,
+//                            config('custom.dingtalk.agentidlist.erpmessage'));
+//                    }
+//                }
+//                else
+//                {
+//                    // 向销售经理发送消息
+//                    $salesmanager_hxold = Userold::where('user_hxold_id', $sohead->salesmanager_id)->first();
+//                    if (isset($salesmanager_hxold))
+//                    {
+//                        $salesmanager = User::where('id', $salesmanager_hxold->user_id)->first();
+//                        if (isset($salesmanager))
+//                            DingTalkController::send($salesmanager->dtuserid, '',
+//                                $msg,
+//                                config('custom.dingtalk.agentidlist.erpmessage'));
+//                    }
+//
+//                    // 向吴HL发送消息
+//                    if ($toWuHL)
+//                    {
+//                        $touser = User::where('email', 'wuhaolun@huaxing-east.com')->first();
+//                        if (isset($touser))
+//                            DingTalkController::send($touser->dtuserid, '',
+//                                $msg,
+//                                config('custom.dingtalk.agentidlist.erpmessage'));
+//
+//                        $touser = User::where('email', 'liyao@huaxing-east.com')->first();
+//                        if (isset($touser))
+//                            DingTalkController::send($touser->dtuserid, '',
+//                                $msg,
+//                                config('custom.dingtalk.agentidlist.erpmessage'));
+//                    }
+//                }
 
             }
         }
@@ -379,5 +384,42 @@ class ReceiptReminder extends Command
 //        DingTalkController::send('manager1200', '',
 //            '来自的付款单需要您审批.',
 //            config('custom.dingtalk.agentidlist.approval'));
+    }
+
+    public function sendMsg($msg, $userid_hxold = 0)
+    {
+        if ($this->option('debug'))
+        {
+            $touser = User::where('email', $this->argument('useremail'))->first();
+            if (isset($touser))
+            {
+                $data = [
+                    'userid'        => $touser->id,
+                    'msgcontent'    => urlencode($msg) ,
+                ];
+
+                $response = DingTalkController::sendCorpMessageTextReminder(json_encode($data));
+//                Log::info(json_encode($response));
+                sleep(1);
+            }
+        }
+        elseif ($userid_hxold > 0)
+        {
+            $transactor_hxold = Userold::where('user_hxold_id', $userid_hxold)->first();
+            if (isset($transactor_hxold))
+            {
+                $transactor = User::where('id', $transactor_hxold->user_id)->first();
+                if (isset($transactor))
+                {
+                    $data = [
+                        'userid'        => $transactor->id,
+                        'msgcontent'    => urlencode($msg) ,
+                    ];
+//                    Log::info($transactor->name);
+                    DingTalkController::sendCorpMessageTextReminder(json_encode($data));
+                    sleep(1);
+                }
+            }
+        }
     }
 }
