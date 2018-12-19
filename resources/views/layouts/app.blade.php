@@ -21,6 +21,7 @@
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
     <link rel="stylesheet" type="text/css" href="{{ asset('DataTables/datatables.min.css') }}" />
     {{--<link rel="stylesheet" type="text/css" href="{{ asset('DataTables/DataTables-1.10.16/css/jquery.dataTables.css') }}" />--}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery-editable-select.css') }} ">
 
     <style>
         body {

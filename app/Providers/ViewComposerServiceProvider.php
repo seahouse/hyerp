@@ -185,7 +185,7 @@ class ViewComposerServiceProvider extends ServiceProvider
         });
 
         // projectList
-        view()->composer(array('system.report.statisticsindex'), function($view) {
+        view()->composer(array('system.report.statisticsindex', 'approval.reports2.issuedrawingpurchasedetail'), function($view) {
             $view->with('projectList', \App\Models\Sales\Project_hxold::orderby('id', 'asc')->lists('name', 'id'));
 //            $view->with('poheadOrderDateyearList_hxold', DB::connection('sqlsrv')->select(DB::raw('select distinct datepart(year, orderdate) from vorder'))->lists('projectjc', 'id'));
         });

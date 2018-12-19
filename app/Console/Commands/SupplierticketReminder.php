@@ -179,7 +179,8 @@ class SupplierticketReminder extends Command
         foreach ($msgWuhl as $key => $value)
         {
 //            $value = array_slice($value, 0, 50);        // pre 50
-            if (array_sum($value["unticketedamountlist"]) > 100000.0)
+            // moidfy from 100000.0 to 0.0, 2018/12/18,
+            if (array_sum($value["unticketedamountlist"]) > 0.0)
             {
                 $msg = $value["name"] . "累计" . count($value["unticketedamountlist"]) . "个采购订单，合计欠票" . array_sum($value["unticketedamountlist"]) . "元。";
 //                Log::info($msg);

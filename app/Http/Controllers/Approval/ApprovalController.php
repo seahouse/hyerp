@@ -929,6 +929,12 @@ class ApprovalController extends Controller
             $query->whereIn('sohead_id', $sohead_ids);
         }
 
+        if ($request->has('project_id'))
+        {
+            $sohead_ids = Salesorder_hxold::where('project_id', $request->get('project_id'))->pluck('id');
+            $query->whereIn('sohead_id', $sohead_ids);
+        }
+
         if ($request->has('issuedrawingdatestart') && $request->has('issuedrawingdateend')) {
             $query->whereRaw('issuedrawings.created_at between \'' . $request->get('issuedrawingdatestart') . '\' and \'' . $request->get('issuedrawingdateend') . '\'');
         }
@@ -1669,7 +1675,7 @@ class ApprovalController extends Controller
                 // Sheet manipulation
                 $data = [];
 
-                $sheet->appendRow(["", "下图", "采购", "结算抛丸", "结算油漆", "结算人工", "结算铆焊"]);
+                $sheet->appendRow(["", "年份", "下图", "采购", "结算抛丸", "结算油漆", "结算人工", "结算铆焊"]);
 
                 foreach ($project_ids as $project_id)
                 {
@@ -1719,10 +1725,14 @@ class ApprovalController extends Controller
                     $sheet->freezeFirstRow();
                     $sheet->fromArray($data);
 
+                    $year = Salesorder_hxold::where('project_id', $project->id)->select(DB::raw('MIN(YEAR(orderdate)) as year'))->pluck('year');
+                    if (count($year) > 0)
+                        $year = $year[0];
+
 //                    $totalrowcolor = "#00FF00";       // green
 //                    if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
 //                        $totalrowcolor = "#FF0000"; // red
-                    $sheet->appendRow([$project->name, $tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase, $tonnagetotal_pppayment_paowan, $tonnagetotal_pppayment_youqi, $tonnagetotal_pppayment_rengong, $tonnagetotal_pppayment_maohan
+                    $sheet->appendRow([$project->name, $year, $tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase, $tonnagetotal_pppayment_paowan, $tonnagetotal_pppayment_youqi, $tonnagetotal_pppayment_rengong, $tonnagetotal_pppayment_maohan
                     ]);
 //                    $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
 //                        $row->setBackground($totalrowcolor);

@@ -54,6 +54,8 @@
         {!! Form::open(['url' => '/approval/reports2/issuedrawingpurchasedetail', 'class' => 'pull-right form-inline', 'id' => 'frmSearch']) !!}
         <div class="form-group-sm">
             {!! Form::select('sohead_id', $poheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '--订单--']) !!}
+            {!! Form::select('selectProject', $projectList, null, ['class' => 'form-control', 'placeholder' => '--项目--', 'id' => 'selectProject']) !!}
+            {!! Form::hidden('project_id', null, ['id' => 'project_id']) !!}
             {!! Form::label('issuedrawingdatelabel', '下图时间:', ['class' => 'control-label']) !!}
             {!! Form::date('issuedrawingdatestart', null, ['class' => 'form-control']) !!}
             {!! Form::label('issuedrawingdatelabelto', '-', ['class' => 'control-label']) !!}
@@ -128,9 +130,27 @@
 
 @section('script')
     <script type="text/javascript" src="/DataTables/datatables.js"></script>
+    <script type="text/javascript" src="/js/jquery-editable-select.js"></script>
     {{--<script type="text/javascript" src="/DataTables/DataTables-1.10.16/js/jquery.dataTables.js"></script>--}}
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
+            $('#selectProject')
+                .editableSelect({
+                    effects: 'slide',
+                })
+//                .on('shown.editable-select', function (e) {
+//                    console.log("shown");
+//                    console.log($('#selectProject').val());
+//                    if ($('#selectProject').val() == "--项目--")
+//                        $('#selectProject').val("");
+//                })
+                .on('select.editable-select', function (e, li) {
+//                    console.log(li.val() + li.text());
+                    $('input[name=project_id]').val(li.val())
+//                    console.log($('#project_id').val());
+                })
+            ;
+
             $("#btnExport").click(function() {
                 $("form#formExport").find('#sohead_id').val($('select[name=sohead_id]').val());
                 $("form#formExport").submit();
@@ -182,6 +202,7 @@
                     "url": "{{ url('approval/report2/issuedrawingjson') }}",
                     "data": function (d) {
                         d.sohead_id = $('select[name=sohead_id]').val();
+                        d.project_id = $('input[name=project_id]').val();
                         d.issuedrawingdatestart = $('input[name=issuedrawingdatestart]').val();
                         d.issuedrawingdateend = $('input[name=issuedrawingdateend]').val();
                     }
