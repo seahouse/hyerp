@@ -31,7 +31,7 @@
         --}}
         {!! Form::open(['url' => '/approval/report2/issuedrawingpurchasedetailexport3', 'class' => 'pull-right form-inline', 'id' => 'formExport3']) !!}
         <div class="form-group-sm">
-            {!! Form::hidden('sohead_id', null) !!}
+            {!! Form::hidden('project_id', null) !!}
             {!! Form::button('按项目导出', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport3']) !!}
         </div>
         {!! Form::close() !!}
@@ -53,7 +53,8 @@
 
         {!! Form::open(['url' => '/approval/reports2/issuedrawingpurchasedetail', 'class' => 'pull-right form-inline', 'id' => 'frmSearch']) !!}
         <div class="form-group-sm">
-            {!! Form::select('sohead_id', $poheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '--订单--']) !!}
+            {!! Form::select('selectSohead', $poheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '--订单--', 'id' => 'selectSohead']) !!}
+            {!! Form::hidden('sohead_id', null, ['id' => 'sohead_id']) !!}
             {!! Form::select('selectProject', $projectList, null, ['class' => 'form-control', 'placeholder' => '--项目--', 'id' => 'selectProject']) !!}
             {!! Form::hidden('project_id', null, ['id' => 'project_id']) !!}
             {!! Form::label('issuedrawingdatelabel', '下图时间:', ['class' => 'control-label']) !!}
@@ -146,13 +147,37 @@
 //                })
                 .on('select.editable-select', function (e, li) {
 //                    console.log(li.val() + li.text());
-                    $('input[name=project_id]').val(li.val())
+                    if (li.val() > 0)
+                        $('input[name=project_id]').val(li.val());
+                    else
+                        $('input[name=project_id]').val('');
+//                    console.log($('#project_id').val());
+                })
+            ;
+
+            $('#selectSohead')
+                .editableSelect({
+                    effects: 'slide',
+                })
+                //                .on('shown.editable-select', function (e) {
+                //                    console.log("shown");
+                //                    console.log($('#selectProject').val());
+                //                    if ($('#selectProject').val() == "--项目--")
+                //                        $('#selectProject').val("");
+                //                })
+                .on('select.editable-select', function (e, li) {
+//                    console.log(li.val() + li.text());
+                    if (li.val() > 0)
+                        $('input[name=sohead_id]').val(li.val());
+                    else
+                        $('input[name=sohead_id]').val('');
+//                    console.log($('input[name=sohead_id]').val());
 //                    console.log($('#project_id').val());
                 })
             ;
 
             $("#btnExport").click(function() {
-                $("form#formExport").find('#sohead_id').val($('select[name=sohead_id]').val());
+                $("form#formExport").find('#sohead_id').val($('input[name=sohead_id]').val());
                 $("form#formExport").submit();
                 {{--return;--}}
                 {{--alert($("form#formExport").find('#sohead_id').val());--}}
@@ -170,12 +195,12 @@
             });
 
             $("#btnExport2").click(function() {
-                $("form#formExport2").find('#sohead_id').val($('select[name=sohead_id]').val());
+                $("form#formExport2").find('#sohead_id').val($('input[name=sohead_id]').val());
                 $("form#formExport2").submit();
             });
 
             $("#btnExport3").click(function() {
-                $("form#formExport3").find('#sohead_id').val($('select[name=sohead_id]').val());
+                $("form#formExport3").find('#project_id').val($('input[name=project_id]').val());
                 $("form#formExport3").submit();
             });
 
@@ -201,8 +226,8 @@
                 "ajax": {
                     "url": "{{ url('approval/report2/issuedrawingjson') }}",
                     "data": function (d) {
-                        d.sohead_id = $('select[name=sohead_id]').val();
-                        d.project_id = $('input[name=project_id]').val();
+                        d.sohead_id = $('input[name=sohead_id]').val();
+                        d.project_id = $('input[name=project_id]').val();       // because use jquery-editable-select.js, select control changed to input control
                         d.issuedrawingdatestart = $('input[name=issuedrawingdatestart]').val();
                         d.issuedrawingdateend = $('input[name=issuedrawingdateend]').val();
                     }
@@ -286,7 +311,8 @@
                 "ajax": {
                     "url": "{{ url('approval/report2/mcitempurchasejson') }}",
                     "data": function (d) {
-                        d.sohead_id = $('select[name=sohead_id]').val();
+                        d.sohead_id = $('input[name=sohead_id]').val();
+                        d.project_id = $('input[name=project_id]').val();
                         d.receivedatestart = $('input[name=receivedatestart]').val();
                         d.receivedateend = $('input[name=receivedateend]').val();
                     }
@@ -314,7 +340,8 @@
                 "ajax": {
                     "url": "{{ url('approval/report2/pppaymentjson') }}",
                     "data": function (d) {
-                        d.sohead_id = $('select[name=sohead_id]').val();
+                        d.sohead_id = $('input[name=sohead_id]').val();
+                        d.project_id = $('input[name=project_id]').val();
                         d.receivedatestart = $('input[name=receivedatestart]').val();
                         d.receivedateend = $('input[name=receivedateend]').val();
                     }

@@ -184,23 +184,24 @@ class SupplierticketReminder extends Command
             {
                 $msg = $value["name"] . "累计" . count($value["unticketedamountlist"]) . "个采购订单，合计欠票" . array_sum($value["unticketedamountlist"]) . "元。";
 //                Log::info($msg);
+
+                $this->sendMsg($msg, 186);      // to LiuYJ
             }
 
-            $data = [
-                'userid'        => $key,
-                'msgcontent'    => urlencode($msg),
-            ];
-            if ($this->option('totalto'))
-            {
-                $touser = User::where('email', $this->option('totalto'))->first();
-                if (isset($touser))
-                {
-                    $data['userid'] = $touser->id;
-                    DingTalkController::sendCorpMessageText(json_encode($data));
-                    sleep(1);
-                    $this->sendMsg($msg, 186);      // to LiuYJ
-                }
-            }
+//            $data = [
+//                'userid'        => $key,
+//                'msgcontent'    => urlencode($msg),
+//            ];
+//            if ($this->option('totalto'))
+//            {
+//                $touser = User::where('email', $this->option('totalto'))->first();
+//                if (isset($touser))
+//                {
+//                    $data['userid'] = $touser->id;
+//                    DingTalkController::sendCorpMessageText(json_encode($data));
+//                    sleep(1);
+//                }
+//            }
         }
     }
 

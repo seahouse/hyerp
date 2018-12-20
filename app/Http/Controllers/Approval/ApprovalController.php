@@ -994,6 +994,13 @@ class ApprovalController extends Controller
             $sohead_ids = Salesorder_hxold::where('project_id', $project_id)->pluck('id');
             $query->whereIn('sohead_id', $sohead_ids);
         }
+
+        if ($request->has('project_id'))
+        {
+            $sohead_ids = Salesorder_hxold::where('project_id', $request->get('project_id'))->pluck('id');
+            $query->whereIn('sohead_id', $sohead_ids);
+        }
+
 //        $query->leftJoin('vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
 //        $query->leftJoin('outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
 
@@ -1028,6 +1035,11 @@ class ApprovalController extends Controller
 //        if ($request->has('sohead_id'))
 //            $query->where('sohead_id', $request->get('sohead_id'));
 
+        if ($request->has('project_id'))
+        {
+            $sohead_ids = Salesorder_hxold::where('project_id', $request->get('project_id'))->pluck('id');
+            $query->whereIn('pppaymentitems.sohead_id', $sohead_ids);
+        }
 
 //        $items = $query->select('vorder.*',
 //            'vcustomer.name as customer_name')
@@ -1092,7 +1104,7 @@ class ApprovalController extends Controller
 //        }
         Excel::create($filename, function($excel) use ($request, $filename) {
             $sohead_ids = [];
-            if ($request->has('sohead_id'))
+            if ($request->has('sohead_id') && $request->get('sohead_id') > 0)
                 array_push($sohead_ids, $request->get('sohead_id'));
             else
             {
@@ -1500,13 +1512,14 @@ class ApprovalController extends Controller
         Excel::create($filename, function($excel) use ($request, $filename) {
             $project_ids = [];
             $sohead_ids = Issuedrawing::where('status', 0)->distinct()->pluck('sohead_id');
-//            if ($request->has('sohead_id'))
-//                array_push($sohead_ids, $request->get('sohead_id'));
-//            else
-//            {
+            if ($request->has('project_id'))
+                array_push($project_ids, $request->get('project_id'));
+            else
+            {
 //                $sohead_ids = Issuedrawing::where('status', 0)->distinct()->pluck('sohead_id');
-//            }
-            $project_ids = Salesorder_hxold::whereIn('id', $sohead_ids)->distinct()->pluck('project_id');
+                $project_ids = Salesorder_hxold::whereIn('id', $sohead_ids)->distinct()->pluck('project_id');
+            }
+//            $project_ids = Salesorder_hxold::whereIn('id', $sohead_ids)->distinct()->pluck('project_id');
             foreach ($project_ids as $project_id)
             {
                 $sheetname = "Sheetname" . $project_id;
