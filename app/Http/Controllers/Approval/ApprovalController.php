@@ -1277,7 +1277,7 @@ class ApprovalController extends Controller
                     $param = "@orderid=" . $sohead_id;
                     $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
                     if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
-                        $tonnagetotal_out = $sohead_outitems[0]->heights / 10000.0;
+                        $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
 //                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
 
 //                dd($data);
@@ -1665,7 +1665,7 @@ class ApprovalController extends Controller
                     $param = "@projectid=" . $project_id;
                     $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
                     if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
-                        $tonnagetotal_out = $sohead_outitems[0]->heights / 10000.0;
+                        $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
 
 //                    dd($data);
                     $sheet->freezeFirstRow();
