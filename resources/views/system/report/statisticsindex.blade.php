@@ -52,6 +52,12 @@
                 {!! Form::select('dateyear', $soheadOrderDateyearList_hxold, null, ['class' => 'form-control', 'placeholder' => '--年份--']) !!}
             @elseif ($report->name == "po_statistics_byproject")
                 {!! Form::select('project_id', $projectList, null, ['class' => 'form-control', 'placeholder' => '--项目--']) !!}
+            @elseif ($report->name == "so_bonuspayment")
+                {!! Form::select('salesmanagerid', $salesmanagerList2, null, ['class' => 'form-control', 'placeholder' => '--销售经理--', 'id' => 'salesmanager']) !!}
+                {!! Form::label('paymentdatelabel', '付款日期:', ['class' => 'control-label']) !!}
+                {!! Form::date('paymentdatefrom', null, ['class' => 'form-control']) !!}
+                {!! Form::label('paymentdatelabelto', '-', ['class' => 'control-label']) !!}
+                {!! Form::date('paymentdateto', null, ['class' => 'form-control']) !!}
             @endif
 
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}

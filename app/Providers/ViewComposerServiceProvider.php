@@ -180,8 +180,13 @@ class ViewComposerServiceProvider extends ServiceProvider
         });
 
         // salesmanagerList_hxold
-        view()->composer(array('my.bonus.index_byorder', 'my.bonus.index_bonusbysalesmanager'), function($view) {
+        view()->composer(array('my.bonus.index_byorder', 'my.bonus.index_bonusbysalesmanager', 'system.report.statisticsindex'), function($view) {
             $view->with('salesmanagerList_hxold', \App\Models\Sales\Salesorder_hxold::orderby('id', 'asc')->lists('salesmanager', 'salesmanager'));
+        });
+
+        // salesmanagerList2
+        view()->composer(array('system.report.statisticsindex'), function($view) {
+            $view->with('salesmanagerList2', \App\Models\Sales\Salesorder_hxold::orderby('id', 'asc')->lists('salesmanager', 'salesmanager_id'));
         });
 
         // projectList
