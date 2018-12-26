@@ -1127,6 +1127,7 @@ class ApprovalController extends Controller
                     $tonnagetotal_pppayment_rengong = 0.0;
                     $tonnagetotal_pppayment_maohan = 0.0;
                     $tonnagetotal_out = 0.0;
+                    $tonnagetotal_in = 0.0;
 
                     $issuedrawings = $this->issuedrawingjson($request, $sohead_id);
 //                dd($issuedrawings->getData(true));
@@ -1278,6 +1279,10 @@ class ApprovalController extends Controller
                     $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
                     if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
                         $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
+
+                    $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
+                    if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
+                        $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
 //                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
 
 //                dd($data);
@@ -1289,7 +1294,7 @@ class ApprovalController extends Controller
                         $totalrowcolor = "#FF0000"; // red
                     $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
                         $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-                        "领用" . $tonnagetotal_out
+                        "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
                         ]);
                     $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
                         $row->setBackground($totalrowcolor);
@@ -1539,6 +1544,7 @@ class ApprovalController extends Controller
                     $tonnagetotal_pppayment_rengong = 0.0;
                     $tonnagetotal_pppayment_maohan = 0.0;
                     $tonnagetotal_out = 0.0;
+                    $tonnagetotal_in = 0.0;
 
                     $issuedrawings = $this->issuedrawingjson($request, 0, '', $project_id);
 //                dd($issuedrawings->getData(true));
@@ -1667,6 +1673,10 @@ class ApprovalController extends Controller
                     if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
                         $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
 
+                    $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
+                    if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
+                        $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
+
 //                    dd($data);
                     $sheet->freezeFirstRow();
                     $sheet->fromArray($data);
@@ -1676,7 +1686,7 @@ class ApprovalController extends Controller
                         $totalrowcolor = "#FF0000"; // red
                     $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
                         $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-                        "领用" . $tonnagetotal_out
+                        "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
                     ]);
                     $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
                         $row->setBackground($totalrowcolor);
@@ -1688,7 +1698,7 @@ class ApprovalController extends Controller
                 // Sheet manipulation
                 $data = [];
 
-                $sheet->appendRow(["", "年份", "下图", "采购", "结算抛丸", "结算油漆", "结算人工", "结算铆焊"]);
+                $sheet->appendRow(["", "年份", "下图", "采购", "结算抛丸", "结算油漆", "结算人工", "结算铆焊", "领用", "采购入库"]);
 
                 foreach ($project_ids as $project_id)
                 {
@@ -1730,10 +1740,14 @@ class ApprovalController extends Controller
                         $tonnagetotal_pppayment_maohan += $value['tonnage_maohan'];
                     }
 
-//                    $param = "@projectid=" . $project_id;
-//                    $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
-//                    if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
-//                        $tonnagetotal_out = $sohead_outitems[0]->heights / 10000.0;
+                    $param = "@projectid=" . $project_id;
+                    $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
+                    if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
+                        $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
+
+                    $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
+                    if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
+                        $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
 
                     $sheet->freezeFirstRow();
                     $sheet->fromArray($data);
@@ -1745,13 +1759,26 @@ class ApprovalController extends Controller
 //                    $totalrowcolor = "#00FF00";       // green
 //                    if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
 //                        $totalrowcolor = "#FF0000"; // red
-                    $sheet->appendRow([$project->name, $year, $tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase, $tonnagetotal_pppayment_paowan, $tonnagetotal_pppayment_youqi, $tonnagetotal_pppayment_rengong, $tonnagetotal_pppayment_maohan
+                    $sheet->appendRow([$project->name, $year, $tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase, $tonnagetotal_pppayment_paowan, $tonnagetotal_pppayment_youqi, $tonnagetotal_pppayment_rengong, $tonnagetotal_pppayment_maohan,
+                        $tonnagetotal_out, $tonnagetotal_in
                     ]);
 //                    $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
 //                        $row->setBackground($totalrowcolor);
 //                    });
                 }
 
+                $param = "@orderid=7550";
+                $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
+                if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
+                    $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
+
+                $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
+                if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
+                    $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
+
+                $sheet->appendRow(["厂部管理费用", "", "", "", "", "", "", "",
+                    $tonnagetotal_out, $tonnagetotal_in
+                ]);
             });
 
             // Set the title
