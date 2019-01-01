@@ -13,6 +13,7 @@
 </style>
 
 @section('main')
+    @if (Auth::user()->isSuperAdmin())
     <div class="panel-heading">
         <div class="panel-title">我的 -- 奖金
             {{--            <div class="pull-right">
@@ -27,14 +28,24 @@
                 <a href="{{ URL::to('approval/items/create') }}" class="btn btn-sm btn-success">新建</a>
         --}}
 
-        @if (Auth::user()->email === "admin@admin.com")
-            <form class="pull-right" action="/approval/paymentrequests/export" method="post">
-                {!! csrf_field() !!}
-                <div class="pull-right">
-                    <button type="submit" class="btn btn-default btn-sm">导出</button>
-                </div>
-            </form>
-        @endif
+
+        {!! Form::open(['url' => '/my/bonus/byorderexport', 'class' => 'pull-right form-inline', 'id' => 'formExport']) !!}
+        <div class="form-group-sm">
+            {!! Form::hidden('salesmanager', null) !!}
+            {!! Form::hidden('receivedatestart', null) !!}
+            {!! Form::hidden('receivedateend', null) !!}
+            {!! Form::button('按订单导出明细', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport']) !!}
+        </div>
+        {!! Form::close() !!}
+
+        {!! Form::open(['url' => '/my/bonus/byorderexport2', 'class' => 'pull-right form-inline', 'id' => 'formExport2']) !!}
+        <div class="form-group-sm">
+            {!! Form::hidden('salesmanager', null) !!}
+            {!! Form::hidden('receivedatestart', null) !!}
+            {!! Form::hidden('receivedateend', null) !!}
+            {!! Form::button('按销售经理导出明细', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport2']) !!}
+        </div>
+        {!! Form::close() !!}
 
         {!! Form::open(['url' => '/my/bonus/byorder', 'class' => 'pull-right form-inline', 'id' => 'frmSearch']) !!}
         <div class="form-group-sm">
@@ -84,7 +95,9 @@
     @endif
     --}}
 
-
+    @else
+        无权限。
+    @endif
 
 @endsection
 
@@ -94,18 +107,17 @@
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
             $("#btnExport").click(function() {
-                $.ajax({
-                    type: "POST",
-                    url: "{{ url('approval/paymentrequests/export') }}",
-                    // data: $("form#formAddVendbank").serialize(),
-                    // dataType: "json",
-                    error:function(xhr, ajaxOptions, thrownError){
-                        alert('error');
-                    },
-                    success:function(result){
-                        alert("导出成功:" + result);
-                    },
-                });
+                $("form#formExport").find('#salesmanager').val($('input[name=salesmanager]').val());
+                $("form#formExport").find('input[name=receivedatestart]').val($("form#frmSearch").find('input[name=receivedatestart]').val());
+                $("form#formExport").find('input[name=receivedateend]').val($("form#frmSearch").find('input[name=receivedateend]').val());
+                $("form#formExport").submit();
+            });
+
+            $("#btnExport2").click(function() {
+                $("form#formExport2").find('#salesmanager').val($('input[name=salesmanager]').val());
+                $("form#formExport2").find('input[name=receivedatestart]').val($("form#frmSearch").find('input[name=receivedatestart]').val());
+                $("form#formExport2").find('input[name=receivedateend]').val($("form#frmSearch").find('input[name=receivedateend]').val());
+                $("form#formExport2").submit();
             });
 
             function format ( d ) {
@@ -131,8 +143,8 @@
                     "url": "{{ url('my/bonus/indexjsonbyorder') }}",
                     "data": function (d) {
                         d.salesmanager = $('select[name=salesmanager]').val();
-                        d.receivedatestart = $('input[name=receivedatestart]').val();
-                        d.receivedateend = $('input[name=receivedateend]').val();
+                        d.receivedatestart = $("form#frmSearch").find('input[name=receivedatestart]').val();
+                        d.receivedateend = $("form#frmSearch").find('input[name=receivedateend]').val();
                     }
                 },
                 "columns": [

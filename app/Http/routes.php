@@ -542,6 +542,8 @@ Route::group(['prefix' => 'my', 'namespace' => 'My', 'middleware' => ['web', 'au
     Route::group(['prefix' => 'bonus'], function() {
         Route::any('', 'MyController@bonus');
         Route::any('byorder', 'MyController@bonusbyorder');
+        Route::post('byorderexport', 'MyController@byorderexport');
+        Route::post('byorderexport2', 'MyController@byorderexport2');
         Route::get('indexjsonbyorder', 'MyController@indexjsonbyorder');
         Route::get('detailjsonbyorder/{sohead_id}', 'MyController@detailjsonbyorder');
         Route::get('indexjsonbysalesmanager', 'MyController@indexjsonbysalesmanager');

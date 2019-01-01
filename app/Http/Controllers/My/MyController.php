@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use DB, Auth, Datatables, Log;
+use DB, Auth, Datatables, Log, Excel;
 
 class MyController extends Controller
 {
@@ -180,27 +180,31 @@ class MyController extends Controller
         return view('my.bonus.index_byorder', compact('input'));
     }
 
-    public function indexjsonbyorder(Request $request)
+    public function indexjsonbyorder(Request $request, $sohead_id = 0, $salesmanager_id = 0)
     {
         $query = Salesorder_hxold::whereRaw('1=1');
         $query->leftJoin('vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
         $query->leftJoin('outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
 
+        if ($sohead_id > 0)
+            $query->whereRaw('vorder.id=' . $sohead_id);
+        if ($salesmanager_id > 0)
+            $query->where('vorder.salesmanager_id', $salesmanager_id);
+
 //        $input = $request->all();
 //        Log::info($request->get('salesmanager'));
-//        if ($request->has('receivedatestart') && $request->has('receivedateend'))
-//        {
-//            $query->whereRaw('vreceiptpayment.date between \'' . $request->input('receivedatestart') . '\' and \'' . $request->input('receivedateend')  . '\'');
-//        }
 
-//        $query->whereRaw('vreceiptpayment.date between \'2018/1/1\' and \'2018/8/1\'');
+        if ($request->has('receivedatestart') && $request->has('receivedateend'))
+        {
+            $query->whereRaw("(select SUM(amount) from vreceiptpayment where vreceiptpayment.sohead_id=vorder.id  and vreceiptpayment.date between '" . $request->get('receivedatestart') . "' and '" . $request->get('receivedateend') . "')>0");
+        }
+        else
+            $query->whereRaw('(select SUM(amount) from vreceiptpayment where vreceiptpayment.sohead_id=vorder.id)>0');
+
 
 //        if (isset(Auth::user()->userold))
 //            $query->where('vorder.salesmanager_id', 15);
 
-//        $items = $query->select('vorder.*',
-//            'vcustomer.name as customer_name')
-//            ->paginate(10);
 
         return Datatables::of($query->select('vorder.*', DB::raw('(select SUM(amount) from vreceiptpayment where sohead_id=vorder.id) as amountperiod'),
             'vcustomer.name as customer_name'))
@@ -482,6 +486,214 @@ class MyController extends Controller
                 return $bonuspaid;
             })
             ->make(true);
+
+    }
+
+    /**
+     * export to excel/pdf.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function byorderexport(Request $request)
+    {
+        //
+        $filename = "销售人员奖金明细_按订单";
+        Excel::create($filename, function($excel) use ($request, $filename) {
+            $sohead_ids = [];
+            if ($request->has('salesmanager') && $request->get('sohead_id') > 0)
+                array_push($sohead_ids, $request->get('sohead_id'));
+            else
+            {
+                $sohead_ids = Salesorder_hxold::pluck('id');
+            }
+            foreach ($sohead_ids as $sohead_id)
+            {
+                $sheetname = "Sheetname" . $sohead_id;
+                $sohead = Salesorder_hxold::find($sohead_id);
+                if ($sohead)
+                    $sheetname = $sohead->projectjc;
+
+                $soheadbonus = $this->indexjsonbyorder($request, $sohead_id);
+                $soheadbonusArray = $soheadbonus->getData(true)["data"];
+//                dd($soheadbonusArray);
+                $soheadbonusdetail = $this->detailjsonbyorder($request, $sohead_id);
+                $soheadbonusdetailArray = $soheadbonusdetail->getData(true)["data"];
+                if (count($soheadbonusArray) == 1 && count($soheadbonusdetailArray) > 0)
+                {
+//                    dd($soheadbonusdetailArray);
+                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead_id, $soheadbonusArray, $soheadbonusdetailArray) {
+                        // Sheet manipulation
+                        $data = [];
+                        $tonnagetotal_issuedrawing = 0.0;
+                        $tonnagetotal_mcitempurchase = 0.0;
+                        $tonnagetotal_pppayment = 0.0;
+                        $tonnagetotal_pppayment_paowan = 0.0;
+                        $tonnagetotal_pppayment_youqi = 0.0;
+                        $tonnagetotal_pppayment_rengong = 0.0;
+                        $tonnagetotal_pppayment_maohan = 0.0;
+                        $tonnagetotal_out = 0.0;
+                        $tonnagetotal_in = 0.0;
+
+                        foreach ($soheadbonusdetailArray as $value)
+                        {
+                            $temp = [];
+                            $temp['订单编号']          = $soheadbonusArray[0]['number'];
+                            $temp['订单名称']          = $soheadbonusArray[0]['projectjc'];
+                            $temp['订单金额']          = $soheadbonusArray[0]['amount'];
+                            $temp['销售经理']          = $soheadbonusArray[0]['salesmanager'];
+
+                            $temp['收款日期']          = $value['receiptdate'];
+                            $temp['收款金额']          = $value['amount'];
+                            $temp['奖金系数']          = $value['bonusfactor'];
+                            $temp['应发奖金']          = $value['bonus'];
+
+
+//                            $temp['结算日期']             = '';
+//                            $temp['抛丸']           = '';
+//                            $temp['油漆']            = '';
+//                            $temp['人工']          = '';
+//                            $temp['铆焊']           = '';
+//                            $temp['结算制作公司']        = '';
+//                            $temp['结算制作概述']       = '';
+//                            $temp['结算支付日期']              = '';
+//                            $temp['结算申请人']                = '';
+//                            $temp['结算吨位']                  = '';
+                            array_push($data, $temp);
+//                            $tonnagetotal_issuedrawing += $value['tonnage'];
+
+//                            dd($temp);
+                        }
+
+//                        $param = "@orderid=" . $sohead_id;
+//                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
+//                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
+//                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
+//
+//                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
+//                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
+//                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
+
+                        $sheet->freezeFirstRow();
+                        $sheet->fromArray($data);
+
+//                        $totalrowcolor = "#00FF00";       // green
+//                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
+//                            $totalrowcolor = "#FF0000"; // red
+//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+//                        ]);
+//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+//                            $row->setBackground($totalrowcolor);
+//                        });
+                    });
+                }
+
+
+            }
+
+            // Set the title
+            $excel->setTitle($filename);
+
+            // Chain the setters
+            $excel->setCreator('HXERP')
+                ->setCompany('Huaxing East');
+
+            // Call them separately
+//            $excel->setDescription('A demonstration to change the file properties');
+
+        })->export('xlsx');
+
+    }
+
+    public function byorderexport2(Request $request)
+    {
+        //
+        $filename = "销售人员奖金明细_按销售经理";
+        Excel::create($filename, function($excel) use ($request, $filename) {
+            $salesmanagers = [];
+            if ($request->has('salesmanager') && $request->get('sohead_id') > 0)
+                array_push($sohead_ids, $request->get('sohead_id'));
+            else
+            {
+                $salesmanagers = Salesorder_hxold::distinct()->pluck('salesmanager', 'salesmanager_id');
+            }
+            foreach ($salesmanagers as $key => $salesmanager)
+            {
+                $sheetname = "Sheetname" . $key;
+                if (strlen($salesmanager) > 0)
+                    $sheetname = $salesmanager;
+
+                $soheadbonus = $this->indexjsonbyorder($request, 0, $key);
+                $soheadbonusArray = $soheadbonus->getData(true)["data"];
+                if (count($soheadbonusArray) > 0)
+                {
+                    $excel->sheet($sheetname, function($sheet) use ($request, $soheadbonusArray) {
+                        // Sheet manipulation
+                        $data = [];
+                        $tonnagetotal_issuedrawing = 0.0;
+                        $tonnagetotal_mcitempurchase = 0.0;
+                        $tonnagetotal_pppayment = 0.0;
+                        $tonnagetotal_pppayment_paowan = 0.0;
+                        $tonnagetotal_pppayment_youqi = 0.0;
+                        $tonnagetotal_pppayment_rengong = 0.0;
+                        $tonnagetotal_pppayment_maohan = 0.0;
+                        $tonnagetotal_out = 0.0;
+                        $tonnagetotal_in = 0.0;
+
+                        foreach ($soheadbonusArray as $soheadbonus)
+                        {
+                            $soheadbonusdetail = $this->detailjsonbyorder($request, $soheadbonus['id']);
+                            $soheadbonusdetailArray = $soheadbonusdetail->getData(true)["data"];
+                            if (count($soheadbonusdetailArray) > 0)
+                            {
+//                                dd($soheadbonusdetailArray);
+                                foreach ($soheadbonusdetailArray as $value)
+                                {
+                                    $temp = [];
+                                    $temp['订单编号']          = $soheadbonus['number'];
+                                    $temp['订单名称']          = $soheadbonus['projectjc'];
+                                    $temp['订单金额']          = $soheadbonus['amount'];
+//                                    $temp['销售经理']          = $soheadbonus['salesmanager'];
+
+                                    $temp['收款日期']          = $value['receiptdate'];
+                                    $temp['收款金额']          = $value['amount'];
+                                    $temp['奖金系数']          = $value['bonusfactor'];
+                                    $temp['应发奖金']          = $value['bonus'];
+
+
+                                    array_push($data, $temp);
+//                            $tonnagetotal_issuedrawing += $value['tonnage'];
+
+                                }
+                            }
+                        }
+
+
+
+
+                        $sheet->freezeFirstRow();
+                        $sheet->fromArray($data);
+
+                    });
+                }
+
+
+
+
+            }
+
+            // Set the title
+            $excel->setTitle($filename);
+
+            // Chain the setters
+            $excel->setCreator('HXERP')
+                ->setCompany('Huaxing East');
+
+            // Call them separately
+//            $excel->setDescription('A demonstration to change the file properties');
+
+        })->export('xlsx');
 
     }
 }
