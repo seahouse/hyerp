@@ -213,19 +213,23 @@ class Salesorder_hxold extends Model
         if ($this->amount > 0.0)
         {
             $amount = $this->amount;
-            $poheadamounttotal = $this->poheads_simple->sum('amount') / 10000.0;
+            $poheadamounttotal = $this->poheads_simple->sum('amount');
+            $poheadAmountBy7550 = array_first($this->getPoheadAmountBy7550())->poheadAmountBy7550;
+            $sohead_taxamount = isset($this->temTaxamountstatistics->sohead_taxamount) ? $this->temTaxamountstatistics->sohead_taxamount : 0.0;
+            $sohead_poheadtaxamount = isset($this->temTaxamountstatistics->sohead_poheadtaxamount) ? $this->temTaxamountstatistics->sohead_poheadtaxamount : 0.0;
             $receiptpaymenttotal = $this->receiptpayments->sum('amount');
-            $poheadamounpercent = $poheadamounttotal / $amount;
+            $poheadcostpercent = ($poheadamounttotal + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount) / ($amount * 10000.0);
+//            $poheadamounpercent = $poheadamounttotal / $amount;
             if ($receiptpaymenttotal / $amount >= 0.6)
             {
                 $bonusfactor = $maxbonusfactor;
-                if ($poheadamounpercent >= 0.5 && $poheadamounpercent < 0.6)
+                if ($poheadcostpercent >= 0.5 && $poheadcostpercent < 0.6)
                     $bonusfactor = $bonusfactor - $offset;
-                elseif ($poheadamounpercent >= 0.6 && $poheadamounpercent < 0.7)
+                elseif ($poheadcostpercent >= 0.6 && $poheadcostpercent < 0.7)
                     $bonusfactor = $bonusfactor - $offset * 2;
-                elseif ($poheadamounpercent >= 0.7 && $poheadamounpercent < 0.8)
+                elseif ($poheadcostpercent >= 0.7 && $poheadcostpercent < 0.8)
                     $bonusfactor = $bonusfactor - $offset * 3;
-                elseif ($poheadamounpercent / $amount >= 0.8)
+                elseif ($poheadcostpercent / $amount >= 0.8)
                     $bonusfactor = $mixbonusfactor;
             }
         }
