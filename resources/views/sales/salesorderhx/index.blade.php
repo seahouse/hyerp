@@ -45,8 +45,8 @@
                 <th>客户</th>
                 <th>工程名称</th>
                 <th>订单日期</th>
+                <th>图纸物料清单</th>
                 {{--
-                <th>销售代表</th>
                 <th>物料</th>
                 --}}
                 <th>操作</th>
@@ -66,6 +66,9 @@
                     </td>
                     <td>
                         {{ substr($salesorder->orderdate, 0, 10) }}
+                    </td>
+                    <td>
+                        <a class="btn btn-sm btn-default" href={!! URL("sales/salesorderhx/" . $salesorder->id . "/dwgbom") !!} role="button" target="_blank">物料清单</a>
                     </td>
     {{--
     <td>

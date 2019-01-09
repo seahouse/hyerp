@@ -53,7 +53,7 @@ class SalesOrdersController extends Controller
     {
         // $salesorders = Salesorder::latest('created_at')->where('number', 'like', '%' . $key . '%')
         //     ->orWhere('descrip', 'like', '%'.$key.'%')->paginate(20);
-        $query = Salesorder_hxold::orderBy('id', 'desc');
+        $query = Salesorder_hxold::where('status', '>=', 0)->orderBy('id', 'desc');
         if ($customerid > 0)
         {
             $query->where('custinfo_id', $customerid);

@@ -48,6 +48,10 @@ class PadcapitalStatistics extends Command
         $orderamountstatisticses = Vorderamountstatistics_hxold::where('padcapital', '>', 0.0)->orderBy('padcapital', 'desc')->get();
         foreach ($orderamountstatisticses as $orderamountstatistics)
         {
+            $sohead = Salesorder_hxold::where('number', $orderamountstatistics->number)->first();
+            if (isset($sohead) && $sohead->id == 7550)
+                continue;
+
             $padcapitalTotal += $orderamountstatistics->padcapital;
             $msg = $orderamountstatistics->projectjc == "" ? $orderamountstatistics->descrip : $orderamountstatistics->projectjc
                 . '(' .$orderamountstatistics->number . ')垫资'

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Sales;
 
+use App\Models\Sales\Dwgbom_hx;
 use App\Models\Sales\Salesorder_hxold;
 use Illuminate\Http\Request;
 
@@ -121,5 +122,12 @@ class SalesorderhxController extends Controller
             '--sohead_id' => $id,
         ]);
         dd('检查完成, 请查看钉钉消息.(' . $exitCode . ')');
+    }
+
+    public function dwgbom($id)
+    {
+        //
+        $dwgboms = Dwgbom_hx::where('sohead_id', $id)->paginate(10);
+        return view('sales.salesorderhx.dwgbom', compact('dwgboms', 'id'));
     }
 }
