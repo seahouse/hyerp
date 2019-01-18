@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Sales;
 
 use App\Models\Sales\Dwgbom_hx;
+use App\Models\Sales\Dwgbomitems_hx;
 use App\Models\Sales\Salesorder_hxold;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Artisan;
+use Datatables, Log;
 
 class SalesorderhxController extends Controller
 {
@@ -129,5 +131,117 @@ class SalesorderhxController extends Controller
         //
         $dwgboms = Dwgbom_hx::where('sohead_id', $id)->paginate(10);
         return view('sales.salesorderhx.dwgbom', compact('dwgboms', 'id'));
+    }
+
+    public function dwgbomjson(Request $request)
+    {
+        $query = Dwgbom_hx::whereRaw('1=1');
+
+        if ($request->has('sohead_id'))
+        {
+            $query->where('sohead_id', $request->get('sohead_id'));
+        }
+
+
+
+
+
+        return Datatables::of($query->select('dwgbom.id', 'dwgbom.bomname', 'dwgbom.created_at as create_at', 'dwgbom.updated_at as update_at'))
+//            ->editColumn('created_at', 'dwgbom.created_at')
+//            ->addColumn('amountperiod2', function (Salesorder_hxold $sohead) use ($request) {
+//                if ($request->has('receivedatestart') && $request->has('receivedateend'))
+//                {
+//                    return $sohead->receiptpayments->sum(function ($receiptpayment) use ($request) {
+//                        if ($receiptpayment->date >= $request->get('receivedatestart') && $receiptpayment->date <= $request->get('receivedateend'))
+//                            return $receiptpayment->amount;
+//                        else
+//                            return 0.0;
+//                    });
+//                }
+//                else
+//                    return $sohead->receiptpayments->sum('amount');
+//            })
+//            ->addColumn('bonusfactor', function (Salesorder_hxold $sohead) use ($request) {
+//                if ($request->has('receivedatestart') && $request->has('receivedateend'))
+//                    return $sohead->getBonusfactorByPolicy($request->get('receivedateend')) * 100.0 . '%';
+//                else
+//                    return $sohead->getBonusfactorByPolicy() * 100.0 . '%';
+//            })
+//            ->addColumn('bonus', function (Salesorder_hxold $sohead) use ($request) {
+//                if ($request->has('receivedatestart') && $request->has('receivedateend'))
+//                {
+//                    return $sohead->receiptpayments->sum(function ($receiptpayment) use ($request, $sohead) {
+//                        if ($receiptpayment->date >= $request->get('receivedatestart') && $receiptpayment->date <= $request->get('receivedateend'))
+//                            return $receiptpayment->amount * $sohead->getBonusfactorByPolicy($request->get('receivedateend')) * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+//                        else
+//                            return 0.0;
+//                    });
+//                }
+//                else
+//                    return $sohead->receiptpayments->sum('amount') * $sohead->getBonusfactorByPolicy() * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+//            })
+//            ->addColumn('bonuspaid', function (Salesorder_hxold $sohead) {
+//                return $sohead->bonuspayments->sum('amount');
+//            })
+//            ->addColumn('paybonus', function (Salesorder_hxold $sohead) {
+//                return '<a href="'. url('sales/' . $sohead->id . '/bonuspayment/create') .'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> 支付</a>';
+//            })
+            ->make(true);
+
+    }
+
+    public function dwgbomjsondetail(Request $request, $id = 0)
+    {
+        $query = Dwgbomitems_hx::whereRaw('1=1');
+        $query->leftJoin('vgoods', 'vgoods.goods_id', '=', 'dwgbomitems.goods_id');
+
+        if ($id > 0)
+            $query->where('dwgbom_id', $id);
+
+
+
+
+        return Datatables::of($query->select('dwgbomitems.*', 'vgoods.goods_name'))
+//            ->editColumn('created_at', 'dwgbom.created_at')
+//            ->addColumn('amountperiod2', function (Salesorder_hxold $sohead) use ($request) {
+//                if ($request->has('receivedatestart') && $request->has('receivedateend'))
+//                {
+//                    return $sohead->receiptpayments->sum(function ($receiptpayment) use ($request) {
+//                        if ($receiptpayment->date >= $request->get('receivedatestart') && $receiptpayment->date <= $request->get('receivedateend'))
+//                            return $receiptpayment->amount;
+//                        else
+//                            return 0.0;
+//                    });
+//                }
+//                else
+//                    return $sohead->receiptpayments->sum('amount');
+//            })
+//            ->addColumn('bonusfactor', function (Salesorder_hxold $sohead) use ($request) {
+//                if ($request->has('receivedatestart') && $request->has('receivedateend'))
+//                    return $sohead->getBonusfactorByPolicy($request->get('receivedateend')) * 100.0 . '%';
+//                else
+//                    return $sohead->getBonusfactorByPolicy() * 100.0 . '%';
+//            })
+//            ->addColumn('bonus', function (Salesorder_hxold $sohead) use ($request) {
+//                if ($request->has('receivedatestart') && $request->has('receivedateend'))
+//                {
+//                    return $sohead->receiptpayments->sum(function ($receiptpayment) use ($request, $sohead) {
+//                        if ($receiptpayment->date >= $request->get('receivedatestart') && $receiptpayment->date <= $request->get('receivedateend'))
+//                            return $receiptpayment->amount * $sohead->getBonusfactorByPolicy($request->get('receivedateend')) * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+//                        else
+//                            return 0.0;
+//                    });
+//                }
+//                else
+//                    return $sohead->receiptpayments->sum('amount') * $sohead->getBonusfactorByPolicy() * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+//            })
+//            ->addColumn('bonuspaid', function (Salesorder_hxold $sohead) {
+//                return $sohead->bonuspayments->sum('amount');
+//            })
+//            ->addColumn('paybonus', function (Salesorder_hxold $sohead) {
+//                return '<a href="'. url('sales/' . $sohead->id . '/bonuspayment/create') .'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> 支付</a>';
+//            })
+            ->make(true);
+
     }
 }

@@ -218,6 +218,8 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
         Route::post('search', 'SalesorderhxController@search');
         Route::get('{id}/checktaxrateinput', 'SalesorderhxController@checktaxrateinput');
         Route::get('{id}/dwgbom', 'SalesorderhxController@dwgbom');
+        Route::get('dwgbomjson', 'SalesorderhxController@dwgbomjson');
+        Route::get('dwgbomjsondetail/{id?}', 'SalesorderhxController@dwgbomjsondetail');
     });
     Route::resource('salesorderhx', 'SalesorderhxController');
     Route::group(['prefix' => 'salesorders/{salesorder}/receiptpayments'], function () {

@@ -83,9 +83,12 @@
             {{-- 如果换行, 就2个按钮分别加float:left --}}
             <a href="{{ URL::to('/sales/salesorderhx/'.$salesorder->id.'/edit') }}" class="btn btn-success btn-sm pull-left" style="margin-right: 2px">编辑</a>
         @endcan
+        {{--
         @can('sales_salesorder_checktaxrateinput')
             <a href="{{ URL::to('/sales/salesorderhx/'.$salesorder->id.'/checktaxrateinput') }}" class="btn btn-success btn-sm pull-left" target="_blank">检查税率输入</a>
         @endcan
+            --}}
+
         {{--
         <a href="{{ URL::to('/sales/salesorders/' . $salesorder->id . '/ship') }}" class="btn btn-success btn-sm pull-left">发货</a>
         <a href="{{ URL::to('/sales/salesorders/' . $salesorder->id . '/receiptpayments') }}" target="_blank" class="btn btn-success btn-sm pull-left">收款</a>

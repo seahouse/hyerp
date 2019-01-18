@@ -184,8 +184,10 @@ class SupplierticketReminder extends Command
             {
                 $msg = $value["name"] . "累计" . count($value["unticketedamountlist"]) . "个采购订单，合计欠票" . array_sum($value["unticketedamountlist"]) . "元。";
 //                Log::info($msg);
-
                 $this->sendMsg($msg, 186);      // to LiuYJ
+
+                if (array_sum($value["unticketedamountlist"]) > 300000.0)
+                    $this->sendMsg($msg, 8);      // to WuHL
             }
 
 //            $data = [
