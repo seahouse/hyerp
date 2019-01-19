@@ -47,21 +47,23 @@
                         @endcan
                     </ul>
                 </li>
+                --}}
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">销售<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         @can('module_sales')
                             <li><a href="/sales/salesorderhx">销售订单</a></li>
+                        {{--
                         <li><a href="/sales/custinfos">客户</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="/inventory/inventoryAvailabilityBySalesorder">库存可用量</a></li>
                         @if (Auth::user()->isSuperAdmin())
                             <li><a href="/sales/report">报表</a></li>
                         @endif
+                        --}}
                         @endcan
                     </ul>
                 </li>
-                --}}
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">采购<span class="caret"></span></a>
                     <ul class="dropdown-menu">
