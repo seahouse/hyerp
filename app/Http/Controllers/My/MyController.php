@@ -236,6 +236,9 @@ class MyController extends Controller
                 else
                     return $sohead->getBonusfactorByPolicy() * 100.0 . '%';
             })
+            ->addColumn('bonusfactortype', function (Salesorder_hxold $sohead) {
+                return $sohead->bonusfactor > 0.0 ? "手工" : "自动";
+            })
             ->addColumn('bonus', function (Salesorder_hxold $sohead) use ($request) {
                 if ($request->has('receivedatestart') && $request->has('receivedateend'))
                 {
@@ -520,14 +523,10 @@ class MyController extends Controller
                 $soheadbonusdetailArray = $soheadbonusdetail->getData(true)["data"];
                 if (count($soheadbonusArray) == 1 && count($soheadbonusdetailArray) > 0)
                 {
-//                    dd($soheadbonusdetailArray);
+//                    dd($soheadbonusArray);
                     $excel->sheet($sheetname, function($sheet) use ($request, $sohead_id, $soheadbonusArray, $soheadbonusdetailArray) {
                         // Sheet manipulation
                         $data = [];
-                        $tonnagetotal_issuedrawing = 0.0;
-                        $tonnagetotal_mcitempurchase = 0.0;
-                        $tonnagetotal_pppayment = 0.0;
-                        $tonnagetotal_pppayment_paowan = 0.0;
                         $tonnagetotal_pppayment_youqi = 0.0;
                         $tonnagetotal_pppayment_rengong = 0.0;
                         $tonnagetotal_pppayment_maohan = 0.0;
@@ -545,6 +544,7 @@ class MyController extends Controller
                             $temp['收款日期']          = $value['receiptdate'];
                             $temp['收款金额']          = $value['amount'];
                             $temp['奖金系数']          = $value['bonusfactor'];
+                            $temp['系数类别']          = $soheadbonusArray[0]['bonusfactortype'];
                             $temp['应发奖金']          = $value['bonus'];
 
 
@@ -631,10 +631,6 @@ class MyController extends Controller
                     $excel->sheet($sheetname, function($sheet) use ($request, $soheadbonusArray) {
                         // Sheet manipulation
                         $data = [];
-                        $tonnagetotal_issuedrawing = 0.0;
-                        $tonnagetotal_mcitempurchase = 0.0;
-                        $tonnagetotal_pppayment = 0.0;
-                        $tonnagetotal_pppayment_paowan = 0.0;
                         $tonnagetotal_pppayment_youqi = 0.0;
                         $tonnagetotal_pppayment_rengong = 0.0;
                         $tonnagetotal_pppayment_maohan = 0.0;
@@ -659,6 +655,7 @@ class MyController extends Controller
                                     $temp['收款日期']          = $value['receiptdate'];
                                     $temp['收款金额']          = $value['amount'];
                                     $temp['奖金系数']          = $value['bonusfactor'];
+                                    $temp['系数类别']          = $soheadbonus['bonusfactortype'];
                                     $temp['应发奖金']          = $value['bonus'];
 
 

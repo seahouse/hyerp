@@ -80,6 +80,7 @@
 
             <th>区间收款</th>
             <th>奖金系数</th>
+            <th>系数类别</th>
             <th>应发奖金</th>
             <th>已发奖金</th>
             <th>支付奖金</th>
@@ -161,6 +162,7 @@
                     {"data": "salesmanager", "name": "salesmanager"},
                     {"data": "amountperiod2", "name": "amountperiod2"},
                     {"data": "bonusfactor", "name": "bonusfactor"},
+                    {"data": "bonusfactortype", "name": "bonusfactortype"},
                     {"data": "bonus", "name": "bonus"},
                     {"data": "bonuspaid", "name": "bonuspaid"},
                     {"data": "paybonus", "name": "paybonus"},
