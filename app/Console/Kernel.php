@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use Illuminate\Console\Command;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use DB;
@@ -26,6 +27,7 @@ class Kernel extends ConsoleKernel
         Commands\ReceiptrepeatReminder::class,
         Commands\BonusfactorStatistics::class,
         Commands\DeliverydelayReminder::class,
+        Commands\EDITest::class,
     ];
 
     /**

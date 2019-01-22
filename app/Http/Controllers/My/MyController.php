@@ -217,6 +217,12 @@ class MyController extends Controller
 //                    $query->where('email', 'like', "%{$request->get('email')}%");
 //                }
             })
+            ->addColumn('receiptpercent', function (Salesorder_hxold $sohead) {
+                if ($sohead->amount > 0.0)
+                    return number_format($sohead->receiptpayments->sum('amount') / $sohead->amount * 100.0, 2) . "%";
+                else
+                    return "-";
+            })
             ->addColumn('amountperiod2', function (Salesorder_hxold $sohead) use ($request) {
                 if ($request->has('receivedatestart') && $request->has('receivedateend'))
                 {
@@ -540,6 +546,7 @@ class MyController extends Controller
                             $temp['订单名称']          = $soheadbonusArray[0]['projectjc'];
                             $temp['订单金额']          = $soheadbonusArray[0]['amount'];
                             $temp['销售经理']          = $soheadbonusArray[0]['salesmanager'];
+                            $temp['收款']          = $soheadbonusArray[0]['receiptpercent'];
 
                             $temp['收款日期']          = $value['receiptdate'];
                             $temp['收款金额']          = $value['amount'];
@@ -651,6 +658,7 @@ class MyController extends Controller
                                     $temp['订单名称']          = $soheadbonus['projectjc'];
                                     $temp['订单金额']          = $soheadbonus['amount'];
 //                                    $temp['销售经理']          = $soheadbonus['salesmanager'];
+                                    $temp['收款']          = $soheadbonus['receiptpercent'];
 
                                     $temp['收款日期']          = $value['receiptdate'];
                                     $temp['收款金额']          = $value['amount'];
@@ -667,8 +675,6 @@ class MyController extends Controller
                         }
 
 
-
-
                         $sheet->freezeFirstRow();
                         $sheet->fromArray($data);
 
@@ -676,9 +682,45 @@ class MyController extends Controller
                 }
 
 
-
-
             }
+
+            if (count($salesmanagers) > 0)
+            {
+                $sheetname = "总表";
+
+                $soheadbonus = $this->indexjsonbyorder($request);
+                $soheadbonusArray = $soheadbonus->getData(true)["data"];
+                if (count($soheadbonusArray) > 0)
+                {
+                    $excel->sheet($sheetname, function($sheet) use ($request, $soheadbonusArray) {
+                        // Sheet manipulation
+                        $data = [];
+
+                        foreach ($soheadbonusArray as $soheadbonus)
+                        {
+                            $temp = [];
+                            $temp['订单编号']          = $soheadbonus['number'];
+                            $temp['订单名称']          = $soheadbonus['projectjc'];
+                            $temp['订单金额']          = $soheadbonus['amount'];
+                            $temp['销售经理']          = $soheadbonus['salesmanager'];
+                            $temp['收款']              = $soheadbonus['receiptpercent'];
+                            $temp['区间收款']          = $soheadbonus['amountperiod2'];
+                            $temp['奖金系数']          = $soheadbonus['bonusfactor'];
+                            $temp['系数类别']          = $soheadbonus['bonusfactortype'];
+                            $temp['应发奖金']          = $soheadbonus['bonus'];
+
+                            array_push($data, $temp);
+
+                        }
+
+
+                        $sheet->freezeFirstRow();
+                        $sheet->fromArray($data);
+
+                    });
+                }
+            }
+
 
             // Set the title
             $excel->setTitle($filename);

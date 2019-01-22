@@ -77,6 +77,7 @@
             <th>订单名称</th>
             <th>订单金额</th>
             <th>销售经理</th>
+            <th>收款</th>
 
             <th>区间收款</th>
             <th>奖金系数</th>
@@ -160,6 +161,7 @@
                     {"data": "projectjc", "name": "projectjc"},
                     {"data": "amount", "name": "amount"},
                     {"data": "salesmanager", "name": "salesmanager"},
+                    {"data": "receiptpercent", "name": "receiptpercent"},
                     {"data": "amountperiod2", "name": "amountperiod2"},
                     {"data": "bonusfactor", "name": "bonusfactor"},
                     {"data": "bonusfactortype", "name": "bonusfactortype"},
