@@ -316,6 +316,47 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase'], function() {
     });
 });
 
+Route::group(['prefix' => 'purchaseorderc', 'namespace' => 'Purchaseorderc', 'middleware' => ['web', 'auth']], function() {
+    Route::group(['prefix' => 'purchaseordercs/{id}'], function () {
+        Route::get('detail', 'PurchaseordercController@detail');
+//        Route::get('detail_hxold', 'PurchaseordersController@detail_hxold');
+//        Route::get('receiving', 'PurchaseordersController@receiving');
+//        Route::get('receiptorders', 'PurchaseordersController@receiptorders');
+//        Route::get('poitems', 'PurchaseordersController@poitems');
+//        Route::get('receiptorders_hx', 'PurchaseordersController@receiptorders_hx');
+//        Route::get('edit_hx', 'PurchaseordersController@edit_hx');
+//        Route::patch('update_hx', 'PurchaseordersController@update_hx');
+//        Route::get('getpoheadtaxrateass_hx', 'PurchaseordersController@getpoheadtaxrateass_hx');
+    });
+//    Route::group(['prefix' => 'purchaseorders/{purchaseorder}/payments'], function () {
+//        Route::get('/', 'PaymentsController@index');
+//        Route::get('create', 'PaymentsController@create');
+//        Route::post('store', 'PaymentsController@store');
+//        Route::delete('destroy/{payment}', 'PaymentsController@destroy');
+//
+//        Route::get('create_hxold', 'PaymentsController@create_hxold');
+//        Route::post('store_hxold', 'PaymentsController@store_hxold');
+//    });
+//    Route::group(['prefix' => 'purchaseorders'], function() {
+//        Route::get('getitemsbyorderkey/{key}/{supplierid?}', 'PurchaseordersController@getitemsbyorderkey');
+//        Route::get('index_hx', 'PurchaseordersController@index_hx');
+//        Route::get('create_hx', 'PurchaseordersController@create_hx');
+//        Route::post('store_hx', 'PurchaseordersController@store_hx');
+//        Route::post('search_hx', 'PurchaseordersController@search_hx');
+//    });
+//    Route::group(['prefix' => 'poheadtaxrateass'], function() {
+//        Route::get('destorybyid/{id}', 'PoheadtaxrateassController@destorybyid');       // use get for page opt.
+//    });
+    Route::resource('purchaseordercs', 'PurchaseordercController');
+    Route::resource('poheadtaxrateass', 'PoheadtaxrateassController');
+    Route::get('poitemcs/{headId}/create', 'PoitemcController@createByPoheadId');
+    Route::group(['prefix' => 'poitems/hxold'], function() {
+        Route::get('', 'PoitemsController@index_hxold');
+    });
+    Route::resource('poitemcs', 'PoitemcController');
+    Route::get('report', '\App\Http\Controllers\System\ReportController@indexpurchase');
+});
+
 Route::group(['prefix' => 'crm', 'namespace' => 'Crm', 'middleware' => ['web', 'auth']], function() {
     Route::resource('contacts', 'ContactsController');
 });
