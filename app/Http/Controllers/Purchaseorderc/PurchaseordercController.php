@@ -148,7 +148,7 @@ class PurchaseordercController extends Controller
                 return 0.0;
             })
             ->addColumn('packingcount', function () {
-                return '<input name="key" type="text">';
+                return '<input class="form-control" name="key" type="text">';
             })
 //            ->filterColumn('created_at', function ($query) use ($request) {
 //                $keyword = $request->get('search')['value'];
@@ -164,7 +164,7 @@ class PurchaseordercController extends Controller
 
     public function packing($id)
     {
-        $poitems = Poitemc::latest('created_at')->where('poheadc_id', $id)->paginate(10);
+        $poitems = Poitemc::where('poheadc_id', $id)->paginate(10);
         return view('purchaseorderc.purchaseordercs.packing', compact('poitems', 'id'));
     }
 }

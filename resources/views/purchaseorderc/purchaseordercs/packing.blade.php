@@ -30,10 +30,57 @@
                 <th>单价</th>
                 <th>发货日期</th>
                 <th>已发数量</th>
-                <th>打包数量</th>
+                <th>打包</th>
             </tr>
         </thead>
+        <tbody>
+        @foreach($poitems as $poitem)
+            <tr>
+                <td>
+                    {{ $poitem->fabric_sequence_no }}
+                </td>
+                <td>
+                    {{ $poitem->material_code }}
+                </td>
+                <td>
+                    {{ $poitem->quantity }}
+                </td>
+                <td>
+                    {{ $poitem->unit }}
+                </td>
+                <td>
+                    {{ $poitem->fabric_width }}
+                </td>
+                <td>
+                    {{ $poitem->transportation_method_type_code }}
+                </td>
+                <td>
+                    {{ $poitem->unit_price }}
+                </td>
+                <td>
+                    {{ $poitem->shipment_date }}
+                </td>
+                <td>
+                    0.0
+                </td>
+                {{--
+                <td>
+                    <a href="{{ URL::to('/purchase/purchaseorders/' . $purchaseorder->id . '/detail') }}" target="_blank">明细</a>
+                </td>
+                --}}
+                <td>
+                    <div id="divTd_{{ $poitem->fabric_sequence_no }}">
+                        <div class="row">
+                            {!! Form::text('roll_no', null, ['placeholder' => '卷号']) !!}
+                            {!! Form::text('quantity', null, ['placeholder' => '数量']) !!}
+                            {!! Form::button('+', ['name' => 'btnAddLine', 'data-seq' => $poitem->fabric_sequence_no]) !!}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        @endforeach
 
+        </tbody>
     </table>
 
     {!! Form::button('打印标签', ['class' => 'btn btn-primary']) !!}
@@ -41,10 +88,84 @@
 @endsection
 
 @section('script')
-    <script type="text/javascript" src="/DataTables/datatables.js"></script>
+    {{--<script type="text/javascript" src="/DataTables/datatables.js"></script>--}}
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
+            $("button[name='btnAddLine']").click(function () {
+                var itemHtml = '\
+                    <div class="row">\
+                        <input placeholder="卷号" name="roll_no" type="text">\
+                        <input placeholder="数量" name="quantity" type="text">\
+                        <button name="btnDeleteLine" type="button" onclick="delLine(this);">-</button>\
+                    </div>\
+                    ';
+                $("#divTd_" + this.dataset.seq).append(itemHtml);
+            });
 
+            delLine = function (e) {
+                $(e).parent().remove();
+            };
+
+            $("#btnAddItem").click(function() {
+                item_num++;
+                var btnId = 'btnDeleteItem_' + String(item_num);
+                var divName = 'divClassItem_' + String(item_num);
+                var itemHtml = '<div class="' + divName + '"><p class="bannerTitle">明细(' + String(item_num) + ')&nbsp;<button class="btn btn-sm" id="' + btnId + '" type="button">删除</button></p>\
+                	<div name="container_item">\
+						<div class="form-group">\
+							<label for="item_name" class="col-xs-4 col-sm-2 control-label">物品名称:</label>\
+							<div class="col-sm-10 col-xs-8">\
+							<input class="form-control" data-toggle="modal" data-target="#selectItemModal" name="item_name" type="text" id="item_name_' + String(item_num) + '" data-num="' + String(item_num) + '">\
+							<input class="btn btn-sm" id="item_id_' + String(item_num) + '" name="item_id" type="hidden" value="0">\
+                    </div>\
+						</div>\
+						<div class="form-group">\
+							<label for="item_spec" class="col-xs-4 col-sm-2 control-label">规格型号:</label>\
+							<div class="col-sm-10 col-xs-8">\
+							<input class="form-control" readonly="readonly" name="item_spec" type="text" id="item_spec_' + String(item_num) + '">\
+							</div>\
+						</div>\
+						<div class="form-group">\
+							<label for="unit" class="col-xs-4 col-sm-2 control-label">单位:</label>\
+							<div class="col-sm-10 col-xs-8">\
+							<input class="form-control" readonly="readonly" name="unit" type="text" id="unit_' + String(item_num) + '">\
+							</div>\
+						</div>\
+						<div class="form-group">\
+							<label for="size" class="col-xs-4 col-sm-2 control-label">尺寸:</label>\
+							<div class="col-sm-10 col-xs-8">\
+							<input class="form-control" name="size" type="text"  id="size_' + String(item_num) + '">\
+							</div>\
+						</div>\
+						<div class="form-group">\
+							<label for="material" class="col-xs-4 col-sm-2 control-label">材质:</label>\
+							<div class="col-sm-10 col-xs-8">\
+							<input class="form-control" name="material" type="text"  id="material_' + String(item_num) + '">\
+							</div>\
+						</div>\
+						<div class="form-group">\
+							<label for="unitprice" class="col-xs-4 col-sm-2 control-label">单价（可不填）:</label>\
+							<div class="col-sm-10 col-xs-8">\
+							<input class="form-control" name="unitprice" type="text"  id="unitprice_' + String(item_num) + '">\
+							</div>\
+						</div>\
+						<div class="form-group">\
+							<label for="weight" class="col-xs-4 col-sm-2 control-label">重量（吨）:</label>\
+							<div class="col-sm-10 col-xs-8">\
+							<input class="form-control" name="weight" type="text" id="weight_' + String(item_num) + '">\
+							</div>\
+						</div>\
+						<div class="form-group">\
+							<label for="remark" class="col-xs-4 col-sm-2 control-label">备注:</label>\
+							<div class="col-sm-10 col-xs-8">\
+							<input class="form-control" name="remark" type="text"  id="remark_' + String(item_num) + '">\
+							</div>\
+						</div>\
+					</div>\
+					</div>';
+                $("#itemMore").append(itemHtml);
+                addBtnDeleteItemClickEvent(btnId, divName);
+            });
 
 //            $("#btnExport").click(function() {
 //                $("form#formExport").find('#sohead_id').val($('input[name=sohead_id]').val());
@@ -75,51 +196,51 @@
 //                    '</table>';
 //            }
 
-            var tablePacking = $('#tablePacking').DataTable({
-                "processing": true,
-                "serverSide": true,
+            {{--var tablePacking = $('#tablePacking').DataTable({--}}
+                {{--"processing": true,--}}
+                {{--"serverSide": true,--}}
                 {{--"ajax": "{{ url('my/bonus/indexjsonbyorder') }}",--}}
-                "ajax": {
-                    "url": "{{ url('purchaseorderc/purchaseordercs/' . $id . '/detailjson') }}",
-                    "data": function (d) {
+                {{--"ajax": {--}}
+                    {{--"url": "{{ url('purchaseorderc/purchaseordercs/' . $id . '/detailjson') }}",--}}
+                    {{--"data": function (d) {--}}
                         {{--d.soheadc_id = {{ $id }};--}}
-//                        d.project_id = $('input[name=project_id]').val();       // because use jquery-editable-select.js, select control changed to input control
-//                        d.issuedrawingdatestart = $('input[name=issuedrawingdatestart]').val();
-//                        d.issuedrawingdateend = $('input[name=issuedrawingdateend]').val();
-                    }
-                },
-                "columns": [
-//                    {
-//                        "orderable":      false,
-//                        "searchable":      false,
-//                        "data":           null,
-//                        "defaultContent": ''
-//                    },
-                    {"data": "fabric_sequence_no", "name": "fabric_sequence_no"},
-                    {"data": "material_code", "name": "material_code"},
-                    {"data": "quantity", "name": "quantity"},
-                    {"data": "unit", "name": "unit"},
-                    {"data": "fabric_width", "name": "fabric_width"},
-                    {"data": "transportation_method_type_code", "name": "transportation_method_type_code"},
-                    {"data": "unit_price", "name": "unit_price"},
-                    {"data": "shipment_date", "name": "shipment_date"},
-                    {"data": "packedcount", "name": "packedcount"},
-                    {"data": "packingcount", "name": "packingcount"},
-                ],
-//                "fnCreatedRow": function(nRow, aData, iDataIndex) {
-//                    $('td:eq(0)', nRow).html("<span class='row-details row-details-close' data_id='" + aData[1] + "'></span>&nbsp;" + aData[0]);
-//                }
-                initComplete: function () {
-                    this.api().columns().every(function () {
-                        var column = this;
-                        var input = document.createElement("input");
-                        $(input).appendTo($(column.footer()).empty())
-                            .on('change', function () {
-                                column.search($(this).val(), false, false, true).draw();
-                            });
-                    });
-                }
-            });
+{{--//                        d.project_id = $('input[name=project_id]').val();       // because use jquery-editable-select.js, select control changed to input control--}}
+{{--//                        d.issuedrawingdatestart = $('input[name=issuedrawingdatestart]').val();--}}
+{{--//                        d.issuedrawingdateend = $('input[name=issuedrawingdateend]').val();--}}
+                    {{--}--}}
+                {{--},--}}
+                {{--"columns": [--}}
+{{--//                    {--}}
+{{--//                        "orderable":      false,--}}
+{{--//                        "searchable":      false,--}}
+{{--//                        "data":           null,--}}
+{{--//                        "defaultContent": ''--}}
+{{--//                    },--}}
+                    {{--{"data": "fabric_sequence_no", "name": "fabric_sequence_no"},--}}
+                    {{--{"data": "material_code", "name": "material_code"},--}}
+                    {{--{"data": "quantity", "name": "quantity"},--}}
+                    {{--{"data": "unit", "name": "unit"},--}}
+                    {{--{"data": "fabric_width", "name": "fabric_width"},--}}
+                    {{--{"data": "transportation_method_type_code", "name": "transportation_method_type_code"},--}}
+                    {{--{"data": "unit_price", "name": "unit_price"},--}}
+                    {{--{"data": "shipment_date", "name": "shipment_date"},--}}
+                    {{--{"data": "packedcount", "name": "packedcount"},--}}
+                    {{--{"data": "packingcount", "name": "packingcount"},--}}
+                {{--],--}}
+{{--//                "fnCreatedRow": function(nRow, aData, iDataIndex) {--}}
+{{--//                    $('td:eq(0)', nRow).html("<span class='row-details row-details-close' data_id='" + aData[1] + "'></span>&nbsp;" + aData[0]);--}}
+{{--//                }--}}
+                {{--initComplete: function () {--}}
+                    {{--this.api().columns().every(function () {--}}
+                        {{--var column = this;--}}
+                        {{--var input = document.createElement("input");--}}
+                        {{--$(input).appendTo($(column.footer()).empty())--}}
+                            {{--.on('change', function () {--}}
+                                {{--column.search($(this).val(), false, false, true).draw();--}}
+                            {{--});--}}
+                    {{--});--}}
+                {{--}--}}
+            {{--});--}}
 
             $('#tableIssuedrawing tbody').on('click', 'td.details-control', function () {
                 var tr = $(this).closest('tr');
@@ -140,85 +261,30 @@
                 }
             } );
 
-            function initTable(tableId, data) {
-                $('#' + tableId).DataTable({
-                    processing: true,
-                    serverSide: true,
+            {{--function initTable(tableId, data) {--}}
+                {{--$('#' + tableId).DataTable({--}}
+                    {{--processing: true,--}}
+                    {{--serverSide: true,--}}
                     {{--ajax: "{{ url('my/bonus/detailjsonbyorder') }}/" + data.id,--}}
-                    "ajax": {
-                        "url": "{{ url('my/bonus/detailjsonbyorder') }}/" + data.id,
-                        "data": function (d) {
-                            d.receivedatestart = $('input[name=receivedatestart]').val();
-                            d.receivedateend = $('input[name=receivedateend]').val();
-                        }
-                    },
-                    columns: [
-                        { data: 'receiptdate', name: 'receiptdate' },
-                        { data: 'amount', name: 'amount' },
-                        { data: 'bonusfactor', name: 'bonusfactor' },
-                        { data: 'bonus', name: 'bonus' },
-                    ]
-                })
-            };
+                    {{--"ajax": {--}}
+                        {{--"url": "{{ url('my/bonus/detailjsonbyorder') }}/" + data.id,--}}
+                        {{--"data": function (d) {--}}
+                            {{--d.receivedatestart = $('input[name=receivedatestart]').val();--}}
+                            {{--d.receivedateend = $('input[name=receivedateend]').val();--}}
+                        {{--}--}}
+                    {{--},--}}
+                    {{--columns: [--}}
+                        {{--{ data: 'receiptdate', name: 'receiptdate' },--}}
+                        {{--{ data: 'amount', name: 'amount' },--}}
+                        {{--{ data: 'bonusfactor', name: 'bonusfactor' },--}}
+                        {{--{ data: 'bonus', name: 'bonus' },--}}
+                    {{--]--}}
+                {{--})--}}
+            {{--};--}}
 
-            var tableMcitempurchase = $('#tableMcitempurchase').DataTable({
-                "processing": true,
-                "serverSide": true,
-                {{--"ajax": "{{ url('my/bonus/indexjsonbyorder') }}",--}}
-                "ajax": {
-                    "url": "{{ url('approval/report2/mcitempurchasejson') }}",
-                    "data": function (d) {
-                        d.sohead_id = $('input[name=sohead_id]').val();
-                        d.project_id = $('input[name=project_id]').val();
-                        d.receivedatestart = $('input[name=receivedatestart]').val();
-                        d.receivedateend = $('input[name=receivedateend]').val();
-                    }
-                },
-                "columns": [
-                    {"data": "created_date", "name": "created_date", "searchable": false},
-                    {"data": "manufacturingcenter", "name": "manufacturingcenter"},
-                    {"data": "totalweight", "name": "totalweight", "searchable": false},
-                    {"data": "detailuse", "name": "detailuse"},
-//                    {"data": "overview", "name": "overview"},
-//                    {"data": "bonusfactor", "name": "bonusfactor"},
-//                    {"data": "bonus", "name": "bonus"},
-//                    {"data": "bonuspaid", "name": "bonuspaid"},
-//                    {"data": "paybonus", "name": "paybonus"},
-                ],
-//                "fnCreatedRow": function(nRow, aData, iDataIndex) {
-//                    $('td:eq(0)', nRow).html("<span class='row-details row-details-close' data_id='" + aData[1] + "'></span>&nbsp;" + aData[0]);
-//                }
-            });
 
-            var tablePppayment = $('#tablePppayment').DataTable({
-                "processing": true,
-                "serverSide": true,
-                {{--"ajax": "{{ url('my/bonus/indexjsonbyorder') }}",--}}
-                "ajax": {
-                    "url": "{{ url('approval/report2/pppaymentjson') }}",
-                    "data": function (d) {
-                        d.sohead_id = $('input[name=sohead_id]').val();
-                        d.project_id = $('input[name=project_id]').val();
-                        d.receivedatestart = $('input[name=receivedatestart]').val();
-                        d.receivedateend = $('input[name=receivedateend]').val();
-                    }
-                },
-                "columns": [
-                    {"data": "created_date", "name": "created_date"},
-                    {"data": "tonnage_paowan", "name": "tonnage_paowan"},
-                    {"data": "tonnage_youqi", "name": "tonnage_youqi"},
-                    {"data": "tonnage_rengong", "name": "tonnage_rengong"},
-                    {"data": "tonnage_maohan", "name": "tonnage_maohan"},
-                    {"data": "productioncompany", "name": "productioncompany"},
-                    {"data": "productionoverview", "name": "productionoverview"},
-                    {"data": "paymentdate", "name": "paymentdate"},
-                    {"data": "applicant", "name": "applicant"},
-                    {"data": "tonnage", "name": "tonnage"},
-                ],
-//                "fnCreatedRow": function(nRow, aData, iDataIndex) {
-//                    $('td:eq(0)', nRow).html("<span class='row-details row-details-close' data_id='" + aData[1] + "'></span>&nbsp;" + aData[0]);
-//                }
-            });
+
+
 
 
             $('#frmSearch').on('submit', function (e) {
