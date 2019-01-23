@@ -319,7 +319,8 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase'], function() {
 Route::group(['prefix' => 'purchaseorderc', 'namespace' => 'Purchaseorderc', 'middleware' => ['web', 'auth']], function() {
     Route::group(['prefix' => 'purchaseordercs/{id}'], function () {
         Route::get('detail', 'PurchaseordercController@detail');
-//        Route::get('detail_hxold', 'PurchaseordersController@detail_hxold');
+        Route::get('detailjson', 'PurchaseordercController@detailjson');
+        Route::get('packing', 'PurchaseordercController@packing');
 //        Route::get('receiving', 'PurchaseordersController@receiving');
 //        Route::get('receiptorders', 'PurchaseordersController@receiptorders');
 //        Route::get('poitems', 'PurchaseordersController@poitems');

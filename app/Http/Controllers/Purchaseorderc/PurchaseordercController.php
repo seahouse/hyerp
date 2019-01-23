@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Log, Datatables;
 
 class PurchaseordercController extends Controller
 {
@@ -110,5 +111,60 @@ class PurchaseordercController extends Controller
     {
         $poitems = Poitemc::latest('created_at')->where('poheadc_id', $id)->paginate(10);
         return view('purchaseorderc.poitemcs.index', compact('poitems', 'id'));
+    }
+
+    public function detailjson(Request $request, $id)
+    {
+        $query = Poitemc::whereRaw('poheadc_id=' . $id);
+//        $query->where('status', 0);
+//        if ($request->has('sohead_id'))
+//            $query->where('sohead_id', $request->get('sohead_id'));
+//        elseif ($sohead_id > 0)
+//            $query->where('sohead_id', $sohead_id);
+//        elseif (strlen($factory) > 0)
+//            $query->where('productioncompany', 'like', '%' . $factory . '%');
+//        elseif ($project_id > 0)
+//        {
+//            $sohead_ids = Salesorder_hxold::where('project_id', $project_id)->pluck('id');
+//            $query->whereIn('sohead_id', $sohead_ids);
+//        }
+//
+//        if ($request->has('project_id'))
+//        {
+//            $sohead_ids = Salesorder_hxold::where('project_id', $request->get('project_id'))->pluck('id');
+//            $query->whereIn('sohead_id', $sohead_ids);
+//        }
+//
+//        if ($request->has('issuedrawingdatestart') && $request->has('issuedrawingdateend')) {
+//            $query->whereRaw('issuedrawings.created_at between \'' . $request->get('issuedrawingdatestart') . '\' and \'' . $request->get('issuedrawingdateend') . '\'');
+//        }
+//
+//        $query->leftJoin('users', 'users.id', '=', 'issuedrawings.applicant_id');
+
+
+
+        return Datatables::of($query->select('poitemcs.*'))
+            ->addColumn('packedcount', function () {
+                return 0.0;
+            })
+            ->addColumn('packingcount', function () {
+                return '<input name="key" type="text">';
+            })
+//            ->filterColumn('created_at', function ($query) use ($request) {
+//                $keyword = $request->get('search')['value'];
+//                $query->whereRaw('CONVERT(varchar(100), issuedrawings.created_at, 23) like \'%' . $keyword . '%\'');
+//            })
+//            ->filterColumn('applicant', function ($query) use ($request) {
+//                $keyword = $request->get('search')['value'];
+//                $query->whereRaw('users.name like \'%' . $keyword . '%\'');
+//            })
+//            ->editColumn('created_at', '{{ substr($created_at, 0, 10) }}' )
+            ->make(true);
+    }
+
+    public function packing($id)
+    {
+        $poitems = Poitemc::latest('created_at')->where('poheadc_id', $id)->paginate(10);
+        return view('purchaseorderc.purchaseordercs.packing', compact('poitems', 'id'));
     }
 }
