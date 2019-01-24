@@ -349,13 +349,22 @@ Route::group(['prefix' => 'purchaseorderc', 'namespace' => 'Purchaseorderc', 'mi
 //        Route::get('destorybyid/{id}', 'PoheadtaxrateassController@destorybyid');       // use get for page opt.
 //    });
     Route::resource('purchaseordercs', 'PurchaseordercController');
-    Route::resource('poheadtaxrateass', 'PoheadtaxrateassController');
     Route::get('poitemcs/{headId}/create', 'PoitemcController@createByPoheadId');
     Route::group(['prefix' => 'poitems/hxold'], function() {
         Route::get('', 'PoitemsController@index_hxold');
     });
     Route::resource('poitemcs', 'PoitemcController');
-    Route::get('report', '\App\Http\Controllers\System\ReportController@indexpurchase');
+    Route::group(['prefix' => 'asns'], function () {
+        Route::post('packingstore', 'AsnController@packingstore');
+//        Route::get('packing', 'PurchaseordercController@packing');
+    });
+    Route::group(['prefix' => 'asns/{id}'], function () {
+        Route::get('detail', 'AsnController@detail');
+//        Route::get('detailjson', 'PurchaseordercController@detailjson');
+//        Route::get('packing', 'PurchaseordercController@packing');
+    });
+    Route::resource('asns', 'AsnController');
+    Route::resource('asnitems', 'AsnitemController');
 });
 
 Route::group(['prefix' => 'crm', 'namespace' => 'Crm', 'middleware' => ['web', 'auth']], function() {

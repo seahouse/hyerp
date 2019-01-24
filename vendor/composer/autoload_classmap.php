@@ -24,6 +24,8 @@ return array(
     'CreateAddrsTable' => $baseDir . '/database/migrations/2015_08_14_050948_create_addrs_table.php',
     'CreateApprovaltypesTable' => $baseDir . '/database/migrations/2016_03_23_095930_create_approvaltypes_table.php',
     'CreateApproversettingsTable' => $baseDir . '/database/migrations/2016_03_23_101359_create_approversettings_table.php',
+    'CreateAsnitemsTable' => $baseDir . '/database/migrations/2019_01_24_085741_create_asnitems_table.php',
+    'CreateAsnsTable' => $baseDir . '/database/migrations/2019_01_24_085359_create_asns_table.php',
     'CreateBomheadsTable' => $baseDir . '/database/migrations/2015_08_04_064324_create_bomheads_table.php',
     'CreateBomitemsTable' => $baseDir . '/database/migrations/2015_08_04_064352_create_bomitems_table.php',
     'CreateCharassesTable' => $baseDir . '/database/migrations/2015_10_27_090944_create_charasses_table.php',

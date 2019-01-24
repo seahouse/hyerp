@@ -37,4 +37,8 @@ class Poitemc extends Model
         'quantity_per_color',
         'shipment_date',
     ];
+
+    public function purchaseorderc() {
+        return $this->hasOne('\App\Models\Purchaseorderc\Poheadc', 'id', 'poheadc_id');
+    }
 }

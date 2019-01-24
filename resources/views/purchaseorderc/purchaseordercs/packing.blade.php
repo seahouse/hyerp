@@ -69,11 +69,11 @@
                 </td>
                 --}}
                 <td>
-                    <div id="divTd_{{ $poitem->fabric_sequence_no }}">
+                    <div id="divTd_{{ $poitem->id }}" name="asn_container" data-poitemc_id="{{ $poitem->id }}">
                         <div class="row">
                             {!! Form::text('roll_no', null, ['placeholder' => '卷号']) !!}
                             {!! Form::text('quantity', null, ['placeholder' => '数量']) !!}
-                            {!! Form::button('+', ['name' => 'btnAddLine', 'data-seq' => $poitem->fabric_sequence_no]) !!}
+                            {!! Form::button('+', ['name' => 'btnAddLine', 'data-seq' => $poitem->id]) !!}
                         </div>
                     </div>
                 </td>
@@ -84,7 +84,12 @@
     </table>
 
     {!! Form::button('打印标签', ['class' => 'btn btn-primary']) !!}
-    {!! Form::button('打包发送', ['class' => 'btn btn-primary']) !!}
+    {!! Form::open(['url' => '/purchaseorderc/asns/packingstore', 'class' => 'pull-left', 'id' => 'frmStorePacking']) !!}
+    {!! Form::hidden('number', null) !!}
+    {!! Form::hidden('items_string', null, ['id' => 'items_string']) !!}
+    {!! Form::button('打包发送', ['class' => 'btn btn-primary', 'id' => 'btnStorePacking']) !!}
+    {!! Form::close() !!}
+
 @endsection
 
 @section('script')
@@ -106,71 +111,42 @@
                 $(e).parent().remove();
             };
 
-            $("#btnAddItem").click(function() {
-                item_num++;
-                var btnId = 'btnDeleteItem_' + String(item_num);
-                var divName = 'divClassItem_' + String(item_num);
-                var itemHtml = '<div class="' + divName + '"><p class="bannerTitle">明细(' + String(item_num) + ')&nbsp;<button class="btn btn-sm" id="' + btnId + '" type="button">删除</button></p>\
-                	<div name="container_item">\
-						<div class="form-group">\
-							<label for="item_name" class="col-xs-4 col-sm-2 control-label">物品名称:</label>\
-							<div class="col-sm-10 col-xs-8">\
-							<input class="form-control" data-toggle="modal" data-target="#selectItemModal" name="item_name" type="text" id="item_name_' + String(item_num) + '" data-num="' + String(item_num) + '">\
-							<input class="btn btn-sm" id="item_id_' + String(item_num) + '" name="item_id" type="hidden" value="0">\
-                    </div>\
-						</div>\
-						<div class="form-group">\
-							<label for="item_spec" class="col-xs-4 col-sm-2 control-label">规格型号:</label>\
-							<div class="col-sm-10 col-xs-8">\
-							<input class="form-control" readonly="readonly" name="item_spec" type="text" id="item_spec_' + String(item_num) + '">\
-							</div>\
-						</div>\
-						<div class="form-group">\
-							<label for="unit" class="col-xs-4 col-sm-2 control-label">单位:</label>\
-							<div class="col-sm-10 col-xs-8">\
-							<input class="form-control" readonly="readonly" name="unit" type="text" id="unit_' + String(item_num) + '">\
-							</div>\
-						</div>\
-						<div class="form-group">\
-							<label for="size" class="col-xs-4 col-sm-2 control-label">尺寸:</label>\
-							<div class="col-sm-10 col-xs-8">\
-							<input class="form-control" name="size" type="text"  id="size_' + String(item_num) + '">\
-							</div>\
-						</div>\
-						<div class="form-group">\
-							<label for="material" class="col-xs-4 col-sm-2 control-label">材质:</label>\
-							<div class="col-sm-10 col-xs-8">\
-							<input class="form-control" name="material" type="text"  id="material_' + String(item_num) + '">\
-							</div>\
-						</div>\
-						<div class="form-group">\
-							<label for="unitprice" class="col-xs-4 col-sm-2 control-label">单价（可不填）:</label>\
-							<div class="col-sm-10 col-xs-8">\
-							<input class="form-control" name="unitprice" type="text"  id="unitprice_' + String(item_num) + '">\
-							</div>\
-						</div>\
-						<div class="form-group">\
-							<label for="weight" class="col-xs-4 col-sm-2 control-label">重量（吨）:</label>\
-							<div class="col-sm-10 col-xs-8">\
-							<input class="form-control" name="weight" type="text" id="weight_' + String(item_num) + '">\
-							</div>\
-						</div>\
-						<div class="form-group">\
-							<label for="remark" class="col-xs-4 col-sm-2 control-label">备注:</label>\
-							<div class="col-sm-10 col-xs-8">\
-							<input class="form-control" name="remark" type="text"  id="remark_' + String(item_num) + '">\
-							</div>\
-						</div>\
-					</div>\
-					</div>';
-                $("#itemMore").append(itemHtml);
-                addBtnDeleteItemClickEvent(btnId, divName);
-            });
 
-//            $("#btnExport").click(function() {
-//                $("form#formExport").find('#sohead_id').val($('input[name=sohead_id]').val());
-//                $("form#formExport").submit();
-//            });
+            $("#btnStorePacking").click(function() {
+                var itemArray = new Array();
+
+                $("div[name='asn_container']").each(function(i){
+                    var container = $(this);
+                    var poitemc_id = this.dataset.poitemc_id;
+                    console.info(poitemc_id);
+
+                    container.find("div[class='row']").each(function (i) {
+                        var itemObject = new Object();
+                        var row = $(this);
+                        console.info(row.find("input[name='roll_no']").val());
+                        console.info(row.find("input[name='quantity']").val());
+
+                        itemObject.poitemc_id = poitemc_id;
+                        itemObject.roll_no = row.find("input[name='roll_no']").val();
+                        itemObject.quantity = row.find("input[name='quantity']").val();
+
+                        if (itemObject.roll_no.length > 0 && itemObject.quantity.length > 0)
+                        {
+                            console.info(JSON.stringify(itemObject));
+                            itemArray.push(itemObject);
+                        }
+                    });
+
+
+//                    alert(JSON.stringify(itemArray));
+//                    return false;
+//                    alert($("form#formMain").serialize());
+                });
+                console.info(JSON.stringify(itemArray));
+                $("#items_string").val(JSON.stringify(itemArray));
+
+                $("form#frmStorePacking").submit();
+            });
 //
 //            $("#btnExport2").click(function() {
 //                $("form#formExport2").find('#sohead_id').val($('input[name=sohead_id]').val());

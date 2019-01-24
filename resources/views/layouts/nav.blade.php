@@ -87,7 +87,7 @@
                         <ul class="dropdown-menu">
                             @can('module_purchase')
                                 <li><a href="/purchaseorderc/purchaseordercs">采购订单</a></li>
-                                {{--<li><a href="/purchase/vendinfos">供应商</a></li>--}}
+                                <li><a href="/purchaseorderc/asns">ASN</a></li>
                                 {{--<li role="separator" class="divider"></li>--}}
                                 {{--<li><a href="/inventory/inventoryAvailability">库存可用量</a></li>--}}
                                 {{--<li><a href="/purchase/report">报表</a></li>--}}
