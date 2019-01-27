@@ -41,4 +41,8 @@ class Poitemc extends Model
     public function purchaseorderc() {
         return $this->hasOne('\App\Models\Purchaseorderc\Poheadc', 'id', 'poheadc_id');
     }
+
+    public function asnitems() {
+        return $this->hasMany('\App\Models\Purchaseorderc\Asnitem', 'poitemc_id', 'id');
+    }
 }

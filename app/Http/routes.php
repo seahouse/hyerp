@@ -360,7 +360,7 @@ Route::group(['prefix' => 'purchaseorderc', 'namespace' => 'Purchaseorderc', 'mi
     });
     Route::group(['prefix' => 'asns/{id}'], function () {
         Route::get('detail', 'AsnController@detail');
-//        Route::get('detailjson', 'PurchaseordercController@detailjson');
+        Route::get('labelpreprint', 'AsnController@labelpreprint');
 //        Route::get('packing', 'PurchaseordercController@packing');
     });
     Route::resource('asns', 'AsnController');

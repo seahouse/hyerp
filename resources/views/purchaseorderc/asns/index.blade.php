@@ -61,8 +61,8 @@
                         <a href="{{ URL::to('/purchaseorderc/asns/' . $asn->id . '/detail') }}" target="_blank">明细</a>
                     </td>
                     <td>
+                        <a href="{{ URL::to('/purchaseorderc/asns/'.$asn->id.'/labelpreprint') }}" class="btn btn-success btn-sm pull-left" target="_blank">标签预览</a>
                         {{--
-                        <a href="{{ URL::to('/purchaseorderc/purchaseordercs/'.$purchaseorder->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>
                         <a href="{{ URL::to('/purchaseorderc/purchaseordercs/' . $purchaseorder->id . '/packing') }}" class="btn btn-success btn-sm pull-left">打包</a>
                         --}}
                     </td>

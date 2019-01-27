@@ -61,7 +61,7 @@
                     {{ $poitem->shipment_date }}
                 </td>
                 <td>
-                    0.0
+                    {{ $poitem->asnitems->sum('quantity') }}
                 </td>
                 {{--
                 <td>
@@ -83,7 +83,6 @@
         </tbody>
     </table>
 
-    {!! Form::button('打印标签', ['class' => 'btn btn-primary']) !!}
     {!! Form::open(['url' => '/purchaseorderc/asns/packingstore', 'class' => 'pull-left', 'id' => 'frmStorePacking']) !!}
     {!! Form::hidden('number', null) !!}
     {!! Form::hidden('items_string', null, ['id' => 'items_string']) !!}

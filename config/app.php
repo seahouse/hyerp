@@ -167,6 +167,7 @@ return [
         PragmaRX\Google2FA\Vendor\Laravel\ServiceProvider::class,
         Yajra\Oci8\Oci8ServiceProvider::class,
         Yajra\Datatables\DatatablesServiceProvider::class,
+        Milon\Barcode\BarcodeServiceProvider::class,
     ],
 
     /*
@@ -223,6 +224,8 @@ return [
         'GA'        => \App\Http\Controllers\util\PHPGangsta_GoogleAuthenticator::class,
         'Google2FA' => PragmaRX\Google2FA\Vendor\Laravel\Facade::class,
         'Datatables' => Yajra\Datatables\Facades\Datatables::class,
+        'DNS1D'     => Milon\Barcode\Facades\DNS1DFacade::class,
+        'DNS2D'     => Milon\Barcode\Facades\DNS2DFacade::class,
     ],
 
 ];
