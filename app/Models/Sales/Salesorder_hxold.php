@@ -212,26 +212,60 @@ class Salesorder_hxold extends Model
         $offset = ($maxbonusfactor - $mixbonusfactor) / 4;
         if ($this->amount > 0.0)
         {
-            $amount = $this->amount;
-            $poheadamounttotal = $this->poheads_simple->sum('amount');
-            $poheadAmountBy7550 = array_first($this->getPoheadAmountBy7550())->poheadAmountBy7550;
-            $sohead_taxamount = isset($this->temTaxamountstatistics->sohead_taxamount) ? $this->temTaxamountstatistics->sohead_taxamount : 0.0;
-            $sohead_poheadtaxamount = isset($this->temTaxamountstatistics->sohead_poheadtaxamount) ? $this->temTaxamountstatistics->sohead_poheadtaxamount : 0.0;
-            $poheadcostpercent = ($poheadamounttotal + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount) / ($amount * 10000.0);
-//            $poheadamounpercent = $poheadamounttotal / $amount;
-            $receiptpaymenttotal = $this->receiptpayments->sum('amount');
-            if ($receiptpaymenttotal / $amount >= 0.6)
+            $project = $this->project();
+            if (isset($project))
             {
-                $bonusfactor = $maxbonusfactor;
-                if ($poheadcostpercent >= 0.5 && $poheadcostpercent < 0.6)
-                    $bonusfactor = $bonusfactor - $offset;
-                elseif ($poheadcostpercent >= 0.6 && $poheadcostpercent < 0.7)
-                    $bonusfactor = $bonusfactor - $offset * 2;
-                elseif ($poheadcostpercent >= 0.7 && $poheadcostpercent < 0.8)
-                    $bonusfactor = $bonusfactor - $offset * 3;
-                elseif ($poheadcostpercent / $amount >= 0.8)
-                    $bonusfactor = $mixbonusfactor;
+                $amount = 0.0;
+                $poheadamounttotal = 0.0;
+                $poheadAmountBy7550 = 0.0;
+                $sohead_taxamount = 0.0;
+                $sohead_poheadtaxamount = 0.0;
+                $receiptpaymenttotal = 0.0;
+                foreach ($project->soheads as $sohead)
+                {
+                    $amount += $sohead->amount;
+                    $poheadamounttotal += $sohead->poheads->sum('amount');
+                    $poheadAmountBy7550 += array_first($sohead->getPoheadAmountBy7550())->poheadAmountBy7550;
+                    $sohead_taxamount += isset($sohead->temTaxamountstatistics->sohead_taxamount) ? $sohead->temTaxamountstatistics->sohead_taxamount : 0.0;
+                    $sohead_poheadtaxamount += isset($sohead->temTaxamountstatistics->sohead_poheadtaxamount) ? $sohead->temTaxamountstatistics->sohead_poheadtaxamount : 0.0;
+                    $receiptpaymenttotal += $sohead->receiptpayments->sum('amount');
+                }
+                $poheadcostpercent = ($poheadamounttotal + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount) / ($amount * 10000.0);
+//            $poheadamounpercent = $poheadamounttotal / $amount;
+                if ($receiptpaymenttotal / $amount >= 0.6)
+                {
+                    $bonusfactor = $maxbonusfactor;
+                    if ($poheadcostpercent >= 0.5 && $poheadcostpercent < 0.6)
+                        $bonusfactor = $bonusfactor - $offset;
+                    elseif ($poheadcostpercent >= 0.6 && $poheadcostpercent < 0.7)
+                        $bonusfactor = $bonusfactor - $offset * 2;
+                    elseif ($poheadcostpercent >= 0.7 && $poheadcostpercent < 0.8)
+                        $bonusfactor = $bonusfactor - $offset * 3;
+                    elseif ($poheadcostpercent / $amount >= 0.8)
+                        $bonusfactor = $mixbonusfactor;
+                }
             }
+
+//            $amount = $this->amount;
+//            $poheadamounttotal = $this->poheads_simple->sum('amount');
+//            $poheadAmountBy7550 = array_first($this->getPoheadAmountBy7550())->poheadAmountBy7550;
+//            $sohead_taxamount = isset($this->temTaxamountstatistics->sohead_taxamount) ? $this->temTaxamountstatistics->sohead_taxamount : 0.0;
+//            $sohead_poheadtaxamount = isset($this->temTaxamountstatistics->sohead_poheadtaxamount) ? $this->temTaxamountstatistics->sohead_poheadtaxamount : 0.0;
+//            $poheadcostpercent = ($poheadamounttotal + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount) / ($amount * 10000.0);
+////            $poheadamounpercent = $poheadamounttotal / $amount;
+//            $receiptpaymenttotal = $this->receiptpayments->sum('amount');
+//            if ($receiptpaymenttotal / $amount >= 0.6)
+//            {
+//                $bonusfactor = $maxbonusfactor;
+//                if ($poheadcostpercent >= 0.5 && $poheadcostpercent < 0.6)
+//                    $bonusfactor = $bonusfactor - $offset;
+//                elseif ($poheadcostpercent >= 0.6 && $poheadcostpercent < 0.7)
+//                    $bonusfactor = $bonusfactor - $offset * 2;
+//                elseif ($poheadcostpercent >= 0.7 && $poheadcostpercent < 0.8)
+//                    $bonusfactor = $bonusfactor - $offset * 3;
+//                elseif ($poheadcostpercent / $amount >= 0.8)
+//                    $bonusfactor = $mixbonusfactor;
+//            }
         }
         return $bonusfactor;
     }
