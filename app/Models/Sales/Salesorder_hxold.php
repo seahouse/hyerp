@@ -241,7 +241,7 @@ class Salesorder_hxold extends Model
                         $bonusfactor = $bonusfactor - $offset * 2;
                     elseif ($poheadcostpercent >= 0.7 && $poheadcostpercent < 0.8)
                         $bonusfactor = $bonusfactor - $offset * 3;
-                    elseif ($poheadcostpercent / $amount >= 0.8)
+                    elseif ($poheadcostpercent >= 0.8)
                         $bonusfactor = $mixbonusfactor;
                 }
             }
@@ -298,7 +298,7 @@ class Salesorder_hxold extends Model
                     $bonusfactor = $bonusfactor - $offset * 4;
                 elseif ($poheadcostpercent >= 0.7 && $poheadcostpercent < 0.8)
                     $bonusfactor = $bonusfactor - $offset * 5;
-                elseif ($poheadcostpercent / $amount >= 0.8)
+                elseif ($poheadcostpercent >= 0.8)
                     $bonusfactor = $mixbonusfactor;
             }
         }
