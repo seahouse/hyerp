@@ -544,12 +544,12 @@ class MyController extends Controller
                             $temp = [];
                             $temp['订单编号']          = $soheadbonusArray[0]['number'];
                             $temp['订单名称']          = $soheadbonusArray[0]['projectjc'];
-                            $temp['订单金额']          = $soheadbonusArray[0]['amount'];
+                            $temp['订单金额']          = (double)$soheadbonusArray[0]['amount'];
                             $temp['销售经理']          = $soheadbonusArray[0]['salesmanager'];
-                            $temp['收款']          = $soheadbonusArray[0]['receiptpercent'];
+                            $temp['收款']             = $soheadbonusArray[0]['receiptpercent'];
 
                             $temp['收款日期']          = $value['receiptdate'];
-                            $temp['收款金额']          = $value['amount'];
+                            $temp['收款金额']          = (double)$value['amount'];
                             $temp['奖金系数']          = $value['bonusfactor'];
                             $temp['系数类别']          = $soheadbonusArray[0]['bonusfactortype'];
                             $temp['应发奖金']          = $value['bonus'];
@@ -656,12 +656,12 @@ class MyController extends Controller
                                     $temp = [];
                                     $temp['订单编号']          = $soheadbonus['number'];
                                     $temp['订单名称']          = $soheadbonus['projectjc'];
-                                    $temp['订单金额']          = $soheadbonus['amount'];
+                                    $temp['订单金额']          = (double)$soheadbonus['amount'];
 //                                    $temp['销售经理']          = $soheadbonus['salesmanager'];
                                     $temp['收款']          = $soheadbonus['receiptpercent'];
 
                                     $temp['收款日期']          = $value['receiptdate'];
-                                    $temp['收款金额']          = $value['amount'];
+                                    $temp['收款金额']          = (double)$value['amount'];
                                     $temp['奖金系数']          = $value['bonusfactor'];
                                     $temp['系数类别']          = $soheadbonus['bonusfactortype'];
                                     $temp['应发奖金']          = $value['bonus'];
@@ -701,7 +701,7 @@ class MyController extends Controller
                             $temp = [];
                             $temp['订单编号']          = $soheadbonus['number'];
                             $temp['订单名称']          = $soheadbonus['projectjc'];
-                            $temp['订单金额']          = $soheadbonus['amount'];
+                            $temp['订单金额']          = (double)$soheadbonus['amount'];
                             $temp['销售经理']          = $soheadbonus['salesmanager'];
                             $temp['收款']              = $soheadbonus['receiptpercent'];
                             $temp['区间收款']          = $soheadbonus['amountperiod2'];

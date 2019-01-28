@@ -115,3 +115,25 @@
 @endif
 
 @stop
+
+@section('script')
+    @if (Agent::isDesktop())
+        <script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
+        <script type="text/javascript">
+            jQuery(document).ready(function(e) {
+
+
+
+//                console.log(DingTalkPC.ua.isInDingTalk);
+                if (DingTalkPC.ua.isInDingTalk)
+                {
+                    $("a").attr("target", "_self");
+
+                }
+
+
+
+            });
+        </script>
+    @endif
+@endsection
