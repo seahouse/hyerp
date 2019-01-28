@@ -212,7 +212,7 @@ class Salesorder_hxold extends Model
         $offset = ($maxbonusfactor - $mixbonusfactor) / 4;
         if ($this->amount > 0.0)
         {
-            $project = $this->project();
+            $project = $this->project;
             if (isset($project))
             {
                 $amount = 0.0;
