@@ -223,6 +223,12 @@ class MyController extends Controller
                 else
                     return "-";
             })
+            ->addColumn('receiptpercent_excel', function (Salesorder_hxold $sohead) {
+                if ($sohead->amount > 0.0)
+                    return number_format($sohead->receiptpayments->sum('amount') / $sohead->amount, 4);
+                else
+                    return "-";
+            })
             ->addColumn('amountperiod2', function (Salesorder_hxold $sohead) use ($request) {
                 if ($request->has('receivedatestart') && $request->has('receivedateend'))
                 {
@@ -241,6 +247,12 @@ class MyController extends Controller
                     return $sohead->getBonusfactorByPolicy($request->get('receivedateend')) * 100.0 . '%';
                 else
                     return $sohead->getBonusfactorByPolicy() * 100.0 . '%';
+            })
+            ->addColumn('bonusfactor_excel', function (Salesorder_hxold $sohead) use ($request) {
+                if ($request->has('receivedatestart') && $request->has('receivedateend'))
+                    return $sohead->getBonusfactorByPolicy($request->get('receivedateend'));
+                else
+                    return $sohead->getBonusfactorByPolicy();
             })
             ->addColumn('bonusfactortype', function (Salesorder_hxold $sohead) {
                 return $sohead->bonusfactor > 0.0 ? "手工" : "自动";
@@ -297,6 +309,9 @@ class MyController extends Controller
             })
             ->addColumn('bonusfactor', function (Receiptpayment_hxold $receiptpayment) {
                 return $receiptpayment->sohead->getBonusfactorByPolicy() * 100.0 . '%';
+            })
+            ->addColumn('bonusfactor_excel', function (Receiptpayment_hxold $receiptpayment) {
+                return $receiptpayment->sohead->getBonusfactorByPolicy();
             })
             ->addColumn('bonus', function (Receiptpayment_hxold $receiptpayment) {
                 return $receiptpayment->amount * $receiptpayment->sohead->getBonusfactorByPolicy() * array_first($receiptpayment->sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
@@ -546,11 +561,11 @@ class MyController extends Controller
                             $temp['订单名称']          = $soheadbonusArray[0]['projectjc'];
                             $temp['订单金额']          = (double)$soheadbonusArray[0]['amount'];
                             $temp['销售经理']          = $soheadbonusArray[0]['salesmanager'];
-                            $temp['收款']             = $soheadbonusArray[0]['receiptpercent'];
+                            $temp['收款']             = (double)$soheadbonusArray[0]['receiptpercent_excel'];
 
                             $temp['收款日期']          = $value['receiptdate'];
                             $temp['收款金额']          = (double)$value['amount'];
-                            $temp['奖金系数']          = $value['bonusfactor'];
+                            $temp['奖金系数']          = (double)$value['bonusfactor_excel'];
                             $temp['系数类别']          = $soheadbonusArray[0]['bonusfactortype'];
                             $temp['应发奖金']          = $value['bonus'];
 
@@ -581,6 +596,10 @@ class MyController extends Controller
 //                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
 
                         $sheet->freezeFirstRow();
+                        $sheet->setColumnFormat(array(
+                            'E'     => '0.00%',
+                            'H'     => '0.00%',
+                        ));
                         $sheet->fromArray($data);
 
 //                        $totalrowcolor = "#00FF00";       // green
@@ -658,11 +677,11 @@ class MyController extends Controller
                                     $temp['订单名称']          = $soheadbonus['projectjc'];
                                     $temp['订单金额']          = (double)$soheadbonus['amount'];
 //                                    $temp['销售经理']          = $soheadbonus['salesmanager'];
-                                    $temp['收款']          = $soheadbonus['receiptpercent'];
+                                    $temp['收款']             = (double)$soheadbonus['receiptpercent_excel'];
 
                                     $temp['收款日期']          = $value['receiptdate'];
                                     $temp['收款金额']          = (double)$value['amount'];
-                                    $temp['奖金系数']          = $value['bonusfactor'];
+                                    $temp['奖金系数']          = (double)$value['bonusfactor_excel'];
                                     $temp['系数类别']          = $soheadbonus['bonusfactortype'];
                                     $temp['应发奖金']          = $value['bonus'];
 
@@ -674,10 +693,12 @@ class MyController extends Controller
                             }
                         }
 
-
                         $sheet->freezeFirstRow();
+                        $sheet->setColumnFormat(array(
+                            'D'     => '0.00%',
+                            'G'     => '0.00%',
+                        ));
                         $sheet->fromArray($data);
-
                     });
                 }
 
@@ -703,9 +724,9 @@ class MyController extends Controller
                             $temp['订单名称']          = $soheadbonus['projectjc'];
                             $temp['订单金额']          = (double)$soheadbonus['amount'];
                             $temp['销售经理']          = $soheadbonus['salesmanager'];
-                            $temp['收款']              = $soheadbonus['receiptpercent'];
+                            $temp['收款']              = (double)$soheadbonus['receiptpercent_excel'];
                             $temp['区间收款']          = $soheadbonus['amountperiod2'];
-                            $temp['奖金系数']          = $soheadbonus['bonusfactor'];
+                            $temp['奖金系数']          = (double)$soheadbonus['bonusfactor_excel'];
                             $temp['系数类别']          = $soheadbonus['bonusfactortype'];
                             $temp['应发奖金']          = $soheadbonus['bonus'];
 
@@ -715,6 +736,10 @@ class MyController extends Controller
 
 
                         $sheet->freezeFirstRow();
+                        $sheet->setColumnFormat(array(
+                            'E'     => '0.00%',
+                            'G'     => '0.00%',
+                        ));
                         $sheet->fromArray($data);
 
                     });
