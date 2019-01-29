@@ -13,6 +13,7 @@
 </style>
 
 @section('main')
+    @can('sales_salesorder_bom_view')
     <div class="panel-heading">
         <div class="panel-title">销售 -- 销售订单 -- 图纸物料清单
             {{--
@@ -80,6 +81,9 @@
 </div>
 @endif
 
+    @else
+    无权限。
+    @endcan
 @endsection
 
 @section('script')

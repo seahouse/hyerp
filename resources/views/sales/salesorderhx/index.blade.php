@@ -3,6 +3,7 @@
 @section('title', '销售订单')
 
 @section('main')
+    @can('sales_salesorder_view')
     <div class="panel-heading">
         <div class="panel-title">销售 -- 销售订单
             {{--
@@ -114,7 +115,10 @@
 </div>
 @endif
 
-@stop
+    @else
+        无权限。
+    @endcan
+@endsection
 
 @section('script')
     @if (Agent::isDesktop())
