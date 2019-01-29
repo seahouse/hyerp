@@ -234,15 +234,33 @@ class Salesorder_hxold extends Model
 //            $poheadamounpercent = $poheadamounttotal / $amount;
                 if ($receiptpaymenttotal / $amount >= 0.6)
                 {
-                    $bonusfactor = $maxbonusfactor;
-                    if ($poheadcostpercent >= 0.5 && $poheadcostpercent < 0.6)
-                        $bonusfactor = $bonusfactor - $offset;
-                    elseif ($poheadcostpercent >= 0.6 && $poheadcostpercent < 0.7)
-                        $bonusfactor = $bonusfactor - $offset * 2;
-                    elseif ($poheadcostpercent >= 0.7 && $poheadcostpercent < 0.8)
-                        $bonusfactor = $bonusfactor - $offset * 3;
-                    elseif ($poheadcostpercent >= 0.8)
-                        $bonusfactor = $mixbonusfactor;
+                    if (abs($maxbonusfactor - 0.35) < 0.000001 && abs($mixbonusfactor - 0.1) < 0.000001)
+                    {
+                        if ($poheadcostpercent < 0.65)
+                            $bonusfactor = 0.35;
+                        elseif ($poheadcostpercent >= 0.65 && $poheadcostpercent < 0.7)
+                            $bonusfactor = 0.3;
+                        elseif ($poheadcostpercent >= 0.7 && $poheadcostpercent < 0.75)
+                            $bonusfactor = 0.25;
+                        elseif ($poheadcostpercent >= 0.75 && $poheadcostpercent < 0.8)
+                            $bonusfactor = 0.2;
+                        elseif ($poheadcostpercent >= 0.8 && $poheadcostpercent < 0.85)
+                            $bonusfactor = 0.15;
+                        else
+                            $bonusfactor = 0.1;
+                    }
+                    else
+                    {
+                        $bonusfactor = $maxbonusfactor;
+                        if ($poheadcostpercent >= 0.5 && $poheadcostpercent < 0.6)
+                            $bonusfactor = $bonusfactor - $offset;
+                        elseif ($poheadcostpercent >= 0.6 && $poheadcostpercent < 0.7)
+                            $bonusfactor = $bonusfactor - $offset * 2;
+                        elseif ($poheadcostpercent >= 0.7 && $poheadcostpercent < 0.8)
+                            $bonusfactor = $bonusfactor - $offset * 3;
+                        elseif ($poheadcostpercent >= 0.8)
+                            $bonusfactor = $mixbonusfactor;
+                    }
                 }
             }
 
