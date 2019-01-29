@@ -110,6 +110,7 @@
                     '<thead>'+
                     '<tr>' +
                     '<th>物料名称</th>' +
+                    '<th>型号</th>' +
                     '<th>代码</th>' +
                     '<th>数量</th>' +
                     '<th>材料</th>' +
@@ -190,6 +191,7 @@
                     },
                     columns: [
                         { data: 'goods_name', name: 'goods_name' },
+                        { data: 'goods_spec', name: 'goods_spec' },
                         { data: 'code', name: 'code' },
                         { data: 'quantity', name: 'quantity' },
                         { data: 'meterial', name: 'meterial' },

@@ -201,7 +201,7 @@ class SalesorderhxController extends Controller
 
 
 
-        return Datatables::of($query->select('dwgbomitems.*', 'vgoods.goods_name'))
+        return Datatables::of($query->select('dwgbomitems.*', 'vgoods.goods_name', 'vgoods.goods_spec'))
 //            ->editColumn('created_at', 'dwgbom.created_at')
 //            ->addColumn('amountperiod2', function (Salesorder_hxold $sohead) use ($request) {
 //                if ($request->has('receivedatestart') && $request->has('receivedateend'))
