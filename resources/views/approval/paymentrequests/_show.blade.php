@@ -329,6 +329,11 @@
             });
         });
     </script>
+@elseif(Agent::isMobile())
+    <script src="https://g.alicdn.com/ilw/ding/0.7.5/scripts/dingtalk.js"></script>
+    <script type="text/javascript">
+        $("a").attr("target", "_self");
+    </script>
 @endif
 
     @yield('for_paymentrequestapprovals_create_script')
