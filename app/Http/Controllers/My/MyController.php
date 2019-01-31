@@ -266,6 +266,11 @@ class MyController extends Controller
                 if ($request->has('receivedatestart') && $request->has('receivedateend'))
                 {
                     return $sohead->receiptpayments->sum(function ($receiptpayment) use ($request, $sohead) {
+                        if (Carbon::parse($receiptpayment->date)->gte(Carbon::parse($request->get('receivedatestart'))) && Carbon::parse($receiptpayment->date)->lte(Carbon::parse($request->get('receivedateend'))))
+                            return $receiptpayment->amount * $sohead->getBonusfactorByPolicy($request->get('receivedateend')) * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+                        else
+                            return 0.0;
+
                         if ($receiptpayment->date >= $request->get('receivedatestart') && $receiptpayment->date <= $request->get('receivedateend'))
                             return $receiptpayment->amount * $sohead->getBonusfactorByPolicy($request->get('receivedateend')) * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
                         else
@@ -359,10 +364,15 @@ class MyController extends Controller
                     if ($request->has('receivedatestart') && $request->has('receivedateend'))
                     {
                         $receiptamountperiod += $sohead->receiptpayments->sum(function ($receiptpayment) use ($request, &$receiptamountperiod) {
-                            if ($receiptpayment->date >= $request->get('receivedatestart') && $receiptpayment->date <= $request->get('receivedateend'))
+                            if (Carbon::parse($receiptpayment->date)->gte(Carbon::parse($request->get('receivedatestart'))) && Carbon::parse($receiptpayment->date)->lte(Carbon::parse($request->get('receivedateend'))))
                                 $receiptamountperiod += $receiptpayment->amount;
                             else
                                 $receiptamountperiod += 0.0;
+
+//                            if ($receiptpayment->date >= $request->get('receivedatestart') && $receiptpayment->date <= $request->get('receivedateend'))
+//                                $receiptamountperiod += $receiptpayment->amount;
+//                            else
+//                                $receiptamountperiod += 0.0;
                         });
                     }
                     else
@@ -378,10 +388,15 @@ class MyController extends Controller
                     if ($request->has('receivedatestart') && $request->has('receivedateend'))
                     {
                         $bonus += $sohead->receiptpayments->sum(function ($receiptpayment) use ($request, $sohead, &$bonus) {
-                            if ($receiptpayment->date >= $request->get('receivedatestart') && $receiptpayment->date <= $request->get('receivedateend'))
+                            if (Carbon::parse($receiptpayment->date)->gte(Carbon::parse($request->get('receivedatestart'))) && Carbon::parse($receiptpayment->date)->lte(Carbon::parse($request->get('receivedateend'))))
                                 $bonus += $receiptpayment->amount * $sohead->getBonusfactorByPolicy($request->get('receivedateend')) * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
                             else
                                 $bonus += 0.0;
+
+//                            if ($receiptpayment->date >= $request->get('receivedatestart') && $receiptpayment->date <= $request->get('receivedateend'))
+//                                $bonus += $receiptpayment->amount * $sohead->getBonusfactorByPolicy($request->get('receivedateend')) * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+//                            else
+//                                $bonus += 0.0;
                         });
                     }
                     else
@@ -406,10 +421,15 @@ class MyController extends Controller
                     if ($request->has('receivedatestart') && $request->has('receivedateend'))
                     {
                         $bonuspaid += $sohead->bonuspayments->sum(function ($bonuspayment) use ($request, &$bonuspaid) {
-                            if ($bonuspayment->paymentdate >= $request->get('receivedatestart') && $bonuspayment->paymentdate <= $request->get('receivedateend'))
+                            if (Carbon::parse($bonuspayment->paymentdate)->gte(Carbon::parse($request->get('receivedatestart'))) && Carbon::parse($bonuspayment->paymentdate)->lte(Carbon::parse($request->get('receivedateend'))))
                                 $bonuspaid += $bonuspayment->amount;
                             else
                                 $bonuspaid += 0.0;
+
+//                            if ($bonuspayment->paymentdate >= $request->get('receivedatestart') && $bonuspayment->paymentdate <= $request->get('receivedateend'))
+//                                $bonuspaid += $bonuspayment->amount;
+//                            else
+//                                $bonuspaid += 0.0;
                         });
                     }
                     else
