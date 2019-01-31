@@ -332,7 +332,10 @@
 @elseif(Agent::isMobile())
     <script src="https://g.alicdn.com/ilw/ding/0.7.5/scripts/dingtalk.js"></script>
     <script type="text/javascript">
-        $("a").attr("target", "_self");
+        $("#showPdf").click(function() {
+            location.href = 'http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf").attr("href");
+            return false;
+        });
     </script>
 @endif
 
