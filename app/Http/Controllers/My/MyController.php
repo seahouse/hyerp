@@ -233,6 +233,11 @@ class MyController extends Controller
                 if ($request->has('receivedatestart') && $request->has('receivedateend'))
                 {
                     return $sohead->receiptpayments->sum(function ($receiptpayment) use ($request) {
+                        if (Carbon::parse($receiptpayment->date)->gte(Carbon::parse($request->get('receivedatestart'))) && Carbon::parse($receiptpayment->date)->lte(Carbon::parse($request->get('receivedateend'))))
+                            return $receiptpayment->amount;
+                        else
+                            return 0.0;
+
                         if ($receiptpayment->date >= $request->get('receivedatestart') && $receiptpayment->date <= $request->get('receivedateend'))
                             return $receiptpayment->amount;
                         else
