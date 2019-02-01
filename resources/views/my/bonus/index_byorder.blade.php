@@ -128,6 +128,7 @@
                     '<thead>'+
                     '<tr>' +
                     '<th>收款日期</th>' +
+                    '<th>录入日期</th>' +
                     '<th>收款金额</th>' +
                     '<th>奖金系数</th>' +
                     '<th>应发奖金</th>' +
@@ -207,6 +208,7 @@
                     },
                     columns: [
                         { data: 'receiptdate', name: 'receiptdate' },
+                        { data: 'recorddate', name: 'recorddate' },
                         { data: 'amount', name: 'amount' },
                         { data: 'bonusfactor', name: 'bonusfactor' },
                         { data: 'bonus', name: 'bonus' },
