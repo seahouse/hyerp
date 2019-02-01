@@ -588,7 +588,7 @@ class MyController extends Controller
                             $temp['销售经理']          = $soheadbonusArray[0]['salesmanager'];
                             $temp['收款']             = (double)$soheadbonusArray[0]['receiptpercent_excel'];
 
-                            $temp['收款日期']          = $value['receiptdate'];
+                            $temp['录入日期']          = $value['recorddate'];
                             $temp['收款金额']          = (double)$value['amount'];
                             $temp['奖金系数']          = (double)$value['bonusfactor_excel'];
                             $temp['系数类别']          = $soheadbonusArray[0]['bonusfactortype'];
@@ -704,7 +704,7 @@ class MyController extends Controller
 //                                    $temp['销售经理']          = $soheadbonus['salesmanager'];
                                     $temp['收款']             = (double)$soheadbonus['receiptpercent_excel'];
 
-                                    $temp['收款日期']          = $value['receiptdate'];
+                                    $temp['录入日期']          = $value['recorddate'];
                                     $temp['收款金额']          = (double)$value['amount'];
                                     $temp['奖金系数']          = (double)$value['bonusfactor_excel'];
                                     $temp['系数类别']          = $soheadbonus['bonusfactortype'];
