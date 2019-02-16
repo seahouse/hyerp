@@ -6,6 +6,7 @@ use App\Http\Controllers\util\HttpDingtalkEco;
 use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
 use App\Http\Controllers\util\taobaosdk\dingtalk\domain\FormComponentValueVo;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\SmartworkBpmsProcessinstanceCreateRequest;
+use App\Http\Controllers\util\taobaosdk\dingtalk\request\SmartworkBpmsProcessinstanceListRequest;
 use App\Models\Approval\Approvaltype;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Issuedrawing;
@@ -16,6 +17,7 @@ use App\Models\Approval\Pppaymentitem;
 use App\Models\Sales\Project_hxold;
 use App\Models\Sales\Salesorder_hxold;
 use App\Models\System\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -1792,5 +1794,91 @@ class ApprovalController extends Controller
 //            $excel->setDescription('A demonstration to change the file properties');
 
         })->export('xlsx');
+    }
+
+    public static function processinstance_listids_issuedrawing($startTime, $endTime)
+    {
+        $user = Auth::user();
+        $method = 'dingtalk.smartwork.bpms.processinstance.create';
+        $session = DingTalkController::getAccessToken();
+//        $timestamp = time('2017-07-19 13:06:00');
+        $format = 'json';
+        $v = '2.0';
+
+        $process_code = config('custom.dingtalk.approval_processcode.issuedrawing');
+        $originator_user_id = $user->dtuserid;
+        $departmentList = json_decode($user->dtuser->department);
+        $dept_id = 0;
+        if (count($departmentList) > 0)
+            $dept_id = array_first($departmentList);
+
+//        $form_component_values = str_replace('#', '%23', $form_component_values);
+//        $form_component_values = str_replace(' ', '%20', $form_component_values);
+//        dd(json_decode(json_decode($form_component_values)[9]->value));
+//        Log::info('process_code: ' . $process_code);
+
+        $startTime = $startTime->timestamp * 1000;
+        $endTime = $endTime->timestamp * 1000;
+
+//        Log::info($startTime);
+//        Log::info($endTime);
+        $c = new DingTalkClient();
+        $req = new SmartworkBpmsProcessinstanceListRequest();
+        $req->setProcessCode($process_code);
+        $req->setStartTime("$startTime");
+        $req->setEndTime("$endTime");
+//        $req->setSize(10);
+
+        $response = $c->execute($req, $session);
+//        Log::info(json_encode($response));
+        return $response;
+//        return json_encode($response);
+        dd(json_encode($response, JSON_UNESCAPED_UNICODE));
+        return response()->json($response);
+
+
+    }
+
+    public static function processinstance_listids($approvaltype, $startTime, $endTime)
+    {
+        $user = Auth::user();
+        $method = 'dingtalk.smartwork.bpms.processinstance.create';
+        $session = DingTalkController::getAccessToken();
+//        $timestamp = time('2017-07-19 13:06:00');
+        $format = 'json';
+        $v = '2.0';
+
+        $process_code = config('custom.dingtalk.approval_processcode.' . $approvaltype);
+        $originator_user_id = $user->dtuserid;
+        $departmentList = json_decode($user->dtuser->department);
+        $dept_id = 0;
+        if (count($departmentList) > 0)
+            $dept_id = array_first($departmentList);
+
+//        $form_component_values = str_replace('#', '%23', $form_component_values);
+//        $form_component_values = str_replace(' ', '%20', $form_component_values);
+//        dd(json_decode(json_decode($form_component_values)[9]->value));
+//        Log::info('process_code: ' . $process_code);
+
+        $startTime = $startTime->timestamp * 1000;
+        $endTime = $endTime->timestamp * 1000;
+
+//        Log::info($startTime);
+//        Log::info($endTime);
+        $c = new DingTalkClient();
+        $req = new SmartworkBpmsProcessinstanceListRequest();
+        $req->setProcessCode($process_code);
+        $req->setStartTime("$startTime");
+        $req->setEndTime("$endTime");
+//        $req->setSize(10);
+
+        $response = $c->execute($req, $session);
+//        Log::info(json_encode($response));
+        return $response;
+//        return json_encode($response);
+        dd(json_encode($response, JSON_UNESCAPED_UNICODE));
+        return response()->json($response);
+
+
     }
 }

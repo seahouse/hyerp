@@ -102,8 +102,8 @@ class ReceiptReminder extends Command
                         if ($startDate->gt($baseDate))
                             $bWarning = true;
                         break;
-                    case 13:
-                    case 5:
+                    case 13:        // 部分到货款: 已勾选发货
+                    case 5:         // 全部到货款: 已勾选发货
                         if ($sohead->delivery_status == 1)
                         {
                             $bWarning = true;
@@ -117,7 +117,7 @@ class ReceiptReminder extends Command
                             $bWarning = true;
                         }
                         break;
-                    case 7:             // 调试后: 项目投运日期（72+24小时完成日）
+                    case 7:             // 调试后: 已填写项目投运日期（72+24小时完成日）
                         // Carbon使用方法: https://9iphp.com/web/laravel/php-datetime-package-carbon.html
                         $this->info('      ' . $sohead->debugend_date);
                         $debugendDate = Carbon::parse($sohead->debugend_date);
@@ -157,13 +157,13 @@ class ReceiptReminder extends Command
                         if ($performanceAcceptDate->gt($baseDate))
                             $bWarning = true;
                         break;
-                    case 17:            // 运行3个月
-                        $debugendDate = Carbon::parse($sohead->debugend_date);
+                    case 17:            // 运行3个月: 已填写已填写项目投运日期后3个月
+                    $debugendDate = Carbon::parse($sohead->debugend_date);
                         $baseDate = Carbon::create(1900, 1, 1);
                         if ($debugendDate->gt($baseDate) && Carbon::now()->gt($debugendDate->addMonth(3)))
                             $bWarning = true;
                         break;
-                    case 18:            // 运行半年
+                    case 18:            // 运行半年: 已填写已填写项目投运日期后6个月
                         $debugendDate = Carbon::parse($sohead->debugend_date);
                         $baseDate = Carbon::create(1900, 1, 1);
                         if ($debugendDate->gt($baseDate) && Carbon::now()->gt($debugendDate->addMonth(6)))
@@ -180,7 +180,7 @@ class ReceiptReminder extends Command
                             $bWarning = true;
                         }
                         break;
-                    case 10:        // 质保金: quolityDate.  不知道为什么质保金日期在后台里很多订单是 1901-01-01, 而不是 1900
+                    case 10:        // 质保金: 质保金到期日期.  不知道为什么质保金日期在后台里很多订单是 1901-01-01, 而不是 1900
                         $quolityDate = Carbon::parse($sohead->quolityDate);
                         $baseDate = Carbon::create(1901, 1, 1);
                         if ($quolityDate->gt($baseDate) && Carbon::now()->gt($quolityDate))

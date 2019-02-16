@@ -215,6 +215,13 @@ class ViewComposerServiceProvider extends ServiceProvider
                 ->orderby('id', 'asc')->lists('projectjc', 'id'));
 //            $view->with('poheadOrderDateyearList_hxold', DB::connection('sqlsrv')->select(DB::raw('select distinct datepart(year, orderdate) from vorder'))->lists('projectjc', 'id'));
         });
+
+        // approvaltypes
+        view()->composer(array('approval.synchronize.index'), function($view) {
+            $approvaltypes = config('custom.dingtalk.approval_type');
+            $view->with('approvaltypes', $approvaltypes);
+//            $view->with('poheadOrderDateyearList_hxold', DB::connection('sqlsrv')->select(DB::raw('select distinct datepart(year, orderdate) from vorder'))->lists('projectjc', 'id'));
+        });
     }
 
     /**

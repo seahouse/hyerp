@@ -26,9 +26,9 @@ class UserRequest extends Request
         return [
             //
             'name' => 'required|max:255',
-            'username' => 'required|max:255|unique:users',
+//            'username' => 'required|max:255|unique:users',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|confirmed|min:3',
+//            'password' => 'required|confirmed|min:3',
         ];
     }
 }

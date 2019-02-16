@@ -500,6 +500,10 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('mcitempurchasejson', 'ApprovalController@mcitempurchasejson');
         Route::get('pppaymentjson', 'ApprovalController@pppaymentjson');
     });
+    Route::group(['prefix' => 'synchronize'], function () {
+        Route::get('', 'SynchronizeController@index');
+        Route::post('synchronize', 'SynchronizeController@synchronize');
+    });
 });
 
 Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' => ['web', 'auth']], function() {

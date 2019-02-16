@@ -22,6 +22,8 @@ class Mcitempurchase extends Model
         'applicant_id',
         'status',
         'approversetting_id',
+        'process_instance_id',
+        'business_id',
     ];
 
     public function mcitempurchaseitems() {

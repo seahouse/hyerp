@@ -130,6 +130,9 @@
                                         <li><a href="/approval/issuedrawing">下发图纸</a></li>
                                     @endcan
 @endif
+    @can('approval_synchronize')
+                            <li><a href="/approval/synchronize">审批同步（钉钉）</a></li>
+    @endcan
                         <li role="separator" class="divider"></li>
                         <li><a href="/approval/approversettings">设置</a></li>
     <li role="separator" class="divider"></li>
