@@ -14,7 +14,7 @@ class Userrole extends Model
     protected $fillable = [
         'user_id',
         'role_id',
-    ];    
+    ];
    
     public function user() {
         return $this->hasOne('App\Models\System\User', 'id', 'user_id');

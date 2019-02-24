@@ -350,9 +350,6 @@ Route::group(['prefix' => 'purchaseorderc', 'namespace' => 'Purchaseorderc', 'mi
 //    });
     Route::resource('purchaseordercs', 'PurchaseordercController');
     Route::get('poitemcs/{headId}/create', 'PoitemcController@createByPoheadId');
-    Route::group(['prefix' => 'poitems/hxold'], function() {
-        Route::get('', 'PoitemsController@index_hxold');
-    });
     Route::resource('poitemcs', 'PoitemcController');
     Route::group(['prefix' => 'asns'], function () {
         Route::post('packingstore', 'AsnController@packingstore');
@@ -364,7 +361,7 @@ Route::group(['prefix' => 'purchaseorderc', 'namespace' => 'Purchaseorderc', 'mi
 //        Route::get('packing', 'PurchaseordercController@packing');
     });
     Route::resource('asns', 'AsnController');
-    Route::resource('asnitems', 'AsnitemController');
+//    Route::resource('asnitems', 'AsnitemController');
 });
 
 Route::group(['prefix' => 'crm', 'namespace' => 'Crm', 'middleware' => ['web', 'auth']], function() {
