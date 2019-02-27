@@ -170,13 +170,23 @@ class ReceiptReminder extends Command
                             $bWarning = true;
                         break;
                     case 9:             // 运行1年
-                    case 12:            // 环保验收: 项目投运日期（72+24小时完成日）后, 12个月后
                         // Carbon使用方法: https://9iphp.com/web/laravel/php-datetime-package-carbon.html
                         $debugendDate = Carbon::parse($sohead->debugend_date);
                         $this->info('      ' . $debugendDate);
                         $baseDate = Carbon::create(1900, 1, 1);
                         if ($debugendDate->gt($baseDate) && Carbon::now()->gt($debugendDate->addMonth(12)))
                         {
+                            $bWarning = true;
+                        }
+                        break;
+                    case 12:            // 环保验收: 已填写环保验收日期
+                        // Carbon使用方法: https://9iphp.com/web/laravel/php-datetime-package-carbon.html
+                        $environmentalProtectionCollectionDate = Carbon::parse($sohead->environmentalProtectionCollectionDate);
+                        $this->info('      ' . $environmentalProtectionCollectionDate);
+                        $baseDate = Carbon::create(1900, 1, 1);
+                        if ($environmentalProtectionCollectionDate->gt($baseDate) && Carbon::now()->gt($environmentalProtectionCollectionDate))
+                        {
+                            $this->info("\t\t\tneed warning: " . $environmentalProtectionCollectionDate);
                             $bWarning = true;
                         }
                         break;
@@ -257,47 +267,6 @@ class ReceiptReminder extends Command
                 $this->sendMsg($msg, 8);        // to WuHL
                 $this->sendMsg($msg, 16);       // to LiY
 
-//                // 本地测试
-//                if ($this->option('debug'))
-//                {
-//                    $touser = User::where('email', $this->argument('useremail'))->first();
-//                    if (isset($touser))
-//                    {
-//                        DingTalkController::send($touser->dtuserid, '',
-//                            $msg,
-//                            config('custom.dingtalk.agentidlist.erpmessage'));
-//                    }
-//                }
-//                else
-//                {
-//                    // 向销售经理发送消息
-//                    $salesmanager_hxold = Userold::where('user_hxold_id', $sohead->salesmanager_id)->first();
-//                    if (isset($salesmanager_hxold))
-//                    {
-//                        $salesmanager = User::where('id', $salesmanager_hxold->user_id)->first();
-//                        if (isset($salesmanager))
-//                            DingTalkController::send($salesmanager->dtuserid, '',
-//                                $msg,
-//                                config('custom.dingtalk.agentidlist.erpmessage'));
-//                    }
-//
-//                    // 向吴HL发送消息
-//                    if ($toWuHL)
-//                    {
-//                        $touser = User::where('email', 'wuhaolun@huaxing-east.com')->first();
-//                        if (isset($touser))
-//                            DingTalkController::send($touser->dtuserid, '',
-//                                $msg,
-//                                config('custom.dingtalk.agentidlist.erpmessage'));
-//
-//                        $touser = User::where('email', 'liyao@huaxing-east.com')->first();
-//                        if (isset($touser))
-//                            DingTalkController::send($touser->dtuserid, '',
-//                                $msg,
-//                                config('custom.dingtalk.agentidlist.erpmessage'));
-//                    }
-//                }
-
             }
         }
 //        Log::info(json_encode($receiptPeopleArray));
@@ -348,7 +317,6 @@ class ReceiptReminder extends Command
                     }
 
 
-//                    Log::info($salesmanager->name . "可收" . $value['total'] . "万元, 明细: " . implode(", ", $value['msg']) . ".");
                 }
 
             }

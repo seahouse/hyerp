@@ -1,3 +1,3 @@
 @extends('navbarerp')
 
-@include('approval.paymentrequests._show')
+@include('purchaseorderc.purchaseordercs._show')
