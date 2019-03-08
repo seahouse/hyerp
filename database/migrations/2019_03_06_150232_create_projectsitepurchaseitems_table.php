@@ -18,7 +18,7 @@ class CreateProjectsitepurchaseitemsTable extends Migration
             $table->integer('projectsitepurchase_id')->nullable();
             $table->integer('item_id')->nullable();
             $table->string('brand')->default('');
-            $table->integer('unit_id')->nullable();
+            $table->integer('unit_id')->default(0);
             $table->decimal('quantity', 18, 2)->default(0.0);
             $table->decimal('unitprice', 18, 2)->default(0.0);
             $table->decimal('price', 18, 4)->default(0.0);

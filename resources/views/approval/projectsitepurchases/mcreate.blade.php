@@ -317,6 +317,8 @@
                     if (itemObject.quantity == "")
                         itemObject.quantity = 0.0;
                     itemObject.unit_id = container.find("select[name='unit_id']").val();
+                    if (itemObject.unit_id == "")
+                        itemObject.unit_id = 0;
                     itemObject.unit_name = container.find("select[name='unit_id']").find("option:selected").text();
                     itemObject.unitprice = container.find("input[name='unitprice']").val();
                     if (itemObject.unitprice == "")
