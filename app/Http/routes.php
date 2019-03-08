@@ -479,12 +479,17 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::group(['prefix' => 'pppayment'], function() {
         Route::get('mcreate', 'PppaymentController@mcreate');
         Route::post('mstore', 'PppaymentController@mstore');
-
     });
     Route::resource('pppayment', 'PppaymentController');
     Route::resource('pppaymentitem', 'PppaymentitemController');
     Route::resource('pppaymentitemissuedrawing', 'PppaymentitemissuedrawingController');
     Route::resource('pppaymentitemattachment', 'PppaymentitemattachmentController');
+
+    Route::group(['prefix' => 'projectsitepurchases'], function() {
+        Route::get('mcreate', 'ProjectsitepurchaseController@mcreate');
+        Route::post('mstore', 'ProjectsitepurchaseController@mstore');
+    });
+    Route::resource('projectsitepurchases', 'ProjectsitepurchaseController');
 
     Route::post('bingdingtalk', 'ApprovalController@bingdingtalk');
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexapproval');

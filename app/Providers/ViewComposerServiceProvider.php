@@ -175,7 +175,7 @@ class ViewComposerServiceProvider extends ServiceProvider
         });
 
         // unitList_hxold
-        view()->composer(array('approval.mcitempurchases.mcreate'), function($view) {
+        view()->composer(array('approval.mcitempurchases.mcreate', 'approval.projectsitepurchases.mcreate'), function($view) {
             $view->with('unitList_hxold', \App\Models\Product\Unit_hxold::orderby('id', 'asc')->lists('name', 'id'));
         });
 
