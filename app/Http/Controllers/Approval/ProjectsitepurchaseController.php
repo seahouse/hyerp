@@ -250,7 +250,7 @@ class ProjectsitepurchaseController extends Controller
 
         if (isset($projectsitepurchase))
         {
-
+            $input['totalprice'] = $projectsitepurchase->projectsitepurchaseitems->sum('price') + $input['freight'];
             $input['image_urls'] = json_encode($image_urls);
             $input['approvers'] = $projectsitepurchase->approvers();
             $response = ApprovalController::projectsitepurchase($input);

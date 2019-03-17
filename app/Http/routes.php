@@ -515,6 +515,9 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     });
 });
 
+Route::group(['prefix' => 'log', 'namespace' => 'Log', 'middleware' => ['web', 'auth']], function () {
+});
+
 Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['web', 'auth']], function() {
     Route::resource('employees', 'EmployeesController');
     Route::resource('depts', 'DeptsController');

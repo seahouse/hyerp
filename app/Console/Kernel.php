@@ -28,6 +28,7 @@ class Kernel extends ConsoleKernel
         Commands\BonusfactorStatistics::class,
         Commands\DeliverydelayReminder::class,
         Commands\EDITest::class,
+        Commands\ReceiveDTLogs::class,
     ];
 
     /**

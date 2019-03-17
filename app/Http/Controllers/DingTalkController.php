@@ -1491,10 +1491,11 @@ class DingTalkController extends Controller
 //        $form_component_values = '{name:\'测试1\', value:\'aaa\'}';
 //        dd(json_encode($formdata));
         $form_component_values = json_encode($formdata);
-        Log::info('process_code: ' . $process_code);
-        Log::info('originator_user_id: ' . $originator_user_id);
-        Log::info('dept_id: ' . $dept_id);
-        Log::info('approvers: ' . $approvers);
+//        Log::info('process_code: ' . $process_code);
+//        Log::info('originator_user_id: ' . $originator_user_id);
+//        Log::info('dept_id: ' . $dept_id);
+//        Log::info('approvers: ' . $approvers);
+//        Log::info('cc_list: ' . $cc_list);
         $params = compact('method', 'session', 'v', 'format',
             'process_code', 'originator_user_id', 'dept_id', 'approvers', 'cc_list', 'cc_position', 'form_component_values');
         $data = [

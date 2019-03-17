@@ -44,7 +44,7 @@ class DeliverydelayReminder extends Command
     public function handle()
     {
         //
-        $soheads = Salesorder_hxold::where('status', '<>', -10)->get();
+        $soheads = Salesorder_hxold::where('status', '<>', -10)->orderBy('plandeliverydate')->get();
         foreach ($soheads as $sohead)
         {
             $this->info($sohead->id);

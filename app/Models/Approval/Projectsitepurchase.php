@@ -31,6 +31,10 @@ class Projectsitepurchase extends Model
         'business_id',
     ];
 
+    public function projectsitepurchaseitems() {
+        return $this->hasMany('\App\Models\Approval\Projectsitepurchaseitem', 'projectsitepurchase_id', 'id');
+    }
+
     public function approvers() {
         $approvers = config('custom.dingtalk.approversettings.projectsitepurchase.' . $this::getAttribute('purchasetype'), '');
         return $approvers;
