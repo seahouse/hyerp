@@ -320,6 +320,11 @@ class IssuedrawingController extends Controller
         $input = $request->all();
 //        dd($input->file('image_file'));
 //        dd($input);
+        $cc_list = config('custom.dingtalk.approversettings.issuedrawing.cc_list.' . $input['productioncompany']);
+        $cc_list_designdepartment = config('custom.dingtalk.approversettings.issuedrawing.cc_list.designdepartment.' . $input['designdepartment']);
+        $cc_list .= empty($cc_list) ? $cc_list_designdepartment : ',' . $cc_list_designdepartment;
+        dd($cc_list);
+
         $this->validate($request, [
             'designdepartment'      => 'required',
             'productioncompany'      => 'required',

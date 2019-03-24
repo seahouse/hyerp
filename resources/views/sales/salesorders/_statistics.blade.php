@@ -13,6 +13,7 @@
 			@else
 				<p>订单收款比例：-</p>
 			@endif
+			<p>订单开票总金额：{{ $sohead->sotickets->sum('amount') }}万</p>
 			<?php $pohead_amount_total = $sohead->poheads->sum('amount'); ?>
             <?php $poheadAmountBy7550 = array_first($sohead->getPoheadAmountBy7550())->poheadAmountBy7550; ?>
             <?php $sohead_taxamount = isset($sohead->temTaxamountstatistics->sohead_taxamount) ? $sohead->temTaxamountstatistics->sohead_taxamount : 0.0; ?>

@@ -1400,6 +1400,8 @@ class DingTalkController extends Controller
             $dept_id = array_first($departmentList);
         $approvers = $inputs['approvers'];
         $cc_list = config('custom.dingtalk.approversettings.issuedrawing.cc_list.' . $inputs['productioncompany']);
+        $cc_list_designdepartment = config('custom.dingtalk.approversettings.issuedrawing.cc_list.designdepartment.' . $inputs['designdepartment']);
+        $cc_list .= empty($cc_list) ? $cc_list_designdepartment : ',' . $cc_list_designdepartment;
         $cc_position = "FINISH";
 //        if (strlen($cc_list) == 0)
 //            $cc_list = config('custom.dingtalk.approversettings.mcitempurchase.cc_list.default');

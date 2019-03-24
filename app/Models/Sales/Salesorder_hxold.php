@@ -344,4 +344,9 @@ class Salesorder_hxold extends Model
     public function senddetails() {
         return $this->hasMany('App\Models\Sales\Senddetail_hxold', 'sohead_id', 'id');
     }
+
+    public function sotickets() {
+        return $this->hasMany('App\Models\Sales\Soticket_hxold', 'sohead_id', 'id');
+    }
+
 }
