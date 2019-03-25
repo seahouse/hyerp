@@ -52,8 +52,10 @@ class ReceiveDTLogs extends Command
         $statDate = Carbon::today()->subDays($this->argument('days'));
         $endDate = Carbon::now();
         if ($statDate->diffInDays($endDate) >= 179)
-            $endDate = $statDate->addDays(179);             // do not exceed 180 days.
+            $endDate = $statDate->copy()->addDays(179);             // do not exceed 180 days.
 
+        $this->info($statDate->toDateTimeString());
+        $this->info($endDate->toDateTimeString());
         $startTime = $statDate->timestamp * 1000;
         $endTime = $endDate->timestamp * 1000;
         $this->info($startTime);
