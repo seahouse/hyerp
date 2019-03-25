@@ -16,4 +16,8 @@ class Dtlog extends Model
         'remark',
         'template_name',
     ];
+
+    public function dtlogitems() {
+        return $this->hasMany('App\Models\Dingtalk\Dtlogitem');
+    }
 }

@@ -515,7 +515,8 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     });
 });
 
-Route::group(['prefix' => 'log', 'namespace' => 'Log', 'middleware' => ['web', 'auth']], function () {
+Route::group(['prefix' => 'dingtalk', 'namespace' => 'Dingtalk', 'middleware' => ['web', 'auth']], function () {
+    Route::resource('dtlogs', 'DtlogController');
 });
 
 Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['web', 'auth']], function() {

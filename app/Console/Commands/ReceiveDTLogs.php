@@ -49,14 +49,19 @@ class ReceiveDTLogs extends Command
         $request = new CorpReportListRequest();
         $session = DingTalkController::getAccessToken();
 
-        $startTime = Carbon::today()->subDays($this->argument('days'))->timestamp * 1000;
-        $endTime = Carbon::now()->timestamp * 1000;
+        $statDate = Carbon::today()->subDays($this->argument('days'));
+        $endDate = Carbon::now();
+        if ($statDate->diffInDays($endDate) >= 179)
+            $endDate = $statDate->addDays(179);             // do not exceed 180 days.
+
+        $startTime = $statDate->timestamp * 1000;
+        $endTime = $endDate->timestamp * 1000;
         $this->info($startTime);
         $this->info($endTime);
         $request->setStartTime("$startTime");
         $request->setEndTime("$endTime");
         $this->info($this->option('template'));
-        Log::info($this->option('template'));
+//        Log::info($this->option('template'));
         $request->setTemplateName($this->option('template'));
         $request->setSize("10");
 
