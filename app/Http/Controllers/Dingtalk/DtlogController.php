@@ -18,8 +18,91 @@ class DtlogController extends Controller
     public function index()
     {
         //
-        $dtlogs = Dtlog::latest('create_time')->paginate(10);
-        return view('dingtalk.dtlogs.index', compact('dtlogs'));
+        $request = request();
+        $inputs = $request->all();
+        $dtlogs = $this->searchrequest($request);
+//        $dtlogs = Dtlog::latest('create_time')->paginate(15);
+        return view('dingtalk.dtlogs.index', compact('dtlogs', 'inputs'));
+    }
+
+    public function search(Request $request)
+    {
+//        $key = $request->input('key');
+        $inputs = $request->all();
+        $dtlogs = $this->searchrequest($request);
+//        $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
+//        $totalamount = Paymentrequest::sum('amount');
+
+        return view('dingtalk.dtlogs.index', compact('dtlogs', 'inputs'));
+    }
+
+    public function searchrequest($request)
+    {
+
+        $query = Dtlog::latest('create_time');
+
+
+        if ($request->has('createdatestart') && $request->has('createdateend'))
+        {
+            $query->whereRaw("DATEDIFF(DAY, create_time, '" . $request->input('createdatestart') . "') <= 0 and DATEDIFF(DAY, create_time, '" . $request->input('createdateend') . "') >=0");
+
+        }
+
+        if ($request->has('creator_name'))
+        {
+            $query->where('creator_name', $request->input('creator_name'));
+        }
+//
+//        // payment status
+//        // because need search hxold database, so select this condition last.
+//        if ($request->has('paymentstatus'))
+//        {
+//            $paymentstatus = $request->input('paymentstatus');
+//            if ($paymentstatus == 0)
+//            {
+//                $query->where('approversetting_id', '0');
+//
+//                $paymentrequestids = [];
+//                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
+//                    foreach ($paymentrequests as $paymentrequest) {
+//                        # code...
+//                        if (isset($paymentrequest->purchaseorder_hxold->payments))
+//                        {
+//                            if ($paymentrequest->paymentrequestapprovals->max('created_at') < $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
+//                                array_push($paymentrequestids, $paymentrequest->id);
+//                        }
+//                    }
+//                });
+//
+//                // dd($paymentrequestids);
+//                $query->whereIn('id', $paymentrequestids);
+//
+//            }
+//            elseif ($paymentstatus == -1)
+//            {
+//                $query->where('approversetting_id', '0');
+//
+//                $paymentrequestids = [];
+//                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
+//                    foreach ($paymentrequests as $paymentrequest) {
+//                        # code...
+//                        if (isset($paymentrequest->purchaseorder_hxold->payments))
+//                        {
+//                            if ($paymentrequest->paymentrequestapprovals->max('created_at') > $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
+//                                array_push($paymentrequestids, $paymentrequest->id);
+//                        }
+//                    }
+//                });
+//
+//                $query->whereIn('id', $paymentrequestids);
+//            }
+//        }
+
+
+        $dtlogs = $query->select('*')
+            ->paginate(15);
+
+        return $dtlogs;
     }
 
     /**

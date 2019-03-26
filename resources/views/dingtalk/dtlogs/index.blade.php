@@ -3,6 +3,7 @@
 @section('title', '钉钉日志')
 
 @section('main')
+    @can('dingtalk_dtlogs_view')
     <div class="panel-heading">
         <div class="panel-title">钉钉 -- 钉钉日志
 
@@ -10,16 +11,22 @@
     </div>
     
     <div class="panel-body">
-        {{--<a href="{{ URL::to('approval/approvaltypes/create') }}" class="btn btn-sm btn-success">新建</a>--}}
-{{--        <form class="pull-right" action="/approval/items/search" method="post">
-            {!! csrf_field() !!}
-            <div class="pull-right">
-                <button type="submit" class="btn btn-default btn-sm">查找</button>
-            </div>
-            <div class="pull-right input-group-sm">
-                <input type="text" class="form-control" name="key" placeholder="Search">    
-            </div>
-        </form> --}}
+        {!! Form::open(['url' => '/dingtalk/dtlogs/search', 'class' => 'pull-right form-inline']) !!}
+        <div class="form-group-sm">
+            {!! Form::label('createdatelabel', '发起时间:', ['class' => 'control-label']) !!}
+            {!! Form::date('createdatestart', null, ['class' => 'form-control']) !!}
+            {!! Form::label('createdatelabelto', '-', ['class' => 'control-label']) !!}
+            {!! Form::date('createdateend', null, ['class' => 'form-control']) !!}
+            {!! Form::select('creator_name', $dtlog_creatornames, null, ['class' => 'form-control', 'placeholder' => '--发起人--']) !!}
+
+            {!! Form::select('template_name', $dtlog_templatenames, null, ['class' => 'form-control', 'placeholder' => '--日志模板--']) !!}
+
+            {{--{!! Form::select('paymentstatus', ['0' => '已付款', '-1' => '未付款'], null, ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}--}}
+            {{--{!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']); !!}--}}
+            {{--{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称、申请人']); !!}--}}
+            {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
+        </div>
+        {!! Form::close() !!}
     </div> 
 
     
@@ -57,12 +64,22 @@
         </tbody>
 
     </table>
-    {!! $dtlogs->render() !!}
+
+    {!! $dtlogs->setPath('/dingtalk/dtlogs')->appends([
+        'createdatestart' => isset($inputs['createdatestart']) ? $inputs['createdatestart'] : null ,
+        'createdateend' => isset($inputs['createdateend']) ? $inputs['createdateend'] : null,
+        'creator_name' => isset($inputs['creator_name']) ? $inputs['creator_name'] : null,
+        'template_name' => isset($inputs['template_name']) ? $inputs['template_name'] : null,
+    ])->links() !!}
+
     @else
     <div class="alert alert-warning alert-block">
         <i class="fa fa-warning"></i>
         {{'无记录', [], 'layouts'}}
     </div>
-    @endif    
+    @endif
 
+    @else
+        无权限
+    @endcan
 @endsection

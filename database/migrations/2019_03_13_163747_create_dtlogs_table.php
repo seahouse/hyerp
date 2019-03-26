@@ -19,8 +19,8 @@ class CreateDtlogsTable extends Migration
             $table->dateTime('create_time');
             $table->string('creator_id');
             $table->string('creator_name');
-            $table->string('dept_name');
-            $table->string('remark', 500);
+            $table->string('dept_name')->nullable();
+            $table->string('remark', 1000);
             $table->string('template_name');
 
             $table->timestamps();

@@ -949,16 +949,9 @@ class ApprovalController extends Controller
 //        $query->whereRaw('vreceiptpayment.date between \'2018/1/1\' and \'2018/8/1\'');
 
 
-//        $items = $query->select('vorder.*',
-//            'vcustomer.name as customer_name')
-//            ->paginate(10);
 
         return Datatables::of($query->select('issuedrawings.*', Db::raw('convert(varchar(100), issuedrawings.created_at, 23) as created_date'), 'users.name as applicant'))
             ->filterColumn('created_at', function ($query) use ($request) {
-//                if ($request->has('issuedrawingdatestart') && $request->has('issuedrawingdateend')) {
-//                    Log::info("aaa");
-//                    $query->whereRaw('issuedrawings.created_at between \'' . $request->get('issuedrawingdatestart') . '\' and \'' . $request->get('issuedrawingdateend') . '\'');
-//                }
                 $keyword = $request->get('search')['value'];
                 $query->whereRaw('CONVERT(varchar(100), issuedrawings.created_at, 23) like \'%' . $keyword . '%\'');
             })
@@ -978,6 +971,7 @@ class ApprovalController extends Controller
 //            ->addColumn('bonus', function (Receiptpayment_hxold $receiptpayment) {
 //                return $receiptpayment->amount * $receiptpayment->sohead->getBonusfactorByPolicy() * array_first($receiptpayment->sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
 //            })
+//                ->orderColumn('created_at')
             ->make(true);
     }
 

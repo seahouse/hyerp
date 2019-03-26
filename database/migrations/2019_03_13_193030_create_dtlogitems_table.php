@@ -17,7 +17,7 @@ class CreateDtlogitemsTable extends Migration
 
             $table->integer('dtlog_id');
             $table->string('key');
-            $table->string('value');
+            $table->string('value', 1000);
             $table->integer('sort');
             $table->integer('type');
 

@@ -516,6 +516,9 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
 });
 
 Route::group(['prefix' => 'dingtalk', 'namespace' => 'Dingtalk', 'middleware' => ['web', 'auth']], function () {
+    Route::group(['prefix' => 'dtlogs'], function () {
+        Route::post('search', 'DtlogController@search');
+    });
     Route::resource('dtlogs', 'DtlogController');
 });
 

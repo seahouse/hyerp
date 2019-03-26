@@ -222,6 +222,18 @@ class ViewComposerServiceProvider extends ServiceProvider
             $view->with('approvaltypes', $approvaltypes);
 //            $view->with('poheadOrderDateyearList_hxold', DB::connection('sqlsrv')->select(DB::raw('select distinct datepart(year, orderdate) from vorder'))->lists('projectjc', 'id'));
         });
+
+        // dtlog_creatornames
+        view()->composer(array('dingtalk.dtlogs.index'), function($view) {
+            $view->with('dtlog_creatornames', \App\Models\Dingtalk\Dtlog::select('creator_name')->distinct()->lists('creator_name', 'creator_name'));
+        });
+
+        // dtlog_templatenames
+        view()->composer(array('dingtalk.dtlogs.index'), function($view) {
+            $dtlog_templatenames = config('custom.dingtalk.dtlogs.template_names');
+            $view->with('dtlog_templatenames', $dtlog_templatenames);
+//            $view->with('poheadOrderDateyearList_hxold', DB::connection('sqlsrv')->select(DB::raw('select distinct datepart(year, orderdate) from vorder'))->lists('projectjc', 'id'));
+        });
     }
 
     /**
