@@ -950,7 +950,7 @@ class ApprovalController extends Controller
 
 
 
-        return Datatables::of($query->select('issuedrawings.*', Db::raw('convert(varchar(100), issuedrawings.created_at, 23) as created_date'), 'users.name as applicant'))
+        return Datatables::of($query->select(['issuedrawings.*', Db::raw('convert(varchar(100), issuedrawings.created_at, 23) as created_date'), 'users.name as applicant']))
             ->filterColumn('created_at', function ($query) use ($request) {
                 $keyword = $request->get('search')['value'];
                 $query->whereRaw('CONVERT(varchar(100), issuedrawings.created_at, 23) like \'%' . $keyword . '%\'');
@@ -959,7 +959,7 @@ class ApprovalController extends Controller
                 $keyword = $request->get('search')['value'];
                 $query->whereRaw('users.name like \'%' . $keyword . '%\'');
             })
-            ->editColumn('created_at', '{{ substr($created_at, 0, 10) }}' )
+//            ->editColumn('created_at1', '{{ substr($created_at, 0, 10) }}' )
 //            ->filter(function ($query) use ($request) {
 //                if ($request->has('issuedrawingdatestart') && $request->has('issuedrawingdateend')) {
 //                    $query->whereRaw('issuedrawings.created_at between \'' . $request->get('issuedrawingdatestart') . '\' and \'' . $request->get('issuedrawingdateend') . '\'');

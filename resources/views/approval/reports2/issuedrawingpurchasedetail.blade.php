@@ -239,7 +239,7 @@
 //                        "data":           null,
 //                        "defaultContent": ''
 //                    },
-                    {"data": "created_at", "name": "created_at"},
+                    {"data": "created_date", "name": "issuedrawings.created_at"},
                     {"data": "tonnage", "name": "tonnage"},
                     {"data": "applicant", "name": "applicant"},
                     {"data": "productioncompany", "name": "productioncompany"},
@@ -318,7 +318,7 @@
                     }
                 },
                 "columns": [
-                    {"data": "created_date", "name": "created_date", "searchable": false},
+                    {"data": "created_date", "name": "mcitempurchases.created_at", "searchable": false},
                     {"data": "manufacturingcenter", "name": "manufacturingcenter"},
                     {"data": "totalweight", "name": "totalweight", "searchable": false},
                     {"data": "detailuse", "name": "detailuse"},
@@ -347,7 +347,7 @@
                     }
                 },
                 "columns": [
-                    {"data": "created_date", "name": "created_date"},
+                    {"data": "created_date", "name": "pppaymentitems.created_at"},
                     {"data": "tonnage_paowan", "name": "tonnage_paowan"},
                     {"data": "tonnage_youqi", "name": "tonnage_youqi"},
                     {"data": "tonnage_rengong", "name": "tonnage_rengong"},
