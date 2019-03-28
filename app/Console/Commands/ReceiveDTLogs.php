@@ -72,7 +72,7 @@ class ReceiveDTLogs extends Command
         {
             $request->setCursor("$cursor");
             $response = $client->execute($request, $session);
-//            Log::info(json_encode($response));
+            Log::info(json_encode($response));
             $this->info(json_encode($response));
 
             if ($response->result->ding_open_errcode == "0")

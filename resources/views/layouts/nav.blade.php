@@ -147,9 +147,7 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">钉钉<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             @can('module_dingtalk')
-                                @if (Auth::user()->email === "admin@admin.com")
                                     <li><a href="/dingtalk/dtlogs">日志</a></li>
-                                @endif
                             @endcan
                         </ul>
                     </li>
