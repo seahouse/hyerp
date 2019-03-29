@@ -527,16 +527,16 @@ class IssuedrawingController extends Controller
             $response = DingTalkController::issuedrawing($input);
 //            Log::info($response);
             $responsejson = json_decode($response);
-            if ($responsejson->dingtalk_smartwork_bpms_processinstance_create_response->result->ding_open_errcode <> 0)
+            if ($responsejson->result->ding_open_errcode <> 0)
             {
                 $issuedrawing->forceDelete();
                 Log::info(json_encode($input));
-                dd('钉钉端创建失败: ' . $responsejson->dingtalk_smartwork_bpms_processinstance_create_response->result->error_msg);
+                dd('钉钉端创建失败: ' . $responsejson->result->error_msg);
             }
             else
             {
                 // save process_instance_id and business_id
-                $process_instance_id = $responsejson->dingtalk_smartwork_bpms_processinstance_create_response->result->process_instance_id;
+                $process_instance_id = $responsejson->result->process_instance_id;
 
                 $response = DingTalkController::processinstance_get($process_instance_id);
                 $responsejson = json_decode($response);

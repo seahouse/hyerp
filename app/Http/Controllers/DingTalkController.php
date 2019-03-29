@@ -6,6 +6,8 @@ use App\Http\Controllers\Approval\IssuedrawingController;
 use App\Http\Controllers\Approval\McitempurchaseController;
 use App\Http\Controllers\Approval\PppaymentController;
 use App\Http\Controllers\util\HttpDingtalkEco;
+use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
+use App\Http\Controllers\util\taobaosdk\dingtalk\request\SmartworkBpmsProcessinstanceCreateRequest;
 use App\Models\System\User;
 use App\Models\System\Userold;
 use Carbon\Carbon;
@@ -1503,6 +1505,27 @@ class DingTalkController extends Controller
         $data = [
 //            'process_code' => '001'
         ];
+
+        $c = new DingTalkClient();
+        $req = new SmartworkBpmsProcessinstanceCreateRequest();
+//        $req->setAgentId("41605932");
+        $req->setProcessCode($process_code);
+        $req->setOriginatorUserId($originator_user_id);
+        $req->setDeptId("$dept_id");
+        $req->setApprovers($approvers);
+        if ($cc_list <> "")
+        {
+            $req->setCcList($cc_list);
+            $req->setCcPosition("FINISH");
+        }
+//        $form_component_values = new FormComponentValueVo();
+//        $form_component_values->name="请假类型";
+//        $form_component_values->value="事假";
+//        $form_component_values->ext_value="总天数:1";
+        $req->setFormComponentValues("$form_component_values");
+        $response = $c->execute($req, $session);
+        return json_encode($response);
+
         $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
         return $response;
     }
