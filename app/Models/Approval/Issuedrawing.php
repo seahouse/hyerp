@@ -25,6 +25,7 @@ class Issuedrawing extends Model
         'materialsupplier',
         'drawingchecker_id',
         'requestdeliverydate',
+        'bolt',
         'drawingcount',
         'remark',
         'applicant_id',

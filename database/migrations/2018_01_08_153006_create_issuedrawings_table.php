@@ -25,6 +25,7 @@ class CreateIssuedrawingsTable extends Migration
             $table->string('materialsupplier');
             $table->integer('drawingchecker_id');
             $table->date('requestdeliverydate');
+            $table->smallInteger('bolt')->default(0);               // 是否栓接
             $table->integer('drawingcount')->default(0);
             $table->string('remark')->default('');
             $table->integer('applicant_id');

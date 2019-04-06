@@ -286,6 +286,13 @@
 </div>
 
         <div class="form-group">
+            {!! Form::label('bolt', '是否栓接:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::select('bolt', array('1' => '是', '0' => '否'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+            </div>
+        </div>
+
+        <div class="form-group">
             {!! Form::label('drawingcount', '图纸份数:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
                 {!! Form::text('drawingcount', null, ['class' => 'form-control', 'placeholder' => '下发图纸份数', 'id' => 'amount', $attr]) !!}

@@ -29,6 +29,7 @@ class Kernel extends ConsoleKernel
         Commands\DeliverydelayReminder::class,
         Commands\EDITest::class,
         Commands\ReceiveDTLogs::class,
+        Commands\PurchaseReminder::class,
     ];
 
     /**

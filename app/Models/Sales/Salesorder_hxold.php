@@ -85,6 +85,10 @@ class Salesorder_hxold extends Model
         return $this->belongsToMany('App\Models\Sales\Equipmenttype_hxold', 'equipmenttypeass', 'equipmenttypeass_order_id', 'equipmenttypeass_equipmenttype_id');
     }
 
+    public function paywayasses() {
+        return $this->hasMany('App\Models\Sales\Paywayass_hxold', 'paywayass_order_id');
+    }
+
     // 奖金系数/折扣 如果没有字段值，则根据政策动态生成，不取字段值
     public function getBonusfactorByPolicy($date = '') {
         if (strlen($date) > 0)
