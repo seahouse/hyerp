@@ -353,4 +353,7 @@ class Salesorder_hxold extends Model
         return $this->hasMany('App\Models\Sales\Soticket_hxold', 'sohead_id', 'id');
     }
 
+    public function soheaddocs() {
+        return $this->hasMany('App\Models\Sales\Soheaddocs', 'sohead_id', 'id');
+    }
 }
