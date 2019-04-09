@@ -99,7 +99,7 @@ class PurchaseReminder extends Command
             }
             if ($bReminder)
             {
-                $msg = $sohead->projectjc . "(" . $sohead->number . ")已付预付款，但还未采购雾化器，请抓紧采购。1";
+                $msg = $sohead->projectjc . "(" . $sohead->number . ")已付预付款，但还未采购雾化器，请抓紧采购。2";
 //                Log::info($msg);
                 $this->sendMsg($msg, 196);        // to LiuHM
                 $this->sendMsg($msg, $sohead->salesmanager_id);
@@ -134,7 +134,7 @@ class PurchaseReminder extends Command
 
                 if ($bReminder)
                 {
-                    $msg = $sohead->projectjc . "(" . $sohead->number . ")的下图审批包含栓接，但还未采购高强螺丝，请抓紧采购。1";
+                    $msg = $sohead->projectjc . "(" . $sohead->number . ")的下图审批包含栓接，但还未采购高强螺丝，请抓紧采购。2";
 //                    Log::info($msg);
                     $this->sendMsg($msg, 196);        // to LiuHM
                     $this->sendMsg($msg, $sohead->salesmanager_id);
@@ -178,33 +178,42 @@ class PurchaseReminder extends Command
                 $bReminderDBR = true;
                 $this->info($sohead->id);
                 Log::info($sohead->id);
-                $poheads = $sohead->poheads;
-                foreach ($poheads as $pohead)
+                // 刮板机：仅针对喷雾订单
+                $equipmenttypes = $sohead->equipmenttypes;
+                foreach ($equipmenttypes as $equipmenttype)
                 {
-                    // 刮板机：仅针对喷雾订单
-                    $equipmenttypes = $sohead->equipmenttypes;
-                    foreach ($equipmenttypes as $equipmenttype)
+                    if (strpos($equipmenttype->equipmenttype_number, '喷雾') !== false)
                     {
-                        if (strpos($equipmenttype->equipmenttype_number, '喷雾') !== false)
+                        $bReminderGBJ = true;
+
+                        $poheads = $sohead->poheads;
+                        foreach ($poheads as $pohead)
                         {
-                            $bReminderGBJ = true;
                             if (strpos($pohead->productname, '刮板机') !== false)
                             {
 //                        Log::info($pohead->productname);
                                 $bReminderGBJ = false;
+                                goto drb;
+                                break;
                             }
                         }
                     }
+                }
 
+                drb:
+                $poheads = $sohead->poheads;
+                foreach ($poheads as $pohead)
+                {
                     if (strpos($pohead->productname, '电伴热') !== false)
                     {
 //                        Log::info($pohead->productname);
                         $bReminderDBR = false;
+                        break;
                     }
                 }
                 if ($bReminderGBJ)
                 {
-                    $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购刮板机，请抓紧采购。1";
+                    $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购刮板机，请抓紧采购。2";
                     Log::info($msg);
                     $this->sendMsg($msg, 196);        // to LiuHM
                     $this->sendMsg($msg, $sohead->salesmanager_id);
@@ -215,7 +224,7 @@ class PurchaseReminder extends Command
                 }
                 if ($bReminderDBR)
                 {
-                    $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购电伴热，请抓紧采购。1";
+                    $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购电伴热，请抓紧采购。2";
                     Log::info($msg);
                     $this->sendMsg($msg, 196);        // to LiuHM
                     $this->sendMsg($msg, $sohead->salesmanager_id);
