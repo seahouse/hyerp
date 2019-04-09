@@ -99,7 +99,7 @@ class PurchaseReminder extends Command
             }
             if ($bReminder)
             {
-                $msg = $sohead->projectjc . "(" . $sohead->number . ")已付预付款，但还未采购雾化器，请抓紧采购。2";
+                $msg = $sohead->projectjc . "(" . $sohead->number . ")已付预付款，但还未采购雾化器，请抓紧采购。3";
 //                Log::info($msg);
                 $this->sendMsg($msg, 196);        // to LiuHM
                 $this->sendMsg($msg, $sohead->salesmanager_id);
@@ -134,7 +134,7 @@ class PurchaseReminder extends Command
 
                 if ($bReminder)
                 {
-                    $msg = $sohead->projectjc . "(" . $sohead->number . ")的下图审批包含栓接，但还未采购高强螺丝，请抓紧采购。2";
+                    $msg = $sohead->projectjc . "(" . $sohead->number . ")的下图审批包含栓接，但还未采购高强螺丝，请抓紧采购。3";
 //                    Log::info($msg);
                     $this->sendMsg($msg, 196);        // to LiuHM
                     $this->sendMsg($msg, $sohead->salesmanager_id);
@@ -193,14 +193,12 @@ class PurchaseReminder extends Command
                             {
 //                        Log::info($pohead->productname);
                                 $bReminderGBJ = false;
-                                goto drb;
                                 break;
                             }
                         }
                     }
                 }
 
-                drb:
                 $poheads = $sohead->poheads;
                 foreach ($poheads as $pohead)
                 {
@@ -213,7 +211,7 @@ class PurchaseReminder extends Command
                 }
                 if ($bReminderGBJ)
                 {
-                    $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购刮板机，请抓紧采购。2";
+                    $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购刮板机，请抓紧采购。3";
                     Log::info($msg);
                     $this->sendMsg($msg, 196);        // to LiuHM
                     $this->sendMsg($msg, $sohead->salesmanager_id);
@@ -224,7 +222,7 @@ class PurchaseReminder extends Command
                 }
                 if ($bReminderDBR)
                 {
-                    $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购电伴热，请抓紧采购。2";
+                    $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购电伴热，请抓紧采购。3";
                     Log::info($msg);
                     $this->sendMsg($msg, 196);        // to LiuHM
                     $this->sendMsg($msg, $sohead->salesmanager_id);
