@@ -209,7 +209,7 @@
 @endsection
 @elseif ($agent->isDesktop())
 @section('script')
-	<script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
+    <script src="//g.alicdn.com/dingding/dingtalk-jsapi/2.6.41/dingtalk.open.js"></script>
 	
 	<script type="text/javascript">
 		jQuery(document).ready(function(e) {
@@ -245,7 +245,7 @@
 			}
 			else
 			{
-                DingTalkPC.config({
+                dd.config({
                     // agentId: '13231599', // 必填，微应用ID
                     // corpId: 'ding6ed55e00b5328f39',//必填，企业ID
                     // timeStamp: $('#timeStamp').val(), // 必填，生成签名的时间戳
@@ -267,43 +267,20 @@
                 });
 
 
-
-                DingTalkPC.ready(function(res) {
-                    // DingTalkPC.runtime.info({
-                    // 	onSuccess: function(info) {
-                    // 		// alert('runtime info: ' + JSON.stringify(info));
-                    // 	},
-                    // 	onFail: function(err) {
-                    // 		alert('fail: ' + JSON.stringify(err));
-                    // 	}
-                    // });
-
-                    // // if the page is not first history.back, exit it.
-                    // if (history.length > 1)
-                    // {
-                    // 	dd.biz.navigation.close({
-                    // 	    onSuccess : function(result) {
-                    // 	        /*result结构
-                    // 	        {}
-                    // 	        */
-                    // 	    },
-                    // 	    onFail : function(err) {}
-                    // 	});
-                    // }
-
+                dd.ready(function() {
                     console.log(DingTalkPC.ua);
                     // if (DingTalkPC.ua.isInDingTalk)
                     // 	$("#t1").attr("target", "_self");
 
                     // console.log('requestAuthCode');
-                    DingTalkPC.runtime.permission.requestAuthCode({
+                    dd.runtime.permission.requestAuthCode({
                         corpId: "{!! array_get($config, 'corpId') !!}",
                         onSuccess: function(result) {
                             $.ajax({
                                 type:"GET",
                                 url:"{{ url('dingtalk/getuserinfo') }}" + "/" + result.code,
                                 error:function(xhr, ajaxOptions, thrownError){
-                                    DingTalkPC.device.notification.alert({
+                                    dd.device.notification.alert({
                                         message: "登录错误",
                                         title: "登录错误",//可传空
                                         buttonName: "收到",
@@ -325,7 +302,7 @@
                                     // console.log('{!! array_get($config, "appname") !!}');
                                     if (msg.userid_erp == -1)
                                     {
-                                        DingTalkPC.device.notification.alert({
+                                        dd.device.notification.alert({
                                             message: "登录错误",
                                             title: "登录错误",//可传空
                                             buttonName: "收到",
@@ -367,6 +344,8 @@
                                         else
                                             location.href = "{{ url('/') }}";
                                     }
+                                    else
+                                        location.href = "{{ url('/') }}";
                                     // else
                                     // 	console.log('else ~~');
                                 },

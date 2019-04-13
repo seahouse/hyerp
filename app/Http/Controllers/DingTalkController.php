@@ -161,10 +161,12 @@ class DingTalkController extends Controller
 //        Log::info(request()->query());
 //        Log::info(http_build_query(request()->query()));
 //        Log::info($url);
-        $corpAccessToken = self::getAccessToken_appkey();
+        $corpAccessToken = self::getAccessToken_appkey($agentid);
         Log::info('token_appkey: ' . $corpAccessToken);
         $ticket = self::getTicket($corpAccessToken);
+        Log::info('ticket: ' . $ticket);
         $signature = self::sign($ticket, $nonceStr, $timeStamp, $url);
+        Log::info('signature: ' . $signature);
         if ($agentid == '')
             $agentid = config('custom.dingtalk.agentidlist.' . self::$APPNAME);
 //        Log::info($agentid);
