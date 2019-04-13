@@ -56,6 +56,22 @@ class DingTalkController extends Controller
         return $accessToken;
     }
 
+    public static function getAccessToken_appkey($agentid) {
+        $accessToken = Cache::remember('access_token_appkey', 7200/60 - 5, function() use ($agentid) {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
+            $url = 'https://oapi.dingtalk.com/gettoken';
+            $appkey = config('custom.dingtalk.apps.' . $agentid . '.appkey');
+            $appsecret = config('custom.dingtalk.apps.' . $agentid . '.appsecret');
+//            $corpid = config('custom.dingtalk.corpid');
+//            $corpsecret = config('custom.dingtalk.corpsecret');
+            $params = compact('appkey', 'appsecret');
+            // $reply = $this->get($url, $params);
+            $reply = self::get($url, $params);
+            $accessToken = $reply->access_token;
+            return $accessToken;
+        });
+        return $accessToken;
+    }
+
     public static function getTokenSns() {
         $accessToken = Cache::remember('access_token_sns', 7200/60 - 5, function() {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
             $url = 'https://oapi.dingtalk.com/sns/gettoken';
@@ -93,7 +109,6 @@ class DingTalkController extends Controller
         return $signature;
     }
 
-
     public static function getconfig($agentid = '')
     {
 //         Cache::flush();
@@ -109,6 +124,45 @@ class DingTalkController extends Controller
 //        Log::info(http_build_query(request()->query()));
 //        Log::info($url);
         $corpAccessToken = self::getAccessToken();
+        $ticket = self::getTicket($corpAccessToken);
+        $signature = self::sign($ticket, $nonceStr, $timeStamp, $url);
+        if ($agentid == '')
+            $agentid = config('custom.dingtalk.agentidlist.' . self::$APPNAME);
+//        Log::info($agentid);
+
+        $config = array(
+            'url' => $url,
+            'nonceStr' => $nonceStr,
+            'timeStamp' => $timeStamp,
+            'corpId' => config('custom.dingtalk.corpid'),
+            'signature' => $signature,
+            'ticket' => $ticket,
+//            'agentId' => config('custom.dingtalk.agentidlist.' . self::$APPNAME),       // such as: config('custom.dingtalk.agentidlist.approval')      // request('app')
+            'agentId' => $agentid,
+            'appname' => self::$APPNAME,
+        );
+
+        return $config;
+        // return json_encode($config, JSON_UNESCAPED_SLASHES);
+        // return response()->json($config);
+    }
+
+    public static function getconfig2($agentid = '')
+    {
+//         Cache::flush();
+        $nonceStr = str_random(32);
+        $timeStamp = time();
+        $url = urldecode(request()->fullurl());
+//        $url = request()->url();
+//        if (request()->getQueryString() <> '')
+//            $url .= urldecode('?' . request()->getQueryString());
+//        Log::info(request()->url());
+//        Log::info(urldecode(request()->getQueryString()));
+//        Log::info(request()->query());
+//        Log::info(http_build_query(request()->query()));
+//        Log::info($url);
+        $corpAccessToken = self::getAccessToken_appkey();
+        Log::info('token_appkey: ' . $corpAccessToken);
         $ticket = self::getTicket($corpAccessToken);
         $signature = self::sign($ticket, $nonceStr, $timeStamp, $url);
         if ($agentid == '')
@@ -294,6 +348,20 @@ class DingTalkController extends Controller
         // self::$AGENTID = array_get(self::$AGENTIDS, request('app'), '13231599');
         self::$APPNAME = $appname;
         $config = $this->getconfig();
+        // dd(compact('config'));
+        $agent = new Agent();
+        $url = str_replace("-", "/", $url);
+        $code = request('code', '');
+        return view('mddauth', compact('config', 'agent', 'url', 'code'));
+    }
+
+    public function mddauth2($appname = '', $url = '')
+    {
+        // dd($url);
+        // Cache::flush();
+        // self::$AGENTID = array_get(self::$AGENTIDS, request('app'), '13231599');
+        self::$APPNAME = $appname;
+        $config = $this->getconfig2();
         // dd(compact('config'));
         $agent = new Agent();
         $url = str_replace("-", "/", $url);

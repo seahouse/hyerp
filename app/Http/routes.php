@@ -62,6 +62,7 @@ Route::post('approval/mcitempurchase/uploadparseexcel', 'Approval\Mcitempurchase
 Route::group(['middleware' => ['web']], function () {
     // Route::get('mddauth', function() { return view('mddauth'); });
     Route::get('mddauth/{appname?}/{url?}', 'DingTalkController@mddauth');
+    Route::get('mddauth2/{agentid?}/{url?}', 'DingTalkController@mddauth2');
 //    Route::get('test', 'DingTalkController@test');
     Route::get('ddauth/{appname?}/{url?}', 'DingTalkController@ddauth');
 

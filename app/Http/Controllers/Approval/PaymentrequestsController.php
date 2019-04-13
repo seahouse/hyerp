@@ -1618,13 +1618,13 @@ class PaymentrequestsController extends Controller
         }
         else
         {
-            $paymentrequests = Paymentrequest::where("created_at", ">", Carbon::now()->subMonth(2))
+            $paymentrequests = Paymentrequest::where("created_at", ">", Carbon::now()->subMonth(3))
                 ->where("pohead_id", $pohead_id)->where("amount", $amount)
                 ->get();
             if ($paymentrequests->count() > 0)
             {
                 $data["code"] = -1;
-                $data["msg"] = "采购订单和付款金额在2个月内有重复申请。";
+                $data["msg"] = "采购订单和付款金额在3个月内有重复申请。";
             }
         }
         return response()->json($data);
