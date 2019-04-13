@@ -147,7 +147,7 @@ class DingTalkController extends Controller
         // return response()->json($config);
     }
 
-    public static function getconfig2($agentid = '')
+    public static function getconfig2($agentid = '252755905')
     {
 //         Cache::flush();
         $nonceStr = str_random(32);
