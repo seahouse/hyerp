@@ -72,6 +72,32 @@ class DingTalkController extends Controller
         return $accessToken;
     }
 
+    public static function getAccessToken_suite() {
+        $accessToken = Cache::remember('access_token_suite', 7200/60 - 5, function() {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
+            // signature=kKlP1QmmXXX&timestamp=1527130370219&suiteTicket=xxx&accessKey=suitezmpdnvsw4xxxxx
+            $url = 'https://oapi.dingtalk.com/service/get_corp_token';
+            $timestamp = time();
+            $suiteTicket = 'test';
+            $str = $timestamp + "\n" + $suiteTicket;
+            $suitesecret = 'yfjcsow8AozeUIGyb23xzAFilCz-Jgm6ylQDiQ7JnE6fpU74k4uYycpEay458RV6';
+            $signature = hash_hmac('sha256', $str, $suitesecret, true);
+            Log::info('str: ' . $str);
+            Log::info('signature'. $signature);
+            $accessKey = 'suiteuvrgsabybcf6vo1h';
+//            $corpid = config('custom.dingtalk.corpid');
+//            $corpsecret = config('custom.dingtalk.corpsecret');
+            $url .= '?signature=' . $signature . '&timestamp=' . $timestamp . '&suiteTicket=' . $suiteTicket . '&accessKey=' . $accessKey;
+            $auth_corpid = config('custom.dingtalk.corpid');
+            $params = compact('auth_corpid');
+            $data = ['auth_corpid' => $auth_corpid];
+            $reply = self::post($url, [], $data);
+            $accessToken = $reply->access_token;
+            Log::info('accesstoken: ' . $accessToken);
+            return $accessToken;
+        });
+        return $accessToken;
+    }
+
     public static function getTokenSns() {
         $accessToken = Cache::remember('access_token_sns', 7200/60 - 5, function() {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
             $url = 'https://oapi.dingtalk.com/sns/gettoken';
@@ -161,7 +187,8 @@ class DingTalkController extends Controller
 //        Log::info(request()->query());
 //        Log::info(http_build_query(request()->query()));
 //        Log::info($url);
-        $corpAccessToken = self::getAccessToken_appkey($agentid);
+        $corpAccessToken = self::getAccessToken_suite();
+//        $corpAccessToken = self::getAccessToken_appkey($agentid);
         Log::info('token_appkey: ' . $corpAccessToken);
         $ticket = self::getTicket($corpAccessToken);
         Log::info('ticket: ' . $ticket);

@@ -268,7 +268,6 @@
 
 
                 dd.ready(function() {
-                    console.log(DingTalkPC.ua);
                     // if (DingTalkPC.ua.isInDingTalk)
                     // 	$("#t1").attr("target", "_self");
 
