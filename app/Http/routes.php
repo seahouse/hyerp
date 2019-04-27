@@ -201,6 +201,10 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
 });
 
 Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web', 'auth']], function() {
+    Route::group(['prefix' => 'groups'], function() {
+        Route::get('{id}/mstatistics', 'GroupController@mstatistics');
+    });
+    Route::resource('groups', 'GroupController');
     Route::group(['prefix' => 'projects'], function() {
         Route::get('{id}/mstatistics', 'ProjectController@mstatistics');
     });

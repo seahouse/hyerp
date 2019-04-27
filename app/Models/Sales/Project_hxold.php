@@ -15,4 +15,8 @@ class Project_hxold extends Model
 //        return $this->belongsToMany('App\Models\Sales\Salesorder_hxold', 'projectorders', 'project_id', 'order_id');
         return $this->hasMany('App\Models\Sales\Salesorder_hxold', 'project_id', 'id');
     }
+
+    public function group() {
+        return $this->belongsTo('App\Models\Sales\Group');
+    }
 }
