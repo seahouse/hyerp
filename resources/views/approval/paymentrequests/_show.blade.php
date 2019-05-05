@@ -228,11 +228,6 @@
 
 @if (Agent::isDesktop())
     <script src="/js/jquery.media.js"></script>
-    <script type="text/javascript">
-        $(function() {
-            $('#pdfContainer').media({width:'100%', height:800});
-        });
-    </script>
 
     <script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
     <script type="text/javascript">
@@ -240,14 +235,6 @@
             $("a").attr("target", "_self");
 
             {{-- 不需要config和ready，直接通过DingTalkPC.ua.isInDingTalk来判断 --}}
-            {{--DingTalkPC.config({--}}
-                {{--agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID--}}
-                {{--corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID--}}
-                {{--timeStamp: "{!! array_get($config, 'timeStamp') !!}", // 必填，生成签名的时间戳--}}
-                {{--nonceStr: "{!! array_get($config, 'nonceStr') !!}", // 必填，生成签名的随机串--}}
-                {{--signature: "{!! array_get($config, 'signature') !!}", // 必填，签名--}}
-                {{--jsApiList: [] // 必填，需要使用的jsapi列表--}}
-            {{--});--}}
 
             console.log(DingTalkPC.ua.isInDingTalk);
             if (DingTalkPC.ua.isInDingTalk)
@@ -270,36 +257,16 @@
             }
             else
             {
+                $(function() {
+                    $('#pdfContainer').media({width:'100%', height:800});
+                });
+
                 $("#showPdf").click(function() {
                     $('#myModal').modal();
                     return false;
                 });
             }
 
-//            DingTalkPC.ready(function(res) {
-//                if (DingTalkPC.ua.isInDingTalk)
-//                {
-//                    $("#showPdf").click(function() {
-//                        location.href = 'http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf").attr("href");
-//                        return false;
-//                    });
-//
-//                    $("#showPaymentnode").click(function() {
-//                        DingTalkPC.biz.util.openLink({
-//                            url: $("#showPaymentnode").attr("href"),
-//                            onSuccess : function(result) {
-//                                /**/
-//                            },
-//                            onFail : function() {}
-//                        })
-//                        return false;
-//                    });
-//                }
-//                else
-//                {
-//
-//                }
-//            });
 
             function showPdf() {
                 var container = document.getElementById("container");
