@@ -23,6 +23,8 @@ class CreateDtlogsTable extends Migration
             $table->string('remark', 1000);
             $table->string('template_name');
 
+            $table->integer('xmjlsgrz_sohead_id')->nullable()->comment('项目经理施工日志_订单ID');
+
             $table->timestamps();
         });
     }

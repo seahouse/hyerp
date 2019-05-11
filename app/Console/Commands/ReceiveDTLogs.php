@@ -7,6 +7,7 @@ use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\CorpReportListRequest;
 use App\Models\Dingtalk\Dtlog;
 use App\Models\Dingtalk\Dtlogitem;
+use App\Models\Sales\Salesorder_hxold;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Log;
@@ -115,6 +116,18 @@ class ReceiveDTLogs extends Command
                                     if (is_array($itemArray['value']))
                                         $itemArray['value'] = "";
                                     Dtlogitem::create($itemArray);
+
+                                    if ($this->option('template') == '项目经理施工日志' && $itemArray['key'] == '2、工程项目名称')
+                                    {
+                                        $soheads = Salesorder_hxold::all();
+                                        foreach ($soheads as $sohead)
+                                        {
+                                            if (strpos($itemArray['value'], $sohead->number) !== false)
+                                            {
+                                                $dtlog->update(['xmjlsgrz_sohead_id' => $sohead->id]);
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

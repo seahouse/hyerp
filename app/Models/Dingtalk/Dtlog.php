@@ -15,6 +15,7 @@ class Dtlog extends Model
         'dept_name',
         'remark',
         'template_name',
+        'xmjlsgrz_sohead_id',
     ];
 
     public function dtlogitems() {
