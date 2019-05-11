@@ -112,7 +112,6 @@ class ReceiveDTLogs extends Command
                                 {
                                     $itemArray = json_decode(json_encode($item), true);
                                     $itemArray['dtlog_id'] = $dtlog->id;
-//                            Log::info($itemArray);
                                     if (is_array($itemArray['value']))
                                         $itemArray['value'] = "";
                                     Dtlogitem::create($itemArray);

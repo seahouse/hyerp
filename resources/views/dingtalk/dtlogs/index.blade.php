@@ -11,7 +11,7 @@
     </div>
     
     <div class="panel-body">
-        {!! Form::open(['url' => '/dingtalk/dtlogs/search', 'class' => 'pull-right form-inline']) !!}
+        {!! Form::open(['url' => '/dingtalk/dtlogs/search', 'class' => 'pull-right form-inline', 'id' => 'frmCondition']) !!}
         <div class="form-group-sm">
             {!! Form::label('createdatelabel', '发起时间:', ['class' => 'control-label']) !!}
             {!! Form::date('createdatestart', null, ['class' => 'form-control']) !!}
@@ -21,10 +21,12 @@
 
             {!! Form::select('template_name', $dtlog_templatenames, null, ['class' => 'form-control', 'placeholder' => '--日志模板--']) !!}
 
-            {{--{!! Form::select('paymentstatus', ['0' => '已付款', '-1' => '未付款'], null, ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}--}}
             {{--{!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']); !!}--}}
             {{--{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称、申请人']); !!}--}}
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
+            @if (Auth::user()->email == "admin@admin.com")
+            {!! Form::button('关联项目经理施工日志到ERP订单', ['class' => 'btn btn-default btn-sm', 'id' => 'btn_xmjlsgrz_sohead_id']) !!}
+            @endif
         </div>
         {!! Form::close() !!}
     </div> 
@@ -82,4 +84,37 @@
     @else
         无权限
     @endcan
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+        jQuery(document).ready(function(e) {
+            $("#btn_xmjlsgrz_sohead_id").click(function() {
+                $.ajax({
+                    type: "POST",
+                    url: "{!! url('dingtalk/dtlogs/relate_xmjlsgrz_sohead_id') !!}",
+                    data : $('#frmCondition').serialize(),
+                    success: function(result) {
+                        // alert(result);
+                        // alert(result.errmsg);
+                        if (result.errcode == 0)
+                        {
+                            alert("关联成功。");
+                        }
+                        else
+                            alert(JSON.stringify(result));
+
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(JSON.stringify(xhr));
+                    }
+                });
+            });
+
+        });
+
+
+
+
+    </script>
 @endsection

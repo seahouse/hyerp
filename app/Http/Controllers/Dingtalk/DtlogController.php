@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Dingtalk;
 
 use App\Models\Dingtalk\Dtlog;
+use App\Models\Sales\Salesorder_hxold;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Log;
 
 class DtlogController extends Controller
 {
@@ -171,5 +173,44 @@ class DtlogController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function relate_xmjlsgrz_sohead_id(Request $request)
+    {
+        $query = Dtlog::latest('create_time');
+        if ($request->has('createdatestart') && $request->has('createdateend'))
+        {
+            $query->whereRaw("DATEDIFF(DAY, create_time, '" . $request->input('createdatestart') . "') <= 0 and DATEDIFF(DAY, create_time, '" . $request->input('createdateend') . "') >=0");
+        }
+
+        $dtlogs = $query->select('*')->get();
+        Log::info($dtlogs->count());
+        foreach ($dtlogs as $dtlog)
+        {
+            if ($dtlog->template_name == '项目经理施工日志')
+            {
+                $dtlogitems = $dtlog->dtlogitems;
+                foreach ($dtlogitems as $dtlogitem)
+                {
+                    if ($dtlogitem->key == '2、工程项目名称')
+                    {
+                        $soheads = Salesorder_hxold::all();
+                        foreach ($soheads as $sohead)
+                        {
+                            if (strpos($dtlogitem->value, $sohead->number) !== false)
+                            {
+                                $dtlog->update(['xmjlsgrz_sohead_id' => $sohead->id]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $data = [
+            'errcode' => 0,
+            'errmsg' => '关联成功',
+        ];
+        return response()->json($data);
     }
 }
