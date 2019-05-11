@@ -194,7 +194,7 @@ class DtlogController extends Controller
                 $dtlogitems = $dtlog->dtlogitems;
                 foreach ($dtlogitems as $dtlogitem)
                 {
-                    if ($dtlogitem->key == '2、工程项目名称' || $dtlogitem->key == '2、工程项目名称：')
+                    if ($dtlogitem->key == '2、工程项目名称' || $dtlogitem->key == '2、工程项目名称：' || $dtlogitem->key == '工程项目名称：')
                     {
                         $soheads = Salesorder_hxold::all();
                         foreach ($soheads as $sohead)
