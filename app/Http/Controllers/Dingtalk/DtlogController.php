@@ -184,15 +184,17 @@ class DtlogController extends Controller
         }
 
         $dtlogs = $query->select('*')->get();
+        $count = 0;
         Log::info($dtlogs->count());
         foreach ($dtlogs as $dtlog)
         {
             if ($dtlog->template_name == '项目经理施工日志')
             {
+                $updated = false;
                 $dtlogitems = $dtlog->dtlogitems;
                 foreach ($dtlogitems as $dtlogitem)
                 {
-                    if ($dtlogitem->key == '2、工程项目名称')
+                    if ($dtlogitem->key == '2、工程项目名称' || $dtlogitem->key == '2、工程项目名称：')
                     {
                         $soheads = Salesorder_hxold::all();
                         foreach ($soheads as $sohead)
@@ -200,8 +202,12 @@ class DtlogController extends Controller
                             if (strpos($dtlogitem->value, $sohead->number) !== false)
                             {
                                 $dtlog->update(['xmjlsgrz_sohead_id' => $sohead->id]);
+                                $updated = true;
+                                $count++;
+                                break;
                             }
                         }
+                        if ($updated) break;
                     }
                 }
             }
@@ -209,7 +215,7 @@ class DtlogController extends Controller
 
         $data = [
             'errcode' => 0,
-            'errmsg' => '关联成功',
+            'errmsg' => '关联成功，共关联了' . $count . '个日志。',
         ];
         return response()->json($data);
     }

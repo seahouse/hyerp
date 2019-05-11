@@ -99,7 +99,7 @@
                         // alert(result.errmsg);
                         if (result.errcode == 0)
                         {
-                            alert("关联成功。");
+                            alert(result.errmsg);
                         }
                         else
                             alert(JSON.stringify(result));
