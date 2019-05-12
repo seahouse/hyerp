@@ -40,9 +40,8 @@ class DtlogController extends Controller
 
     public function searchrequest($request)
     {
-
+//        dd($request->all());
         $query = Dtlog::latest('create_time');
-
 
         if ($request->has('createdatestart') && $request->has('createdateend'))
         {
@@ -54,51 +53,12 @@ class DtlogController extends Controller
         {
             $query->where('creator_name', $request->input('creator_name'));
         }
-//
-//        // payment status
-//        // because need search hxold database, so select this condition last.
-//        if ($request->has('paymentstatus'))
-//        {
-//            $paymentstatus = $request->input('paymentstatus');
-//            if ($paymentstatus == 0)
-//            {
-//                $query->where('approversetting_id', '0');
-//
-//                $paymentrequestids = [];
-//                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
-//                    foreach ($paymentrequests as $paymentrequest) {
-//                        # code...
-//                        if (isset($paymentrequest->purchaseorder_hxold->payments))
-//                        {
-//                            if ($paymentrequest->paymentrequestapprovals->max('created_at') < $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
-//                                array_push($paymentrequestids, $paymentrequest->id);
-//                        }
-//                    }
-//                });
-//
-//                // dd($paymentrequestids);
-//                $query->whereIn('id', $paymentrequestids);
-//
-//            }
-//            elseif ($paymentstatus == -1)
-//            {
-//                $query->where('approversetting_id', '0');
-//
-//                $paymentrequestids = [];
-//                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
-//                    foreach ($paymentrequests as $paymentrequest) {
-//                        # code...
-//                        if (isset($paymentrequest->purchaseorder_hxold->payments))
-//                        {
-//                            if ($paymentrequest->paymentrequestapprovals->max('created_at') > $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
-//                                array_push($paymentrequestids, $paymentrequest->id);
-//                        }
-//                    }
-//                });
-//
-//                $query->whereIn('id', $paymentrequestids);
-//            }
-//        }
+
+        // xmjlsgrz_sohead_id
+        if ($request->has('xmjlsgrz_sohead_id') && $request->input('xmjlsgrz_sohead_id') > 0)
+        {
+            $query->where('xmjlsgrz_sohead_id', $request->input('xmjlsgrz_sohead_id'));
+        }
 
 
         $dtlogs = $query->select('*')

@@ -21,7 +21,9 @@
 
             {!! Form::select('template_name', $dtlog_templatenames, null, ['class' => 'form-control', 'placeholder' => '--日志模板--']) !!}
 
-            {{--{!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']); !!}--}}
+            {!! Form::label('select_xmjlsgrz_sohead_label', '项目经理施工日志对应订单', ['class' => 'control-label']) !!}
+            {!! Form::select('select_xmjlsgrz_sohead', $soheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '', 'id' => 'select_xmjlsgrz_sohead']) !!}
+            {!! Form::hidden('xmjlsgrz_sohead_id', null, ['id' => 'sohead_id']) !!}
             {{--{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称、申请人']); !!}--}}
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
             @if (Auth::user()->email == "admin@admin.com")
@@ -87,6 +89,7 @@
 @endsection
 
 @section('script')
+    <script type="text/javascript" src="/js/jquery-editable-select.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
             $("#btn_xmjlsgrz_sohead_id").click(function() {
@@ -113,7 +116,26 @@
 
         });
 
-
+        $('#select_xmjlsgrz_sohead')
+            .editableSelect({
+                effects: 'slide',
+            })
+            //                .on('shown.editable-select', function (e) {
+            //                    console.log("shown");
+            //                    console.log($('#selectProject').val());
+            //                    if ($('#selectProject').val() == "--项目--")
+            //                        $('#selectProject').val("");
+            //                })
+            .on('select.editable-select', function (e, li) {
+//                    console.log(li.val() + li.text());
+                if (li.val() > 0)
+                    $('input[name=xmjlsgrz_sohead_id]').val(li.val());
+                else
+                    $('input[name=xmjlsgrz_sohead_id]').val('');
+//                    console.log($('input[name=sohead_id]').val());
+//                    console.log($('#project_id').val());
+            })
+        ;
 
 
     </script>

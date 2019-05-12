@@ -151,10 +151,10 @@ class ViewComposerServiceProvider extends ServiceProvider
             $view->with('userList_hxold', \App\Models\System\Employee_hxold::where('status', '<>', -1)->orderby('name', 'asc')->lists('name', 'id'));
         });
 
-        // poheadList_hxold
+        // soheadList_hxold
         view()->composer(array('system.report.statisticsindex', 'approval.reports2.issuedrawingpurchasedetail',
-            'purchase.purchaseorders.index_hx'), function($view) {
-            $view->with('poheadList_hxold', \App\Models\Sales\Salesorder_hxold::where('status', 0)->orderby('id', 'asc')->lists('projectjc', 'id'));
+            'purchase.purchaseorders.index_hx', 'dingtalk.dtlogs.index'), function($view) {
+            $view->with('soheadList_hxold', \App\Models\Sales\Salesorder_hxold::where('status', 0)->orderby('id', 'asc')->lists('projectjc', 'id'));
         });
 
          // poheadOrderDateyearList_hxold

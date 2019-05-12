@@ -53,7 +53,7 @@
 
         {!! Form::open(['url' => '/approval/reports2/issuedrawingpurchasedetail', 'class' => 'pull-right form-inline', 'id' => 'frmSearch']) !!}
         <div class="form-group-sm">
-            {!! Form::select('selectSohead', $poheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '--订单--', 'id' => 'selectSohead']) !!}
+            {!! Form::select('selectSohead', $soheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '--订单--', 'id' => 'selectSohead']) !!}
             {!! Form::hidden('sohead_id', null, ['id' => 'sohead_id']) !!}
             {!! Form::select('selectProject', $projectList, null, ['class' => 'form-control', 'placeholder' => '--项目--', 'id' => 'selectProject']) !!}
             {!! Form::hidden('project_id', null, ['id' => 'project_id']) !!}

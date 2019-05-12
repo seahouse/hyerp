@@ -31,7 +31,7 @@
                 {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '对应项目名称']) !!}
             @elseif ($report->name == "so_factory_analysis")
             @elseif ($report->name == "so_height_statistics_detail")
-                {!! Form::select('orderid', $poheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
+                {!! Form::select('orderid', $soheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
             @elseif ($report->name == "po_statistics")
                 {!! Form::label('signdatelabel', '签订日期:', ['class' => 'control-label']) !!}
                 {!! Form::date('signdatefrom', null, ['class' => 'form-control']) !!}
@@ -43,7 +43,7 @@
             @elseif ($report->name == "in_batch")
                 {!! Form::text('batch', null, ['class' => 'form-control', 'placeholder' => '批号']) !!}
             @elseif ($report->name == "so_cost_statistics")
-                {!! Form::select('orderid', $poheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
+                {!! Form::select('orderid', $soheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
             @elseif ($report->name == "so_amount_statistics")
                 {!! Form::select('dateyear', $poheadOrderDateyearList_hxold, null, ['class' => 'form-control', 'placeholder' => '--年份--']) !!}
             @elseif ($report->name == "so_projectengineeringlist_statistics")
