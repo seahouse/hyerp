@@ -23,7 +23,7 @@
 
             {!! Form::label('select_xmjlsgrz_sohead_label', '项目经理施工日志对应订单', ['class' => 'control-label']) !!}
             {!! Form::select('select_xmjlsgrz_sohead', $soheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '', 'id' => 'select_xmjlsgrz_sohead']) !!}
-            {!! Form::hidden('xmjlsgrz_sohead_id', null, ['id' => 'sohead_id']) !!}
+            {!! Form::hidden('xmjlsgrz_sohead_id', null, ['id' => 'xmjlsgrz_sohead_id']) !!}
             {{--{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称、申请人']); !!}--}}
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
             @if (Auth::user()->email == "admin@admin.com")
@@ -74,6 +74,7 @@
         'createdateend' => isset($inputs['createdateend']) ? $inputs['createdateend'] : null,
         'creator_name' => isset($inputs['creator_name']) ? $inputs['creator_name'] : null,
         'template_name' => isset($inputs['template_name']) ? $inputs['template_name'] : null,
+        'xmjlsgrz_sohead_id' => isset($inputs['xmjlsgrz_sohead_id']) ? $inputs['xmjlsgrz_sohead_id'] : null,
     ])->links() !!}
 
     @else
