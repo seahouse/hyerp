@@ -8,7 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\CharassRequest;
 use Request;
-use App\Product\Charass;
+use App\Models\Product\Charass;
 
 class CharassesController extends Controller
 {

@@ -114,7 +114,6 @@
                     }
                 });
             });
-
         });
 
         $('#select_xmjlsgrz_sohead')
@@ -137,7 +136,6 @@
 //                    console.log($('#project_id').val());
             })
         ;
-
 
     </script>
 @endsection
