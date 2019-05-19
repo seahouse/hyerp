@@ -526,6 +526,7 @@ Route::group(['prefix' => 'dingtalk', 'namespace' => 'Dingtalk', 'middleware' =>
         Route::post('relate_xmjlsgrz_sohead_id', 'DtlogController@relate_xmjlsgrz_sohead_id');
     });
     Route::resource('dtlogs', 'DtlogController');
+    Route::get('report', '\App\Http\Controllers\System\ReportController@indexdingtalk');
 });
 
 Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['web', 'auth']], function() {

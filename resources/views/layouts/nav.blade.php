@@ -147,7 +147,9 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">钉钉<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             @can('module_dingtalk')
-                                    <li><a href="/dingtalk/dtlogs">日志</a></li>
+                                <li><a href="/dingtalk/dtlogs">日志</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="/dingtalk/report">报表</a></li>
                             @endcan
                         </ul>
                     </li>

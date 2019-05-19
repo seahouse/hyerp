@@ -79,6 +79,14 @@ class ReportController extends Controller
 //        return view('system.report.index', compact('reports', 'readonly'));
     }
 
+    public function indexdingtalk()
+    {
+        return $this->indexmodule('钉钉');
+//        $reports = Report::latest('created_at')->where('module', '审批')->where('active', 1)->paginate(10);
+//        $readonly = true;
+//        return view('system.report.index', compact('reports', 'readonly'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *

@@ -156,90 +156,110 @@ class PurchaseReminder extends Command
         $soheads = Salesorder_hxold::where('status', '<>', -10)->get();
         foreach ($soheads as $sohead)
         {
-            $soheadstartreports = Soheaddocs::where('type', 'so_kgbg')->where('sohead_id', $sohead->id)->get();
-//            Log::info($soheadstartreports->count());
-            if ($soheadstartreports->count() > 0)
+            // 针对其中几种设备进行提醒
+            $equipmenttypes = $sohead->equipmenttypes;
+            foreach ($equipmenttypes as $equipmenttype)
             {
-                // 通烟气
-                $passgasDate = Carbon::parse($sohead->passgasDate);
-                $baseDate = Carbon::create(1900, 1, 1);
-                if ($passgasDate->gt($baseDate))
-                    continue;
-
-                // 72
-                $debugendDate = Carbon::parse($sohead->debugend_date);
-                $baseDate = Carbon::create(1900, 1, 1);
-                if ($debugendDate->gt($baseDate))
-                    continue;
-
-                // 环保验收
-                $environmentalProtectionCollectionDate = Carbon::parse($sohead->environmentalProtectionCollectionDate);
-                $baseDate = Carbon::create(1900, 1, 1);
-                if ($environmentalProtectionCollectionDate->gt($baseDate))
-                    continue;
-
-                $bReminderGBJ = false;
-                $bReminderDBR = true;
-                $this->info($sohead->id);
-                Log::info($sohead->id);
-                // 刮板机：仅针对喷雾订单
-                $equipmenttypes = $sohead->equipmenttypes;
-                foreach ($equipmenttypes as $equipmenttype)
+                // 6: 循环流化床法烟气净化
+                // 7: 循环流化床法脱硫
+                // 9: 喷雾烟气净化装置（固定喷雾、KS、希格斯）_1
+                // 10: LLDM布袋除尘_1
+                // 19: 喷雾烟气净化装置（尼鲁）
+                // 24: 喷雾烟气净化装置（固定喷雾、KS、希格斯）_2
+                // 25: LLDM布袋除尘_2
+                $soheadids = [6, 7, 9, 10, 19, 24, 25];
+                if (in_array($equipmenttype->id, $soheadids))
                 {
-                    if (strpos($equipmenttype->equipmenttype_number, '喷雾') !== false)
+                    $this->info($equipmenttype->id);
+                    $soheadstartreports = Soheaddocs::where('type', 'so_kgbg')->where('sohead_id', $sohead->id)->get();
+                    if ($soheadstartreports->count() > 0)
                     {
-                        $bReminderGBJ = true;
+                        // 通烟气
+                        $passgasDate = Carbon::parse($sohead->passgasDate);
+                        $baseDate = Carbon::create(1900, 1, 1);
+                        if ($passgasDate->gt($baseDate))
+                            continue;
+
+                        // 72
+                        $debugendDate = Carbon::parse($sohead->debugend_date);
+                        $baseDate = Carbon::create(1900, 1, 1);
+                        if ($debugendDate->gt($baseDate))
+                            continue;
+
+                        // 环保验收
+                        $environmentalProtectionCollectionDate = Carbon::parse($sohead->environmentalProtectionCollectionDate);
+                        $baseDate = Carbon::create(1900, 1, 1);
+                        if ($environmentalProtectionCollectionDate->gt($baseDate))
+                            continue;
+
+                        $bReminderGBJ = false;
+                        $bReminderDBR = true;
+                        $this->info($sohead->id);
+                        Log::info($sohead->id);
+                        // 刮板机：仅针对喷雾订单
+                        $equipmenttypes = $sohead->equipmenttypes;
+                        foreach ($equipmenttypes as $equipmenttype)
+                        {
+                            if (strpos($equipmenttype->equipmenttype_number, '喷雾') !== false)
+                            {
+                                $bReminderGBJ = true;
+
+                                $poheads = $sohead->poheads;
+                                foreach ($poheads as $pohead)
+                                {
+                                    if (strpos($pohead->productname, '刮板机') !== false)
+                                    {
+//                        Log::info($pohead->productname);
+                                        $bReminderGBJ = false;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
 
                         $poheads = $sohead->poheads;
                         foreach ($poheads as $pohead)
                         {
-                            if (strpos($pohead->productname, '刮板机') !== false)
+                            if (strpos($pohead->productname, '电伴热') !== false)
                             {
 //                        Log::info($pohead->productname);
-                                $bReminderGBJ = false;
+                                $bReminderDBR = false;
                                 break;
                             }
                         }
+                        if ($bReminderGBJ)
+                        {
+                            $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购刮板机，请抓紧采购。";
+                            Log::info($msg);
+                            $this->sendMsg($msg, 196);        // to LiuHM
+                            $this->sendMsg($msg, $sohead->salesmanager_id);
+                            $this->sendMsg($msg, 8);        // to WuHL
+                            $this->sendMsg($msg, 16);        // to LiY
+                            if ($sohead->designer_tech1_id > 0)
+                                $this->sendMsg($msg, 268);        // to NiPP
+                            if ($sohead->designer_tech2_id > 0)
+                                $this->sendMsg($msg, 266);        // to QiangFX
+                        }
+                        if ($bReminderDBR)
+                        {
+                            $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购电伴热，请抓紧采购。";
+                            Log::info($msg);
+                            $this->sendMsg($msg, 196);        // to LiuHM
+                            $this->sendMsg($msg, $sohead->salesmanager_id);
+                            $this->sendMsg($msg, 8);        // to WuHL
+                            $this->sendMsg($msg, 16);        // to LiY
+                            if ($sohead->designer_tech1_id > 0)
+                                $this->sendMsg($msg, 268);        // to NiPP
+                            if ($sohead->designer_tech2_id > 0)
+                                $this->sendMsg($msg, 266);        // to QiangFX
+                        }
                     }
-                }
 
-                $poheads = $sohead->poheads;
-                foreach ($poheads as $pohead)
-                {
-                    if (strpos($pohead->productname, '电伴热') !== false)
-                    {
-//                        Log::info($pohead->productname);
-                        $bReminderDBR = false;
-                        break;
-                    }
-                }
-                if ($bReminderGBJ)
-                {
-                    $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购刮板机，请抓紧采购。";
-                    Log::info($msg);
-                    $this->sendMsg($msg, 196);        // to LiuHM
-                    $this->sendMsg($msg, $sohead->salesmanager_id);
-                    $this->sendMsg($msg, 8);        // to WuHL
-                    $this->sendMsg($msg, 16);        // to LiY
-                    if ($sohead->designer_tech1_id > 0)
-                        $this->sendMsg($msg, 268);        // to NiPP
-                    if ($sohead->designer_tech2_id > 0)
-                        $this->sendMsg($msg, 266);        // to QiangFX
-                }
-                if ($bReminderDBR)
-                {
-                    $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购电伴热，请抓紧采购。";
-                    Log::info($msg);
-                    $this->sendMsg($msg, 196);        // to LiuHM
-                    $this->sendMsg($msg, $sohead->salesmanager_id);
-                    $this->sendMsg($msg, 8);        // to WuHL
-                    $this->sendMsg($msg, 16);        // to LiY
-                    if ($sohead->designer_tech1_id > 0)
-                        $this->sendMsg($msg, 268);        // to NiPP
-                    if ($sohead->designer_tech2_id > 0)
-                        $this->sendMsg($msg, 266);        // to QiangFX
+                    break;
                 }
             }
+
+
         }
     }
 
