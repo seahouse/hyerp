@@ -69,13 +69,15 @@
 
     </table>
 
-    {!! $dtlogs->setPath('/dingtalk/dtlogs')->appends([
-        'createdatestart' => isset($inputs['createdatestart']) ? $inputs['createdatestart'] : null ,
-        'createdateend' => isset($inputs['createdateend']) ? $inputs['createdateend'] : null,
-        'creator_name' => isset($inputs['creator_name']) ? $inputs['creator_name'] : null,
-        'template_name' => isset($inputs['template_name']) ? $inputs['template_name'] : null,
-        'xmjlsgrz_sohead_id' => isset($inputs['xmjlsgrz_sohead_id']) ? $inputs['xmjlsgrz_sohead_id'] : null,
-    ])->links() !!}
+    {!! $dtlogs->setPath('/dingtalk/dtlogs')->appends($inputs)->links() !!}
+
+    {{--{!! $dtlogs->setPath('/dingtalk/dtlogs')->appends([--}}
+        {{--'createdatestart' => isset($inputs['createdatestart']) ? $inputs['createdatestart'] : null ,--}}
+        {{--'createdateend' => isset($inputs['createdateend']) ? $inputs['createdateend'] : null,--}}
+        {{--'creator_name' => isset($inputs['creator_name']) ? $inputs['creator_name'] : null,--}}
+        {{--'template_name' => isset($inputs['template_name']) ? $inputs['template_name'] : null,--}}
+        {{--'xmjlsgrz_sohead_id' => isset($inputs['xmjlsgrz_sohead_id']) ? $inputs['xmjlsgrz_sohead_id'] : null,--}}
+    {{--])->links() !!}--}}
 
     @else
     <div class="alert alert-warning alert-block">
