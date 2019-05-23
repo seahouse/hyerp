@@ -60,6 +60,11 @@ class DtlogController extends Controller
             $query->where('xmjlsgrz_sohead_id', $request->input('xmjlsgrz_sohead_id'));
         }
 
+        if ($request->has('key') && strlen($request->input('key')) > 0)
+        {
+            $query->where('remark', 'like', '%' . $request->input('key') . '%');
+        }
+
 
         $dtlogs = $query->select('*')
             ->paginate(15);
