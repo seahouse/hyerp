@@ -54,17 +54,24 @@ class DtlogController extends Controller
             $query->where('creator_name', $request->input('creator_name'));
         }
 
-        // xmjlsgrz_sohead_id
-        if ($request->has('xmjlsgrz_sohead_id') && $request->input('xmjlsgrz_sohead_id') > 0)
-        {
-            $query->where('xmjlsgrz_sohead_id', $request->input('xmjlsgrz_sohead_id'));
-        }
-
         if ($request->has('key') && strlen($request->input('key')) > 0)
         {
             $query->where('remark', 'like', '%' . $request->input('key') . '%');
         }
 
+//        // xmjlsgrz_sohead_id
+//        if ($request->has('xmjlsgrz_sohead_id') && $request->input('xmjlsgrz_sohead_id') > 0)
+//        {
+//            $query->where('xmjlsgrz_sohead_id', $request->input('xmjlsgrz_sohead_id'));
+//        }
+
+        // xmjlsgrz_project_id
+        if ($request->has('xmjlsgrz_project_id') && $request->input('xmjlsgrz_project_id') > 0)
+        {
+            $soheadids = Salesorder_hxold::where('project_id', $request->input('xmjlsgrz_project_id'))->pluck('id');
+//            dd($soheadids);
+            $query->whereIn('xmjlsgrz_sohead_id', $soheadids);
+        }
 
         $dtlogs = $query->select('*')
             ->paginate(15);

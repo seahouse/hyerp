@@ -21,9 +21,14 @@
 
             {!! Form::select('template_name', $dtlog_templatenames, null, ['class' => 'form-control', 'placeholder' => '--日志模板--']) !!}
 
-            {!! Form::label('select_xmjlsgrz_sohead_label', '项目经理施工日志对应订单', ['class' => 'control-label']) !!}
-            {!! Form::select('select_xmjlsgrz_sohead', $soheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '', 'id' => 'select_xmjlsgrz_sohead']) !!}
-            {!! Form::hidden('xmjlsgrz_sohead_id', null, ['id' => 'xmjlsgrz_sohead_id']) !!}
+            {{--{!! Form::label('select_xmjlsgrz_sohead_label', '项目经理施工日志对应订单', ['class' => 'control-label']) !!}--}}
+            {{--{!! Form::select('select_xmjlsgrz_sohead', $soheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '', 'id' => 'select_xmjlsgrz_sohead']) !!}--}}
+            {{--{!! Form::hidden('xmjlsgrz_sohead_id', null, ['id' => 'xmjlsgrz_sohead_id']) !!}--}}
+
+            {!! Form::label('select_xmjlsgrz_project_label', '项目经理施工日志对应项目', ['class' => 'control-label']) !!}
+            {!! Form::select('select_xmjlsgrz_project', $projectList, null, ['class' => 'form-control', 'placeholder' => '', 'id' => 'select_xmjlsgrz_project']) !!}
+            {!! Form::hidden('xmjlsgrz_project_id', null, ['id' => 'xmjlsgrz_project_id']) !!}
+
             {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '备注']) !!}
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
             @if (Auth::user()->email == "admin@admin.com")
@@ -41,6 +46,7 @@
                 <th>创建时间</th>
                 <th>发起人</th>
                 <th>日志模板</th>
+                <th>备注</th>
                 <th style="width: 120px">操作</th>
             </tr>
         </thead>
@@ -55,6 +61,9 @@
                     </td>
                     <td>
                         {{ $dtlog->template_name }}
+                    </td>
+                    <td>
+                        {{ str_limit($dtlog->remark, 20) }}
                     </td>
                     <td>
                         <a href="{{ URL::to('/dingtalk/dtlogs/'.$dtlog->id) }}" class="btn btn-success btn-sm pull-left" target="_blank">查看</a>
@@ -134,6 +143,21 @@
                     $('input[name=xmjlsgrz_sohead_id]').val(li.val());
                 else
                     $('input[name=xmjlsgrz_sohead_id]').val('');
+//                    console.log($('input[name=sohead_id]').val());
+//                    console.log($('#project_id').val());
+            })
+        ;
+
+        $('#select_xmjlsgrz_project')
+            .editableSelect({
+                effects: 'slide',
+            })
+            .on('select.editable-select', function (e, li) {
+//                    console.log(li.val() + li.text());
+                if (li.val() > 0)
+                    $('input[name=xmjlsgrz_project_id]').val(li.val());
+                else
+                    $('input[name=xmjlsgrz_project_id]').val('');
 //                    console.log($('input[name=sohead_id]').val());
 //                    console.log($('#project_id').val());
             })
