@@ -102,13 +102,13 @@ class PurchaseReminder extends Command
                 $msg = $sohead->projectjc . "(" . $sohead->number . ")已付预付款，但还未采购雾化器，请抓紧采购。";
 //                Log::info($msg);
                 $this->sendMsg($msg, $sohead->id, 196);        // to LiuHM
-                $this->sendMsg($msg, $sohead->salesmanager_id);
-                $this->sendMsg($msg, 8);        // to WuHL
-                $this->sendMsg($msg, 16);        // to LiY
+                $this->sendMsg($msg, $sohead->id, $sohead->salesmanager_id);
+                $this->sendMsg($msg, $sohead->id, 8);        // to WuHL
+                $this->sendMsg($msg, $sohead->id, 16);        // to LiY
                 if ($sohead->designer_tech1_id > 0)
-                    $this->sendMsg($msg, 268);        // to NiPP
+                    $this->sendMsg($msg, $sohead->id, 268);        // to NiPP
                 if ($sohead->designer_tech2_id > 0)
-                    $this->sendMsg($msg, 266);        // to QiangFX
+                    $this->sendMsg($msg, $sohead->id, 266);        // to QiangFX
             }
         }
 
@@ -138,14 +138,14 @@ class PurchaseReminder extends Command
                 {
                     $msg = $sohead->projectjc . "(" . $sohead->number . ")的下图审批包含栓接，但还未采购高强螺丝，请抓紧采购。";
 //                    Log::info($msg);
-                    $this->sendMsg($msg, 196);        // to LiuHM
-                    $this->sendMsg($msg, $sohead->salesmanager_id);
-                    $this->sendMsg($msg, 8);        // to WuHL
-                    $this->sendMsg($msg, 16);        // to LiY
+                    $this->sendMsg($msg, $sohead->id, 196);        // to LiuHM
+                    $this->sendMsg($msg, $sohead->id, $sohead->salesmanager_id);
+                    $this->sendMsg($msg, $sohead->id, 8);        // to WuHL
+                    $this->sendMsg($msg, $sohead->id, 16);        // to LiY
                     if ($sohead->designer_tech1_id > 0)
-                        $this->sendMsg($msg, 268);        // to NiPP
+                        $this->sendMsg($msg, $sohead->id, 268);        // to NiPP
                     if ($sohead->designer_tech2_id > 0)
-                        $this->sendMsg($msg, 266);        // to QiangFX
+                        $this->sendMsg($msg, $sohead->id, 266);        // to QiangFX
                 }
             }
         }
@@ -231,27 +231,27 @@ class PurchaseReminder extends Command
                         {
                             $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购刮板机，请抓紧采购。";
                             Log::info($msg);
-                            $this->sendMsg($msg, 196);        // to LiuHM
-                            $this->sendMsg($msg, $sohead->salesmanager_id);
-                            $this->sendMsg($msg, 8);        // to WuHL
-                            $this->sendMsg($msg, 16);        // to LiY
+                            $this->sendMsg($msg, $sohead->id, 196);        // to LiuHM
+                            $this->sendMsg($msg, $sohead->id, $sohead->salesmanager_id);
+                            $this->sendMsg($msg, $sohead->id, 8);        // to WuHL
+                            $this->sendMsg($msg, $sohead->id, 16);        // to LiY
                             if ($sohead->designer_tech1_id > 0)
-                                $this->sendMsg($msg, 268);        // to NiPP
+                                $this->sendMsg($msg, $sohead->id, 268);        // to NiPP
                             if ($sohead->designer_tech2_id > 0)
-                                $this->sendMsg($msg, 266);        // to QiangFX
+                                $this->sendMsg($msg, $sohead->id, 266);        // to QiangFX
                         }
                         if ($bReminderDBR)
                         {
                             $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购电伴热，请抓紧采购。";
                             Log::info($msg);
-                            $this->sendMsg($msg, 196);        // to LiuHM
-                            $this->sendMsg($msg, $sohead->salesmanager_id);
-                            $this->sendMsg($msg, 8);        // to WuHL
-                            $this->sendMsg($msg, 16);        // to LiY
+                            $this->sendMsg($msg, $sohead->id, 196);        // to LiuHM
+                            $this->sendMsg($msg, $sohead->id, $sohead->salesmanager_id);
+                            $this->sendMsg($msg, $sohead->id, 8);        // to WuHL
+                            $this->sendMsg($msg, $sohead->id, 16);        // to LiY
                             if ($sohead->designer_tech1_id > 0)
-                                $this->sendMsg($msg, 268);        // to NiPP
+                                $this->sendMsg($msg, $sohead->id, 268);        // to NiPP
                             if ($sohead->designer_tech2_id > 0)
-                                $this->sendMsg($msg, 266);        // to QiangFX
+                                $this->sendMsg($msg, $sohead->id, 266);        // to QiangFX
                         }
                     }
 
