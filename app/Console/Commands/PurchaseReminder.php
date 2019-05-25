@@ -101,7 +101,7 @@ class PurchaseReminder extends Command
             {
                 $msg = $sohead->projectjc . "(" . $sohead->number . ")已付预付款，但还未采购雾化器，请抓紧采购。";
 //                Log::info($msg);
-                $this->sendMsg($msg, 196);        // to LiuHM
+                $this->sendMsg($msg, $sohead->id, 196);        // to LiuHM
                 $this->sendMsg($msg, $sohead->salesmanager_id);
                 $this->sendMsg($msg, 8);        // to WuHL
                 $this->sendMsg($msg, 16);        // to LiY
@@ -263,20 +263,40 @@ class PurchaseReminder extends Command
         }
     }
 
-    public function sendMsg($msg, $userid_hxold = 0)
+    public function sendMsg($msg, $sohead_id = 0, $userid_hxold = 0)
     {
         if ($this->option('debug'))
         {
             $touser = User::where('email', $this->argument('useremail'))->first();
             if (isset($touser))
             {
+//                $data = [
+//                    'userid'        => $touser->id,
+//                    'msgcontent'    => urlencode($msg) ,
+//                ];
+
                 $data = [
-                    'userid'        => $touser->id,
-                    'msgcontent'    => urlencode($msg) ,
+                    'msgtype'   => 'action_card',
+                    'action_card' => [
+                        'title' => '采购提醒',
+                        'markdown'  => $msg,
+                        'btn_orientation' => '0',
+                        'btn_json_list' => [
+                            [
+                                'title' => '设置此订单不再提醒',
+                                'action_url' => 'http://www.huaxing-east.cn:2016/mddauth/approval/sales/salesorders/' . $sohead_id . '/setpurchasereminderactive/0',
+                            ],
+//                            [
+//                                'title' => '两个按钮',
+//                                'action_url' => 'https://www.tmall.com',
+//                            ],
+                        ]
+                    ],
                 ];
 
 //                $response = DingTalkController::sendCorpMessageTextReminder(json_encode($data));
-                $response = DingTalkController::sendActionCardMsg();
+                $agentid = config('custom.dingtalk.agentidlist.erpreminder');
+                $response = DingTalkController::sendActionCardMsg($touser->id, $agentid, $data);
 //                Log::info(json_encode($response));
                 sleep(1);
             }

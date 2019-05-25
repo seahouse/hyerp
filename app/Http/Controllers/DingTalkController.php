@@ -826,32 +826,32 @@ class DingTalkController extends Controller
         return "";
     }
 
-    public static function sendActionCardMsg()
+    public static function sendActionCardMsg($useridList, $agentid, $data)
     {
         $c = new DingTalkClient();
         $req = new OapiMessageCorpconversationAsyncsendV2Request();
-        $req->setUseridList('manager1200');
-        $req->setAgentId('13231599');
+        $req->setUseridList($useridList);
+        $req->setAgentId($agentid);
 
-        Log::info(url('mddauth'));
-        $data = [
-            'msgtype'   => 'action_card',
-            'action_card' => [
-                'title' => '是透出到会话列表和通知的文案',
-                'markdown'  => '支持markdown格式的正文内容',
-                'btn_orientation' => '1',
-                'btn_json_list' => [
-                    [
-                        'title' => '一个按钮',
-                        'action_url' => url('mddauth'),
-                    ],
-                    [
-                        'title' => '两个按钮',
-                        'action_url' => 'https://www.tmall.com',
-                    ],
-                ]
-            ],
-        ];
+//        Log::info(url('mddauth'));
+//        $data = [
+//            'msgtype'   => 'action_card',
+//            'action_card' => [
+//                'title' => '是透出到会话列表和通知的文案',
+//                'markdown'  => '支持markdown格式的正文内容',
+//                'btn_orientation' => '1',
+//                'btn_json_list' => [
+//                    [
+//                        'title' => '一个按钮',
+//                        'action_url' => 'http://www.huaxing-east.cn:2016/mddauth/approval/sales/salesorders/',
+//                    ],
+//                    [
+//                        'title' => '两个按钮',
+//                        'action_url' => 'https://www.tmall.com',
+//                    ],
+//                ]
+//            ],
+//        ];
         Log::info(json_encode($data));
         $req->setMsg(json_encode($data));
 

@@ -217,6 +217,7 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
         Route::get('getitembyid/{id}', 'SalesordersController@getitembyid');
         Route::get('getsohx', 'SalesordersController@getsohx');
         Route::get('{id}/mstatistics', 'SalesordersController@mstatistics');
+        Route::get('{id}/setpurchasereminderactive/{active}', 'SalesordersController@setpurchasereminderactive');
     });
     Route::resource('salesorders', 'SalesordersController');
     Route::group(['prefix' => 'salesorderhx'], function() {
