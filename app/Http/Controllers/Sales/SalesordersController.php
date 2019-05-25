@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Sales\Salesorder;
 use App\Http\Requests\Sales\SalesorderRequest;
+use App\Models\Sales\Salesorder_hxold_t;
 use Httpful\Response;
 use Request;
 use App\Inventory\Itemsite;
@@ -17,6 +18,7 @@ use App\Inventory\Shipitem;
 use App\Sales\Soitem;
 use App\Models\Sales\Salesorder_hxold;
 use App\Models\Sales\Custinfo_hxold;
+use Log;
 
 class SalesOrdersController extends Controller
 {
@@ -263,5 +265,31 @@ class SalesOrdersController extends Controller
         }
 
         return view('sales.salesorders.mstatistics', compact('sohead'));
+    }
+
+    public function setpurchasereminderactive($sohead_id, $purchasereminderactive)
+    {
+        $count = Salesorder_hxold_t::where('订单ID', $sohead_id)->update(['purchasereminderactive' => $purchasereminderactive]);
+        if ($count > 0)
+            dd('设置成功。');
+        else
+            dd('设置失败。');
+
+////        $sohead = Salesorder_hxold_t::where('订单ID', $sohead_id)->first();
+//        $sohead = Salesorder_hxold_t::find($sohead_id)->first();
+//        if (isset($sohead))
+//        {
+////            Log::info($sohead->startDate);
+////            Log::info($sohead->purchasereminderactive);
+////            $sohead->purchasereminderactive = $purchasereminderactive;
+////            $sohead->save();
+//
+////            $sohead->update(['purchasereminderactive' => $purchasereminderactive]);
+//            Log::info($sohead->purchasereminderactive);
+//
+//            dd('设置成功。' . $count);
+//        }
+//
+//        dd('设置失败。');
     }
 }

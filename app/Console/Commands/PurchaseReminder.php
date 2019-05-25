@@ -275,6 +275,7 @@ class PurchaseReminder extends Command
 //                    'msgcontent'    => urlencode($msg) ,
 //                ];
 
+                Log::info('http://www.huaxing-east.cn:2016/mddauth/approval/sales/salesorders/' . $sohead_id . '/setpurchasereminderactive/0');
                 $data = [
                     'msgtype'   => 'action_card',
                     'action_card' => [
@@ -296,7 +297,7 @@ class PurchaseReminder extends Command
 
 //                $response = DingTalkController::sendCorpMessageTextReminder(json_encode($data));
                 $agentid = config('custom.dingtalk.agentidlist.erpreminder');
-                $response = DingTalkController::sendActionCardMsg($touser->id, $agentid, $data);
+                $response = DingTalkController::sendActionCardMsg('manager1200', $agentid, $data);
 //                Log::info(json_encode($response));
                 sleep(1);
             }
