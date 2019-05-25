@@ -285,7 +285,7 @@ class PurchaseReminder extends Command
                         'btn_json_list' => [
                             [
                                 'title' => '设置此订单不再提醒',
-                                'action_url' => 'http://www.huaxing-east.cn:2016/mddauth/approval/sales/salesorders/' . $sohead_id . '/setpurchasereminderactive/0',
+                                'action_url' => 'http://www.huaxing-east.cn:2016/mddauth/approval/sales-salesorders-' . $sohead_id . '-setpurchasereminderactive-0',
                             ],
 //                            [
 //                                'title' => '两个按钮',
