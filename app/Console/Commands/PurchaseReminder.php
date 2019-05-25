@@ -275,7 +275,8 @@ class PurchaseReminder extends Command
                     'msgcontent'    => urlencode($msg) ,
                 ];
 
-                $response = DingTalkController::sendCorpMessageTextReminder(json_encode($data));
+//                $response = DingTalkController::sendCorpMessageTextReminder(json_encode($data));
+                $response = DingTalkController::sendActionCardMsg();
 //                Log::info(json_encode($response));
                 sleep(1);
             }

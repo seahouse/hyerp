@@ -8,6 +8,7 @@ use App\Http\Controllers\Approval\PppaymentController;
 use App\Http\Controllers\util\HttpDingtalkEco;
 use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\SmartworkBpmsProcessinstanceCreateRequest;
+use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiMessageCorpconversationAsyncsendV2Request;
 use App\Models\System\User;
 use App\Models\System\Userold;
 use Carbon\Carbon;
@@ -823,6 +824,72 @@ class DingTalkController extends Controller
         return response()->json($response);
 
         return "";
+    }
+
+    public static function sendActionCardMsg()
+    {
+        $c = new DingTalkClient();
+        $req = new OapiMessageCorpconversationAsyncsendV2Request();
+        $req->setUseridList('manager1200');
+        $req->setAgentId('13231599');
+
+        Log::info(url('mddauth'));
+        $data = [
+            'msgtype'   => 'action_card',
+            'action_card' => [
+                'title' => '是透出到会话列表和通知的文案',
+                'markdown'  => '支持markdown格式的正文内容',
+                'btn_orientation' => '1',
+                'btn_json_list' => [
+                    [
+                        'title' => '一个按钮',
+                        'action_url' => url('mddauth'),
+                    ],
+                    [
+                        'title' => '两个按钮',
+                        'action_url' => 'https://www.tmall.com',
+                    ],
+                ]
+            ],
+        ];
+        Log::info(json_encode($data));
+        $req->setMsg(json_encode($data));
+
+        $session = self::getAccessToken();
+        $response = $c->execute($req, $session);
+        Log::info(json_encode($response));
+        return $response;
+
+
+//        $method = 'dingtalk.corp.message.corpconversation.asyncsend';
+//        $session = self::getAccessToken();
+//        $format = 'json';
+//        $v = '2.0';
+//
+//        $msgtype = 'text';
+//        $agent_id = config('custom.dingtalk.agentidlist.erpreminder');
+//
+//        $userid_list = '';
+//        $msgcontent = '';
+//
+//        $json = json_decode($strJson);
+//        $user = User::where('id', $json->userid)->first();
+//        if (isset($user))
+//        {
+//            $userid_list = $user->dtuserid;
+//            $msgcontent = '{"content":"' . $json->msgcontent . '"}';
+//        }
+//
+//
+//        $params = compact('method', 'session', 'v', 'format',
+//            'msgtype', 'agent_id', 'userid_list', 'msgcontent');
+//        $data = [
+//        ];
+//
+//        $response = HttpDingtalkEco::post("",
+//            $params, json_encode($data));
+//        return $response;
+//        return response()->json($response);
     }
 
     public static function register_call_back_user()
