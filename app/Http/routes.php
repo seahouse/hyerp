@@ -581,6 +581,10 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
     Route::resource('userold', 'UseroldController');
 
     Route::resource('operationlog', 'OperationlogController');
+    Route::group(['prefix' => 'reminderswitches'], function() {
+        Route::get('storebyclick/{tablename}/{tableid}/{type}/{value}', 'ReminderswitchController@storebyclick');
+    });
+    Route::resource('reminderswitches', 'ReminderswitchController');
 });
 
 Route::group(['prefix' => 'teaching', 'namespace' => 'Teaching', 'middleware' => ['web', 'auth']], function() {

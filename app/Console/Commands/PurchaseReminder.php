@@ -6,6 +6,7 @@ use App\Http\Controllers\DingTalkController;
 use App\Models\Approval\Issuedrawing;
 use App\Models\Sales\Salesorder_hxold;
 use App\Models\Sales\Soheaddocs;
+use App\Models\System\Reminderswitch;
 use App\Models\System\User;
 use App\Models\System\Userold;
 use Carbon\Carbon;
@@ -53,6 +54,10 @@ class PurchaseReminder extends Command
         $soheads = Salesorder_hxold::where('status', '<>', -10)->get();
         foreach ($soheads as $sohead)
         {
+            $reminderswitch = Reminderswitch::where('tablename', '订单')->where('tableid', $sohead->id)->where('type', 'purchase_whq')->where('value', '<>', 1)->first();
+            if (isset($reminderswitch))
+                continue;
+
             $bReminder = false;
             $receivedAmount = $sohead->receiptpayments()->sum('amount');
             $equipmenttypes = $sohead->equipmenttypes;
@@ -101,14 +106,14 @@ class PurchaseReminder extends Command
             {
                 $msg = $sohead->projectjc . "(" . $sohead->number . ")已付预付款，但还未采购雾化器，请抓紧采购。";
 //                Log::info($msg);
-                $this->sendMsg($msg, $sohead->id, 196);        // to LiuHM
-                $this->sendMsg($msg, $sohead->id, $sohead->salesmanager_id);
-                $this->sendMsg($msg, $sohead->id, 8);        // to WuHL
-                $this->sendMsg($msg, $sohead->id, 16);        // to LiY
+                $this->sendMsg($msg, $sohead->id, 'purchase_whq', 196);        // to LiuHM
+                $this->sendMsg($msg, $sohead->id, 'purchase_whq', $sohead->salesmanager_id);
+                $this->sendMsg($msg, $sohead->id, 'purchase_whq', 8);        // to WuHL
+                $this->sendMsg($msg, $sohead->id, 'purchase_whq', 16);        // to LiY
                 if ($sohead->designer_tech1_id > 0)
-                    $this->sendMsg($msg, $sohead->id, 268);        // to NiPP
+                    $this->sendMsg($msg, $sohead->id, 'purchase_whq', 268);        // to NiPP
                 if ($sohead->designer_tech2_id > 0)
-                    $this->sendMsg($msg, $sohead->id, 266);        // to QiangFX
+                    $this->sendMsg($msg, $sohead->id, 'purchase_whq', 266);        // to QiangFX
             }
         }
 
@@ -138,14 +143,14 @@ class PurchaseReminder extends Command
                 {
                     $msg = $sohead->projectjc . "(" . $sohead->number . ")的下图审批包含栓接，但还未采购高强螺丝，请抓紧采购。";
 //                    Log::info($msg);
-                    $this->sendMsg($msg, $sohead->id, 196);        // to LiuHM
-                    $this->sendMsg($msg, $sohead->id, $sohead->salesmanager_id);
-                    $this->sendMsg($msg, $sohead->id, 8);        // to WuHL
-                    $this->sendMsg($msg, $sohead->id, 16);        // to LiY
+                    $this->sendMsg($msg, $sohead->id, 'purchase_gqls', 196);        // to LiuHM
+                    $this->sendMsg($msg, $sohead->id, 'purchase_gqls', $sohead->salesmanager_id);
+                    $this->sendMsg($msg, $sohead->id, 'purchase_gqls', 8);        // to WuHL
+                    $this->sendMsg($msg, $sohead->id, 'purchase_gqls', 16);        // to LiY
                     if ($sohead->designer_tech1_id > 0)
-                        $this->sendMsg($msg, $sohead->id, 268);        // to NiPP
+                        $this->sendMsg($msg, $sohead->id, 'purchase_gqls', 268);        // to NiPP
                     if ($sohead->designer_tech2_id > 0)
-                        $this->sendMsg($msg, $sohead->id, 266);        // to QiangFX
+                        $this->sendMsg($msg, $sohead->id, 'purchase_gqls', 266);        // to QiangFX
                 }
             }
         }
@@ -231,27 +236,27 @@ class PurchaseReminder extends Command
                         {
                             $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购刮板机，请抓紧采购。";
                             Log::info($msg);
-                            $this->sendMsg($msg, $sohead->id, 196);        // to LiuHM
-                            $this->sendMsg($msg, $sohead->id, $sohead->salesmanager_id);
-                            $this->sendMsg($msg, $sohead->id, 8);        // to WuHL
-                            $this->sendMsg($msg, $sohead->id, 16);        // to LiY
+                            $this->sendMsg($msg, $sohead->id, 'purchase_gbj', 196);        // to LiuHM
+                            $this->sendMsg($msg, $sohead->id, 'purchase_gbj', $sohead->salesmanager_id);
+                            $this->sendMsg($msg, $sohead->id, 'purchase_gbj', 8);        // to WuHL
+                            $this->sendMsg($msg, $sohead->id, 'purchase_gbj', 16);        // to LiY
                             if ($sohead->designer_tech1_id > 0)
-                                $this->sendMsg($msg, $sohead->id, 268);        // to NiPP
+                                $this->sendMsg($msg, $sohead->id, 'purchase_gbj', 268);        // to NiPP
                             if ($sohead->designer_tech2_id > 0)
-                                $this->sendMsg($msg, $sohead->id, 266);        // to QiangFX
+                                $this->sendMsg($msg, $sohead->id, 'purchase_gbj', 266);        // to QiangFX
                         }
                         if ($bReminderDBR)
                         {
                             $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购电伴热，请抓紧采购。";
                             Log::info($msg);
-                            $this->sendMsg($msg, $sohead->id, 196);        // to LiuHM
-                            $this->sendMsg($msg, $sohead->id, $sohead->salesmanager_id);
-                            $this->sendMsg($msg, $sohead->id, 8);        // to WuHL
-                            $this->sendMsg($msg, $sohead->id, 16);        // to LiY
+                            $this->sendMsg($msg, $sohead->id, 'purchase_dbr', 196);        // to LiuHM
+                            $this->sendMsg($msg, $sohead->id, 'purchase_dbr', $sohead->salesmanager_id);
+                            $this->sendMsg($msg, $sohead->id, 'purchase_dbr', 8);        // to WuHL
+                            $this->sendMsg($msg, $sohead->id, 'purchase_dbr', 16);        // to LiY
                             if ($sohead->designer_tech1_id > 0)
-                                $this->sendMsg($msg, $sohead->id, 268);        // to NiPP
+                                $this->sendMsg($msg, $sohead->id, 'purchase_dbr', 268);        // to NiPP
                             if ($sohead->designer_tech2_id > 0)
-                                $this->sendMsg($msg, $sohead->id, 266);        // to QiangFX
+                                $this->sendMsg($msg, $sohead->id, 'purchase_dbr', 266);        // to QiangFX
                         }
                     }
 
@@ -263,7 +268,7 @@ class PurchaseReminder extends Command
         }
     }
 
-    public function sendMsg($msg, $sohead_id = 0, $userid_hxold = 0)
+    public function sendMsg($msg, $sohead_id = 0, $type = '', $userid_hxold = 0)
     {
         if ($this->option('debug'))
         {
@@ -275,7 +280,7 @@ class PurchaseReminder extends Command
 //                    'msgcontent'    => urlencode($msg) ,
 //                ];
 
-                Log::info('http://www.huaxing-east.cn:2016/mddauth/approval/sales/salesorders/' . $sohead_id . '/setpurchasereminderactive/0');
+                Log::info('http://www.huaxing-east.cn:2016/mddauth/approval/system-reminderswitches-storebyclick-订单-' . $sohead_id . '-' . $type . '-0');
                 $data = [
                     'msgtype'   => 'action_card',
                     'action_card' => [
@@ -285,7 +290,7 @@ class PurchaseReminder extends Command
                         'btn_json_list' => [
                             [
                                 'title' => '设置此订单不再提醒',
-                                'action_url' => 'http://www.huaxing-east.cn:2016/mddauth/approval/sales-salesorders-' . $sohead_id . '-setpurchasereminderactive-0',
+                                'action_url' => 'http://www.huaxing-east.cn:2016/mddauth/approval/system-reminderswitches-storebyclick-订单-' . $sohead_id . '-' . $type . '-0',
                             ],
 //                            [
 //                                'title' => '两个按钮',
