@@ -289,7 +289,7 @@ class PurchaseReminder extends Command
                         'btn_orientation' => '0',
                         'btn_json_list' => [
                             [
-                                'title' => '设置此订单不再提醒',
+                                'title' => '设置此消息不再提醒',
                                 'action_url' => 'http://www.huaxing-east.cn:2016/mddauth/approval/system-reminderswitches-storebyclick-订单-' . $sohead_id . '-' . $type . '-0',
                             ],
 //                            [

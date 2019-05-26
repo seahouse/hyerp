@@ -9,4 +9,10 @@ class Reminderswitch extends Model
     //
 //    protected $table = 'reminderswitches';
     protected $connection = 'sqlsrv';
+    protected $fillable = [
+        'tablename',
+        'tableid',
+        'type',
+        'value',
+    ];
 }
