@@ -54,7 +54,7 @@ class PurchaseReminder extends Command
         $soheads = Salesorder_hxold::where('status', '<>', -10)->get();
         foreach ($soheads as $sohead)
         {
-            $reminderswitch = Reminderswitch::where('tablename', '订单')->where('tableid', $sohead->id)->where('type', 'purchase_whq')->where('value', '<>', 1)->first();
+            $reminderswitch = Reminderswitch::where('tablename', 'vorder')->where('tableid', $sohead->id)->where('type', 'purchase_whq')->where('value', '<>', 1)->first();
             if (isset($reminderswitch))
                 continue;
 
@@ -127,6 +127,10 @@ class PurchaseReminder extends Command
             $sohead = $issuedrawing->sohead_hxold;
             if (isset($sohead))
             {
+                $reminderswitch = Reminderswitch::where('tablename', 'vorder')->where('tableid', $sohead->id)->where('type', 'purchase_gqls')->where('value', '<>', 1)->first();
+                if (isset($reminderswitch))
+                    continue;
+
                 $bReminder = true;
                 $poheads = $sohead->poheads;
                 foreach ($poheads as $pohead)
@@ -234,29 +238,37 @@ class PurchaseReminder extends Command
                         }
                         if ($bReminderGBJ)
                         {
-                            $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购刮板机，请抓紧采购。";
-                            Log::info($msg);
-                            $this->sendMsg($msg, $sohead->id, 'purchase_gbj', 196);        // to LiuHM
-                            $this->sendMsg($msg, $sohead->id, 'purchase_gbj', $sohead->salesmanager_id);
-                            $this->sendMsg($msg, $sohead->id, 'purchase_gbj', 8);        // to WuHL
-                            $this->sendMsg($msg, $sohead->id, 'purchase_gbj', 16);        // to LiY
-                            if ($sohead->designer_tech1_id > 0)
-                                $this->sendMsg($msg, $sohead->id, 'purchase_gbj', 268);        // to NiPP
-                            if ($sohead->designer_tech2_id > 0)
-                                $this->sendMsg($msg, $sohead->id, 'purchase_gbj', 266);        // to QiangFX
+                            $reminderswitch = Reminderswitch::where('tablename', 'vorder')->where('tableid', $sohead->id)->where('type', 'purchase_gbj')->where('value', '<>', 1)->first();
+                            if (!isset($reminderswitch))
+                            {
+                                $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购刮板机，请抓紧采购。";
+                                Log::info($msg);
+                                $this->sendMsg($msg, $sohead->id, 'purchase_gbj', 196);        // to LiuHM
+                                $this->sendMsg($msg, $sohead->id, 'purchase_gbj', $sohead->salesmanager_id);
+                                $this->sendMsg($msg, $sohead->id, 'purchase_gbj', 8);        // to WuHL
+                                $this->sendMsg($msg, $sohead->id, 'purchase_gbj', 16);        // to LiY
+                                if ($sohead->designer_tech1_id > 0)
+                                    $this->sendMsg($msg, $sohead->id, 'purchase_gbj', 268);        // to NiPP
+                                if ($sohead->designer_tech2_id > 0)
+                                    $this->sendMsg($msg, $sohead->id, 'purchase_gbj', 266);        // to QiangFX
+                            }
                         }
                         if ($bReminderDBR)
                         {
-                            $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购电伴热，请抓紧采购。";
-                            Log::info($msg);
-                            $this->sendMsg($msg, $sohead->id, 'purchase_dbr', 196);        // to LiuHM
-                            $this->sendMsg($msg, $sohead->id, 'purchase_dbr', $sohead->salesmanager_id);
-                            $this->sendMsg($msg, $sohead->id, 'purchase_dbr', 8);        // to WuHL
-                            $this->sendMsg($msg, $sohead->id, 'purchase_dbr', 16);        // to LiY
-                            if ($sohead->designer_tech1_id > 0)
-                                $this->sendMsg($msg, $sohead->id, 'purchase_dbr', 268);        // to NiPP
-                            if ($sohead->designer_tech2_id > 0)
-                                $this->sendMsg($msg, $sohead->id, 'purchase_dbr', 266);        // to QiangFX
+                            $reminderswitch = Reminderswitch::where('tablename', 'vorder')->where('tableid', $sohead->id)->where('type', 'purchase_dbr')->where('value', '<>', 1)->first();
+                            if (!isset($reminderswitch))
+                            {
+                                $msg = $sohead->projectjc . "(" . $sohead->number . ")已录入开工报告，但还未采购电伴热，请抓紧采购。";
+                                Log::info($msg);
+                                $this->sendMsg($msg, $sohead->id, 'purchase_dbr', 196);        // to LiuHM
+                                $this->sendMsg($msg, $sohead->id, 'purchase_dbr', $sohead->salesmanager_id);
+                                $this->sendMsg($msg, $sohead->id, 'purchase_dbr', 8);        // to WuHL
+                                $this->sendMsg($msg, $sohead->id, 'purchase_dbr', 16);        // to LiY
+                                if ($sohead->designer_tech1_id > 0)
+                                    $this->sendMsg($msg, $sohead->id, 'purchase_dbr', 268);        // to NiPP
+                                if ($sohead->designer_tech2_id > 0)
+                                    $this->sendMsg($msg, $sohead->id, 'purchase_dbr', 266);        // to QiangFX
+                            }
                         }
                     }
 
@@ -280,7 +292,7 @@ class PurchaseReminder extends Command
 //                    'msgcontent'    => urlencode($msg) ,
 //                ];
 
-                Log::info('http://www.huaxing-east.cn:2016/mddauth/approval/system-reminderswitches-storebyclick-订单-' . $sohead_id . '-' . $type . '-0');
+                Log::info('http://www.huaxing-east.cn:2016/mddauth/approval/system-reminderswitches-storebyclick-vorder-' . $sohead_id . '-' . $type . '-0');
                 $data = [
                     'msgtype'   => 'action_card',
                     'action_card' => [
@@ -290,7 +302,7 @@ class PurchaseReminder extends Command
                         'btn_json_list' => [
                             [
                                 'title' => '设置此消息不再提醒',
-                                'action_url' => 'http://www.huaxing-east.cn:2016/mddauth/approval/system-reminderswitches-storebyclick-订单-' . $sohead_id . '-' . $type . '-0',
+                                'action_url' => 'http://www.huaxing-east.cn:2016/mddauth/approval/system-reminderswitches-storebyclick-vorder-' . $sohead_id . '-' . $type . '-0',
                             ],
 //                            [
 //                                'title' => '两个按钮',
