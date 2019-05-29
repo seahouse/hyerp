@@ -327,12 +327,34 @@ class PurchaseReminder extends Command
                 $transactor = User::where('id', $transactor_hxold->user_id)->first();
                 if (isset($transactor))
                 {
+//                    $data = [
+//                        'userid'        => $transactor->id,
+//                        'msgcontent'    => urlencode($msg) ,
+//                    ];
+
+                    Log::info('http://www.huaxing-east.cn:2016/mddauth/approval/system-reminderswitches-storebyclick-vorder-' . $sohead_id . '-' . $type . '-0');
                     $data = [
-                        'userid'        => $transactor->id,
-                        'msgcontent'    => urlencode($msg) ,
+                        'msgtype'   => 'action_card',
+                        'action_card' => [
+                            'title' => '采购提醒',
+                            'markdown'  => $msg,
+                            'btn_orientation' => '0',
+                            'btn_json_list' => [
+                                [
+                                    'title' => '设置此消息不再提醒',
+                                    'action_url' => 'http://www.huaxing-east.cn:2016/mddauth/approval/system-reminderswitches-storebyclick-vorder-' . $sohead_id . '-' . $type . '-0',
+                                ],
+//                            [
+//                                'title' => '两个按钮',
+//                                'action_url' => 'https://www.tmall.com',
+//                            ],
+                            ]
+                        ],
                     ];
-//                    Log::info($transactor->name);
-                    DingTalkController::sendCorpMessageTextReminder(json_encode($data));
+
+                    $agentid = config('custom.dingtalk.agentidlist.erpreminder');
+                    $response = DingTalkController::sendActionCardMsg($transactor->id, $agentid, $data);
+//                    DingTalkController::sendCorpMessageTextReminder(json_encode($data));
                     sleep(1);
                 }
             }
