@@ -73,6 +73,18 @@ class DtlogController extends Controller
             $query->whereIn('xmjlsgrz_sohead_id', $soheadids);
         }
 
+        // other
+        if ($request->has('other'))
+        {
+            if ($request->input('other') == 'btn_xmjlsgrz_sohead_id_undefined')
+            {
+                $query->where(function ($query) {
+                    $query->whereNull('xmjlsgrz_sohead_id')
+                        ->orWhere('xmjlsgrz_sohead_id', '<', 1);
+                });
+            }
+        }
+
         $dtlogs = $query->select('*')
             ->paginate(15);
 
@@ -190,5 +202,20 @@ class DtlogController extends Controller
             'errmsg' => '关联成功，共关联了' . $count . '个日志。',
         ];
         return response()->json($data);
+    }
+
+    public function attachsohead($id)
+    {
+        //
+        $dtlog = Dtlog::findOrFail($id);
+        return view('dingtalk.dtlogs.attachsohead', compact('dtlog'));
+    }
+
+    public function updateattachsohead(Request $request, $id)
+    {
+        //
+        $dtlog = Dtlog::findOrFail($id);
+        $dtlog->update($request->all());
+        dd('设置成功。');
     }
 }

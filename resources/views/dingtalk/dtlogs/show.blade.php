@@ -5,8 +5,6 @@
     @include('dingtalk.dtlogs._form',
         [
             'submitButtonText' => '提交',
-            'supplier_name' => null,
-            'pohead_number' => null,
             'datepay' => null,
             'requestdeliverydate' => null,
             'customer_name' => null,
