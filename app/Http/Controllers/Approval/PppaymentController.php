@@ -523,15 +523,14 @@ class PppaymentController extends Controller
                                 $input['approversetting_id'] = -1;
                                 if ($item->status == "COMPLETED")
                                 {
-                                    $status = -1;
                                     if ($item->process_instance_result == "agree")
                                         $input['status'] = 0;
                                     else
                                         $input['status'] = -1;
 
-                                    if ($status != $pppayment->status)
+                                    if ($input['status'] != $pppayment->status)
                                     {
-                                        $pppayment->status = $status;
+                                        $pppayment->status = $input['status'];
                                         $pppayment->save();
                                         $count++;
                                     }
