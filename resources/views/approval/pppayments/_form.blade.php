@@ -22,135 +22,13 @@
         </div>
 
 
-@if (isset($paymentrequest))
-<div class="form-group">
-    {!! Form::label('supplier_name', '支付对象:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->supplier_hxold->name))
-
-        {!! Form::text('supplier_name', $paymentrequest->supplier_hxold->name, ['class' => 'form-control', $attr]) !!}
-
-    @else
-        {!! Form::text('supplier_name', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-</div>
-
-<div class="form-group">
-    {!! Form::label('pohead_number', '采购合同:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->number)) 
-         {!! Form::text('pohead_number', $paymentrequest->purchaseorder_hxold->number, ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('pohead_number', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-</div>
-
-<div class="form-group">
-    {!! Form::label('pohead_descrip', '对应工程名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->sohead->custinfo->name)) 
-         {!! Form::textarea('pohead_descrip', $paymentrequest->purchaseorder_hxold->sohead->custinfo->name . ' | ' . $paymentrequest->purchaseorder_hxold->sohead->descrip, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
-    @else
-        {!! Form::textarea('pohead_descrip', null, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
-    @endif
-    </div>
-</div>
-
-<div class="form-group">
-    {!! Form::label('pohead_amount', '合同金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount)) 
-         {!! Form::text('pohead_amount', $paymentrequest->purchaseorder_hxold->amount, ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('pohead_amount', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-</div>
-
-<div class="form-group">
-    {!! Form::label('pohead_amount_paid', '已付金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-5 col-sm-9'>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount_paid)) 
-         {!! Form::text('pohead_amount', $paymentrequest->purchaseorder_hxold->amount_paid, ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('pohead_amount', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount_paid) and isset($paymentrequest->purchaseorder_hxold->amount) and $paymentrequest->purchaseorder_hxold->amount > 0.0)
-        {!! Form::label('amount_paid_percent', number_format($paymentrequest->purchaseorder_hxold->amount_paid / $paymentrequest->purchaseorder_hxold->amount * 100.0, 2, '.', '') . '%', ['class' => 'col-xs-3 col-sm-1 control-label']) !!}
-    @else
-        {!! Form::label('amount_paid_percent', '-', ['class' => 'col-xs-3 col-sm-1 control-label', 'id' => 'amount_paid_percent']) !!}
-    @endif
-</div>
-
-<div class="form-group">
-    {!! Form::label('pohead_amount_ticketed', '已开票金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-5 col-sm-9'>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount_ticketed)) 
-         {!! Form::text('pohead_amount_ticketed', $paymentrequest->purchaseorder_hxold->amount_ticketed, ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('pohead_amount_ticketed', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount_ticketed) and isset($paymentrequest->purchaseorder_hxold->amount) and $paymentrequest->purchaseorder_hxold->amount > 0.0)
-        {!! Form::label('amount_ticketed_percent', number_format($paymentrequest->purchaseorder_hxold->amount_ticketed / $paymentrequest->purchaseorder_hxold->amount * 100.0, 2, '.', '') . '%', ['class' => 'col-xs-3 col-sm-1 control-label']) !!}
-    @else
-        {!! Form::label('amount_ticketed_percent', '-', ['class' => 'col-xs-3 col-sm-1 control-label', 'id' => 'amount_ticketed_percent']) !!}
-    @endif
-</div>
-
-<div class="form-group">
-    {!! Form::label('pohead_arrived', '到货情况:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->arrival_percent))
-        @if ($paymentrequest->purchaseorder_hxold->arrival_percent <= 0.0)
-            {!! Form::text('pohead_arrived', '未到货', ['class' => 'form-control', $attr]) !!}
-        @elseif ($paymentrequest->purchaseorder_hxold->arrival_percent > 0.0 and $paymentrequest->purchaseorder_hxold->arrival_percent < 0.99)
-            {!! Form::text('pohead_arrived', '部分到货', ['class' => 'form-control', $attr]) !!}
-        @else
-            {!! Form::text('pohead_arrived', '全部到货', ['class' => 'form-control', $attr]) !!}
-        @endif
-    @else
-        {!! Form::text('pohead_arrived', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-</div>
-
-<div class="form-group">
-    {!! Form::label('paymethod', '付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->paymethod)) 
-        {!! Form::textarea('paymethod', $paymentrequest->purchaseorder_hxold->paymethod, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
-    @else
-        {!! Form::textarea('paymethod', null, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
-    @endif
-    </div>
-</div>
+@if (isset($pppayment))
 
 
-<div class="form-group">
-    {!! Form::label('sohead_installeddate', '安装完毕日期:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->sohead->installeddate)) 
-        {!! Form::text('sohead_installeddate', substr($paymentrequest->purchaseorder_hxold->sohead->installeddate, 0, 10), ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('sohead_installeddate', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-</div>
 
-<div class="form-group">
-    {!! Form::label('pohead_productname', '采购商品名称:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->productname)) 
-        {!! Form::text('pohead_productname', $paymentrequest->purchaseorder_hxold->productname, ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('pohead_productname', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-</div>
+
+
+
 
 
 @else
@@ -308,7 +186,11 @@
         <div class="form-group">
             {!! Form::label('paymentdate', '支付日期:', ['for' => 'date', 'class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::date('paymentdate', $paymentdate, ['class' => 'form-control', $attr]) !!}
+                @if (isset($pppayment))
+                    {!! Form::date('paymentdate', null, ['class' => 'form-control', $attr]) !!}
+                @else
+                    {!! Form::date('paymentdate', $paymentdate, ['class' => 'form-control', $attr]) !!}
+                @endif
             </div>
         </div>
 

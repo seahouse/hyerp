@@ -33,7 +33,7 @@
 
     {!! Form::model($dtlog, ['method' => 'PATCH', 'action' => ['Dingtalk\DtlogController@updatepeoplecount', $dtlog->id], 'class' => 'form-horizontal']) !!}
 
-    @if ($dtlog->template_name != '项目经理施工日志')
+    @if ($dtlog->template_name == '项目经理施工日志')
         <div class="form-group">
             {!! Form::label('xmjlsgrz_peoplecount', '施工人数', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>

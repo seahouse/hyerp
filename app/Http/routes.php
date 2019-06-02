@@ -485,6 +485,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::group(['prefix' => 'pppayment'], function() {
         Route::get('mcreate', 'PppaymentController@mcreate');
         Route::post('mstore', 'PppaymentController@mstore');
+        Route::post('synchronize_status_to_erp', 'PppaymentController@synchronize_status_to_erp');
     });
     Route::resource('pppayment', 'PppaymentController');
     Route::resource('pppaymentitem', 'PppaymentitemController');

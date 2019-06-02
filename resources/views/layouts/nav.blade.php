@@ -129,6 +129,9 @@
                                     @can('approval_issuedrawing_view')
                                         <li><a href="/approval/issuedrawing">下发图纸</a></li>
                                     @endcan
+                                    @can('approval_pppayment_view')
+                                        <li><a href="/approval/pppayment">生产加工结算</a></li>
+                                    @endcan
 @endif
     @can('approval_synchronize')
                             <li><a href="/approval/synchronize">审批同步（钉钉）</a></li>

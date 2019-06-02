@@ -9,6 +9,10 @@ use App\Models\Approval\Pppaymentitem;
 use App\Models\Approval\Pppaymentitemattachment;
 use App\Models\Approval\Pppaymentitemissuedrawing;
 use App\Models\Approval\Pppaymentitemunitprice;
+use App\Models\Purchase\Vendbank_hxold;
+use App\Models\Purchase\Vendinfo_hxold;
+use App\Models\System\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -27,6 +31,34 @@ class PppaymentController extends Controller
     public function index()
     {
         //
+        $request = request();
+        $inputs = $request->all();
+        $pppayments = $this->searchrequest($request);
+
+        return view('approval.pppayments.index', compact('pppayments', 'inputs'));
+    }
+
+    public function searchrequest($request)
+    {
+        $key = $request->input('key');
+
+
+        $query = Pppayment::latest('created_at');
+
+        if (strlen($key) > 0)
+        {
+            $query->where('business_id', 'like', '%'.$key.'%');
+        }
+
+
+
+        $pppayments = $query->select('pppayments.*')
+            ->paginate(10);
+
+        // $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
+        // dd($purchaseorders->pluck('id'));
+
+        return $pppayments;
     }
 
     /**
@@ -356,6 +388,8 @@ class PppaymentController extends Controller
     public function show($id)
     {
         //
+        $pppayment = Pppayment::findOrFail($id);
+        return view('approval.pppayments.show', compact('pppayment'));
     }
 
     /**
@@ -419,5 +453,114 @@ class PppaymentController extends Controller
         {
             $pppayment->forceDelete();
         }
+    }
+
+    public function synchronize_status_to_erp(Request $request)
+    {
+        $query = Pppayment::latest('created_at');
+        if ($request->has('createdatestart') && $request->has('createdateend'))
+        {
+            $query->whereRaw("DATEDIFF(DAY, created_at, '" . $request->input('createdatestart') . "') <= 0 and DATEDIFF(DAY, created_at, '" . $request->input('createdateend') . "') >=0");
+        }
+
+        $pppayments = $query->select('*')->get();
+        $count = 0;
+        Log::info($pppayments->count());
+        foreach ($pppayments as $pppayment)
+        {
+            $business_id = $pppayment->business_id;
+            if (empty($business_id)) continue;
+//            Log::info(substr($business_id, 0, 12));
+            $startTime = Carbon::createFromFormat('YmdHi', substr($business_id, 0, 12));
+            $endTime = $startTime->copy()->addMinute();
+            $approvaltype = 'pppayment';
+            $response = ApprovalController::processinstance_listids($approvaltype, $startTime, $endTime);
+            Log::info('response: ' . json_encode($response));
+            if ($response->result->ding_open_errcode == "0")
+            {
+                if (isset($response->result->result->list))
+                {
+                    foreach ($response->result->result->list->process_instance_top_vo as $item)
+                    {
+                        if ($item->business_id == $business_id)
+                        {
+//                        $approvaltype = $request->get('approvaltype');
+                            $formData = [];
+                            $user = User::where('dtuserid', $item->originator_userid)->first();
+                            foreach ($item->form_component_values->form_component_value_vo as $formvalue)
+                            {
+//                            Log::info(json_encode($formvalue));
+//                            Log::info($formvalue->name . ": " . $formvalue->value);
+                                $formData["$formvalue->name"] = "$formvalue->value";
+                            }
+                            if ($approvaltype == 'pppayment')
+                            {
+                                $input = [];
+                                $input['productioncompany'] = $formData['制作公司'];
+                                $input['designdepartment'] = $formData['设计部门'];
+                                $input['paymentreason'] = $formData['付款事由'];
+                                $input['invoicingsituation'] = $formData['发票开具情况'];
+                                $input['totalpaid'] = $formData['该加工单已付款总额'];
+                                $input['amount'] = $formData['本次申请付款总额'];
+                                $input['paymentdate'] = $formData['支付日期'];
+                                $supplier = Vendinfo_hxold::where('name', $formData['支付对象'])->first();
+                                if (isset($supplier))
+                                    $input['supplier_id'] = $supplier->id;
+                                else
+                                    $input['supplier_id'] = 0;
+                                $vendbank = Vendbank_hxold::where('bankname', $formData['开户行'])->where('accountnum', $formData['开户行'])->first();
+                                if (isset($vendbank))
+                                    $input['vendbank_id'] = $vendbank->id;
+                                else
+                                    $input['vendbank_id'] = 0;
+
+                                if (isset($user))
+                                {
+                                    $input['applicant_id'] = $user->id;
+                                }
+                                else
+                                    $msg = '发起人不存在，无法继续。';
+                                $input['approversetting_id'] = -1;
+                                if ($item->status == "COMPLETED")
+                                {
+                                    $status = -1;
+                                    if ($item->process_instance_result == "agree")
+                                        $input['status'] = 0;
+                                    else
+                                        $input['status'] = -1;
+
+                                    if ($status != $pppayment->status)
+                                    {
+                                        $pppayment->status = $status;
+                                        $pppayment->save();
+                                        $count++;
+                                    }
+                                }
+                                else
+                                    $msg = '此审批单还未结束，无法继续';
+                                $input['process_instance_id'] = "$item->process_instance_id";
+                                $input['business_id'] = "$item->business_id";
+
+//                            Log::info(json_encode($input));
+
+                            }
+
+                            break;
+                        }
+                        else
+                            continue;
+//                    Log::info(json_encode($item));
+                    }
+                }
+            }
+            else
+                $msg = '获取钉钉审批单失败。';
+        }
+
+        $data = [
+            'errcode' => 0,
+            'errmsg' => '同步成功，共修改了' . $count . '个审批单。',
+        ];
+        return response()->json($data);
     }
 }
