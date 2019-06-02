@@ -29,7 +29,7 @@
             {!! Form::select('select_xmjlsgrz_project', $projectList, null, ['class' => 'form-control', 'placeholder' => '', 'id' => 'select_xmjlsgrz_project']) !!}
             {!! Form::hidden('xmjlsgrz_project_id', null, ['id' => 'xmjlsgrz_project_id']) !!}
 
-            {!! Form::select('other', ['btn_xmjlsgrz_sohead_id_undefined' => '还未关联订单的项目经理施工日志'], null, ['class' => 'form-control', 'placeholder' => '--其他--']) !!}
+            {!! Form::select('other', ['xmjlsgrz_sohead_id_undefined' => '还未关联订单的项目经理施工日志', 'btn_xmjlsgrz_peoplecount_undefined' => '施工人数填写不符要求或未填'], null, ['class' => 'form-control', 'placeholder' => '--其他--']) !!}
             {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '备注']) !!}
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
             {{--{!! Form::button('还未关联订单的项目经理施工日志', ['class' => 'btn btn-default btn-sm', 'id' => 'btn_xmjlsgrz_sohead_id_undefined']) !!}--}}
@@ -49,7 +49,7 @@
                 <th>发起人</th>
                 <th>日志模板</th>
                 <th>备注</th>
-                <th style="width: 120px">操作</th>
+                <th>操作</th>
             </tr>
         </thead>
         <tbody>
@@ -68,9 +68,10 @@
                         {{ str_limit($dtlog->remark, 20) }}
                     </td>
                     <td>
-                        <div class="row">
-                            <a href="{{ URL::to('/dingtalk/dtlogs/'.$dtlog->id) }}" class="btn btn-success btn-sm pull-left" target="_blank">查看</a>
+                        <div class="form-inline">
+                            <a href="{{ URL::to('/dingtalk/dtlogs/'.$dtlog->id) }}" class="btn btn-success btn-sm" target="_blank">查看</a>
                             <a href="{{ URL::to('/dingtalk/dtlogs/'.$dtlog->id.'/attachsohead') }}" class="btn btn-success btn-sm" target="_blank">关联订单</a>
+                            <a href="{{ URL::to('/dingtalk/dtlogs/'.$dtlog->id.'/peoplecount') }}" class="btn btn-success btn-sm" target="_blank">人数</a>
                             {{--{!! Form::open(array('route' => array('dingtalk.dtlogs.destroy', $dtlog->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}--}}
                             {{--{!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}--}}
                             {{--{!! Form::close() !!}--}}

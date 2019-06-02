@@ -529,6 +529,8 @@ Route::group(['prefix' => 'dingtalk', 'namespace' => 'Dingtalk', 'middleware' =>
     Route::group(['prefix' => 'dtlogs/{dtlog}'], function () {
         Route::get('attachsohead', 'DtlogController@attachsohead');
         Route::patch('updateattachsohead', 'DtlogController@updateattachsohead');
+        Route::get('peoplecount', 'DtlogController@peoplecount');
+        Route::patch('updatepeoplecount', 'DtlogController@updatepeoplecount');
     });
     Route::resource('dtlogs', 'DtlogController');
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexdingtalk');
