@@ -913,10 +913,25 @@
                             <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\
                             \</div>\
                             \<div class="col-sm-5 col-xs-4">';
-                        if (productioncompany == "泰州分公司")
-                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['泰州分公司'] !!}" readonly="readonly">';
-                        else if (productioncompany == "胶州分公司")
-                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';
+                        var value = '';
+                        if (selectarea.val() == "国外")
+                        {
+                            @if (isset($value['国外']))
+                                value = "{!! $value['国外'] !!}";
+                            @endif
+                        }
+                        if (value == "")
+                        {
+                            if (productioncompany == "泰州分公司")
+                                value = "{!! $value['泰州分公司'] !!}";
+                            else if (productioncompany == "胶州分公司")
+                                value = "{!! $value['胶州分公司'] !!}"
+                        }
+                        strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';
+                        {{--if (productioncompany == "泰州分公司")--}}
+                            {{--strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['泰州分公司'] !!}" readonly="readonly">';--}}
+                        {{--else if (productioncompany == "胶州分公司")--}}
+                            {{--strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';--}}
                         strhtml2 += '\</div>';
                         strhtml2 += '</div>';
                     @endforeach
@@ -955,10 +970,26 @@
                             <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\
                             \</div>\
                             \<div class="col-sm-5 col-xs-4">';
-                            if (productioncompany == "泰州分公司")
-                                strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['泰州分公司'] !!}" readonly="readonly">';
-                            else if (productioncompany == "胶州分公司")
-                                strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';
+
+                            var value = '';
+                            if (selectarea.val() == "国外")
+                            {
+                                @if (isset($value['国外']))
+                                    value = "{!! $value['国外'] !!}";
+                                @endif
+                            }
+                            if (value == "")
+                            {
+                                if (productioncompany == "泰州分公司")
+                                    value = "{!! $value['泰州分公司'] !!}";
+                                else if (productioncompany == "胶州分公司")
+                                    value = "{!! $value['胶州分公司'] !!}"
+                            }
+                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';
+                            {{--if (productioncompany == "泰州分公司")--}}
+                                {{--strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['泰州分公司'] !!}" readonly="readonly">';--}}
+                            {{--else if (productioncompany == "胶州分公司")--}}
+                                {{--strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';--}}
                             strhtml2 += '\</div>';
                             strhtml2 += '</div>';
                         }
