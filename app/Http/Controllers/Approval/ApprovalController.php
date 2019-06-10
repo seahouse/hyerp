@@ -1787,12 +1787,30 @@ class ApprovalController extends Controller
                 if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
                     $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
 
+                $tonnagetotal_out_wxylc = 0.0;
+                $param = "@warehouse_number='001',@orderid=7550";
+                $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
+                if (count($items) > 0 && isset($items[0]))
+                    $tonnagetotal_out_wxylc = $items[0]->heights / 1000.0;
+
+                $tonnagetotal_out_tzylc = 0.0;
+                $param = "@warehouse_number='003',@orderid=7550";
+                $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
+                if (count($items) > 0 && isset($items[0]))
+                    $tonnagetotal_out_tzylc = $items[0]->heights / 1000.0;
+
+                $tonnagetotal_out_jzylc = 0.0;
+                $param = "@warehouse_number='004',@orderid=7550";
+                $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
+                if (count($items) > 0 && isset($items[0]))
+                    $tonnagetotal_out_jzylc = $items[0]->heights / 1000.0;
+
                 $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
                 if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
                     $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
 
                 $sheet->appendRow(["厂部管理费用", "", "", "", "", "", "", "",
-                    $tonnagetotal_out, $tonnagetotal_in
+                    $tonnagetotal_out, $tonnagetotal_out_wxylc, $tonnagetotal_out_tzylc, $tonnagetotal_out_jzylc, $tonnagetotal_in
                 ]);
             });
 
