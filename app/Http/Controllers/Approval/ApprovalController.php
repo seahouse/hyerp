@@ -1805,6 +1805,7 @@ class ApprovalController extends Controller
                 if (count($items) > 0 && isset($items[0]))
                     $tonnagetotal_out_jzylc = $items[0]->heights / 1000.0;
 
+                $param = "@orderid=7550";
                 $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
                 if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
                     $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
