@@ -1744,17 +1744,17 @@ class ApprovalController extends Controller
                     if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
                         $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
 
-                    $param = "@warehouse_number='01',@projectid=" . $project_id;
+                    $param = "@warehouse_number='001',@projectid=" . $project_id;
                     $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
                     if (count($items) > 0 && isset($items[0]))
                         $tonnagetotal_out_wxylc = $items[0]->heights / 1000.0;
 
-                    $param = "@warehouse_number='03',@projectid=" . $project_id;
+                    $param = "@warehouse_number='003',@projectid=" . $project_id;
                     $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
                     if (count($items) > 0 && isset($items[0]))
                         $tonnagetotal_out_tzylc = $items[0]->heights / 1000.0;
 
-                    $param = "@warehouse_number='04',@projectid=" . $project_id;
+                    $param = "@warehouse_number='004',@projectid=" . $project_id;
                     $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
                     if (count($items) > 0 && isset($items[0]))
                         $tonnagetotal_out_jzylc = $items[0]->heights / 1000.0;
