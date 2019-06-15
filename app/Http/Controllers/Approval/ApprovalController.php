@@ -1694,7 +1694,7 @@ class ApprovalController extends Controller
                 // Sheet manipulation
                 $data = [];
 
-                $sheet->appendRow(["", "年份", "下图", "采购", "结算抛丸", "结算油漆", "结算人工", "结算铆焊", "总领用", "无锡原料仓出库", "泰州原料仓出库", "胶州原料仓出库", "采购入库"]);
+                $sheet->appendRow(["", "年份", "下图", "采购", "结算抛丸", "结算油漆", "结算人工", "结算铆焊", "总领用", "无锡原料仓出库", "泰州原料仓出库", "胶州原料仓出库", "采购入库", "无锡原料仓入库", "泰州原料仓入库", "胶州原料仓入库"]);
 
                 foreach ($project_ids as $project_id)
                 {
@@ -1715,6 +1715,10 @@ class ApprovalController extends Controller
                     $tonnagetotal_out_wxylc = 0.0;
                     $tonnagetotal_out_tzylc = 0.0;
                     $tonnagetotal_out_jzylc = 0.0;
+                    $tonnagetotal_in = 0.0;
+                    $tonnagetotal_in_wxylc = 0.0;
+                    $tonnagetotal_in_tzylc = 0.0;
+                    $tonnagetotal_in_jzylc = 0.0;
 
                     $issuedrawings = $this->issuedrawingjson($request, 0, '', $project_id);
                     $issuedrawingsArray = $issuedrawings->getData(true)["data"];
@@ -1764,6 +1768,21 @@ class ApprovalController extends Controller
                     if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
                         $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
 
+                    $param = "@warehouse_number='001',@projectid=" . $project_id;
+                    $items = DB::connection('sqlsrv')->select(' pGetOrderInHeightByWarehouse ' . $param);
+                    if (count($items) > 0 && isset($items[0]))
+                        $tonnagetotal_in_wxylc = $items[0]->heights / 1000.0;
+
+                    $param = "@warehouse_number='003',@projectid=" . $project_id;
+                    $items = DB::connection('sqlsrv')->select(' pGetOrderInHeightByWarehouse ' . $param);
+                    if (count($items) > 0 && isset($items[0]))
+                        $tonnagetotal_in_tzylc = $items[0]->heights / 1000.0;
+
+                    $param = "@warehouse_number='004',@projectid=" . $project_id;
+                    $items = DB::connection('sqlsrv')->select(' pGetOrderInHeightByWarehouse ' . $param);
+                    if (count($items) > 0 && isset($items[0]))
+                        $tonnagetotal_in_jzylc = $items[0]->heights / 1000.0;
+
                     $sheet->freezeFirstRow();
                     $sheet->fromArray($data);
 
@@ -1775,7 +1794,7 @@ class ApprovalController extends Controller
 //                    if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
 //                        $totalrowcolor = "#FF0000"; // red
                     $sheet->appendRow([$project->name, $year, $tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase, $tonnagetotal_pppayment_paowan, $tonnagetotal_pppayment_youqi, $tonnagetotal_pppayment_rengong, $tonnagetotal_pppayment_maohan,
-                        $tonnagetotal_out, $tonnagetotal_out_wxylc, $tonnagetotal_out_tzylc, $tonnagetotal_out_jzylc, $tonnagetotal_in
+                        $tonnagetotal_out, $tonnagetotal_out_wxylc, $tonnagetotal_out_tzylc, $tonnagetotal_out_jzylc, $tonnagetotal_in, $tonnagetotal_in_wxylc, $tonnagetotal_in_tzylc, $tonnagetotal_in_jzylc
                     ]);
 //                    $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
 //                        $row->setBackground($totalrowcolor);
