@@ -925,7 +925,8 @@ class ApprovalController extends Controller
             $query->where('sohead_id', $sohead_id);
         elseif (strlen($factory) > 0)
             $query->where('productioncompany', 'like', '%' . $factory . '%');
-        elseif ($project_id > 0)
+
+        if ($project_id > 0)
         {
             $sohead_ids = Salesorder_hxold::where('project_id', $project_id)->pluck('id');
             $query->whereIn('sohead_id', $sohead_ids);
@@ -1694,7 +1695,7 @@ class ApprovalController extends Controller
                 // Sheet manipulation
                 $data = [];
 
-                $sheet->appendRow(["", "年份", "下图", "采购", "结算抛丸", "结算油漆", "结算人工", "结算铆焊", "总领用", "无锡原料仓出库", "泰州原料仓出库", "胶州原料仓一厂出库", "胶州原料仓二厂出库", "郎溪原料仓出库",
+                $sheet->appendRow(["", "年份", "下图", "下图（无锡）", "下图（泰州）", "下图（胶州）", "下图（郎溪）", "采购", "结算抛丸", "结算油漆", "结算人工", "结算铆焊", "总领用", "无锡原料仓出库", "泰州原料仓出库", "胶州原料仓一厂出库", "胶州原料仓二厂出库", "郎溪原料仓出库",
                     "采购入库", "无锡原料仓入库", "泰州原料仓入库", "胶州原料仓一厂入库", "胶州原料仓二厂入库", "郎溪原料仓入库"]);
 
                 foreach ($project_ids as $project_id)
@@ -1706,6 +1707,10 @@ class ApprovalController extends Controller
 
                     $data = [];
                     $tonnagetotal_issuedrawing = 0.0;
+                    $tonnagetotal_issuedrawing_wx = 0.0;
+                    $tonnagetotal_issuedrawing_tz = 0.0;
+                    $tonnagetotal_issuedrawing_jz = 0.0;
+                    $tonnagetotal_issuedrawing_lx = 0.0;
                     $tonnagetotal_mcitempurchase = 0.0;
                     $tonnagetotal_pppayment = 0.0;
                     $tonnagetotal_pppayment_paowan = 0.0;
@@ -1730,6 +1735,30 @@ class ApprovalController extends Controller
                     foreach ($issuedrawingsArray as $value)
                     {
                         $tonnagetotal_issuedrawing += $value['tonnage'];
+                    }
+                    $issuedrawings = $this->issuedrawingjson($request, 0, '无锡生产中心', $project_id);
+                    $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                    foreach ($issuedrawingsArray as $value)
+                    {
+                        $tonnagetotal_issuedrawing_wx += $value['tonnage'];
+                    }
+                    $issuedrawings = $this->issuedrawingjson($request, 0, '泰州生产中心', $project_id);
+                    $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                    foreach ($issuedrawingsArray as $value)
+                    {
+                        $tonnagetotal_issuedrawing_tz += $value['tonnage'];
+                    }
+                    $issuedrawings = $this->issuedrawingjson($request, 0, '胶州生产中心', $project_id);
+                    $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                    foreach ($issuedrawingsArray as $value)
+                    {
+                        $tonnagetotal_issuedrawing_jz += $value['tonnage'];
+                    }
+                    $issuedrawings = $this->issuedrawingjson($request, 0, '郎溪生产中心', $project_id);
+                    $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                    foreach ($issuedrawingsArray as $value)
+                    {
+                        $tonnagetotal_issuedrawing_lx += $value['tonnage'];
                     }
                     $mcitempurchases = $this->mcitempurchasejson($request, 0, '', $project_id);
                     $mcitempurchasesArray = $mcitempurchases->getData(true)["data"];
@@ -1818,13 +1847,14 @@ class ApprovalController extends Controller
 //                    $totalrowcolor = "#00FF00";       // green
 //                    if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
 //                        $totalrowcolor = "#FF0000"; // red
-                    $sheet->appendRow([$project->name, $year, $tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase, $tonnagetotal_pppayment_paowan, $tonnagetotal_pppayment_youqi, $tonnagetotal_pppayment_rengong, $tonnagetotal_pppayment_maohan,
+                    $sheet->appendRow([$project->name, $year, $tonnagetotal_issuedrawing, $tonnagetotal_issuedrawing_wx, $tonnagetotal_issuedrawing_tz, $tonnagetotal_issuedrawing_jz, $tonnagetotal_issuedrawing_lx, $tonnagetotal_mcitempurchase, $tonnagetotal_pppayment_paowan, $tonnagetotal_pppayment_youqi, $tonnagetotal_pppayment_rengong, $tonnagetotal_pppayment_maohan,
                         $tonnagetotal_out, $tonnagetotal_out_wxylc, $tonnagetotal_out_tzylc, $tonnagetotal_out_jzylc1, $tonnagetotal_out_jzylc2, $tonnagetotal_out_lxylc,
                         $tonnagetotal_in, $tonnagetotal_in_wxylc, $tonnagetotal_in_tzylc, $tonnagetotal_in_jzylc1, $tonnagetotal_in_jzylc2, $tonnagetotal_in_lxylc
                     ]);
 //                    $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
 //                        $row->setBackground($totalrowcolor);
 //                    });
+//                    break;
                 }
 
                 $param = "@orderid=7550";
@@ -1844,19 +1874,31 @@ class ApprovalController extends Controller
                 if (count($items) > 0 && isset($items[0]))
                     $tonnagetotal_out_tzylc = $items[0]->heights / 1000.0;
 
-                $tonnagetotal_out_jzylc = 0.0;
+                $tonnagetotal_out_jzylc1 = 0.0;
                 $param = "@warehouse_number='004',@orderid=7550";
                 $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
                 if (count($items) > 0 && isset($items[0]))
-                    $tonnagetotal_out_jzylc = $items[0]->heights / 1000.0;
+                    $tonnagetotal_out_jzylc1 = $items[0]->heights / 1000.0;
+
+                $tonnagetotal_out_jzylc2 = 0.0;
+                $param = "@warehouse_number='008',@orderid=7550";
+                $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
+                if (count($items) > 0 && isset($items[0]))
+                    $tonnagetotal_out_jzylc2 = $items[0]->heights / 1000.0;
+
+                $tonnagetotal_out_lxylc = 0.0;
+                $param = "@warehouse_number='010',@orderid=7550";
+                $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
+                if (count($items) > 0 && isset($items[0]))
+                    $tonnagetotal_out_lxylc = $items[0]->heights / 1000.0;
 
                 $param = "@orderid=7550";
                 $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
                 if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
                     $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
 
-                $sheet->appendRow(["厂部管理费用", "", "", "", "", "", "", "",
-                    $tonnagetotal_out, $tonnagetotal_out_wxylc, $tonnagetotal_out_tzylc, $tonnagetotal_out_jzylc, $tonnagetotal_in
+                $sheet->appendRow(["厂部管理费用", "", "", "", "", "", "", "", "", "", "", "",
+                    $tonnagetotal_out, $tonnagetotal_out_wxylc, $tonnagetotal_out_tzylc, $tonnagetotal_out_jzylc1, $tonnagetotal_out_jzylc2, $tonnagetotal_out_lxylc, $tonnagetotal_in
                 ]);
             });
 
