@@ -38,11 +38,9 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">库存<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         @can('module_inventory')
-                        <li><a href="/inventory/warehouses">仓库</a></li>
-                        <li role="separator" class="divider"></li>
-                        @can('inventory_batch_search')
+                            <li><a href="/inventory/warehouses">仓库</a></li>
+                            <li role="separator" class="divider"></li>
                             <li><a href="/inventory/report">报表</a></li>
-                        @endcan
                         @endcan
                     </ul>
                 </li>
@@ -118,31 +116,31 @@
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">审批<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         @can('module_approval')
-                        <li><a href="/approval/reimbursements">报销</a></li>
+                            <li><a href="/approval/reimbursements">报销</a></li>
                         @endcan
                         @can('approval_paymentrequest_view')
-                        <li><a href="/approval/paymentrequests">供应商付款</a></li>
+                            <li><a href="/approval/paymentrequests">供应商付款</a></li>
                         @endcan
-                        @can('module_approval')
-@if (isset(Auth::user()->email) and Auth::user()->email == "admin@admin.com")
-                        <li><a href="/approval/paymentrequestapprovals">供应商付款审批记录</a></li>
-                                    @can('approval_issuedrawing_view')
-                                        <li><a href="/approval/issuedrawing">下发图纸</a></li>
-                                    @endcan
-                                    @can('approval_pppayment_view')
-                                        <li><a href="/approval/pppayment">生产加工结算</a></li>
-                                    @endcan
-@endif
-    @can('approval_synchronize')
+                        @if (isset(Auth::user()->email) and Auth::user()->email == "admin@admin.com")
+                            <li><a href="/approval/paymentrequestapprovals">供应商付款审批记录</a></li>
+                                @can('approval_issuedrawing_view')
+                                    <li><a href="/approval/issuedrawing">下发图纸</a></li>
+                                @endcan
+                                @can('approval_pppayment_view')
+                                    <li><a href="/approval/pppayment">生产加工结算</a></li>
+                                @endcan
+                        @endif
+                        @can('approval_synchronize')
                             <li><a href="/approval/synchronize">审批同步（钉钉）</a></li>
-    @endcan
+                        @endcan
                         <li role="separator" class="divider"></li>
-                        <li><a href="/approval/approversettings">设置</a></li>
-    <li role="separator" class="divider"></li>
-                        <li><a href="/approval/report">报表</a></li>
-    @if (Auth::user()->isSuperAdmin())
-        <li><a href="/approval/report2/issuedrawingpurchasedetail">下图申购结算明细报表</a></li>
-    @endif
+                        @can('module_approval')
+                            <li><a href="/approval/approversettings">设置</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="/approval/report">报表</a></li>
+                        @endcan
+                        @can('approval_report_issuedrawingpurchasedetail')
+                            <li><a href="/approval/report2/issuedrawingpurchasedetail">下图申购结算明细报表</a></li>
                         @endcan
                     </ul>
                 </li>

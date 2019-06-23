@@ -13,7 +13,7 @@
 </style>
 
 @section('main')
-    @if (Auth::user()->isSuperAdmin())
+    @can('approval_report_issuedrawingpurchasedetail')
     <div class="panel-heading">
         {{--
         <div class="panel-title">我的 -- 奖金
@@ -125,7 +125,7 @@
     --}}
     @else
         无权限。
-    @endif
+    @endcan
 
 @endsection
 

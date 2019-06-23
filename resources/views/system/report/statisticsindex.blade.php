@@ -92,6 +92,14 @@
         @can('system_report_so_amountstatistics_forfinancedept')
             <?php $hasright = true; ?>
         @endcan
+    @elseif ($report->name == "in_out_detail")
+        @can('inventory_out_detail')
+            <?php $hasright = true; ?>
+        @endcan
+    @elseif ($report->name == "in_in_detail")
+        @can('inventory_in_detail')
+            <?php $hasright = true; ?>
+        @endcan
     @else
         @if (Auth::user()->isSuperAdmin())
             <?php $hasright = true; ?>
