@@ -23,6 +23,7 @@ class CreateReportsTable extends Migration
             $table->string('sumcol')->default('');
             $table->string('descrip')->default('')->commet('描述');
             $table->string('statement', 1023)->default('')->commet('SQL语句');
+            $table->string('condition', 1023)->default('')->commet('条件语句');
 
             $table->timestamps();
 

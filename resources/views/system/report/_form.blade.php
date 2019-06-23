@@ -67,9 +67,16 @@
 <div class="form-group">
     {!! Form::label('statement', '设计:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-        {!! Form::textarea('statement', null, ['class' => 'form-control']) !!}
+        {!! Form::textarea('statement', null, ['class' => 'form-control', 'rows' => 3]) !!}
     </div>
 </div>
+
+{{--<div class="form-group">--}}
+    {{--{!! Form::label('condition', '条件:', ['class' => 'col-sm-2 control-label']) !!}--}}
+    {{--<div class='col-sm-10'>--}}
+        {{--{!! Form::textarea('condition', null, ['class' => 'form-control']) !!}--}}
+    {{--</div>--}}
+{{--</div>--}}
 @endif
 
 <div class="form-group">

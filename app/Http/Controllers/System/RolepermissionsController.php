@@ -116,7 +116,12 @@ class RolepermissionsController extends Controller
         $role = Role::findOrFail($roleId);
         $permission = Permission::findOrFail($permissionId);
         if ($role != null && $permission != null)
-            $role->detachPermission($permission);
+        {
+//            $role->detachPermission($permission);
+            $deletedRows = RolePermission::where('role_id', $roleId)->where('permission_id', $permissionId)->delete();
+//            if (isset($rolepermission))
+//                $rolepermission->delete();
+        }
         else
             back();
         

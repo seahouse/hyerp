@@ -15,6 +15,7 @@ class Report extends Model
         'autostatistics',
         'sumcol',
         'descrip',
-        'statement'
+        'statement',
+        'condition',
     ];
 }

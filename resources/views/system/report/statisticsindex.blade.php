@@ -58,7 +58,25 @@
                 {!! Form::date('paymentdatefrom', null, ['class' => 'form-control']) !!}
                 {!! Form::label('paymentdatelabelto', '-', ['class' => 'control-label']) !!}
                 {!! Form::date('paymentdateto', null, ['class' => 'form-control']) !!}
+            @elseif ($report->name == "in_out_detail")
+                {!! Form::select('type', array('weight' => '重量（KG）'), null, ['class' => 'form-control', 'placeholder' => '--类型--']) !!}
+                {!! Form::label('project_name', '订单', ['class' => 'control-label']) !!}
+                {!! Form::select('project_name', $projectList, null, ['class' => 'form-control', 'id' => 'select_project']) !!}
+                {!! Form::hidden('project_id', null) !!}
+                {{--{!! Form::label('sohead_name', '订单', ['class' => 'control-label']) !!}--}}
+                {{--{!! Form::select('sohead_name', $soheadList_hxold, null, ['class' => 'form-control', 'id' => 'select_sohead']) !!}--}}
+                {{--{!! Form::hidden('sohead_id', null, ['id' => 'sohead_id']) !!}--}}
+            @elseif ($report->name == "in_in_detail")
+                {!! Form::select('type', array('weight' => '重量（KG）'), null, ['class' => 'form-control', 'placeholder' => '--类型--']) !!}
+                {!! Form::label('project_name', '订单', ['class' => 'control-label']) !!}
+                {!! Form::select('project_name', $projectList, null, ['class' => 'form-control', 'id' => 'select_project']) !!}
+                {!! Form::hidden('project_id', null) !!}
+                {{--{!! Form::label('sohead_name', '订单', ['class' => 'control-label']) !!}--}}
+                {{--{!! Form::select('sohead_name', $soheadList_hxold, null, ['class' => 'form-control', 'id' => 'select_sohead']) !!}--}}
+                {{--{!! Form::hidden('sohead_id', null, ['id' => 'sohead_id']) !!}--}}
             @endif
+
+{{--            {!! $report->condition !!}--}}
 
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
         </div>
@@ -175,3 +193,48 @@
         无权限。
     @endif
 @stop
+
+@section('script')
+    <script type="text/javascript" src="/js/jquery-editable-select.js"></script>
+    {{--<script type="text/javascript" src="/DataTables/DataTables-1.10.16/js/jquery.dataTables.js"></script>--}}
+    <script type="text/javascript">
+        jQuery(document).ready(function(e) {
+
+            $('#select_project')
+                .editableSelect({
+                    effects: 'slide',
+                })
+
+                .on('select.editable-select', function (e, li) {
+                    if (li.val() > 0)
+                        $('input[name=project_id]').val(li.val());
+                    else
+                        $('input[name=project_id]').val('');
+                })
+            ;
+
+            $('#select_sohead')
+                .editableSelect({
+                    effects: 'slide',
+                })
+
+                .on('select.editable-select', function (e, li) {
+                    if (li.val() > 0)
+                        $('input[name=sohead_id]').val(li.val());
+                    else
+                        $('input[name=sohead_id]').val('');
+                })
+            ;
+
+
+
+
+
+
+
+
+
+
+        });
+    </script>
+@endsection
