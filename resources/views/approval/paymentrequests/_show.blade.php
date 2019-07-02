@@ -245,7 +245,7 @@
                 });
 
                 $("#showPaymentnode").click(function() {
-                    location.href = 'http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPaymentnode").attr("href");
+                    location.href = 'http://www.huaxing-east.cn:2016/pdfjs/build/generic/web/viewer.html?file=' + $("#showPaymentnode").attr("href");
                     return false;
                 });
 
@@ -310,7 +310,7 @@
         });
 
         $("#showPaymentnode").click(function() {
-            location.href = 'http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPaymentnode").attr("href");
+            location.href = 'http://www.huaxing-east.cn:2016/pdfjs/build/generic/web/viewer.html?file=' + $("#showPaymentnode").attr("href");
             return false;
         });
     </script>
