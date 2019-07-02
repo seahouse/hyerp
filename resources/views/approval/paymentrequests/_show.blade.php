@@ -245,15 +245,20 @@
                 });
 
                 $("#showPaymentnode").click(function() {
-                    DingTalkPC.biz.util.openLink({
-                        url: $("#showPaymentnode").attr("href"),
-                        onSuccess : function(result) {
-                            /**/
-                        },
-                        onFail : function() {}
-                    })
+                    location.href = 'http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPaymentnode").attr("href");
                     return false;
                 });
+
+//                $("#showPaymentnode").click(function() {
+//                    DingTalkPC.biz.util.openLink({
+//                        url: $("#showPaymentnode").attr("href"),
+//                        onSuccess : function(result) {
+//                            /**/
+//                        },
+//                        onFail : function() {}
+//                    })
+//                    return false;
+//                });
             }
             else
             {
@@ -301,6 +306,11 @@
     <script type="text/javascript">
         $("#showPdf").click(function() {
             location.href = 'http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf").attr("href");
+            return false;
+        });
+
+        $("#showPaymentnode").click(function() {
+            location.href = 'http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPaymentnode").attr("href");
             return false;
         });
     </script>
