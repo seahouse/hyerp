@@ -74,6 +74,10 @@
                 {{--{!! Form::label('sohead_name', '订单', ['class' => 'control-label']) !!}--}}
                 {{--{!! Form::select('sohead_name', $soheadList_hxold, null, ['class' => 'form-control', 'id' => 'select_sohead']) !!}--}}
                 {{--{!! Form::hidden('sohead_id', null, ['id' => 'sohead_id']) !!}--}}
+            @elseif ($report->name == "dt_logs_xmjlsgrz_detail")
+                {!! Form::label('project_name', '项目', ['class' => 'control-label']) !!}
+                {!! Form::select('project_name', $projectList, null, ['class' => 'form-control', 'id' => 'select_project']) !!}
+                {!! Form::hidden('project_id', null) !!}
             @endif
 
 {{--            {!! $report->condition !!}--}}
