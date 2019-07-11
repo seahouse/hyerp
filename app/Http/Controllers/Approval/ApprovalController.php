@@ -2128,7 +2128,7 @@ class ApprovalController extends Controller
                 'value'     => $inputs['image_urls'],
             ],
             [
-                'name'      => '明细',
+                'name'      => '采购明细',
                 'value'     => json_encode($detail_array),
             ],
         ];
