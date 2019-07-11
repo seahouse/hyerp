@@ -368,6 +368,7 @@
                     {!! Form::file('images[]', ['multiple']) !!}
                 @else
                     {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
+                    {!! Form::hidden('imagesname_mobile', null, ['class' => 'btn btn-sm']) !!}
                 @endif
             @endif
 

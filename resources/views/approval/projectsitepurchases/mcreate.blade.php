@@ -952,8 +952,8 @@
 								imageHtml += '</div>';
 							}
 //                            alert($(this).val());
-                            $("#imagesname_mobile_" + String(num)).val(result);
-							$("#previewimage_" + String(num)).empty().append(imageHtml);
+                            $("#imagesname_mobile").val(result);
+							$("#previewimage").empty().append(imageHtml);
 						},
 						onFail: function(err) {
 							alert('select image failed: ' + JSON.stringify(err));
