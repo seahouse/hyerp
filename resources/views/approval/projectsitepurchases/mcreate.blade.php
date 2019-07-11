@@ -934,32 +934,32 @@
 
 
 			dd.ready(function() {
-//				$("#btnSelectImage").click(function() {
-//				    var num = $(this).val();
-////                    alert($(this).val());
-//					dd.biz.util.uploadImage({
-//						multiple: true,
-//						max: 9,
-//						onSuccess: function(result) {
-//							var images = result;	// result.split(',');
-//							var imageHtml = '';
-//							for (var i in images) {
-//								imageHtml += '<div class="col-xs-6 col-md-3">';
-//								imageHtml += '<div class="thumbnail">';
-//								imageHtml += '<img src=' + images[i] + ' />';
-//								//imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
-//								imageHtml += '</div>';
-//								imageHtml += '</div>';
-//							}
-////                            alert($(this).val());
-//                            $("#imagesname_mobile_" + String(num)).val(result);
-//							$("#previewimage_" + String(num)).empty().append(imageHtml);
-//						},
-//						onFail: function(err) {
-//							alert('select image failed: ' + JSON.stringify(err));
-//						}
-//					});
-//				});
+				$("#btnSelectImage").click(function() {
+				    var num = $(this).val();
+//                    alert($(this).val());
+					dd.biz.util.uploadImage({
+						multiple: true,
+						max: 9,
+						onSuccess: function(result) {
+							var images = result;	// result.split(',');
+							var imageHtml = '';
+							for (var i in images) {
+								imageHtml += '<div class="col-xs-6 col-md-3">';
+								imageHtml += '<div class="thumbnail">';
+								imageHtml += '<img src=' + images[i] + ' />';
+								//imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
+								imageHtml += '</div>';
+								imageHtml += '</div>';
+							}
+//                            alert($(this).val());
+                            $("#imagesname_mobile_" + String(num)).val(result);
+							$("#previewimage_" + String(num)).empty().append(imageHtml);
+						},
+						onFail: function(err) {
+							alert('select image failed: ' + JSON.stringify(err));
+						}
+					});
+				});
 
                 selectImage_Mobile = function (num) {
 //                    var num = $(this).val();
