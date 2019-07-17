@@ -451,7 +451,7 @@
 --}}
 
 <div class="form-group">
-    {!! Form::label('paymentnodeattachments', '付款节点审批单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('paymentnodeattachments', '付款节点审批单(PDF):', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 {{--
     <将在钉钉的下一个版本中支持上传附件>
 --}}
@@ -466,7 +466,7 @@
                  <a href="{!! URL($paymentnode->path) !!}" target="_blank" id="showPaymentnode">{{ $paymentnode->filename }}</a> <br>
             @endforeach
         @else
-            {!! Form::file('paymentnodeattachments[]', ['multiple']) !!}
+            {!! Form::file('paymentnodeattachments[]',['accept'=>'application/pdf'],['multiple']) !!}
         @endif
     </div>
 </div>
