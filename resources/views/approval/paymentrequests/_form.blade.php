@@ -466,7 +466,7 @@
                  <a href="{!! URL($paymentnode->path) !!}" target="_blank" id="showPaymentnode">{{ $paymentnode->filename }}</a> <br>
             @endforeach
         @else
-            {!! Form::file('paymentnodeattachments[]',['accept'=>'application/pdf'],['multiple']) !!}
+            {!! Form::file('paymentnodeattachments[]',['accept'=>'.pdf','multiple'=>'true']) !!}
         @endif
     </div>
 </div>
