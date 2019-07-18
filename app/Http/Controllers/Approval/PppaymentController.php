@@ -83,7 +83,7 @@ class PppaymentController extends Controller
     {
         //
         $input = $request->all();
-//        dd($input);
+        dd($input);
         $itemsArray = json_decode($input['items_string']);
         if (is_array(json_decode($input['items_string2'])) && is_array(json_decode($input['items_string'])))
             $itemsArray = array_merge(json_decode($input['items_string2']), json_decode($input['items_string']));

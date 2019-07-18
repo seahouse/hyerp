@@ -23,24 +23,7 @@
 
 
 @if (isset($pppayment))
-
-
-
-
-
-
-
-
 @else
-
-
-
-
-
-
-
-
-
         <div id="items_excel">
 
         </div>
@@ -71,12 +54,12 @@
                 </div>
             </div>
 
-                <div class="form-group">
-                    {!! Form::label('tonnage', '吨位:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-                    <div class='col-xs-8 col-sm-10'>
-                        {!! Form::text('tonnage', null, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'tonnage_1']) !!}
-                    </div>
-                </div>
+                {{--<div class="form-group">--}}
+                    {{--{!! Form::label('tonnage', '吨位:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
+                    {{--<div class='col-xs-8 col-sm-10'>--}}
+                        {{--{!! Form::text('tonnage', null, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'tonnage_1']) !!}--}}
+                    {{--</div>--}}
+                {{--</div>--}}
 
                 <div class="form-group">
                     {!! Form::label('issuedrawing_numbers', '下发图纸审批单号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}

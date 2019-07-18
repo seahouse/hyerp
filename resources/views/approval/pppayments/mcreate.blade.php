@@ -300,6 +300,7 @@
 			 $("#btnSubmit").click(function() {
                  var itemArray = new Array();
 
+
                 $("div[name='container_item']").each(function(i){
                     var itemObject = new Object();
                     var container = $(this);
@@ -308,9 +309,9 @@
                     itemObject.project_name = container.find("input[name='project_name']").val();
                     itemObject.sohead_number = container.find("input[name='sohead_number']").val();
                     itemObject.productionoverview = container.find("textarea[name='productionoverview']").val();
-                    itemObject.tonnage = container.find("input[name='tonnage']").val();
-                    if (itemObject.tonnage == "")
-                        itemObject.tonnage = 0.0;
+                    //itemObject.tonnage = container.find("input[name='tonnage']").val();
+                    //if (itemObject.tonnage == "")
+                    itemObject.tonnage = 0.0;
                     itemObject.issuedrawing_numbers = container.find("input[name='issuedrawing_numbers']").val();
                     itemObject.issuedrawing_values = container.find("input[name='issuedrawing_values']").val();
                     itemObject.imagesname = container.find("input[name='imagesname']").val();
@@ -326,6 +327,7 @@
                     itemObject.unitprice_inputname = container.find("input[name='unitprice_inputname']").val();
                     itemObject.totalprice_inputname = container.find("input[name='totalprice_inputname']").val();
 
+
                     var unitpriceArray = new Array();
                     var pppaymentitemtypecontainer = container.find("div[name='pppaymentitemtypecontainer']");
                     pppaymentitemtypecontainer.find("div[name='div_unitpriceitem']").each(function (i) {
@@ -335,27 +337,20 @@
                         unitpriceObject.tonnage = unitpriceitemcontainer.find("input[name='tonnage']").val();
                         if (unitpriceObject.tonnage == "")
                             unitpriceObject.tonnage = 0.0;
+                        itemObject.tonnage= Number(unitpriceObject.tonnage)  + Number(itemObject.tonnage) ;
                         unitpriceObject.unitprice = unitpriceitemcontainer.find("input[name='unitprice']").val();
                         unitpriceArray.push(unitpriceObject);
                     });
-
-//                    $('div[name="pppaymentitemtypecontainer"] > div[name="div_unitpriceitem"]').each(function (i) {
-//                        var unitpriceObject = new Object();
-//                        unitpriceObject.name = container.find("input[name='weight']").dataset("name");
-//                        unitpriceObject.weight = container.find("input[name='weight']").val();
-//                        unitpriceObject.unitprice = container.find("input[name='unitprice']").val();
-//                        unitpriceArray.push(unitpriceObject);
-//                    });
-
 
                     itemObject.unitprice_array = unitpriceArray;
 
                     itemArray.push(itemObject);
 
-//                    alert(JSON.stringify(itemArray));
+                   //alert(JSON.stringify(itemArray));
 //                    return false;
 //                    alert($("form#formMain").serialize());
                 });
+
                 $("#items_string").val(JSON.stringify(itemArray));
 
 //                alert($("#sohead_id").val());
@@ -368,18 +363,9 @@
                         return false;
 					}
 				}
+
 				$("form#formMain").submit();
 
-                 {{--$.post("{{ url('approval/mcitempurchase/weightvalid') }}", $("form#formMain").serialize(), function (data) {--}}
-                     {{--if (data.code < 0)--}}
-					 {{--{--}}
-                         {{--$('#submitModal').modal('toggle');--}}
-                         {{--$("#dataDefine").empty().append(data.msg);--}}
-					 {{--}--}}
-                     {{--else--}}
-                         {{--$("form#formMain").submit();--}}
-                 {{--});--}}
-				 {{--return false;--}}
 			 });
 
 
@@ -823,12 +809,6 @@
 							</div>\
 						</div>\
 						<div class="form-group">\
-							<label for="tonnage" class="col-xs-4 col-sm-2 control-label">吨位:</label>\
-							<div class="col-sm-10 col-xs-8">\
-							<input class="form-control" placeholder="" ="" id="tonnage_' + String(item_num) + '" name="tonnage" type="text">\
-							</div>\
-						</div>\
-						<div class="form-group">\
 							<label for="issuedrawing_numbers" class="col-xs-4 col-sm-2 control-label">下发图纸审批单号:</label>\
 							<div class="col-sm-10 col-xs-8">\
 							<input class="form-control" placeholder="--点击选择--" readonly="readonly" ="" data-toggle="modal" data-target="#selectIssueDrawingsModal" data-name="issuedrawing_numbers_' + String(item_num) + '" data-id="issuedrawing_values_' + String(item_num) + '" data-num="' + String(item_num) + '" id="issuedrawing_numbers_' + String(item_num) + '" name="issuedrawing_numbers" type="text">\
@@ -899,6 +879,8 @@
                             strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['泰州分公司'] !!}" readonly="readonly">';
                         else if (productioncompany == "胶州分公司")
                             strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';
+                        else if (productioncompany == "郎溪分公司")
+                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['郎溪分公司'] !!}" readonly="readonly">';
                         strhtml2 += '\</div>';
                         strhtml2 += '</div>';
                     @endforeach
@@ -926,6 +908,8 @@
                                 value = "{!! $value['泰州分公司'] !!}";
                             else if (productioncompany == "胶州分公司")
                                 value = "{!! $value['胶州分公司'] !!}"
+                            else if (productioncompany == "郎溪分公司")
+                                value = "{!! $value['郎溪分公司'] !!}"
                         }
                         strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';
                         {{--if (productioncompany == "泰州分公司")--}}
@@ -950,6 +934,8 @@
                             strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['泰州分公司'] !!}" readonly="readonly">';
                         else if (productioncompany == "胶州分公司")
                             strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';
+                        else if (productioncompany == "郎溪分公司")
+                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['郎溪分公司'] !!}" readonly="readonly">';
                         strhtml2 += '\</div>';
                         strhtml2 += '</div>';
                     @endforeach
@@ -984,6 +970,8 @@
                                     value = "{!! $value['泰州分公司'] !!}";
                                 else if (productioncompany == "胶州分公司")
                                     value = "{!! $value['胶州分公司'] !!}"
+                                else if (productioncompany == "郎溪分公司")
+                                    value = "{!! $value['郎溪分公司'] !!}"
                             }
                             strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';
                             {{--if (productioncompany == "泰州分公司")--}}
@@ -1018,6 +1006,8 @@
                             value = "{!! $value['泰州分公司'] !!}";
                         else if (productioncompany == "胶州分公司")
                             value = "{!! $value['胶州分公司'] !!}"
+                        else if (productioncompany == "郎溪分公司")
+                            value = "{!! $value['郎溪分公司'] !!}"
                     }
                     strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';
                     {{--if (productioncompany == "泰州分公司")--}}
