@@ -110,7 +110,7 @@
 
 <div class="form-group">
     {!! Form::label('pohead_arrived', '到货情况:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
+    <div class='col-xs-5 col-sm-9'>
     @if (isset($paymentrequest->purchaseorder_hxold->arrival_percent))
         @if ($paymentrequest->purchaseorder_hxold->arrival_percent <= 0.0)
             {!! Form::text('pohead_arrived', '未到货', ['class' => 'form-control', $attr]) !!}
@@ -123,6 +123,13 @@
         {!! Form::text('pohead_arrived', null, ['class' => 'form-control', $attr]) !!}
     @endif
     </div>
+    @if (isset($paymentrequest->purchaseorder_hxold->arrival_percent))
+        @if ($paymentrequest->purchaseorder_hxold->arrival_percent > 0.0)
+            {!! Form::label('pohead_arrived_percent', number_format($paymentrequest->purchaseorder_hxold->arrival_percent * 100.0, 2, '.', '') . '%', ['class' => 'col-xs-3 col-sm-1 control-label']) !!}
+        @else
+            {!! Form::label('pohead_arrived_percent', '0.00%', ['class' => 'col-xs-3 col-sm-1 control-label', 'id' => 'pohead_arrived_percent']) !!}
+        @endif
+     @endif
 </div>
 
 <div class="form-group">
@@ -278,9 +285,10 @@
 
 <div class="form-group">
     {!! Form::label('pohead_arrived', '到货情况:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
+    <div class='col-xs-5 col-sm-9'>
     {!! Form::text('pohead_arrived', null, ['class' => 'form-control', 'readonly', $attr]) !!}
     </div>
+    {!! Form::label('pohead_arrived_percent', '-', ['class' => 'col-xs-3 col-sm-1 control-label', 'id' => 'pohead_arrived_percent']) !!}
 </div>
 
 <div class="form-group">

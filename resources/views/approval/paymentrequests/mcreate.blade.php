@@ -293,6 +293,10 @@
 					else if (field.arrival_percent >= 0.99)
 						pohead_arrived = '全部到货';
 					$("#pohead_arrived").val(pohead_arrived);
+					if(field.arrival_percent > 0.0)
+						$("#pohead_arrived_percent").html(field.arrival_percent * 100 + "%");
+					else
+						$("#pohead_arrived_percent").html('0.00%');
 					$("#paymethod").val(field.paymethod);
 
 					if (amount > 0.0)
