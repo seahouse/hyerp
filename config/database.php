@@ -98,10 +98,10 @@ return [
 
         'sqlsrv3' => [
             'driver'   => 'sqlsrv',
-            'host'     => env('DB_HOST', 'localhost'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'host'     => env('DB_HOST_PDM', 'localhost'),
+            'database' => env('DB_DATABASE_PDM', 'forge'),
+            'username' => env('DB_USERNAME_PDM', 'forge'),
+            'password' => env('DB_PASSWORD_PDM', ''),
             'charset'  => 'utf8',
             'prefix'   => '',
         ],
