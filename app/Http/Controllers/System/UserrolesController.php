@@ -40,7 +40,7 @@ class UserrolesController extends Controller
         $roleIds = Userrole::where('user_id', $userId)->select('role_id')->get();
         $db_driver = config('database.connections.' . env('DB_CONNECTION', 'mysql') . '.driver');
         $roleList = Role::whereNotIn('id', $roleIds)->select('id', 'name')->lists('name', 'id');
-        if ($db_driver.startsWith('sqlsrv'))
+        if (strpos($db_driver, 'sqlsrv') === 0)
         {
             $roleList = Role::whereNotIn('id', $roleIds)->select('id', DB::raw('name + \' - \' + display_name as name'))->lists('name', 'id');
         }
