@@ -1075,6 +1075,9 @@ class ApprovalController extends Controller
             ->addColumn('tonnage_maohan', function (Pppaymentitem $pppaymentitem) {
                 return $pppaymentitem->type == "铆焊" ? $pppaymentitem->pppaymentitemunitprices->sum('tonnage') : 0.0;
             })
+            ->addColumn('tonnage_waixieyouqi', function (Pppaymentitem $pppaymentitem) {
+                return $pppaymentitem->type == "外协油漆" ? $pppaymentitem->pppaymentitemunitprices->sum('tonnage') : 0.0;
+            })
             ->addColumn('applicant', function (Pppaymentitem $pppaymentitem) {
                 return $pppaymentitem->pppayment->applicant->name;
             })
@@ -1540,6 +1543,7 @@ class ApprovalController extends Controller
                     $tonnagetotal_pppayment_youqi = 0.0;
                     $tonnagetotal_pppayment_rengong = 0.0;
                     $tonnagetotal_pppayment_maohan = 0.0;
+                    $tonnagetotal_pppayment_waixieyouqi=0.0;
                     $tonnagetotal_out = 0.0;
                     $tonnagetotal_in = 0.0;
 
@@ -1566,6 +1570,7 @@ class ApprovalController extends Controller
                         $temp['油漆']            = '';
                         $temp['人工']          = '';
                         $temp['铆焊']           = '';
+                        $temp['外协油漆']           = '';
                         $temp['结算制作公司']        = '';
                         $temp['结算制作概述']       = '';
                         $temp['结算支付日期']              = '';
@@ -1605,6 +1610,7 @@ class ApprovalController extends Controller
                             $temp['油漆']            = '';
                             $temp['人工']          = '';
                             $temp['铆焊']           = '';
+                            $temp['外协油漆']           = '';
                             $temp['结算制作公司']        = '';
                             $temp['结算制作概述']       = '';
                             $temp['结算支付日期']              = '';
@@ -1626,6 +1632,7 @@ class ApprovalController extends Controller
                             $data[$key]['油漆']          = $value['tonnage_youqi'];
                             $data[$key]['人工']        = $value['tonnage_rengong'];
                             $data[$key]['铆焊']          = $value['tonnage_maohan'];
+                            $data[$key]['外协油漆']          = $value['tonnage_waixieyouqi'];
                             $data[$key]['结算制作公司']      = $value['productioncompany'];
                             $data[$key]['结算制作概述']     = $value['productionoverview'];
                             $data[$key]['结算支付日期']             = $value['paymentdate'];
@@ -1651,6 +1658,7 @@ class ApprovalController extends Controller
                             $temp['油漆']            = $value['tonnage_youqi'];
                             $temp['人工']          = $value['tonnage_rengong'];
                             $temp['铆焊']           = $value['tonnage_maohan'];
+                            $temp['外协油漆']           = $value['tonnage_waixieyouqi'];
                             $temp['结算制作公司']        = $value['productioncompany'];
                             $temp['结算制作概述']       = $value['productionoverview'];
                             $temp['结算支付日期']              = $value['paymentdate'];
@@ -1682,7 +1690,7 @@ class ApprovalController extends Controller
                     if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
                         $totalrowcolor = "#FF0000"; // red
                     $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-                        $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+                        $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan ."，外协油漆" . $tonnagetotal_pppayment_waixieyouqi . "）",
                         "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
                     ]);
                     $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
@@ -1695,7 +1703,7 @@ class ApprovalController extends Controller
                 // Sheet manipulation
                 $data = [];
 
-                $sheet->appendRow(["", "年份", "下图", "下图（无锡）", "下图（泰州）", "下图（胶州）", "下图（郎溪）", "采购", "结算抛丸", "结算油漆", "结算人工", "结算铆焊", "总领用", "无锡原料仓出库", "泰州原料仓出库", "胶州原料仓一厂出库", "胶州原料仓二厂出库", "郎溪原料仓出库",
+                $sheet->appendRow(["", "年份", "下图", "下图（无锡）", "下图（泰州）", "下图（胶州）", "下图（郎溪）", "采购", "结算抛丸", "结算油漆", "结算人工", "结算铆焊","结算外协油漆", "总领用", "无锡原料仓出库", "泰州原料仓出库", "胶州原料仓一厂出库", "胶州原料仓二厂出库", "郎溪原料仓出库",
                     "采购入库", "无锡原料仓入库", "泰州原料仓入库", "胶州原料仓一厂入库", "胶州原料仓二厂入库", "郎溪原料仓入库"]);
 
                 foreach ($project_ids as $project_id)
@@ -1717,6 +1725,7 @@ class ApprovalController extends Controller
                     $tonnagetotal_pppayment_youqi = 0.0;
                     $tonnagetotal_pppayment_rengong = 0.0;
                     $tonnagetotal_pppayment_maohan = 0.0;
+                    $tonnagetotal_pppayment_waixieyouqi = 0.0;
                     $tonnagetotal_out = 0.0;
                     $tonnagetotal_out_wxylc = 0.0;
                     $tonnagetotal_out_tzylc = 0.0;
@@ -1775,6 +1784,7 @@ class ApprovalController extends Controller
                         $tonnagetotal_pppayment_youqi += $value['tonnage_youqi'];
                         $tonnagetotal_pppayment_rengong += $value['tonnage_rengong'];
                         $tonnagetotal_pppayment_maohan += $value['tonnage_maohan'];
+                        $tonnagetotal_pppayment_waixieyouqi += $value['tonnage_waixieyouqi'];
                     }
 
                     $param = "@projectid=" . $project_id;
@@ -1847,7 +1857,7 @@ class ApprovalController extends Controller
 //                    $totalrowcolor = "#00FF00";       // green
 //                    if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
 //                        $totalrowcolor = "#FF0000"; // red
-                    $sheet->appendRow([$project->name, $year, $tonnagetotal_issuedrawing, $tonnagetotal_issuedrawing_wx, $tonnagetotal_issuedrawing_tz, $tonnagetotal_issuedrawing_jz, $tonnagetotal_issuedrawing_lx, $tonnagetotal_mcitempurchase, $tonnagetotal_pppayment_paowan, $tonnagetotal_pppayment_youqi, $tonnagetotal_pppayment_rengong, $tonnagetotal_pppayment_maohan,
+                    $sheet->appendRow([$project->name, $year, $tonnagetotal_issuedrawing, $tonnagetotal_issuedrawing_wx, $tonnagetotal_issuedrawing_tz, $tonnagetotal_issuedrawing_jz, $tonnagetotal_issuedrawing_lx, $tonnagetotal_mcitempurchase, $tonnagetotal_pppayment_paowan, $tonnagetotal_pppayment_youqi, $tonnagetotal_pppayment_rengong, $tonnagetotal_pppayment_maohan,$tonnagetotal_pppayment_waixieyouqi,
                         $tonnagetotal_out, $tonnagetotal_out_wxylc, $tonnagetotal_out_tzylc, $tonnagetotal_out_jzylc1, $tonnagetotal_out_jzylc2, $tonnagetotal_out_lxylc,
                         $tonnagetotal_in, $tonnagetotal_in_wxylc, $tonnagetotal_in_tzylc, $tonnagetotal_in_jzylc1, $tonnagetotal_in_jzylc2, $tonnagetotal_in_lxylc
                     ]);

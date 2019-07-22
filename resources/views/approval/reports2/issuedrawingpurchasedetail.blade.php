@@ -106,6 +106,7 @@
             <th>油漆</th>
             <th>人工</th>
             <th>铆焊</th>
+            <th>外协油漆</th>
             <th>工厂</th>
             <th>制作概述</th>
             <th>支付日期</th>
@@ -352,6 +353,7 @@
                     {"data": "tonnage_youqi", "name": "tonnage_youqi"},
                     {"data": "tonnage_rengong", "name": "tonnage_rengong"},
                     {"data": "tonnage_maohan", "name": "tonnage_maohan"},
+                    {"data": "tonnage_waixieyouqi", "name": "tonnage_waixieyouqi"},
                     {"data": "productioncompany", "name": "productioncompany"},
                     {"data": "productionoverview", "name": "productionoverview"},
                     {"data": "paymentdate", "name": "paymentdate"},
