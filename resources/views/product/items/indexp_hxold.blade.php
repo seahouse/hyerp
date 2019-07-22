@@ -81,7 +81,7 @@
                 <th>创建日期</th>
                 <th>BOM</th>
 --}}
-                <th style="width: 150px">操作</th>
+                <th style="width: 200px">操作</th>
             </tr>
         </thead>
         <tbody>
@@ -129,6 +129,10 @@
                         @can('product_item_purchase_setoldrelation')
                         <a href="{{ URL::to('/product/indexp_hxold/'.$item->goods_id.'/sethxold2') }}" target="_blank" class="btn btn-success btn-sm pull-left">对应老编号</a>
                         @endcan
+
+                            @if (isset(Auth::user()->email) and Auth::user()->email == "admin@admin.com")
+                                <a href="{{ URL::to('/product/indexp_hxold/'.$item->goods_id.'/topdm') }}" target="_blank" class="btn btn-success btn-sm pull-left">到PDM</a>
+                            @endif
 {{--
                         {!! Form::open(array('route' => array('product.items.destroy', $item->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
                             {!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}

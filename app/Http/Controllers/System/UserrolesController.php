@@ -38,7 +38,17 @@ class UserrolesController extends Controller
         //
         $user = User::findOrFail($userId);
         $roleIds = Userrole::where('user_id', $userId)->select('role_id')->get();
-        $roleList = Role::whereNotIn('id', $roleIds)->select('id', DB::raw('name + \' - \' + display_name as name'))->lists('name', 'id');
+        $db_driver = config('database.connections.' . env('DB_CONNECTION', 'mysql') . '.driver');
+        $roleList = Role::whereNotIn('id', $roleIds)->select('id', 'name')->lists('name', 'id');
+        if (strpos($db_driver, 'sqlsrv') === 0)
+        {
+            $roleList = Role::whereNotIn('id', $roleIds)->select('id', DB::raw('name + \' - \' + display_name as name'))->lists('name', 'id');
+        }
+        elseif ($db_driver == "pgsql")
+        {
+            $roleList = Role::whereNotIn('id', $roleIds)->select('id', DB::raw('name || \' - \' || display_name as name'))->lists('name', 'id');
+        }
+//        $roleList = Role::whereNotIn('id', $roleIds)->select('id', DB::raw('name + \' - \' + display_name as name'))->lists('name', 'id');
         if ($user != null)
             return view('system.userroles.create', compact('user', 'roleList'));
         else

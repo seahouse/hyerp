@@ -179,6 +179,7 @@ Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => [
         Route::get('{id}/msethxold2', 'ItemsController@msethxold2');
         Route::post('{id}/sethxold2/{id2}', 'ItemsController@sethxold2update');
         Route::post('resetitempnumber', 'ItemsController@resetitempnumber');
+        Route::get('{id}/topdm', 'ItemsController@topdm');
     });
 
     Route::resource('items', 'ItemsController');

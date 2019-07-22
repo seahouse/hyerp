@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Product;
 
 use App\Models\Product\Item;
+use App\Models\Product\Pdmitem;
 use Illuminate\Http\Request;
 //use Request;
 use App\Http\Requests\ItemRequest;
@@ -360,5 +361,14 @@ class ItemsController extends Controller
 //        return $count;
 //        return redirect('product/indexp_hxold/');
 
+    }
+
+    public function topdm($id)
+    {
+        $itemp = Itemp_hxold::where('goods_id', $id)->firstOrFail();
+        $pdmitem = Pdmitem::where('itemid', 4573)->firstOrFail();
+        dd($pdmitem);
+
+        return view('product.items.sethxold2', compact('itemp', 'items2'));
     }
 }
