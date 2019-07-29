@@ -40,12 +40,21 @@
 
 <div class="form-group">
     {!! Form::label('pohead_number', '采购合同:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
-    <div class='col-xs-10 col-sm-10'>
+    <div class='col-xs-4 col-sm-4'>
     @if (isset($paymentrequest->purchaseorder_hxold->number)) 
          {!! Form::text('pohead_number', $paymentrequest->purchaseorder_hxold->number, ['class' => 'form-control', $attr]) !!}
     @else
         {!! Form::text('pohead_number', null, ['class' => 'form-control', $attr]) !!}
     @endif
+    </div>
+
+    {!! Form::label('company_name', '采购公司:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
+    <div class='col-xs-4 col-sm-4'>
+        @if (isset($paymentrequest->purchaseorder_hxold->companyname))
+            {!! Form::text('company_name', $paymentrequest->purchaseorder_hxold->companyname, ['class' => 'form-control', $attr,]) !!}
+        @else
+            {!! Form::text('company_name', null, ['class' => 'form-control', $attr]) !!}
+        @endif
     </div>
 </div>
 
@@ -236,6 +245,14 @@
     @endif
     </div>
 </div>
+
+<div class="form-group">
+    {!! Form::label('company_name', '采购公司:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+        {!! Form::text('company_name', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+    </div>
+</div>
+
 
 <div class="form-group">
     {!! Form::label('pohead_descrip', '对应工程名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
