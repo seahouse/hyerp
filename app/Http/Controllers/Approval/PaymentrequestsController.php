@@ -183,7 +183,8 @@ class PaymentrequestsController extends Controller
     {
         $key = $request->input('key');
         $approvalstatus = $request->input('approvalstatus');        
-
+        //dd($key);
+        //dd($request);
         $supplier_ids = [];
         $purchaseorder_ids = [];
         if (strlen($key) > 0)
@@ -191,7 +192,7 @@ class PaymentrequestsController extends Controller
             $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
             $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
         }
-
+        //dd($purchaseorder_ids);
         $query = Paymentrequest::latest('paymentrequests.created_at');
 
         if (strlen($key) > 0)
@@ -265,7 +266,7 @@ class PaymentrequestsController extends Controller
             if ($paymentstatus == 0)
             {
                 $query->where('approversetting_id', '0');
-
+                //dd($query);
                 $paymentrequestids = [];
                 $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
                     foreach ($paymentrequests as $paymentrequest) {
@@ -278,7 +279,7 @@ class PaymentrequestsController extends Controller
                     }
                 });
 
-                // dd($paymentrequestids);
+                //dd($paymentrequestids);
                 $query->whereIn('id', $paymentrequestids);
 
                 // $query->whereHas('paymentrequestapprovals', function($query) {
@@ -306,7 +307,7 @@ class PaymentrequestsController extends Controller
                         }
                     }
                 });
-
+                //dd($paymentrequestids);
                 $query->whereIn('id', $paymentrequestids);
             }
         }

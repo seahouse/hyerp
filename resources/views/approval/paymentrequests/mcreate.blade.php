@@ -8,7 +8,7 @@
     {!! Form::open(array('url' => 'approval/paymentrequests/mstore', 'class' => 'form-horizontal', 'id' => 'formMain', 'files' => true)) !!}
         @include('approval.paymentrequests._form', 
         	[
-        		'submitButtonText' => '提交', 
+        		'submitButtonText' => '提交',
         		'supplier_name' => null,
         		'pohead_number' => null,
         		'pohead_name' => null,
@@ -287,6 +287,8 @@
 					$("#pohead_descrip").val(field.custinfo_name + ' | ' + field.sohead_descrip);
 					$("#pohead_amount_paid").val(amount_paid);
 					$("#pohead_amount_ticketed").val(field.amount_ticketed);
+					$("#company_name").val(field.companyname);
+
 					var pohead_arrived = '未到货';
 					if (field.arrival_percent > 0.0 && field.arrival_percent < 0.99)
 						pohead_arrived = '部分到货';
