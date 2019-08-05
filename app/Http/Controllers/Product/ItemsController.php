@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers\Product;
 
+use App\Models\Product\Bom_hxold;
 use App\Models\Product\Item;
+use App\Models\Product\Pdm\Cfdict;
+use App\Models\Product\Pdm\Cffdr;
+use App\Models\Product\Pdm\Cffdrref;
+use App\Models\Product\Pdm\Cfobjkind;
 use App\Models\Product\Pdmitem;
 use Illuminate\Http\Request;
 //use Request;
 use App\Http\Requests\ItemRequest;
-use DB;
+use DB, Log;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -366,8 +371,279 @@ class ItemsController extends Controller
     public function topdm($id)
     {
         $itemp = Itemp_hxold::where('goods_id', $id)->firstOrFail();
-        $pdmitem = Pdmitem::where('itemid', 4573)->firstOrFail();
+//        $pdmitem = Pdmitem::where('itemid', 4573)->firstOrFail();
+        $pdmitem = new Pdmitem();
+        $itemid = Pdmitem::max('itemid');
+        $itemid += 1;
+        $pdmitem->itemid = $itemid;
+        $pdmitem->revlabel = 'A.1';
+        $pdmitem->itemcode = $itemp->goods_no;
+        $pdmitem->itemname = $itemp->goods_name;
+        $pdmitem->spec = $itemp->goods_spec;
+        $pdmitem->itemkindid = 1035;
+        $pdmitem->save();
+
+        $cffdrref = new Cffdrref();
+        $cffdrref->objid=887;
+        $cffdrref->objrev=0;
+        $cffdrref->refobjid=$itemid;
+        $cffdrref->refobjrev=1;
+        $cffdrref->refobjtypeid=21;
+        $cffdrref->reftype=1;
+        $cffdrref->seq=1;
+        $cffdrref->fdrreftag=0;
+        $cffdrref->save();
         dd($pdmitem);
+
+        return view('product.items.sethxold2', compact('itemp', 'items2'));
+    }
+
+    public function itemstopdm()
+    {
+        $cffdr = Cffdr::where('fdrname', 'ERP导入')->firstOrFail();
+        if (isset($cffdr))
+        {
+            Log::info('itemstopdm 1');
+            $items = Itemp_hxold::where('goods_no', '<>', '')->take(10)->get();
+            foreach ($items as $item)
+            {
+                Log::info('itemstopdm 2');
+                Log::info($item->type_name);
+                Log::info($item->goods_no);
+                if (empty($item->type_name) || empty($item->goods_no)) continue;
+
+                $subcffdr = Cffdr::where('fdrname', $item->type_name)->first();
+                Log::info('itemstopdm 3');
+                if (!isset($subcffdr))
+                {
+                    Log::info('itemstopdm 4');
+                    $subcffdr = new Cffdr();
+                    $fdrid = Cffdr::max('fdrid');
+                    $fdrid += 1;
+                    $subcffdr->fdrid = $fdrid;
+                    $subcffdr->rev = 1;
+                    $subcffdr->fdrname = $item->type_name;
+                    $subcffdr->stat = 1;
+                    $subcffdr->actived = 2;
+                    $subcffdr->type = 3;
+                    $subcffdr->hide = 1;
+                    $subcffdr->creator = 'admin';
+                    $subcffdr->updator = 'admin';
+                    $subcffdr->idpathdb = '-99\\' . $cffdr->fdrid . '\\' . $fdrid . '\\';
+                    $subcffdr->typepathdb = '-1\\2\\2\\';
+                    $subcffdr->namepathdb = '标准物料库\\ERP导入\\' . $item->type_name . '\\';
+                    $subcffdr->fdrkindid = 60;
+                    $subcffdr->spobjid = $cffdr->fdrid;
+                    $subcffdr->spobjtypeid = 2;
+                    $subcffdr->revlabel = 'A.1';
+                    $subcffdr->save();
+
+                    $cffdrref = new Cffdrref();
+                    $cffdrref->objid = $cffdr->fdrid;
+                    $cffdrref->objrev = 1;
+                    $cffdrref->refobjid = $fdrid;
+                    $cffdrref->refobjrev = 1;
+                    $cffdrref->refobjtypeid = 2;
+                    $cffdrref->reftype = 1;
+                    $cffdrref_seq = Cffdrref::where('objid', $cffdr->fdrid)->max('seq');
+                    if (isset($cffdrref_seq))
+                        $cffdrref_seq += 1;
+                    else
+                        $cffdrref_seq = 1;
+                    $cffdrref->seq = $cffdrref_seq;
+                    $cffdrref->fdrreftag=0;
+                    $cffdrref->save();
+
+                    dd($cffdrref);
+                }
+//                dd($item->type_name);
+
+                $pdmitem = Pdmitem::where('itemcode', $item->goods_no)->first();
+                if (!isset($pdmitem))
+                {
+                    $pdmitem = new Pdmitem();
+                    $itemid = Pdmitem::max('itemid');
+                    $itemid += 1;
+                    $pdmitem->itemid = $itemid;
+                    $pdmitem->rev = 1;
+                    $pdmitem->revlabel = 'A.1';
+                    $pdmitem->itemcode = $item->goods_no;
+                    $pdmitem->itemname = $item->goods_name;
+                    $pdmitem->spec = $item->goods_spec;
+                    $pdmitem->itemtype = 4;             // 含义参考: select * from cfdict where pid=9 中的 dictvalue 字段, 原材料
+                    $unitname = $item->goods_unit_name;
+                    if (!empty($unitname))
+                    {
+                        $cfdict = Cfdict::where('pid', 19)->where('dictname', $unitname)->first();
+                        if (isset($cfdict))
+                        {
+                            $pdmitem->weightunit = $cfdict->dictvalue;
+                        }
+                    }
+                    $pdmitem->stat = 1;             // select * from cfdict where pid=51
+                    $pdmitem->actived = 2;
+                    $pdmitem->creator = 'hyerp';
+                    $pdmitem->updator = 'hyerp';
+                    $cfobjkind = Cfobjkind::where('objkindname', '外购件')->first();
+                    if (isset($cfobjkind))
+                        $pdmitem->itemkindid = $cfobjkind->objkindid;
+                    $pdmitem->idpathdb = '-99\\' . $cffdr->fdrid . '\\' . $subcffdr->fdrid . '\\' . $itemid . '\\';
+                    $pdmitem->typepathdb = '-1\\2\\2\\21\\';
+                    $pdmitem->namepathdb = '标准物料库\\ERP导入\\' . $item->type_name . '\\' . $item->goods_name . '\\';
+                    $pdmitem->citemid = $itemid;
+                    $pdmitem->save();
+
+                    $cffdrref = new Cffdrref();
+                    $cffdrref->objid = $subcffdr->fdrid;
+                    $cffdrref->objrev = 0;
+                    $cffdrref->refobjid = $itemid;
+                    $cffdrref->refobjrev = 1;
+                    $cffdrref->refobjtypeid = 21;
+                    $cffdrref->reftype = 1;
+                    $cffdrref_seq = Cffdrref::where('objid', $subcffdr->fdrid)->max('seq');
+                    if (isset($cffdrref_seq))
+                        $cffdrref_seq += 1;
+                    else
+                        $cffdrref_seq = 1;
+                    $cffdrref->seq = $cffdrref_seq;
+                    $cffdrref->fdrreftag=0;
+                    $cffdrref->save();
+
+                    dd($cffdrref);
+                }
+            }
+        }
+
+
+        dd('aaa');
+
+        return view('product.items.sethxold2', compact('itemp', 'items2'));
+    }
+
+    public function bomstopdm()
+    {
+        $cffdr = Cffdr::where('fdrname', 'ERP系列')->firstOrFail();
+        if (isset($cffdr))
+        {
+            $bom_pids = Bom_hxold::select('pid')->distinct()->take(10)->get();
+            dd($bom_pids);
+            foreach ($bom_pids as $bom_pid)
+            {
+//                $bomitem = Itemp_hxold::where('goods_id', '<>', '')->take(10)->get();
+            }
+            foreach ($items as $item)
+            {
+                Log::info('itemstopdm 2');
+                Log::info($item->type_name);
+                Log::info($item->goods_no);
+                if (empty($item->type_name) || empty($item->goods_no)) continue;
+
+                $subcffdr = Cffdr::where('fdrname', $item->type_name)->first();
+                Log::info('itemstopdm 3');
+                if (!isset($subcffdr))
+                {
+                    Log::info('itemstopdm 4');
+                    $subcffdr = new Cffdr();
+                    $fdrid = Cffdr::max('fdrid');
+                    $fdrid += 1;
+                    $subcffdr->fdrid = $fdrid;
+                    $subcffdr->rev = 1;
+                    $subcffdr->fdrname = $item->type_name;
+                    $subcffdr->stat = 1;
+                    $subcffdr->actived = 2;
+                    $subcffdr->type = 3;
+                    $subcffdr->hide = 1;
+                    $subcffdr->creator = 'admin';
+                    $subcffdr->updator = 'admin';
+                    $subcffdr->idpathdb = '-99\\' . $cffdr->fdrid . '\\' . $fdrid . '\\';
+                    $subcffdr->typepathdb = '-1\\2\\2\\';
+                    $subcffdr->namepathdb = '标准物料库\\ERP导入\\' . $item->type_name . '\\';
+                    $subcffdr->fdrkindid = 60;
+                    $subcffdr->spobjid = $cffdr->fdrid;
+                    $subcffdr->spobjtypeid = 2;
+                    $subcffdr->revlabel = 'A.1';
+                    $subcffdr->save();
+
+                    $cffdrref = new Cffdrref();
+                    $cffdrref->objid = $cffdr->fdrid;
+                    $cffdrref->objrev = 1;
+                    $cffdrref->refobjid = $fdrid;
+                    $cffdrref->refobjrev = 1;
+                    $cffdrref->refobjtypeid = 2;
+                    $cffdrref->reftype = 1;
+                    $cffdrref_seq = Cffdrref::where('objid', $cffdr->fdrid)->max('seq');
+                    if (isset($cffdrref_seq))
+                        $cffdrref_seq += 1;
+                    else
+                        $cffdrref_seq = 1;
+                    $cffdrref->seq = $cffdrref_seq;
+                    $cffdrref->fdrreftag=0;
+                    $cffdrref->save();
+
+                    dd($cffdrref);
+                }
+//                dd($item->type_name);
+
+                $pdmitem = Pdmitem::where('itemcode', $item->goods_no)->first();
+                if (!isset($pdmitem))
+                {
+                    $pdmitem = new Pdmitem();
+                    $itemid = Pdmitem::max('itemid');
+                    $itemid += 1;
+                    $pdmitem->itemid = $itemid;
+                    $pdmitem->rev = 1;
+                    $pdmitem->revlabel = 'A.1';
+                    $pdmitem->itemcode = $item->goods_no;
+                    $pdmitem->itemname = $item->goods_name;
+                    $pdmitem->spec = $item->goods_spec;
+                    $pdmitem->itemtype = 4;             // 含义参考: select * from cfdict where pid=9 中的 dictvalue 字段, 原材料
+                    $unitname = $item->goods_unit_name;
+                    if (!empty($unitname))
+                    {
+                        $cfdict = Cfdict::where('pid', 19)->where('dictname', $unitname)->first();
+                        if (isset($cfdict))
+                        {
+                            $pdmitem->weightunit = $cfdict->dictvalue;
+                        }
+                    }
+                    $pdmitem->stat = 1;             // select * from cfdict where pid=51
+                    $pdmitem->actived = 2;
+                    $pdmitem->creator = 'hyerp';
+                    $pdmitem->updator = 'hyerp';
+                    $cfobjkind = Cfobjkind::where('objkindname', '外购件')->first();
+                    if (isset($cfobjkind))
+                        $pdmitem->itemkindid = $cfobjkind->objkindid;
+                    $pdmitem->idpathdb = '-99\\' . $cffdr->fdrid . '\\' . $subcffdr->fdrid . '\\' . $itemid . '\\';
+                    $pdmitem->typepathdb = '-1\\2\\2\\21\\';
+                    $pdmitem->namepathdb = '标准物料库\\ERP导入\\' . $item->type_name . '\\' . $item->goods_name . '\\';
+                    $pdmitem->citemid = $itemid;
+                    $pdmitem->save();
+
+                    $cffdrref = new Cffdrref();
+                    $cffdrref->objid = $subcffdr->fdrid;
+                    $cffdrref->objrev = 0;
+                    $cffdrref->refobjid = $itemid;
+                    $cffdrref->refobjrev = 1;
+                    $cffdrref->refobjtypeid = 21;
+                    $cffdrref->reftype = 1;
+                    $cffdrref_seq = Cffdrref::where('objid', $subcffdr->fdrid)->max('seq');
+                    if (isset($cffdrref_seq))
+                        $cffdrref_seq += 1;
+                    else
+                        $cffdrref_seq = 1;
+                    $cffdrref->seq = $cffdrref_seq;
+                    $cffdrref->fdrreftag=0;
+                    $cffdrref->save();
+
+                    dd($cffdrref);
+                }
+            }
+        }
+        else
+            dd('请在产品工作区建立ERP系列文件夹');
+
+
+        dd('aaa');
 
         return view('product.items.sethxold2', compact('itemp', 'items2'));
     }

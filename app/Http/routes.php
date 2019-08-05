@@ -180,6 +180,8 @@ Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => [
         Route::post('{id}/sethxold2/{id2}', 'ItemsController@sethxold2update');
         Route::post('resetitempnumber', 'ItemsController@resetitempnumber');
         Route::get('{id}/topdm', 'ItemsController@topdm');
+        Route::get('itemstopdm', 'ItemsController@itemstopdm');
+        Route::get('bomstopdm', 'ItemsController@bomstopdm');
     });
 
     Route::resource('items', 'ItemsController');

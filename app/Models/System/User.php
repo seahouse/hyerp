@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Http\Controllers\Approval\ReimbursementsController;
 use App\Http\Controllers\Approval\PaymentrequestsController;
 use App\Http\Controllers\DingTalkController;
+use Log;
 
 class User extends Authenticatable
 {
@@ -46,6 +47,7 @@ class User extends Authenticatable
 
     public function hasPermission($permission)
     {
+        Log::info($permission);
         return $this->hasRole($permission->roles);
     }
 

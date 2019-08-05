@@ -29,6 +29,8 @@
 
 @if (Auth::user()->isSuperAdmin())
         {!! Form::button('重新对新老系统编号进行一一对应（按照名称、型号完全匹配）', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnSetNo']) !!}
+            <a href="{{ URL::to('product/indexp_hxold/itemstopdm') }}" target="_blank" class="btn btn-sm btn-success">同步到PDM</a>
+            <a href="{{ URL::to('product/indexp_hxold/bomstopdm') }}" target="_blank" class="btn btn-sm btn-success">BOM同步到PDM</a>
 @endif
 
         {{--
@@ -199,7 +201,8 @@
                         window.location.reload(true);
                     }
                 }, "json");
-            }
+            };
+
         });
     </script>
 @endsection

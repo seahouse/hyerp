@@ -751,9 +751,7 @@ class PaymentrequestsController extends Controller
                     $paymentnodeattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
                     $paymentnodeattachment->save();
                 }
-
             }
-
         }
 
         // create businesscontractattachments
