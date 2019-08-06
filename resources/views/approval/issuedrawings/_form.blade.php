@@ -7,7 +7,12 @@
     </div>
 </div>
 
-
+        <div class="form-group">
+            {!! Form::label('company_id', '公司:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::select('company_id', $companyList, null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+            </div>
+        </div>
 
 @if (isset($issuedrawing))
 <div class="form-group">
@@ -49,33 +54,6 @@
 {{--
 
 
-<div class="form-group">
-    {!! Form::label('pohead_arrived', '到货情况:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->arrival_percent))
-        @if ($paymentrequest->purchaseorder_hxold->arrival_percent <= 0.0)
-            {!! Form::text('pohead_arrived', '未到货', ['class' => 'form-control', $attr]) !!}
-        @elseif ($paymentrequest->purchaseorder_hxold->arrival_percent > 0.0 and $paymentrequest->purchaseorder_hxold->arrival_percent < 0.99)
-            {!! Form::text('pohead_arrived', '部分到货', ['class' => 'form-control', $attr]) !!}
-        @else
-            {!! Form::text('pohead_arrived', '全部到货', ['class' => 'form-control', $attr]) !!}
-        @endif
-    @else
-        {!! Form::text('pohead_arrived', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-</div>
-
-<div class="form-group">
-    {!! Form::label('paymethod', '付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->paymethod)) 
-        {!! Form::textarea('paymethod', $paymentrequest->purchaseorder_hxold->paymethod, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
-    @else
-        {!! Form::textarea('paymethod', null, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
-    @endif
-    </div>
-</div>
 
 
 <div class="form-group">
@@ -267,7 +245,8 @@
 <div class="form-group">
     {!! Form::label('productioncompany', '制作公司:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::select('productioncompany', array('无锡生产中心' => '无锡生产中心', '苏州生产中心' => '苏州生产中心', '泰州生产中心' => '泰州生产中心', '胶州生产中心' => '胶州生产中心', '无锡电气生产部' => '无锡电气生产部', '郎溪生产中心' => '郎溪生产中心'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+    {!! Form::select('productioncompany', array('无锡生产中心' => '无锡生产中心', '苏州生产中心' => '苏州生产中心', '泰州生产中心' => '泰州生产中心', '胶州生产中心' => '胶州生产中心', '无锡电气生产部' => '无锡电气生产部', '郎溪生产中心' => '郎溪生产中心',
+        '宣城子公司' => '宣城子公司', '许昌子公司' => '许昌子公司'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
     </div>
 </div>
 

@@ -247,7 +247,7 @@ class PaymentrequestsController extends Controller
             // ->groupBy('paymentrequests.id')
             //         ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'::timestamp + interval \'1D\'');
                 // ->select('paymentrequests.id', DB::raw('max(paymentrequestapprovals.created_at)'))
-                
+
                 
 
         }
@@ -280,7 +280,10 @@ class PaymentrequestsController extends Controller
                 });
 
                 //dd($paymentrequestids);
-                $query->whereIn('id', $paymentrequestids);
+//                $query->whereIn('id', $paymentrequestids);
+                $query->whereExists(function ($query) {
+                    $query->select(DB::raw(1))->from('hxerp2016..vpurchaseorder')->whereRaw('hxerp2016..vpurchaseorder.id=paymentrequests.pohead_id and max(hxerp2016..vpurchaseorder.created_at < ')
+                });
 
                 // $query->whereHas('paymentrequestapprovals', function($query) {
                 //     $query->from('sqlsrv.vpayments')->whereRaw('max(create_date) > max(paymentrequestapprovals.created_at)');

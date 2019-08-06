@@ -9,6 +9,7 @@ use App\Models\Approval\Issuedrawing;
 use App\Models\Approval\Issuedrawingattachment;
 use App\Models\Approval\Issuedrawingcabinet;
 use App\Models\Approval\Issuedrawingmodifyweightlog;
+use App\Models\Basic\Company_hxold;
 use App\Models\System\Operationlog;
 use Illuminate\Http\Request;
 
@@ -342,12 +343,13 @@ class IssuedrawingController extends Controller
 //        $input = HelperController::skipEmptyValue($input);
 
 
-        // dd($request->hasFile('paymentnodeattachments'));
-        // dd($request->file('paymentnodeattachments'));
         // dd($request->file('paymentnodeattachments')->getClientOriginalExtension());
         // dd($request->input('amount', '0.0'));
 
-
+        $input['company_name'] = '';
+        $company = Company_hxold::find($input['company_id']);
+        if (isset($company))
+            $input['company_name'] = $company->name;
 
 
 

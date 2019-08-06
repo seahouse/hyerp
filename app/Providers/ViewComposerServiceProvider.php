@@ -234,6 +234,11 @@ class ViewComposerServiceProvider extends ServiceProvider
             $view->with('dtlog_templatenames', $dtlog_templatenames);
 //            $view->with('poheadOrderDateyearList_hxold', DB::connection('sqlsrv')->select(DB::raw('select distinct datepart(year, orderdate) from vorder'))->lists('projectjc', 'id'));
         });
+
+        // companyList
+        view()->composer(array('approval.issuedrawings.mcreate'), function($view) {
+            $view->with('companyList', \App\Models\Basic\Company_hxold::orderby('id', 'asc')->lists('name', 'id'));
+        });
     }
 
     /**

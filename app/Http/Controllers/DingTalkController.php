@@ -1604,6 +1604,10 @@ class DingTalkController extends Controller
                 'value'     => $inputs['designdepartment'],
             ],
             [
+                'name'      => '公司',
+                'value'     => $inputs['company_name'],
+            ],
+            [
                 'name'      => '项目名称',
                 'value'     => $inputs['project_name'],
             ],

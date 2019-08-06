@@ -16,6 +16,7 @@ class CreateIssuedrawingsTable extends Migration
             $table->increments('id');
 
             $table->string('designdepartment');
+            $table->integer('company_id')->nullable();
             $table->integer('sohead_id');
             $table->string('overview')->default('');
             $table->string('cabinetname')->default('');             // 柜体名称

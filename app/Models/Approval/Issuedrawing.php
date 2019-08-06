@@ -15,6 +15,7 @@ class Issuedrawing extends Model
     private static $approvaltype_name = "下发图纸";
 
     protected $fillable = [
+        'company_id',
         'designdepartment',
         'sohead_id',
         'overview',
