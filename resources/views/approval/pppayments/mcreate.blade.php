@@ -824,7 +824,7 @@
 						\<div class="form-group">\
 							<label for="type" class="col-xs-4 col-sm-2 control-label">类型:</label>\
 							<div class="col-sm-10 col-xs-8">\
-							    <select class="form-control" ="" id="type_' + String(item_num) + '" onchange="selectTypeChange(this.dataset.num)" data-num="' + String(item_num) + '" name="type"><option selected="selected" value="">--请选择--</option><option value="抛丸">抛丸</option><option value="油漆">油漆</option><option value="人工">人工</option><option value="铆焊">铆焊</option><option value="外协油漆">外协油漆</option></select>\
+							    <select class="form-control" ="" id="type_' + String(item_num) + '" onchange="selectTypeChange(this.dataset.num)" data-num="' + String(item_num) + '" name="type"><option selected="selected" value="">--请选择--</option><option value="抛丸">抛丸</option><option value="油漆">油漆</option><option value="人工">人工</option><option value="铆焊">铆焊</option><option value="外协油漆">外协油漆</option><option value="板拼型钢">板拼型钢</option></select>\
 							    <input class="btn btn-sm" id="unitprice_inputname_' + String(item_num) + '" name="unitprice_inputname" type="hidden" value="unitprice_inputname_' + String(item_num) + '">\
 							    <input class="btn btn-sm" name="totalprice_inputname" type="hidden" value="totalprice_inputname_' + String(item_num) + '">\
 							</div>\
@@ -880,7 +880,7 @@
                         else if (productioncompany == "胶州分公司")
                             strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';
                         else if (productioncompany == "郎溪分公司")
-                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['郎溪分公司'] !!}" readonly="readonly">';
+                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! isset($value['郎溪分公司']) ? $value['郎溪分公司'] : '0' !!}" readonly="readonly">';
                         strhtml2 += '\</div>';
                         strhtml2 += '</div>';
                     @endforeach
@@ -909,7 +909,7 @@
                             else if (productioncompany == "胶州分公司")
                                 value = "{!! $value['胶州分公司'] !!}"
                             else if (productioncompany == "郎溪分公司")
-                                value = "{!! $value['郎溪分公司'] !!}"
+                                value = "{!! isset($value['郎溪分公司']) ? $value['郎溪分公司'] : '0' !!}"
                         }
                         strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';
                         {{--if (productioncompany == "泰州分公司")--}}
@@ -935,7 +935,7 @@
                         else if (productioncompany == "胶州分公司")
                             strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';
                         else if (productioncompany == "郎溪分公司")
-                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['郎溪分公司'] !!}" readonly="readonly">';
+                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! isset($value['郎溪分公司']) ? $value['郎溪分公司'] : '0' !!}" readonly="readonly">';
                         strhtml2 += '\</div>';
                         strhtml2 += '</div>';
                     @endforeach
@@ -971,7 +971,7 @@
                                 else if (productioncompany == "胶州分公司")
                                     value = "{!! $value['胶州分公司'] !!}"
                                 else if (productioncompany == "郎溪分公司")
-                                    value = "{!! $value['郎溪分公司'] !!}"
+                                    value = "{!! isset($value['郎溪分公司']) ? $value['郎溪分公司'] : '0' !!}"
                             }
                             strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';
                             {{--if (productioncompany == "泰州分公司")--}}
@@ -1007,7 +1007,7 @@
                         else if (productioncompany == "胶州分公司")
                             value = "{!! $value['胶州分公司'] !!}"
                         else if (productioncompany == "郎溪分公司")
-                            value = "{!! $value['郎溪分公司'] !!}"
+                            value = "{!! isset($value['郎溪分公司']) ? $value['郎溪分公司'] : '0' !!}"
                     }
                     strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';
                     {{--if (productioncompany == "泰州分公司")--}}
@@ -1018,168 +1018,39 @@
                     strhtml2 += '</div>';
                     @endforeach
                 }
+                else if (selecttype.val() == "板拼型钢")
+                {
+                    @foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.板拼型钢') as $key => $value)
+                            {{--alert('{!! $key !!}');--}}
+                        strhtml2 += '<div class="form-group" name="div_unitpriceitem">';
+                    strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\
+                            <div class="col-sm-5 col-xs-4">\
+                            <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\
+                            \</div>\
+                            \<div class="col-sm-5 col-xs-4">';
+                    var value = '';
+                    if (selectarea.val() == "国外")
+                    {
+                        @if (isset($value['国外']))
+                            value = "{!! $value['国外'] !!}";
+                        @endif
+                    }
+                    if (value == "")
+                    {
+                        if (productioncompany == "泰州分公司")
+                            value = "{!! $value['泰州分公司'] !!}";
+                        else if (productioncompany == "胶州分公司")
+                            value = "{!! $value['胶州分公司'] !!}"
+                        else if (productioncompany == "郎溪分公司")
+                            value = "{!! isset($value['郎溪分公司']) ? $value['郎溪分公司'] : '0' !!}"
+                    }
+                    strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';
+                        strhtml2 += '\</div>';
+                    strhtml2 += '</div>';
+                    @endforeach
+                }
 
 
-                if (selecttype.val() == "抛丸")
-                {
-                    strhtml += '<div class="form-group" name="div_unitpriceitem">\
-                            <label for="paowan" class="col-xs-4 col-sm-2 control-label">抛丸:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="抛丸">\
-                            </div>\
-                            \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! config('custom.dingtalk.approversettings.pppayment.pricedetail.抛丸.抛丸.泰州分公司') !!}" readonly="readonly">\
-                            </div>\
-                        </div>\
-                        ';
-                }
-                else if (selecttype.val() == "油漆")
-                {
-                    strhtml += '<div class="form-group" name="div_unitpriceitem">\
-                            <label for="hanjiegj" class="col-xs-4 col-sm-2 control-label">焊接钢架:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="hanjiegj_weight_' + String(num) + '" name="tonnage" type="text" data-name="焊接钢架">\
-                            </div>\
-                            \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="hanjiegj_unitprice_' + String(num) + '" name="unitprice" type="text" value="460" readonly="readonly">\
-                            </div>\
-                        </div>\
-                        \<div class="form-group" name="div_unitpriceitem">\
-                            <label for="guanleict" class="col-xs-4 col-sm-2 control-label">罐类仓体:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="guanleict_weight_' + String(num) + '" name="tonnage" type="text" data-name="罐类仓体">\
-                            </div>\
-                            \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="guanleict_unitprice_' + String(num) + '" name="unitprice" type="text" value="360" readonly="readonly">\
-                            </div>\
-                        </div>\
-                        \<div class="form-group" name="div_unitpriceitem">\
-                            <label for="buxiugg" class="col-xs-4 col-sm-2 control-label">不锈钢罐:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="buxiugg_weight_' + String(num) + '" name="tonnage" type="text" data-name="不锈钢罐">\
-                            </div>\
-                            \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="buxiugg_unitprice_' + String(num) + '" name="unitprice" type="text" value="130" readonly="readonly">\
-                            </div>\
-                        </div>\
-                        \<div class="form-group" name="div_unitpriceitem">\
-                            <label for="luoshuangj" class="col-xs-4 col-sm-2 control-label">螺栓钢架:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="luoshuangj_weight_' + String(num) + '" name="tonnage" type="text"  data-name="螺栓钢架">\
-                            </div>\
-                            \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="luoshuangj_unitprice_' + String(num) + '" name="unitprice" type="text" value="500" readonly="readonly">\
-                            </div>\
-                        </div>\
-                        ';
-                }
-                else if (selecttype.val() == "人工")
-                {
-                    strhtml += '<div class="form-group" name="div_unitpriceitem">\
-                            <label for="rengong" class="col-xs-4 col-sm-2 control-label">人工:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="rengong_weight_' + String(num) + '" name="tonnage" type="text"   data-name="人工">\
-                            </div>\
-                            \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="rengong_unitprice_' + String(num) + '" name="unitprice" type="text" value="250" readonly="readonly">\
-                            </div>\
-                        </div>\
-                        ';
-                }
-                else if (selecttype.val() == "铆焊")
-                {
-                    strhtml += '<div class="form-group" name="div_unitpriceitem">\
-                            <label for="jinfengsaztt" class="col-xs-4 col-sm-2 control-label">风栅套筒:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="jinfengsaztt_weight_' + String(num) + '" name="tonnage" type="text" data-name="风栅套筒">\
-                            </div>\
-                            \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="jinfengsaztt_unitprice_' + String(num) + '" name="unitprice" type="text" value="1207" readonly="readonly">\
-                            </div>\
-                        </div>\
-                        \<div class="form-group" name="div_unitpriceitem">\
-                            <label for="hanjiegj" class="col-xs-4 col-sm-2 control-label">焊接钢架:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="hanjiegj_weight_' + String(num) + '" name="tonnage" type="text" data-name="焊接钢架">\
-                            </div>\
-                            \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="hanjiegj_unitprice_' + String(num) + '" name="unitprice" type="text" value="812" readonly="readonly">\
-                            </div>\
-                        </div>\
-                        \<div class="form-group" name="div_unitpriceitem">\
-                            <label for="huidouzxt" class="col-xs-4 col-sm-2 control-label">灰斗箱体:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="huidouzxt_weight_' + String(num) + '" name="tonnage" type="text" data-name="灰斗箱体">\
-                            </div>\
-                            \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="huidouzxt_unitprice_' + String(num) + '" name="unitprice" type="text" value="976" readonly="readonly">\
-                            </div>\
-                        </div>\
-                        \<div class="form-group" name="div_unitpriceitem">\
-                            <label for="pingtaiptlg" class="col-xs-4 col-sm-2 control-label">平台爬梯:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="pingtaiptlg_weight_' + String(num) + '" name="tonnage" type="text" data-name="平台爬梯">\
-                            </div>\
-                            \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="pingtaiptlg_unitprice_' + String(num) + '" name="unitprice" type="text" value="985" readonly="readonly">\
-                            </div>\
-                        </div>\
-                        \<div class="form-group" name="div_unitpriceitem">\
-                            <label for="shoutabt" class="col-xs-4 col-sm-2 control-label">收塔本体:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="shoutabt_weight_' + String(num) + '" name="tonnage" type="text" data-name="收塔本体">\
-                            </div>\
-                            \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="shoutabt_unitprice_' + String(num) + '" name="unitprice" type="text" value="976" readonly="readonly">\
-                            </div>\
-                        </div>\
-                        \<div class="form-group" name="div_unitpriceitem">\
-                            <label for="woke" class="col-xs-4 col-sm-2 control-label">进风烟道:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="woke_weight_' + String(num) + '" name="tonnage" type="text" data-name="进风烟道">\
-                            </div>\
-                            \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="woke_unitprice_' + String(num) + '" name="unitprice" type="text" value="976" readonly="readonly">\
-                            </div>\
-                        </div>\
-                        \<div class="form-group" name="div_unitpriceitem">\
-                            <label for="huadongzj" class="col-xs-4 col-sm-2 control-label">滑动支架:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="huadongzj_weight_' + String(num) + '" name="tonnage" type="text" data-name="滑动支架">\
-                            </div>\
-                            \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="huadongzj_unitprice_' + String(num) + '" name="unitprice" type="text" value="1136" readonly="readonly">\
-                            </div>\
-                        </div>\
-                        \<div class="form-group" name="div_unitpriceitem">\
-                            <label for="buxiugg" class="col-xs-4 col-sm-2 control-label">不锈钢罐:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="buxiugg_weight_' + String(num) + '" name="tonnage" type="text" data-name="不锈钢罐">\
-                            </div>\
-                            \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="buxiugg_unitprice_' + String(num) + '" name="unitprice" type="text" value="1713" readonly="readonly">\
-                            </div>\
-                        </div>\
-                        \<div class="form-group" name="div_unitpriceitem">\
-                            <label for="shangxiangt" class="col-xs-4 col-sm-2 control-label">上箱体:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="shangxiangt_weight_' + String(num) + '" name="tonnage" type="text" data-name="上箱体">\
-                            </div>\
-                            \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="shangxiangt_unitprice_' + String(num) + '" name="unitprice" type="text" value="1236" readonly="readonly">\
-                            </div>\
-                        </div>\
-                        \<div class="form-group" name="div_unitpriceitem">\
-                            <label for="luoshuangj" class="col-xs-4 col-sm-2 control-label">螺栓钢架:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                                <input class="form-control" placeholder="吨数" ="" id="luoshuangj_weight_' + String(num) + '" name="tonnage" type="text" data-name="螺栓钢架">\
-                            </div>\
-                            \<div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="单价" ="" id="luoshuangj_unitprice_' + String(num) + '" name="unitprice" type="text" value="1050" readonly="readonly">\
-                            </div>\
-                        </div>\
-                        ';
-                }
                 $("#pppaymentitemtypecontainer_" + String(num)).empty().append(strhtml2);
 
             }

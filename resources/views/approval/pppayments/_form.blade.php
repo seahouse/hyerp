@@ -79,7 +79,7 @@
                 <div class="form-group">
                     {!! Form::label('type', '类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
                     <div class='col-xs-8 col-sm-10'>
-                        {!! Form::select('type', array('抛丸' => '抛丸', '油漆' => '油漆', '人工' => '人工', '铆焊' => '铆焊', '外协油漆' => '外协油漆'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, 'id' => 'type_1', 'onchange' => 'selectTypeChange(this.dataset.num)', 'data-num' => '1']) !!}
+                        {!! Form::select('type', array('抛丸' => '抛丸', '油漆' => '油漆', '人工' => '人工', '铆焊' => '铆焊', '外协油漆' => '外协油漆', '板拼型钢' => '板拼型钢'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, 'id' => 'type_1', 'onchange' => 'selectTypeChange(this.dataset.num)', 'data-num' => '1']) !!}
                     </div>
                 </div>
                 {!! Form::hidden('unitprice_inputname', 'unitprice_inputname_1', ['class' => 'btn btn-sm', 'id' => 'unitprice_inputname_1']) !!}
