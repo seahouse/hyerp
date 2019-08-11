@@ -32,6 +32,9 @@
                             @can('product_item_purchase_view')
                                 <li><a href="/product/indexp_hxold/">购入零件</a></li>
                             @endcan
+                            @if (Auth::user()->email === "admin@admin.com")
+                                <li><a href="/product/pdms/">同步到PDM</a></li>
+                            @endif
                     </ul>
                 </li>
                 <li class="dropdown">

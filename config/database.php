@@ -96,6 +96,16 @@ return [
             'prefix'   => '',
         ],
 
+        'sqlsrv_pdm_from' => [
+            'driver'   => 'sqlsrv',
+            'host'     => env('DB_HOST_PDM_FROM', 'localhost'),
+            'database' => env('DB_DATABASE_PDM_FROM', 'forge'),
+            'username' => env('DB_USERNAME_PDM_FROM', 'forge'),
+            'password' => env('DB_PASSWORD_PDM_FROM', ''),
+            'charset'  => 'utf8',
+            'prefix'   => '',
+        ],
+
         'sqlsrv3' => [
             'driver'   => 'sqlsrv',
             'host'     => env('DB_HOST_PDM', 'localhost'),
@@ -105,7 +115,6 @@ return [
             'charset'  => 'utf8',
             'prefix'   => '',
         ],
-
     ],
 
     /*

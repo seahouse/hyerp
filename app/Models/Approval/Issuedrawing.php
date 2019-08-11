@@ -156,7 +156,8 @@ class Issuedrawing extends Model
                         if (strlen($dtuserid) > 0)
                         {
                             $dtuser = Dtuser::where('userid', $dtuserid)->firstOrFail();
-                            $user = User::findOrFail($dtuser->user_id);
+                            if (isset($dtuser))
+                                $user = User::findOrFail($dtuser->user_id);
                         }
                     }
                     elseif ($approversetting->level == 5)

@@ -47,7 +47,7 @@ class User extends Authenticatable
 
     public function hasPermission($permission)
     {
-        Log::info($permission);
+//        Log::info($permission);
         return $this->hasRole($permission->roles);
     }
 

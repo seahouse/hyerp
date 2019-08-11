@@ -195,6 +195,11 @@ Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => [
         Route::get('getCharassesByTargetId/{targetType}/{targetId}', 'CharassesController@getCharassesByTargetId');
         Route::resource('/', 'CharassesController');
     });
+
+    Route::group(['prefix' => 'pdms'], function() {
+        Route::get('k3topdm', 'PdmController@k3topdm');
+    });
+    Route::resource('pdms', 'PdmController');
 });
 
 Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web']], function() {

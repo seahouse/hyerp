@@ -266,24 +266,19 @@ class PaymentrequestsController extends Controller
             if ($paymentstatus == 0)
             {
                 $query->where('approversetting_id', '0');
-                //dd($query);
-                $paymentrequestids = [];
-                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
-                    foreach ($paymentrequests as $paymentrequest) {
-                        # code...
-                        if (isset($paymentrequest->purchaseorder_hxold->payments))
-                        {
-                            if ($paymentrequest->paymentrequestapprovals->max('created_at') < $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
-                                array_push($paymentrequestids, $paymentrequest->id);
-                        }
-                    }
-                });
-
-                //dd($paymentrequestids);
-                $query->whereIn('id', $paymentrequestids);
-//                $query->whereExists(function ($query) {
-//                    $query->select(DB::raw(1))->from('hxerp2016..vpurchaseorder')->whereRaw('hxerp2016..vpurchaseorder.id=paymentrequests.pohead_id and max(hxerp2016..vpurchaseorder.created_at < ')
+//                $paymentrequestids = [];
+//                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
+//                    foreach ($paymentrequests as $paymentrequest) {
+//                        # code...
+//                        if (isset($paymentrequest->purchaseorder_hxold->payments))
+//                        {
+//                            if ($paymentrequest->paymentrequestapprovals->max('created_at') < $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
+//                                array_push($paymentrequestids, $paymentrequest->id);
+//                        }
+//                    }
 //                });
+//                $query->whereIn('id', $paymentrequestids);
+                $query->whereRaw('(select MAX(created_at) from paymentrequestapprovals where paymentrequestapprovals.paymentrequest_id=paymentrequests.id)<(select MAX(create_date) from hxcrm2016..vpayments where vpayments.pohead_id=paymentrequests.pohead_id)');
 
                 // $query->whereHas('paymentrequestapprovals', function($query) {
                 //     $query->from('sqlsrv.vpayments')->whereRaw('max(create_date) > max(paymentrequestapprovals.created_at)');
@@ -298,20 +293,19 @@ class PaymentrequestsController extends Controller
             elseif ($paymentstatus == -1)
             {
                 $query->where('approversetting_id', '0');
-
-                $paymentrequestids = [];
-                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
-                    foreach ($paymentrequests as $paymentrequest) {
-                        # code...
-                        if (isset($paymentrequest->purchaseorder_hxold->payments))
-                        {
-                            if ($paymentrequest->paymentrequestapprovals->max('created_at') > $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
-                                array_push($paymentrequestids, $paymentrequest->id);
-                        }
-                    }
-                });
-                //dd($paymentrequestids);
-                $query->whereIn('id', $paymentrequestids);
+//                $paymentrequestids = [];
+//                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
+//                    foreach ($paymentrequests as $paymentrequest) {
+//                        # code...
+//                        if (isset($paymentrequest->purchaseorder_hxold->payments))
+//                        {
+//                            if ($paymentrequest->paymentrequestapprovals->max('created_at') > $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
+//                                array_push($paymentrequestids, $paymentrequest->id);
+//                        }
+//                    }
+//                });
+//                $query->whereIn('id', $paymentrequestids);
+                $query->whereRaw('(select MAX(created_at) from paymentrequestapprovals where paymentrequestapprovals.paymentrequest_id=paymentrequests.id)>(select MAX(create_date) from hxcrm2016..vpayments where vpayments.pohead_id=paymentrequests.pohead_id)');
             }
         }
 
