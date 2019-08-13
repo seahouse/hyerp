@@ -305,7 +305,7 @@ class PaymentrequestsController extends Controller
 //                    }
 //                });
 //                $query->whereIn('id', $paymentrequestids);
-                $query->whereRaw('(select MAX(created_at) from paymentrequestapprovals where paymentrequestapprovals.paymentrequest_id=paymentrequests.id)>(select MAX(create_date) from hxcrm2016..vpayments where vpayments.pohead_id=paymentrequests.pohead_id)');
+                $query->whereRaw('(select MAX(created_at) from paymentrequestapprovals where paymentrequestapprovals.paymentrequest_id=paymentrequests.id)>(select isnull(MAX(create_date),\'1900-01-01\') from hxcrm2016..vpayments where vpayments.pohead_id=paymentrequests.pohead_id)');
             }
         }
 
