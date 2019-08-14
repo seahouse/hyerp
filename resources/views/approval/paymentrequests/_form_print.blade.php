@@ -1,3 +1,13 @@
+<div class="form-group">
+    {!! Form::label('company_name', '采购公司:', ['class' => 'col-xs-2 col-sm-2 control-label ','style'=>'font-size:20px;font-weight:bold ']) !!}
+    <div class='col-xs-8 col-sm-10'>
+        @if (isset($paymentrequest->purchaseorder_hxold->companyname))
+            {!! Form::text('company_name', $paymentrequest->purchaseorder_hxold->companyname, ['class' => 'form-control ','style'=>'font-size:20px;font-weight:bold ', $attr,]) !!}
+        @else
+            {!! Form::text('company_name', null, ['class' => 'form-control ','style'=>'font-size:20px font-weight:bold', $attr]) !!}
+        @endif
+    </div>
+</div>
 
 <div class="form-group">
     {!! Form::label('suppliertype', '供应商类型:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
@@ -41,21 +51,13 @@
 <div class="form-group">
     {!! Form::label('pohead_number', '采购合同:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
     <div class='col-xs-4 col-sm-4'>
-    @if (isset($paymentrequest->purchaseorder_hxold->number)) 
+    @if (isset($paymentrequest->purchaseorder_hxold->number))
          {!! Form::text('pohead_number', $paymentrequest->purchaseorder_hxold->number, ['class' => 'form-control', $attr]) !!}
     @else
         {!! Form::text('pohead_number', null, ['class' => 'form-control', $attr]) !!}
     @endif
     </div>
 
-    {!! Form::label('company_name', '采购公司:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
-    <div class='col-xs-4 col-sm-4'>
-        @if (isset($paymentrequest->purchaseorder_hxold->companyname))
-            {!! Form::text('company_name', $paymentrequest->purchaseorder_hxold->companyname, ['class' => 'form-control', $attr,]) !!}
-        @else
-            {!! Form::text('company_name', null, ['class' => 'form-control', $attr]) !!}
-        @endif
-    </div>
 </div>
 
 <div class="form-group">
