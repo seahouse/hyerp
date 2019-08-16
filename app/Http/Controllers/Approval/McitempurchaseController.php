@@ -224,7 +224,7 @@ class McitempurchaseController extends Controller
 
                     // add database record
                     $mcitempurchaseattachment = new Mcitempurchaseattachment();
-                    $mcitempurchaseattachment->issuedrawing_id = $mcitempurchase->id;
+                    $mcitempurchaseattachment->mcitempurchase_id = $mcitempurchase->id;
                     $mcitempurchaseattachment->type = "file";
                     $mcitempurchaseattachment->filename = $originalName;
                     $mcitempurchaseattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
