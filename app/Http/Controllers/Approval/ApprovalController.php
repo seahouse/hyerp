@@ -676,6 +676,10 @@ class ApprovalController extends Controller
                 'value'     => $inputs['detailuse'],
             ],
             [
+                'name'      => '上传文件',
+                'value'     => $inputs['fileattachments_url'],
+            ],
+            [
                 'name'      => '上传图片',
                 'value'     => $inputs['image_urls'],
             ],

@@ -203,6 +203,52 @@ class McitempurchaseController extends Controller
         $input['projecttonnage'] = '项目总吨数' . $projecttonnagetotal . '吨，已申购' . $projecttonnagedonetotal . "吨。\n" .
             "项目电气柜体总数" . $projectcabinettotal . "。" ;
 
+        // create files
+        $fileattachments_url = [];
+        $fileattachments_url2 = [];
+        if ($mcitempurchase)
+        {
+            $files = array_get($input,'files');
+            $destinationPath = 'uploads/approval/mcitempurchase/' . $mcitempurchase->id . '/files/';
+            foreach ($files as $key => $file) {
+                if ($file)
+                {
+                    $originalName = $file->getClientOriginalName();         // aa.xlsx
+                    $extension = $file->getClientOriginalExtension();       // .xlsx
+//                    Log::info('extension: ' . $extension);
+                    $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                    Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
+
+                    // $fileName = rand(11111, 99999) . '.' . $extension;
+                    $upload_success = $file->move($destinationPath, $filename);
+
+                    // add database record
+                    $mcitempurchaseattachment = new Mcitempurchaseattachment();
+                    $mcitempurchaseattachment->issuedrawing_id = $mcitempurchase->id;
+                    $mcitempurchaseattachment->type = "file";
+                    $mcitempurchaseattachment->filename = $originalName;
+                    $mcitempurchaseattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
+                    $mcitempurchaseattachment->save();
+
+                    array_push($fileattachments_url, url($destinationPath . $filename));
+                    if (strcasecmp($extension, "pdf") == 0)
+                        array_push($fileattachments_url2, url('pdfjs/viewer') . "?file=" . "/$destinationPath$filename");
+                    else
+                    {
+                        $filename2 = str_replace(".", "_", $filename);
+                        array_push($fileattachments_url2, url("$destinationPath$filename2"));
+                    }
+//                    array_push($fileattachments_url2, url('mddauth/pdfjs-viewer') . "?file=" . "/$destinationPath$filename");
+
+
+//                    DingTalkController::send_oa_paymentrequest($touser->dtuserid, '',
+//                        url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
+//                        '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', $paymentrequest,
+//                        config('custom.dingtalk.agentidlist.approval'));
+                }
+            }
+        }
+
         $image_urls = [];
         // create images in the desktop
         if ($mcitempurchase)
@@ -286,7 +332,7 @@ class McitempurchaseController extends Controller
 
         if (isset($mcitempurchase))
         {
-
+            $input['fileattachments_url'] = implode(" , ", $fileattachments_url2);
             $input['image_urls'] = json_encode($image_urls);
             $input['approvers'] = $mcitempurchase->approvers();
             $response = ApprovalController::mcitempurchase($input);

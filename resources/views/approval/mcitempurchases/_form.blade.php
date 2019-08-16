@@ -371,6 +371,20 @@
             </div>
         </div>
 
+        <div class="form-group">
+            {!! Form::label('files', '上传文件:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+
+            <div class='col-xs-8 col-sm-10'>
+                @if (isset($issuedrawing))
+                    @foreach ($issuedrawing->drawingattachments() as $drawingattachment)
+                        <a href="{!! URL($drawingattachment->path) !!}" target="_blank" id="showPaymentnode">{{ $drawingattachment->filename }}</a> <br>
+                    @endforeach
+                @else
+                    {!! Form::file('files[]', ['multiple']) !!}
+                @endif
+            </div>
+        </div>
+
 <div class="form-group">
     {!! Form::label('images', '上传图片:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     
