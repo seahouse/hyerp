@@ -243,7 +243,7 @@ class ProjectsitepurchaseController extends Controller
                 $projectsitepurchaseattachment->path = "/$dir$filename";     // add a '/' in the head.
                 $projectsitepurchaseattachment->save();
 
-                array_push($image_urls, url($destinationPath . $value));
+                array_push($image_urls, $value);
             }
         }
 //        dd($projectsitepurchase);

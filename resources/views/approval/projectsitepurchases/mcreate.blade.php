@@ -300,6 +300,7 @@
 			 $("#btnSubmit").click(function() {
                  var itemArray = new Array();
 
+                 var flag = true;
                 $("div[name='container_item']").each(function(i){
                     var itemObject = new Object();
                     var container = $(this);
@@ -316,6 +317,9 @@
                     itemObject.quantity = container.find("input[name='quantity']").val();
                     if (itemObject.quantity == "")
                         itemObject.quantity = 0.0;
+                    console.log(!isNaN(itemObject.quantity));
+                    if (isNaN(itemObject.quantity))
+                        flag = false;
                     itemObject.unit_id = container.find("select[name='unit_id']").val();
                     if (itemObject.unit_id == "")
                         itemObject.unit_id = 0;
@@ -324,7 +328,6 @@
                     if (itemObject.unitprice == "")
                         itemObject.unitprice = 0.0;
                     itemObject.price = container.find("input[name='price']").val();
-
 
 //                    var unitpriceArray = new Array();
 //                    var pppaymentitemtypecontainer = container.find("div[name='pppaymentitemtypecontainer']");
@@ -340,8 +343,6 @@
 //                    });
 
 
-
-
                     itemArray.push(itemObject);
 
 //                    alert(JSON.stringify(itemArray));
@@ -350,27 +351,15 @@
                 });
                 $("#items_string").val(JSON.stringify(itemArray));
 
-//                if ($("#sohead_id").val() != 7550)
-//				{
-//				    if ($("#issuedrawing_values").val() == "")
-//					{
-//                        $('#submitModal').modal('toggle');
-//                        $("#dataDefine").empty().append('未选择下图单');
-//                        return false;
-//					}
-//				}
+                 if (!flag)
+                 {
+                     $('#submitModal').modal('toggle');
+                     $("#dataDefine").empty().append('数量字段必须是数字类型，不能包含字符串数值。');
+                     return false;
+                 }
+
 				$("form#formMain").submit();
 
-                 {{--$.post("{{ url('approval/mcitempurchase/weightvalid') }}", $("form#formMain").serialize(), function (data) {--}}
-                     {{--if (data.code < 0)--}}
-					 {{--{--}}
-                         {{--$('#submitModal').modal('toggle');--}}
-                         {{--$("#dataDefine").empty().append(data.msg);--}}
-					 {{--}--}}
-                     {{--else--}}
-                         {{--$("form#formMain").submit();--}}
-                 {{--});--}}
-				 {{--return false;--}}
 			 });
 
 
@@ -947,7 +936,7 @@
 								imageHtml += '<div class="col-xs-6 col-md-3">';
 								imageHtml += '<div class="thumbnail">';
 								imageHtml += '<img src=' + images[i] + ' />';
-								//imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
+								imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
 								imageHtml += '</div>';
 								imageHtml += '</div>';
 							}
