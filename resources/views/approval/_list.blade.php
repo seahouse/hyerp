@@ -17,8 +17,10 @@
             @endif
 --}}
             <div class='col-xs-6 col-sm-6 content'
-                 {{-- 如果是垫资，则用特殊颜色显示。垫资：销售订单的收款金额小于此销售订单对应的采购订单的付款总额。--}}
-                @if (isset($item->purchaseorder_hxold->sohead) and $item->purchaseorder_hxold->sohead->receiptpayments->sum('amount') * 10000 < $item->purchaseorder_hxold->sohead->payments->sum('amount'))  style="color: #FF3300;") @endif >
+                 {{-- 如果是垫资，则用红色颜色显示。垫资：销售订单的收款金额小于此销售订单对应的采购订单的付款总额。--}}
+                         {{-- 蓝色：约定付款节点到了没付款，项目又垫款，且集团所有项目都垫款的，弄成蓝色 --}}
+                 @if (isset($item->purchaseorder_hxold->sohead) && $item->purchaseorder_hxold->sohead->needreceiptpayment() && $item->purchaseorder_hxold->sohead->groupdianziallsohead())  style="color: #0000cc;")
+                @elseif (isset($item->purchaseorder_hxold->sohead) and $item->purchaseorder_hxold->sohead->receiptpayments->sum('amount') * 10000 < $item->purchaseorder_hxold->sohead->payments->sum('amount'))  style="color: #FF3300;") @endif >
                 <div title="{{ $item->applicant_name }}的付款" class="title">
                     <div class='longText'>{{ $item->paymenttype }} | {{ $item->amount }}</div>
                     {{-- 示例：山东奥博环保科技有限公司 --}}

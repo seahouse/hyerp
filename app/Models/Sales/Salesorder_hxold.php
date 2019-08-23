@@ -356,4 +356,227 @@ class Salesorder_hxold extends Model
     public function soheaddocs() {
         return $this->hasMany('App\Models\Sales\Soheaddocs', 'sohead_id', 'id');
     }
+
+    // 是否需要收款：根据约定的付款方式判断是否需要收款
+    public function needreceiptpayment() {
+        $soheadAmount = $this->amount;
+        $receivedAmount = $this->receiptpayments()->sum('amount');
+        $msgList = [];
+        $notReceiveAmountForWarning = 0.0;
+        // 获取付款方式
+        $paywayasses = Paywayass_hxold::where('paywayass_order_id', $this->id)->orderBy('payway_seq')->get();
+        $percentSum = 0.0;
+        $bWarning = false;
+        foreach ($paywayasses as $paywayass)
+        {
+            $paywayId = $paywayass->paywayass_payway_id;
+            $percentSum += $paywayass->paywayass_value;
+//                Log::info("percentSum: " . $percentSum);
+
+            $amountDest = $this->amount * $percentSum;
+            $notReceivedAmount = $amountDest - $receivedAmount;
+//                Log::info("notReceivedAmount: " . $notReceivedAmount);
+
+            switch ($paywayId)
+            {
+                case 1:         // 预付款: 合同签订后10天
+                    $orderDate = Carbon::parse($this->orderdate);
+                    if (Carbon::now()->gt($orderDate->addDay(10)))
+                        $bWarning = true;
+                    break;
+                case 2:         // 提资款: 合同签订后20天
+                    $orderDate = Carbon::parse($this->orderdate);
+                    if (Carbon::now()->gt($orderDate->addDay(20)))
+                        $bWarning = true;
+                    break;
+                case 15:        // 设计结束款: 技术部与电气部都已完成
+                    // 目前数据库中的电气部似乎都没有显示完成，所以先不考虑电气部的完成情况
+                    if ($this->techdept_status == 1 && $this->elecdept_status == 1)
+//                        if ($this->techdept_status == 1)
+                    {
+                        $bWarning = true;
+                    }
+                    break;
+                case 3:         // 进度款: 已填写开工日期
+                case 4:         // 发货前款: 已填写开工日期
+                    $startDate = Carbon::parse($this->startDate);
+                    $baseDate = Carbon::create(1900, 1, 1);
+                    if ($startDate->gt($baseDate))
+                        $bWarning = true;
+                    break;
+                case 13:        // 部分到货款: 已勾选发货
+                case 5:         // 全部到货款: 已勾选发货
+                    if ($this->delivery_status == 1)
+                    {
+                        $bWarning = true;
+                    }
+                    break;
+                case 14:            // 安装结束款: 已填写安装日期
+                    $installeddate = Carbon::parse($this->installeddate);
+                    $baseDate = Carbon::create(1900, 1, 1);
+                    if ($installeddate->gt($baseDate))
+                    {
+                        $bWarning = true;
+                    }
+                    break;
+                case 7:             // 调试后: 已填写项目投运日期（72+24小时完成日）
+                    // Carbon使用方法: https://9iphp.com/web/laravel/php-datetime-package-carbon.html
+                    $debugendDate = Carbon::parse($this->debugend_date);
+                    $baseDate = Carbon::create(1900, 1, 1);
+                    if ($debugendDate->gt($baseDate))
+                    {
+                        $bWarning = true;
+                    }
+                    break;
+                case 23:            // 通烟气款: 已填写通烟气日期
+                    $passgasDate = Carbon::parse($this->passgasDate);
+                    $baseDate = Carbon::create(1900, 1, 1);
+                    if ($passgasDate->gt($baseDate))
+                        $bWarning = true;
+                    break;
+                case 21:            // 滤料质保金: 已填写通烟气日期后两年
+                    $passgasDate = Carbon::parse($this->passgasDate);
+                    $baseDate = Carbon::create(1900, 1, 1);
+                    if ($passgasDate->gt($baseDate) && Carbon::now()->gt($passgasDate->addYear(2)))
+                        $bWarning = true;
+                    break;
+                case 8:             // 72小时后款: 已填写项目投运日期
+                    // Carbon使用方法: https://9iphp.com/web/laravel/php-datetime-package-carbon.html
+                    $debugendDate = Carbon::parse($this->debugend_date);
+                    $baseDate = Carbon::create(1900, 1, 1);
+                    if ($debugendDate->gt($baseDate))
+                    {
+                        $bWarning = true;
+                    }
+                    break;
+                case 22:            // 性能验收后: 已填写性能验收日期
+                    $performanceAcceptDate = Carbon::parse($this->performanceAcceptDate);
+                    $baseDate = Carbon::create(1900, 1, 1);
+                    if ($performanceAcceptDate->gt($baseDate))
+                        $bWarning = true;
+                    break;
+                case 17:            // 运行3个月: 已填写已填写项目投运日期后3个月
+                    $debugendDate = Carbon::parse($this->debugend_date);
+                    $baseDate = Carbon::create(1900, 1, 1);
+                    if ($debugendDate->gt($baseDate) && Carbon::now()->gt($debugendDate->addMonth(3)))
+                        $bWarning = true;
+                    break;
+                case 18:            // 运行半年: 已填写已填写项目投运日期后6个月
+                    $debugendDate = Carbon::parse($this->debugend_date);
+                    $baseDate = Carbon::create(1900, 1, 1);
+                    if ($debugendDate->gt($baseDate) && Carbon::now()->gt($debugendDate->addMonth(6)))
+                        $bWarning = true;
+                    break;
+                case 9:             // 运行1年
+                    // Carbon使用方法: https://9iphp.com/web/laravel/php-datetime-package-carbon.html
+                    $debugendDate = Carbon::parse($this->debugend_date);
+                    $baseDate = Carbon::create(1900, 1, 1);
+                    if ($debugendDate->gt($baseDate) && Carbon::now()->gt($debugendDate->addMonth(12)))
+                    {
+                        $bWarning = true;
+                    }
+                    break;
+                case 12:            // 环保验收: 已填写环保验收日期
+                    // Carbon使用方法: https://9iphp.com/web/laravel/php-datetime-package-carbon.html
+                    $environmentalProtectionCollectionDate = Carbon::parse($this->environmentalProtectionCollectionDate);
+                    $baseDate = Carbon::create(1900, 1, 1);
+                    if ($environmentalProtectionCollectionDate->gt($baseDate) && Carbon::now()->gt($environmentalProtectionCollectionDate))
+                    {
+                        $bWarning = true;
+                    }
+                    break;
+                case 10:        // 质保金: 质保金到期日期.  不知道为什么质保金日期在后台里很多订单是 1901-01-01, 而不是 1900
+                    $quolityDate = Carbon::parse($this->quolityDate);
+                    $baseDate = Carbon::create(1901, 1, 1);
+                    if ($quolityDate->gt($baseDate) && Carbon::now()->gt($quolityDate))
+                    {
+                        $bWarning = true;
+                    }
+                    break;
+                case 19:        // 第1年质保金: quolityDate
+                    $quolityDate = Carbon::parse($this->quolityDate);
+                    $baseDate = Carbon::create(1901, 1, 1);
+                    if ($quolityDate->gt($baseDate) && Carbon::now()->gt($quolityDate->addYear(1)))
+                    {
+                        $bWarning = true;
+                    }
+                    break;
+                case 20:        // 第2年质保金: quolityDate
+                    $quolityDate = Carbon::parse($this->quolityDate);
+                    $baseDate = Carbon::create(1901, 1, 1);
+                    if ($quolityDate->gt($baseDate) && Carbon::now()->gt($quolityDate->addYear(2)))
+                    {
+                        $bWarning = true;
+                    }
+                    break;
+                case 11:
+                    break;
+                default:
+                    break;
+            }
+
+            if ($bWarning)
+            {
+                if ($notReceivedAmount > $this->amount * 0.01)
+                    ;
+                else
+                    $bWarning = false;
+//                $notReceiveAmountForWarning = $notReceivedAmount;
+//                $msgTemp = "应收" . $paywayass->payway_name . "款" . $amountDest . "万, " .
+//                    "实收" . $receivedAmount . "万, 未收" . $notReceivedAmount . "万";
+//                $msgTemp = "累计可收" . $amountDest . "万(" . $amountDest / $soheadAmount * 100.0 . "%), " .
+//                    "累计实收" . doubleval($receivedAmount) . "万(" . number_format($receivedAmount / $soheadAmount * 100.0, 2) . "%), " .
+//                    "差" . $notReceivedAmount . "万(" . number_format($notReceivedAmount / $soheadAmount * 100.0, 2) . "%).";
+//                array_push($msgList, $msgTemp);
+            }
+        }
+
+//        if (count($msgList) > 0)
+//        {
+//
+//            $msg = ($this->projectjc == "" ? $this->descrip : $this->projectjc) . ", "  .
+//                "合同" . doubleval($soheadAmount) . "万, " . array_pop($msgList) . " \n付款方式: " . $this->paymethod;
+//
+//            $salesmanager_id = $this->salesmanager_id;
+//            if (!array_key_exists($this->salesmanager_id, $receiptPeopleArray))
+//            {
+//                $receiptPeopleArray[$salesmanager_id] = [];
+//                $receiptPeopleArray[$salesmanager_id]['msg'] = [];
+//                $receiptPeopleArray[$salesmanager_id]['total'] = 0.0;
+//            }
+//            array_push($receiptPeopleArray[$this->salesmanager_id]['msg'], ($this->projectjc == "" ? $this->descrip : $this->projectjc) . $notReceiveAmountForWarning . "万元")  ;
+//            $receiptPeopleArray[$salesmanager_id]['total'] += $notReceiveAmountForWarning;
+//
+//            // 向销售经理发送消息
+//            $this->sendMsg($msg, $this->salesmanager_id);
+//            $this->sendMsg($msg, 8);        // to WuHL
+//            $this->sendMsg($msg, 16);       // to LiY
+//        }
+        return $bWarning;
+    }
+
+    // 集团里所有的订单都垫资
+    public function groupdianziallsohead() {
+        $bRtn = true;
+        $group = $this->project->group;
+        if (isset($group))
+        {
+//            Log::info('Group:' . $group->id);
+            foreach ($group->projects as $project)
+            {
+                foreach ($project->soheads as $sohead)
+                {
+//                    Log::info('Sohead:' . $sohead->id);
+//                    Log::info($sohead->receiptpayments->sum('amount') * 10000);
+//                    Log::info($sohead->payments->sum('amount'));
+                    if ($sohead->receiptpayments->sum('amount') * 10000 >= $sohead->payments->sum('amount'))
+                    {
+                        $bRtn = false;
+                        break;
+                    }
+                }
+            }
+        }
+        return $bRtn;
+    }
 }
