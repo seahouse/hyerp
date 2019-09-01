@@ -340,4 +340,23 @@ class VendordeductionController extends Controller
     {
         //
     }
+
+    public static function updateStatusByProcessInstanceId($processInstanceId, $status)
+    {
+        $vendordeduction = Vendordeduction::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if ($vendordeduction)
+        {
+            $vendordeduction->status = $status;
+            $vendordeduction->save();
+        }
+    }
+
+    public static function deleteByProcessInstanceId($processInstanceId)
+    {
+        $vendordeduction = Vendordeduction::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if ($vendordeduction)
+        {
+            $vendordeduction->forceDelete();
+        }
+    }
 }

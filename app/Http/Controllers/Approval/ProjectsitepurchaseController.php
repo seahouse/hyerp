@@ -349,4 +349,23 @@ class ProjectsitepurchaseController extends Controller
     {
         //
     }
+
+    public static function updateStatusByProcessInstanceId($processInstanceId, $status)
+    {
+        $projectsitepurchase = Projectsitepurchase::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if ($projectsitepurchase)
+        {
+            $projectsitepurchase->status = $status;
+            $projectsitepurchase->save();
+        }
+    }
+
+    public static function deleteByProcessInstanceId($processInstanceId)
+    {
+        $projectsitepurchase = Projectsitepurchase::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if ($projectsitepurchase)
+        {
+            $projectsitepurchase->forceDelete();
+        }
+    }
 }
