@@ -2188,4 +2188,165 @@ class ApprovalController extends Controller
 
         return $response;
     }
+
+    public static function vendordeduction($inputs)
+    {
+        $user = Auth::user();
+        $method = 'dingtalk.smartwork.bpms.processinstance.create';
+        $session = DingTalkController::getAccessToken();
+        $timestamp = time('2017-07-19 13:06:00');
+        $format = 'json';
+        $v = '2.0';
+
+        $process_code = config('custom.dingtalk.approval_processcode.vendordeduction');
+        $originator_user_id = $user->dtuserid;
+        $departmentList = json_decode($user->dtuser->department);
+        $dept_id = 0;
+        if (count($departmentList) > 0)
+            $dept_id = array_first($departmentList);
+        $approvers = $inputs['approvers'];
+//        $approvers = $user->dtuserid;
+        // if originator_user_id in approvers, skip pre approvers
+        $approver_array = explode(',', $approvers);
+        if (in_array($originator_user_id, $approver_array))
+        {
+            $offset = array_search($originator_user_id, $approver_array);
+            $approver_array = array_slice($approver_array, $offset+1);
+            $approvers = implode(",", $approver_array);
+        }
+        if ($approvers == "")
+            $approvers = config('custom.dingtalk.default_approvers');       // wuceshi for test
+
+        $detail_array = [];
+        $vendordeduction_items = json_decode($inputs['items_string']);
+        $totalprice = 0.0;
+        foreach ($vendordeduction_items as $value) {
+            if (strlen($value->itemname) > 0)
+            {
+                $item_array = [
+                    [
+                        'name'      => '设备名称',
+                        'value'     => $value->itemname,
+                    ],
+                    [
+                        'name'      => '规格',
+                        'value'     => $value->itemspec,
+                    ],
+                    [
+                        'name'      => '单位',
+                        'value'     => $value->itemunit,
+                    ],
+                    [
+                        'name'      => '数量',
+                        'value'     => $value->quantity,
+                    ],
+                    [
+                        'name'      => '单价',
+                        'value'     => $value->unitprice,
+                    ],
+                    [
+                        'name'      => '总额（元）',
+                        'value'     => $value->quantity * $value->unitprice,
+                    ],
+                ];
+                array_push($detail_array, $item_array);
+                $totalprice += $value->quantity * $value->unitprice;
+            }
+        }
+        $formdata = [
+            [
+                'name'      => '本次扣款所属项目名称',
+                'value'     => $inputs['pohead_descrip'],
+            ],
+            [
+                'name'      => '本次扣款所属项目编号',
+                'value'     => $inputs['sohead_number'],
+            ],
+            [
+                'name'      => '本次扣款外协合同编号',
+                'value'     => $inputs['pohead_number'],
+            ],
+            [
+                'name'      => '外协单位名称',
+                'value'     => $inputs['vendor_name'],
+            ],
+            [
+                'name'      => '外协单位所属种类',
+                'value'     => $inputs['outsourcingtype'],
+            ],
+            [
+                'name'      => '工艺主设部门',
+                'value'     => $inputs['techdepart'],
+            ],
+            [
+                'name'      => '扣款问题发生地',
+                'value'     => $inputs['problemlocation'],
+            ],
+            [
+                'name'      => '扣款原因',
+                'value'     => $inputs['reason'],
+            ],
+            [
+                'name'      => '申请扣款总金额（元）',
+                'value'     => $totalprice,
+            ],
+            [
+                'name'      => '备注',
+                'value'     => $inputs['remark'],
+            ],
+            [
+                'name'      => '供应商盖章或签字确认的文件',
+                'value'     => $inputs['fileattachments_url'],
+            ],
+            [
+                'name'      => '供应商确认的或执行通知义务的截图',
+                'value'     => $inputs['image_urls'],
+            ],
+            [
+                'name'      => '明细',
+                'value'     => json_encode($detail_array),
+            ],
+        ];
+        $form_component_values = json_encode($formdata);
+//        dd(json_decode(json_decode($form_component_values)[9]->value));
+//        Log::info('process_code: ' . $process_code);
+//        Log::info('originator_user_id: ' . $originator_user_id);
+//        Log::info('dept_id: ' . $dept_id);
+//        Log::info('approvers: ' . $approvers);
+//        Log::info('form_component_values: ' . $form_component_values);
+        $params = compact('method', 'session', 'v', 'format',
+            'process_code', 'originator_user_id', 'dept_id', 'approvers', 'form_component_values');
+        $data = [
+//            'form_component_values' => $form_component_values,
+        ];
+
+//        Log::info(app_path());
+        $c = new DingTalkClient();
+        $req = new SmartworkBpmsProcessinstanceCreateRequest();
+//        $req->setAgentId("41605932");
+        $req->setProcessCode($process_code);
+        $req->setOriginatorUserId($originator_user_id);
+        $req->setDeptId("$dept_id");
+        $req->setApprovers($approvers);
+        $cc_list = config('custom.dingtalk.approversettings.vendordeduction.cc_list.default');
+        if (strlen($cc_list) == 0)
+            $cc_list = config('custom.dingtalk.approversettings.vendordeduction.cc_list.default', '');
+        if ($cc_list <> "")
+        {
+            $req->setCcList($cc_list);
+            $req->setCcPosition("FINISH");
+        }
+        $req->setFormComponentValues("$form_component_values");
+
+//        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
+        $response = $c->execute($req, $session);
+        return json_encode($response);
+        dd(json_encode($response, JSON_UNESCAPED_UNICODE));
+        return response()->json($response);
+
+//        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+//        $response = HttpDingtalkEco::post("", $params, json_encode($data));
+
+        return $response;
+    }
 }

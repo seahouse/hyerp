@@ -310,6 +310,7 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
     });
     Route::group(['prefix' => 'purchaseorders'], function() {
         Route::get('getitemsbyorderkey/{key}/{supplierid?}', 'PurchaseordersController@getitemsbyorderkey');
+        Route::get('getitemsbyorderkey_simple/{key}/{supplierid?}', 'PurchaseordersController@getitemsbyorderkey_simple');
         Route::get('index_hx', 'PurchaseordersController@index_hx');
         Route::get('create_hx', 'PurchaseordersController@create_hx');
         Route::post('store_hx', 'PurchaseordersController@store_hx');
@@ -509,6 +510,12 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::post('mstore', 'ProjectsitepurchaseController@mstore');
     });
     Route::resource('projectsitepurchases', 'ProjectsitepurchaseController');
+
+    Route::group(['prefix' => 'vendordeductions'], function() {
+        Route::get('mcreate', 'VendordeductionController@mcreate');
+        Route::post('mstore', 'VendordeductionController@mstore');
+    });
+    Route::resource('vendordeductions', 'VendordeductionController');
 
     Route::post('bingdingtalk', 'ApprovalController@bingdingtalk');
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexapproval');

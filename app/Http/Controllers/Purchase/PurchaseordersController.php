@@ -76,6 +76,21 @@ class PurchaseordersController extends Controller
         return $purchaseorders;
     }
 
+    public function getitemsbyorderkey_simple($key, $supplierid=0)
+    {
+        //
+        $query = Purchaseorder_hxold_simple::orderBy('id', 'desc');
+        if ($supplierid > 0)
+            $query->where('vendinfo_id', $supplierid);
+        if (strlen($key) > 0)
+            $query->where(function ($query) use ($key) {
+                $query->where('number', 'like', '%'.$key.'%')
+                    ->orWhere('descrip', 'like', '%'.$key.'%');
+            });
+        $purchaseorders = $query->paginate(20);
+        return $purchaseorders;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
