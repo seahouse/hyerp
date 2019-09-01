@@ -139,6 +139,10 @@ Route::group(['middleware' => ['web', 'auth']], function () {
         $filename = str_replace("_", ".", $filename);
         return redirect(url("uploads/approval/mcitempurchase/$id/files/$filename"));
     });
+    Route::get('uploads/approval/{approvaltype}/{id}/files/{filename}', function ($approvaltype, $id, $filename) {
+        $filename = str_replace("_", ".", $filename);
+        return redirect(url("uploads/approval/$approvaltype/$id/files/$filename"));
+    });
 
     Route::get('changeuser', 'HelperController@changeuser');
     Route::post('changeuser_store', 'HelperController@changeuser_store');
