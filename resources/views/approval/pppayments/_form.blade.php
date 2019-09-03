@@ -7,6 +7,7 @@
     </div>
 </div>
 
+
         <div class="form-group">
             {!! Form::label('designdepartment', '设计部门:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
