@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Approval;
 
 use App\Http\Controllers\DingTalkController;
-use App\Models\Approval\Projectsitepurchase;
-use App\Models\Approval\Projectsitepurchaseattachment;
-use App\Models\Approval\Projectsitepurchaseitem;
+use App\Models\Approval\Vendordeduction;
+use App\Models\Approval\Vendordeductionattachment;
+use App\Models\Approval\Vendordeductionitem;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Auth, Storage, Log;
+use Auth, Storage;
 
-class ProjectsitepurchaseController extends Controller
+class VendordeductionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -38,7 +38,7 @@ class ProjectsitepurchaseController extends Controller
     {
         //
         $config = DingTalkController::getconfig();
-        return view('approval/projectsitepurchases/mcreate', compact('config'));
+        return view('approval/vendordeductions/mcreate', compact('config'));
     }
 
     /**
@@ -54,16 +54,15 @@ class ProjectsitepurchaseController extends Controller
 
     public function mstore(Request $request)
     {
+//        $vendordeduction = new Vendordeduction;
+//        $vendordeduction->techdepart = '工艺二室';
+//        $vendordeduction->outsourcingtype = '宣城生产中心生产队伍';
+//        $vendordeduction->problemlocation = '项目现场';
+//        $techdepart = $vendordeduction->approvers();
+//        dd($techdepart);
+
         $input = $request->all();
 //        dd($input);
-//        $itemsArray = json_decode($input['items_string']);
-//        if (is_array(json_decode($input['items_string2'])) && is_array(json_decode($input['items_string'])))
-//            $itemsArray = array_merge(json_decode($input['items_string2']), json_decode($input['items_string']));
-//        elseif (is_array(json_decode($input['items_string2'])) && !is_array(json_decode($input['items_string'])))
-//            $itemsArray = json_decode($input['items_string2']);
-//        $input['items_string'] = json_encode($itemsArray);
-//        dd($itemsArray);
-//        dd($input['items_string']);
 
 
 //        $input = array(
@@ -76,9 +75,8 @@ class ProjectsitepurchaseController extends Controller
 //            'approvers' => 'manager1200');
 
         $this->validate($request, [
-            'sohead_id'                   => 'required|integer|min:1',
-            'purchasetype'               => 'required',
-            'purchasereason'             => 'required',
+            'pohead_id'                   => 'required|integer|min:1',
+//            'purchasereason'             => 'required',
 //            'issuedrawing_values'       => 'required',
             'items_string'               => 'required',
 //            'tonnage'               => 'required|numeric',
@@ -89,89 +87,82 @@ class ProjectsitepurchaseController extends Controller
         ]);
 //        $input = HelperController::skipEmptyValue($input);
 
-//        // valid
-//        $weight_purchase = 0.0;
-//        $mcitempurchase_items = json_decode($input['items_string']);
-//        foreach ($mcitempurchase_items as $value) {
-//            if ($value->item_id > 0)
-//            {
-//                $weight_purchase += $value->weight;
-//            }
-//        }
-//        $input['totalweight'] = $weight_purchase;
-//
-//        if ($input['sohead_id'] <> "7550")
-//        {
-//            $weight_issuedrawing = 0.0;
-//            $issuedrawing_values = $input['issuedrawing_values'];
-//            foreach (explode(",", $issuedrawing_values) as $value) {
-//                if ($value > 0)
-//                {
-//                    $issuedrawing = Issuedrawing::where('id', $value)->first();
-//                    if (isset($issuedrawing))
-//                        $weight_issuedrawing += $issuedrawing->tonnage;
-//                }
-//            }
-//            if ($weight_purchase > $weight_issuedrawing * 1.3)
-//                dd('申购重量超过了图纸重量');
-//            $weight_sohead_issuedrawing = 0.0;
-//            $weight_sohead_purchase = 0.0;
-//            $issuedrawings = Issuedrawing::where('sohead_id', $input['sohead_id'])->where('status', 0)->get();
-//            foreach ($issuedrawings as $issuedrawing)
-//            {
-//                $weight_sohead_issuedrawing += $issuedrawing->tonnage;
-//            }
-//            $mcitempurchases = Mcitempurchase::where('sohead_id', $input['sohead_id'])->where('status', '>=', 0)->get();
-//            foreach ($mcitempurchases as $mcitempurchase)
-//            {
-//                $weight_sohead_purchase += $mcitempurchase->mcitempurchaseitems->sum('weight');
-//            }
-//            if (($weight_sohead_purchase + $weight_purchase)  > $weight_sohead_issuedrawing * 1.2)
-//                dd("该订单的申购重量之和超过了图纸重量之和。订单下图单总重量：" . $weight_sohead_issuedrawing . "，已申购：" . $weight_sohead_purchase . "，此次申购：" . $weight_purchase . "。");
-//        }
 
-        if ($input['totalprice'] == "")
-            $input['totalprice'] = 0.0;
+//        if ($input['totalprice'] == "")
+//            $input['totalprice'] = 0.0;
         $input['applicant_id'] = Auth::user()->id;
 
-//        // set approversetting_id
-//        $approvaltype_id = self::typeid();
-//        if ($approvaltype_id > 0)
-//        {
-//            $approversettingFirst = Approversetting::where('approvaltype_id', $approvaltype_id)->orderBy('level')->first();
-//            if ($approversettingFirst)
-//                $input['approversetting_id'] = $approversettingFirst->id;
-//            else
-//                $input['approversetting_id'] = -1;
-//        }
-//        else
-//            $input['approversetting_id'] = -1;
 
-        $projectsitepurchase = Projectsitepurchase::create($input);
-//        dd($projectsitepurchase);
+        $vendordeduction = Vendordeduction::create($input);
+//        dd($vendordeduction);
 
         // create mcitempurchaseitems
-        if (isset($projectsitepurchase))
+        if (isset($vendordeduction))
         {
-            $projectsitepurchase_items = json_decode($input['items_string']);
-            foreach ($projectsitepurchase_items as $value) {
-                if ($value->item_id > 0)
+            $vendordeduction_items = json_decode($input['items_string']);
+            foreach ($vendordeduction_items as $value) {
+                if (strlen($value->itemname) > 0)
                 {
                     $item_array = json_decode(json_encode($value), true);
-                    $item_array['projectsitepurchase_id'] = $projectsitepurchase->id;
-                    Projectsitepurchaseitem::create($item_array);
+                    $item_array['vendordeduction_id'] = $vendordeduction->id;
+                    Vendordeductionitem::create($item_array);
                 }
             }
         }
-//        dd($projectsitepurchase);
+//        dd($vendordeduction);
 
+        // create files
+        $fileattachments_url = [];
+        $fileattachments_url2 = [];
+        if (isset($vendordeduction))
+        {
+            $files = array_get($input,'files');
+            $destinationPath = 'uploads/approval/vendordeduction/' . $vendordeduction->id . '/files/';
+            foreach ($files as $key => $file) {
+                if ($file)
+                {
+                    $originalName = $file->getClientOriginalName();         // aa.xlsx
+                    $extension = $file->getClientOriginalExtension();       // .xlsx
+//                    Log::info('extension: ' . $extension);
+                    $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                    Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
+
+                    // $fileName = rand(11111, 99999) . '.' . $extension;
+                    $upload_success = $file->move($destinationPath, $filename);
+
+                    // add database record
+                    $vendordeductionattachment = new Vendordeductionattachment();
+                    $vendordeductionattachment->vendordeduction_id = $vendordeduction->id;
+                    $vendordeductionattachment->type = "file";
+                    $vendordeductionattachment->filename = $originalName;
+                    $vendordeductionattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
+                    $vendordeductionattachment->save();
+
+                    array_push($fileattachments_url, url($destinationPath . $filename));
+                    if (strcasecmp($extension, "pdf") == 0)
+                        array_push($fileattachments_url2, url('pdfjs/viewer') . "?file=" . "/$destinationPath$filename");
+                    else
+                    {
+                        $filename2 = str_replace(".", "_", $filename);
+                        array_push($fileattachments_url2, url("$destinationPath$filename2"));
+                    }
+//                    array_push($fileattachments_url2, url('mddauth/pdfjs-viewer') . "?file=" . "/$destinationPath$filename");
+
+
+//                    DingTalkController::send_oa_paymentrequest($touser->dtuserid, '',
+//                        url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
+//                        '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', $paymentrequest,
+//                        config('custom.dingtalk.agentidlist.approval'));
+                }
+            }
+        }
 
         $image_urls = [];
         // create images in the desktop
-        if ($projectsitepurchase)
+        if ($vendordeduction)
         {
             $files = array_get($input,'images');
-            $destinationPath = 'uploads/approval/projectsitepurchase/' . $projectsitepurchase->id . '/images/';
+            $destinationPath = 'uploads/approval/vendordeduction/' . $vendordeduction->id . '/images/';
             if ($files)
             {
                 foreach ($files as $key => $file) {
@@ -188,12 +179,12 @@ class ProjectsitepurchaseController extends Controller
                         $upload_success = $file->move($destinationPath, $filename);
 
                         // add database record
-                        $projectsitepurchaseattachment = new Projectsitepurchaseattachment();
-                        $projectsitepurchaseattachment->projectsitepurchase_id = $projectsitepurchase->id;
-                        $projectsitepurchaseattachment->type = "image";
-                        $projectsitepurchaseattachment->filename = $originalName;
-                        $projectsitepurchaseattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
-                        $projectsitepurchaseattachment->save();
+                        $vendordeductionattachment = new Vendordeductionattachment();
+                        $vendordeductionattachment->vendordeduction_id = $vendordeduction->id;
+                        $vendordeductionattachment->type = "image";
+                        $vendordeductionattachment->filename = $originalName;
+                        $vendordeductionattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
+                        $vendordeductionattachment->save();
 
                         array_push($image_urls, url($destinationPath . $filename));
                     }
@@ -202,14 +193,14 @@ class ProjectsitepurchaseController extends Controller
         }
 
         // create images from dingtalk mobile
-        if ($projectsitepurchase)
+        if ($vendordeduction)
         {
             $images = array_where($input, function($key, $value) {
                 if (substr_compare($key, 'image_', 0, 6) == 0)
                     return $value;
             });
 
-            $destinationPath = 'uploads/approval/projectsitepurchase/' . $projectsitepurchase->id . '/images/';
+            $destinationPath = 'uploads/approval/vendordeduction/' . $vendordeduction->id . '/images/';
             foreach ($images as $key => $value) {
                 # code...
 
@@ -218,7 +209,7 @@ class ProjectsitepurchaseController extends Controller
                 // $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
                 // Storage::disk('local')->put($sFilename, file_get_contents($value));
                 // Storage::move($sFilename, '../abcd.jpg');
-                $dir = 'images/approval/projectsitepurchase/' . $projectsitepurchase->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                $dir = 'images/approval/projectsitepurchase/' . $vendordeduction->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
                 $parts = explode('/', $dir);
                 $filename = array_pop($parts);
                 $dir = '';
@@ -237,29 +228,29 @@ class ProjectsitepurchaseController extends Controller
 
 
                 // add image record
-                $projectsitepurchaseattachment = new Projectsitepurchaseattachment;
-                $projectsitepurchaseattachment->projectsitepurchase_id = $projectsitepurchase->id;
-                $projectsitepurchaseattachment->type = "image";     // add a '/' in the head.
-                $projectsitepurchaseattachment->path = "/$dir$filename";     // add a '/' in the head.
-                $projectsitepurchaseattachment->save();
+                $vendordeductionattachment = new Vendordeductionattachment;
+                $vendordeductionattachment->vendordeduction_id = $vendordeduction->id;
+                $vendordeductionattachment->type = "image";     // add a '/' in the head.
+                $vendordeductionattachment->path = "/$dir$filename";     // add a '/' in the head.
+                $vendordeductionattachment->save();
 
                 array_push($image_urls, $value);
             }
         }
-//        dd($projectsitepurchase);
+//        dd($vendordeduction);
 
-        if (isset($projectsitepurchase))
+        if (isset($vendordeduction))
         {
-            $input['totalprice'] = $projectsitepurchase->projectsitepurchaseitems->sum('price') + $input['freight'];
+            $input['fileattachments_url'] = implode(" , ", $fileattachments_url2);
             $input['image_urls'] = json_encode($image_urls);
-            $input['approvers'] = $projectsitepurchase->approvers();
-            $response = ApprovalController::projectsitepurchase($input);
+            $input['approvers'] = $vendordeduction->approvers();
+            $response = ApprovalController::vendordeduction($input);
 //            Log::info($response);
 //            dd($response);
             $responsejson = json_decode($response);
             if ($responsejson->result->ding_open_errcode <> 0)
             {
-                $projectsitepurchase->forceDelete();
+                $vendordeduction->forceDelete();
 //                Log::info(json_encode($input));
                 dd('钉钉端创建失败: ' . $responsejson->result->error_msg);
             }
@@ -274,9 +265,9 @@ class ProjectsitepurchaseController extends Controller
                 if ($responsejson->dingtalk_smartwork_bpms_processinstance_get_response->result->ding_open_errcode == 0)
                     $business_id = $responsejson->dingtalk_smartwork_bpms_processinstance_get_response->result->process_instance->business_id;
 
-                $projectsitepurchase->process_instance_id = $process_instance_id;
-                $projectsitepurchase->business_id = $business_id;
-                $projectsitepurchase->save();
+                $vendordeduction->process_instance_id = $process_instance_id;
+                $vendordeduction->business_id = $business_id;
+                $vendordeduction->save();
 
 //                // send dingtalk message.
 //                $touser = $mcitempurchase->nextapprover();
@@ -352,20 +343,20 @@ class ProjectsitepurchaseController extends Controller
 
     public static function updateStatusByProcessInstanceId($processInstanceId, $status)
     {
-        $projectsitepurchase = Projectsitepurchase::where('process_instance_id', $processInstanceId)->firstOrFail();
-        if ($projectsitepurchase)
+        $vendordeduction = Vendordeduction::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if ($vendordeduction)
         {
-            $projectsitepurchase->status = $status;
-            $projectsitepurchase->save();
+            $vendordeduction->status = $status;
+            $vendordeduction->save();
         }
     }
 
     public static function deleteByProcessInstanceId($processInstanceId)
     {
-        $projectsitepurchase = Projectsitepurchase::where('process_instance_id', $processInstanceId)->firstOrFail();
-        if ($projectsitepurchase)
+        $vendordeduction = Vendordeduction::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if ($vendordeduction)
         {
-            $projectsitepurchase->forceDelete();
+            $vendordeduction->forceDelete();
         }
     }
 }

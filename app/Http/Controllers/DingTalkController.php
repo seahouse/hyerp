@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Approval\IssuedrawingController;
 use App\Http\Controllers\Approval\McitempurchaseController;
 use App\Http\Controllers\Approval\PppaymentController;
+use App\Http\Controllers\Approval\ProjectsitepurchaseController;
+use App\Http\Controllers\Approval\VendordeductionController;
 use App\Http\Controllers\util\HttpDingtalkEco;
 use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\SmartworkBpmsProcessinstanceCreateRequest;
@@ -1157,6 +1159,10 @@ class DingTalkController extends Controller
                         McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.pppayment'))
                         PppaymentController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.projectsitepurchase'))
+                        ProjectsitepurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.vendordeduction'))
+                        VendordeductionController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
                 }
                 elseif ($data->type == "finish" && $data->result == "refuse")
                 {
@@ -1166,6 +1172,10 @@ class DingTalkController extends Controller
                         McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.pppayment'))
                         PppaymentController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.projectsitepurchase'))
+                        ProjectsitepurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.vendordeduction'))
+                        VendordeductionController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
                 }
                 elseif ($data->type == "terminate")
                 {
@@ -1175,6 +1185,10 @@ class DingTalkController extends Controller
                         McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.pppayment'))
                         PppaymentController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.projectsitepurchase'))
+                        ProjectsitepurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.vendordeduction'))
+                        VendordeductionController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
                 }
                 elseif ($data->type == "delete")
                 {
@@ -1184,6 +1198,10 @@ class DingTalkController extends Controller
                         McitempurchaseController::deleteByProcessInstanceId($data->processInstanceId);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.pppayment'))
                         PppaymentController::deleteByProcessInstanceId($data->processInstanceId);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.projectsitepurchase'))
+                        ProjectsitepurchaseController::deleteByProcessInstanceId($data->processInstanceId);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.vendordeduction'))
+                        VendordeductionController::deleteByProcessInstanceId($data->processInstanceId);
                 }
             }
             else if ("bpms_task_change" === $eventType)
