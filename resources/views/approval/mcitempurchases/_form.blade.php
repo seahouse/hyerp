@@ -3,7 +3,7 @@
 <div class="form-group">
     {!! Form::label('manufacturingcenter', '所属制造中心:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::select('manufacturingcenter', array('无锡制造中心机械车间' => '无锡制造中心机械车间', '无锡制造中心电气车间' => '无锡制造中心电气车间', '泰州制造中心' => '泰州制造中心', '胶州制造中心（一厂）' => '胶州制造中心（一厂）', '胶莱制造中心（二厂）' => '胶莱制造中心（二厂）', '郎溪制造中心' => '郎溪制造中心'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+    {!! Form::select('manufacturingcenter', array('无锡制造中心机械车间' => '无锡制造中心机械车间', '无锡制造中心电气车间' => '无锡制造中心电气车间', '泰州制造中心' => '泰州制造中心', '胶州制造中心（一厂）' => '胶州制造中心（一厂）', '胶莱制造中心（二厂）' => '胶莱制造中心（二厂）', '宣城制造中心' => '宣城制造中心','许昌制造中心'=>'许昌制造中心'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
     </div>
 </div>
 
