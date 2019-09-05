@@ -157,7 +157,7 @@ class MyController extends Controller
             'vcustomer.name as customer_name',
             DB::raw('100-outsourcingpercent.[percent] as profitpercent'), DB::raw('dbo.getSoheadAmountPaid(vreceiptpayment.sohead_id) as soheadamountpaid'))
             ->paginate(10);
-
+        
         return $items;
     }
 

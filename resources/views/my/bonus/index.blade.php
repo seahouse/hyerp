@@ -48,6 +48,8 @@
     @if ($items->count())
     <?php $totalbonus = 0.0; ?>
     <?php $totalaamountperiod = 0.0; ?>
+    <?php $bonusfactor=0.0 ?>
+    <?php $totalbonusfactor=0.0 ?>
     <table id="userDataTable" class="table table-striped table-hover table-condensed">
         <thead>
             <tr>
@@ -89,6 +91,8 @@
                         {{ substr($item->date, 0, 10) }}
                     </td>
                     <td>
+                        <?php $bonusfactor =  $item->sohead->getBonusfactorByPolicy(); ?>
+                        <?php $totalbonusfactor += $bonusfactor; ?>
                         {{ $item->sohead->getBonusfactorByPolicy() * 100.0 . '%' }}
                     </td>
                     <td>
@@ -171,7 +175,9 @@
                 <td></td>
                 <td>{{ $totalaamountperiod }}</td>
                 <td></td>
-                <td></td>
+                <td>
+                    {{ $totalbonusfactor * 100 . '% '}}
+                </td>
                 <td>
                     {{--{{ number_format($items->sum('bonus'), 2) }}--}}
                     {{ $totalbonus }}

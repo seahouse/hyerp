@@ -182,6 +182,27 @@ class Salesorder_hxold extends Model
                         case 12:     // 24
                             $bonusfactortemp = $this->getBonusfactorByAmount();
                             break;
+                        case 28:     // 25
+                            $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
+                            break;
+                        case 29:     // 26
+                            $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
+                            break;
+                        case 30:     // 27
+                            $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.8, 1.2);
+                            break;
+                        case 31:     // 28
+                            $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.8, 1.2);
+                            break;
+                        case 32:     // 29
+                            $bonusfactortemp = $this->getBonusfactorByAmount();
+                            break;
+                        case 33:     // 30
+                            $bonusfactortemp = $this->getBonusfactorByAmount();
+                            break;
+                        case 34:     // 31
+                            $bonusfactortemp = $this->getBonusfactorByAmount();
+                            break;
                     }
                     if ($bonusfactor == 0.0 || $bonusfactor > $bonusfactortemp)
                         $bonusfactor = $bonusfactortemp;
@@ -236,6 +257,7 @@ class Salesorder_hxold extends Model
                 }
                 $poheadcostpercent = ($poheadamounttotal + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount) / ($amount * 10000.0);
 //            $poheadamounpercent = $poheadamounttotal / $amount;
+
                 if ($receiptpaymenttotal / $amount >= 0.6)
                 {
                     if (abs($maxbonusfactor - 0.35) < 0.000001 && abs($mixbonusfactor - 0.1) < 0.000001)
