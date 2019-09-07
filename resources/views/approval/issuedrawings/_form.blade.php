@@ -3,7 +3,7 @@
 <div class="form-group">
     {!! Form::label('designdepartment', '设计部门:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::select('designdepartment', array('工艺一室' => '工艺一室', '工艺二室' => '工艺二室', '电控室' => '电控室'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable, 'onchange' => 'selectDesigndepartmentChange()']) !!}
+    {!! Form::select('designdepartment', array('工艺一室' => '工艺一室', '工艺二室' => '工艺二室', '工艺三室' => '工艺三室', '电控室' => '电控室'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable, 'onchange' => 'selectDesigndepartmentChange()']) !!}
     </div>
 </div>
 
