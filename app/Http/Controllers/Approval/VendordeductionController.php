@@ -256,16 +256,16 @@ class VendordeductionController extends Controller
 //            Log::info($response);
 //            dd($response);
             $responsejson = json_decode($response);
-            if ($responsejson->result->ding_open_errcode <> 0)
+            if ($responsejson->errcode <> "0")
             {
                 $vendordeduction->forceDelete();
 //                Log::info(json_encode($input));
-                dd('钉钉端创建失败: ' . $responsejson->result->error_msg);
+                dd('钉钉端创建失败: ' . $responsejson->errmsg);
             }
             else
             {
                 // save process_instance_id and business_id
-                $process_instance_id = $responsejson->result->process_instance_id;
+                $process_instance_id = $responsejson->process_instance_id;
 
                 $response = DingTalkController::processinstance_get($process_instance_id);
                 $responsejson = json_decode($response);

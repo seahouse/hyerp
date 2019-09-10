@@ -2504,6 +2504,7 @@ class ApprovalController extends Controller
 
 //        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
         $response = $c->execute($req, $session);
+//        Log::info(json_encode($response));
         return json_encode($response);
         dd(json_encode($response, JSON_UNESCAPED_UNICODE));
         return response()->json($response);
