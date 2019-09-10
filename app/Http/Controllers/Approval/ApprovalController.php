@@ -2456,8 +2456,11 @@ class ApprovalController extends Controller
             ],
             [
                 'name'      => '供应商盖章或签字确认的文件',
+                'value'     => $inputs['fileattachments_url'],
+            ],
+            [
+                'name'      => '附件',
                 'value'     => $inputs['files_string'],
-//                'value'     => $inputs['fileattachments_url'],
             ],
             [
                 'name'      => '供应商确认的或执行通知义务的截图',
