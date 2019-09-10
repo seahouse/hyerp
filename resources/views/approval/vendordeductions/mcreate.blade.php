@@ -919,38 +919,39 @@
                         {{--image:{multiple:true,compress:false,max:9,spaceId: "{!! array_get($config, 'spaceid') !!}"},--}}
                         space:{corpId:"{!! array_get($config, 'corpId') !!}",spaceId:"{!! array_get($config, 'spaceid') !!}",isCopy:1 , max:9},
                         file:{spaceId:"{!! array_get($config, 'spaceid') !!}",max:1},
-                        types:["photo","file","space"],//PC端支持["photo","file","space"]
+                        types:["file","space"],//PC端支持["photo","file","space"]
                         onSuccess : function(result) {
                             //onSuccess将在文件上传成功之后调用
+                            alert(JSON.stringify(result));
                             /*
-                             {
-                             type:'', // 用户选择了哪种文件类型 ，image（图片）、file（手机文件）、space（钉盘文件）
-                             data: [
-                             {
-                             spaceId: "232323",
-                             fileId: "DzzzzzzNqZY",
-                             fileName: "审批流程.docx",
-                             fileSize: 1024,
-                             fileType: "docx"
-                             },
-                             {
-                             spaceId: "232323",
-                             fileId: "DzzzzzzNqZY",
-                             fileName: "审批流程1.pdf",
-                             fileSize: 1024,
-                             fileType: "pdf"
-                             },
-                             {
-                             spaceId: "232323",
-                             fileId: "DzzzzzzNqZY",
-                             fileName: "审批流程3.pptx",
-                             fileSize: 1024,
-                             fileType: "pptx"
-                             }
-                             ]
+                            {
+                                type:'', // 用户选择了哪种文件类型 ，image（图片）、file（手机文件）、space（钉盘文件）
+                                    data: [
+                                {
+                                    spaceId: "232323",
+                                    fileId: "DzzzzzzNqZY",
+                                    fileName: "审批流程.docx",
+                                    fileSize: 1024,
+                                    fileType: "docx"
+                                },
+                                {
+                                    spaceId: "232323",
+                                    fileId: "DzzzzzzNqZY",
+                                    fileName: "审批流程1.pdf",
+                                    fileSize: 1024,
+                                    fileType: "pdf"
+                                },
+                                {
+                                    spaceId: "232323",
+                                    fileId: "DzzzzzzNqZY",
+                                    fileName: "审批流程3.pptx",
+                                    fileSize: 1024,
+                                    fileType: "pptx"
+                                }
+                            ]
 
-                             }
-                             */
+                            }
+                            */
                         },
                         onFail : function(err) {}
                     });
