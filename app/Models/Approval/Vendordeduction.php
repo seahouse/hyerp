@@ -29,12 +29,13 @@ class Vendordeduction extends Model
 
     public function approvers() {
         $outsourcingtype = config('custom.dingtalk.approversettings.vendordeduction.' . $this::getAttribute('techdepart') . '.' . $this::getAttribute('outsourcingtype'));
+//        dd($outsourcingtype);
         $approvers = '';
         if (is_string($outsourcingtype))
             $approvers = $outsourcingtype;
         else if (is_array($outsourcingtype))
         {
-            $problemlocation = $outsourcingtype['default'];
+//            $problemlocation = $outsourcingtype['default'];
             if (array_key_exists($this::getAttribute('problemlocation'), $outsourcingtype))
                 $problemlocation = $outsourcingtype[$this::getAttribute('problemlocation')];
             if (is_string($problemlocation))

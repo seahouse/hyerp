@@ -298,6 +298,7 @@
                 @endforeach
             @else
                 {!! Form::file('files[]', ['multiple']) !!}
+                {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'uploadAttach']) !!}
             @endif
         </div>
     </div>

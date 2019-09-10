@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Approval;
 
 use App\Http\Controllers\DingTalkController;
+use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
+use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiProcessinstanceCspaceInfoRequest;
 use App\Models\Approval\Vendordeduction;
 use App\Models\Approval\Vendordeductionattachment;
 use App\Models\Approval\Vendordeductionitem;
@@ -38,6 +40,12 @@ class VendordeductionController extends Controller
     {
         //
         $config = DingTalkController::getconfig();
+        $client = new DingTalkClient();
+        $req = new OapiProcessinstanceCspaceInfoRequest();
+        $req->setUserId(Auth::user()->dtuserid);
+        $response = $client->execute($req, $config['session']);
+//        dd(json_decode(json_encode($response))->result->space_id);
+        $config['spaceid'] = json_decode(json_encode($response))->result->space_id;
         return view('approval/vendordeductions/mcreate', compact('config'));
     }
 

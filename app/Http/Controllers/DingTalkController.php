@@ -169,6 +169,7 @@ class DingTalkController extends Controller
 //            'agentId' => config('custom.dingtalk.agentidlist.' . self::$APPNAME),       // such as: config('custom.dingtalk.agentidlist.approval')      // request('app')
             'agentId' => $agentid,
             'appname' => self::$APPNAME,
+            'session' => $corpAccessToken,
         );
 
         return $config;

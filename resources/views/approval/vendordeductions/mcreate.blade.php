@@ -275,18 +275,6 @@
     </div>
 </div>
 
-	{{-- upload and parse excel file form --}}
-{{--
-	<form id="formUploadParseExcel" method="post" action="{{ url('approval/mcitempurchase/uploadparseexcel') }}"  class="form-horizontal" enctype="multipart/form-data">
-		<div class="form-group">
-			{!! Form::label('items_excelfile', '解析明细模板文件:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-			<div class='col-xs-8 col-sm-10'>
-				{!! Form::file('items_excelfile', []) !!}
-				{!! Form::button('解析Excel', ['class' => 'btn btn-sm', 'id' => 'btnParseExcel']) !!}
-			</div>
-		</div>
-	</form>
---}}
 
 @endsection
 
@@ -815,60 +803,6 @@
                 });
             }
 
-
-			 $("#btnParseExcel").click(function() {
-//                 $('#formUploadParseExcel').append($(this).parent().children());
-//                 return false;
-//                 $('#formUploadParseExcel').submit();
-                 var formData = new FormData();
-                 formData.append('items_excelfile', $('#items_excelfile')[0].files[0]);
-                 $.ajax({
-                     type: "POST",
-                     url: "{!! url('approval/mcitempurchase/uploadparseexcel') !!}",
-					 data: formData,
-                     processData: false,
-                     contentType: false,
-                     success: function(result) {
-                         $("#items_string2").val(JSON.stringify(result));
-//                         alert(JSON.stringify(result));
-                         var strhtml = '';
-                         strhtml += '<table class="table table-striped table-hover table-condensed">';
-                         if (result.length > 0)
-						 {
-                             strhtml += '<thead><tr><th>物品名称</th><th>型号</th><th>单位</th><th>尺寸</th><th>数量</th><th>重量</th><th>备注</th></tr></thead>';
-						     strhtml += '<tbody>';
-						 }
-
-                         $.each(result, function(i, field) {
-//                             alert(field.item_name);
-                             strhtml += '<tr><td>' + field.item_name + '</td><td>' + field.item_spec + '</td><td>' + field.unit_name + '</td><td>' + field.size + '</td><td>' + field.quantity + '</td><td>' + field.weight + '</td><td>' + field.remark + '</td></tr>'
-//                             $.each(field, function(j, item) {
-//                                 if (j == 'item_name')
-//                                     alert(item);
-////                                 btnId = 'btnSelectDrawingchecker_' + String(i);
-////                                 strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.name + "</h4></button>"
-//                             });
-//                             btnId = 'btnSelectDrawingchecker_' + String(i);
-//                             strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.name + "</h4></button>"
-                         });
-                         if (result.length > 0)
-                             strhtml += '</tbody>';
-                         strhtml += '</table>';
-                         if (strhtml == '')
-                             strhtml = '无记录。';
-                         $("#items_excel").empty().append(strhtml);
-
-//                         $.each(result.data, function(i, field) {
-//                             btnId = 'btnSelectDrawingchecker_' + String(i);
-//                             addBtnClickEvent(btnId, field);
-//                         });
-                     },
-                     error: function(xhr, ajaxOptions, thrownError) {
-                         alert('error');
-                     }
-                 });
-			 });
-
 			dd.config({
 			    agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
 			    corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID
@@ -978,6 +912,49 @@
 		  //               }
 				// 	});
 				// });
+
+                // 上传附件
+                $("#uploadAttach").click(function () {
+                    dd.biz.util.uploadAttachment({
+                        {{--image:{multiple:true,compress:false,max:9,spaceId: "{!! array_get($config, 'spaceid') !!}"},--}}
+                        space:{corpId:"{!! array_get($config, 'corpId') !!}",spaceId:"{!! array_get($config, 'spaceid') !!}",isCopy:1 , max:9},
+                        file:{spaceId:"{!! array_get($config, 'spaceid') !!}",max:1},
+                        types:["photo","file","space"],//PC端支持["photo","file","space"]
+                        onSuccess : function(result) {
+                            //onSuccess将在文件上传成功之后调用
+                            /*
+                             {
+                             type:'', // 用户选择了哪种文件类型 ，image（图片）、file（手机文件）、space（钉盘文件）
+                             data: [
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程.docx",
+                             fileSize: 1024,
+                             fileType: "docx"
+                             },
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程1.pdf",
+                             fileSize: 1024,
+                             fileType: "pdf"
+                             },
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程3.pptx",
+                             fileSize: 1024,
+                             fileType: "pptx"
+                             }
+                             ]
+
+                             }
+                             */
+                        },
+                        onFail : function(err) {}
+                    });
+                });
 			});
 
 			dd.error(function(error) {
