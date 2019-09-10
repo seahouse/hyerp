@@ -809,7 +809,7 @@
 			    timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
 			    nonceStr: '{!! array_get($config, 'nonceStr') !!}', // 必填，生成签名的随机串
 			    signature: '{!! array_get($config, 'signature') !!}', // 必填，签名
-			    jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile', 'biz.util.uploadAttachment'] // 必填，需要使用的jsapi列表
+			    jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile', 'biz.util.uploadAttachment', 'biz.cspace.preview'] // 必填，需要使用的jsapi列表
 			});
 
 //            window.selectImage_Mobile = function(evt) {
@@ -922,7 +922,25 @@
                         types:["file","space"],//PC端支持["photo","file","space"]
                         onSuccess : function(result) {
                             //onSuccess将在文件上传成功之后调用
-                            alert(JSON.stringify(result));
+//                            alert(JSON.stringify(result));
+                            $("#files_string").val(JSON.stringify(result));
+                            $.each(result.data, function(i, field) {
+                                dd.biz.cspace.preview({
+                                    corpId:"{!! array_get($config, 'corpId') !!}",
+                                    spaceId:field.spaceId,
+                                    fileId:field.fileId,
+                                    fileName:field.fileName,
+                                    fileSize:field.fileSize,
+                                    fileType:field.fileType,
+                                    onSuccess: function() {
+                                        //无，直接在native显示文件详细信息
+                                    },
+                                    onFail: function(err) {
+                                        // 无，直接在native页面显示具体的错误
+                                    }
+                                });
+                            });
+
                             /*
                             {
                                 type:'', // 用户选择了哪种文件类型 ，image（图片）、file（手机文件）、space（钉盘文件）
