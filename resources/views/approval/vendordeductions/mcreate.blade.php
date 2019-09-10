@@ -923,7 +923,7 @@
                         onSuccess : function(result) {
                             //onSuccess将在文件上传成功之后调用
 //                            alert(JSON.stringify(result));
-                            $("#files_string").val(JSON.stringify(result));
+                            $("#files_string").val(JSON.stringify(result.data));
                             {{--$.each(result.data, function(i, field) {--}}
                                 {{--dd.biz.cspace.preview({--}}
                                     {{--corpId:"{!! array_get($config, 'corpId') !!}",--}}
