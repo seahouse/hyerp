@@ -299,6 +299,8 @@
             @else
                 {!! Form::file('files[]', ['multiple']) !!}
                 {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'uploadAttach']) !!}
+                <div id="lblFiles">
+                </div>
                 {!! Form::hidden('files_string', null, ['id' => 'files_string']) !!}
             @endif
         </div>
