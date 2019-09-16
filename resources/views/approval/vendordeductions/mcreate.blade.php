@@ -80,17 +80,17 @@
 </div>
 
 <!-- supplier selector -->
-<div class="modal fade" id="selectProjectModal" tabindex="-1" role="dialog">
+<div class="modal fade" id="selectProjectpurchaseApproval" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">选择项目</h4>
+                <h4 class="modal-title">选择工程现场采购审批单</h4>
             </div>
             <div class="modal-body">
             	<div class="input-group">
-            		{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '项目编号、项目名称', 'id' => 'keyProject']) !!}
+            		{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '审批单号', 'id' => 'keyProjectpurchase']) !!}
             		<span class="input-group-btn">
-                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchProject']) !!}
+                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchProjectpurchaseApproval']) !!}
                    	</span>
             	</div>
             	{!! Form::hidden('name', null, ['id' => 'name']) !!}
@@ -432,8 +432,7 @@
 
 
 
-
-			$('#selectProjectModal').on('show.bs.modal', function (e) {
+			$('#selectProjectpurchaseApproval').on('show.bs.modal', function (e) {
 				$("#listproject").empty();
 
 				var target = $(e.relatedTarget);
@@ -446,27 +445,27 @@
 				// alert(modal.find('#id').val());
 			});
 
-			$("#btnSearchProject").click(function() {
-				if ($("#keyProject").val() == "") {
+			$("#btnSearchProjectpurchaseApproval").click(function() {
+				if ($("#keyProjectpurchase").val() == "") {
 					alert('请输入关键字');
 					return;
 				}
 				$.ajax({
 					type: "GET",
-					url: "{!! url('/sales/salesorders/getitemsbykey/') !!}" + "/" + $("#keyProject").val(),
+					url: "{!! url('/approval/projectsitepurchases/getitemsbykey/') !!}" + "/" + $("#keyProjectpurchase").val(),
 					success: function(result) {
 						var strhtml = '';
 						$.each(result.data, function(i, field) {
-							btnId = 'btnSelectProject_' + String(i);
-							strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.number + "</h4><p>" + field.descrip + "</p></button>"
+							btnId = 'btnSelectProjectpurchase_' + String(i);
+							strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.business_id + "</h4><p>提交人：" + field.applicant + "，工程简称：" + field.projectjc + "，订单编号：" + field.sohead_number +"，订单销售经理：" + field.salesmanager + "</p></button>"
 						});
 						if (strhtml == '')
 							strhtml = '无记录。';
 						$("#listproject").empty().append(strhtml);
 
 						$.each(result.data, function(i, field) {
-							btnId = 'btnSelectProject_' + String(i);
-							addBtnClickEventProject(btnId, field.id, field.number, field);
+							btnId = 'btnSelectProjectpurchase_' + String(i);
+							addBtnClickEventProjectpurchase(btnId, field.id, field.number, field);
 						});
 						// addBtnClickEvent('btnSelectOrder_0');
 					},
@@ -476,18 +475,15 @@
 				});
 			});
 
-			function addBtnClickEventProject(btnId, soheadid, name, field)
+			function addBtnClickEventProjectpurchase(btnId, soheadid, name, field)
 			{
 				$("#" + btnId).bind("click", function() {
-					$('#selectProjectModal').modal('toggle');
-					$("#" + $("#selectProjectModal").find('#name').val()).val(field.descrip);
-					$("#" + $("#selectProjectModal").find('#id').val()).val(soheadid);
-                    $("#sohead_number_" + $("#selectProjectModal").find('#num').val()).val(field.number);
-                    $("#sohead_number").val(field.number);
-					$("#sohead_salesmanager").val(field.salesmanager);
+					$('#selectProjectpurchaseApproval').modal('toggle');
+                    var strhtml = '关联审批单：' + field.business_id;
+                    $("#lblAssociatedapprovals").empty().append(strhtml);
+					$("#associatedapprovals").val(field.process_instance_id);
 //					$("#supplier_bankaccountnumber").val(field.bankaccountnumber);
 //					$("#vendbank_id").val(field.vendbank_id);
-//					$("#selectSupplierBankModal").find("#vendinfo_id").val(supplierid);
 				});
 			}
 

@@ -512,6 +512,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::group(['prefix' => 'projectsitepurchases'], function() {
         Route::get('mcreate', 'ProjectsitepurchaseController@mcreate');
         Route::post('mstore', 'ProjectsitepurchaseController@mstore');
+        Route::get('getitemsbykey/{key}', 'ProjectsitepurchaseController@getitemsbykey');
     });
     Route::resource('projectsitepurchases', 'ProjectsitepurchaseController');
 
@@ -564,6 +565,7 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
     Route::resource('employees', 'EmployeesController');
     Route::resource('depts', 'DeptsController');
     Route::resource('images', 'ImagesController');
+    Route::post('users/test', 'UsersController@test');
     Route::get('users/{id}/editrole', 'UsersController@editrole');
     Route::post('users/{id}/updaterole', 'UsersController@updaterole');
     Route::post('userroles/store', 'UserrolesController@store');
