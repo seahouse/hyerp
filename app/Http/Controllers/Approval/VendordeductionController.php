@@ -70,8 +70,6 @@ class VendordeductionController extends Controller
 //        dd($techdepart);
 
         $input = $request->all();
-//        dd(json_encode(array($input['associatedapprovals'])));
-
 
         $this->validate($request, [
             'pohead_id'                   => 'required|integer|min:1',
@@ -239,12 +237,13 @@ class VendordeductionController extends Controller
                 array_push($image_urls, $value);
             }
         }
-//        dd($vendordeduction);
 
         if (isset($vendordeduction))
         {
             $input['fileattachments_url'] = implode(" , ", $fileattachments_url2);
             $input['image_urls'] = json_encode($image_urls);
+            $input['associatedapprovals'] = strlen($input['associatedapprovals']) > 0 ? json_encode(array($input['associatedapprovals'])) : "";
+//            dd($input['associatedapprovals']);
             $input['approvers'] = $vendordeduction->approvers();
             $response = ApprovalController::vendordeduction($input);
 //            Log::info($response);

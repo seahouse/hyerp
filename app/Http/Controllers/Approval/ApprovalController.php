@@ -2468,7 +2468,7 @@ class ApprovalController extends Controller
             ],
             [
                 'name'      => '关联增补审批单',
-                'value'     => json_encode(array($inputs['associatedapprovals'])),
+                'value'     => $inputs['associatedapprovals'],
             ],
             [
                 'name'      => '明细',
