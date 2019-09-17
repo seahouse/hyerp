@@ -313,6 +313,7 @@
             </div>
         </div>
 
+    
     <div class="form-group">
         {!! Form::label('companyname', '公司名称:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
         <div class='col-xs-8 col-sm-10'>
