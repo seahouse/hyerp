@@ -309,7 +309,7 @@
         <div class="form-group">
             {!! Form::label('invoicesituation', '发票情况:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('invoicesituation', array('提供17%增值税票。' => '提供17%增值税票。', '提供普通发票。' => '提供普通发票。', '吴颖浩统计专用-收据部分' => '吴颖浩统计专用-收据部分'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                {!! Form::select('invoicesituation', array('提供13%增值税票。' => '提供13%增值税票。', '提供9%增值税票。' => '提供9%增值税票。','提供6%增值税票。' => '提供6%增值税票。','提供3%增值税票。' => '提供3%增值税票。','提供普通发票。' => '提供普通发票。', '吴颖浩统计专用-收据部分' => '吴颖浩统计专用-收据部分'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
             </div>
         </div>
 

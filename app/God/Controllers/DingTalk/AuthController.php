@@ -9,10 +9,10 @@ use DB, Auth, Cache, Redirect;
 
 class AuthController extends \App\God\Controllers\GodController
 {
-    const CONFIG = [
-        'corpid'     => 'ding05d110a55ed1446d',
-        'corpsecret' => 'vk6AtJvIZZEyiiTx7psL5BaFZG268F8YXUF4VVwabbGAAgGDNXiIPRxjU8uEhtPX',
-    ];
+//    const CONFIG = [
+//        'corpid'     => 'ding05d110a55ed1446d',
+//        'corpsecret' => 'vk6AtJvIZZEyiiTx7psL5BaFZG268F8YXUF4VVwabbGAAgGDNXiIPRxjU8uEhtPX',
+//    ];
 
     public function __construct()
     {
