@@ -24,6 +24,26 @@ class ProjectsitepurchaseController extends Controller
         //
     }
 
+    public function getitemsbykey($key)
+    {
+        $query = Projectsitepurchase::where('business_id', $key)->orderBy('id', 'desc');
+//        if ($customerid > 0)
+//        {
+//            $query->where('custinfo_id', $customerid);
+//        }
+//        $query->where(function ($query) use ($key) {
+//            $query->where('number', 'like', '%'.$key.'%')
+//                ->orWhere('descrip', 'like', '%'.$key.'%');
+//        });
+        $query->leftJoin('users', 'users.id', '=', 'projectsitepurchases.applicant_id');
+        $query->leftJoin('hxcrm2016.dbo.vorder', 'vorder.id', '=', 'projectsitepurchases.sohead_id');
+        $items = $query->select('projectsitepurchases.*', 'users.name as applicant', 'hxcrm2016.dbo.vorder.projectjc', 'hxcrm2016.dbo.vorder.number as sohead_number', 'hxcrm2016.dbo.vorder.salesmanager')->paginate(20);
+
+        return $items;
+        return response($items)
+            ->header('Access-Control-Allow-Origin', 'http://www.huaxing-east.cn:2016');
+    }
+
     /**
      * Show the form for creating a new resource.
      *

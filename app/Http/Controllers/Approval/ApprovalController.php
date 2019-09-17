@@ -2454,17 +2454,21 @@ class ApprovalController extends Controller
                 'name'      => '备注',
                 'value'     => $inputs['remark'],
             ],
+//            [
+//                'name'      => '供应商盖章或签字确认的文件',
+//                'value'     => $inputs['fileattachments_url'],
+//            ],
             [
                 'name'      => '供应商盖章或签字确认的文件',
-                'value'     => $inputs['fileattachments_url'],
-            ],
-            [
-                'name'      => '附件',
                 'value'     => $inputs['files_string'],
             ],
             [
                 'name'      => '供应商确认的或执行通知义务的截图',
                 'value'     => $inputs['image_urls'],
+            ],
+            [
+                'name'      => '关联增补审批单',
+                'value'     => json_encode(array($inputs['associatedapprovals'])),
             ],
             [
                 'name'      => '明细',

@@ -17,7 +17,7 @@
 
 <div class="form-group">
     {!! Form::label('position', '职位:') !!}
-    {!! Form::text('position', null, ['class' => 'form-control']) !!}
+    {!! Form::text('position', null, ['class' => 'form-control', 'id' => 'position']) !!}
 </div>
 
 <div class="form-group">

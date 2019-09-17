@@ -612,4 +612,10 @@ class UsersController extends Controller
 //            ->paginate(20);
         return $users;
     }
+
+    public function test(Request $request)
+    {
+        dd('aaa');
+        Log::info('abcd');
+    }
 }
