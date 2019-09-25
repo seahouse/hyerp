@@ -580,25 +580,30 @@ class Salesorder_hxold extends Model
     // 集团里所有的订单都垫资
     public function groupdianziallsohead() {
         $bRtn = true;
-        $group = $this->project->group;
-        if (isset($group))
+        $project = $this->project;
+        if (isset($project))
         {
-//            Log::info('Group:' . $group->id);
-            foreach ($group->projects as $project)
+            $group = $project->group;
+            if (isset($group))
             {
-                foreach ($project->soheads as $sohead)
+//            Log::info('Group:' . $group->id);
+                foreach ($group->projects as $project)
                 {
+                    foreach ($project->soheads as $sohead)
+                    {
 //                    Log::info('Sohead:' . $sohead->id);
 //                    Log::info($sohead->receiptpayments->sum('amount') * 10000);
 //                    Log::info($sohead->payments->sum('amount'));
-                    if ($sohead->receiptpayments->sum('amount') * 10000 >= $sohead->payments->sum('amount'))
-                    {
-                        $bRtn = false;
-                        break;
+                        if ($sohead->receiptpayments->sum('amount') * 10000 >= $sohead->payments->sum('amount'))
+                        {
+                            $bRtn = false;
+                            break;
+                        }
                     }
                 }
             }
         }
+
         return $bRtn;
     }
 }
