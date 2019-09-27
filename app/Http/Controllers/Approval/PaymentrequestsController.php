@@ -544,6 +544,14 @@ class PaymentrequestsController extends Controller
     public function mcreate()
     {
         //
+//        $vendordecution=DB::table('vendordeductions')
+//            ->leftJoin('vendordeductionitems', 'vendordeductions.id', '=', 'vendordeductionitems.vendordeduction_id')
+//            ->where('vendordeductions.status','>=',0)
+//            ->where('vendordeductions.pohead_id','=',29496)
+//            ->select(DB::raw('sum(vendordeductionitems.quantity * vendordeductionitems.unitprice) as decutionamount'))->first();
+//        if (isset($vendordecution))
+//            dd($vendordecution->decutionamount);
+//        dd($vendordecution->decutionamount);
         $config = DingTalkController::getconfig();
         $agent = new Agent();
 
@@ -1646,19 +1654,25 @@ class PaymentrequestsController extends Controller
                 ->leftJoin('vendordeductionitems', 'vendordeductions.id', '=', 'vendordeductionitems.vendordeduction_id')
                 ->where('vendordeductions.status','>=',0)
                 ->where('vendordeductions.pohead_id','=',$pohead_id)
-                ->select(DB::raw('sum(vendordeductionitems.quantity * vendordeductionitems.unitprice)'));
-//            dd($vendordecution);
+                ->select(DB::raw('sum(vendordeductionitems.quantity * vendordeductionitems.unitprice) as decutionamount'))->first();
+
+            $dec_amount = 0.0;
+            if(isset($vendordecution))
+                $dec_amount=$vendordecution->decutionamount;
+//            Log::info($dec_amount);
             if ($pohead->amount_paid + $amount > $pohead->amount)
             {
                 $data["code"] = -2;
                 $data["msg"] = "该采购订单已付款" . $pohead->amount_paid . '元，加上该付款单的' . $amount . '元后，会超过合同金额' . $pohead->amount . '元。';
             }
-            if ($pohead->amount_paid + $amount > $pohead->amount - $vendordecution)
+            if ($pohead->amount_paid + $amount > $pohead->amount - $dec_amount)
             {
+                $ed=$pohead->amount - $dec_amount - $pohead->amount_paid;
                 $data["code"] = -2;
-                $data["msg"] = "该供应商有扣款" . $vendordecution . '元，加上该付款单的' . $amount . '元后，会超过合同金额' . $pohead->amount . '元。';
+                $data["msg"] = "该采购订单合同金额为" . $pohead->amount . '元，已付款' . $pohead->amount_paid . '元，供应商扣款' . $dec_amount . '元。本次申请的' . $amount . '元超过了可用额度的' . $ed . '元。';
             }
         }
+//        Log::info($data["msg"]);
         return response()->json($data);
     }
 
