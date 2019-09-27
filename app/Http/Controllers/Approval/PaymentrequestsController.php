@@ -1665,6 +1665,8 @@ class PaymentrequestsController extends Controller
                 $data["code"] = -2;
                 $data["msg"] = "该采购订单已付款" . $pohead->amount_paid . '元，加上该付款单的' . $amount . '元后，会超过合同金额' . $pohead->amount . '元。';
             }
+
+            
             if ($pohead->amount_paid + $amount > $pohead->amount - $dec_amount)
             {
                 $ed=$pohead->amount - $dec_amount - $pohead->amount_paid;
