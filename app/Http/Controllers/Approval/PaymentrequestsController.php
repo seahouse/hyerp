@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Approval;
 
+use App\Models\Approval\Vendordeduction;
 use App\Models\Purchase\Purchaseorder_hxold_simple;
 use App\Models\System\User;
 use Carbon\Carbon;
@@ -1641,10 +1642,21 @@ class PaymentrequestsController extends Controller
         else
         {
             $pohead = Purchaseorder_hxold_simple::where('id', $pohead_id)->firstOrFail();
+            $vendordecution=DB::table('vendordeductions')
+                ->leftJoin('vendordeductionitems', 'vendordeductions.id', '=', 'vendordeductionitems.vendordeduction_id')
+                ->where('vendordeductions.status','>=',0)
+                ->where('vendordeductions.pohead_id','=',$pohead_id)
+                ->select(DB::raw('sum(vendordeductionitems.quantity * vendordeductionitems.unitprice)'));
+//            dd($vendordecution);
             if ($pohead->amount_paid + $amount > $pohead->amount)
             {
                 $data["code"] = -2;
                 $data["msg"] = "该采购订单已付款" . $pohead->amount_paid . '元，加上该付款单的' . $amount . '元后，会超过合同金额' . $pohead->amount . '元。';
+            }
+            if ($pohead->amount_paid + $amount > $pohead->amount - $vendordecution)
+            {
+                $data["code"] = -2;
+                $data["msg"] = "该供应商有扣款" . $vendordecution . '元，加上该付款单的' . $amount . '元后，会超过合同金额' . $pohead->amount . '元。';
             }
         }
         return response()->json($data);
