@@ -84,15 +84,8 @@ class ProjectsitepurchaseController extends Controller
     {
         $input = $request->all();
 //        dd($input);
-//        $itemsArray = json_decode($input['items_string']);
-//        if (is_array(json_decode($input['items_string2'])) && is_array(json_decode($input['items_string'])))
-//            $itemsArray = array_merge(json_decode($input['items_string2']), json_decode($input['items_string']));
-//        elseif (is_array(json_decode($input['items_string2'])) && !is_array(json_decode($input['items_string'])))
-//            $itemsArray = json_decode($input['items_string2']);
-//        $input['items_string'] = json_encode($itemsArray);
-//        dd($itemsArray);
-//        dd($input['items_string']);
-
+//        $input['associatedapprovals'] = strlen($input['associatedapprovals']) > 0 ? json_encode(array($input['associatedapprovals'])) : "";
+//        dd($input['associatedapprovals']);
 
 //        $input = array(
 //            '_token' => 'MXvSgAhoJ7JkDQ1f5zJvjbtMzdfZ4pePk9xE74Ud', 'manufacturingcenter' => '无锡制造中心机械车间', 'itemtype' => '消耗品类－如焊条', 'expirationdate' => '2018-04-16',
@@ -322,21 +315,23 @@ class ProjectsitepurchaseController extends Controller
         {
             $input['totalprice'] = $projectsitepurchase->projectsitepurchaseitems->sum('price') + $input['freight'];
             $input['image_urls'] = json_encode($image_urls);
+            $input['associatedapprovals'] = strlen($input['associatedapprovals']) > 0 ? json_encode(array($input['associatedapprovals'])) : "";
+//            dd($input['associatedapprovals']);
             $input['approvers'] = $projectsitepurchase->approvers();
             $response = ApprovalController::projectsitepurchase($input);
 //            Log::info($response);
 //            dd($response);
             $responsejson = json_decode($response);
-            if ($responsejson->result->ding_open_errcode <> 0)
+            if ($responsejson->errcode <> "0")
             {
                 $projectsitepurchase->forceDelete();
 //                Log::info(json_encode($input));
-                dd('钉钉端创建失败: ' . $responsejson->result->error_msg);
+                dd('钉钉端创建失败: ' . $responsejson->errmsg);
             }
             else
             {
                 // save process_instance_id and business_id
-                $process_instance_id = $responsejson->result->process_instance_id;
+                $process_instance_id = $responsejson->process_instance_id;
 
                 $response = DingTalkController::processinstance_get($process_instance_id);
                 $responsejson = json_decode($response);

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\util\taobaosdk\top;
+use Dompdf\Exception;
 
 /**
  * API入参静态检查类

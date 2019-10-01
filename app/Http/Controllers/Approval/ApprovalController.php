@@ -2172,7 +2172,7 @@ class ApprovalController extends Controller
             ],
         ];
         $form_component_values = json_encode($formdata);
-//        dd(json_decode(json_decode($form_component_values)[9]->value));
+//        dd($form_component_values);
 //        Log::info('process_code: ' . $process_code);
 //        Log::info('originator_user_id: ' . $originator_user_id);
 //        Log::info('dept_id: ' . $dept_id);
@@ -2186,24 +2186,26 @@ class ApprovalController extends Controller
 
 //        Log::info(app_path());
         $c = new DingTalkClient();
-        $req = new SmartworkBpmsProcessinstanceCreateRequest();
+//        $req = new SmartworkBpmsProcessinstanceCreateRequest();
+        $req = new OapiProcessinstanceCreateRequest();
 //        $req->setAgentId("41605932");
         $req->setProcessCode($process_code);
         $req->setOriginatorUserId($originator_user_id);
         $req->setDeptId("$dept_id");
-        $req->setApprovers($approvers);
-        $cc_list = config('custom.dingtalk.approversettings.projectsitepurchase.cc_list.' . $inputs['purchasetype']);
-        if (strlen($cc_list) == 0)
-            $cc_list = config('custom.dingtalk.approversettings.projectsitepurchase.cc_list.default', '');
-        if ($cc_list <> "")
-        {
-            $req->setCcList($cc_list);
-            $req->setCcPosition("FINISH");
-        }
+//        $req->setApprovers($approvers);
+//        $cc_list = config('custom.dingtalk.approversettings.projectsitepurchase.cc_list.' . $inputs['purchasetype']);
+//        if (strlen($cc_list) == 0)
+//            $cc_list = config('custom.dingtalk.approversettings.projectsitepurchase.cc_list.default', '');
+//        if ($cc_list <> "")
+//        {
+//            $req->setCcList($cc_list);
+//            $req->setCcPosition("FINISH");
+//        }
         $req->setFormComponentValues("$form_component_values");
 
 //        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
         $response = $c->execute($req, $session);
+        Log::info(json_encode($response));
         return json_encode($response);
         dd(json_encode($response, JSON_UNESCAPED_UNICODE));
         return response()->json($response);
