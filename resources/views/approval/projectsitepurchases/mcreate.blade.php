@@ -89,14 +89,14 @@
                 <div class="input-group">
                     {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '审批单号', 'id' => 'keyApproval']) !!}
                     <span class="input-group-btn">
-                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchProjectpurchaseApproval']) !!}
+                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchApproval']) !!}
                    	</span>
                 </div>
                 {!! Form::hidden('name', null, ['id' => 'name']) !!}
                 {!! Form::hidden('id', null, ['id' => 'id']) !!}
                 {!! Form::hidden('num', null, ['id' => 'num']) !!}
                 <p>
-                <div class="list-group" id="listproject">
+                <div class="list-group" id="listapproval">
 
                 </div>
                 </p>
@@ -369,7 +369,7 @@
 
 
             $('#selectApproval').on('show.bs.modal', function (e) {
-                $("#listproject").empty();
+                $("#listapproval").empty();
 
                 var target = $(e.relatedTarget);
                 // alert(text.data('id'));
@@ -381,7 +381,7 @@
                 // alert(modal.find('#id').val());
             });
 
-            $("#btnSearchProjectpurchaseApproval").click(function() {
+            $("#btnSearchApproval").click(function() {
                 if ($("#keyApproval").val() == "") {
                     alert('请输入关键字');
                     return;
@@ -393,11 +393,11 @@
                         var strhtml = '';
                         $.each(result.data, function(i, field) {
                             btnId = 'btnSelectApproval_' + String(i);
-                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.business_id + "</h4><p>提交人：" + field.applicant + "，工程简称：" + field.projectjc + "，订单编号：" + field.sohead_number +"，订单销售经理：" + field.salesmanager + "</p></button>"
+                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.business_id + "</h4><p>提交人：" + field.applicant + "，采购订单编号：" + field.pohead_number + "</p></button>"
                         });
                         if (strhtml == '')
                             strhtml = '无记录。';
-                        $("#listproject").empty().append(strhtml);
+                        $("#listapproval").empty().append(strhtml);
 
                         $.each(result.data, function(i, field) {
                             btnId = 'btnSelectApproval_' + String(i);
