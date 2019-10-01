@@ -291,7 +291,8 @@
 
 
 @section('script')
-	<script src="https://g.alicdn.com/ilw/ding/0.7.5/scripts/dingtalk.js"></script>
+	{{--<script src="https://g.alicdn.com/ilw/ding/0.7.5/scripts/dingtalk.js"></script>--}}
+    <script src="https://g.alicdn.com/dingding/dingtalk-jsapi/2.7.13/dingtalk.open.js"></script>
 
 	<script type="text/javascript">
 		jQuery(document).ready(function(e) {
@@ -901,7 +902,7 @@
 			    timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
 			    nonceStr: '{!! array_get($config, 'nonceStr') !!}', // 必填，生成签名的随机串
 			    signature: '{!! array_get($config, 'signature') !!}', // 必填，签名
-			    jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile'] // 必填，需要使用的jsapi列表
+			    jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile', 'biz.util.uploadAttachment', 'biz.cspace.preview'] // 必填，需要使用的jsapi列表
 			});
 
 //            window.selectImage_Mobile = function(evt) {
@@ -975,35 +976,59 @@
                             alert('select image failed: ' + JSON.stringify(err));
                         }
                     });
-                }
+                };
 
-				// // 上传附件
-				// $("#btnSelectPaymentnodeattachment").click(function() {
-				// 	dd.biz.cspace.saveFile({
-				// 		corpId:"{!! array_get($config, 'corpId') !!}",
-				// 		url:"https://ringnerippca.files.wordpress.com/20.pdf",
-				// 		name:"文件名",
-				// 		onSuccess: function(data) {
-		  //                 data结构
-		  //                {"data":
-		  //                   [
-		  //                   {
-		  //                   "corpId": "", //公司id
-		  //                   "spaceId": "" //空间id
-		  //                   "fileId": "", //文件id
-		  //                   "fileName": "", //文件名
-		  //                   "fileSize": 111111, //文件大小
-		  //                   "fileType": "", //文件类型
-		  //                   }
-		  //                   ]
-		  //                }
-		                 
-		  //               },
-		  //               onFail: function(err) {
-		  //                   alert(JSON.stringify(err));
-		  //               }
-				// 	});
-				// });
+
+                // 上传附件
+                $("#uploadAttach").click(function () {
+                    dd.biz.util.uploadAttachment({
+                        {{--image:{multiple:true,compress:false,max:9,spaceId: "{!! array_get($config, 'spaceid') !!}"},--}}
+                        space:{corpId:"{!! array_get($config, 'corpId') !!}",spaceId:"{!! array_get($config, 'spaceid') !!}",isCopy:1 , max:9},
+                        file:{spaceId:"{!! array_get($config, 'spaceid') !!}",max:1},
+                        types:["file","space"],//PC端支持["photo","file","space"]
+                        onSuccess : function(result) {
+                            //onSuccess将在文件上传成功之后调用
+//                            alert(JSON.stringify(result));
+                            $("#files_string").val(JSON.stringify(result.data));
+                            var strhtml = '已上传文件：';
+                            $.each(result.data, function(i, field) {
+                                btnId = 'btnSelectOrder_' + String(i);
+                                strhtml += field.fileName + ",";
+                            });
+                            $("#lblFiles").empty().append(strhtml);
+                            /*
+                             {
+                             type:'', // 用户选择了哪种文件类型 ，image（图片）、file（手机文件）、space（钉盘文件）
+                             data: [
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程.docx",
+                             fileSize: 1024,
+                             fileType: "docx"
+                             },
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程1.pdf",
+                             fileSize: 1024,
+                             fileType: "pdf"
+                             },
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程3.pptx",
+                             fileSize: 1024,
+                             fileType: "pptx"
+                             }
+                             ]
+
+                             }
+                             */
+                        },
+                        onFail : function(err) {}
+                    });
+                });
 			});
 
 			dd.error(function(error) {

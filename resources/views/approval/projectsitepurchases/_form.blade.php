@@ -23,19 +23,48 @@
         </div>
 
         <div class="form-group">
+            {!! Form::label('projecttype', '项目类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::select('projecttype', array('EP项目' => 'EP项目', 'EPC项目' => 'EPC项目'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {!! Form::label('vendordeduction_descrip', '采购是否涉及供应商扣款:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::select('vendordeduction_descrip', array('是，供应商扣款流程已审批完结，并在此流程后关联《供应商扣款》审批单。' => '是，供应商扣款流程已审批完结，并在此流程后关联《供应商扣款》审批单。', '不涉及供应商扣款' => '不涉及供应商扣款'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {!! Form::label('designdept', '订单所属设计部门:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::select('designdept', array('工艺一室' => '工艺一室', '工艺二室' => '工艺二室', '工艺三室' => '工艺三室', '电控室' => '电控室', '不涉及设计部门' => '不涉及设计部门'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {!! Form::label('productiondept', '生产部门:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::select('productiondept', array('无锡生产中心生产' => '无锡生产中心生产', '泰州生产中心生产' => '泰州生产中心生产', '胶州生产中心生产' => '胶州生产中心生产', '朗溪生产中心生产' => '朗溪生产中心生产',
+                    '许昌生产中心生产' => '许昌生产中心生产', '由外协设备商供货' => '由外协设备商供货', '不涉及生产部门' => '不涉及生产部门'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+            </div>
+        </div>
+
+        <div class="form-group">
             {!! Form::label('purchasetype', '采购类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('purchasetype', array('青岛铁塔供货类' => '青岛铁塔供货类', '机务材料类-工艺一部' => '机务材料类-工艺一部', '机务材料类-工艺二部' => '机务材料类-工艺二部',
-                    '电气材料类' => '电气材料类', '设备类' => '设备类', '工具及劳保类' => '工具及劳保类'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                {!! Form::select('purchasetype', array('机务材料类' => '机务材料类', '电气材料类' => '电气材料类', '机务设备类' => '机务设备类', '电气设备类' => '电气设备类', '维修费用' => '维修费用',
+                    '工具类' => '工具类', '劳保类' => '劳保类', '办公用品' => '办公用品', '生活用品' => '生活用品'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
             </div>
         </div>
 
         <div class="form-group">
             {!! Form::label('purchasereason', '采购原因:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('purchasereason', array('属合同供货范围外，业主要求增加。' => '属合同供货范围外，业主要求增加。', '现场材料业主不满意，更改增加。' => '现场材料业主不满意，更改增加。', '现场施工质量业主不满意，返工需增加部分。' => '现场施工质量业主不满意，返工需增加部分。',
-                    '属合同供货范围内，采购漏项。' => '属合同供货范围内，采购漏项。', '属供货范围内，外协厂漏发货。' => '属供货范围内，外协厂漏发货。', '属合同供货范围内，本公司漏发货。' => '属合同供货范围内，本公司漏发货。',
-                    '属合同供货范围内，本公司发货短缺。' => '属合同供货范围内，本公司发货短缺。', '属合同供货范围内，需现场自己采购' => '属合同供货范围内，需现场自己采购', '老公司项目，已沟通过，叶明已同意。' => '老公司项目，已沟通过，叶明已同意。'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                {!! Form::select('purchasereason', array('不属我方供货范围，甲方要求增加。' => '不属我方供货范围，甲方要求增加。', '现场材料业主不满意，需更改，现场购买。' => '现场材料业主不满意，需更改，现场购买。', '现场施工质量甲方不满意，返工需增加部分现场购买。' => '现场施工质量甲方不满意，返工需增加部分现场购买。',
+                    '属我方供货范围内，采购漏项。' => '属我方供货范围内，采购漏项。', '属我方供货范围内，外协厂漏发货。' => '属我方供货范围内，外协厂漏发货。', '属我方供货范围内，本公司漏发货。' => '属我方供货范围内，本公司漏发货。',
+                    '属我方供货范围内，需现场自行采购' => '属我方供货范围内，需现场自行采购', '现场消缺-领导决定材料当地采购。' => '现场消缺-领导决定材料当地采购。', '现场售后-公司发货不合算或来不及。' => '现场售后-公司发货不合算或来不及。'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
             </div>
         </div>
 
@@ -133,27 +162,6 @@
 </div>
 
 
-<div class="form-group">
-    {!! Form::label('sohead_installeddate', '安装完毕日期:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->sohead->installeddate)) 
-        {!! Form::text('sohead_installeddate', substr($paymentrequest->purchaseorder_hxold->sohead->installeddate, 0, 10), ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('sohead_installeddate', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-</div>
-
-<div class="form-group">
-    {!! Form::label('pohead_productname', '采购商品名称:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->productname)) 
-        {!! Form::text('pohead_productname', $paymentrequest->purchaseorder_hxold->productname, ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('pohead_productname', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-</div>
 
 
 @else
@@ -234,12 +242,6 @@
                     </div>
                 </div>
 
-                {{--<div class="form-group">--}}
-                    {{--{!! Form::label('remark', '备注:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
-                    {{--<div class='col-xs-8 col-sm-10'>--}}
-                        {{--{!! Form::text('remark', null, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'remark_1']) !!}--}}
-                    {{--</div>--}}
-                {{--</div>--}}
             </div>
 
 
@@ -302,7 +304,8 @@
         <div class="form-group">
             {!! Form::label('paymentmethod', '支付方式:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('paymentmethod', array('无须打款，采购人用个人备用金付款' => '无须打款，采购人用个人备用金付款', '财务需打款给采购人，现场付现金。' => '财务需打款给采购人，现场付现金。', '公司财务电汇给供货单位。' => '公司财务电汇给供货单位。'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                {!! Form::select('paymentmethod', array('采购人申请采购备用金' => '采购人申请采购备用金', '采购人使用差旅备用金购买，到公司凭发票报销' => '采购人使用差旅备用金购买，到公司凭发票报销', '采购人先行使用个人资金垫付，到公司凭发票报销' => '采购人先行使用个人资金垫付，到公司凭发票报销',
+                    '财务需打款给采购人，现场付现金' => '财务需打款给采购人，现场付现金', '公司财务电汇给供货单位' => '公司财务电汇给供货单位'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
             </div>
         </div>
 
@@ -345,9 +348,6 @@
 
 
 
-
-
-
     <div class="form-group">
         {!! Form::label('images', '上传凭证:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
@@ -376,6 +376,34 @@
         </div>
     </div>
 
+    <div class="form-group">
+        {!! Form::label('files', '附件:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+
+        <div class='col-xs-8 col-sm-10'>
+            @if (isset($issuedrawing))
+                @foreach ($issuedrawing->drawingattachments() as $drawingattachment)
+                    <a href="{!! URL($drawingattachment->path) !!}" target="_blank" id="showPaymentnode">{{ $drawingattachment->filename }}</a> <br>
+                @endforeach
+            @else
+                {{--                {!! Form::file('files[]', ['multiple']) !!}--}}
+                {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'uploadAttach']) !!}
+                <div id="lblFiles">
+                </div>
+                {!! Form::hidden('files_string', null, ['id' => 'files_string']) !!}
+            @endif
+        </div>
+    </div>
+
+    <div class="form-group">
+        {!! Form::label('associatedapprovals', '关联相关审批单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+
+        <div class='col-xs-8 col-sm-10'>
+            {!! Form::button('+', ['class' => 'btn btn-sm', 'data-toggle' => 'modal', 'data-target' => '#selectProjectpurchaseApproval']) !!}
+            {!! Form::hidden('associatedapprovals', null, ['class' => 'btn btn-sm']) !!}
+            <div id="lblAssociatedapprovals">
+            </div>
+        </div>
+    </div>
 
 {!! Form::hidden('applicant_id', null, ['class' => 'btn btn-sm']) !!}
 {!! Form::hidden('approversetting_id', null, ['class' => 'btn btn-sm']) !!}

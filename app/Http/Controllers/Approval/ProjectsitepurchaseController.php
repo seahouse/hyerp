@@ -184,7 +184,49 @@ class ProjectsitepurchaseController extends Controller
             }
         }
 //        dd($projectsitepurchase);
+        // create files
+        $fileattachments_url = [];
+        $fileattachments_url2 = [];
+        if (isset($projectsitepurchase))
+        {
+            $files = array_get($input,'files');
+            $destinationPath = 'uploads/approval/projectsitepurchase/' . $projectsitepurchase->id . '/files/';
+            if (isset($files))
+            {
+                foreach ($files as $key => $file) {
+                    if ($file)
+                    {
+                        $originalName = $file->getClientOriginalName();         // aa.xlsx
+                        $extension = $file->getClientOriginalExtension();       // .xlsx
+//                    Log::info('extension: ' . $extension);
+                        $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                        Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
 
+                        // $fileName = rand(11111, 99999) . '.' . $extension;
+                        $upload_success = $file->move($destinationPath, $filename);
+
+                        // add database record
+                        $projectsitepurchaseattachment = new Projectsitepurchaseattachment();
+                        $projectsitepurchaseattachment->projectsitepurchase_id = $projectsitepurchase->id;
+                        $projectsitepurchaseattachment->type = "file";
+                        $projectsitepurchaseattachment->filename = $originalName;
+                        $projectsitepurchaseattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
+                        $projectsitepurchaseattachment->save();
+
+                        array_push($fileattachments_url, url($destinationPath . $filename));
+                        if (strcasecmp($extension, "pdf") == 0)
+                            array_push($fileattachments_url2, url('pdfjs/viewer') . "?file=" . "/$destinationPath$filename");
+                        else
+                        {
+                            $filename2 = str_replace(".", "_", $filename);
+                            array_push($fileattachments_url2, url("$destinationPath$filename2"));
+                        }
+
+
+                    }
+                }
+            }
+        }
 
         $image_urls = [];
         // create images in the desktop

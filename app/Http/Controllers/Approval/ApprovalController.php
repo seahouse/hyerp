@@ -2091,8 +2091,24 @@ class ApprovalController extends Controller
                 'value'     => $inputs['sohead_number'],
             ],
             [
+                'name'      => '项目类型',
+                'value'     => $inputs['projecttype'],
+            ],
+            [
+                'name'      => '采购是否涉及供应商扣款',
+                'value'     => $inputs['vendordeduction_descrip'],
+            ],
+            [
                 'name'      => '订单所属销售经理',
                 'value'     => $inputs['sohead_salesmanager'],
+            ],
+            [
+                'name'      => '订单所属设计部门',
+                'value'     => $inputs['designdept'],
+            ],
+            [
+                'name'      => '生产部门',
+                'value'     => $inputs['productiondept'],
             ],
             [
                 'name'      => '采购类型',
@@ -2141,6 +2157,14 @@ class ApprovalController extends Controller
             [
                 'name'      => '上传凭证',
                 'value'     => $inputs['image_urls'],
+            ],
+            [
+                'name'      => '附件',
+                'value'     => $inputs['files_string'],
+            ],
+            [
+                'name'      => '关联相关审批单',
+                'value'     => $inputs['associatedapprovals'],
             ],
             [
                 'name'      => '采购明细',

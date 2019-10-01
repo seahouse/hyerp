@@ -16,6 +16,10 @@ class CreateProjectsitepurchasesTable extends Migration
             $table->increments('id');
 
             $table->integer('sohead_id');
+            $table->string('projecttype');
+            $table->string('vendordeduction_descrip');
+            $table->string('designdept');
+            $table->string('productiondept');
             $table->string('purchasetype');
             $table->string('purchasereason');
             $table->string('remark', 500)->default('');
