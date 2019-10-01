@@ -58,6 +58,12 @@ class ProjectsitepurchaseController extends Controller
     {
         //
         $config = DingTalkController::getconfig();
+        $client = new DingTalkClient();
+        $req = new OapiProcessinstanceCspaceInfoRequest();
+        $req->setUserId(Auth::user()->dtuserid);
+        $response = $client->execute($req, $config['session']);
+//        dd(json_decode(json_encode($response))->result->space_id);
+        $config['spaceid'] = json_decode(json_encode($response))->result->space_id;
         return view('approval/projectsitepurchases/mcreate', compact('config'));
     }
 
