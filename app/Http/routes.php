@@ -519,6 +519,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::group(['prefix' => 'vendordeductions'], function() {
         Route::get('mcreate', 'VendordeductionController@mcreate');
         Route::post('mstore', 'VendordeductionController@mstore');
+        Route::get('getitemsbykey/{key}', 'VendordeductionController@getitemsbykey');
     });
     Route::resource('vendordeductions', 'VendordeductionController');
 

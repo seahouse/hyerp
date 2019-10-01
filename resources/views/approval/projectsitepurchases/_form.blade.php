@@ -398,7 +398,7 @@
         {!! Form::label('associatedapprovals', '关联相关审批单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
         <div class='col-xs-8 col-sm-10'>
-            {!! Form::button('+', ['class' => 'btn btn-sm', 'data-toggle' => 'modal', 'data-target' => '#selectProjectpurchaseApproval']) !!}
+            {!! Form::button('+', ['class' => 'btn btn-sm', 'data-toggle' => 'modal', 'data-target' => '#selectApproval']) !!}
             {!! Form::hidden('associatedapprovals', null, ['class' => 'btn btn-sm']) !!}
             <div id="lblAssociatedapprovals">
             </div>

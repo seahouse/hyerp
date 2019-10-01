@@ -79,41 +79,40 @@
     </div>
 </div>
 
-<!-- issuedrawing selector -->
-<div class="modal fade" id="selectIssueDrawingsModal" tabindex="-1" role="dialog">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title">选择下发图纸审批单</h4>
-			</div>
-			<div class="modal-body">
-				<div class="input-group">
-					{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '', 'id' => 'keyDrawingchecker']) !!}
-					<span class="input-group-btn">
-                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchDrawingchecker']) !!}
+<div class="modal fade" id="selectApproval" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">选择供应商扣款审批单</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '审批单号', 'id' => 'keyApproval']) !!}
+                    <span class="input-group-btn">
+                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchProjectpurchaseApproval']) !!}
                    	</span>
-				</div>
-				{!! Form::hidden('name', null, ['id' => 'name']) !!}
-				{!! Form::hidden('id', null, ['id' => 'id']) !!}
-				{!! Form::hidden('supplierid', 0, ['id' => 'supplierid']) !!}
-				{!! Form::hidden('poheadamount', 0, ['id' => 'poheadamount']) !!}
-				{!! Form::hidden('num', null, ['id' => 'num']) !!}
-				<p>
-				<div class="list-group" id="listissuedrawings">
+                </div>
+                {!! Form::hidden('name', null, ['id' => 'name']) !!}
+                {!! Form::hidden('id', null, ['id' => 'id']) !!}
+                {!! Form::hidden('num', null, ['id' => 'num']) !!}
+                <p>
+                <div class="list-group" id="listproject">
 
-				</div>
-				</p>
-				<form id="formAccept">
-					{{--{!! csrf_field() !!}--}}
+                </div>
+                </p>
+                <form id="formAccept">
+                    {!! csrf_field() !!}
 
-				</form>
-			</div>
-			<div class="modal-footer">
-				{!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
-				{!! Form::button('确定', ['class' => 'btn btn-sm btn-primary', 'id' => 'btnok_selectissuedrawing']) !!}
-			</div>
-		</div>
-	</div>
+                    {{--                    {!! Form::hidden('reimbursement_id', $reimbursement->id, ['class' => 'form-control']) !!}
+                                        {!! Form::hidden('status', 0, ['class' => 'form-control']) !!} --}}
+                </form>
+            </div>
+            {{--            <div class="modal-footer">
+                            {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
+                            {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnAccept']) !!}
+                        </div>--}}
+        </div>
+    </div>
 </div>
 
 <!-- item selector -->
@@ -369,93 +368,60 @@
 			});
 
 
-			$('#selectIssueDrawingsModal').on('show.bs.modal', function (e) {
-				$("#listissuedrawings").empty();
+            $('#selectApproval').on('show.bs.modal', function (e) {
+                $("#listproject").empty();
 
-				var text = $(e.relatedTarget);
-				var modal = $(this);
+                var target = $(e.relatedTarget);
+                // alert(text.data('id'));
 
-				modal.find('#name').val(text.data('name'));
-				modal.find('#id').val(text.data('id'));
-				modal.find('#supplierid').val(text.data('supplierid'));
-				modal.find('#poheadamount').val(text.data('poheadamount'));
-                modal.find('#num').val(text.data('num'));
-			});
+                var modal = $(this);
+                modal.find('#name').val(target.data('name'));
+                modal.find('#id').val(target.data('id'));
+                modal.find('#num').val(target.data('num'));
+                // alert(modal.find('#id').val());
+            });
 
-			$("#btnSearchDrawingchecker").click(function() {
-				if ($("#keyDrawingchecker").val() == "") {
-					alert('请输入关键字');
-					return;
-				}
-				$.ajax({
-					type: "GET",
-					url: "{!! url('/system/users/getitemsbykey/') !!}" + "/" + $("#keyDrawingchecker").val(),
-					success: function(result) {
-						var strhtml = '';
-						$.each(result.data, function(i, field) {
-							btnId = 'btnSelectDrawingchecker_' + String(i);
-							strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.name + "</h4></button>"
-						});
-						if (strhtml == '')
-							strhtml = '无记录。';
-						$("#listissuedrawings").empty().append(strhtml);
+            $("#btnSearchProjectpurchaseApproval").click(function() {
+                if ($("#keyApproval").val() == "") {
+                    alert('请输入关键字');
+                    return;
+                }
+                $.ajax({
+                    type: "GET",
+                    url: "{!! url('/approval/vendordeductions/getitemsbykey/') !!}" + "/" + $("#keyApproval").val(),
+                    success: function(result) {
+                        var strhtml = '';
+                        $.each(result.data, function(i, field) {
+                            btnId = 'btnSelectApproval_' + String(i);
+                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.business_id + "</h4><p>提交人：" + field.applicant + "，工程简称：" + field.projectjc + "，订单编号：" + field.sohead_number +"，订单销售经理：" + field.salesmanager + "</p></button>"
+                        });
+                        if (strhtml == '')
+                            strhtml = '无记录。';
+                        $("#listproject").empty().append(strhtml);
 
-						$.each(result.data, function(i, field) {
-							btnId = 'btnSelectDrawingchecker_' + String(i);
-							addBtnClickEvent(btnId, field);
-						});
-					},
-					error: function(xhr, ajaxOptions, thrownError) {
-						alert('error');
-					}
-				});
-			});
+                        $.each(result.data, function(i, field) {
+                            btnId = 'btnSelectApproval_' + String(i);
+                            addBtnClickEventProjectpurchase(btnId, field.id, field.number, field);
+                        });
+                        // addBtnClickEvent('btnSelectOrder_0');
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('error');
+                    }
+                });
+            });
 
-			function addBtnClickEvent(btnId, field)
-			{
-				$("#" + btnId).bind("click", function() {
-					$('#selectIssueDrawingsModal').modal('toggle');
-//					$("#" + $("#selectIssueDrawingsModal").find('#name').val()).val(number);
-//					$("#" + $("#selectIssueDrawingsModal").find('#id').val()).val(salesorderid);
-//					$("#" + $("#selectIssueDrawingsModal").find('#poheadamount').val()).val(amount);
-					$("#drawingchecker").val(field.name);
-					$("#drawingchecker_id").val(field.id);
-					{{--
-					$("#pohead_amount_paid").val(amount_paid);
-					$("#pohead_amount_ticketed").val(field.amount_ticketed);
-					var pohead_arrived = '未到货';
-					if (field.arrival_percent > 0.0 && field.arrival_percent < 0.99)
-						pohead_arrived = '部分到货';
-					else if (field.arrival_percent >= 0.99)
-						pohead_arrived = '全部到货';
-					$("#pohead_arrived").val(pohead_arrived);
-					$("#paymethod").val(field.paymethod);
-
-					if (amount > 0.0)
-					{
-						var percent = amount_paid / amount * 100;
-						var percent_str = percent.toFixed(2);
-						$("#amount_paid_percent").html(percent_str + "%");
-
-						percent = field.amount_ticketed / amount * 100;
-						percent_str = percent.toFixed(2);
-						$("#amount_ticketed_percent").html(percent_str + "%");
-					}
-					$("#pohead_productname").val(field.productname);
-
-					$.ajax({
-						type: "GET",
-						url: "{!! url('/sales/salesorders/getitembyid/') !!}" + "/" + field.sohead_id,
-						success: function(result) {
-							$("#sohead_installeddate").val(result.installeddate.substring(0, 10));
-						},
-						error: function(xhr, ajaxOptions, thrownError) {
-							alert('error');
-						}
-					});
-					--}}
-				});
-			}
+            function addBtnClickEventProjectpurchase(btnId, soheadid, name, field)
+            {
+                $("#" + btnId).bind("click", function() {
+                    $('#selectApproval').modal('toggle');
+                    var strhtml = '关联审批单：' + field.business_id;
+                    $("#lblAssociatedapprovals").empty().append(strhtml);
+                    $("#associatedapprovals").val(field.process_instance_id);
+//					$("#supplier_bankaccountnumber").val(field.bankaccountnumber);
+//					$("#vendbank_id").val(field.vendbank_id);
+                });
+            }
 
 			$('#selectProjectModal').on('show.bs.modal', function (e) {
 				$("#listproject").empty();
