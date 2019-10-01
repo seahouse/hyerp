@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Approval;
 
 use App\Http\Controllers\DingTalkController;
+use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
+use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiProcessinstanceCspaceInfoRequest;
 use App\Models\Approval\Projectsitepurchase;
 use App\Models\Approval\Projectsitepurchaseattachment;
 use App\Models\Approval\Projectsitepurchaseitem;
