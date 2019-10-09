@@ -30,6 +30,7 @@ class Kernel extends ConsoleKernel
         Commands\EDITest::class,
         Commands\ReceiveDTLogs::class,
         Commands\PurchaseReminder::class,
+        Commands\SoheadPauseReminder::class,
     ];
 
     /**
