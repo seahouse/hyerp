@@ -45,6 +45,7 @@ class SoheadPauseReminder extends Command
     {
         //
         $soheads = Salesorder_hxold::where('status', '<>', -10)->get();
+        $msgs = [];
         foreach ($soheads as $sohead)
         {
             $this->info($sohead->id);
@@ -61,16 +62,28 @@ class SoheadPauseReminder extends Command
                 {
                     $maxdate = Carbon::parse($maxreceiptdate);
                     $this->info($maxdate);
-                    if (Carbon::now()->gt($maxdate->copy()->addYear(1)))
+                    $today = Carbon::today();
+                    if ($today->gt($maxdate->copy()->addYear(1)))
                     {
                         $remainAmount = $sohead->amount - $receivedAmount;
-                        $msg = "订单'" . $sohead->projectjc . "'最后一次收款时间为" . $maxdate->toDateString() . "，已收款" . $receivedAmount . "万元，剩余尾款" . $remainAmount . "万元，已开票金额" . $sohead->sotickets->sum('amount') . "万元。\n付款方式：" . $sohead->paymethod;
+                        $days = $maxdate->diffInDays($today);
+                        $msg = "订单'" . $sohead->projectjc . "'最后一次收款时间为" . $maxdate->toDateString() . "，距现在已" . $maxdate->diffInDays($today) . "天，已收款" . $receivedAmount . "万元，剩余尾款" . $remainAmount . "万元，已开票金额" . $sohead->sotickets->sum('amount') . "万元。\n付款方式：" . $sohead->paymethod;
 //                        $this->info($msg);
                         Log::info($msg);
-                        $this->sendMsg($msg, 8);        // to WuHL
+                        $msgs[$sohead->id]['days'] = $days;
+                        $msgs[$sohead->id]['msg'] = $msg;
+//                        $this->sendMsg($msg, 8);        // to WuHL
                     }
                 }
             }
+        }
+        $msgs = array_sort($msgs, function ($value) {
+            return 0 - $value['days'];
+        });
+
+        foreach ($msgs as $value)
+        {
+            $this->sendMsg($value['msg'], 8);        // to WuHL
         }
     }
 
