@@ -1258,6 +1258,8 @@ class PaymentrequestsController extends Controller
         $str .= '<p style="font-family: DroidSansFallback;">付款日期: ' . $paymentrequest->datepay . '</p>';
         $str .= '<p style="font-family: DroidSansFallback;">开户行: ' . (isset($paymentrequest->vendbank_hxold->bankname) ? $paymentrequest->vendbank_hxold->bankname : '') . '</p>';
         $str .= '<p style="font-family: DroidSansFallback;">银行账号: ' . (isset($paymentrequest->vendbank_hxold->accountnum) ? $paymentrequest->vendbank_hxold->accountnum : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">开户行2: ' . (isset($paymentrequest->vendbank_hxold2->bankname) ? $paymentrequest->vendbank_hxold2->bankname : '') . '</p>';
+//        $str .= '<p style="font-family: DroidSansFallback;">银行账号2: ' . (isset($paymentrequest->vendbank_hxold2->accountnum) ? $paymentrequest->vendbank_hxold2->accountnum : '') . '</p>';
         $str .= '<p style="font-family: DroidSansFallback;">付款日期: ' . $paymentrequest->datepay . '</p>';
         $str .= '<p style="font-family: DroidSansFallback;">审批记录:</p>';
 
@@ -1666,7 +1668,7 @@ class PaymentrequestsController extends Controller
                 $data["msg"] = "该采购订单已付款" . $pohead->amount_paid . '元，加上该付款单的' . $amount . '元后，会超过合同金额' . $pohead->amount . '元。';
             }
 
-            
+
             if ($pohead->amount_paid + $amount > $pohead->amount - $dec_amount)
             {
                 $ed=$pohead->amount - $dec_amount - $pohead->amount_paid;

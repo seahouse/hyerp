@@ -425,6 +425,25 @@
         {!! Form::text('supplier_bankaccountnumber', null, ['class' => 'form-control', $attr]) !!}
     @endif
     </div>
+
+    {!! Form::label('supplier_bank2', '开户行2:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
+    <div class='col-xs-4 col-sm-4'>
+        @if (isset($paymentrequest->vendbank_hxold2->bankname))
+            {!! Form::text('supplier_bank2', $paymentrequest->vendbank_hxold2->bankname, ['class' => 'form-control', $attr]) !!}
+        @else
+            {!! Form::text('supplier_bank2', null, ['class' => 'form-control', $attr]) !!}
+        @endif
+    </div>
+
+    {!! Form::label('supplier_bankaccountnumber2', '银行账号:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
+    <div class='col-xs-4 col-sm-4'>
+        @if (isset($paymentrequest->vendbank_hxold2->accountnum))
+            {!! Form::text('supplier_bankaccountnumber2', $paymentrequest->vendbank_hxold2->accountnum, ['class' => 'form-control', $attr]) !!}
+        @else
+            {!! Form::text('supplier_bankaccountnumber2', null, ['class' => 'form-control', $attr]) !!}
+        @endif
+    </div>
+
 </div>
 
 <div class="form-group">

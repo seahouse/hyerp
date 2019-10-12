@@ -414,12 +414,34 @@
 <div class="form-group">
     {!! Form::label('supplier_bankaccountnumber', '银行账号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->vendbank_hxold->accountnum)) 
+    @if (isset($paymentrequest->vendbank_hxold->accountnum))
         {!! Form::text('supplier_bankaccountnumber', $paymentrequest->vendbank_hxold->accountnum, ['class' => 'form-control', $attr]) !!}
     @else
         {!! Form::text('supplier_bankaccountnumber', null, ['class' => 'form-control', $attr]) !!}
     @endif
     </div>
+</div>
+
+<div class="form-group">
+        {!! Form::label('supplier_bank2', '开户行2:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+         <div class='col-xs-8 col-sm-10'>
+               @if (isset($paymentrequest->vendbank_hxold2->bankname))
+                    {!! Form::text('supplier_bank2', $paymentrequest->vendbank_hxold2->bankname, ['class' => 'form-control', $attr]) !!}
+               @else
+                     {!! Form::text('supplier_bank2', null, ['class' => 'form-control', $attr]) !!}
+               @endif
+          </div>
+</div>
+
+<div class="form-group">
+     {!! Form::label('supplier_bankaccountnumber2', '银行账号2:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+         <div class='col-xs-8 col-sm-10'>
+               @if (isset($paymentrequest->vendbank_hxold2->accountnum))
+                   {!! Form::text('supplier_bankaccountnumber2', $paymentrequest->vendbank_hxold2->accountnum, ['class' => 'form-control', $attr]) !!}
+               @else
+                   {!! Form::text('supplier_bankaccountnumber2', null, ['class' => 'form-control', $attr]) !!}
+               @endif
+         </div>
 </div>
 
 <div class="form-group">
@@ -444,9 +466,7 @@
 <div class="form-group">
     {!! Form::label('supplier_bank', '开户行:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-{{--
-    {!! Form::text('supplier_bank', null, ['class' => 'form-control', 'readonly', $attr]) !!}
---}}
+
     {!! Form::text('supplier_bank', null, ['class' => 'form-control', 'placeholder' => '点击选择', 'readonly', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectSupplierBankModal', 'data-name' => 'supplier_name', 'data-id' => 'supplier_id']) !!}
 
     {!! Form::hidden('vendbank_id', 0, ['id' => 'vendbank_id']) !!}
@@ -459,6 +479,24 @@
     {!! Form::text('supplier_bankaccountnumber', null, ['class' => 'form-control', 'readonly', $attr]) !!}
     </div>
 </div>
+
+<div class="form-group">
+    {!! Form::label('supplier_bank2', '开户行2:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+
+        {!! Form::text('supplier_bank2', null, ['class' => 'form-control', 'placeholder' => '点击选择', 'readonly', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectSupplierBankModal2', 'data-name' => 'supplier_name', 'data-id' => 'supplier_id']) !!}
+
+        {!! Form::hidden('vendbank2_id', 0, ['id' => 'vendbank2_id']) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('supplier_bankaccountnumber2', '银行账号2:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+        {!! Form::text('supplier_bankaccountnumber2', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+    </div>
+</div>
+
 @endif
 
 {{--

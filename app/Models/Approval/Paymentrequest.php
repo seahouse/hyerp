@@ -25,6 +25,7 @@ class Paymentrequest extends Model
         'paymentmethod',
         'datepay',
         'vendbank_id',
+        'vendbank2_id',
         'bank',
         'bankaccountnumber',
         'applicant_id',
@@ -42,6 +43,10 @@ class Paymentrequest extends Model
 
     public function vendbank_hxold() {
         return $this->hasOne('\App\Models\Purchase\Vendbank_hxold', 'id', 'vendbank_id');
+    }
+
+    public function vendbank_hxold2() {
+        return $this->hasOne('\App\Models\Purchase\Vendbank_hxold', 'id', 'vendbank2_id');
     }
 
     public function applicant() {
