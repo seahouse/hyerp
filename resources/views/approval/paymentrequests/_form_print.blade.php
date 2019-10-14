@@ -417,6 +417,7 @@
     @endif
     </div>
 
+
     {!! Form::label('supplier_bankaccountnumber', '银行账号:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
     <div class='col-xs-4 col-sm-4'>
     @if (isset($paymentrequest->vendbank_hxold->accountnum)) 

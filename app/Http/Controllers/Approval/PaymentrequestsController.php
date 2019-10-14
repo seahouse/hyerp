@@ -1240,6 +1240,7 @@ class PaymentrequestsController extends Controller
         $str .= '</head>';
         $str .= '<body>';
 
+
         $str .= '<p style="font-family: DroidSansFallback;">供应商类型: ' . $paymentrequest->suppliertype . '</p>';
         $str .= '<p style="font-family: DroidSansFallback;">付款类型: ' . $paymentrequest->paymenttype . '</p>';
         $str .= '<p style="font-family: DroidSansFallback;">支付对象: ' . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '') . '</p>';

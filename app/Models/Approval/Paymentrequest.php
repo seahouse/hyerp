@@ -34,6 +34,7 @@ class Paymentrequest extends Model
 		'approversetting_id',
     ];
 
+
     public function supplier_hxold() {
         return $this->hasOne('\App\Models\Purchase\Vendinfo_hxold', 'id', 'supplier_id');
     }

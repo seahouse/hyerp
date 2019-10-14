@@ -141,6 +141,7 @@
     </div>
 </div>
 
+
 <div class="row">
     <div class="col-xs-2 col-sm-2">付款方式:</div>
     <div class="col-xs-10 col-sm-10">
