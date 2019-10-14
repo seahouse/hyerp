@@ -427,7 +427,7 @@
     @endif
     </div>
 
-    {!! Form::label('paymentmethod2', '付款方式:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
+    {!! Form::label('paymentmethod2', '付款方式2:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
     <div class='col-xs-4 col-sm-4'>
         {!! Form::select('paymentmethod2', array('支票' => '支票', '贷记' => '贷记', '电汇' => '电汇', '汇票' => '汇票', '现金' => '现金', '银行卡' => '银行卡', '其他' => '其他'), null, ['class' => 'form-control', 'placeholder' => '付款方式', $attr, $attrdisable]) !!}
     </div>

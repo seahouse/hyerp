@@ -33,7 +33,7 @@ class CreatePaymentrequestsTable extends Migration
 			$table->integer('status')->default(1);						// 状态：1-初始，0-已付款
 			$table->integer('approversetting_id');          			// 下一个审批流程id, 0表示已经走完流程, -1表示没有流程可以走，-2表示流程已走完，未通过，-3表示撤回过程中，-4表示已撤回, -5表示超期结束
 
-            
+
             $table->timestamps();
 			$table->softDeletes();
         });
