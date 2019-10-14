@@ -46,7 +46,7 @@
         <div class="form-group">
             {!! Form::label('productiondept', '生产部门:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('productiondept', array('无锡生产中心生产' => '无锡生产中心生产', '泰州生产中心生产' => '泰州生产中心生产', '胶州生产中心生产' => '胶州生产中心生产', '朗溪生产中心生产' => '朗溪生产中心生产',
+                {!! Form::select('productiondept', array('无锡生产中心生产' => '无锡生产中心生产', '朗溪生产中心生产' => '朗溪生产中心生产',
                     '许昌生产中心生产' => '许昌生产中心生产', '由外协设备商供货' => '由外协设备商供货', '不涉及生产部门' => '不涉及生产部门'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
             </div>
         </div>
