@@ -112,16 +112,16 @@
         {{ $paymentrequest->amount }}
     </div>
 
-    <div class="col-xs-2 col-sm-2">付款方式:</div>
+    <div class="col-xs-2 col-sm-2">付款日期:</div>
     <div class="col-xs-4 col-sm-4">
-         {{ $paymentrequest->paymentmethod }}
+         {{ $paymentrequest->datepay }}
     </div>
 </div>
 
 <div class="row">
-    <div class="col-xs-2 col-sm-2">付款日期:</div>
+    <div class="col-xs-2 col-sm-2">付款方式:</div>
     <div class="col-xs-10 col-sm-10">
-        {{ $paymentrequest->datepay }}
+        {{ $paymentrequest->paymentmethod }}
     </div>
 </div>
 
@@ -137,6 +137,29 @@
     <div class="col-xs-4 col-sm-4">
         @if (isset($paymentrequest->vendbank_hxold->accountnum))
             {{ $paymentrequest->vendbank_hxold->accountnum }}
+        @endif
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-2 col-sm-2">付款方式:</div>
+    <div class="col-xs-10 col-sm-10">
+        {{ $paymentrequest->paymentmethod2 }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-2 col-sm-2">开户行2:</div>
+    <div class="col-xs-4 col-sm-4">
+        @if (isset($paymentrequest->vendbank_hxold2->bankname))
+            {{ $paymentrequest->vendbank_hxold2->bankname }}
+        @endif
+    </div>
+
+    <div class="col-xs-2 col-sm-2">银行账号2:</div>
+    <div class="col-xs-4 col-sm-4">
+        @if (isset($paymentrequest->vendbank_hxold2->accountnum))
+            {{ $paymentrequest->vendbank_hxold2->accountnum }}
         @endif
     </div>
 </div>

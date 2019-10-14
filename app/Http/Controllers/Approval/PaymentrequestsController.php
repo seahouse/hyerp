@@ -1254,12 +1254,13 @@ class PaymentrequestsController extends Controller
         $str .= '<p style="font-family: DroidSansFallback;">应付款设备名称: ' . $paymentrequest->equipmentname . '</p>';
         $str .= '<p style="font-family: DroidSansFallback;">说明: ' . $paymentrequest->descrip . '</p>';
         $str .= '<p style="font-family: DroidSansFallback;">本次请款额: ' . $paymentrequest->amount . '</p>';
-        $str .= '<p style="font-family: DroidSansFallback;">付款方式: ' . $paymentrequest->paymentmethod . '</p>';
         $str .= '<p style="font-family: DroidSansFallback;">付款日期: ' . $paymentrequest->datepay . '</p>';
+        $str .= '<p style="font-family: DroidSansFallback;">付款方式: ' . $paymentrequest->paymentmethod . '</p>';
         $str .= '<p style="font-family: DroidSansFallback;">开户行: ' . (isset($paymentrequest->vendbank_hxold->bankname) ? $paymentrequest->vendbank_hxold->bankname : '') . '</p>';
         $str .= '<p style="font-family: DroidSansFallback;">银行账号: ' . (isset($paymentrequest->vendbank_hxold->accountnum) ? $paymentrequest->vendbank_hxold->accountnum : '') . '</p>';
-//        $str .= '<p style="font-family: DroidSansFallback;">开户行2: ' . (isset($paymentrequest->vendbank_hxold2->bankname) ? $paymentrequest->vendbank_hxold2->bankname : '') . '</p>';
-//        $str .= '<p style="font-family: DroidSansFallback;">银行账号2: ' . (isset($paymentrequest->vendbank_hxold2->accountnum) ? $paymentrequest->vendbank_hxold2->accountnum : '') . '</p>';
+        $str .= '<p style="font-family: DroidSansFallback;">付款方式: ' . $paymentrequest->paymentmethod2 . '</p>';
+        $str .= '<p style="font-family: DroidSansFallback;">开户行2: ' . (isset($paymentrequest->vendbank_hxold2->bankname) ? $paymentrequest->vendbank_hxold2->bankname : '') . '</p>';
+        $str .= '<p style="font-family: DroidSansFallback;">银行账号2: ' . (isset($paymentrequest->vendbank_hxold2->accountnum) ? $paymentrequest->vendbank_hxold2->accountnum : '') . '</p>';
         $str .= '<p style="font-family: DroidSansFallback;">付款日期: ' . $paymentrequest->datepay . '</p>';
         $str .= '<p style="font-family: DroidSansFallback;">审批记录:</p>';
 

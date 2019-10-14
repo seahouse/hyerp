@@ -25,6 +25,7 @@ class Paymentrequest extends Model
         'paymentmethod',
         'datepay',
         'vendbank_id',
+        'paymentmethod2',
         'vendbank2_id',
         'bank',
         'bankaccountnumber',
