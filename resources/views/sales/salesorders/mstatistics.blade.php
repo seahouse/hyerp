@@ -100,10 +100,9 @@
                     });
 
                     $("#showPdf_jsxy").click(function() {
-                        location.href = 'http://www.huaxing-east.cn:2016/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf_jsxy").attr("href");
+                        location.href = 'http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf_jsxy").attr("href");
                         return false;
                     });
-					
                 }
                 else
                 {
