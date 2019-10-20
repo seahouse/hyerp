@@ -82,7 +82,7 @@ class IssuedrawingController extends Controller
     public static function searchrequest($request)
     {
         $key = $request->input('key');
-        $approvalstatus = $request->input('approvalstatus');
+        $approvalstatus = $request->input('status');
 
         $supplier_ids = [];
         $purchaseorder_ids = [];
@@ -99,13 +99,8 @@ class IssuedrawingController extends Controller
             $query->where('business_id', 'like', '%'.$key.'%');
         }
 
-//        if ($approvalstatus <> '')
-//        {
-//            if ($approvalstatus == "1")
-//                $query->where('approversetting_id', '>', '0');
-//            else
-//                $query->where('approversetting_id', $approvalstatus);
-//        }
+        if ($request->has('status'))
+            $query->where('status', $request->input('status'));
 //
 //        if ($request->has('approvaldatestart') && $request->has('approvaldateend'))
 //        {

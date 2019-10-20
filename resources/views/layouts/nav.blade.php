@@ -126,9 +126,11 @@
                         @endcan
                         @if (isset(Auth::user()->email) and Auth::user()->email == "admin@admin.com")
                             <li><a href="/approval/paymentrequestapprovals">供应商付款审批记录</a></li>
+                        @endif
                                 @can('approval_issuedrawing_view')
                                     <li><a href="/approval/issuedrawing">下发图纸</a></li>
                                 @endcan
+                        @if (isset(Auth::user()->email) and Auth::user()->email == "admin@admin.com")
                                 @can('approval_pppayment_view')
                                     <li><a href="/approval/pppayment">生产加工结算</a></li>
                                 @endcan

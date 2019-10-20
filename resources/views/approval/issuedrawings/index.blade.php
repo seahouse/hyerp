@@ -39,8 +39,8 @@
                 {!! Form::select('paymentmethod', ['支票' => '支票', '贷记' => '贷记', '电汇' => '电汇', '汇票' => '汇票', '现金' => '现金', '银行卡' => '银行卡', '其他' => '其他'], null, ['class' => 'form-control', 'placeholder' => '--付款方式--']) !!}
 
                 {!! Form::select('paymentstatus', ['0' => '已付款', '-1' => '未付款'], null, ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}
-                {!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']); !!}
                 --}}
+                {!! Form::select('status', ['1' => '审批中', '0' => '已通过', '-1' => '已拒绝', '-2' => '已撤回'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']) !!}
                 {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '审批编号']) !!}
                 {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
             </div>
@@ -134,6 +134,7 @@
 
             <tr class="info">
                 <td>合计</td>
+                <td></td>
                 <td>{{ $issuedrawings->sum('tonnage') }}</td>
 @if (Agent::isDesktop())
                 <td></td>
