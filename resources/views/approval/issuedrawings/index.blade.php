@@ -38,8 +38,11 @@
 
                 {!! Form::select('paymentmethod', ['支票' => '支票', '贷记' => '贷记', '电汇' => '电汇', '汇票' => '汇票', '现金' => '现金', '银行卡' => '银行卡', '其他' => '其他'], null, ['class' => 'form-control', 'placeholder' => '--付款方式--']) !!}
 
-                {!! Form::select('paymentstatus', ['0' => '已付款', '-1' => '未付款'], null, ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}
                 --}}
+                {!! Form::label('sohead_name', '订单', ['class' => 'control-label']) !!}
+                {!! Form::select('sohead_name', $soheadList_hxold, null, ['class' => 'form-control', 'id' => 'select_sohead']) !!}
+                {!! Form::hidden('sohead_id', null, ['id' => 'sohead_id']) !!}
+
                 {!! Form::select('status', ['1' => '审批中', '0' => '已通过', '-1' => '已拒绝', '-2' => '已撤回'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']) !!}
                 {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '审批编号']) !!}
                 {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
@@ -191,7 +194,7 @@
 
 @section('script')
     <script type="text/javascript" src="/DataTables/datatables.js"></script>
-    {{--<script type="text/javascript" src="/DataTables/DataTables-1.10.16/js/jquery.dataTables.js"></script>--}}
+    <script type="text/javascript" src="/js/jquery-editable-select.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
             $("#btnExport").click(function() {
@@ -209,16 +212,18 @@
                 }); 
             });
 
-            {{--
-            $('#userDataTable').DataTable({
-                "processing": true,
-                "serverSide": true,
-                "ajax": "{{ url('approval/issuedrawings/indexjson') }}",
-                "columns": [
-                    {"data": "created_at", "name": "created_at"},
-                ]
-            });
-            --}}
+            $('#select_sohead')
+                .editableSelect({
+                    effects: 'slide',
+                })
+
+                .on('select.editable-select', function (e, li) {
+                    if (li.val() > 0)
+                        $('input[name=sohead_id]').val(li.val());
+                    else
+                        $('input[name=sohead_id]').val('');
+                })
+            ;
         });
     </script>
 @endsection

@@ -153,7 +153,7 @@ class ViewComposerServiceProvider extends ServiceProvider
 
         // soheadList_hxold
         view()->composer(array('system.report.statisticsindex', 'approval.reports2.issuedrawingpurchasedetail',
-            'purchase.purchaseorders.index_hx', 'dingtalk.dtlogs.index'), function($view) {
+            'purchase.purchaseorders.index_hx', 'dingtalk.dtlogs.index', 'approval.issuedrawings.index'), function($view) {
             $view->with('soheadList_hxold', \App\Models\Sales\Salesorder_hxold::where('status', 0)->orderby('id', 'asc')->lists('projectjc', 'id'));
         });
 
@@ -190,7 +190,8 @@ class ViewComposerServiceProvider extends ServiceProvider
         });
 
         // projectList
-        view()->composer(array('system.report.statisticsindex', 'approval.reports2.issuedrawingpurchasedetail', 'dingtalk.dtlogs.index'), function($view) {
+        view()->composer(array('system.report.statisticsindex', 'approval.reports2.issuedrawingpurchasedetail', 'dingtalk.dtlogs.index',
+            'approval.issuedrawings.index'), function($view) {
             $view->with('projectList', \App\Models\Sales\Project_hxold::orderby('id', 'asc')->lists('name', 'id'));
 //            $view->with('poheadOrderDateyearList_hxold', DB::connection('sqlsrv')->select(DB::raw('select distinct datepart(year, orderdate) from vorder'))->lists('projectjc', 'id'));
         });
