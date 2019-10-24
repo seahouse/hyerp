@@ -44,7 +44,7 @@
                 {!! Form::hidden('sohead_id', null, ['id' => 'sohead_id']) !!}
 
                 {!! Form::select('status', ['1' => '审批中', '0' => '已通过', '-1' => '已拒绝', '-2' => '已撤回'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']) !!}
-                {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '审批编号']) !!}
+                {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '审批编号, 订单编号']) !!}
                 {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
             </div>
         {!! Form::close() !!}

@@ -96,7 +96,12 @@ class IssuedrawingController extends Controller
 
         if (strlen($key) > 0)
         {
-            $query->where('business_id', 'like', '%'.$key.'%');
+//            $query->where('business_id', 'like', '%'.$key.'%');
+            $query->leftJoin('hxcrm2016.dbo.vorder', 'vorder.id', '=', 'issuedrawings.sohead_id');
+            $query->where(function ($query) use ($key){
+                $query->where('business_id', 'like', '%'.$key.'%')
+                    ->orWhere('hxcrm2016.dbo.vorder.number', 'like', '%'.$key.'%');
+            });
         }
 
         if ($request->has('status'))
