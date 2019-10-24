@@ -60,7 +60,8 @@
                 <th>申请日期</th>
                 <th>编号</th>
                 <th>吨数</th>
-
+                <th>制作公司</th>
+                <th>制作概述</th>
                 @if (Agent::isDesktop())
                 <th>对应项目</th>
                 @endif
@@ -89,6 +90,12 @@
                     </td>
                     <td>
                         {{ $issuedrawing->tonnage }}
+                    </td>
+                    <td>
+                        {{ $issuedrawing->productioncompany }}
+                    </td>
+                    <td title="{{ $issuedrawing->overview }}">
+                        {{ str_limit($issuedrawing->overview, 40) }}
                     </td>
                     @if (Agent::isDesktop())
                         <td title="@if (isset($issuedrawing->sohead_hxold->descrip)) {{ $issuedrawing->sohead_hxold->descrip }} @else @endif">
