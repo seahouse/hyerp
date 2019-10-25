@@ -59,11 +59,11 @@ class DingTalkController extends Controller
         return $accessToken;
     }
 
-    public static function getAccessToken_appkey($agentid) {
-        $accessToken = Cache::remember('access_token_appkey', 7200/60 - 5, function() use ($agentid) {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
+    public static function getAccessToken_appkey($agentname) {
+        $accessToken = Cache::remember('access_token_appkey', 7200/60 - 5, function() use ($agentname) {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
             $url = 'https://oapi.dingtalk.com/gettoken';
-            $appkey = config('custom.dingtalk.apps.' . $agentid . '.appkey');
-            $appsecret = config('custom.dingtalk.apps.' . $agentid . '.appsecret');
+            $appkey = config('custom.dingtalk.hx_henan.apps.' . $agentname . '.appkey');
+            $appsecret = config('custom.dingtalk.hx_henan.apps.' . $agentname . '.appsecret');
 //            $corpid = config('custom.dingtalk.corpid');
 //            $corpsecret = config('custom.dingtalk.corpsecret');
             $params = compact('appkey', 'appsecret');

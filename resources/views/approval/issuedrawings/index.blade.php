@@ -146,6 +146,8 @@
                 <td>合计</td>
                 <td></td>
                 <td>{{ $issuedrawings->sum('tonnage') }}</td>
+                <td></td>
+                <td></td>
 @if (Agent::isDesktop())
                 <td></td>
 @endif
@@ -159,7 +161,10 @@
 @if (Auth::user()->email == "admin@admin.com")
             <tr class="success">
                 <td>汇总</td>
+                <td></td>
                 <td>
+                <td></td>
+                <td></td>
                 @if (isset($totalamount))
                     {{ $totalamount }}
                 @endif
