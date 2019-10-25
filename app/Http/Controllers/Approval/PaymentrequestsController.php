@@ -916,16 +916,17 @@ class PaymentrequestsController extends Controller
                 if (isset($paymentrequest->purchaseorder_hxold->purchasecompany_id) && $paymentrequest->purchaseorder_hxold->purchasecompany_id == 3)
                 {
                     $access_token = DingTalkController::getAccessToken_appkey('approval');
+                    $req->setAgentId(config('custom.dingtalk.hx_henan.apps.approval.agentid'));
                     $req->setUseridList('04090710367573');
                 }
                 else
                 {
                     $access_token = DingTalkController::getAccessToken();
+                    $req->setAgentId(config('custom.dingtalk.agentidlist.approval'));
                     $req->setUseridList($touser->dtuserid);
                 }
 
                 $req->setMsgtype("oa");
-                $req->setAgentId(config('custom.dingtalk.agentidlist.approval'));
 //                $req->setDeptIdList("");
                 $req->setToAllUser("false");
                 $req->setMsgcontent("$msgcontent");
