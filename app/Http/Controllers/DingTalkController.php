@@ -177,7 +177,7 @@ class DingTalkController extends Controller
         // return response()->json($config);
     }
 
-    public static function getconfig2($agentname)
+    public static function getconfig2($agentname = 'approval')
     {
 //         Cache::flush();
         $nonceStr = str_random(32);
@@ -198,8 +198,7 @@ class DingTalkController extends Controller
         Log::info('ticket: ' . $ticket);
         $signature = self::sign($ticket, $nonceStr, $timeStamp, $url);
         Log::info('signature: ' . $signature);
-        if ($agentid == '')
-            $agentid = config('custom.dingtalk.agentidlist.' . self::$APPNAME);
+        $agentid = config('custom.dingtalk.hx_henan.apps.' . $agentname . '.agentid');
 //        Log::info($agentid);
 
         $config = array(
