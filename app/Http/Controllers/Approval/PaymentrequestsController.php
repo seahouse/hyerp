@@ -917,7 +917,8 @@ class PaymentrequestsController extends Controller
                 {
                     $access_token = DingTalkController::getAccessToken_appkey('approval');
                     $req->setAgentId(config('custom.dingtalk.hx_henan.apps.approval.agentid'));
-                    $req->setUseridList('04090710367573');
+//                    $req->setUseridList('04090710367573');
+                    $req->setUseridList($touser->dtuserid);
                 }
                 else
                 {

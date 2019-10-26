@@ -89,6 +89,13 @@ class Paymentrequest extends Model
         $approversetting = Approversetting::find($this::getAttribute('approversetting_id'));
         if ($approversetting)
         {
+            // 如果是河南华星，第5层为候S
+            if ($approversetting->level == 5 && isset($this->purchaseorder_hxold->purchasecompany_id) && $this->purchaseorder_hxold->purchasecompany_id == 3)
+            {
+                $user = User::where('id', 123)->first();
+                return $user;
+            }
+
 			if ($approversetting->approver_id > 0)
 			{
 				$user = User::where('id', $approversetting->approver_id)->first();
