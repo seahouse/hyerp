@@ -205,7 +205,7 @@ class DingTalkController extends Controller
             'url' => $url,
             'nonceStr' => $nonceStr,
             'timeStamp' => $timeStamp,
-            'corpId' => config('custom.dingtalk.corpid'),
+            'corpId' => config('custom.dingtalk.hx_henan.corpid'),
             'signature' => $signature,
             'ticket' => $ticket,
 //            'agentId' => config('custom.dingtalk.agentidlist.' . self::$APPNAME),       // such as: config('custom.dingtalk.agentidlist.approval')      // request('app')
