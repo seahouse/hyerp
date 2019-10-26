@@ -177,7 +177,7 @@ class DingTalkController extends Controller
         // return response()->json($config);
     }
 
-    public static function getconfig2($agentid = '252755905')
+    public static function getconfig2($agentname)
     {
 //         Cache::flush();
         $nonceStr = str_random(32);
@@ -192,7 +192,7 @@ class DingTalkController extends Controller
 //        Log::info(http_build_query(request()->query()));
 //        Log::info($url);
 //        $corpAccessToken = self::getAccessToken_suite();
-        $corpAccessToken = self::getAccessToken_appkey($agentid);
+        $corpAccessToken = self::getAccessToken_appkey($agentname);
         Log::info('token_appkey: ' . $corpAccessToken);
         $ticket = self::getTicket($corpAccessToken);
         Log::info('ticket: ' . $ticket);
@@ -394,7 +394,7 @@ class DingTalkController extends Controller
         // Cache::flush();
         // self::$AGENTID = array_get(self::$AGENTIDS, request('app'), '13231599');
         self::$APPNAME = $appname;
-        $config = $this->getconfig2();
+        $config = $this->getconfig2($appname);
         // dd(compact('config'));
         $agent = new Agent();
         $url = str_replace("-", "/", $url);
