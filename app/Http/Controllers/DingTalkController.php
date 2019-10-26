@@ -191,8 +191,8 @@ class DingTalkController extends Controller
 //        Log::info(request()->query());
 //        Log::info(http_build_query(request()->query()));
 //        Log::info($url);
-        $corpAccessToken = self::getAccessToken_suite();
-//        $corpAccessToken = self::getAccessToken_appkey($agentid);
+//        $corpAccessToken = self::getAccessToken_suite();
+        $corpAccessToken = self::getAccessToken_appkey($agentid);
         Log::info('token_appkey: ' . $corpAccessToken);
         $ticket = self::getTicket($corpAccessToken);
         Log::info('ticket: ' . $ticket);
