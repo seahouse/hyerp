@@ -59,7 +59,7 @@ class DingTalkController extends Controller
         return $accessToken;
     }
 
-    public static function getAccessToken_appkey($agentname) {
+    public static function getAccessToken_appkey($agentname = 'approval') {
         $accessToken = Cache::remember('access_token_appkey', 7200/60 - 5, function() use ($agentname) {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
             $url = 'https://oapi.dingtalk.com/gettoken';
             $appkey = config('custom.dingtalk.hx_henan.apps.' . $agentname . '.appkey');
@@ -226,9 +226,6 @@ class DingTalkController extends Controller
 
     public function getuserinfo($code)
     {
-//        $corpid = 'ding6ed55e00b5328f39';
-//        $corpsecret = 'gdQvzBl7IW5f3YUSMIkfEIsivOVn8lcXUL_i1BIJvbP4kPJh8SU8B8JuNe8U9JIo';
-
         // $url = 'https://oapi.dingtalk.com/gettoken';
         // $params = compact('corpid', 'corpsecret');
         // $reply = $this->get($url, $params);
@@ -248,6 +245,45 @@ class DingTalkController extends Controller
             $userid_erp = $user_erp->id;
             session()->put('userid', $userid_erp);
             // login 
+            if (!Auth::check())
+            {
+                Auth::loginUsingId($userid_erp);
+            }
+        }
+
+        $user = [
+            'deviceId' => $userInfo->deviceId,
+            'errcode' => $userInfo->errcode,
+            'errmsg' => $userInfo->errmsg,
+            'is_sys' => $userInfo->is_sys,
+            'sys_level' => $userInfo->sys_level,
+            'userid' => $userInfo->userid,
+            'userid_erp' => $userid_erp,
+        ];
+        return response()->json($user);
+    }
+
+    public function getuserinfo2($code)
+    {
+        // $url = 'https://oapi.dingtalk.com/gettoken';
+        // $params = compact('corpid', 'corpsecret');
+        // $reply = $this->get($url, $params);
+        // $access_token = $reply->access_token;
+        $access_token = self::getAccessToken_appkey();
+
+        // Get user info
+        $url = 'https://oapi.dingtalk.com/user/getuserinfo';
+        $params = compact('access_token', 'code');
+        $userInfo = $this->get($url, $params);
+
+        // get erp user info and set session userid
+        $user_erp = DB::table('dtuser2s')->where('userid', $userInfo->userid)->first();
+        $userid_erp = -1;
+        if (!is_null($user_erp))
+        {
+            $userid_erp = $user_erp->user_id;
+            session()->put('userid', $userid_erp);
+            // login
             if (!Auth::check())
             {
                 Auth::loginUsingId($userid_erp);
