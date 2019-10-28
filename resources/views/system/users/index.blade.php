@@ -18,11 +18,6 @@
         {!! Form::open(['url' => '/system/users/search', 'class' => 'pull-right form-inline']) !!}
         <div class="form-group-sm">
             {{--
-            {!! Form::label('approvaldatelabel', '审批时间:', ['class' => 'control-label']); !!}
-            {!! Form::date('approvaldatestart', null, ['class' => 'form-control']); !!}
-            {!! Form::label('approvaldatelabelto', '-', ['class' => 'control-label']); !!}
-            {!! Form::date('approvaldateend', null, ['class' => 'form-control']); !!}
-
             {!! Form::select('paymentmethod', ['支票' => '支票', '贷记' => '贷记', '电汇' => '电汇', '汇票' => '汇票', '现金' => '现金', '银行卡' => '银行卡', '其他' => '其他'], null, ['class' => 'form-control', 'placeholder' => '--付款方式--']) !!}
 
             {!! Form::select('paymentstatus', ['0' => '已付款', '-1' => '未付款'], null, ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}
@@ -34,34 +29,38 @@
         {!! Form::close() !!}
 
 @if (Auth::user()->email == "admin@admin.com")
+
+    {!! Form::open(['class' => 'pull-right form-inline']) !!}
+        {!! Form::button('河南华星人员自动同步钉钉', ['class' => 'btn btn-default btn-sm', 'id' => 'btnBindHnhxDtuser']) !!}
+        {!! Form::button('取消河南华星人员自动同步钉钉', ['class' => 'btn btn-default btn-sm', 'id' => 'btnCancelBindHnhxDtuser']) !!}
+    {!! Form::close() !!}
+
         {!! Form::button('与钉钉取消绑定', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnCancelBindDT']) !!}
-            {!! Form::button('聊天2', ['class' => 'btn btn-default btn-sm pull-right', 'id' => 'btnPickConversation']) !!}
-        <a href="{{ URL::to('dingtalk/delete_call_back') }}">与钉钉取消绑定</a>
+        {{--<a href="{{ URL::to('dingtalk/delete_call_back') }}">与钉钉取消绑定</a>--}}
 
         {!! Form::open(['url' => '/system/users/bingdingtalk', 'class' => 'pull-right']) !!}
             {!! Form::submit('与钉钉强绑定', ['class' => 'btn btn-default btn-sm']) !!}            
         {!! Form::close() !!}
 
-        {!! Form::open(['url' => '/dingtalk/receive', 'class' => 'pull-right']) !!}
-            {!! Form::submit('与钉钉强绑定222', ['class' => 'btn btn-default btn-sm']) !!}            
-        {!! Form::close() !!}
+        {{--{!! Form::open(['url' => '/dingtalk/receive', 'class' => 'pull-right']) !!}--}}
+            {{--{!! Form::submit('与钉钉强绑定222', ['class' => 'btn btn-default btn-sm']) !!}            --}}
+        {{--{!! Form::close() !!}--}}
 
-        {!! Form::open(['url' => '/faceplusplus/detect', 'class' => 'pull-right']) !!}
-            {!! Form::submit('人脸监测', ['class' => 'btn btn-default btn-sm']) !!}            
-        {!! Form::close() !!}
+        {{--{!! Form::open(['url' => '/faceplusplus/detect', 'class' => 'pull-right']) !!}--}}
+            {{--{!! Form::submit('人脸监测', ['class' => 'btn btn-default btn-sm']) !!}            --}}
+        {{--{!! Form::close() !!}--}}
 
-        {!! Form::open(['url' => '/faceplusplus/faceset_create', 'class' => 'pull-right', 'files' => true]) !!}
-            {!! Form::submit('人脸集合', ['class' => 'btn btn-default btn-sm']) !!}            
-        {!! Form::close() !!}
+        {{--{!! Form::open(['url' => '/faceplusplus/faceset_create', 'class' => 'pull-right', 'files' => true]) !!}--}}
+            {{--{!! Form::submit('人脸集合', ['class' => 'btn btn-default btn-sm']) !!}            --}}
+        {{--{!! Form::close() !!}--}}
 
-        {!! Form::open(['url' => '/faceplusplus/compare', 'class' => 'pull-right']) !!}
-            {!! Form::hidden('api_key', 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk', []) !!}
-            {!! Form::hidden('api_secret', 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT', []) !!}
-            {!! Form::hidden('image_url1', 'http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg', []) !!}
-            {!! Form::hidden('image_url2', 'http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg', []) !!}
-            {!! Form::submit('人脸对比测试', ['class' => 'btn btn-default btn-sm']) !!}            
-        {!! Form::close() !!}
-
+        {{--{!! Form::open(['url' => '/faceplusplus/compare', 'class' => 'pull-right']) !!}--}}
+            {{--{!! Form::hidden('api_key', 'eLObusplEGW0dCfBDYceyhoAdvcEaQtk', []) !!}--}}
+            {{--{!! Form::hidden('api_secret', 'bWJAjmtylVZ6A8Ik4_vC1xBO3X3cyKJT', []) !!}--}}
+            {{--{!! Form::hidden('image_url1', 'http://static.dingtalk.com/media/lADOlob6ns0CgM0CgA_640_640.jpg', []) !!}--}}
+            {{--{!! Form::hidden('image_url2', 'http://static.dingtalk.com/media/lADOlob7MM0CgM0CgA_640_640.jpg', []) !!}--}}
+            {{--{!! Form::submit('人脸对比测试', ['class' => 'btn btn-default btn-sm']) !!}            --}}
+        {{--{!! Form::close() !!}--}}
 
 
 
@@ -200,6 +199,11 @@
                 });
             });
 
+            $("#btnBindHnhxDtuser").click(function() {
+                $.post("{{ url('system/users/binddingtalk2') }}", {_token:"{{ csrf_token() }}"}, function (data) {
+                    alert(data);
+                });
+            });
         });
 
         <?php $config = DT::getconfig(); ?>
@@ -213,28 +217,6 @@
         });
 
         dd.ready(function() {
-            $("#btnPickConversation").click(function() {
-                dd.biz.util.uploadImage({
-                    multiple: true,
-                    max: 5,
-                    onSuccess: function(result) {
-                        var images = result;	// result.split(',');
-                        var imageHtml = '';
-                        for (var i in images) {
-                            imageHtml += '<div class="col-xs-6 col-md-3">';
-                            imageHtml += '<div class="thumbnail">';
-                            imageHtml += '<img src=' + images[i] + ' />';
-                            imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
-                            imageHtml += '</div>';
-                            imageHtml += '</div>';
-                        }
-                        $("#previewimage").empty().append(imageHtml);
-                    },
-                    onFail: function(err) {
-                        alert('select image failed: ' + JSON.stringify(err));
-                    }
-                });
-            });
 
         });
 

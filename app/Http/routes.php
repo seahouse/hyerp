@@ -588,6 +588,8 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
     });
     Route::post('users/bingdingtalk', 'UsersController@bingdingtalk');
     Route::post('users/bingdingtalkcancel', 'UsersController@bingdingtalkcancel');
+    Route::post('users/binddingtalk2', 'UsersController@binddingtalk2');
+    Route::post('users/binddingtalk2cancel', 'UsersController@binddingtalk2cancel');
     // Route::post('users/test', 'UsersController@test');
     Route::resource('users', 'UsersController');
     Route::group(['prefix' => 'users/{user}/roles'], function () {

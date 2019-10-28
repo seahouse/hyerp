@@ -362,6 +362,26 @@ class UsersController extends Controller
             dd($data->errcode . ': ' . $data->errmsg);
     }
 
+    public function binddingtalk2()
+    {
+        $data = DingTalkController::register_call_back_user2();
+
+        if ($data->errcode == "0")
+            return $data->errmsg;
+        else
+            return $data->errcode . ': ' . $data->errmsg;
+    }
+
+    public function binddingtalk2cancel()
+    {
+        $data = DingTalkController::register_call_back_user();
+
+        if ($data->errcode == "0")
+            dd($data->errmsg);
+        else
+            dd($data->errcode . ': ' . $data->errmsg);
+    }
+
     private function saveImg($file)
     {
         $fileOriginalName = $file->getClientOriginalName();

@@ -953,6 +953,29 @@ class DingTalkController extends Controller
         return $response;
     }
 
+    public static function register_call_back_user2()
+    {
+        // Cache::flush();
+        $access_token = self::getAccessToken_appkey();
+        // dd(str_random(32));
+
+        // self::$ENCODING_AES_KEY = str_random(43);
+        $data = [
+            'call_back_tag' => ['user_add_org', 'user_modify_org', 'user_leave_org', 'bpms_task_change', 'bpms_instance_change'],
+            'token' => config('custom.dingtalk.TOKEN'),
+            'aes_key' => config('custom.dingtalk.ENCODING_AES_KEY'),
+//            'url' => 'http://139.224.8.136:81/dingtalk/receive'
+            'url' => url('dingtalk/receive2')
+//             'url' => 'http://www.huaxing-east.cn:2016/dingtalk/receive'
+//             'url' => 'http://hyerp.ricki.cn/dingtalk/receive'
+//             'url' => 'http://139.224.8.136:81/dingtalk/receive'
+        ];
+        // dd($data);
+
+        $response = self::register_call_back($access_token, $data);
+        return $response;
+    }
+
     // register call back approval
     // do not need this function. not use.
     public static function register_call_back_bpms()
