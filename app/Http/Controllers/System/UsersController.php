@@ -7,6 +7,7 @@ namespace App\Http\Controllers\System;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+use App\Models\System\Dtuser2;
 use App\Models\System\User;
 use App\Http\Requests\System\UserRequest;
 use Request;
@@ -289,7 +290,7 @@ class UsersController extends Controller
 //                $user->dtuserid        = $dtuser->userid;
 //                $user->save();
 
-                $dtuserlocal = Dtuser::firstOrNew(['userid' => $dtuser->userid]);
+                $dtuserlocal = Dtuser2::firstOrNew(['userid' => $dtuser->userid]);
 //            if (!isset($dtuserlocal))
 //                $dtuserlocal = new Dtuser;
                 $dtuserlocal->user_id       = $user->id;
@@ -337,7 +338,7 @@ class UsersController extends Controller
     // 河南华星
     public static function destroydtuser2($dtuserid)
     {
-        $dtuserlocal = Dtuser::where('userid', $dtuserid);
+        $dtuserlocal = Dtuser2::where('userid', $dtuserid);
         if (isset($dtuserlocal))
         {
             $dtuserlocal->delete();
