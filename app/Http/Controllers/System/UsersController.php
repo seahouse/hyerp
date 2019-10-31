@@ -286,8 +286,8 @@ class UsersController extends Controller
             {
 //                $user->name         = $dtuser->name;
 //                $user->email        = $dtuser->orgEmail;
-                $user->dtuserid        = $dtuser->userid;
-                $user->save();
+//                $user->dtuserid        = $dtuser->userid;
+//                $user->save();
 
                 $dtuserlocal = Dtuser::firstOrNew(['userid' => $dtuser->userid]);
 //            if (!isset($dtuserlocal))
@@ -330,6 +330,16 @@ class UsersController extends Controller
                 $user->dtuserid = "";
                 $user->save();
             }
+            $dtuserlocal->delete();
+        }
+    }
+
+    // 河南华星
+    public static function destroydtuser2($dtuserid)
+    {
+        $dtuserlocal = Dtuser::where('userid', $dtuserid);
+        if (isset($dtuserlocal))
+        {
             $dtuserlocal->delete();
         }
     }

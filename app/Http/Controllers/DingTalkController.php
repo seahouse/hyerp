@@ -1455,7 +1455,7 @@ class DingTalkController extends Controller
                     Log::info("user id: " . $userid);
 //                    $user = self::userGet($userid);
 //                    Log::info("user: " . json_encode($user));
-                    UsersController::destroydtuser($userid);
+                    UsersController::destroydtuser2($userid);
                 }
             }
             else if ("bpms_instance_change" === $eventType)
