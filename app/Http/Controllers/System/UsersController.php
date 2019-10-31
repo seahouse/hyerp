@@ -300,7 +300,7 @@ class UsersController extends Controller
                 $dtuserlocal->remark        = isset($dtuser->remark) ? $dtuser->remark : '';
                 $dtuserlocal->mobile        = $dtuser->mobile;
                 if (isset($dtuser->email))      $dtuserlocal->email         = $dtuser->email;
-                $dtuserlocal->orgEmail      = $dtuser->orgEmail;             // 无此元素
+                $dtuserlocal->orgEmail      = isset($dtuser->orgEmail) ? $dtuser->orgEmail : '';
                 $dtuserlocal->active        = $dtuser->active;
                 $dtuserlocal->orderInDepts  = isset($dtuser->orderInDepts) ? $dtuser->orderInDepts : '';
                 $dtuserlocal->isAdmin       = $dtuser->isAdmin;
