@@ -305,7 +305,7 @@ class UsersController extends Controller
                 $dtuserlocal->orderInDepts  = isset($dtuser->orderInDepts) ? $dtuser->orderInDepts : '';
                 $dtuserlocal->isAdmin       = $dtuser->isAdmin;
                 $dtuserlocal->isBoss        = $dtuser->isBoss;
-                $dtuserlocal->dingId        = $dtuser->dingId;
+                $dtuserlocal->dingId        = isset($dtuser->dingId) ? $dtuser->dingId : '';
                 $dtuserlocal->isLeaderInDepts = isset($dtuser->isLeaderInDepts) ? $dtuser->isLeaderInDepts : '';
                 $dtuserlocal->isHide        = $dtuser->isHide;
                 $dtuserlocal->department    = json_encode($dtuser->department);           // 是个数组，暂不考虑
