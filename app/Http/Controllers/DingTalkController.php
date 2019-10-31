@@ -1069,6 +1069,13 @@ class DingTalkController extends Controller
         return self::get($url, $params);
     }
 
+    public static function userGet2($userid) {
+        $url = 'https://oapi.dingtalk.com/user/get';
+        $access_token = self::getAccessToken_appkey();
+        $params = compact('access_token', 'userid');
+        return self::get($url, $params);
+    }
+
     public function receive()
     {
         $signature = $_GET["signature"];
@@ -1426,7 +1433,7 @@ class DingTalkController extends Controller
                 foreach ($data->UserId as $userid) {
                     # code...
                     Log::info("user id: " . $userid);
-                    $user = self::userGet($userid);
+                    $user = self::userGet2($userid);
                     Log::info("user: " . json_encode($user));
                     UsersController::synchronizedtuser2($user);
                 }
@@ -1439,7 +1446,7 @@ class DingTalkController extends Controller
                 foreach ($data->UserId as $userid) {
                     # code...
                     Log::info("user id: " . $userid);
-                    $user = self::userGet($userid);
+                    $user = self::userGet2($userid);
                     Log::info("user: " . json_encode($user));
                     UsersController::synchronizedtuser2($user);
 //                    UsersController::updatedtuser($userid);
