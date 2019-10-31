@@ -1418,7 +1418,7 @@ class DingTalkController extends Controller
             org_dept_remove ： 通讯录企业部门删除
             org_remove ： 企业被解散
             */
-            else if ("user_add_org" === $eventType)
+            else if ("user_add_org" === $eventType)     // 河南华星
             {
                 Log::info(json_encode($_GET) . "  Info:user_add_org");
                 //handle auth change event
@@ -1428,9 +1428,8 @@ class DingTalkController extends Controller
                     Log::info("user id: " . $userid);
                     $user = self::userGet($userid);
                     Log::info("user: " . json_encode($user));
-                    UsersController::synchronizedtuser($user);
+                    UsersController::synchronizedtuser2($user);
                 }
-
             }
             else if ("user_modify_org" === $eventType)
             {
@@ -1442,7 +1441,7 @@ class DingTalkController extends Controller
                     Log::info("user id: " . $userid);
                     $user = self::userGet($userid);
                     Log::info("user: " . json_encode($user));
-                    UsersController::synchronizedtuser($user);
+                    UsersController::synchronizedtuser2($user);
 //                    UsersController::updatedtuser($userid);
                 }
             }

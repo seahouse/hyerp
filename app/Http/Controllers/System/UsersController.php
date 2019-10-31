@@ -276,6 +276,47 @@ class UsersController extends Controller
         }
     }
 
+    // 河南华星同步用户信息。通过员工姓名进行对应，需要先在无锡华星中新建账号并设置企业邮箱
+    public static function synchronizedtuser2($dtuser)
+    {
+        if (isset($dtuser->name) && !empty($dtuser->name))
+        {
+            $user = User::where('name', $dtuser->name)->first();
+            if (isset($user))
+            {
+//                $user->name         = $dtuser->name;
+//                $user->email        = $dtuser->orgEmail;
+                $user->dtuserid        = $dtuser->userid;
+                $user->save();
+
+                $dtuserlocal = Dtuser::firstOrNew(['userid' => $dtuser->userid]);
+//            if (!isset($dtuserlocal))
+//                $dtuserlocal = new Dtuser;
+                $dtuserlocal->user_id       = $user->id;
+                $dtuserlocal->name          = $dtuser->name;
+                $dtuserlocal->tel           = isset($dtuser->tel) ? $dtuser->tel : '';
+                $dtuserlocal->workPlace    = isset($dtuser->workPlace) ? $dtuser->workPlace : '';
+                $dtuserlocal->remark        = isset($dtuser->remark) ? $dtuser->remark : '';
+                $dtuserlocal->mobile        = $dtuser->mobile;
+                if (isset($dtuser->email))      $dtuserlocal->email         = $dtuser->email;
+                $dtuserlocal->orgEmail      = $dtuser->orgEmail;             // 无此元素
+                $dtuserlocal->active        = $dtuser->active;
+                $dtuserlocal->orderInDepts  = isset($dtuser->orderInDepts) ? $dtuser->orderInDepts : '';
+                $dtuserlocal->isAdmin       = $dtuser->isAdmin;
+                $dtuserlocal->isBoss        = $dtuser->isBoss;
+                $dtuserlocal->dingId        = $dtuser->dingId;
+                $dtuserlocal->isLeaderInDepts = isset($dtuser->isLeaderInDepts) ? $dtuser->isLeaderInDepts : '';
+                $dtuserlocal->isHide        = $dtuser->isHide;
+                $dtuserlocal->department    = json_encode($dtuser->department);           // 是个数组，暂不考虑
+                $dtuserlocal->position      = $dtuser->position;
+                $dtuserlocal->avatar        = $dtuser->avatar;
+                $dtuserlocal->jobnumber     = $dtuser->jobnumber;
+                // $dtuserlocal->extattr       = $dtuser->extattr;              // 无此元素
+                $dtuserlocal->save();
+            }
+        }
+    }
+
     // delete dtuser
     // when dingtalk delete the user, do this
     public static function destroydtuser($dtuserid)
