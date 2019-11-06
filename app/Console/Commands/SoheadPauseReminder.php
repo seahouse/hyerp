@@ -67,8 +67,10 @@ class SoheadPauseReminder extends Command
                     {
                         $remainAmount = $sohead->amount - $receivedAmount;
                         $days = $maxdate->diffInDays($today);
-                        $msg = "订单'" . $sohead->projectjc . "'最后一次收款时间为" . $maxdate->toDateString() . "，距现在已" . $maxdate->diffInDays($today) . "天，已收款" . $receivedAmount . "万元，剩余尾款" . $remainAmount . "万元，已开票金额" . $sohead->sotickets->sum('amount') . "万元。\n付款方式：" . $sohead->paymethod;
-//                        $this->info($msg);
+                        $debugend_date = Carbon::parse($sohead->debugend_date);
+                        $quolityDate = Carbon::parse($sohead->quolityDate);
+                        $quolity_period = $debugend_date->diffInDays($quolityDate);
+                        $msg = "订单'" . $sohead->projectjc . "'最后一次收款时间为" . $maxdate->toDateString() . "，距现在已" . $days . "天，已收款" . $receivedAmount . "万元，剩余尾款" . $remainAmount . "万元，已开票金额" . $sohead->sotickets->sum('amount') . "万元。质保期：" . $quolity_period . "天。\n付款方式：" . $sohead->paymethod;
 //                        Log::info($msg);
                         $msgs[$sohead->id]['days'] = $days;
                         $msgs[$sohead->id]['msg'] = $msg;
