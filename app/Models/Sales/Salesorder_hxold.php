@@ -63,6 +63,11 @@ class Salesorder_hxold extends Model
         return DB::connection('sqlsrv')->select('select dbo.getPoheadAmountBy7550(' . $this->id . ') as poheadAmountBy7550');
     }
 
+    // 获取订单的总人工数
+    public function getDtlogHumandays_Xmjlsgrz() {
+        return DB::connection('sqlsrv2')->select('select dbo.getDtlogHumandays_Xmjlsgrz(' . $this->id . ') as days');
+    }
+
     // 公用订单的分摊成本金额
     public function getPoheadTaxAmountBy7550() {
         return DB::connection('sqlsrv')->select('select dbo.getPoheadTaxAmountBy7550(' . $this->id . ') as poheadTaxAmountBy7550');

@@ -216,6 +216,51 @@ class DtlogController extends Controller
         return response()->json($data);
     }
 
+    public function relate_gctsrz_sohead_id(Request $request)
+    {
+        $query = Dtlog::latest('create_time');
+        if ($request->has('createdatestart') && $request->has('createdateend'))
+        {
+            $query->whereRaw("DATEDIFF(DAY, create_time, '" . $request->input('createdatestart') . "') <= 0 and DATEDIFF(DAY, create_time, '" . $request->input('createdateend') . "') >=0");
+        }
+
+        $dtlogs = $query->select('*')->get();
+        $count = 0;
+        Log::info($dtlogs->count());
+        foreach ($dtlogs as $dtlog)
+        {
+            if ($dtlog->template_name == '工程调试日志')
+            {
+                $updated = false;
+                $dtlogitems = $dtlog->dtlogitems;
+                foreach ($dtlogitems as $dtlogitem)
+                {
+                    if ($dtlogitem->key == '2、工程项目名称' || $dtlogitem->key == '2、工程项目名称：' || $dtlogitem->key == '工程项目名称：')
+                    {
+                        $soheads = Salesorder_hxold::all();
+                        foreach ($soheads as $sohead)
+                        {
+                            if (strpos($dtlogitem->value, $sohead->number) !== false)
+                            {
+                                $dtlog->update(['gctsrz_sohead_id' => $sohead->id]);
+                                $updated = true;
+                                $count++;
+                                break;
+                            }
+                        }
+                        if ($updated) break;
+                    }
+                }
+            }
+        }
+
+        $data = [
+            'errcode' => 0,
+            'errmsg' => '关联成功，共关联了' . $count . '个日志。',
+        ];
+        return response()->json($data);
+    }
+
     public function attachsohead($id)
     {
         //

@@ -35,6 +35,7 @@
             {{--{!! Form::button('还未关联订单的项目经理施工日志', ['class' => 'btn btn-default btn-sm', 'id' => 'btn_xmjlsgrz_sohead_id_undefined']) !!}--}}
             @if (Auth::user()->email == "admin@admin.com")
             {!! Form::button('关联项目经理施工日志到ERP订单', ['class' => 'btn btn-default btn-sm', 'id' => 'btn_xmjlsgrz_sohead_id']) !!}
+            {!! Form::button('关联工程调试日志到ERP订单', ['class' => 'btn btn-default btn-sm', 'id' => 'btn_gctsrz_sohead_id']) !!}
             @endif
         </div>
         {!! Form::close() !!}
@@ -130,6 +131,29 @@
                     }
                 });
             });
+
+            $("#btn_gctsrz_sohead_id").click(function() {
+                $.ajax({
+                    type: "POST",
+                    url: "{!! url('dingtalk/dtlogs/relate_gctsrz_sohead_id') !!}",
+                    data : $('#frmCondition').serialize(),
+                    success: function(result) {
+                        // alert(result);
+                        // alert(result.errmsg);
+                        if (result.errcode == 0)
+                        {
+                            alert(result.errmsg);
+                        }
+                        else
+                            alert(JSON.stringify(result));
+
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(JSON.stringify(xhr));
+                    }
+                });
+            });
+
 
             $('#select_xmjlsgrz_sohead')
                 .editableSelect({

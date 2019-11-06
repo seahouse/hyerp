@@ -551,6 +551,7 @@ Route::group(['prefix' => 'dingtalk', 'namespace' => 'Dingtalk', 'middleware' =>
     Route::group(['prefix' => 'dtlogs'], function () {
         Route::post('search', 'DtlogController@search');
         Route::post('relate_xmjlsgrz_sohead_id', 'DtlogController@relate_xmjlsgrz_sohead_id');
+        Route::post('relate_gctsgrz_sohead_id', 'DtlogController@relate_gctsrx_sohead_id');
     });
     Route::group(['prefix' => 'dtlogs/{dtlog}'], function () {
         Route::get('attachsohead', 'DtlogController@attachsohead');

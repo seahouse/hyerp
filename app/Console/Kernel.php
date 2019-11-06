@@ -31,6 +31,7 @@ class Kernel extends ConsoleKernel
         Commands\ReceiveDTLogs::class,
         Commands\PurchaseReminder::class,
         Commands\SoheadPauseReminder::class,
+        Commands\SitehoursReminder::class,
     ];
 
     /**
