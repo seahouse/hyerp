@@ -46,7 +46,7 @@ class SupplierticketReminder extends Command
     {
         //
         $msg = '以下消息为超额付款的采购订单：';
-        $this->sendMsg($msg, 379);      // to ZhouYP
+//        $this->sendMsg($msg, 379);      // to ZhouYP
         $this->sendMsg($msg, 8);        // to WuHL
         $this->sendMsg($msg, 196);      // to LiuHM
 
@@ -61,7 +61,7 @@ class SupplierticketReminder extends Command
 //                Log::info($msg);
 
                 $this->sendMsg($msg, $pohead->transactor_id);
-                $this->sendMsg($msg, 379);       // to ZhouYP
+//                $this->sendMsg($msg, 379);       // to ZhouYP
 
                 $supplier_id = $pohead->vendinfo_id;
                 if (!array_key_exists($supplier_id, $msgWuhl))
@@ -104,7 +104,7 @@ class SupplierticketReminder extends Command
 
 
         $msg = '以下消息为需要向供应商催开票据的订单：';
-        $this->sendMsg($msg, 379);      // to ZhouYP
+//        $this->sendMsg($msg, 379);      // to ZhouYP
         $this->sendMsg($msg, 8);        // to WuHL
         $this->sendMsg($msg, 196);      // to LiuHM
         $this->sendMsg($msg, 186);      // to LiuYJ
@@ -136,9 +136,10 @@ class SupplierticketReminder extends Command
                     $payment = Payment_hxold::where('pohead_id', $pohead->id)->orderBy('payment_date', 'desc')->firstOrFail();
                     if (isset($payment))
                     {
-//                        Log::info($payment->payment_date);
                         $payment_date = Carbon::parse($payment->payment_date);
-                        if (Carbon::now()->gt($payment_date->addDays(20)))
+
+                        /// 修改：去掉20天的延迟提醒，修改为立马提醒，2019/20/22
+//                        if (Carbon::now()->gt($payment_date->addDays(20)))
                         {
                             $needReminder = true;
 
@@ -151,13 +152,12 @@ class SupplierticketReminder extends Command
                                 $msgWuhl[$supplier_id]["ticketedamountlist"] = [];
                             }
                             // 付款超过70%后，发票按照100%算；付款低于70%的，发票按照已付款金额为标准
-//                            array_push($msgWuhl[$supplier_id]["unticketedamountlist"], $pohead->amount_paid - $pohead->amount_ticketed);
                             array_push($msgWuhl[$supplier_id]["unticketedamountlist"], $pohead->amount_paid / $pohead->amount >= 0.7 ? $pohead->amount - $pohead->amount_ticketed : $pohead->amount_paid - $pohead->amount_ticketed);
                             array_push($msgWuhl[$supplier_id]["paidamountlist"], $pohead->amount_paid);
                             array_push($msgWuhl[$supplier_id]["ticketedamountlist"], $pohead->amount_ticketed);
                         }
-                        else
-                            $needReminder = false;
+//                        else
+//                            $needReminder = false;
                     }
                 }
 

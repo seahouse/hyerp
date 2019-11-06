@@ -232,6 +232,11 @@ class ApprovalController extends Controller
         $ids_approversetting = Approversetting::where('approver_id', $userid)
             ->where('approvaltype_id', $approvaltype_id)
             ->select('id')->pluck('id');
+        // 特殊情况：
+        // 如果是候S，可以看到供应商付款的第4级审批
+        if ($user->id == 123)
+            $ids_approversetting = $ids_approversetting->merge([11]);
+
         // 如果审批设置中没有设置人员，而是设置了部门和职位，那么也要加进去
         $ids_approversetting2 = [];
         if (isset($user->dept->id))

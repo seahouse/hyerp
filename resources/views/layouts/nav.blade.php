@@ -118,7 +118,7 @@
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">审批<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        @can('module_approval')
+                        @can('approval_reimbursement_view')
                             <li><a href="/approval/reimbursements">报销</a></li>
                         @endcan
                         @can('approval_paymentrequest_view')

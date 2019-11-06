@@ -908,18 +908,35 @@ class PaymentrequestsController extends Controller
                     ]
                 ];
                 $msgcontent = json_encode($msgcontent_data);
-                $access_token = DingTalkController::getAccessToken();
 
                 $c = new DingTalkClient;
                 $req = new CorpMessageCorpconversationAsyncsendRequest;
+
+                $access_token = '';
+                if (isset($paymentrequest->purchaseorder_hxold->purchasecompany_id) && $paymentrequest->purchaseorder_hxold->purchasecompany_id == 3)
+                {
+                    $access_token = DingTalkController::getAccessToken_appkey('approval');
+                    $req->setAgentId(config('custom.dingtalk.hx_henan.apps.approval.agentid'));
+//                    $req->setUseridList('04090710367573');
+                    $req->setUseridList($touser->dtuserid);
+                }
+                else
+                {
+                    $access_token = DingTalkController::getAccessToken();
+                    $req->setAgentId(config('custom.dingtalk.agentidlist.approval'));
+                    $req->setUseridList($touser->dtuserid);
+                }
+
                 $req->setMsgtype("oa");
-                $req->setAgentId(config('custom.dingtalk.agentidlist.approval'));
-                $req->setUseridList($touser->dtuserid);
 //                $req->setDeptIdList("");
                 $req->setToAllUser("false");
                 $req->setMsgcontent("$msgcontent");
                 $resp = $c->execute($req, $access_token);
-//                Log::info(json_encode($resp));
+                Log::info(json_encode($resp));
+                if ($resp->code != "0")
+                {
+                    Log::info($resp->msg . ": " . $resp->sub_msg);
+                }
 
 //                DingTalkController::send_link($touser->dtuserid, '',
 //                    url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',

@@ -59,11 +59,11 @@ class DingTalkController extends Controller
         return $accessToken;
     }
 
-    public static function getAccessToken_appkey($agentid) {
-        $accessToken = Cache::remember('access_token_appkey', 7200/60 - 5, function() use ($agentid) {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
+    public static function getAccessToken_appkey($agentname = 'approval') {
+        $accessToken = Cache::remember('access_token_appkey', 7200/60 - 5, function() use ($agentname) {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
             $url = 'https://oapi.dingtalk.com/gettoken';
-            $appkey = config('custom.dingtalk.apps.' . $agentid . '.appkey');
-            $appsecret = config('custom.dingtalk.apps.' . $agentid . '.appsecret');
+            $appkey = config('custom.dingtalk.hx_henan.apps.' . $agentname . '.appkey');
+            $appsecret = config('custom.dingtalk.hx_henan.apps.' . $agentname . '.appsecret');
 //            $corpid = config('custom.dingtalk.corpid');
 //            $corpsecret = config('custom.dingtalk.corpsecret');
             $params = compact('appkey', 'appsecret');
@@ -177,7 +177,7 @@ class DingTalkController extends Controller
         // return response()->json($config);
     }
 
-    public static function getconfig2($agentid = '252755905')
+    public static function getconfig2($agentname = 'approval')
     {
 //         Cache::flush();
         $nonceStr = str_random(32);
@@ -191,22 +191,21 @@ class DingTalkController extends Controller
 //        Log::info(request()->query());
 //        Log::info(http_build_query(request()->query()));
 //        Log::info($url);
-        $corpAccessToken = self::getAccessToken_suite();
-//        $corpAccessToken = self::getAccessToken_appkey($agentid);
+//        $corpAccessToken = self::getAccessToken_suite();
+        $corpAccessToken = self::getAccessToken_appkey($agentname);
         Log::info('token_appkey: ' . $corpAccessToken);
         $ticket = self::getTicket($corpAccessToken);
         Log::info('ticket: ' . $ticket);
         $signature = self::sign($ticket, $nonceStr, $timeStamp, $url);
         Log::info('signature: ' . $signature);
-        if ($agentid == '')
-            $agentid = config('custom.dingtalk.agentidlist.' . self::$APPNAME);
+        $agentid = config('custom.dingtalk.hx_henan.apps.' . $agentname . '.agentid');
 //        Log::info($agentid);
 
         $config = array(
             'url' => $url,
             'nonceStr' => $nonceStr,
             'timeStamp' => $timeStamp,
-            'corpId' => config('custom.dingtalk.corpid'),
+            'corpId' => config('custom.dingtalk.hx_henan.corpid'),
             'signature' => $signature,
             'ticket' => $ticket,
 //            'agentId' => config('custom.dingtalk.agentidlist.' . self::$APPNAME),       // such as: config('custom.dingtalk.agentidlist.approval')      // request('app')
@@ -227,9 +226,6 @@ class DingTalkController extends Controller
 
     public function getuserinfo($code)
     {
-//        $corpid = 'ding6ed55e00b5328f39';
-//        $corpsecret = 'gdQvzBl7IW5f3YUSMIkfEIsivOVn8lcXUL_i1BIJvbP4kPJh8SU8B8JuNe8U9JIo';
-
         // $url = 'https://oapi.dingtalk.com/gettoken';
         // $params = compact('corpid', 'corpsecret');
         // $reply = $this->get($url, $params);
@@ -249,6 +245,45 @@ class DingTalkController extends Controller
             $userid_erp = $user_erp->id;
             session()->put('userid', $userid_erp);
             // login 
+            if (!Auth::check())
+            {
+                Auth::loginUsingId($userid_erp);
+            }
+        }
+
+        $user = [
+            'deviceId' => $userInfo->deviceId,
+            'errcode' => $userInfo->errcode,
+            'errmsg' => $userInfo->errmsg,
+            'is_sys' => $userInfo->is_sys,
+            'sys_level' => $userInfo->sys_level,
+            'userid' => $userInfo->userid,
+            'userid_erp' => $userid_erp,
+        ];
+        return response()->json($user);
+    }
+
+    public function getuserinfo2($code)
+    {
+        // $url = 'https://oapi.dingtalk.com/gettoken';
+        // $params = compact('corpid', 'corpsecret');
+        // $reply = $this->get($url, $params);
+        // $access_token = $reply->access_token;
+        $access_token = self::getAccessToken_appkey();
+
+        // Get user info
+        $url = 'https://oapi.dingtalk.com/user/getuserinfo';
+        $params = compact('access_token', 'code');
+        $userInfo = $this->get($url, $params);
+
+        // get erp user info and set session userid
+        $user_erp = DB::table('dtuser2s')->where('userid', $userInfo->userid)->first();
+        $userid_erp = -1;
+        if (!is_null($user_erp))
+        {
+            $userid_erp = $user_erp->user_id;
+            session()->put('userid', $userid_erp);
+            // login
             if (!Auth::check())
             {
                 Auth::loginUsingId($userid_erp);
@@ -394,7 +429,7 @@ class DingTalkController extends Controller
         // Cache::flush();
         // self::$AGENTID = array_get(self::$AGENTIDS, request('app'), '13231599');
         self::$APPNAME = $appname;
-        $config = $this->getconfig2();
+        $config = $this->getconfig2($appname);
         // dd(compact('config'));
         $agent = new Agent();
         $url = str_replace("-", "/", $url);
@@ -918,6 +953,29 @@ class DingTalkController extends Controller
         return $response;
     }
 
+    public static function register_call_back_user2()
+    {
+        // Cache::flush();
+        $access_token = self::getAccessToken_appkey();
+        // dd(str_random(32));
+
+        // self::$ENCODING_AES_KEY = str_random(43);
+        $data = [
+            'call_back_tag' => ['user_add_org', 'user_modify_org', 'user_leave_org', 'bpms_task_change', 'bpms_instance_change'],
+            'token' => config('custom.dingtalk.TOKEN'),
+            'aes_key' => config('custom.dingtalk.ENCODING_AES_KEY'),
+//            'url' => 'http://139.224.8.136:81/dingtalk/receive'
+            'url' => url('dingtalk/receive2')
+//             'url' => 'http://www.huaxing-east.cn:2016/dingtalk/receive'
+//             'url' => 'http://hyerp.ricki.cn/dingtalk/receive'
+//             'url' => 'http://139.224.8.136:81/dingtalk/receive'
+        ];
+        // dd($data);
+
+        $response = self::register_call_back($access_token, $data);
+        return $response;
+    }
+
     // register call back approval
     // do not need this function. not use.
     public static function register_call_back_bpms()
@@ -1007,6 +1065,13 @@ class DingTalkController extends Controller
     public static function userGet($userid) {
         $url = 'https://oapi.dingtalk.com/user/get';
         $access_token = self::getAccessToken();
+        $params = compact('access_token', 'userid');
+        return self::get($url, $params);
+    }
+
+    public static function userGet2($userid) {
+        $url = 'https://oapi.dingtalk.com/user/get';
+        $access_token = self::getAccessToken_appkey();
         $params = compact('access_token', 'userid');
         return self::get($url, $params);
     }
@@ -1259,6 +1324,259 @@ class DingTalkController extends Controller
                 // return $encryptMsg;
             } 
             else 
+            {
+                Log::error("RESPONSE ERR: " . $errCode);
+            }
+        }
+    }
+
+    public function receive2()
+    {
+        $signature = $_GET["signature"];
+        $timeStamp = $_GET["timestamp"];
+        $nonce = $_GET["nonce"];
+        $postdata = file_get_contents("php://input");
+        $postList = json_decode($postdata,true);
+        $encrypt = $postList['encrypt'];
+        $crypt = new DingtalkCrypt(config('custom.dingtalk.TOKEN'), config('custom.dingtalk.ENCODING_AES_KEY'), config('custom.dingtalk.hx_henan.corpid'));
+        // Log::info("ENCODING_AES_KEY: " . config('custom.dingtalk.ENCODING_AES_KEY'));
+
+        $msg = "";
+        $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
+        Log::info("msg: " . $msg);
+//        Log::info("errCode: " . $errCode);
+
+        if ($errCode != 0)
+        {
+            Log::info(json_encode($_GET) . "  ERR:" . $errCode);
+
+            /**
+             * 创建套件时检测回调地址有效性，使用CREATE_SUITE_KEY作为SuiteKey
+             */
+            $crypt = new DingtalkCrypt(config('custom.dingtalk.TOKEN'), config('custom.dingtalk.ENCODING_AES_KEY'), '');
+            $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
+            if ($errCode == 0)
+            {
+                Log::info("DECRYPT CREATE SUITE MSG SUCCESS " . json_encode($_GET) . "  " . $msg);
+                $eventMsg = json_decode($msg);
+                $eventType = $eventMsg->EventType;
+                if ("check_create_suite_url" === $eventType)
+                {
+                    $random = $eventMsg->Random;
+                    $testSuiteKey = $eventMsg->TestSuiteKey;
+
+                    $encryptMsg = "";
+                    $errCode = $crypt->EncryptMsg($random, $timeStamp, $nonce, $encryptMsg);
+                    if ($errCode == 0)
+                    {
+                        Log::info("CREATE SUITE URL RESPONSE: " . $encryptMsg);
+                        echo $encryptMsg;
+                        // return $encryptMsg;
+                    }
+                    else
+                    {
+                        Log::info("CREATE SUITE URL RESPONSE ERR: " . $errCode);
+                    }
+                }
+                else
+                {
+                    //should never happened
+                }
+            }
+            else
+            {
+                Log::error(json_encode($_GET) . "CREATE SUITE ERR:" . $errCode);
+            }
+            return;
+        }
+        else
+        {
+            /**
+             * 套件创建成功后的回调推送
+             */
+            Log::info("DECRYPT MSG SUCCESS " . json_encode($_GET) . "  " . $msg);
+            $eventMsg = json_decode($msg);
+            $eventType = $eventMsg->EventType;
+            /**
+             * 套件ticket
+             */
+            if ("suite_ticket" === $eventType)
+            {
+                Cache::setSuiteTicket($eventMsg->SuiteTicket);
+            }
+            /**
+             * 临时授权码
+             */
+            else if ("tmp_auth_code" === $eventType)
+            {
+                $tmpAuthCode = $eventMsg->AuthCode;
+                Activate::autoActivateSuite($tmpAuthCode);
+            }
+            /**
+             * 授权变更事件
+             */
+            /*user_add_org : 通讯录用户增加
+            user_modify_org : 通讯录用户更改
+            user_leave_org : 通讯录用户离职
+            org_admin_add ：通讯录用户被设为管理员
+            org_admin_remove ：通讯录用户被取消设置管理员
+            org_dept_create ： 通讯录企业部门创建
+            org_dept_modify ： 通讯录企业部门修改
+            org_dept_remove ： 通讯录企业部门删除
+            org_remove ： 企业被解散
+            */
+            else if ("user_add_org" === $eventType)     // 河南华星
+            {
+                Log::info(json_encode($_GET) . "  Info:user_add_org");
+                //handle auth change event
+                $data = json_decode($msg);
+                foreach ($data->UserId as $userid) {
+                    # code...
+                    Log::info("user id: " . $userid);
+                    $user = self::userGet2($userid);
+                    Log::info("user: " . json_encode($user));
+                    UsersController::synchronizedtuser2($user);
+                }
+            }
+            else if ("user_modify_org" === $eventType)
+            {
+                Log::error(json_encode($_GET) . "  Info:user_modify_org");
+                //handle auth change event
+                $data = json_decode($msg);
+                foreach ($data->UserId as $userid) {
+                    # code...
+                    Log::info("user id: " . $userid);
+                    $user = self::userGet2($userid);
+                    Log::info("user: " . json_encode($user));
+                    UsersController::synchronizedtuser2($user);
+//                    UsersController::updatedtuser($userid);
+                }
+            }
+            else if ("user_leave_org" === $eventType)
+            {
+                Log::error(json_encode($_GET) . "  ERR:user_leave_org");
+                // delete dtuser
+                $data = json_decode($msg);
+                foreach ($data->UserId as $userid) {
+                    # code...
+                    Log::info("user id: " . $userid);
+//                    $user = self::userGet($userid);
+//                    Log::info("user: " . json_encode($user));
+                    UsersController::destroydtuser2($userid);
+                }
+            }
+            else if ("bpms_instance_change" === $eventType)
+            {
+//                Log::info(json_encode($_GET) . "  INFO:bpms_instance_change");
+                $data = json_decode($msg);
+                Log::info("bpms_instance_change: " . $msg);
+                if ($data->type == "finish" && $data->result == "agree")
+                {
+                    if ($data->processCode == "PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2")
+                        IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
+                        McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.pppayment'))
+                        PppaymentController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.projectsitepurchase'))
+                        ProjectsitepurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.vendordeduction'))
+                        VendordeductionController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
+                }
+                elseif ($data->type == "finish" && $data->result == "refuse")
+                {
+                    if ($data->processCode == "PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2")
+                        IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
+                        McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.pppayment'))
+                        PppaymentController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.projectsitepurchase'))
+                        ProjectsitepurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.vendordeduction'))
+                        VendordeductionController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
+                }
+                elseif ($data->type == "terminate")
+                {
+                    if ($data->processCode == "PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2")
+                        IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
+                        McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.pppayment'))
+                        PppaymentController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.projectsitepurchase'))
+                        ProjectsitepurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.vendordeduction'))
+                        VendordeductionController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
+                }
+                elseif ($data->type == "delete")
+                {
+                    if ($data->processCode == "PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2")
+                        IssuedrawingController::deleteByProcessInstanceId($data->processInstanceId);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
+                        McitempurchaseController::deleteByProcessInstanceId($data->processInstanceId);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.pppayment'))
+                        PppaymentController::deleteByProcessInstanceId($data->processInstanceId);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.projectsitepurchase'))
+                        ProjectsitepurchaseController::deleteByProcessInstanceId($data->processInstanceId);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.vendordeduction'))
+                        VendordeductionController::deleteByProcessInstanceId($data->processInstanceId);
+                }
+            }
+            else if ("bpms_task_change" === $eventType)
+            {
+                Log::info(json_encode($_GET) . "  INFO:bpms_task_change");
+                $data = json_decode($msg);
+                Log::info("bpms_task_change: " . $msg);
+            }
+            /**
+             * 应用被解除授权的时候，需要删除相应企业的存储信息
+             */
+            else if ("suite_relieve" === $eventType)
+            {
+                $corpid = $eventMsg->AuthCorpId;
+                // ISVService::removeCorpInfo($corpid);
+                //handle auth change event
+            }else if ("change_auth" === $eventType)
+            {
+                //handle auth change event
+            }
+            /**
+             * 回调地址更新
+             */
+            else if ("check_update_suite_url" === $eventType)
+            {
+                $random = $eventMsg->Random;
+                $testSuiteKey = $eventMsg->TestSuiteKey;
+
+                $encryptMsg = "";
+                $errCode = $crypt->EncryptMsg($random, $timeStamp, $nonce, $encryptMsg);
+                if ($errCode == 0)
+                {
+                    Log::info("UPDATE SUITE URL RESPONSE: " . $encryptMsg);
+                    echo $encryptMsg;
+                    return $encryptMsg;
+                }
+                else
+                {
+                    Log::error("UPDATE SUITE URL RESPONSE ERR: " . $errCode);
+                }
+            }
+            else
+            {
+                //should never happen
+            }
+
+            $res = "success";
+            $encryptMsg = "";
+            $errCode = $crypt->EncryptMsg($res, $timeStamp, $nonce, $encryptMsg);
+            if ($errCode == 0)
+            {
+                Log::info("RESPONSE: " . $encryptMsg);
+                echo $encryptMsg;
+                // return $encryptMsg;
+            }
+            else
             {
                 Log::error("RESPONSE ERR: " . $errCode);
             }

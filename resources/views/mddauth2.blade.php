@@ -150,7 +150,7 @@
 				    onSuccess: function(info) {
 			     	    $.ajax({
 			         	    type:"GET",
-			         	    url:"{{ url('dingtalk/getuserinfo') }}" + "/" + info.code,
+			         	    url:"{{ url('dingtalk/getuserinfo2') }}" + "/" + info.code,
 			         	    error:function(xhr, ajaxOptions, thrownError){
 			             	    alert('error');
 								alert(xhr.status);
@@ -277,7 +277,7 @@
                         onSuccess: function(result) {
                             $.ajax({
                                 type:"GET",
-                                url:"{{ url('dingtalk/getuserinfo') }}" + "/" + result.code,
+                                url:"{{ url('dingtalk/getuserinfo2') }}" + "/" + result.code,
                                 error:function(xhr, ajaxOptions, thrownError){
                                     dd.device.notification.alert({
                                         message: "登录错误",

@@ -38,6 +38,7 @@ Route::get('app2', function() {
 
 Route::post('dingtalk/receive', 'DingTalkController@receive');
 Route::get('dingtalk/receive', 'DingTalkController@receive');
+Route::post('dingtalk/receive2', 'DingTalkController@receive2');
 Route::any('dingtalk/receivebpms', 'DingTalkController@receivebpms');
 // Route::post('dingtalk/receive', function() {
 //     return '';
@@ -589,6 +590,8 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
     });
     Route::post('users/bingdingtalk', 'UsersController@bingdingtalk');
     Route::post('users/bingdingtalkcancel', 'UsersController@bingdingtalkcancel');
+    Route::post('users/binddingtalk2', 'UsersController@binddingtalk2');
+    Route::post('users/binddingtalk2cancel', 'UsersController@binddingtalk2cancel');
     // Route::post('users/test', 'UsersController@test');
     Route::resource('users', 'UsersController');
     Route::group(['prefix' => 'users/{user}/roles'], function () {

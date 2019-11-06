@@ -87,7 +87,7 @@ class PurchaseordersController extends Controller
                 $query->where('number', 'like', '%'.$key.'%')
                     ->orWhere('descrip', 'like', '%'.$key.'%');
             });
-        $purchaseorders = $query->paginate(20);
+        $purchaseorders = $query->paginate(100);
         return $purchaseorders;
     }
 

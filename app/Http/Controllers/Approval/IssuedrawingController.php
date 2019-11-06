@@ -96,36 +96,19 @@ class IssuedrawingController extends Controller
 
         if (strlen($key) > 0)
         {
-            $query->where('business_id', 'like', '%'.$key.'%');
+//            $query->where('business_id', 'like', '%'.$key.'%');
+            $query->leftJoin('hxcrm2016.dbo.vorder', 'vorder.id', '=', 'issuedrawings.sohead_id');
+            $query->where(function ($query) use ($key){
+                $query->where('business_id', 'like', '%'.$key.'%')
+                    ->orWhere('hxcrm2016.dbo.vorder.number', 'like', '%'.$key.'%');
+            });
         }
 
         if ($request->has('status'))
             $query->where('status', $request->input('status'));
-//
-//        if ($request->has('approvaldatestart') && $request->has('approvaldateend'))
-//        {
-//            if ($request->has('approver_id_date'))
-//            {
-//                $paymentrequestids = DB::table('paymentrequestapprovals')
-//                    ->where('approver_id', $request->input('approver_id_date'))
-//                    ->select('paymentrequest_id')
-//                    ->groupBy('paymentrequest_id')
-//                    ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'')
-//                    ->pluck('paymentrequest_id');
-//            }
-//            else
-//            {
-//                $paymentrequestids = DB::table('paymentrequestapprovals')
-//                    ->select('paymentrequest_id')
-//                    ->groupBy('paymentrequest_id')
-//                    ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'')
-//                    ->pluck('paymentrequest_id');
-//            }
-//
-//            $query->whereIn('id', $paymentrequestids);
-//
-//
-//        }
+
+        if ($request->has('sohead_id') && $request->input('sohead_id') > 0)
+            $query->where('sohead_id', $request->input('sohead_id'));
 
 //        // paymentmethod
 //        if ($request->has('paymentmethod'))
