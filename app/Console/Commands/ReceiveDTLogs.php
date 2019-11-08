@@ -127,7 +127,7 @@ class ReceiveDTLogs extends Command
                                             }
                                         }
                                     }
-                                    if ($this->option('template') == '工程调试日志 ' && $itemArray['key'] == '2、工程项目名称')
+                                    if ($this->option('template') == '工程调试日志 ' && $itemArray['key'] == '工程项目名称')
                                     {
                                         $soheads = Salesorder_hxold::all();
                                         foreach ($soheads as $sohead)
