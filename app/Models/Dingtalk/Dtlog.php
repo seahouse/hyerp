@@ -16,7 +16,7 @@ class Dtlog extends Model
         'remark',
         'template_name',
         'xmjlsgrz_sohead_id',
-        'gctsrx_sohead_id',
+        'gctsrz_sohead_id',
     ];
 
     public function dtlogitems() {
