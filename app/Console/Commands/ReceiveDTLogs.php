@@ -124,10 +124,11 @@ class ReceiveDTLogs extends Command
                                             if (strpos($itemArray['value'], $sohead->number) !== false)
                                             {
                                                 $dtlog->update(['xmjlsgrz_sohead_id' => $sohead->id]);
+                                                break;
                                             }
                                         }
                                     }
-                                    if ($this->option('template') == '工程调试日志 ' && $itemArray['key'] == '工程项目名称')
+                                    if ($this->option('template') == '工程调试日志' && $itemArray['key'] == '工程项目名称')
                                     {
                                         $soheads = Salesorder_hxold::all();
                                         foreach ($soheads as $sohead)
@@ -135,6 +136,7 @@ class ReceiveDTLogs extends Command
                                             if (strpos($itemArray['value'], $sohead->number) !== false)
                                             {
                                                 $dtlog->update(['gctsrz_sohead_id' => $sohead->id]);
+                                                break;
                                             }
                                         }
                                     }
