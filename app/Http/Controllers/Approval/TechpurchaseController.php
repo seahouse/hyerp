@@ -323,4 +323,23 @@ class TechpurchaseController extends Controller
     {
         //
     }
+
+    public static function updateStatusByProcessInstanceId($processInstanceId, $status)
+    {
+        $techpurchase = Techpurchase::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if (isset($techpurchase))
+        {
+            $techpurchase->status = $status;
+            $techpurchase->save();
+        }
+    }
+
+    public static function deleteByProcessInstanceId($processInstanceId)
+    {
+        $techpurchase = Techpurchase::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if ($techpurchase)
+        {
+            $techpurchase->forceDelete();
+        }
+    }
 }
