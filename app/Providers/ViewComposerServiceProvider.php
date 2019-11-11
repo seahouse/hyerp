@@ -237,7 +237,7 @@ class ViewComposerServiceProvider extends ServiceProvider
         });
 
         // companyList
-        view()->composer(array('approval.issuedrawings.mcreate', 'approval.issuedrawings.show'), function($view) {
+        view()->composer(array('approval.issuedrawings.mcreate', 'approval.issuedrawings.show', 'approval.techpurchases.mcreate'), function($view) {
             $view->with('companyList', \App\Models\Basic\Company_hxold::orderby('id', 'asc')->lists('name', 'id'));
         });
     }

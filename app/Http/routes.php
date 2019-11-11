@@ -524,6 +524,15 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     });
     Route::resource('vendordeductions', 'VendordeductionController');
 
+    Route::group(['prefix' => 'techpurchase'], function() {
+        Route::get('mcreate', 'TechpurchaseController@mcreate');
+        Route::post('mstore', 'TechpurchaseController@mstore');
+
+    });
+    Route::resource('techpurchase', 'TechpurchaseController');
+    Route::resource('techpurchaseattachment', 'TechpurchaseachmentController');
+    Route::resource('techpurchaseitem', 'TechpurchaseitemController');
+
     Route::post('bingdingtalk', 'ApprovalController@bingdingtalk');
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexapproval');
     Route::group(['prefix' => 'report2'], function() {
