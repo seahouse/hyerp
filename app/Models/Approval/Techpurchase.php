@@ -26,4 +26,8 @@ class Techpurchase extends Model
     public function purchasecompany() {
         return $this->belongsTo('\App\Models\Basic\Company_hxold', 'purchasecompany_id');
     }
+
+    public function techpurchaseitems() {
+        return $this->hasMany('\App\Models\Approval\Techpurchaseitem');
+    }
 }

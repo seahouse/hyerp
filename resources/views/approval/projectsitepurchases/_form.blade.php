@@ -55,7 +55,7 @@
             {!! Form::label('purchasetype', '采购类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
                 {!! Form::select('purchasetype', array('机务材料类' => '机务材料类', '电气材料类' => '电气材料类', '机务设备类' => '机务设备类', '电气设备类' => '电气设备类', '维修费用' => '维修费用',
-                    '工具类' => '工具类', '劳保类' => '劳保类', '办公用品' => '办公用品', '生活用品' => '生活用品'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                    '工具类' => '工具类', '劳务费' => '劳务费', '劳保类' => '劳保类', '办公用品' => '办公用品', '生活用品' => '生活用品'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
             </div>
         </div>
 
@@ -79,27 +79,6 @@
 @if (isset($paymentrequest))
 
 
-<div class="form-group">
-    {!! Form::label('pohead_descrip', '对应工程名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->sohead->custinfo->name)) 
-         {!! Form::textarea('pohead_descrip', $paymentrequest->purchaseorder_hxold->sohead->custinfo->name . ' | ' . $paymentrequest->purchaseorder_hxold->sohead->descrip, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
-    @else
-        {!! Form::textarea('pohead_descrip', null, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
-    @endif
-    </div>
-</div>
-
-<div class="form-group">
-    {!! Form::label('pohead_amount', '合同金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount)) 
-         {!! Form::text('pohead_amount', $paymentrequest->purchaseorder_hxold->amount, ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('pohead_amount', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-</div>
 
 <div class="form-group">
     {!! Form::label('pohead_amount_paid', '已付金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
@@ -304,8 +283,8 @@
         <div class="form-group">
             {!! Form::label('paymentmethod', '支付方式:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('paymentmethod', array('采购人申请采购备用金' => '采购人申请采购备用金', '采购人使用差旅备用金购买，到公司凭发票报销' => '采购人使用差旅备用金购买，到公司凭发票报销', '采购人先行使用个人资金垫付，到公司凭发票报销' => '采购人先行使用个人资金垫付，到公司凭发票报销',
-                    '财务需打款给采购人，现场付现金' => '财务需打款给采购人，现场付现金', '公司财务电汇给供货单位' => '公司财务电汇给供货单位'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                {!! Form::select('paymentmethod', array('申请人通过《请款-员工请款通用》申请采购备用金' => '申请人通过《请款-员工请款通用》申请采购备用金', '申请人使用差旅备用金先行购买，到公司凭发票报销' => '申请人使用差旅备用金先行购买，到公司凭发票报销', '申请人先行使用个人资金垫付，到公司凭发票报销' => '申请人先行使用个人资金垫付，到公司凭发票报销',
+                    '申请人走《付款-对公帐户付款》由公司财务直接打款给供货单位或安装单位' => '申请人走《付款-对公帐户付款》由公司财务直接打款给供货单位或安装单位'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
             </div>
         </div>
 

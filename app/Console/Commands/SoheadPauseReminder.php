@@ -86,6 +86,7 @@ class SoheadPauseReminder extends Command
         foreach ($msgs as $value)
         {
             $this->sendMsg($value['msg'], 8);        // to WuHL
+            $this->sendMsg($msg, 495);              // to WangGZ
         }
     }
 
