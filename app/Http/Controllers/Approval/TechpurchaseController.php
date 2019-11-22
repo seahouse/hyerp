@@ -5,11 +5,14 @@ namespace App\Http\Controllers\Approval;
 use App\Http\Controllers\DingTalkController;
 use App\Http\Controllers\HelperController;
 use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
+use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiCspaceGrantCustomSpaceRequest;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiProcessinstanceCspaceInfoRequest;
 use App\Models\Approval\Techpurchase;
 use App\Models\Approval\Techpurchaseattachment;
 use App\Models\Approval\Techpurchaseitem;
+use App\Models\Product\Itemp_hxold;
 use App\Models\Purchase\Purchaseorder_hx;
+use App\Models\Purchase\Poitem_hx;
 use App\Models\Sales\Salesorder_hxold;
 use App\Models\System\Userold;
 use Carbon\Carbon;
@@ -17,7 +20,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Auth;
+use Auth, Log;
 
 class TechpurchaseController extends Controller
 {
@@ -29,6 +32,24 @@ class TechpurchaseController extends Controller
     public function index()
     {
         //
+        $files_string = '[{"fileId":"10105132132","fileName":"19_04_22(4).log","fileSize":1793354,"fileType":"log","spaceId":"140659409"}]';
+        $files_datas = json_decode($files_string);
+        foreach ($files_datas as $files_data)
+        {
+            Log::info($files_data->fileId);
+//            dd(Auth::user()->dtuserid);
+
+            $session = DingTalkController::getAccessToken();
+            $client = new DingTalkClient();
+            $request = new OapiCspaceGrantCustomSpaceRequest();
+            $request->setType("download");
+            $request->setUserid(Auth::user()->dtuserid);
+            $request->setDuration(3600);
+            $request->setFileids($files_data->fileId);
+            $response = $client->execute($request, $session);
+            dd($response);
+        }
+
 //        TechpurchaseController::updateStatusByProcessInstanceId('16ca4098-7503-4044-86f2-cfdce724fa9e', 0);
 
 //        $techpurchase = Techpurchase::orderBy('id', 'desc')->first();
@@ -147,6 +168,7 @@ class TechpurchaseController extends Controller
         }
 //        dd($techpurchase);
 
+        Log::info($input['files_string']);
         // create files
         $fileattachments_url = [];
         $fileattachments_url2 = [];
@@ -398,7 +420,7 @@ class TechpurchaseController extends Controller
                 $userold_id = 0;
                 $userold = Userold::where('user_id', $techpurchase->applicant_id)->first();
                 if (isset($userold))
-                    $userold_id = $userold_id->user_hxold_id;
+                    $userold_id = $userold->user_hxold_id;
 
                 $pohead_number = $cp . '-' . $item_index . '-' . Carbon::today()->format('Y-d') . '-' . $seqnumber;
 
@@ -423,7 +445,21 @@ class TechpurchaseController extends Controller
 
                 if (isset($pohead))
                 {
-
+                    foreach ($techpurchase->techpurchaseitems as $techpurchaseitem)
+                    {
+                        $item = Itemp_hxold::where('goods_id', $techpurchaseitem->item_id)->first();
+                        if (isset($item))
+                        {
+                            $data = [
+                                'order_id'      => $pohead->id,
+                                'goods_id'      => $techpurchaseitem->item_id,
+                                'goods_name'    => $item->goods_name,
+                                'goods_number'  => $techpurchaseitem->quantity,
+                                'goods_unit'    => $item->goods_unit_name,
+                            ];
+                            Poitem_hx::create($data);
+                        }
+                    }
                 }
             }
         }

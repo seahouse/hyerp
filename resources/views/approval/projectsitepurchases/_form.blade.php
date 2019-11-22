@@ -258,8 +258,6 @@
 
 
 
-
-
 @endif
         {!! Form::hidden('items_string', null, ['id' => 'items_string']) !!}
         {!! Form::hidden('items_string2', null, ['id' => 'items_string2']) !!}
