@@ -78,6 +78,10 @@
                 {!! Form::label('project_name', '项目', ['class' => 'control-label']) !!}
                 {!! Form::select('project_name', $projectList, null, ['class' => 'form-control', 'id' => 'select_project']) !!}
                 {!! Form::hidden('project_id', null) !!}
+            @elseif ($report->name == "dt_logs_xmjlsgrz")
+                {!! Form::label('project_name', '项目', ['class' => 'control-label']) !!}
+                {!! Form::select('project_name', $projectList, null, ['class' => 'form-control', 'id' => 'select_project']) !!}
+                {!! Form::hidden('project_id', null) !!}
             @endif
 
 {{--            {!! $report->condition !!}--}}
