@@ -298,7 +298,7 @@
         {{--</div>--}}
 
         <div class="form-group">
-            {!! Form::label('files', '上传技术规范书:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            {!! Form::label('files', '上传技术规范书（到钉钉审批）:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
             <div class='col-xs-8 col-sm-10'>
                 @if (isset($issuedrawing))
@@ -311,6 +311,20 @@
                     <div id="lblFiles">
                     </div>
                     {!! Form::hidden('files_string', null, ['id' => 'files_string']) !!}
+                @endif
+            </div>
+        </div>
+
+        <div class="form-group">
+            {!! Form::label('files', '上传技术规范书（到ERP）:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+
+            <div class='col-xs-8 col-sm-10'>
+                @if (isset($issuedrawing))
+                    @foreach ($issuedrawing->drawingattachments() as $drawingattachment)
+                        <a href="{!! URL($drawingattachment->path) !!}" target="_blank" id="showPaymentnode">{{ $drawingattachment->filename }}</a> <br>
+                    @endforeach
+                @else
+                    {!! Form::file('files[]', ['multiple']) !!}
                 @endif
             </div>
         </div>
