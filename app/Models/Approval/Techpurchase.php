@@ -30,4 +30,8 @@ class Techpurchase extends Model
     public function techpurchaseitems() {
         return $this->hasMany('\App\Models\Approval\Techpurchaseitem');
     }
+
+    public function techpurchaseattachments() {
+        return $this->hasMany('\App\Models\Approval\Techpurchaseattachment');
+    }
 }

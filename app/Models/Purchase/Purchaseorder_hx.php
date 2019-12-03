@@ -20,6 +20,7 @@ class Purchaseorder_hx extends Model
         '采购订单金额',
         '采购订单状态',
         '修造或工程',
+        '技术规范书',
         '编号年份',
         '编号数字',
         '编号商品名称',

@@ -316,7 +316,7 @@
         </div>
 
         <div class="form-group">
-            {!! Form::label('files', '上传技术规范书（到ERP）:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            {!! Form::label('techspecification', '上传技术规范书（到ERP）:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
             <div class='col-xs-8 col-sm-10'>
                 @if (isset($issuedrawing))
@@ -324,7 +324,7 @@
                         <a href="{!! URL($drawingattachment->path) !!}" target="_blank" id="showPaymentnode">{{ $drawingattachment->filename }}</a> <br>
                     @endforeach
                 @else
-                    {!! Form::file('files[]', ['multiple']) !!}
+                    {!! Form::file('techspecifications[]', ['multiple']) !!}
                 @endif
             </div>
         </div>

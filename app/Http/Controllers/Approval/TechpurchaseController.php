@@ -32,25 +32,24 @@ class TechpurchaseController extends Controller
     public function index()
     {
         //
-        $files_string = '[{"fileId":"10105132132","fileName":"19_04_22(4).log","fileSize":1793354,"fileType":"log","spaceId":"140659409"}]';
-        $files_datas = json_decode($files_string);
-        foreach ($files_datas as $files_data)
-        {
-            Log::info($files_data->fileId);
-//            dd(Auth::user()->dtuserid);
+//        $files_string = '[{"fileId":"10105132132","fileName":"19_04_22(4).log","fileSize":1793354,"fileType":"log","spaceId":"140659409"}]';
+//        $files_datas = json_decode($files_string);
+//        foreach ($files_datas as $files_data)
+//        {
+//            Log::info($files_data->fileId);
+//
+//            $session = DingTalkController::getAccessToken();
+//            $client = new DingTalkClient();
+//            $request = new OapiCspaceGrantCustomSpaceRequest();
+//            $request->setType("download");
+//            $request->setUserid(Auth::user()->dtuserid);
+//            $request->setDuration(3600);
+//            $request->setFileids($files_data->fileId);
+//            $response = $client->execute($request, $session);
+//            dd($response);
+//        }
 
-            $session = DingTalkController::getAccessToken();
-            $client = new DingTalkClient();
-            $request = new OapiCspaceGrantCustomSpaceRequest();
-            $request->setType("download");
-            $request->setUserid(Auth::user()->dtuserid);
-            $request->setDuration(3600);
-            $request->setFileids($files_data->fileId);
-            $response = $client->execute($request, $session);
-            dd($response);
-        }
-
-//        TechpurchaseController::updateStatusByProcessInstanceId('16ca4098-7503-4044-86f2-cfdce724fa9e', 0);
+        TechpurchaseController::updateStatusByProcessInstanceId('b6c71445-519b-4e46-9b23-772ad3e8037b', 0);
 
 //        $techpurchase = Techpurchase::orderBy('id', 'desc')->first();
 //        if (isset($techpurchase))
@@ -174,8 +173,8 @@ class TechpurchaseController extends Controller
         $fileattachments_url2 = [];
         if (isset($techpurchase))
         {
-            $files = array_get($input,'files');
-            $destinationPath = 'uploads/approval/techpurchase/' . $techpurchase->id . '/files/';
+            $files = array_get($input,'techspecifications');
+            $destinationPath = 'uploads/approval/techpurchase/' . $techpurchase->id . '/techspecifications/';
             if (isset($files))
             {
                 foreach ($files as $key => $file) {
@@ -193,7 +192,7 @@ class TechpurchaseController extends Controller
                         // add database record
                         $techpurchaseattachment = new Techpurchaseattachment();
                         $techpurchaseattachment->techpurchase_id = $techpurchase->id;
-                        $techpurchaseattachment->type = "file";
+                        $techpurchaseattachment->type = "techspecification";
                         $techpurchaseattachment->filename = $originalName;
                         $techpurchaseattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
                         $techpurchaseattachment->save();
@@ -393,6 +392,18 @@ class TechpurchaseController extends Controller
             $techpurchase->status = $status;
             $techpurchase->save();
 
+//            $techpurchaseattachment_techspecification = $techpurchase->techpurchaseattachments->where('type', 'techspecification')->first();
+//            $dir = config('custom.hxold.purchase_techspecification_dir') . "12345" . "/";
+//            if (!is_dir($dir)) {
+//                mkdir($dir);
+//            }
+//            copy(public_path($techpurchaseattachment_techspecification->path), $dir . $techpurchaseattachment_techspecification->filename);
+//            dd(public_path($techpurchaseattachment_techspecification->path));
+//            dd(base_path(Storage::url($techpurchaseattachment_techspecification->path)));
+//            dd(Storage::get($techpurchaseattachment_techspecification->path));
+//            dd($techpurchase->techpurchaseattachments->where('type', 'techspecification')->first());
+//            dd('aaa');
+
             // 如果是审批完成且通过，则创建老系统中的采购申请单
             if ($status == 0)
             {
@@ -424,6 +435,8 @@ class TechpurchaseController extends Controller
 
                 $pohead_number = $cp . '-' . $item_index . '-' . Carbon::today()->format('Y-d') . '-' . $seqnumber;
 
+                $techpurchaseattachment_techspecification = $techpurchase->techpurchaseattachments->where('type', 'techspecification')->first();
+
                 $sohead_name = '';
                 $sohead = Salesorder_hxold::find($techpurchase->sohead_id);
                 if (isset($sohead))
@@ -437,6 +450,7 @@ class TechpurchaseController extends Controller
                     '项目名称'                => $sohead_name,
                     '申请到位日期'            => $techpurchase->arrivaldate,
                     '修造或工程'             => $cp,
+                    '技术规范书'             => isset($techpurchaseattachment_techspecification) ? $techpurchaseattachment_techspecification->filename : '',
                     '编号年份'                => Carbon::today()->year,
                     '编号数字'                => $seqnumber,
                     '编号商品名称'            => $item_index,
@@ -459,6 +473,16 @@ class TechpurchaseController extends Controller
                             ];
                             Poitem_hx::create($data);
                         }
+                    }
+
+                    // 拷贝“技术规范书”到对应的ERP目录下
+                    if (isset($techpurchaseattachment_techspecification))
+                    {
+                        $dir = config('custom.hxold.purchase_techspecification_dir') . $pohead->id . "/";
+                        if (!is_dir($dir)) {
+                            mkdir($dir);
+                        }
+                        copy(public_path($techpurchaseattachment_techspecification->path), $dir . $techpurchaseattachment_techspecification->filename);
                     }
                 }
             }

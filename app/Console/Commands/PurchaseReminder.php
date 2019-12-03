@@ -353,7 +353,7 @@ class PurchaseReminder extends Command
                     ];
 
                     $agentid = config('custom.dingtalk.agentidlist.erpreminder');
-                    $response = DingTalkController::sendActionCardMsg($transactor->id, $agentid, $data);
+                    $response = DingTalkController::sendActionCardMsg($transactor->dtuserid, $agentid, $data);
 //                    DingTalkController::sendCorpMessageTextReminder(json_encode($data));
                     sleep(1);
                 }
