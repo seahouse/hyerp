@@ -73,6 +73,26 @@ class Salesorder_hxold extends Model
         return DB::connection('sqlsrv')->select('select dbo.getPoheadTaxAmountBy7550(' . $this->id . ') as poheadTaxAmountBy7550');
     }
 
+    // 出库成本
+    public function getwarehouseCost() {
+        return DB::connection('sqlsrv')->select('select dbo.getWarehouseAmountByorder(' . $this->id . ') as warehousecost');
+    }
+
+    // 出库成本税率
+    public function getwarehousetaxCost() {
+        return DB::connection('sqlsrv')->select('select dbo.getWarehouseTaxAmountByorder(' . $this->id . ') as warehousetaxcost');
+    }
+
+    // 未入库采购合同金额
+    public function getnowarehouseCost() {
+        return DB::connection('sqlsrv')->select('select dbo.getNoWarehouseAmountByorder(' . $this->id . ') as nowarehousecost');
+    }
+
+    // 未入库税额
+    public function getnowarehousetaxCost() {
+        return DB::connection('sqlsrv')->select('select dbo.getNoWarehouseTaxAmountByorder(' . $this->id . ') as nowarehousetaxcost');
+    }
+
     public function soheadtaxratetypeasses() {
         return $this->hasMany('App\Models\Sales\Soheadtaxratetypeass_hxold', 'sohead_id', 'id');
     }
