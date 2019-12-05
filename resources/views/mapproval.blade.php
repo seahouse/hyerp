@@ -71,7 +71,7 @@
 			<div class="btn-group" role="group">
 				<a href="{{ url('/approval/mcitempurchase/mcreate') }}" class="btn btn-default btn-lg">
 					<i class="icon iconfont btn-menu-2 color-grey icon-dingding"></i>
-					<span class="labble">制造中心物品申购</span>
+					<span class="labble">生产采购</span>
 				</a>
 			</div>
 			<div class="btn-group" role="group">
@@ -83,7 +83,7 @@
 			<div class="btn-group" role="group">
 				<a href="{{ url('/approval/projectsitepurchases/mcreate') }}" class="btn btn-default btn-lg rightMenu" >
 					<i class="icon iconfont btn-menu-2 color-grey icon-dingding"></i>
-					<span class="labble">工程现场采购</span>
+					<span class="labble">工程采购</span>
 				</a>
 			</div>
 		</div>
