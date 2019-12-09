@@ -11,6 +11,10 @@
             <?php $sohead_taxamount = 0.0; ?>
             <?php $sohead_poheadtaxamount = 0.0; ?>
             <?php $pohead_amount_payment_total = 0.0; ?>
+			<?php $warehousecost = 0.0; ?>
+			<?php $warehousetaxcost = 0.0; ?>
+			<?php $nowarehousecost = 0.0; ?>
+			<?php $nowarehousetaxcost = 0.0; ?>
 			@foreach($group->projects as $project)
 				@if (isset($project))
 					@foreach($project->soheads as $sohead)
@@ -23,6 +27,10 @@
 						<?php $sohead_taxamount += isset($sohead->temTaxamountstatistics->sohead_taxamount) ? $sohead->temTaxamountstatistics->sohead_taxamount : 0.0; ?>
 						<?php $sohead_poheadtaxamount += isset($sohead->temTaxamountstatistics->sohead_poheadtaxamount) ? $sohead->temTaxamountstatistics->sohead_poheadtaxamount : 0.0; ?>
 						<?php $pohead_amount_payment_total += $sohead->payments->sum('amount'); ?>
+						<?php $warehousecost +=array_first($sohead->getwarehouseCost())->warehousecost; ?>
+						<?php $warehousetaxcost +=array_first($sohead->getwarehousetaxCost())->warehousetaxcost;?>
+						<?php $nowarehousecost +=array_first($sohead->getnowarehouseCost())->nowarehousecost;?>
+						<?php $nowarehousetaxcost +=array_first($sohead->getnowarehousetaxCost())->nowarehousetaxcost;?>
 					@endforeach
 				@endif
 			@endforeach
@@ -45,6 +53,17 @@
 			@else
 				<p>采购成本比例：-</p>
 			@endif
+			<hr style="border-top-color:rgba(0,0,0,1);" >
+			<p>出库物品金额总额：{{number_format($warehousecost/ 10000.0, 4)}}万</p>
+			<p>出库物品税差：{{number_format(($sohead_taxamount - $warehousetaxcost ) / 10000.0, 4)}}万</p>
+			<p>无入库记录合同金额总额：{{number_format($nowarehousecost/ 10000.0, 4)}}万</p>
+			<p>无入库记录物品税差：{{number_format(($sohead_taxamount - $nowarehousetaxcost) / 10000.0, 4)}}万</p>
+			@if ($totalamount > 0.0)
+				<p>出库类成本比例：{{number_format(($warehousecost  + $nowarehousecost + $sohead_taxamount - $nowarehousetaxcost-$warehousetaxcost) / ($totalamount * 10000.0) * 100.0, 2)}}%</p>
+			@else
+				<p>出库类成本比例：-</p>
+			@endif
+			<hr style="border-top-color:rgba(0,0,0,1);" >
 			<p>采购订单付款总金额：{{ number_format($pohead_amount_payment_total / 10000.0, 4) }}万</p>
 			<p>采购订单累计付款比例：{{ number_format($pohead_amount_payment_total / $pohead_amount_total * 100.0, 2) }}%</p>
 			@if ($totalamount > 0.0)

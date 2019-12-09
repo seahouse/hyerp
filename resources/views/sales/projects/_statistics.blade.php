@@ -11,6 +11,10 @@
             <?php $sohead_taxamount = 0.0; ?>
             <?php $sohead_poheadtaxamount = 0.0; ?>
             <?php $pohead_amount_payment_total = 0.0; ?>
+			<?php $warehousecost = 0.0; ?>
+			<?php $warehousetaxcost = 0.0; ?>
+			<?php $nowarehousecost = 0.0; ?>
+			<?php $nowarehousetaxcost = 0.0; ?>
 		@foreach($project->soheads as $sohead)
             	<?php $totalamount += $sohead->amount; ?>
             	<?php $sohead_receiptpayments_total += $sohead->receiptpayments->sum('amount'); ?>
@@ -21,6 +25,10 @@
                 <?php $sohead_taxamount += isset($sohead->temTaxamountstatistics->sohead_taxamount) ? $sohead->temTaxamountstatistics->sohead_taxamount : 0.0; ?>
                 <?php $sohead_poheadtaxamount += isset($sohead->temTaxamountstatistics->sohead_poheadtaxamount) ? $sohead->temTaxamountstatistics->sohead_poheadtaxamount : 0.0; ?>
                 <?php $pohead_amount_payment_total += $sohead->payments->sum('amount'); ?>
+				<?php $warehousecost +=array_first($sohead->getwarehouseCost())->warehousecost; ?>
+				<?php $warehousetaxcost +=array_first($sohead->getwarehousetaxCost())->warehousetaxcost;?>
+				<?php $nowarehousecost +=array_first($sohead->getnowarehouseCost())->nowarehousecost;?>
+				<?php $nowarehousetaxcost +=array_first($sohead->getnowarehousetaxCost())->nowarehousetaxcost;?>
 		@endforeach
 			<p>订单总金额：{{ $totalamount }}万</p>
 			<p>订单收款总金额：{{ $sohead_receiptpayments_total }}万</p>
@@ -41,6 +49,18 @@
 			@else
 				<p>采购成本比例：-</p>
 			@endif
+
+			<hr style="border-top-color:rgba(0,0,0,1);" >
+			<p>出库物品金额总额：{{number_format($warehousecost/ 10000.0, 4)}}万</p>
+			<p>出库物品税差：{{number_format(($sohead_taxamount - $warehousetaxcost ) / 10000.0, 4)}}万</p>
+			<p>无入库记录合同金额总额：{{number_format($nowarehousecost/ 10000.0, 4)}}万</p>
+			<p>无入库记录物品税差：{{number_format(($sohead_taxamount - $nowarehousetaxcost) / 10000.0, 4)}}万</p>
+			@if ($totalamount > 0.0)
+				<p>出库类成本比例：{{number_format(($warehousecost  + $nowarehousecost + $sohead_taxamount - $nowarehousetaxcost-$warehousetaxcost) / ($totalamount * 10000.0) * 100.0, 2)}}%</p>
+			@else
+				<p>出库类成本比例：-</p>
+			@endif
+			<hr style="border-top-color:rgba(0,0,0,1);" >
 			@if (isset($project->group->id))
 				<a href="{{ URL::to('/sales/groups/' . $project->group->id . '/mstatistics') }}" target="_blank" class="btn btn-default btn-sm">备注</a>
 			@endif
