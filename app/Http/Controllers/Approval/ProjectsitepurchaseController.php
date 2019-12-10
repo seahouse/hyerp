@@ -422,6 +422,89 @@ class ProjectsitepurchaseController extends Controller
         {
             $projectsitepurchase->status = $status;
             $projectsitepurchase->save();
+
+//            // 如果是审批完成且通过，则创建老系统中的采购订单
+//            if ($status == 0)
+//            {
+//                $cp = 'WX';
+//                if ($projectsitepurchase->purchasecompany_id == 2)
+//                    $cp = 'AH';
+//                elseif ($projectsitepurchase->purchasecompany_id == 3)
+//                    $cp = 'HN';
+//
+//                $techpurchaseitem = $projectsitepurchase->techpurchaseitems->first();
+//                $item_index = '';
+//                if (isset($techpurchaseitem))
+//                {
+//                    $item_index = HelperController::pinyin_long($techpurchaseitem->item->goods_name);
+//                }
+//                $item_index = strlen($item_index) > 0 ? $item_index : 'spmc';
+//                if (strlen($item_index) < 4)
+//                    $item_index = str_pad($item_index, 4, 0, STR_PAD_LEFT);
+//                elseif (strlen($item_index) > 4)
+//                    $item_index = substr($item_index, 0, 4);
+//                $seqnumber = Purchaseorder_hx::where('编号年份', Carbon::today()->year)->max('编号数字');
+//                $seqnumber += 1;
+//                $seqnumber = str_pad($seqnumber, 4, 0, STR_PAD_LEFT);
+//
+//                $userold_id = 0;
+//                $userold = Userold::where('user_id', $projectsitepurchase->applicant_id)->first();
+//                if (isset($userold))
+//                    $userold_id = $userold->user_hxold_id;
+//
+//                $pohead_number = $cp . '-' . $item_index . '-' . Carbon::today()->format('Y-d') . '-' . $seqnumber;
+//
+//                $techpurchaseattachment_techspecification = $projectsitepurchase->techpurchaseattachments->where('type', 'techspecification')->first();
+//
+//                $sohead_name = '';
+//                $sohead = Salesorder_hxold::find($projectsitepurchase->sohead_id);
+//                if (isset($sohead))
+//                    $sohead_name = $sohead->number . "|" . $sohead->custinfo_name . "|" . $sohead->descrip . "|" . $sohead->amount;
+//
+//                $data = [
+//                    'purchasecompany_id'    => $projectsitepurchase->purchasecompany_id,
+//                    '采购订单编号'            => $pohead_number,
+//                    '申请人ID'                => $userold_id,
+//                    '对应项目ID'              => $projectsitepurchase->sohead_id,
+//                    '项目名称'                => $sohead_name,
+//                    '申请到位日期'            => $projectsitepurchase->arrivaldate,
+//                    '修造或工程'             => $cp,
+//                    '技术规范书'             => isset($techpurchaseattachment_techspecification) ? $techpurchaseattachment_techspecification->filename : '',
+//                    '编号年份'                => Carbon::today()->year,
+//                    '编号数字'                => $seqnumber,
+//                    '编号商品名称'            => $item_index,
+//                ];
+//                $pohead = Purchaseorder_hx::create($data);
+//
+//                if (isset($pohead))
+//                {
+//                    foreach ($projectsitepurchase->techpurchaseitems as $techpurchaseitem)
+//                    {
+//                        $item = Itemp_hxold::where('goods_id', $techpurchaseitem->item_id)->first();
+//                        if (isset($item))
+//                        {
+//                            $data = [
+//                                'order_id'      => $pohead->id,
+//                                'goods_id'      => $techpurchaseitem->item_id,
+//                                'goods_name'    => $item->goods_name,
+//                                'goods_number'  => $techpurchaseitem->quantity,
+//                                'goods_unit'    => $item->goods_unit_name,
+//                            ];
+//                            Poitem_hx::create($data);
+//                        }
+//                    }
+//
+//                    // 拷贝“技术规范书”到对应的ERP目录下
+//                    if (isset($techpurchaseattachment_techspecification))
+//                    {
+//                        $dir = config('custom.hxold.purchase_techspecification_dir') . $pohead->id . "/";
+//                        if (!is_dir($dir)) {
+//                            mkdir($dir);
+//                        }
+//                        copy(public_path($techpurchaseattachment_techspecification->path), $dir . $techpurchaseattachment_techspecification->filename);
+//                    }
+//                }
+//            }
         }
     }
 

@@ -21,14 +21,6 @@
     </div>
 </div>
 
-{{--
-<div class="form-group">
-    {!! Form::label('paymenttype', '付款类型:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
-    <div class='col-xs-4 col-sm-10'>
-    {!! Form::select('paymenttype', array('预付款' => '预付款', '进度款' => '进度款', '到货款' => '到货款', '安装结束款' => '安装结束款', '调试运行款' => '调试运行款', '环保验收款' => '环保验收款', '质保金' => '质保金'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
-    </div>
-</div>
---}}
 
 
 @if (isset($paymentrequest))
@@ -38,10 +30,6 @@
     @if (isset($paymentrequest->supplier_hxold->name))
 
         {!! Form::text('supplier_name', $paymentrequest->supplier_hxold->name, ['class' => 'form-control', $attr]) !!}
-{{--
-
-        {!! Form::label('supplier_name', $paymentrequest->supplier_hxold->name, ['class' => 'control-label']) !!}
---}}
     @else
         {!! Form::text('supplier_name', null, ['class' => 'form-control', $attr]) !!}
     @endif
@@ -60,16 +48,16 @@
 
 </div>
 
-<div class="form-group">
-    {!! Form::label('pohead_descrip', '对应工程名称:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
-    <div class='col-xs-10 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->sohead->custinfo->name)) 
-         {!! Form::textarea('pohead_descrip', $paymentrequest->purchaseorder_hxold->sohead->custinfo->name . ' | ' . $paymentrequest->purchaseorder_hxold->sohead->descrip, ['class' => 'form-control', $attr, 'rows' => 2]) !!}
-    @else
-        {!! Form::textarea('pohead_descrip', null, ['class' => 'form-control', $attr, 'rows' => 2]) !!}
-    @endif
-    </div>
-</div>
+{{--<div class="form-group">--}}
+    {{--{!! Form::label('pohead_descrip', '对应工程名称:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}--}}
+    {{--<div class='col-xs-10 col-sm-10'>--}}
+    {{--@if (isset($paymentrequest->purchaseorder_hxold->sohead->custinfo->name)) --}}
+         {{--{!! Form::textarea('pohead_descrip', $paymentrequest->purchaseorder_hxold->sohead->custinfo->name . ' | ' . $paymentrequest->purchaseorder_hxold->sohead->descrip, ['class' => 'form-control', $attr, 'rows' => 2]) !!}--}}
+    {{--@else--}}
+        {{--{!! Form::textarea('pohead_descrip', null, ['class' => 'form-control', $attr, 'rows' => 2]) !!}--}}
+    {{--@endif--}}
+    {{--</div>--}}
+{{--</div>--}}
 
 <div class="form-group">
     {!! Form::label('pohead_amount', '合同金额:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
@@ -98,23 +86,6 @@
 --}}
 </div>
 
-{{--
-<div class="form-group">
-    {!! Form::label('pohead_amount_paid', '已付金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-5 col-sm-9'>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount_paid)) 
-         {!! Form::text('pohead_amount', $paymentrequest->purchaseorder_hxold->amount_paid, ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('pohead_amount', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount_paid) and isset($paymentrequest->purchaseorder_hxold->amount) and $paymentrequest->purchaseorder_hxold->amount > 0.0)
-        {!! Form::label('amount_paid_percent', number_format($paymentrequest->purchaseorder_hxold->amount_paid / $paymentrequest->purchaseorder_hxold->amount * 100.0, 2, '.', '') . '%', ['class' => 'col-xs-3 col-sm-1 control-label']) !!}
-    @else
-        {!! Form::label('amount_paid_percent', '-', ['class' => 'col-xs-3 col-sm-1 control-label', 'id' => 'amount_paid_percent']) !!}
-    @endif
-</div>
---}}
 
 <div class="form-group">
     {!! Form::label('pohead_amount_ticketed', '已开票金额:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
@@ -203,27 +174,6 @@
     </div>
 </div>
 
-@can('test')
-
-{{--
-<div class="form-group">
-    <div class='col-xs-4 col-sm-2'>
-    </div>
-    <div class='col-xs-8 col-sm-10'>
-@if (Auth::user()->email == "admin@admin.com")
-    @if (isset($paymentrequest->purchaseorder_hxold->id))
-        <a href="{{ URL::to('/purchase/purchaseorders/' . $paymentrequest->purchaseorder_hxold->id . '/detail_hxold') }}" target="_blank">入库价格明细</a>
-    @endif
-@endif
-    <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail') }}" target="_blank" class="btn btn-default btn-sm" id="t1">入库价格明细</a>
-    <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail2') }}" target="_blank" class="btn btn-default btn-sm">入库价格明细2</a>
-    <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail3') }}" target="_blank" class="btn btn-default btn-sm">入库价格明细3</a>
-    <a href="{{ URL::to('/approval/paymentrequests/' . $paymentrequest->id . '/mrecvdetail4') }}" target="_blank" class="btn btn-default btn-sm">入库明细</a>
-    </div>
-</div>
---}}
-
-@endcan
 
 
 @else
@@ -345,14 +295,6 @@
     </div>
 </div>
 
-{{--
-<div class="form-group">
-    {!! Form::label('sohead_process', '目前工程项目进度:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-    {!! Form::text('sohead_process', null, ['class' => 'form-control', 'readonly', $attr]) !!}
-    </div>
-</div>
---}}
 @endif
 
 {{--
@@ -364,12 +306,12 @@
 </div>
 --}}
 
-<div class="form-group">
-    {!! Form::label('descrip', '说明:', ['class' => 'col-xs-2 col-sm-2 control-label' ]) !!}
-    <div class='col-xs-10 col-sm-10'>
-    {!! Form::textarea('descrip', null, ['class' => 'form-control', $attr, 'rows' => 1]) !!}
-    </div>
-</div>
+{{--<div class="form-group">--}}
+    {{--{!! Form::label('descrip', '说明:', ['class' => 'col-xs-2 col-sm-2 control-label' ]) !!}--}}
+    {{--<div class='col-xs-10 col-sm-10'>--}}
+    {{--{!! Form::textarea('descrip', null, ['class' => 'form-control', $attr, 'rows' => 1]) !!}--}}
+    {{--</div>--}}
+{{--</div>--}}
 
 <div class="form-group">
     {!! Form::label('amount', '本次请款额:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
@@ -506,52 +448,48 @@
     </div>
 </div>
 
-<div class="form-group">
-    {!! Form::label('businesscontractattachments', '商务合同等必要附件:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-{{--
-    <将在钉钉的下一个版本中支持上传附件>
-    {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
---}}
-    <div class='col-xs-8 col-sm-10'>
-        @if (isset($paymentrequest))
+{{--<div class="form-group">--}}
+    {{--{!! Form::label('businesscontractattachments', '商务合同等必要附件:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
+    {{--<div class='col-xs-8 col-sm-10'>--}}
+        {{--@if (isset($paymentrequest))--}}
 
-            @if (isset($paymentrequest->purchaseorder_hxold->businesscontract))
-                <a href="{!! config('custom.hxold.purchase_businesscontract_webdir') . $paymentrequest->purchaseorder_hxold->id . '/' . $paymentrequest->purchaseorder_hxold->businesscontract !!}" target="_blank">{{ $paymentrequest->purchaseorder_hxold->businesscontract }}</a> <br>
-            @endif
+            {{--@if (isset($paymentrequest->purchaseorder_hxold->businesscontract))--}}
+                {{--<a href="{!! config('custom.hxold.purchase_businesscontract_webdir') . $paymentrequest->purchaseorder_hxold->id . '/' . $paymentrequest->purchaseorder_hxold->businesscontract !!}" target="_blank">{{ $paymentrequest->purchaseorder_hxold->businesscontract }}</a> <br>--}}
+            {{--@endif--}}
 
-            @foreach ($paymentrequest->businesscontracts() as $businesscontract)
-                <a href="{!! $businesscontract->path !!}" target="_blank">{{ $businesscontract->filename }}</a> <br>
-            @endforeach
-        @else
-            {!! Form::file('businesscontractattachments[]', ['multiple']) !!}
-        @endif
-    </div>
-</div>
+            {{--@foreach ($paymentrequest->businesscontracts() as $businesscontract)--}}
+                {{--<a href="{!! $businesscontract->path !!}" target="_blank">{{ $businesscontract->filename }}</a> <br>--}}
+            {{--@endforeach--}}
+        {{--@else--}}
+            {{--{!! Form::file('businesscontractattachments[]', ['multiple']) !!}--}}
+        {{--@endif--}}
+    {{--</div>--}}
+{{--</div>--}}
 
-<div class="form-group">
-    {!! Form::label('images', '图片说明:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    
-    <div class='col-xs-8 col-sm-10'>
-        @if (isset($paymentrequest))
-            <div class="row" id="previewimage">
-                @foreach ($paymentrequest->paymentrequestimages() as $paymentrequestimage)
-                    <div class="col-xs-6 col-md-3">
-                        <div class="thumbnail">
-                            <img src="{!! $paymentrequestimage->path !!}" />
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-        @else
-            @if ($agent->isDesktop())
-                {!! Form::file('images[]', ['multiple']) !!}
-            @else
-                {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
-            @endif            
-        @endif
+{{--<div class="form-group">--}}
+    {{--{!! Form::label('images', '图片说明:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
+    {{----}}
+    {{--<div class='col-xs-8 col-sm-10'>--}}
+        {{--@if (isset($paymentrequest))--}}
+            {{--<div class="row" id="previewimage">--}}
+                {{--@foreach ($paymentrequest->paymentrequestimages() as $paymentrequestimage)--}}
+                    {{--<div class="col-xs-6 col-md-3">--}}
+                        {{--<div class="thumbnail">--}}
+                            {{--<img src="{!! $paymentrequestimage->path !!}" />--}}
+                        {{--</div>--}}
+                    {{--</div>--}}
+                {{--@endforeach--}}
+            {{--</div>--}}
+        {{--@else--}}
+            {{--@if ($agent->isDesktop())--}}
+                {{--{!! Form::file('images[]', ['multiple']) !!}--}}
+            {{--@else--}}
+                {{--{!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}--}}
+            {{--@endif            --}}
+        {{--@endif--}}
 
-    </div>
-</div>
+    {{--</div>--}}
+{{--</div>--}}
 
 
 
