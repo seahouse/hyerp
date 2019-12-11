@@ -68,6 +68,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('ddauth/{appname?}/{url?}', 'DingTalkController@ddauth');
 
 	Route::get('dingtalk/getuserinfo/{code}', 'DingTalkController@getuserinfo');
+    Route::get('dingtalk/getuserinfo2/{code}', 'DingTalkController@getuserinfo2');
     Route::get('dingtalk/getuserinfoByScancode/{code}', 'DingTalkController@getuserinfoByScancode');
     Route::get('dingtalk/getuserinfoByScancode_hxold/{code}', 'DingTalkController@getuserinfoByScancode_hxold');
     Route::get('dingtalk/getconfig', 'DingTalkController@getconfig');
