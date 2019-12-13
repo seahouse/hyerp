@@ -27,6 +27,7 @@ class Pppayment extends Model
         'approversetting_id',
         'process_instance_id',
         'business_id',
+        'syncdtdesc',
     ];
 
     public function approvers() {

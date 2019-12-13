@@ -745,19 +745,36 @@ class ApprovalController extends Controller
     {
         $user = Auth::user();
         $method = 'dingtalk.smartwork.bpms.processinstance.create';
-        $session = DingTalkController::getAccessToken();
+//        $session = '';
+        if ($inputs['syncdtdesc'] == "河南")
+            $session = DingTalkController::getAccessToken_appkey();
+        else
+            $session = DingTalkController::getAccessToken();
 //        $timestamp = time('2017-07-19 13:06:00');
         $format = 'json';
         $v = '2.0';
 
-        $process_code = config('custom.dingtalk.approval_processcode.pppayment');
-        $originator_user_id = $user->dtuserid;
-        $departmentList = json_decode($user->dtuser->department);
+        if ($inputs['syncdtdesc'] == "河南")
+            $process_code = config('custom.dingtalk.hx_henan.approval_processcode.pppayment');
+        else
+            $process_code = config('custom.dingtalk.approval_processcode.pppayment');
+        if ($inputs['syncdtdesc'] == "河南")
+        {
+            $originator_user_id = $user->dtuser2->userid;
+            $departmentList = json_decode($user->dtuser2->department);
+        }
+        else
+        {
+            $originator_user_id = $user->dtuserid;
+            $departmentList = json_decode($user->dtuser->department);
+        }
         $dept_id = 0;
         if (count($departmentList) > 0)
             $dept_id = array_first($departmentList);
-        $approvers = $inputs['approvers'];
-//        $approvers = $user->dtuserid;
+        if ($inputs['syncdtdesc'] == "河南")
+            $approvers = "04090710367573";
+        else
+            $approvers = $inputs['approvers'];
         // if originator_user_id in approvers, skip pre approvers
         $approver_array = explode(',', $approvers);
         if (in_array($originator_user_id, $approver_array))

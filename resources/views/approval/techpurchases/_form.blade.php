@@ -356,7 +356,6 @@
     {{--</div>--}}
 {{--</div>--}}
 
-
 {!! Form::hidden('applicant_id', null, ['class' => 'btn btn-sm']) !!}
 {!! Form::hidden('approversetting_id', null, ['class' => 'btn btn-sm']) !!}
 

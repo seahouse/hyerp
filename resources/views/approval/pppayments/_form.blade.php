@@ -242,10 +242,12 @@
 
 
 
-
-{{--
-        {!! Form::file('image_file', array('class' => 'form-control')) !!}
---}}
+        <div class="form-group">
+            {!! Form::label('syncdtdesc', '同步到钉钉组织:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::select('syncdtdesc', array('无锡' => '无锡', '许昌' => '许昌'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+            </div>
+        </div>
 
 
 {!! Form::hidden('applicant_id', null, ['class' => 'btn btn-sm']) !!}

@@ -34,6 +34,7 @@ class CreatePppaymentsTable extends Migration
 
             $table->string('process_instance_id')->default('');
             $table->string('business_id')->default('');
+            $table->string('syncdtdesc')->nullable();           // 同步到钉钉组织
 
             $table->timestamps();
             $table->softDeletes();
