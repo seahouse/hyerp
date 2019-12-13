@@ -909,9 +909,14 @@ class ApprovalController extends Controller
         $req->setOriginatorUserId($originator_user_id);
         $req->setDeptId("$dept_id");
         $req->setApprovers($approvers);
-        $cc_list = config('custom.dingtalk.approversettings.pppayment.cc_list.' . $inputs['productioncompany']);
-        if (strlen($cc_list) == 0)
-            $cc_list = config('custom.dingtalk.approversettings.pppayment.cc_list.default');
+        if ($inputs['syncdtdesc'] == "河南")
+            $cc_list = '';
+        else
+        {
+            $cc_list = config('custom.dingtalk.approversettings.pppayment.cc_list.' . $inputs['productioncompany']);
+            if (strlen($cc_list) == 0)
+                $cc_list = config('custom.dingtalk.approversettings.pppayment.cc_list.default');
+        }
         if ($cc_list <> "")
         {
             $req->setCcList($cc_list);
