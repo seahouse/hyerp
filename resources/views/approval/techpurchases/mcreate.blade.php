@@ -547,6 +547,12 @@
 							</div>\
 						</div>\
 						<div class="form-group">\
+							<label for="unit" class="col-xs-4 col-sm-2 control-label">单位:</label>\
+							<div class="col-sm-10 col-xs-8">\
+							<input class="form-control" readonly="readonly" name="unit" type="text" id="unit_' + String(item_num) + '">\
+							</div>\
+						</div>\
+						<div class="form-group">\
 							<label for="quantity" class="col-xs-4 col-sm-2 control-label">数量:</label>\
 							<div class="col-sm-10 col-xs-8">\
 							<input class="form-control" name="quantity" type="text" id="quantity_' + String(item_num) + '">\
