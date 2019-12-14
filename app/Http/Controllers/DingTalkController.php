@@ -2076,4 +2076,24 @@ class DingTalkController extends Controller
         return $response;
 
     }
+
+    public static function processinstance_get2($process_instance_id)
+    {
+        $method = 'dingtalk.smartwork.bpms.processinstance.get';
+        $session = self::getAccessToken_appkey();
+        $timestamp = time('2017-07-19 13:06:00');
+        $format = 'json';
+        $v = '2.0';
+
+        $params = compact('method', 'session', 'v', 'format',
+            'process_instance_id');
+        $data = [
+//            'process_instance_id' => $process_instance_id,
+        ];
+//        Log::info(json_encode($data));
+        $response = HttpDingtalkEco::post("",
+            $params, json_encode($data));
+        return $response;
+
+    }
 }
