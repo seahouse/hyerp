@@ -3,7 +3,7 @@
 <div class="form-group">
     {!! Form::label('productioncompany', '制作公司:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::select('productioncompany', array('苏州分公司' => '苏州分公司', '泰州分公司' => '泰州分公司', '胶州分公司' => '胶州分公司', '宣城分公司' => '宣城分公司', '许昌分公司' => '许昌分公司'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable, 'id' => 'productioncompany']) !!}
+    {!! Form::select('productioncompany', array('苏州分公司' => '苏州分公司', '泰州分公司' => '泰州分公司', '胶州分公司' => '胶州分公司', '宣城分公司' => '宣城分公司', '许昌子公司' => '许昌子公司'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable, 'id' => 'productioncompany']) !!}
     </div>
 </div>
 

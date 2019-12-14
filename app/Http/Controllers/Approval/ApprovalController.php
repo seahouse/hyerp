@@ -746,7 +746,7 @@ class ApprovalController extends Controller
         $user = Auth::user();
         $method = 'dingtalk.smartwork.bpms.processinstance.create';
 //        $session = '';
-        if ($inputs['syncdtdesc'] == "河南")
+        if ($inputs['syncdtdesc'] == "许昌")
             $session = DingTalkController::getAccessToken_appkey();
         else
             $session = DingTalkController::getAccessToken();
@@ -754,11 +754,11 @@ class ApprovalController extends Controller
         $format = 'json';
         $v = '2.0';
 
-        if ($inputs['syncdtdesc'] == "河南")
+        if ($inputs['syncdtdesc'] == "许昌")
             $process_code = config('custom.dingtalk.hx_henan.approval_processcode.pppayment');
         else
             $process_code = config('custom.dingtalk.approval_processcode.pppayment');
-        if ($inputs['syncdtdesc'] == "河南")
+        if ($inputs['syncdtdesc'] == "许昌")
         {
             $originator_user_id = $user->dtuser2->userid;
             $departmentList = json_decode($user->dtuser2->department);
@@ -771,7 +771,7 @@ class ApprovalController extends Controller
         $dept_id = 0;
         if (count($departmentList) > 0)
             $dept_id = array_first($departmentList);
-        if ($inputs['syncdtdesc'] == "河南")
+        if ($inputs['syncdtdesc'] == "许昌")
             $approvers = "04090710367573";
         else
             $approvers = $inputs['approvers'];
@@ -909,7 +909,7 @@ class ApprovalController extends Controller
         $req->setOriginatorUserId($originator_user_id);
         $req->setDeptId("$dept_id");
         $req->setApprovers($approvers);
-        if ($inputs['syncdtdesc'] == "河南")
+        if ($inputs['syncdtdesc'] == "许昌")
             $cc_list = '';
         else
         {
