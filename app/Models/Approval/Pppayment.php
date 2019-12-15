@@ -31,7 +31,7 @@ class Pppayment extends Model
     ];
 
     public function approvers() {
-        if ($this::getAttribute('designdepartment') == "许昌")
+        if ($this::getAttribute('syncdtdesc') == "许昌")
             $approvers = config('custom.dingtalk.hx_henan.approversettings.pppayment.' . $this::getAttribute('designdepartment'), '');
         else
             $approvers = config('custom.dingtalk.approversettings.pppayment.' . $this::getAttribute('designdepartment'), '');
