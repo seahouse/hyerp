@@ -881,8 +881,8 @@
                             strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';
                         else if (productioncompany == "宣城分公司")
                             strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! isset($value['宣城分公司']) ? $value['宣城分公司'] : '0' !!}" readonly="readonly">';
-                        else if (productioncompany == "许昌分公司")
-                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! isset($value['许昌分公司']) ? $value['许昌分公司'] : '0' !!}" readonly="readonly">';
+                        else if (productioncompany == "许昌子公司")
+                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! isset($value['许昌子公司']) ? $value['许昌子公司'] : '0' !!}" readonly="readonly">';
                         strhtml2 += '\</div>';
                         strhtml2 += '</div>';
                     @endforeach
@@ -912,8 +912,8 @@
                                 value = "{!! $value['胶州分公司'] !!}"
                             else if (productioncompany == "宣城分公司")
                                 value = "{!! isset($value['宣城分公司']) ? $value['宣城分公司'] : '0' !!}"
-                            else if (productioncompany == "许昌分公司")
-                                value = "{!! isset($value['许昌分公司']) ? $value['许昌分公司'] : '0' !!}"
+                            else if (productioncompany == "许昌子公司")
+                                value = "{!! isset($value['许昌子公司']) ? $value['许昌子公司'] : '0' !!}"
                         }
                         strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';
                         {{--if (productioncompany == "泰州分公司")--}}
@@ -940,8 +940,8 @@
                             strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';
                         else if (productioncompany == "宣城分公司")
                             strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! isset($value['宣城分公司']) ? $value['宣城分公司'] : '0' !!}" readonly="readonly">';
-                        else if (productioncompany == "许昌分公司")
-                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! isset($value['许昌分公司']) ? $value['许昌分公司'] : '0' !!}" readonly="readonly">';
+                        else if (productioncompany == "许昌子公司")
+                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! isset($value['许昌子公司']) ? $value['许昌子公司'] : '0' !!}" readonly="readonly">';
                         strhtml2 += '\</div>';
                         strhtml2 += '</div>';
                     @endforeach
@@ -978,8 +978,8 @@
                                     value = "{!! $value['胶州分公司'] !!}"
                                 else if (productioncompany == "宣城分公司")
                                     value = "{!! isset($value['宣城分公司']) ? $value['宣城分公司'] : '0' !!}"
-                                else if (productioncompany == "许昌分公司")
-                                    value = "{!! isset($value['许昌分公司']) ? $value['许昌分公司'] : '0' !!}"
+                                else if (productioncompany == "许昌子公司")
+                                    value = "{!! isset($value['许昌子公司']) ? $value['许昌子公司'] : '0' !!}"
                             }
                             strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';
                             strhtml2 += '\</div>';
@@ -1012,8 +1012,8 @@
                             value = "{!! $value['胶州分公司'] !!}"
                         else if (productioncompany == "宣城分公司")
                             value = "{!! isset($value['宣城分公司']) ? $value['宣城分公司'] : '0' !!}"
-                        else if (productioncompany == "许昌分公司")
-                            value = "{!! isset($value['许昌分公司']) ? $value['许昌分公司'] : '0' !!}"
+                        else if (productioncompany == "许昌子公司")
+                            value = "{!! isset($value['许昌子公司']) ? $value['许昌子公司'] : '0' !!}"
                     }
                     strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';
                         strhtml2 += '\</div>';
@@ -1045,8 +1045,8 @@
                             value = "{!! $value['胶州分公司'] !!}"
                         else if (productioncompany == "宣城分公司")
                             value = "{!! isset($value['宣城分公司']) ? $value['宣城分公司'] : '0' !!}"
-                        else if (productioncompany == "许昌分公司")
-                            value = "{!! isset($value['许昌分公司']) ? $value['许昌分公司'] : '0' !!}"
+                        else if (productioncompany == "许昌子公司")
+                            value = "{!! isset($value['许昌子公司']) ? $value['许昌子公司'] : '0' !!}"
                     }
                     strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';
                         strhtml2 += '\</div>';
