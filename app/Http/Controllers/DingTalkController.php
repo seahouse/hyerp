@@ -1485,7 +1485,7 @@ class DingTalkController extends Controller
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
                         McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
-                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.pppayment'))
+                    elseif ($data->processCode == config('custom.dingtalk.hx_henan.approval_processcode.pppayment'))
                         PppaymentController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.projectsitepurchase'))
                         ProjectsitepurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
@@ -1498,7 +1498,7 @@ class DingTalkController extends Controller
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
                         McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
-                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.pppayment'))
+                    elseif ($data->processCode == config('custom.dingtalk.hx_henan.approval_processcode.pppayment'))
                         PppaymentController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.projectsitepurchase'))
                         ProjectsitepurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
@@ -1511,7 +1511,7 @@ class DingTalkController extends Controller
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
                         McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
-                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.pppayment'))
+                    elseif ($data->processCode == config('custom.dingtalk.hx_henan.approval_processcode.pppayment'))
                         PppaymentController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.projectsitepurchase'))
                         ProjectsitepurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
@@ -1524,7 +1524,7 @@ class DingTalkController extends Controller
                         IssuedrawingController::deleteByProcessInstanceId($data->processInstanceId);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
                         McitempurchaseController::deleteByProcessInstanceId($data->processInstanceId);
-                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.pppayment'))
+                    elseif ($data->processCode == config('custom.dingtalk.hx_henan.approval_processcode.pppayment'))
                         PppaymentController::deleteByProcessInstanceId($data->processInstanceId);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.projectsitepurchase'))
                         ProjectsitepurchaseController::deleteByProcessInstanceId($data->processInstanceId);
