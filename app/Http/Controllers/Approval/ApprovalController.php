@@ -771,10 +771,11 @@ class ApprovalController extends Controller
         $dept_id = 0;
         if (count($departmentList) > 0)
             $dept_id = array_first($departmentList);
-        if ($inputs['syncdtdesc'] == "许昌")
-            $approvers = "04090710367573";
-        else
-            $approvers = $inputs['approvers'];
+//        if ($inputs['syncdtdesc'] == "许昌")
+//            $approvers = "04090710367573";
+//        else
+//            $approvers = $inputs['approvers'];
+        $approvers = $inputs['approvers'];
         // if originator_user_id in approvers, skip pre approvers
         $approver_array = explode(',', $approvers);
         if (in_array($originator_user_id, $approver_array))
