@@ -911,7 +911,11 @@ class ApprovalController extends Controller
         $req->setDeptId("$dept_id");
         $req->setApprovers($approvers);
         if ($inputs['syncdtdesc'] == "许昌")
-            $cc_list = '';
+        {
+            $cc_list = config('custom.dingtalk.hx_henan.approversettings.pppayment.cc_list.' . $inputs['productioncompany']);
+            if (strlen($cc_list) == 0)
+                $cc_list = config('custom.dingtalk.hx_henan.approversettings.pppayment.cc_list.default');
+        }
         else
         {
             $cc_list = config('custom.dingtalk.approversettings.pppayment.cc_list.' . $inputs['productioncompany']);
