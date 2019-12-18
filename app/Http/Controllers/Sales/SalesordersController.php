@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Sales\Salesorder;
 use App\Http\Requests\Sales\SalesorderRequest;
 use App\Models\Sales\Salesorder_hxold_t;
+use App\Models\System\Report;
 use Httpful\Response;
 use Request;
 use App\Inventory\Itemsite;
@@ -209,6 +210,12 @@ class SalesOrdersController extends Controller
         $sohead = Salesorder_hxold::find($id);
 
         return view('sales.salesorders.mstatistics', compact('sohead'));
+    }
+
+    public function warehousedetail($id)
+    {
+        $report=Report::where('name','pgetWarehouseDetailByorder')->first();
+        return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?orderid=' . $id);
     }
 
     public function sendmessage_afteredit_hxold($strJson)

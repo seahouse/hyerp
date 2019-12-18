@@ -82,6 +82,11 @@
                 {!! Form::label('project_name', '项目', ['class' => 'control-label']) !!}
                 {!! Form::select('project_name', $projectList, null, ['class' => 'form-control', 'id' => 'select_project']) !!}
                 {!! Form::hidden('project_id', null) !!}
+            @elseif ($report->name == "pgetWarehouseDetailByorder")
+                {!! Form::text('goodsname',  null, ['class' => 'form-control','placeholder'=>'商品名称', 'id' => 'goodsname']) !!}
+                {!! Form::text('goodsspec',  null, ['class' => 'form-control','placeholder'=>'规格', 'id' => 'goodsspec']) !!}
+                {!! Form::text('vendorname',  null, ['class' => 'form-control','placeholder'=>'供应商', 'id' => 'vendorname']) !!}
+                {!! Form::hidden('orderid', $input['orderid']) !!}
             @endif
 
 {{--            {!! $report->condition !!}--}}
