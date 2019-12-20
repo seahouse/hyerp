@@ -309,7 +309,11 @@ class PaymentrequestsController extends Controller
                 $query->whereRaw('(select MAX(created_at) from paymentrequestapprovals where paymentrequestapprovals.paymentrequest_id=paymentrequests.id)>(select isnull(MAX(create_date),\'1900-01-01\') from hxcrm2016..vpayments where vpayments.pohead_id=paymentrequests.pohead_id)');
             }
         }
-
+        if ($request->has('company_id'))
+        {
+            $query->leftJoin('hxcrm2016.dbo.vpurchaseorder', 'hxcrm2016.dbo.vpurchaseorder.id', '=', 'paymentrequests.pohead_id');
+            $query->where('purchasecompany_id', $request->input('company_id'));
+        }
 
         $paymentrequests = $query->select('paymentrequests.*')
             ->paginate(10);

@@ -40,42 +40,17 @@
                 {!! Form::date('approvaldatestart', null, ['class' => 'form-control']) !!}
                 {!! Form::label('approvaldatelabelto', '-', ['class' => 'control-label']) !!}
                 {!! Form::date('approvaldateend', null, ['class' => 'form-control']) !!}
-                {!! Form::select('approver_id_date', $approvers_paymentrequest, null, ['class' => 'form-control', 'placeholder' => '--审批人（审批时间）--']); !!}
+                {!! Form::select('approver_id_date', $approvers_paymentrequest, null, ['class' => 'form-control', 'placeholder' => '--审批人--']) !!}
                 
                 {!! Form::select('paymentmethod', ['支票' => '支票', '贷记' => '贷记', '电汇' => '电汇', '汇票' => '汇票', '现金' => '现金', '银行卡' => '银行卡', '其他' => '其他'], null, ['class' => 'form-control', 'placeholder' => '--付款方式--']) !!}
 
                 {!! Form::select('paymentstatus', ['0' => '已付款', '-1' => '未付款'], null, ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}
-                {!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']); !!}
-                {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称、申请人']); !!}
+                {!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']) !!}
+                {!! Form::select('company_id', $companyList, null, ['class' => 'form-control', 'placeholder' => '--采购公司--']) !!}
+                {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称、申请人']) !!}
                 {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']); !!}
             </div>
         {!! Form::close() !!}
-{{--
-        <form class="pull-right" action="/approval/paymentrequests/search" method="post">
-            {!! csrf_field() !!}
-            <div class="pull-right">
-                <button type="submit" class="btn btn-default btn-sm">查找</button>
-            </div>
-            <div class="pull-right input-group-sm">
-                <input type="text" class="form-control" name="key" placeholder="支付对象、对应项目名称、申请人">
-            </div>
-            <div class="pull-right input-group-sm">
-                {!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']); !!}
-            </div>
-            <div class="pull-right input-group-sm">
-                {!! Form::select('paymentstatus', ['0' => '已付款', '-1' => '未付款'], null, ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}
-            </div>
-            @if (Auth::user()->email == "admin@admin.com")
-            <div class="pull-right input-group-sm">                
-                
-                {!! Form::date('approvaldatestart', \Carbon\Carbon::now(), ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}
-                
-            </div>
-            {!! Form::label('approvaldatelabel', '审批时间:', ['class' => 'control-label pull-right']); !!}
-                
-            @endif
-        </form>
---}}
     </div> 
 
 
@@ -85,6 +60,7 @@
         <thead>
             <tr>
                 <th>申请日期</th>
+                <th>采购公司</th>
                 <th>支付对象</th>
 
                 <th>本次请款额</th>
@@ -114,6 +90,9 @@
                         @else
                             <a href="{{ url('/approval/paymentrequests', $paymentrequest->id) }}" target="_blank">{{ $paymentrequest->created_at }}</a>
                         @endif
+                    </td>
+                    <td>
+                        @if (isset($paymentrequest->purchaseorder_hxold->companyname))  {{ $paymentrequest->purchaseorder_hxold->companyname }} @else @endif
                     </td>
                     <td>
                         @if (isset($paymentrequest->supplier_hxold->name))  {{ $paymentrequest->supplier_hxold->name }} @else @endif
@@ -195,6 +174,7 @@
             <tr class="info">
                 <td>合计</td>
                 <td></td>
+                <td></td>
                 <td>{{ $paymentrequests->sum('amount') }}</td>
 @if (Agent::isDesktop())
                 <td></td>
@@ -221,6 +201,7 @@
 @if (Auth::user()->email == "admin@admin.com")
             <tr class="success">
                 <td>汇总</td>
+                <td></td>
                 <td></td>
                 <td>
                 @if (isset($totalamount))
