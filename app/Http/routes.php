@@ -226,6 +226,7 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
     Route::group(['prefix' => 'projects'], function() {
         Route::get('{id}/mstatistics', 'ProjectController@mstatistics');
         Route::get('{id}/warehousedetail', 'SalesordersController@warehousedetail');
+        Route::get('{id}/otherwarehousedetail', 'SalesordersController@otherwarehousedetail');
     });
     Route::resource('projects', 'ProjectController');
     Route::get('salesorders/{id}/ship', 'SalesordersController@ship');
