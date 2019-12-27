@@ -60,6 +60,8 @@ Route::any('sales/salesorder/message/afteredit/{strJson}',  'Sales\SalesOrdersCo
 
 Route::post('approval/mcitempurchase/uploadparseexcel', 'Approval\McitempurchaseController@uploadparseexcel');
 
+Route::post('approval/pppayment/getpricedetailhtml', 'Approval\PppaymentController@getpricedetailhtml');
+
 Route::group(['middleware' => ['web']], function () {
     // Route::get('mddauth', function() { return view('mddauth'); });
     Route::get('mddauth/{appname?}/{url?}', 'DingTalkController@mddauth');

@@ -865,204 +865,198 @@
                 var selecttype = $("#type_" + String(num));
                 var selectarea = $("#area_" + String(num));
 
-                if (selecttype.val() == "抛丸")
-                {
-                    @foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.抛丸') as $key => $value)
-                        {{--alert('{!! $key !!}');--}}
-                        strhtml2 += '<div class="form-group" name="div_unitpriceitem">';
-                        strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\
-                            \</div>\
-                            \<div class="col-sm-5 col-xs-4">';
-                        if (productioncompany == "泰州分公司")
-                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['泰州分公司'] !!}" readonly="readonly">';
-                        else if (productioncompany == "胶州分公司")
-                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';
-                        else if (productioncompany == "宣城分公司")
-                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! isset($value['宣城分公司']) ? $value['宣城分公司'] : '0' !!}" readonly="readonly">';
-                        else if (productioncompany == "许昌子公司")
-                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! isset($value['许昌子公司']) ? $value['许昌子公司'] : '0' !!}" readonly="readonly">';
-                        strhtml2 += '\</div>';
-                        strhtml2 += '</div>';
-                    @endforeach
-                }
-                else if (selecttype.val() == "油漆")
-                {
-                    @foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.油漆') as $key => $value)
+                $.post("{{ url('approval/pppayment/getpricedetailhtml') }}", { productioncompany: productioncompany, selectarea: selectarea.val(), selecttype: selecttype.val() }, function (data) {
+                    //
+                    $("#pppaymentitemtypecontainer_" + String(num)).empty().append(data);
+                });
+                return;
+
+                {{--if (selecttype.val() == "抛丸")--}}
+                {{--{--}}
+                    {{--@foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.抛丸') as $key => $value)--}}
+                        {{--strhtml2 += '<div class="form-group" name="div_unitpriceitem">';--}}
+                        {{--strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\--}}
+                            {{--<div class="col-sm-5 col-xs-4">\--}}
+                            {{--<input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\--}}
+                            {{--\</div>\--}}
+                            {{--\<div class="col-sm-5 col-xs-4">';--}}
+                        {{--if (productioncompany == "泰州分公司")--}}
+                            {{--strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['泰州分公司']['国内'] !!}" readonly="readonly">';--}}
+                        {{--else if (productioncompany == "胶州分公司")--}}
+                            {{--strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司']['国内'] !!}" readonly="readonly">';--}}
+                        {{--else if (productioncompany == "宣城分公司")--}}
+                            {{--strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! isset($value['宣城分公司']) ? $value['宣城分公司'] : '0' !!}" readonly="readonly">';--}}
+                        {{--else if (productioncompany == "许昌子公司")--}}
+                            {{--strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! isset($value['许昌子公司']) ? $value['许昌子公司'] : '0' !!}" readonly="readonly">';--}}
+                        {{--strhtml2 += '\</div>';--}}
+                        {{--strhtml2 += '</div>';--}}
+                    {{--@endforeach--}}
+                {{--}--}}
+                {{--else if (selecttype.val() == "油漆")--}}
+                {{--{--}}
+                    {{--@foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.油漆') as $key => $value)--}}
+                        {{--strhtml2 += '<div class="form-group" name="div_unitpriceitem">';--}}
+                        {{--strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\--}}
+                            {{--<div class="col-sm-5 col-xs-4">\--}}
+                            {{--<input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\--}}
+                            {{--\</div>\--}}
+                            {{--\<div class="col-sm-5 col-xs-4">';--}}
+                        {{--var value = '';--}}
+                        {{--if (selectarea.val() == "国外")--}}
+                        {{--{--}}
+                            {{--@if (isset($value['国外']))--}}
+                                {{--value = "{!! $value['国外'] !!}";--}}
+                            {{--@endif--}}
+                        {{--}--}}
+                        {{--if (value == "")--}}
+                        {{--{--}}
+                            {{--if (productioncompany == "泰州分公司")--}}
+                                {{--value = "{!! $value['泰州分公司'] !!}";--}}
+                            {{--else if (productioncompany == "胶州分公司")--}}
+                                {{--value = "{!! $value['胶州分公司'] !!}"--}}
+                            {{--else if (productioncompany == "宣城分公司")--}}
+                                {{--value = "{!! isset($value['宣城分公司']) ? $value['宣城分公司'] : '0' !!}"--}}
+                            {{--else if (productioncompany == "许昌子公司")--}}
+                                {{--value = "{!! isset($value['许昌子公司']) ? $value['许昌子公司'] : '0' !!}"--}}
+                        {{--}--}}
+                        {{--strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';--}}
+                        {{--strhtml2 += '\</div>';--}}
+                        {{--strhtml2 += '</div>';--}}
+                    {{--@endforeach--}}
+                {{--}--}}
+                {{--else if (selecttype.val() == "人工")--}}
+                {{--{--}}
+                    {{--@foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.人工') as $key => $value)--}}
                             {{--alert('{!! $key !!}');--}}
-                        strhtml2 += '<div class="form-group" name="div_unitpriceitem">';
-                        strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\
-                            \</div>\
-                            \<div class="col-sm-5 col-xs-4">';
-                        var value = '';
-                        if (selectarea.val() == "国外")
-                        {
-                            @if (isset($value['国外']))
-                                value = "{!! $value['国外'] !!}";
-                            @endif
-                        }
-                        if (value == "")
-                        {
-                            if (productioncompany == "泰州分公司")
-                                value = "{!! $value['泰州分公司'] !!}";
-                            else if (productioncompany == "胶州分公司")
-                                value = "{!! $value['胶州分公司'] !!}"
-                            else if (productioncompany == "宣城分公司")
-                                value = "{!! isset($value['宣城分公司']) ? $value['宣城分公司'] : '0' !!}"
-                            else if (productioncompany == "许昌子公司")
-                                value = "{!! isset($value['许昌子公司']) ? $value['许昌子公司'] : '0' !!}"
-                        }
-                        strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';
+                        {{--strhtml2 += '<div class="form-group" name="div_unitpriceitem">';--}}
+                        {{--strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\--}}
+                            {{--<div class="col-sm-5 col-xs-4">\--}}
+                            {{--<input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\--}}
+                            {{--\</div>\--}}
+                            {{--\<div class="col-sm-5 col-xs-4">';--}}
                         {{--if (productioncompany == "泰州分公司")--}}
                             {{--strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['泰州分公司'] !!}" readonly="readonly">';--}}
                         {{--else if (productioncompany == "胶州分公司")--}}
                             {{--strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';--}}
-                        strhtml2 += '\</div>';
-                        strhtml2 += '</div>';
-                    @endforeach
-                }
-                else if (selecttype.val() == "人工")
-                {
-                    @foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.人工') as $key => $value)
+                        {{--else if (productioncompany == "宣城分公司")--}}
+                            {{--strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! isset($value['宣城分公司']) ? $value['宣城分公司'] : '0' !!}" readonly="readonly">';--}}
+                        {{--else if (productioncompany == "许昌子公司")--}}
+                            {{--strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! isset($value['许昌子公司']) ? $value['许昌子公司'] : '0' !!}" readonly="readonly">';--}}
+                        {{--strhtml2 += '\</div>';--}}
+                        {{--strhtml2 += '</div>';--}}
+                    {{--@endforeach--}}
+                {{--}--}}
+                {{--else if (selecttype.val() == "铆焊")--}}
+                {{--{--}}
+                    {{--@foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.铆焊') as $key => $value)--}}
+                        {{--var b = true;--}}
+                        {{--if (selectarea.val() == "国内" && "{!! $key !!}" == "包装支架含漆")--}}
+                            {{--b = false;--}}
+                        {{--if (b && selectarea.val() == "国外" && "{!! $key !!}" == "包装支架")--}}
+                            {{--b = false;--}}
+                        {{--if (b)--}}
+                        {{--{--}}
+                            {{--strhtml2 += '<div class="form-group" name="div_unitpriceitem">';--}}
+                            {{--strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\--}}
+                            {{--<div class="col-sm-5 col-xs-4">\--}}
+                            {{--<input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\--}}
+                            {{--\</div>\--}}
+                            {{--\<div class="col-sm-5 col-xs-4">';--}}
+
+                            {{--var value = '';--}}
+                            {{--if (selectarea.val() == "国外")--}}
+                            {{--{--}}
+                                {{--@if (isset($value['国外']))--}}
+                                    {{--value = "{!! $value['国外'] !!}";--}}
+                                {{--@endif--}}
+                            {{--}--}}
+                            {{--if (value == "")--}}
+                            {{--{--}}
+                                {{--if (productioncompany == "泰州分公司")--}}
+                                    {{--value = "{!! $value['泰州分公司'] !!}";--}}
+                                {{--else if (productioncompany == "胶州分公司")--}}
+                                    {{--value = "{!! $value['胶州分公司'] !!}"--}}
+                                {{--else if (productioncompany == "宣城分公司")--}}
+                                    {{--value = "{!! isset($value['宣城分公司']) ? $value['宣城分公司'] : '0' !!}"--}}
+                                {{--else if (productioncompany == "许昌子公司")--}}
+                                    {{--value = "{!! isset($value['许昌子公司']) ? $value['许昌子公司'] : '0' !!}"--}}
+                            {{--}--}}
+                            {{--strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';--}}
+                            {{--strhtml2 += '\</div>';--}}
+                            {{--strhtml2 += '</div>';--}}
+                        {{--}--}}
+                    {{--@endforeach--}}
+                {{--}--}}
+                {{--else if (selecttype.val() == "外协油漆")--}}
+                {{--{--}}
+                    {{--@foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.外协油漆') as $key => $value)--}}
                             {{--alert('{!! $key !!}');--}}
-                        strhtml2 += '<div class="form-group" name="div_unitpriceitem">';
-                        strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\
-                            \</div>\
-                            \<div class="col-sm-5 col-xs-4">';
-                        if (productioncompany == "泰州分公司")
-                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['泰州分公司'] !!}" readonly="readonly">';
-                        else if (productioncompany == "胶州分公司")
-                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! $value['胶州分公司'] !!}" readonly="readonly">';
-                        else if (productioncompany == "宣城分公司")
-                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! isset($value['宣城分公司']) ? $value['宣城分公司'] : '0' !!}" readonly="readonly">';
-                        else if (productioncompany == "许昌子公司")
-                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="{!! isset($value['许昌子公司']) ? $value['许昌子公司'] : '0' !!}" readonly="readonly">';
-                        strhtml2 += '\</div>';
-                        strhtml2 += '</div>';
-                    @endforeach
-                }
-                else if (selecttype.val() == "铆焊")
-                {
-                    @foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.铆焊') as $key => $value)
-                        var b = true;
-                        if (selectarea.val() == "国内" && "{!! $key !!}" == "包装支架含漆")
-                            b = false;
-                        if (b && selectarea.val() == "国外" && "{!! $key !!}" == "包装支架")
-                            b = false;
-                        if (b)
-                        {
-                            strhtml2 += '<div class="form-group" name="div_unitpriceitem">';
-                            strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\
-                            \</div>\
-                            \<div class="col-sm-5 col-xs-4">';
+                        {{--strhtml2 += '<div class="form-group" name="div_unitpriceitem">';--}}
+                    {{--strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\--}}
+                            {{--<div class="col-sm-5 col-xs-4">\--}}
+                            {{--<input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\--}}
+                            {{--\</div>\--}}
+                            {{--\<div class="col-sm-5 col-xs-4">';--}}
+                    {{--var value = '';--}}
+                    {{--if (selectarea.val() == "国外")--}}
+                    {{--{--}}
+                        {{--@if (isset($value['国外']))--}}
+                            {{--value = "{!! $value['国外'] !!}";--}}
+                        {{--@endif--}}
+                    {{--}--}}
+                    {{--if (value == "")--}}
+                    {{--{--}}
+                        {{--if (productioncompany == "泰州分公司")--}}
+                            {{--value = "{!! $value['泰州分公司'] !!}";--}}
+                        {{--else if (productioncompany == "胶州分公司")--}}
+                            {{--value = "{!! $value['胶州分公司'] !!}"--}}
+                        {{--else if (productioncompany == "宣城分公司")--}}
+                            {{--value = "{!! isset($value['宣城分公司']) ? $value['宣城分公司'] : '0' !!}"--}}
+                        {{--else if (productioncompany == "许昌子公司")--}}
+                            {{--value = "{!! isset($value['许昌子公司']) ? $value['许昌子公司'] : '0' !!}"--}}
+                    {{--}--}}
+                    {{--strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';--}}
+                        {{--strhtml2 += '\</div>';--}}
+                    {{--strhtml2 += '</div>';--}}
+                    {{--@endforeach--}}
+                {{--}--}}
+                {{--else if (selecttype.val() == "板拼型钢")--}}
+                {{--{--}}
+                    {{--@foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.板拼型钢') as $key => $value)--}}
+                        {{--strhtml2 += '<div class="form-group" name="div_unitpriceitem">';--}}
+                    {{--strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\--}}
+                            {{--<div class="col-sm-5 col-xs-4">\--}}
+                            {{--<input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\--}}
+                            {{--\</div>\--}}
+                            {{--\<div class="col-sm-5 col-xs-4">';--}}
+                    {{--var value = '';--}}
+                    {{--if (selectarea.val() == "国外")--}}
+                    {{--{--}}
+                        {{--@if (isset($value['国外']))--}}
+                            {{--value = "{!! $value['国外'] !!}";--}}
+                        {{--@endif--}}
+                    {{--}--}}
+                    {{--if (value == "")--}}
+                    {{--{--}}
+                        {{--if (productioncompany == "泰州分公司")--}}
+                            {{--value = "{!! $value['泰州分公司'] !!}";--}}
+                        {{--else if (productioncompany == "胶州分公司")--}}
+                            {{--value = "{!! $value['胶州分公司'] !!}"--}}
+                        {{--else if (productioncompany == "宣城分公司")--}}
+                            {{--value = "{!! isset($value['宣城分公司']) ? $value['宣城分公司'] : '0' !!}"--}}
+                        {{--else if (productioncompany == "许昌子公司")--}}
+                            {{--value = "{!! isset($value['许昌子公司']) ? $value['许昌子公司'] : '0' !!}"--}}
+                    {{--}--}}
+                    {{--strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';--}}
+                        {{--strhtml2 += '\</div>';--}}
+                    {{--strhtml2 += '</div>';--}}
+                    {{--@endforeach--}}
+                {{--}--}}
 
-                            var value = '';
-                            if (selectarea.val() == "国外")
-                            {
-                                @if (isset($value['国外']))
-                                    value = "{!! $value['国外'] !!}";
-                                @endif
-                            }
-                            if (value == "")
-                            {
-                                if (productioncompany == "泰州分公司")
-                                    value = "{!! $value['泰州分公司'] !!}";
-                                else if (productioncompany == "胶州分公司")
-                                    value = "{!! $value['胶州分公司'] !!}"
-                                else if (productioncompany == "宣城分公司")
-                                    value = "{!! isset($value['宣城分公司']) ? $value['宣城分公司'] : '0' !!}"
-                                else if (productioncompany == "许昌子公司")
-                                    value = "{!! isset($value['许昌子公司']) ? $value['许昌子公司'] : '0' !!}"
-                            }
-                            strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';
-                            strhtml2 += '\</div>';
-                            strhtml2 += '</div>';
-                        }
-                    @endforeach
-                }
-                else if (selecttype.val() == "外协油漆")
-                {
-                    @foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.外协油漆') as $key => $value)
-                            {{--alert('{!! $key !!}');--}}
-                        strhtml2 += '<div class="form-group" name="div_unitpriceitem">';
-                    strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\
-                            \</div>\
-                            \<div class="col-sm-5 col-xs-4">';
-                    var value = '';
-                    if (selectarea.val() == "国外")
-                    {
-                        @if (isset($value['国外']))
-                            value = "{!! $value['国外'] !!}";
-                        @endif
-                    }
-                    if (value == "")
-                    {
-                        if (productioncompany == "泰州分公司")
-                            value = "{!! $value['泰州分公司'] !!}";
-                        else if (productioncompany == "胶州分公司")
-                            value = "{!! $value['胶州分公司'] !!}"
-                        else if (productioncompany == "宣城分公司")
-                            value = "{!! isset($value['宣城分公司']) ? $value['宣城分公司'] : '0' !!}"
-                        else if (productioncompany == "许昌子公司")
-                            value = "{!! isset($value['许昌子公司']) ? $value['许昌子公司'] : '0' !!}"
-                    }
-                    strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';
-                        strhtml2 += '\</div>';
-                    strhtml2 += '</div>';
-                    @endforeach
-                }
-                else if (selecttype.val() == "板拼型钢")
-                {
-                    @foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.板拼型钢') as $key => $value)
-                            {{--alert('{!! $key !!}');--}}
-                        strhtml2 += '<div class="form-group" name="div_unitpriceitem">';
-                    strhtml2 += '<label for="paowan" class="col-xs-4 col-sm-2 control-label">{!! $key !!}:</label>\
-                            <div class="col-sm-5 col-xs-4">\
-                            <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="{!! $key !!}">\
-                            \</div>\
-                            \<div class="col-sm-5 col-xs-4">';
-                    var value = '';
-                    if (selectarea.val() == "国外")
-                    {
-                        @if (isset($value['国外']))
-                            value = "{!! $value['国外'] !!}";
-                        @endif
-                    }
-                    if (value == "")
-                    {
-                        if (productioncompany == "泰州分公司")
-                            value = "{!! $value['泰州分公司'] !!}";
-                        else if (productioncompany == "胶州分公司")
-                            value = "{!! $value['胶州分公司'] !!}"
-                        else if (productioncompany == "宣城分公司")
-                            value = "{!! isset($value['宣城分公司']) ? $value['宣城分公司'] : '0' !!}"
-                        else if (productioncompany == "许昌子公司")
-                            value = "{!! isset($value['许昌子公司']) ? $value['许昌子公司'] : '0' !!}"
-                    }
-                    strhtml2 +='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' + value + '" readonly="readonly">';
-                        strhtml2 += '\</div>';
-                    strhtml2 += '</div>';
-                    @endforeach
-                }
-
-
-                $("#pppaymentitemtypecontainer_" + String(num)).empty().append(strhtml2);
-
+                {{--$("#pppaymentitemtypecontainer_" + String(num)).empty().append(strhtml2);--}}
             }
 
 			 $("#btnParseExcel").click(function() {
-//                 $('#formUploadParseExcel').append($(this).parent().children());
-//                 return false;
-//                 $('#formUploadParseExcel').submit();
                  var formData = new FormData();
                  formData.append('items_excelfile', $('#items_excelfile')[0].files[0]);
                  $.ajax({
