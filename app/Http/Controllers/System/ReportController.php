@@ -305,8 +305,9 @@ class ReportController extends Controller
             $param .= "@" . $key . "='" . $value . "',";
         }
         $param = count($input) > 0 ? substr($param, 0, strlen($param) - 1) : $param;
+//        dd($param);
         $items_t = DB::connection('sqlsrv')->select($report->statement . ' ' . $param);
-
+//        dd($items_t);
         return $items_t;
     }
 

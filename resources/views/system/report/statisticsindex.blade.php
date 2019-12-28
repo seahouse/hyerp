@@ -92,6 +92,11 @@
                 {!! Form::text('goodsspec',  null, ['class' => 'form-control','placeholder'=>'规格', 'id' => 'goodsspec']) !!}
                 {!! Form::text('vendername',  null, ['class' => 'form-control','placeholder'=>'供应商', 'id' => 'vendername']) !!}
                 {!! Form::hidden('orderid', $input['orderid']) !!}
+            @elseif ($report->name == "pgetInventoryDetailByorder")
+                {!! Form::text('goodsname',  null, ['class' => 'form-control','placeholder'=>'商品名称', 'id' => 'goodsname']) !!}
+                {!! Form::text('goodsspec',  null, ['class' => 'form-control','placeholder'=>'规格', 'id' => 'goodsspec']) !!}
+                {!! Form::text('vendername',  null, ['class' => 'form-control','placeholder'=>'供应商', 'id' => 'vendername']) !!}
+                {!! Form::hidden('orderid', $input['orderid']) !!}
             @endif
 
 {{--            {!! $report->condition !!}--}}
