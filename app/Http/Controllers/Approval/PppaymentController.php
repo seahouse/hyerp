@@ -565,4 +565,33 @@ class PppaymentController extends Controller
         ];
         return response()->json($data);
     }
+
+    public function getpricedetailhtml(Request $request)
+    {
+        $strhtml = "";
+//        Log::info($request->all());
+        if ($request->has('selecttype') && $request->has('productioncompany') && $request->has('selectarea'))
+        {
+            foreach (config('custom.dingtalk.approversettings.pppayment.pricedetail.' . $request->input('selecttype')) as $key => $value)
+            {
+                $strhtml .= "<div class=\"form-group\" name=\"div_unitpriceitem\">";
+                $strhtml .= '<label for="paowan" class="col-xs-4 col-sm-2 control-label">' . $key . ':</label>
+                            <div class="col-sm-5 col-xs-4">
+                            <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="' . $key . '">
+                            </div>
+                            <div class="col-sm-5 col-xs-4">';
+                $strhtml .='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' . $value[$request->input('productioncompany')][$request->input('selectarea')] . '" readonly="readonly">';
+                $strhtml .= '</div>';
+                $strhtml .= '</div>';
+            }
+        }
+
+//        $data = [
+//            'productioncompany' => '泰州分公司',
+//            'selecttype'         => '国外',
+//        ];
+        Log::info($strhtml);
+        return $strhtml;
+//        return response()->json($data);
+    }
 }
