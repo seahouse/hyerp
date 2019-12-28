@@ -32,7 +32,7 @@ class TechpurchaseController extends Controller
      */
     public function index()
     {
-        $techpurchase = Techpurchase::where('process_instance_id', '57ed2692-dea0-488a-9716-d8b1683b1aed')->firstOrFail();
+        $techpurchase = Techpurchase::where('process_instance_id', 'b6c71445-519b-4e46-9b23-772ad3e8037b')->firstOrFail();
         if (isset($techpurchase))
         {
             $status = $techpurchase->status;
@@ -89,18 +89,24 @@ class TechpurchaseController extends Controller
 //                ];
 //                $pohead = Purchaseorder_hx::create($data);
 
-                $pohead = Purchaseorder_hx::where('id', 31203)->first();
+                $pohead = Purchaseorder_hx::where('采购订单ID', 29884)->first();
+//                $pohead_view = Purchaseorder_hxold::where('id', )
                 if (isset($pohead))
                 {
+                    $pohead_id_key = iconv("UTF-8","GBK//IGNORE", '采购订单ID');
+//                    dd($pohead_id_key);
+//                    dd($pohead->$pohead_id_key);
                     $techpurchaseattachment_techspecification = $techpurchase->techpurchaseattachments->where('type', 'techspecification')->first();
                     // 拷贝“技术规范书”到对应的ERP目录下
                     if (isset($techpurchaseattachment_techspecification))
                     {
-                        $dir = config('custom.hxold.purchase_techspecification_dir') . $pohead->id . "/";
+                        $dir = config('custom.hxold.purchase_techspecification_dir') . $pohead->$pohead_id_key . "/";
                         if (!is_dir($dir)) {
                             mkdir($dir);
                         }
-                        copy(public_path($techpurchaseattachment_techspecification->path), $dir . $techpurchaseattachment_techspecification->filename);
+                        $dest = iconv("UTF-8","GBK//IGNORE", $dir . $techpurchaseattachment_techspecification->filename);
+//                        dd($dir . $techpurchaseattachment_techspecification->filename);
+                        copy(public_path($techpurchaseattachment_techspecification->path), $dest);
                     }
                 }
             }
@@ -500,11 +506,14 @@ class TechpurchaseController extends Controller
                     // 拷贝“技术规范书”到对应的ERP目录下
                     if (isset($techpurchaseattachment_techspecification))
                     {
-                        $dir = config('custom.hxold.purchase_techspecification_dir') . $pohead->id . "/";
+                        // 将中文的字段名称转换后使用
+                        $pohead_id_key = iconv("UTF-8","GBK//IGNORE", '采购订单ID');
+                        $dir = config('custom.hxold.purchase_techspecification_dir') . $pohead->$pohead_id_key . "/";
                         if (!is_dir($dir)) {
                             mkdir($dir);
                         }
-                        copy(public_path($techpurchaseattachment_techspecification->path), $dir . $techpurchaseattachment_techspecification->filename);
+                        $dest = iconv("UTF-8","GBK//IGNORE", $dir . $techpurchaseattachment_techspecification->filename);
+                        copy(public_path($techpurchaseattachment_techspecification->path), $dest);
                     }
                 }
             }

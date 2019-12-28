@@ -590,7 +590,7 @@ class PppaymentController extends Controller
 //            'productioncompany' => '泰州分公司',
 //            'selecttype'         => '国外',
 //        ];
-        Log::info($strhtml);
+//        Log::info($strhtml);
         return $strhtml;
 //        return response()->json($data);
     }
