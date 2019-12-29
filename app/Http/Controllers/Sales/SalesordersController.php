@@ -224,6 +224,12 @@ class SalesOrdersController extends Controller
         return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?orderid=' . $id);
     }
 
+    public function fromotherwarehousedetail($id)
+    {
+        $report=Report::where('name','pgetFromOtherWarehouseDetailByorder')->first();
+        return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?orderid=' . $id);
+    }
+
     public function leftwarehousedetail($id)
     {
         $report=Report::where('name','pgetInventoryDetailByorder')->first();

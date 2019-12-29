@@ -97,6 +97,31 @@
                 {!! Form::text('goodsspec',  null, ['class' => 'form-control','placeholder'=>'规格', 'id' => 'goodsspec']) !!}
                 {!! Form::text('vendername',  null, ['class' => 'form-control','placeholder'=>'供应商', 'id' => 'vendername']) !!}
                 {!! Form::hidden('orderid', $input['orderid']) !!}
+            @elseif ($report->name == "pgetFromOtherWarehouseDetailByorder")
+                {!! Form::text('goodsname',  null, ['class' => 'form-control','placeholder'=>'商品名称', 'id' => 'goodsname']) !!}
+                {!! Form::text('goodsspec',  null, ['class' => 'form-control','placeholder'=>'规格', 'id' => 'goodsspec']) !!}
+                {!! Form::text('vendername',  null, ['class' => 'form-control','placeholder'=>'供应商', 'id' => 'vendername']) !!}
+                {!! Form::hidden('orderid', $input['orderid']) !!}
+            @elseif ($report->name == "pgetWarehouseDetailByproject")
+                {!! Form::text('goodsname',  null, ['class' => 'form-control','placeholder'=>'商品名称', 'id' => 'goodsname']) !!}
+                {!! Form::text('goodsspec',  null, ['class' => 'form-control','placeholder'=>'规格', 'id' => 'goodsspec']) !!}
+                {!! Form::text('vendorname',  null, ['class' => 'form-control','placeholder'=>'供应商', 'id' => 'vendorname']) !!}
+                {!! Form::hidden('projectid', $input['projectid']) !!}
+            @elseif ($report->name == "pgetOtherWarehouseDetailByproject")
+                {!! Form::text('goodsname',  null, ['class' => 'form-control','placeholder'=>'商品名称', 'id' => 'goodsname']) !!}
+                {!! Form::text('goodsspec',  null, ['class' => 'form-control','placeholder'=>'规格', 'id' => 'goodsspec']) !!}
+                {!! Form::text('vendername',  null, ['class' => 'form-control','placeholder'=>'供应商', 'id' => 'vendername']) !!}
+                {!! Form::hidden('projectid', $input['projectid']) !!}
+            @elseif ($report->name == "pgetInventoryDetailByproject")
+                {!! Form::text('goodsname',  null, ['class' => 'form-control','placeholder'=>'商品名称', 'id' => 'goodsname']) !!}
+                {!! Form::text('goodsspec',  null, ['class' => 'form-control','placeholder'=>'规格', 'id' => 'goodsspec']) !!}
+                {!! Form::text('vendername',  null, ['class' => 'form-control','placeholder'=>'供应商', 'id' => 'vendername']) !!}
+                {!! Form::hidden('projectid', $input['projectid']) !!}
+            @elseif ($report->name == "pgetFromOtherWarehouseDetailByproject")
+                {!! Form::text('goodsname',  null, ['class' => 'form-control','placeholder'=>'商品名称', 'id' => 'goodsname']) !!}
+                {!! Form::text('goodsspec',  null, ['class' => 'form-control','placeholder'=>'规格', 'id' => 'goodsspec']) !!}
+                {!! Form::text('vendername',  null, ['class' => 'form-control','placeholder'=>'供应商', 'id' => 'vendername']) !!}
+                {!! Form::hidden('projectid', $input['projectid']) !!}
             @endif
 
 {{--            {!! $report->condition !!}--}}

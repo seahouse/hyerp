@@ -52,6 +52,10 @@
 
 			<hr style="border-top-color:rgba(0,0,0,1);" >
 			<p>出库物品金额总额：{{number_format($warehousecost/ 10000.0, 4)}}万</p>
+			<a href="{{ URL::to('/sales/projects/'.$project->id.'/warehousedetailbyproject/') }}" class="btn btn-default btn-sm" target="_blank">出库项目明细</a>
+			<a href="{{ URL::to('/sales/projects/'.$project->id.'/otherwarehousedetailbyproject/') }}" class="btn btn-default btn-sm" target="_blank">出到其他项目明细</a>
+			<a href="{{ URL::to('/sales/projects/'.$project->id.'/fromotherwarehousedetailbyproject/') }}" class="btn btn-default btn-sm" target="_blank">从其他项目来明细</a>
+			<a href="{{ URL::to('/sales/projects/'.$project->id.'/leftwarehousedetailbyproject/') }}" class="btn btn-default btn-sm" target="_blank">剩余项目库存明细</a>
 			<p>出库物品税差：{{number_format(($sohead_taxamount - $warehousetaxcost ) / 10000.0, 4)}}万</p>
 			<p>无入库记录合同金额总额：{{number_format($nowarehousecost/ 10000.0, 4)}}万</p>
 			<p>无入库记录物品税差：{{number_format(($sohead_taxamount - $nowarehousetaxcost) / 10000.0, 4)}}万</p>

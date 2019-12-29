@@ -227,8 +227,13 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
     Route::resource('groups', 'GroupController');
     Route::group(['prefix' => 'projects'], function() {
         Route::get('{id}/mstatistics', 'ProjectController@mstatistics');
+        Route::get('{id}/warehousedetailbyproject', 'ProjectController@warehousedetailbyproject');
+        Route::get('{id}/otherwarehousedetailbyproject', 'ProjectController@otherwarehousedetailbyproject');
+        Route::get('{id}/fromotherwarehousedetailbyproject', 'ProjectController@fromotherwarehousedetailbyproject');
+        Route::get('{id}/leftwarehousedetailbyproject', 'ProjectController@leftwarehousedetailbyproject');
         Route::get('{id}/warehousedetail', 'SalesordersController@warehousedetail');
         Route::get('{id}/otherwarehousedetail', 'SalesordersController@otherwarehousedetail');
+        Route::get('{id}/fromotherwarehousedetail', 'SalesordersController@fromotherwarehousedetail');
         Route::get('{id}/leftwarehousedetail', 'SalesordersController@leftwarehousedetail');
     });
     Route::resource('projects', 'ProjectController');

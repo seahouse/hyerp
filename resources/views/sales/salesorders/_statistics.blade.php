@@ -37,9 +37,10 @@
 			<?php $nowarehousetaxcost=array_first($sohead->getnowarehousetaxCost())->nowarehousetaxcost;?>
 			<hr style="border-top-color:rgba(0,0,0,1);" >
 		    <p>出库物品金额总额：{{number_format($warehousecost/ 10000.0, 4)}}万</p>
-			<a href="{{ URL::to('/sales/projects/'.$sohead->id.'/warehousedetail/') }}" class="btn btn-default btn-sm" target="_blank">出库明细</a>
-			<a href="{{ URL::to('/sales/projects/'.$sohead->id.'/otherwarehousedetail/') }}" class="btn btn-default btn-sm" target="_blank">出到其他项目明细</a>
-			<a href="{{ URL::to('/sales/projects/'.$sohead->id.'/leftwarehousedetail/') }}" class="btn btn-default btn-sm" target="_blank">库存明细</a>
+			<a href="{{ URL::to('/sales/projects/'.$sohead->id.'/warehousedetail/') }}" class="btn btn-default btn-sm" target="_blank">出库订单明细</a>
+			<a href="{{ URL::to('/sales/projects/'.$sohead->id.'/otherwarehousedetail/') }}" class="btn btn-default btn-sm" target="_blank">出到其他订单明细</a>
+			<a href="{{ URL::to('/sales/projects/'.$sohead->id.'/fromotherwarehousedetail/') }}" class="btn btn-default btn-sm" target="_blank">从其他订单来明细</a>
+			<a href="{{ URL::to('/sales/projects/'.$sohead->id.'/leftwarehousedetail/') }}" class="btn btn-default btn-sm" target="_blank">剩余订单库存明细</a>
 			<p>出库物品税差：{{number_format(($sohead_taxamount - $warehousetaxcost ) / 10000.0, 4)}}万</p>
 			<p>无入库记录合同金额总额：{{number_format($nowarehousecost/ 10000.0, 4)}}万</p>
 			<p>无入库记录物品税差：{{number_format(($sohead_taxamount - $nowarehousetaxcost) / 10000.0, 4)}}万</p>

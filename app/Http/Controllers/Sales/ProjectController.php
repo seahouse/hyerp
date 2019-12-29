@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Sales;
 
 use App\Models\Sales\Project_hxold;
+use App\Models\System\Report;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -91,5 +92,29 @@ class ProjectController extends Controller
         $project = Project_hxold::find($id);
 
         return view('sales.projects.mstatistics', compact('project'));
+    }
+
+    public function warehousedetailbyproject($id)
+    {
+        $report=Report::where('name','pgetWarehouseDetailByproject')->first();
+        return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?projectid=' . $id);
+    }
+
+    public function otherwarehousedetailbyproject($id)
+    {
+        $report=Report::where('name','pgetOtherWarehouseDetailByproject')->first();
+        return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?projectid=' . $id);
+    }
+
+    public function fromotherwarehousedetailbyproject($id)
+    {
+        $report=Report::where('name','pgetFromOtherWarehouseDetailByproject')->first();
+        return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?projectid=' . $id);
+    }
+
+    public function leftwarehousedetailbyproject($id)
+    {
+        $report=Report::where('name','pgetInventoryDetailByproject')->first();
+        return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?projectid=' . $id);
     }
 }
