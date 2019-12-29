@@ -1896,17 +1896,26 @@ class DingTalkController extends Controller
     {
         $user = Auth::user();
         $method = 'dingtalk.smartwork.bpms.processinstance.create';
-        $session = self::getAccessToken();
-        $timestamp = time('2017-07-19 13:06:00');
         $format = 'json';
         $v = '2.0';
+        if ($inputs['syncdtdesc'] == "许昌")
+        {
+            $session = self::getAccessToken_appkey();
+            $process_code = config('custom.dingtalk.hx_henan.approval_processcode.issuedrawing');
+            $originator_user_id = $user->dtuser2->userid;
+            $departmentList = json_decode($user->dtuser2->department);
+        }
+        else
+        {
+            $session = self::getAccessToken();
+            $process_code = config('custom.dingtalk.approval_processcode.issuedrawing');
+            $originator_user_id = $user->dtuserid;
+            $departmentList = json_decode($user->dtuser->department);
+        }
+//        $session = self::getAccessToken();
 
-//        $process_code = 'PROC-EF6YRO35P2-7MPMNW3BNO0R8DKYN8GX1-2EACCA5J-6';     // hyerp
 //        $process_code = 'PROC-EF6YJDXRN2-V88CLW5WMN8R63JUE7XW3-M0DE5SQI-2K';    // huaxing
 //        $process_code = 'PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2';    // huaxing
-        $process_code = config('custom.dingtalk.approval_processcode.issuedrawing');
-        $originator_user_id = $user->dtuserid;
-        $departmentList = json_decode($user->dtuser->department);
         $dept_id = 0;
         if (count($departmentList) > 0)
             $dept_id = array_first($departmentList);

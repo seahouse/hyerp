@@ -205,7 +205,7 @@
 <div class="form-group">
     {!! Form::label('productioncompany', '制作公司:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::select('productioncompany', array('无锡生产中心' => '无锡生产中心', '苏州生产中心' => '苏州生产中心', '泰州生产中心' => '泰州生产中心', '胶州生产中心' => '胶州生产中心', '无锡电气生产部' => '无锡电气生产部', '郎溪生产中心' => '郎溪生产中心',
+    {!! Form::select('productioncompany', array('无锡生产中心' => '无锡生产中心', '无锡电气生产部' => '无锡电气生产部', '郎溪生产中心' => '郎溪生产中心',
         '宣城子公司' => '宣城子公司', '许昌子公司' => '许昌子公司'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
     </div>
 </div>
@@ -312,10 +312,12 @@
     </div>
 </div>
 
-{{--
-        {!! Form::file('image_file', array('class' => 'form-control')) !!}
---}}
-
+        <div class="form-group">
+            {!! Form::label('syncdtdesc', '同步到钉钉组织:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::select('syncdtdesc', array('无锡' => '无锡', '许昌' => '许昌'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+            </div>
+        </div>
 
 {!! Form::hidden('applicant_id', null, ['class' => 'btn btn-sm']) !!}
 {!! Form::hidden('approversetting_id', null, ['class' => 'btn btn-sm']) !!}
