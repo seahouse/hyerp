@@ -1481,7 +1481,7 @@ class DingTalkController extends Controller
                 Log::info("bpms_instance_change: " . $msg);
                 if ($data->type == "finish" && $data->result == "agree")
                 {
-                    if ($data->processCode == "PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2")
+                    if ($data->processCode == "RPOC-9794564E-DD4B-41BB-ABD7-1F514756FE2F")
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
                         McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
@@ -1494,7 +1494,7 @@ class DingTalkController extends Controller
                 }
                 elseif ($data->type == "finish" && $data->result == "refuse")
                 {
-                    if ($data->processCode == "PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2")
+                    if ($data->processCode == "RPOC-9794564E-DD4B-41BB-ABD7-1F514756FE2F")
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
                         McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
@@ -1507,7 +1507,7 @@ class DingTalkController extends Controller
                 }
                 elseif ($data->type == "terminate")
                 {
-                    if ($data->processCode == "PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2")
+                    if ($data->processCode == "RPOC-9794564E-DD4B-41BB-ABD7-1F514756FE2F")
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
                         McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
@@ -1520,7 +1520,7 @@ class DingTalkController extends Controller
                 }
                 elseif ($data->type == "delete")
                 {
-                    if ($data->processCode == "PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2")
+                    if ($data->processCode == "RPOC-9794564E-DD4B-41BB-ABD7-1F514756FE2F")
                         IssuedrawingController::deleteByProcessInstanceId($data->processInstanceId);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
                         McitempurchaseController::deleteByProcessInstanceId($data->processInstanceId);
@@ -2106,6 +2106,5 @@ class DingTalkController extends Controller
         $response = HttpDingtalkEco::post("",
             $params, json_encode($data));
         return $response;
-
     }
 }
