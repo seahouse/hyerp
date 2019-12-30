@@ -1904,6 +1904,9 @@ class DingTalkController extends Controller
             $process_code = config('custom.dingtalk.hx_henan.approval_processcode.issuedrawing');
             $originator_user_id = $user->dtuser2->userid;
             $departmentList = json_decode($user->dtuser2->department);
+            $cc_list = config('custom.dingtalk.hx_henan.approversettings.issuedrawing.cc_list.' . $inputs['productioncompany']);
+            $cc_list_default = config('custom.dingtalk.hx_henan.approversettings.issuedrawing.cc_list.default');
+            $cc_list_designdepartment = config('custom.dingtalk.hx_henan.approversettings.issuedrawing.cc_list.designdepartment.' . $inputs['designdepartment']);
         }
         else
         {
@@ -1911,6 +1914,9 @@ class DingTalkController extends Controller
             $process_code = config('custom.dingtalk.approval_processcode.issuedrawing');
             $originator_user_id = $user->dtuserid;
             $departmentList = json_decode($user->dtuser->department);
+            $cc_list = config('custom.dingtalk.approversettings.issuedrawing.cc_list.' . $inputs['productioncompany']);
+            $cc_list_default = config('custom.dingtalk.approversettings.issuedrawing.cc_list.default');
+            $cc_list_designdepartment = config('custom.dingtalk.approversettings.issuedrawing.cc_list.designdepartment.' . $inputs['designdepartment']);
         }
 //        $session = self::getAccessToken();
 
@@ -1920,9 +1926,6 @@ class DingTalkController extends Controller
         if (count($departmentList) > 0)
             $dept_id = array_first($departmentList);
         $approvers = $inputs['approvers'];
-        $cc_list = config('custom.dingtalk.approversettings.issuedrawing.cc_list.' . $inputs['productioncompany']);
-        $cc_list_default = config('custom.dingtalk.approversettings.issuedrawing.cc_list.default');
-        $cc_list_designdepartment = config('custom.dingtalk.approversettings.issuedrawing.cc_list.designdepartment.' . $inputs['designdepartment']);
         $cc_list .= empty($cc_list) ? $cc_list_default : '';
         $cc_list .= empty($cc_list) ? $cc_list_designdepartment : ',' . $cc_list_designdepartment;
         $cc_position = "FINISH";
