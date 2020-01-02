@@ -350,7 +350,10 @@ class McitempurchaseController extends Controller
                 // save process_instance_id and business_id
                 $process_instance_id = $responsejson->result->process_instance_id;
 
-                $response = DingTalkController::processinstance_get($process_instance_id);
+                if ($input['syncdtdesc'] == "许昌")
+                    $response = DingTalkController::processinstance_get2($process_instance_id);
+                else
+                    $response = DingTalkController::processinstance_get($process_instance_id);
                 $responsejson = json_decode($response);
                 $business_id = '';
                 if ($responsejson->dingtalk_smartwork_bpms_processinstance_get_response->result->ding_open_errcode == 0)

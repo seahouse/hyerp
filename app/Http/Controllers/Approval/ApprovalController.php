@@ -565,7 +565,7 @@ class ApprovalController extends Controller
 
         if ($inputs['syncdtdesc'] == "许昌")
         {
-            $session = self::getAccessToken_appkey();
+            $session = DingTalkController::getAccessToken_appkey();
             $process_code = config('custom.dingtalk.hx_henan.approval_processcode.mcitempurchase');
             $originator_user_id = $user->dtuser2->userid;
             $departmentList = json_decode($user->dtuser2->department);
@@ -575,7 +575,7 @@ class ApprovalController extends Controller
         }
         else
         {
-            $session = self::getAccessToken();
+            $session = DingTalkController::getAccessToken();
             $process_code = config('custom.dingtalk.approval_processcode.mcitempurchase');
             $originator_user_id = $user->dtuserid;
             $departmentList = json_decode($user->dtuser->department);
