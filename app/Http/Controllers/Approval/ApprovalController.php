@@ -560,16 +560,30 @@ class ApprovalController extends Controller
     {
         $user = Auth::user();
         $method = 'dingtalk.smartwork.bpms.processinstance.create';
-        $session = DingTalkController::getAccessToken();
-        $timestamp = time('2017-07-19 13:06:00');
         $format = 'json';
         $v = '2.0';
 
-//        $process_code = 'PROC-EF6YRO35P2-7MPMNW3BNO0R8DKYN8GX1-2EACCA5J-6';     // hyerp
+        if ($inputs['syncdtdesc'] == "许昌")
+        {
+            $session = self::getAccessToken_appkey();
+            $process_code = config('custom.dingtalk.hx_henan.approval_processcode.mcitempurchase');
+            $originator_user_id = $user->dtuser2->userid;
+            $departmentList = json_decode($user->dtuser2->department);
+            $cc_list = config('custom.dingtalk.hx_henan.approversettings.mcitempurchase.cc_list.' . $inputs['manufacturingcenter']);
+            if (strlen($cc_list) == 0)
+                $cc_list = config('custom.dingtalk.hx_henan.approversettings.mcitempurchase.cc_list.default');
+        }
+        else
+        {
+            $session = self::getAccessToken();
+            $process_code = config('custom.dingtalk.approval_processcode.mcitempurchase');
+            $originator_user_id = $user->dtuserid;
+            $departmentList = json_decode($user->dtuser->department);
+            $cc_list = config('custom.dingtalk.approversettings.mcitempurchase.cc_list.' . $inputs['manufacturingcenter']);
+            if (strlen($cc_list) == 0)
+                $cc_list = config('custom.dingtalk.approversettings.mcitempurchase.cc_list.default');
+        }
 //        $process_code = 'PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2';    // huaxing
-        $process_code = config('custom.dingtalk.approval_processcode.mcitempurchase');
-        $originator_user_id = $user->dtuserid;
-        $departmentList = json_decode($user->dtuser->department);
         $dept_id = 0;
         if (count($departmentList) > 0)
             $dept_id = array_first($departmentList);
@@ -717,9 +731,6 @@ class ApprovalController extends Controller
         $req->setOriginatorUserId($originator_user_id);
         $req->setDeptId("$dept_id");
         $req->setApprovers($approvers);
-        $cc_list = config('custom.dingtalk.approversettings.mcitempurchase.cc_list.' . $inputs['manufacturingcenter']);
-        if (strlen($cc_list) == 0)
-            $cc_list = config('custom.dingtalk.approversettings.mcitempurchase.cc_list.default');
         if ($cc_list <> "")
         {
             $req->setCcList($cc_list);

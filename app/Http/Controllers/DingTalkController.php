@@ -1483,7 +1483,7 @@ class DingTalkController extends Controller
                 {
                     if ($data->processCode == "RPOC-9794564E-DD4B-41BB-ABD7-1F514756FE2F")
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
-                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
+                    elseif ($data->processCode == config('custom.dingtalk.hx_henan.approval_processcode.mcitempurchase'))
                         McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
                     elseif ($data->processCode == config('custom.dingtalk.hx_henan.approval_processcode.pppayment'))
                         PppaymentController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
@@ -1496,7 +1496,7 @@ class DingTalkController extends Controller
                 {
                     if ($data->processCode == "RPOC-9794564E-DD4B-41BB-ABD7-1F514756FE2F")
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
-                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
+                    elseif ($data->processCode == config('custom.dingtalk.hx_henan.approval_processcode.mcitempurchase'))
                         McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
                     elseif ($data->processCode == config('custom.dingtalk.hx_henan.approval_processcode.pppayment'))
                         PppaymentController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
@@ -1509,7 +1509,7 @@ class DingTalkController extends Controller
                 {
                     if ($data->processCode == "RPOC-9794564E-DD4B-41BB-ABD7-1F514756FE2F")
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
-                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
+                    elseif ($data->processCode == config('custom.dingtalk.hx_henan.approval_processcode.mcitempurchase'))
                         McitempurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
                     elseif ($data->processCode == config('custom.dingtalk.hx_henan.approval_processcode.pppayment'))
                         PppaymentController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
@@ -1522,7 +1522,7 @@ class DingTalkController extends Controller
                 {
                     if ($data->processCode == "RPOC-9794564E-DD4B-41BB-ABD7-1F514756FE2F")
                         IssuedrawingController::deleteByProcessInstanceId($data->processInstanceId);
-                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
+                    elseif ($data->processCode == config('custom.dingtalk.hx_henan.approval_processcode.mcitempurchase'))
                         McitempurchaseController::deleteByProcessInstanceId($data->processInstanceId);
                     elseif ($data->processCode == config('custom.dingtalk.hx_henan.approval_processcode.pppayment'))
                         PppaymentController::deleteByProcessInstanceId($data->processInstanceId);

@@ -24,6 +24,7 @@ class Mcitempurchase extends Model
         'approversetting_id',
         'process_instance_id',
         'business_id',
+        'syncdtdesc',
     ];
 
     public function mcitempurchaseitems() {
@@ -31,7 +32,10 @@ class Mcitempurchase extends Model
     }
 
     public function approvers() {
-        $approvers = config('custom.dingtalk.approversettings.mcitempurchase.' . $this::getAttribute('manufacturingcenter'), '');
+        if ($this::getAttribute('syncdtdesc') == "许昌")
+            $approvers = config('custom.dingtalk.hx_henan.approversettings.mcitempurchase.' . $this::getAttribute('manufacturingcenter'), '');
+        else
+            $approvers = config('custom.dingtalk.approversettings.mcitempurchase.' . $this::getAttribute('manufacturingcenter'), '');
         return $approvers;
     }
 }
