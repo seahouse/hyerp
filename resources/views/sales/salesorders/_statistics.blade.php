@@ -45,7 +45,7 @@
 			<p>无入库记录合同金额总额：{{number_format($nowarehousecost/ 10000.0, 4)}}万</p>
 			<p>无入库记录物品税差：{{number_format(($sohead_taxamount - $nowarehousetaxcost) / 10000.0, 4)}}万</p>
 			@if ($sohead->amount > 0.0)
-				<p>出库类成本比例：{{number_format(($warehousecost  + $nowarehousecost + $sohead_taxamount - $nowarehousetaxcost-$warehousetaxcost) / ($sohead->amount * 10000.0) * 100.0, 2)}}%</p>
+				<p>出库类成本比例：{{number_format(($warehousecost  + $nowarehousecost + $sohead_taxamount + $nowarehousetaxcost-$warehousetaxcost) / ($sohead->amount * 10000.0) * 100.0, 2)}}%</p>
 			@else
 				<p>出库类成本比例：-</p>
 			@endif
