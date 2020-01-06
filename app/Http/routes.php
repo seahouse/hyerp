@@ -642,6 +642,12 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
         Route::get('storebyclick/{tablename}/{tableid}/{type}/{value}', 'ReminderswitchController@storebyclick');
     });
     Route::resource('reminderswitches', 'ReminderswitchController');
+
+    Route::group(['prefix' => 'salarysheet'], function() {
+        Route::get('import', 'SalarysheetController@import');
+        Route::post('importstore', 'SalarysheetController@importstore');
+    });
+    Route::resource('salarysheet', 'SalarysheetController');
 });
 
 Route::group(['prefix' => 'teaching', 'namespace' => 'Teaching', 'middleware' => ['web', 'auth']], function() {

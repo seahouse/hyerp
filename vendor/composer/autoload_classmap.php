@@ -84,6 +84,7 @@ return array(
     'CreateReimbursementtypesTable' => $baseDir . '/database/migrations/2016_02_29_140752_create_reimbursementtypes_table.php',
     'CreateReportsTable' => $baseDir . '/database/migrations/2017_02_14_090808_create_reports_table.php',
     'CreateRolesAndPermissionsTables' => $baseDir . '/database/migrations/2016_04_11_133951_create_roles_and_permissions_tables.php',
+    'CreateSalarysheetsTable' => $baseDir . '/database/migrations/2020_01_03_134409_create_salarysheets_table.php',
     'CreateSalesrepsTable' => $baseDir . '/database/migrations/2015_08_26_024300_create_salesreps_table.php',
     'CreateShipitemsTable' => $baseDir . '/database/migrations/2015_08_31_052239_create_shipitems_table.php',
     'CreateSitehoursreminderrecordsTable' => $baseDir . '/database/migrations/2019_11_04_115655_create_sitehoursreminderrecords_table.php',
