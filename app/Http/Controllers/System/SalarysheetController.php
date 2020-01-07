@@ -91,6 +91,14 @@ class SalarysheetController extends Controller
         //
     }
 
+    public function mshow($id)
+    {
+        //
+        $salarysheet = Salarysheet::findOrFail($id);
+        $config = DingTalkController::getconfig();
+        return view('system.salarysheets.mshow', compact('salarysheet', 'config'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

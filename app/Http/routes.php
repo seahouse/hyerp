@@ -648,6 +648,7 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
         Route::post('importstore', 'SalarysheetController@importstore');
         Route::post('search', 'SalarysheetController@search');
         Route::post('sendsalarysheet', 'SalarysheetController@sendsalarysheet');
+        Route::get('{id}/mshow', 'SalarysheetController@mshow');
     });
     Route::resource('salarysheet', 'SalarysheetController');
 });
