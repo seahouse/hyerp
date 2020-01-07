@@ -22,7 +22,7 @@ class CreateSalarysheetsTable extends Migration
             $table->decimal('attendance_days')->default(0.0);                           // 出勤天数
             $table->decimal('basicsalary')->default(0.0);                               // 基本工资
             $table->decimal('overtime_hours')->default(0.0);                            // 加班小时
-            $table->decimal('absenteeism_reduce')->default(0.0);                        // 缺勤减扣
+            $table->decimal('absenteeismreduce_hours')->default(0.0);                   // 缺勤减扣小时
             $table->decimal('paid_hours')->default(0.0);                                    // 计薪小时
             $table->decimal('overtime_amount')->default(0.0);                           // 加班费
             $table->decimal('fullfrequently_award')->default(0.0);                      // 满勤奖
@@ -32,6 +32,7 @@ class CreateSalarysheetsTable extends Migration
             $table->decimal('additional_amount')->default(0.0);                         // 补资
             $table->decimal('house_amount')->default(0.0);                              // 房贴
             $table->decimal('hightemperature_amount')->default(0.0);                    // 高温费
+            $table->decimal('absenteeismreduce_amount')->default(0.0);                  // 缺勤扣款
             $table->decimal('shouldpay_amount')->default(0.0);                          // 应发工资
             $table->decimal('borrowreduce_amount')->default(0.0);                       // 借款扣回
             $table->decimal('personalsocial_amount')->default(0.0);                     // 个人社保

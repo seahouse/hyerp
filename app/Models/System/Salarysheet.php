@@ -15,7 +15,7 @@ class Salarysheet extends Model
         'attendance_days',
         'basicsalary',
         'overtime_hours',
-        'absenteeism_reduce',
+        'absenteeismreduce_hours',
         'paid_hours',
         'overtime_amount',
         'fullfrequently_award',
@@ -25,6 +25,7 @@ class Salarysheet extends Model
         'additional_amount',
         'house_amount',
         'hightemperature_amount',
+        'absenteeismreduce_amount',
         'shouldpay_amount',
         'borrowreduce_amount',
         'personalsocial_amount',
@@ -33,4 +34,8 @@ class Salarysheet extends Model
         'actualsalary_amount',
         'remark',
     ];
+
+    public function user() {
+        return $this->belongsTo('App\Models\System\User');
+    }
 }
