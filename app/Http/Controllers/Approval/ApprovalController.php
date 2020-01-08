@@ -384,12 +384,14 @@ class ApprovalController extends Controller
 
         if (strlen($key) > 0)
         {
-            // 将productname 的查询条件去掉， 可明显加快查询速度
+            // 通过 leftJoin 和 采购订单商品.goods_name 来查找，加快查找速度
             $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
             $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+                ->leftJoin('采购订单商品', '采购订单商品.order_id', '=', 'vpurchaseorder.id')
                 ->where('descrip', 'like', '%'.$key.'%')
+                ->orWhere('采购订单商品.goods_name', 'like', '%'.$key.'%')
 //                ->orWhere('productname', 'like', '%'.$key.'%')
-                ->pluck('id');
+                ->pluck('vpurchaseorder.id');
             $query->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
                 $query->whereIn('supplier_id', $supplier_ids)
                     ->orWhereIn('pohead_id', $purchaseorder_ids);
