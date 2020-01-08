@@ -202,9 +202,6 @@ class ApprovalController extends Controller
 
     public function searchmindexmyapproval(Request $request)
     {
-//        $reimbursements = ReimbursementsController::myapproval();
-//        $paymentrequests = PaymentrequestsController::myapproval();
-//        return view('approval.mindexmyapproval', compact('reimbursements', 'paymentrequests'));
 
 
         $key = $request->input('key');
@@ -245,18 +242,22 @@ class ApprovalController extends Controller
 
         $query = Paymentrequest::latest('created_at');
         $query->whereIn('approversetting_id', $ids_approversetting);
+//        Log::info('ids_approversetting: ' . $ids_approversetting);
 
         if (strlen($key) > 0)
         {
-            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
-            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
-                ->where('descrip', 'like', '%'.$key.'%')
-                ->orWhere('productname', 'like', '%'.$key.'%')
-                ->pluck('id');
-            $query->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
-                $query->whereIn('supplier_id', $supplier_ids)
-                    ->orWhereIn('pohead_id', $purchaseorder_ids);
-            });
+            // 为了加快速度，将查询方式改成 whereRaw
+            $query->whereRaw("(supplier_id in (select id from hxcrm2016..vsupplier where name like '%" . $key . "%') or pohead_id in (select id from hxcrm2016..vpurchaseorder where descrip like '%" . $key . "%' or productname like '%" . $key . "%'))");
+
+//            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+//                ->where('descrip', 'like', '%'.$key.'%')
+//                ->orWhere('productname', 'like', '%'.$key.'%')
+//                ->pluck('id');
+//            $query->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
+//                $query->whereIn('supplier_id', $supplier_ids)
+//                    ->orWhereIn('pohead_id', $purchaseorder_ids);
+//            });
         }
 
         if (strlen($paymenttype) > 0)
@@ -288,39 +289,6 @@ class ApprovalController extends Controller
 
         $items = $query->select()->paginate(10);
 
-
-//        if ('' == $key)
-//        {
-//            $paymentrequests = Paymentrequest::latest('created_at')->whereIn('approversetting_id', $ids_approversetting)->paginate(10);
-//            $paymentrequestretracts = Paymentrequestretract::latest('created_at')->whereIn('approversetting_id', $ids_approversetting)->paginate(10);
-//        }
-//        else
-//        {
-//            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
-//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
-//                ->where('descrip', 'like', '%'.$key.'%')
-//                ->orWhere('productname', 'like', '%'.$key.'%')
-//                ->pluck('id');
-//
-//            $paymentrequests = Paymentrequest::latest('created_at')
-//                ->whereIn('approversetting_id', $ids_approversetting)
-//                ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
-//                    $query->whereIn('supplier_id', $supplier_ids)
-//                        ->orWhereIn('pohead_id', $purchaseorder_ids);
-//                })
-//                ->select('paymentrequests.*')
-//                ->paginate(10);
-//
-//            // todo: 以后实现对供应商审批撤回的关键字搜索功能
-////            $paymentrequestretracts = Paymentrequestretract::latest('created_at')
-////                ->whereIn('approversetting_id', $ids_approversetting)
-////                ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
-////                    $query->whereIn('supplier_id', $supplier_ids)
-////                        ->orWhereIn('pohead_id', $purchaseorder_ids);
-////                })
-////                ->select('paymentrequests.*')
-////                ->paginate(10);
-//        }
 
 //        return $inputs;
 //        return $paymentrequests->url(1);
@@ -417,15 +385,18 @@ class ApprovalController extends Controller
 
         if (strlen($key) > 0)
         {
-            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
-            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
-                ->where('descrip', 'like', '%'.$key.'%')
-                ->orWhere('productname', 'like', '%'.$key.'%')
-                ->pluck('id');
-            $query->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
-                $query->whereIn('supplier_id', $supplier_ids)
-                    ->orWhereIn('pohead_id', $purchaseorder_ids);
-            });
+            // 为了加快速度，将查询方式改成 whereRaw
+            $query->whereRaw("(supplier_id in (select id from hxcrm2016..vsupplier where name like '%" . $key . "%') or pohead_id in (select id from hxcrm2016..vpurchaseorder where descrip like '%" . $key . "%' or productname like '%" . $key . "%'))");
+
+//            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+//                ->where('descrip', 'like', '%'.$key.'%')
+//                ->orWhere('productname', 'like', '%'.$key.'%')
+//                ->pluck('id');
+//            $query->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
+//                $query->whereIn('supplier_id', $supplier_ids)
+//                    ->orWhereIn('pohead_id', $purchaseorder_ids);
+//            });
         }
 
         if (strlen($paymenttype) > 0)

@@ -328,7 +328,7 @@ class SalarysheetController extends Controller
                         'text' => '您的工资条等待签收'
                     ],
                     'body' => [
-                        'title' => '您的工资条等待签收，点击查看明细。',
+                        'title' => '您的工资条等待签收，点击查看明细（仅手机端）。',
                         'form' => $data
                     ]
                 ];
