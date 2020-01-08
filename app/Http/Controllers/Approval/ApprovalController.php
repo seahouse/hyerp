@@ -379,24 +379,21 @@ class ApprovalController extends Controller
         $query->whereExists(function ($query) use ($userid, $userids) {
             $query->select(DB::raw(1))
                 ->from('paymentrequestapprovals')
-//                ->whereRaw('paymentrequestapprovals.approver_id=' . $userid . ' and paymentrequestapprovals.paymentrequest_id=paymentrequests.id ');
                 ->whereRaw('paymentrequestapprovals.approver_id in (' . implode(",", $userids) . ') and paymentrequestapprovals.paymentrequest_id=paymentrequests.id ');
         });
 
         if (strlen($key) > 0)
         {
-            // 为了加快速度，将查询方式改成 whereRaw
-            $query->whereRaw("(supplier_id in (select id from hxcrm2016..vsupplier where name like '%" . $key . "%') or pohead_id in (select id from hxcrm2016..vpurchaseorder where descrip like '%" . $key . "%' or productname like '%" . $key . "%'))");
-
-//            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
-//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
-//                ->where('descrip', 'like', '%'.$key.'%')
+            // 将productname 的查询条件去掉， 可明显加快查询速度
+            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+                ->where('descrip', 'like', '%'.$key.'%')
 //                ->orWhere('productname', 'like', '%'.$key.'%')
-//                ->pluck('id');
-//            $query->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
-//                $query->whereIn('supplier_id', $supplier_ids)
-//                    ->orWhereIn('pohead_id', $purchaseorder_ids);
-//            });
+                ->pluck('id');
+            $query->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
+                $query->whereIn('supplier_id', $supplier_ids)
+                    ->orWhereIn('pohead_id', $purchaseorder_ids);
+            });
         }
 
         if (strlen($paymenttype) > 0)

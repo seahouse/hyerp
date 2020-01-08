@@ -13,7 +13,7 @@
             {{--</div>--}}
             <div class="row">
                 <div class="col-xs-8 col-sm-8 ctrl1">
-                    {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称、商品名称']) !!}
+                    {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称']) !!}
                 </div>
                 <div class="col-xs-4 col-sm-4 ctrl2">
                     {!! Form::select('paymenttype', array('预付款' => '预付款', '进度款' => '进度款', '到货款' => '到货款', '安装结束款' => '安装结束款', '调试运行款' => '调试运行款', '环保验收款' => '环保验收款', '质保金' => '质保金'), null,
