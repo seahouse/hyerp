@@ -413,10 +413,15 @@ class ApprovalController extends Controller
 
         if (strlen($productname) > 0)
         {
-            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
-                ->where('productname', 'like', '%'.$productname .'%')
-                ->pluck('id');
-            $query->whereIn('pohead_id', $purchaseorder_ids);
+            $query->leftJoin('hxcrm2016.dbo.vpurchaseorder', 'hxcrm2016.dbo.vpurchaseorder.id', '=', 'paymentrequests.pohead_id')
+                ->leftJoin('hxcrm2016.dbo.采购订单商品', '采购订单商品.order_id', '=', 'vpurchaseorder.id')
+                ->where('采购订单商品.goods_name', 'like', '%'.$productname.'%');
+//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+//                ->leftJoin('采购订单商品', '采购订单商品.order_id', '=', 'vpurchaseorder.id')
+//                ->where('采购订单商品.goods_name', 'like', '%'.$key.'%')
+////                ->where('productname', 'like', '%'.$productname .'%')
+//                ->pluck('vpurchaseorder.id');
+//            $query->whereIn('pohead_id', $purchaseorder_ids);
         }
 
         if (strlen($suppliername) > 0)
@@ -425,7 +430,7 @@ class ApprovalController extends Controller
             $query->whereIn('supplier_id', $supplier_ids);
         }
 
-        $items = $query->select()->paginate(10);
+        $items = $query->select('paymentrequests.*')->distinct()->paginate(10);
 
 //        if ('' == $key)
 //            $paymentrequests = Paymentrequest::latest('created_at')->whereIn('id', $ids_paymentrequest)->paginate(10);
