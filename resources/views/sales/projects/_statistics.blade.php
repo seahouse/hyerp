@@ -29,6 +29,7 @@
 				<?php $warehousetaxcost +=array_first($sohead->getwarehousetaxCost())->warehousetaxcost;?>
 				<?php $nowarehousecost +=array_first($sohead->getnowarehouseCost())->nowarehousecost;?>
 				<?php $nowarehousetaxcost +=array_first($sohead->getnowarehousetaxCost())->nowarehousetaxcost;?>
+				<?php $nowarehouseamountby7550 +=array_first($sohead->getnowarehouseamountby7550())->nowarehouseamountby7550;?>
 		@endforeach
 			<p>订单总金额：{{ $totalamount }}万</p>
 			<p>订单收款总金额：{{ $sohead_receiptpayments_total }}万</p>
@@ -56,11 +57,11 @@
 			<a href="{{ URL::to('/sales/projects/'.$project->id.'/otherwarehousedetailbyproject/') }}" class="btn btn-default btn-sm" target="_blank">出到其他项目明细</a>
 			<a href="{{ URL::to('/sales/projects/'.$project->id.'/fromotherwarehousedetailbyproject/') }}" class="btn btn-default btn-sm" target="_blank">从其他项目来明细</a>
 			<a href="{{ URL::to('/sales/projects/'.$project->id.'/leftwarehousedetailbyproject/') }}" class="btn btn-default btn-sm" target="_blank">剩余项目库存明细</a>
-			<p>出库物品税差：{{number_format(($sohead_taxamount - $warehousetaxcost ) / 10000.0, 4)}}万</p>
+			<p>出库物品税额：{{number_format(( $warehousetaxcost ) / 10000.0, 4)}}万</p>
 			<p>无入库记录合同金额总额：{{number_format($nowarehousecost/ 10000.0, 4)}}万</p>
-			<p>无入库记录物品税差：{{number_format(($sohead_taxamount - $nowarehousetaxcost) / 10000.0, 4)}}万</p>
+			<p>无入库记录物品税额：{{number_format(( $nowarehousetaxcost) / 10000.0, 4)}}万</p>
 			@if ($totalamount > 0.0)
-				<p>出库类成本比例：{{number_format(($warehousecost  + $nowarehousecost + $sohead_taxamount - $nowarehousetaxcost-$warehousetaxcost) / ($totalamount * 10000.0) * 100.0, 2)}}%</p>
+				<p>出库类成本比例：{{number_format(($warehousecost  + $nowarehousecost + $sohead_taxamount + $nowarehouseamountby7550  - $nowarehousetaxcost - $warehousetaxcost) / ($totalamount * 10000.0) * 100.0, 2)}}%</p>
 			@else
 				<p>出库类成本比例：-</p>
 			@endif

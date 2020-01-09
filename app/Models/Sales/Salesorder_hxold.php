@@ -93,6 +93,11 @@ class Salesorder_hxold extends Model
         return DB::connection('sqlsrv')->select('select dbo.getNoWarehouseTaxAmountByorder(' . $this->id . ') as nowarehousetaxcost');
     }
 
+    // 厂部采购平摊费用
+    public function getnowarehouseamountby7550() {
+        return DB::connection('sqlsrv')->select('select dbo.getNoWarehouseAmountBy7550(' . $this->id . ') as nowarehouseamountby7550');
+    }
+
     public function soheadtaxratetypeasses() {
         return $this->hasMany('App\Models\Sales\Soheadtaxratetypeass_hxold', 'sohead_id', 'id');
     }
