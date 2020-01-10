@@ -15,6 +15,7 @@
 			<?php $warehousetaxcost = 0.0; ?>
 			<?php $nowarehousecost = 0.0; ?>
 			<?php $nowarehousetaxcost = 0.0; ?>
+			<?php $nowarehouseamountby7550 = 0.0; ?>
 		@foreach($project->soheads as $sohead)
             	<?php $totalamount += $sohead->amount; ?>
             	<?php $sohead_receiptpayments_total += $sohead->receiptpayments->sum('amount'); ?>
