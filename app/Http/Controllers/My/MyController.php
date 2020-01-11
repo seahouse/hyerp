@@ -283,6 +283,19 @@ class MyController extends Controller
             ->addColumn('bonuspaid', function (Salesorder_hxold $sohead) {
                 return $sohead->bonuspayments->sum('amount');
             })
+            ->addColumn('bonusforpay', function (Salesorder_hxold $sohead) use ($request) {
+                if ($request->has('receivedateend'))
+                {
+                    return $sohead->receiptpayments->sum(function ($receiptpayment) use ($request, $sohead) {
+                        if (Carbon::parse($receiptpayment->record_at)->lte(Carbon::parse($request->get('receivedateend'))))
+                            return $receiptpayment->amount * $sohead->getBonusfactorByPolicy($request->get('receivedateend')) * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+                        else
+                            return 0.0;
+                    }) - $sohead->bonuspayments->sum('amount');
+                }
+                else
+                    return $sohead->receiptpayments->sum('amount') * $sohead->getBonusfactorByPolicy() * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead - $sohead->bonuspayments->sum('amount');
+            })
             ->addColumn('paybonus', function (Salesorder_hxold $sohead) {
                 return '<a href="'. url('sales/' . $sohead->id . '/bonuspayment/create') .'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> 支付</a>';
             })->make(true);
@@ -325,6 +338,20 @@ class MyController extends Controller
             })
             ->addColumn('bonus', function (Receiptpayment_hxold $receiptpayment) {
                 return $receiptpayment->amount * $receiptpayment->sohead->getBonusfactorByPolicy() * array_first($receiptpayment->sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+            })
+            ->addColumn('bonusforpay', function (Receiptpayment_hxold $receiptpayment) use ($request) {
+                $sohead = $receiptpayment->sohead;
+                if ($request->has('receivedateend'))
+                {
+                    return $sohead->receiptpayments->sum(function ($receiptpayment) use ($request, $sohead) {
+                            if (Carbon::parse($receiptpayment->record_at)->lte(Carbon::parse($request->get('receivedateend'))))
+                                return $receiptpayment->amount * $sohead->getBonusfactorByPolicy($request->get('receivedateend')) * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+                            else
+                                return 0.0;
+                        }) - $sohead->bonuspayments->sum('amount');
+                }
+                else
+                    return $sohead->receiptpayments->sum('amount') * $sohead->getBonusfactorByPolicy() * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead - $sohead->bonuspayments->sum('amount');
             })->make(true);
     }
 
@@ -592,7 +619,8 @@ class MyController extends Controller
                             $temp['收款金额']          = (double)$value['amount'];
                             $temp['奖金系数']          = (double)$value['bonusfactor_excel'];
                             $temp['系数类别']          = $soheadbonusArray[0]['bonusfactortype'];
-                            $temp['应发奖金']          = $value['bonus'];
+                            $temp['区间奖金']          = $value['bonus'];
+                            $temp['当前应发']          = $value['bonusforpay'];
 
 
 //                            $temp['结算日期']             = '';
@@ -708,7 +736,8 @@ class MyController extends Controller
                                     $temp['收款金额']          = (double)$value['amount'];
                                     $temp['奖金系数']          = (double)$value['bonusfactor_excel'];
                                     $temp['系数类别']          = $soheadbonus['bonusfactortype'];
-                                    $temp['应发奖金']          = $value['bonus'];
+                                    $temp['区间奖金']          = $value['bonus'];
+                                    $temp['当前应发']          = $value['bonusforpay'];
 
 
                                     array_push($data, $temp);
@@ -753,7 +782,8 @@ class MyController extends Controller
                             $temp['区间收款']          = $soheadbonus['amountperiod2'];
                             $temp['奖金系数']          = (double)$soheadbonus['bonusfactor_excel'];
                             $temp['系数类别']          = $soheadbonus['bonusfactortype'];
-                            $temp['应发奖金']          = $soheadbonus['bonus'];
+                            $temp['区间奖金']          = $soheadbonus['bonus'];
+                            $temp['当前应发']          = $soheadbonus['bonusforpay'];
 
                             array_push($data, $temp);
 

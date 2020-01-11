@@ -82,8 +82,9 @@
             <th>区间收款</th>
             <th>奖金系数</th>
             <th>系数类别</th>
-            <th>应发奖金</th>
+            <th>区间奖金</th>
             <th>已发奖金</th>
+            <th>当前应发</th>
             <th>支付奖金</th>
         </tr>
         </thead>
@@ -168,6 +169,7 @@
                     {"data": "bonusfactortype", "name": "bonusfactortype"},
                     {"data": "bonus", "name": "bonus"},
                     {"data": "bonuspaid", "name": "bonuspaid"},
+                    {"data": "bonusforpay", "name": "bonusforpay"},
                     {"data": "paybonus", "name": "paybonus"},
                 ],
 //                "fnCreatedRow": function(nRow, aData, iDataIndex) {
