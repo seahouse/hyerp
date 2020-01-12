@@ -28,6 +28,9 @@
                 <a href="{{ URL::to('approval/items/create') }}" class="btn btn-sm btn-success">新建</a>
         --}}
 
+        @if (Auth::user()->email == "admin@admin.com")
+        <a href="{{ URL::to('sales/bonuspayments/import') }}" class="btn btn-default btn-sm pull-right" target="_blank">导入发放奖金记录（仅测试用， 未发布）</a>
+        @endif
 
         {!! Form::open(['url' => '/my/bonus/byorderexport', 'class' => 'pull-right form-inline', 'id' => 'formExport']) !!}
         <div class="form-group-sm">

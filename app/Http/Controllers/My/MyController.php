@@ -196,7 +196,7 @@ class MyController extends Controller
 
         if ($request->has('receivedatestart') && $request->has('receivedateend'))
         {
-            $query->whereRaw("(select SUM(amount) from vreceiptpayment where vreceiptpayment.sohead_id=vorder.id  and vreceiptpayment.record_at between '" . $request->get('receivedatestart') . "' and '" . $request->get('receivedateend') . "')>0");
+            $query->whereRaw("(select SUM(amount) from vreceiptpayment where vreceiptpayment.sohead_id=vorder.id  and vreceiptpayment.date between '" . $request->get('receivedatestart') . "' and '" . $request->get('receivedateend') . "')>0");
         }
         else
             $query->whereRaw('(select SUM(amount) from vreceiptpayment where vreceiptpayment.sohead_id=vorder.id)>0');

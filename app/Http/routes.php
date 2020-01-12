@@ -276,13 +276,16 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
         Route::get('bonusbysalesmanager', '\App\Http\Controllers\My\MyController@bonusbysalesmanager');
         Route::get('bonusbytechdept', '\App\Http\Controllers\My\MyController@bonusbytechdept');
     });
-//    Route::any('', 'MyController@bonusbyorder');
     Route::group(['prefix' => '{sohead_id}/bonuspayment'], function () {
-//        Route::get('/', 'ReceiptpaymentsController@index');
         Route::get('create', 'BonuspaymentController@create');
         Route::post('store', 'BonuspaymentController@store');
 //        Route::delete('destroy/{receiptpayment}', 'ReceiptpaymentsController@destroy');
     });
+    Route::group(['prefix' => 'bonuspayments'], function () {
+        Route::get('import', 'BonuspaymentController@import');
+        Route::post('importstore', 'BonuspaymentController@importstore');
+    });
+    Route::resource('bonuspayments', 'BonuspaymentController');
 });
 
 Route::group(['prefix' => 'sales', 'namespace' => 'Sales'], function() {
