@@ -1,6 +1,6 @@
 @extends('navbarerp')
 
-@section('title', '技术人员奖金')
+@section('title', '技术人员佣金')
 
 <style>
     td.details-control {
@@ -14,7 +14,7 @@
 
 @section('main')
     <div class="panel-heading">
-        <div class="panel-title">技术人员奖金报表
+        <div class="panel-title">技术人员佣金报表
             {{--            <div class="pull-right">
                             <a href="{{ URL::to('product/itemclasses') }}" target="_blank" class="btn btn-sm btn-success">{{'物料类型管理'}}</a>
                             <a href="{{ URL::to('product/characteristics') }}" target="_blank" class="btn btn-sm btn-success">{{'物料属性管理'}}</a>
@@ -56,9 +56,9 @@
             <th>项目主设</th>
             <th>订单总金额</th>
             <th>区间收款</th>
-            <th>应发奖金</th>
-            <th>已发总奖金</th>
-            <th>区间已发奖金</th>
+            <th>应发佣金</th>
+            <th>已发总佣金</th>
+            <th>区间已发佣金</th>
 
             {{--<th>奖金系数</th>--}}
             {{--<th>应发奖金</th>--}}
@@ -77,8 +77,8 @@
     --}}
 
 <p>
-    2017年奖金统计区间：2017/1/24~2018/2/8<br>
-    2016年奖金统计区间：2016/1/1~2017/1/23
+    2017年佣金统计区间：2017/1/24~2018/2/8<br>
+    2016年佣金统计区间：2016/1/1~2017/1/23
 </p>
 
 @endsection
@@ -97,7 +97,7 @@
                     '<th>收款日期</th>' +
                     '<th>收款金额</th>' +
                     '<th>奖金系数</th>' +
-                    '<th>应发奖金</th>' +
+                    '<th>应发佣金</th>' +
                     '</tr>'+
                     '</thead>'+
                     '</table>';

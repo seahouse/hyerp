@@ -1,6 +1,6 @@
 @extends('app')
 
-@section('title', '支付奖金')
+@section('title', '支付佣金')
 
 @section('main')
 

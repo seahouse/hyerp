@@ -1,10 +1,10 @@
 @extends('navbarerp')
 
-@section('title', '我的奖金')
+@section('title', '我的佣金')
 
 @section('main')
     <div class="panel-heading">
-        <div class="panel-title">我的 -- 奖金
+        <div class="panel-title">我的 -- 佣金
 {{--            <div class="pull-right">
                 <a href="{{ URL::to('product/itemclasses') }}" target="_blank" class="btn btn-sm btn-success">{{'物料类型管理'}}</a>
                 <a href="{{ URL::to('product/characteristics') }}" target="_blank" class="btn btn-sm btn-success">{{'物料属性管理'}}</a>
@@ -59,7 +59,7 @@
                 <th>区间收款</th>
                 <th>收款日期</th>
                 <th>奖金系数</th>
-                <th>应发奖金</th>
+                <th>应发佣金</th>
                 {{--
                 <th>合同金额</th>
 

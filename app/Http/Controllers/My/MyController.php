@@ -327,7 +327,7 @@ class MyController extends Controller
         return Datatables::of($query->select('vreceiptpayment.*', Db::raw('convert(varchar(100), vreceiptpayment.date, 23) as receiptdate'), Db::raw('convert(varchar(100), vreceiptpayment.record_at, 23) as recorddate')))
             ->filter(function ($query) use ($request) {
                 if ($request->has('receivedatestart') && $request->has('receivedateend')) {
-                    $query->whereRaw('vreceiptpayment.record_at between \'' . $request->get('receivedatestart') . '\' and \'' . $request->get('receivedateend') . '\'');
+                    $query->whereRaw('vreceiptpayment.date between \'' . $request->get('receivedatestart') . '\' and \'' . $request->get('receivedateend') . '\'');
                 }
             })
             ->addColumn('bonusfactor', function (Receiptpayment_hxold $receiptpayment) {
