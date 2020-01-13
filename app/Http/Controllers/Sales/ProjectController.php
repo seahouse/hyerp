@@ -106,6 +106,12 @@ class ProjectController extends Controller
         return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?projectid=' . $id);
     }
 
+    public function nowarehousedetailbyproject($id)
+    {
+        $report=Report::where('name','pgetNoWarehouseDetailByproject')->first();
+        return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?projectid=' . $id);
+    }
+
     public function fromotherwarehousedetailbyproject($id)
     {
         $report=Report::where('name','pgetFromOtherWarehouseDetailByproject')->first();

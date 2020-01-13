@@ -231,6 +231,8 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
         Route::get('{id}/otherwarehousedetailbyproject', 'ProjectController@otherwarehousedetailbyproject');
         Route::get('{id}/fromotherwarehousedetailbyproject', 'ProjectController@fromotherwarehousedetailbyproject');
         Route::get('{id}/leftwarehousedetailbyproject', 'ProjectController@leftwarehousedetailbyproject');
+        Route::get('{id}/nowarehousedetailbyproject', 'ProjectController@nowarehousedetailbyproject');
+        Route::get('{id}/nowarehousedetailbyorder', 'SalesordersController@nowarehousedetailbyorder');
         Route::get('{id}/warehousedetail', 'SalesordersController@warehousedetail');
         Route::get('{id}/otherwarehousedetail', 'SalesordersController@otherwarehousedetail');
         Route::get('{id}/fromotherwarehousedetail', 'SalesordersController@fromotherwarehousedetail');
