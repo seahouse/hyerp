@@ -607,6 +607,7 @@ class MyController extends Controller
                             $temp['销售经理']          = $soheadbonusArray[0]['salesmanager'];
                             $temp['收款']             = (double)$soheadbonusArray[0]['receiptpercent_excel'];
 
+                            $temp['收款日期']          = $value['receiptdate'];
                             $temp['录入日期']          = $value['recorddate'];
                             $temp['收款金额']          = (double)$value['amount'];
                             $temp['奖金系数']          = (double)$value['bonusfactor_excel'];
@@ -646,6 +647,8 @@ class MyController extends Controller
                             'H'     => '0.00%',
                         ));
                         $sheet->fromArray($data);
+                        $sheet->appendRow(['结算以实际到账日期为准，不以记账日期为准，财务部不得随意更改到账日期。'
+                        ]);
 
 //                        $totalrowcolor = "#00FF00";       // green
 //                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
@@ -674,7 +677,6 @@ class MyController extends Controller
 //            $excel->setDescription('A demonstration to change the file properties');
 
         })->export('xlsx');
-
     }
 
     public function byorderexport2(Request $request)
@@ -724,6 +726,7 @@ class MyController extends Controller
 //                                    $temp['销售经理']          = $soheadbonus['salesmanager'];
                                     $temp['收款']             = (double)$soheadbonus['receiptpercent_excel'];
 
+                                    $temp['收款日期']          = $value['receiptdate'];
                                     $temp['录入日期']          = $value['recorddate'];
                                     $temp['收款金额']          = (double)$value['amount'];
                                     $temp['奖金系数']          = (double)$value['bonusfactor_excel'];
@@ -745,6 +748,8 @@ class MyController extends Controller
                             'G'     => '0.00%',
                         ));
                         $sheet->fromArray($data);
+                        $sheet->appendRow(['结算以实际到账日期为准，不以记账日期为准，财务部不得随意更改到账日期。'
+                        ]);
                     });
                 }
 
@@ -788,7 +793,8 @@ class MyController extends Controller
                             'G'     => '0.00%',
                         ));
                         $sheet->fromArray($data);
-
+                        $sheet->appendRow(['结算以实际到账日期为准，不以记账日期为准，财务部不得随意更改到账日期。'
+                        ]);
                     });
                 }
             }
