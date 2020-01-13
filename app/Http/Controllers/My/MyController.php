@@ -644,7 +644,7 @@ class MyController extends Controller
                         $sheet->freezeFirstRow();
                         $sheet->setColumnFormat(array(
                             'E'     => '0.00%',
-                            'H'     => '0.00%',
+                            'I'     => '0.00%',
                         ));
                         $sheet->fromArray($data);
                         $sheet->appendRow(['结算以实际到账日期为准，不以记账日期为准，财务部不得随意更改到账日期。'
@@ -745,7 +745,7 @@ class MyController extends Controller
                         $sheet->freezeFirstRow();
                         $sheet->setColumnFormat(array(
                             'D'     => '0.00%',
-                            'G'     => '0.00%',
+                            'H'     => '0.00%',
                         ));
                         $sheet->fromArray($data);
                         $sheet->appendRow(['结算以实际到账日期为准，不以记账日期为准，财务部不得随意更改到账日期。'
