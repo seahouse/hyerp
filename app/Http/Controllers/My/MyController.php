@@ -732,7 +732,7 @@ class MyController extends Controller
                                     $temp['奖金系数']          = (double)$value['bonusfactor_excel'];
                                     $temp['系数类别']          = $soheadbonus['bonusfactortype'];
                                     $temp['区间奖金']          = $value['bonus'];
-                                    $temp['当前应发']          = $value['bonusforpay'];
+//                                    $temp['当前应发']          = $value['bonusforpay'];
 
 
                                     array_push($data, $temp);

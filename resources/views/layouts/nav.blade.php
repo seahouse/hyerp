@@ -179,8 +179,10 @@
                         @can('module_system')
                         <li><a href="/system/employees">员工</a></li>
                         <li><a href="/system/users">用户管理</a></li>
-                            <li><a href="/system/salarysheet">工资条</a></li>
                         @endcan
+                        @can('system_salarysheet')
+                            <li><a href="/system/salarysheet">工资条</a></li>
+                            @endcan
                         @if (Auth::user()->email === "admin@admin.com")
                             <li><a href="/system/report">报表</a></li>
                         @endif
