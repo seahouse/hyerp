@@ -338,7 +338,7 @@ class SalarysheetController extends Controller
                 $req = new CorpMessageCorpconversationAsyncsendRequest;
 
                 $access_token = DingTalkController::getAccessToken();
-                $req->setAgentId(config('custom.dingtalk.agentidlist.erp'));
+                $req->setAgentId(config('custom.dingtalk.agentidlist.erpmessage'));
                 $req->setUseridList($salarysheet->user->dtuserid);
 
                 $req->setMsgtype("oa");
