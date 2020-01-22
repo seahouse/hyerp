@@ -92,7 +92,7 @@
                 <form id="formRetract">
                     {!! csrf_field() !!}
                     {!! Form::text('description', null, ['class' => 'form-control']) !!}
-                    {!! Form::hidden('paymentrequest_id', $salarysheet->id, ['class' => 'form-control']) !!}
+                    {!! Form::hidden('paymentrequest_id', $annualbonussheet->id, ['class' => 'form-control']) !!}
                     {!! Form::hidden('status', -1, ['class' => 'form-control']) !!}
                 </form>
             </div>
@@ -127,7 +127,7 @@
                 </div>
                 <div class="modal-body" >
                         <a class="media" id="pdfContainer"
-                           @if (isset($salarysheet->purchaseorder_hxold->businesscontract)) href="{!! config('custom.hxold.purchase_businesscontract_webdir') . $salarysheet->purchaseorder_hxold->id . '/' . $salarysheet->purchaseorder_hxold->businesscontract !!}" @else href="" @endif>
+                           @if (isset($annualbonussheet->purchaseorder_hxold->businesscontract)) href="{!! config('custom.hxold.purchase_businesscontract_webdir') . $annualbonussheet->purchaseorder_hxold->id . '/' . $annualbonussheet->purchaseorder_hxold->businesscontract !!}" @else href="" @endif>
 
                         </a>
                 </div>
