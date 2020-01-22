@@ -1,4 +1,8 @@
 @extends('app')
 @section('title', '工资条')
 
-@include('system.salarysheets._show')
+@if (Auth::user()->id == $salarysheet->user_id)
+    @include('system.salarysheets._show')
+@else
+    您无权查看他人的工资单。
+@endif

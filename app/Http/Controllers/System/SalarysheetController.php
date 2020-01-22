@@ -26,7 +26,7 @@ class SalarysheetController extends Controller
         $request = request();
 //        $key = $request->input('key', '');
         $inputs = $request->all();
-        $salarysheets = $this->searchrequest($request)->paginate(10);
+        $salarysheets = $this->searchrequest($request)->paginate(15);
 
 //        $salarysheets = Salarysheet::latest('created_at')->paginate(10);
         return view('system.salarysheets.index', compact('salarysheets', 'inputs'));
@@ -36,7 +36,7 @@ class SalarysheetController extends Controller
     {
         $key = $request->input('key');
         $inputs = $request->all();
-        $salarysheets = $this->searchrequest($request)->paginate(10);
+        $salarysheets = $this->searchrequest($request)->paginate(15);
 
         return view('system.salarysheets.index', compact('salarysheets', 'key', 'inputs', 'purchaseorders', 'totalamount'));
     }

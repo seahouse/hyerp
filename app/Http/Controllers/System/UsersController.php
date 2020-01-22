@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DingTalkController;
 use App\Models\System\Userold;
 use App\Models\System\Employee_hxold;
-use Log;
+use Log, PinYin;
 
 class UsersController extends Controller
 {
@@ -234,47 +234,51 @@ class UsersController extends Controller
     // if user is not exist, create.
     public static function synchronizedtuser($dtuser)
     {
+        // 修改：根据名称来同步，不再根据邮箱，2020/1/20
         if (isset($dtuser->orgEmail) && !empty($dtuser->orgEmail))
-        {
             $user = User::where('email', $dtuser->orgEmail)->first();
-            if (!isset($user))
-            {
-                $user = new User;
+        else
+            $user = User::where('name', $dtuser->name)->first();
 
-                $user->password     = bcrypt('123456');
-            }
-            $user->name         = $dtuser->name;
-            $user->email        = $dtuser->orgEmail;
-            $user->dtuserid        = $dtuser->userid;
-            $user->save();
+        if (!isset($user))
+        {
+            $user = new User;
 
-            $dtuserlocal = Dtuser::firstOrNew(['userid' => $dtuser->userid]);
-//            if (!isset($dtuserlocal))
-//                $dtuserlocal = new Dtuser;
-            $dtuserlocal->user_id       = $user->id;
-            $dtuserlocal->name          = $dtuser->name;
-            $dtuserlocal->tel           = isset($dtuser->tel) ? $dtuser->tel : '';
-            $dtuserlocal->workPlace    = isset($dtuser->workPlace) ? $dtuser->workPlace : '';
-            $dtuserlocal->remark        = isset($dtuser->remark) ? $dtuser->remark : '';
-            $dtuserlocal->mobile        = $dtuser->mobile;
-            if (isset($dtuser->email))      $dtuserlocal->email         = $dtuser->email;
-            $dtuserlocal->orgEmail      = $dtuser->orgEmail;             // 无此元素
-            $dtuserlocal->active        = $dtuser->active;
-            $dtuserlocal->orderInDepts  = isset($dtuser->orderInDepts) ? $dtuser->orderInDepts : '';
-            $dtuserlocal->isAdmin       = $dtuser->isAdmin;
-            $dtuserlocal->isBoss        = $dtuser->isBoss;
-            $dtuserlocal->dingId        = $dtuser->dingId;
-            $dtuserlocal->isLeaderInDepts = isset($dtuser->isLeaderInDepts) ? $dtuser->isLeaderInDepts : '';
-            $dtuserlocal->isHide        = $dtuser->isHide;
-            $dtuserlocal->department    = json_encode($dtuser->department);           // 是个数组，暂不考虑
-            $dtuserlocal->position      = $dtuser->position;
-            $dtuserlocal->avatar        = $dtuser->avatar;
-            $dtuserlocal->jobnumber     = $dtuser->jobnumber;
-            // $dtuserlocal->extattr       = $dtuser->extattr;              // 无此元素
-            $dtuserlocal->save();
+            $pinyins = Pinyin::convert($dtuser->name);
+            $email = implode("", $pinyins) . config('custom.dingtalk.email_suffix');
+            Log::info($email);
+            $user->email = $email;
 
-            self::updateuseroldone($user);
+            $user->password     = bcrypt('123456');
         }
+        $user->name         = $dtuser->name;
+//        $user->email        = $dtuser->orgEmail;
+        $user->dtuserid        = $dtuser->userid;
+        $user->save();
+
+        $dtuserlocal = Dtuser::firstOrNew(['userid' => $dtuser->userid]);
+        $dtuserlocal->user_id       = $user->id;
+        $dtuserlocal->name          = $dtuser->name;
+        $dtuserlocal->tel           = isset($dtuser->tel) ? $dtuser->tel : '';
+        $dtuserlocal->workPlace    = isset($dtuser->workPlace) ? $dtuser->workPlace : '';
+        $dtuserlocal->remark        = isset($dtuser->remark) ? $dtuser->remark : '';
+        $dtuserlocal->mobile        = $dtuser->mobile;
+        if (isset($dtuser->email))      $dtuserlocal->email         = $dtuser->email;
+        $dtuserlocal->orgEmail      = isset($dtuser->orgEmail) ? $dtuser->orgEmail : '';
+        $dtuserlocal->active        = $dtuser->active;
+        $dtuserlocal->orderInDepts  = isset($dtuser->orderInDepts) ? $dtuser->orderInDepts : '';
+        $dtuserlocal->isAdmin       = $dtuser->isAdmin;
+        $dtuserlocal->isBoss        = $dtuser->isBoss;
+        $dtuserlocal->dingId        = $dtuser->dingId;
+        $dtuserlocal->isLeaderInDepts = isset($dtuser->isLeaderInDepts) ? $dtuser->isLeaderInDepts : '';
+        $dtuserlocal->isHide        = $dtuser->isHide;
+        $dtuserlocal->department    = json_encode($dtuser->department);           // 是个数组，暂不考虑
+        $dtuserlocal->position      = $dtuser->position;
+        $dtuserlocal->avatar        = $dtuser->avatar;
+        $dtuserlocal->jobnumber     = $dtuser->jobnumber;
+        $dtuserlocal->save();
+
+        self::updateuseroldone($user);
     }
 
     // 河南华星同步用户信息。通过员工姓名进行对应，需要先在无锡华星中新建账号并设置企业邮箱

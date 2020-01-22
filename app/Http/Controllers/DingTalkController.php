@@ -1038,13 +1038,8 @@ class DingTalkController extends Controller
             foreach ($userlist as $user)
             {
                 echo '<li> ' . $user->name  . ' ' . $user->userid . ' ' . (isset($user->orgEmail) ? $user->orgEmail : '') . '</li>';
-                if (isset($user->orgEmail) && !empty($user->orgEmail))
+//                if (isset($user->orgEmail) && !empty($user->orgEmail))
                     UsersController::synchronizedtuser($user);
-//                if ($user->userid === "0823230530894101")
-//                    dd(isset($user->orgEmail));
-//                echo '<li> ' . $user->name  . ' ' . $user->orgEmail .  '</li>';
-//                dd($user);
-//                UsersController::synchronizedtuser($user);
             }
         }
         dd($departments);

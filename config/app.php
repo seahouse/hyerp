@@ -169,6 +169,7 @@ return [
         Yajra\Oci8\Oci8ServiceProvider::class,
         Yajra\Datatables\DatatablesServiceProvider::class,
         Milon\Barcode\BarcodeServiceProvider::class,
+        Overtrue\LaravelPinyin\ServiceProvider::class,
     ],
 
     /*
@@ -227,6 +228,7 @@ return [
         'Datatables' => Yajra\Datatables\Facades\Datatables::class,
         'DNS1D'     => Milon\Barcode\Facades\DNS1DFacade::class,
         'DNS2D'     => Milon\Barcode\Facades\DNS2DFacade::class,
+        'PinYin'    => Overtrue\LaravelPinyin\Facades\Pinyin::class,
     ],
 
 ];
