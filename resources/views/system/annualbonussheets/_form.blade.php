@@ -2,7 +2,7 @@
 {{--<hr />--}}
 
 <div class="form-group">
-    {!! Form::label('salary_date', '工资日期:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('salary_date', '奖金日期:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
         {!! Form::date('salary_date', null, ['class' => 'form-control', $attr]) !!}
     </div>
@@ -23,149 +23,110 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('attendance_days', '出勤天数:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('salaryincrease', '增长工资:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('attendance_days', null, ['class' => 'form-control', $attr]) !!}
+        {!! Form::text('salaryincrease', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
 <div class="form-group">
-    {!! Form::label('basicsalary', '基本工资:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('months', '月份:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('basicsalary', null, ['class' => 'form-control', $attr]) !!}
-    </div>
-</div>
-
-
-<div class="form-group">
-    {!! Form::label('overtime_hours', '加班小时:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('overtime_hours', null, ['class' => 'form-control', $attr]) !!}
-    </div>
-</div>
-
-<div class="form-group">
-    {!! Form::label('absenteeismreduce_hours', '缺勤减扣小时:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('absenteeismreduce_hours', null, ['class' => 'form-control', $attr]) !!}
-    </div>
-</div>
-
-<div class="form-group">
-    {!! Form::label('paid_hours', '计薪小时:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('paid_hours', null, ['class' => 'form-control', $attr]) !!}
-    </div>
-</div>
-
-<div class="form-group">
-    {!! Form::label('overtime_amount', '加班费:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('overtime_amount', null, ['class' => 'form-control', $attr]) !!}
-    </div>
-</div>
-
-<div class="form-group">
-    {!! Form::label('fullfrequently_award', '满勤奖:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('fullfrequently_award', null, ['class' => 'form-control', $attr]) !!}
+        {!! Form::text('months', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
 
 <div class="form-group">
-    {!! Form::label('meal_amount', '餐贴:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('yearend_salary', '年终工资:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('meal_amount', null, ['class' => 'form-control', $attr]) !!}
+        {!! Form::text('yearend_salary', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
 <div class="form-group">
-    {!! Form::label('car_amount', '车贴:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('yearend_bonus', '年终奖金:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('car_amount', null, ['class' => 'form-control', $attr]) !!}
+        {!! Form::text('yearend_bonus', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
 <div class="form-group">
-    {!! Form::label('business_amount', '外差补贴:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('duty_subsidy', '职务补贴:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('business_amount', null, ['class' => 'form-control', $attr]) !!}
+        {!! Form::text('duty_subsidy', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
 <div class="form-group">
-    {!! Form::label('additional_amount', '补资:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('duty_allowance', '职称津贴:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('additional_amount', null, ['class' => 'form-control', $attr]) !!}
+        {!! Form::text('duty_allowance', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
 <div class="form-group">
-    {!! Form::label('house_amount', '房贴:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('forum_amount', '座谈会:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('house_amount', null, ['class' => 'form-control', $attr]) !!}
-    </div>
-</div>
-
-<div class="form-group">
-    {!! Form::label('hightemperature_amount', '高温费:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('hightemperature_amount', null, ['class' => 'form-control', $attr]) !!}
+        {!! Form::text('forum_amount', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
 
-
-
 <div class="form-group">
-    {!! Form::label('absenteeismreduce_amount', '缺勤扣款:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('other_amount', '其他:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('absenteeismreduce_amount', null, ['class' => 'form-control', $attr]) !!}
+        {!! Form::text('other_amount', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
 <div class="form-group">
-    {!! Form::label('shouldpay_amount', '应发工资:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('boss_prize', '老板奖:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('shouldpay_amount', null, ['class' => 'form-control', $attr]) !!}
+        {!! Form::text('boss_prize', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
 <div class="form-group">
-    {!! Form::label('borrowreduce_amount', '借款扣回:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('amount', '发放金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('borrowreduce_amount', null, ['class' => 'form-control', $attr]) !!}
+        {!! Form::text('amount', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
 <div class="form-group">
-    {!! Form::label('personalsocial_amount', '个人社保:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('goodemployee_amount', '优秀员工:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('personalsocial_amount', null, ['class' => 'form-control', $attr]) !!}
+        {!! Form::text('goodemployee_amount', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
 <div class="form-group">
-    {!! Form::label('personalaccumulationfund_amount', '个人公积金:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('totalamount', '合计:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('personalaccumulationfund_amount', null, ['class' => 'form-control', $attr]) !!}
+        {!! Form::text('totalamount', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
 <div class="form-group">
-    {!! Form::label('individualincometax_amount', '个人所得税:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('individualincometax_amount', '个税:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
         {!! Form::text('individualincometax_amount', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
+
+
+
 <div class="form-group">
-    {!! Form::label('actualsalary_amount', '实发工资:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('actual_amount', '实际发放:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('actualsalary_amount', null, ['class' => 'form-control', $attr]) !!}
+        {!! Form::text('actual_amount', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
+
+
+
 
 
 

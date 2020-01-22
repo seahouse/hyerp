@@ -35,8 +35,8 @@
 @endif
 
 <!--startprint-->
-    {!! Form::model($salarysheet, ['class' => 'form-horizontal']) !!}
-        @include('system.salarysheets._form',
+    {!! Form::model($annualbonussheet, ['class' => 'form-horizontal']) !!}
+        @include('system.annualbonussheets._form',
             [
                 'submitButtonText' => '提交', 
                 'supplier_name' => null,
