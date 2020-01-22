@@ -275,7 +275,7 @@ class UsersController extends Controller
         $dtuserlocal->department    = json_encode($dtuser->department);           // 是个数组，暂不考虑
         $dtuserlocal->position      = $dtuser->position;
         $dtuserlocal->avatar        = $dtuser->avatar;
-        $dtuserlocal->jobnumber     = $dtuser->jobnumber;
+        $dtuserlocal->jobnumber     = isset($dtuser->jobnumber) ? $dtuser->jobnumber : '';
         $dtuserlocal->save();
 
         self::updateuseroldone($user);
