@@ -656,6 +656,15 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
         Route::get('{id}/mshow', 'SalarysheetController@mshow');
     });
     Route::resource('salarysheet', 'SalarysheetController');
+
+    Route::group(['prefix' => 'annualbonussheet'], function() {
+        Route::get('import', 'AnnualbonussheetController@import');
+        Route::post('importstore', 'AnnualbonussheetController@importstore');
+        Route::post('search', 'AnnualbonussheetController@search');
+        Route::post('sendannualbonussheet', 'AnnualbonussheetController@sendannualbonussheet');
+        Route::get('{id}/mshow', 'AnnualbonussheetController@mshow');
+    });
+    Route::resource('annualbonussheet', 'AnnualbonussheetController');
 });
 
 Route::group(['prefix' => 'teaching', 'namespace' => 'Teaching', 'middleware' => ['web', 'auth']], function() {
