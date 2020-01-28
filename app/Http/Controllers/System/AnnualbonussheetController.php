@@ -130,6 +130,8 @@ class AnnualbonussheetController extends Controller
     public function destroy($id)
     {
         //
+        Annualbonussheet::destroy($id);
+        return redirect('system/annualbonussheet');
     }
 
     /**

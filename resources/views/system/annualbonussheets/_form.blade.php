@@ -22,12 +22,14 @@
     </div>
 </div>
 
+@if (isset($annualbonussheet) && $annualbonussheet->salaryincrease != 0)
 <div class="form-group">
     {!! Form::label('salaryincrease', '增长工资:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
         {!! Form::text('salaryincrease', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
+@endif
 
 <div class="form-group">
     {!! Form::label('months', '月份:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
@@ -36,97 +38,114 @@
     </div>
 </div>
 
-
+@if (isset($annualbonussheet) && $annualbonussheet->yearend_salary != 0)
 <div class="form-group">
     {!! Form::label('yearend_salary', '年终工资:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
         {!! Form::text('yearend_salary', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
+@endif
 
+@if (isset($annualbonussheet) && $annualbonussheet->yearend_bonus != 0)
 <div class="form-group">
     {!! Form::label('yearend_bonus', '年终奖金:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
         {!! Form::text('yearend_bonus', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
+@endif
 
+@if (isset($annualbonussheet) && $annualbonussheet->duty_subsidy != 0)
 <div class="form-group">
     {!! Form::label('duty_subsidy', '职务补贴:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
         {!! Form::text('duty_subsidy', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
+@endif
 
+@if (isset($annualbonussheet) && $annualbonussheet->duty_allowance != 0)
 <div class="form-group">
     {!! Form::label('duty_allowance', '职称津贴:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
         {!! Form::text('duty_allowance', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
+@endif
 
+@if (isset($annualbonussheet) && $annualbonussheet->forum_amount != 0)
 <div class="form-group">
     {!! Form::label('forum_amount', '座谈会:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
         {!! Form::text('forum_amount', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
+@endif
 
-
+@if (isset($annualbonussheet) && $annualbonussheet->other_amount != 0)
 <div class="form-group">
     {!! Form::label('other_amount', '其他:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
         {!! Form::text('other_amount', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
+@endif
 
+@if (isset($annualbonussheet) && $annualbonussheet->boss_prize != 0)
 <div class="form-group">
     {!! Form::label('boss_prize', '老板奖:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
         {!! Form::text('boss_prize', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
+@endif
 
+@if (isset($annualbonussheet) && $annualbonussheet->amount != 0)
 <div class="form-group">
     {!! Form::label('amount', '发放金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
         {!! Form::text('amount', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
+@endif
 
+@if (isset($annualbonussheet) && $annualbonussheet->goodemployee_amount != 0)
 <div class="form-group">
     {!! Form::label('goodemployee_amount', '优秀员工:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
         {!! Form::text('goodemployee_amount', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
+@endif
 
+@if (isset($annualbonussheet) && $annualbonussheet->totalamount != 0)
 <div class="form-group">
     {!! Form::label('totalamount', '合计:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
         {!! Form::text('totalamount', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
+@endif
 
+@if (isset($annualbonussheet) && $annualbonussheet->individualincometax_amount != 0)
 <div class="form-group">
     {!! Form::label('individualincometax_amount', '个税:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
         {!! Form::text('individualincometax_amount', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
+@endif
 
 
-
-
+@if (isset($annualbonussheet) && $annualbonussheet->actual_amount != 0)
 <div class="form-group">
     {!! Form::label('actual_amount', '实际发放:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
         {!! Form::text('actual_amount', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
-
-
-
+@endif
 
 
 

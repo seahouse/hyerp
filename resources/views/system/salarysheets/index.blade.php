@@ -4,7 +4,7 @@
 
 @section('main')
     <div class="panel-heading">
-        <a href="salarysheet/create" class="btn btn-sm btn-success">新建</a>
+        {{--<a href="salarysheet/create" class="btn btn-sm btn-success">新建</a>--}}
         <a href="salarysheet/import" class="btn btn-sm btn-success">导入</a>
     </div>
 
@@ -79,7 +79,7 @@
                             {{ $salarysheet->created_at }}
                         </td>
                         <td>
-                            <a href="{{ URL::to('/system/salarysheet/'.$salarysheet->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>
+                            {{--<a href="{{ URL::to('/system/salarysheet/'.$salarysheet->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>--}}
                             {{--<a href="{{ URL::to('/shipment/shipments/'.$salarysheet->id.'/export') }}" class="btn btn-success btn-sm pull-left">导出</a>--}}
                             {!! Form::open(array('route' => array('system.salarysheet.destroy', $salarysheet->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
                             {!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}

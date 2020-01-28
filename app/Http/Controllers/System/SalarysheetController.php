@@ -131,6 +131,8 @@ class SalarysheetController extends Controller
     public function destroy($id)
     {
         //
+        Salarysheet::destroy($id);
+        return redirect('system/salarysheet');
     }
 
     /**
