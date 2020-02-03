@@ -38,4 +38,8 @@ class Salarysheet extends Model
     public function user() {
         return $this->belongsTo('App\Models\System\User');
     }
+
+    public function salarysheetreply() {
+        return $this->hasOne('App\Models\System\Salarysheetreply');
+    }
 }

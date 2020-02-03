@@ -21,18 +21,6 @@
         {{--}--}}
     {{--</style>--}}
 
-@if (Agent::isDesktop())
-    {{--<div class="panel-body">--}}
-        {{--<a href="{{url('/approval/paymentrequests/' . $paymentrequest->id . '/printpage')}}" target="_blank" class="btn btn-default btn-sm pull-right">打印版页面</a>--}}
-        {{--<form class="pull-right" action="/approval/paymentrequests/exportitem/{{ $paymentrequest->id }}" method="post">--}}
-            {{--{!! csrf_field() !!}--}}
-            {{--<div class="pull-right">--}}
-                {{--<button type="submit" class="btn btn-default btn-sm">导出PDF</button>--}}
-            {{--</div>--}}
-        {{--</form>--}}
-        {{--<button class="btn btn-default btn-sm pull-right" id="btnPreview">预览并打印</button>--}}
-    {{--</div>--}}
-@endif
 
 <!--startprint-->
     {!! Form::model($salarysheet, ['class' => 'form-horizontal']) !!}
@@ -65,6 +53,25 @@
     {!! Form::close() !!}
 
 
+    @if (!isset($salarysheet->salarysheetreply))
+        @include('system.salarysheetreplies._form',
+            [
+                'acceptButtonText' => '确认无误',
+                'rejectButtonText' => '存有异议',
+                'date' => date('Y-m-d'),
+                'customer_id' => '0',
+                'amount' => '0.0',
+                'order_id' => '0',
+                'datego' => date('Y-m-d'),
+                'dateback' => date('Y-m-d'),
+                'mealamount' => '0.0',
+                'ticketamount' => '0.0',
+                'stayamount' => '0.0',
+                'otheramount' => '0.0',
+                'attr' => '',
+                'btnclass' => 'btn btn-primary',
+            ])
+    @endif
 
 <!--endprint-->
 
@@ -82,27 +89,6 @@
         {{--{!! Form::close() !!}--}}
     {{--@endif--}}
 
-<div class="modal fade" id="retractModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">请输入撤回的理由</h4>
-            </div>
-            <div class="modal-body">
-                <form id="formRetract">
-                    {!! csrf_field() !!}
-                    {!! Form::text('description', null, ['class' => 'form-control']) !!}
-                    {!! Form::hidden('paymentrequest_id', $salarysheet->id, ['class' => 'form-control']) !!}
-                    {!! Form::hidden('status', -1, ['class' => 'form-control']) !!}
-                </form>
-            </div>
-            <div class="modal-footer">
-                {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
-                {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnRetract']) !!}
-            </div>
-        </div>
-    </div>
-</div>
 
     {{-- 审批通过后，发起人可以申请撤回 --}}
     {{-- todo: 已撤回的审批单，无法再次撤回 --}}
@@ -150,20 +136,19 @@
 
 
 @section('script')
-    <script type="text/javascript">
-        jQuery(document).ready(function(e) {            
-            $("#btnPreview").click(function() {
-                window.print();
-            });
+    <script src="http://g.alicdn.com/dingding/open-develop/1.0.0/dingtalk.js"></script>
 
-            $("#btnRetract").bind("click", function() {
+    <script type="text/javascript">
+        jQuery(document).ready(function(e) {
+
+            $("#btnAccept").bind("click", function() {
                 $.ajax({
                     type: "POST",
-                    url: "{{ url('approval/paymentrequestretract') }}",
-                    data: $("form#formRetract").serialize(),
+                    url: "{{ url('system/salarysheetreply/mstore') }}",
+                    data: $("form#formAccept").serialize(),
                     contentType:"application/x-www-form-urlencoded",
                     error: function(xhr, ajaxOptions, thrownError) {
-                        alert($("form#formRetract").serialize());
+                        alert($("form#formAccept").serialize());
                         alert('error');
                         alert(xhr.status);
                         alert(xhr.responseText);
@@ -171,105 +156,107 @@
                         alert(thrownError);
                     },
                     success: function(result) {
-//                        alert('操作完成.');
-                        $('#rejectModal').modal('toggle');
-{{--                        location.href = "{{ url('approval/mindexmyapproval') }}";--}}
-                        location.reload(true);
+                        if (result == "success")
+                        {
+                            alert('操作成功.');
+                            {{--
+                                                        // dd.biz.ding.post({
+                                                        //     users : ['manager1200'],//用户列表，工号
+                                                        //     corpId: '{!! array_get($config, 'corpId') !!}', //企业id
+                                                        //     type: 2, //钉类型 1：image  2：link
+                                                        //     alertType: 2,
+                                                        //     alertDate: {"format":"yyyy-MM-dd HH:mm","value":"2015-05-09 08:00"},
+                                                        //     attachment: {
+                                                        //         title: '华星审批',
+                                                        //         url: '',
+                                                        //         image: '',
+                                                        //         text: '2222'
+                                                        //     },
+                                                        //     text: '有一个报销需要您审批', //消息
+                                                        //     onSuccess : function() {},
+                                                        //     onFail : function() {}
+                                                        // });
+                            --}}
+                        }
+                        else
+                            alert('操作失败：' + result);
+                        $('#acceptModal').modal('toggle');
+                        {{--location.href = "{!!  urldecode(url('system/salarysheetreply') . '?' . ($_SERVER['QUERY_STRING'])) !!}";--}}
+                        location.reload();
                     },
                 });
             });
-        });
-    </script>
 
-@if (Agent::isDesktop())
-    <script src="/js/jquery.media.js"></script>
-
-    <script src="http://g.alicdn.com/dingding/dingtalk-pc-api/2.5.0/index.js"></script>
-    <script type="text/javascript">
-        jQuery(document).ready(function(e) {
-            $("a").attr("target", "_self");
-
-            {{-- 不需要config和ready，直接通过DingTalkPC.ua.isInDingTalk来判断 --}}
-
-            console.log(DingTalkPC.ua.isInDingTalk);
-            if (DingTalkPC.ua.isInDingTalk)
-            {
-                $("#showPdf").click(function() {
-                    location.href = 'http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf").attr("href");
-                    return false;
+            $("#btnReject").bind("click", function() {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('system/salarysheetreply/mstore') }}",
+                    data: $("form#formReject").serialize(),
+                    contentType:"application/x-www-form-urlencoded",
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert($("form#formReject").serialize());
+                        alert('error');
+                        alert(xhr.status);
+                        alert(xhr.responseText);
+                        alert(ajaxOptions);
+                        alert(thrownError);
+                    },
+                    success: function(result) {
+                        alert('操作完成.');
+                        $('#rejectModal').modal('toggle');
+{{--                        location.href = "{{ url('approval/mindexmyapproval') }}";--}}
+                        location.reload();
+                    },
                 });
-
-                $("#showPaymentnode").click(function() {
-                    location.href = 'http://www.huaxing-east.cn:2016/pdfjs/build/generic/web/viewer.html?file=' + $("#showPaymentnode").attr("href");
-                    return false;
-                });
-
-//                $("#showPaymentnode").click(function() {
-//                    DingTalkPC.biz.util.openLink({
-//                        url: $("#showPaymentnode").attr("href"),
-//                        onSuccess : function(result) {
-//                            /**/
-//                        },
-//                        onFail : function() {}
-//                    })
-//                    return false;
-//                });
-            }
-            else
-            {
-                $(function() {
-                    $('#pdfContainer').media({width:'100%', height:800});
-                });
-
-                $("#showPdf").click(function() {
-                    $('#myModal').modal();
-                    return false;
-                });
-            }
+            });
 
 
-            function showPdf() {
-                var container = document.getElementById("container");
-                container.style.display = "block";
-                var url = 'http://www.huaxing-east.cn:2015/HxCgFiles/swht/7592/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf';
-                PDFJS.workerSrc = '/js/pdf.worker.min.js';
-                PDFJS.getDocument(url).then(function getPdfHelloWorld(pdf) {
-                    pdf.getPage(1).then(function getPageHelloWorld(page) {
-                        var scale = 1;
-                        var viewport = page.getViewport(scale);
-                        var canvas = document.getElementById('the-canvas');
-                        var context = canvas.getContext('2d');
-                        canvas.height = viewport.height;
-                        canvas.width = viewport.width;
-                        var renderContext = {
-                            canvasContext: context,
-                            viewport: viewport
-                        };
-                        page.render(renderContext);
+            dd.config({
+                agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
+                corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID
+                timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
+                nonceStr: '{!! array_get($config, 'nonceStr') !!}', // 必填，生成签名的随机串
+                signature: '{!! array_get($config, 'signature') !!}', // 必填，签名
+                jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile', 'biz.chat.pickConversation',
+                    'biz.chat.chooseConversationByCorpId', 'biz.chat.toConversation'] // 必填，需要使用的jsapi列表
+            });
+
+            dd.ready(function() {
+
+                $("#btnPickConversation3").click(function() {
+                    dd.biz.chat.chooseConversationByCorpId({
+                        corpId: '{!! array_get($config, 'corpId') !!}',
+                        onSuccess : function(result) {
+                            //onSuccess将在选择结束之后调用
+                            alert(result.chatId);
+                            alert(result.title);
+                            /*{
+                             chatId: 'xxxx',
+                             title:'xxx'
+                             }*/
+
+                            dd.biz.chat.toConversation({
+                                corpId: '{!! array_get($config, 'corpId') !!}', //企业id
+                                chatId: result.chatId,//会话Id
+                                onSuccess : function() {
+                                    alert('进入会话.');
+                                },
+                                onFail : function(error) { alert('进入会话失败'); alert(result.chatId); alert('dd.error: ' + JSON.stringify(error)); }
+                            });
+
+
+                        },
+                        onFail : function() { alert('error'); }
                     });
                 });
-            }
-
-            $("#btnTest").click(function() {
-                showPdf();
 
             });
+
+            dd.error(function(error) {
+                alert('dd.error: ' + JSON.stringify(error));
+            });
+
         });
     </script>
-@elseif(Agent::isMobile())
-    <script src="https://g.alicdn.com/ilw/ding/0.7.5/scripts/dingtalk.js"></script>
-    <script type="text/javascript">
-        $("#showPdf").click(function() {
-            location.href = 'http://www.huaxing-east.cn:2015/pdfjs/build/generic/web/viewer.html?file=' + $("#showPdf").attr("href");
-            return false;
-        });
 
-        $("#showPaymentnode").click(function() {
-            location.href = 'http://www.huaxing-east.cn:2016/pdfjs/build/generic/web/viewer.html?file=' + $("#showPaymentnode").attr("href");
-            return false;
-        });
-    </script>
-@endif
-
-    @yield('for_paymentrequestapprovals_create_script')
 @endsection

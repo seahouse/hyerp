@@ -41,7 +41,7 @@
                     <th>部门</th>
                     <th>实发工资</th>
                     <th>钉钉绑定状态</th>
-                    {{--<th>编织类型</th>--}}
+                    <th>反馈</th>
                     {{--<th>目的地</th>--}}
                     {{--<th>供应商名称</th>--}}
                     <th>导入时间</th>
@@ -66,9 +66,17 @@
                         <td>
                             @if (isset($salarysheet->user->dtuserid)) 是 @else 否 @endif
                         </td>
-                        {{--<td>--}}
-                        {{--{{ $purchaseorder->weave_type }}--}}
-                        {{--</td>--}}
+                        <td>
+                            @if (isset($salarysheet->salarysheetreply))
+                                @if ($salarysheet->salarysheetreply->status == 0)
+                                    确认：{{ $salarysheet->salarysheetreply->message }}
+                                @elseif($salarysheet->salarysheetreply->status == -1)
+                                    异议：{{ $salarysheet->salarysheetreply->message }}
+                                @endif
+                            @else
+                                -
+                            @endif
+                        </td>
                         {{--<td>--}}
                         {{--{{ $purchaseorder->destination_country }}--}}
                         {{--</td>--}}
