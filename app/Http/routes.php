@@ -237,6 +237,14 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
         Route::get('{id}/otherwarehousedetail', 'SalesordersController@otherwarehousedetail');
         Route::get('{id}/fromotherwarehousedetail', 'SalesordersController@fromotherwarehousedetail');
         Route::get('{id}/leftwarehousedetail', 'SalesordersController@leftwarehousedetail');
+        Route::get('{id}/ticketsdetailbyorder', 'SalesordersController@ticketsdetailbyorder');
+        Route::get('{id}/paymentdetailbyorder', 'SalesordersController@paymentdetailbyorder');
+        Route::get('{id}/purchaseticketamountdetailbyorder', 'SalesordersController@purchaseticketamountdetailbyorder');
+        Route::get('{id}/purchaseamountdetailbyorder', 'SalesordersController@purchaseamountdetailbyorder');
+        Route::get('{id}/ticketsdetailbyproject', 'ProjectController@ticketsdetailbyproject');
+        Route::get('{id}/paymentdetailbyproject', 'ProjectController@paymentdetailbyproject');
+        Route::get('{id}/purchaseticketamountdetailbyproject', 'ProjectController@purchaseticketamountdetailbyproject');
+        Route::get('{id}/purchaseamountdetailbyproject', 'ProjectController@purchaseamountdetailbyproject');
     });
     Route::resource('projects', 'ProjectController');
     Route::get('salesorders/{id}/ship', 'SalesordersController@ship');
