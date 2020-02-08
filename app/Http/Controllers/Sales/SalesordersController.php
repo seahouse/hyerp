@@ -242,6 +242,30 @@ class SalesOrdersController extends Controller
         return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?orderid=' . $id);
     }
 
+    public function paymentdetailbyorder($id)
+    {
+        $report=Report::where('name','pgetpaymentDetailByorder')->first();
+        return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?orderid=' . $id);
+    }
+
+    public function ticketsdetailbyorder($id)
+    {
+        $report=Report::where('name','pgetticketsDetailByorder')->first();
+        return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?orderid=' . $id);
+    }
+
+    public function purchaseticketamountdetailbyorder($id)
+    {
+        $report=Report::where('name','pgetPurchaseTicketAmountDetailByorder')->first();
+        return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?orderid=' . $id);
+    }
+
+    public function purchaseamountdetailbyorder($id)
+    {
+        $report=Report::where('name','pgetPurchaseAmountDetailByorder')->first();
+        return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?orderid=' . $id);
+    }
+
     public function sendmessage_afteredit_hxold($strJson)
     {
         $json = json_decode($strJson);

@@ -33,15 +33,19 @@
 				<?php $nowarehouseamountby7550 +=array_first($sohead->getnowarehouseamountby7550())->nowarehouseamountby7550;?>
 		@endforeach
 			<p>订单总金额：{{ $totalamount }}万</p>
-			<p>订单收款总金额：{{ $sohead_receiptpayments_total }}万</p>
+			<p>订单收款总金额：{{ $sohead_receiptpayments_total }}万
+				<a href="{{ URL::to('/sales/projects/'.$project->id.'/paymentdetailbyproject/') }}" class="btn btn-default btn-sm" target="_blank">订单收款明细</a></p>
 			@if ($totalamount > 0.0)
 				<p>订单收款比例：{{ number_format($sohead_receiptpayments_total / $totalamount * 100.0, 2) }}%</p>
 			@else
 				<p>订单收款比例：-</p>
 			@endif
-			<p>订单开票总金额：{{ $sohead_tickets_total }}万</p>
-			<p>对应的采购订单合同金额总额：{{ number_format($pohead_amount_total / 10000.0, 4) }}万</p> 	{{-- 似乎写到数据库视图中速度更快 --}}
-			<p>对应的采购订单开票金额总额：{{ number_format($pohead_amount_ticketed_total / 10000.0, 4) }}万</p>
+			<p>订单开票总金额：{{ $sohead_tickets_total }}万
+				<a href="{{ URL::to('/sales/projects/'.$project->id.'/ticketsdetailbyproject/') }}" class="btn btn-default btn-sm" target="_blank">订单开票明细</a></p>
+			<p>对应的采购订单合同金额总额：{{ number_format($pohead_amount_total / 10000.0, 4) }}万
+				<a href="{{ URL::to('/sales/projects/'.$project->id.'/purchaseamountdetailbyproject/') }}" class="btn btn-default btn-sm" target="_blank">采购合同明细</a></p> 	{{-- 似乎写到数据库视图中速度更快 --}}
+			<p>对应的采购订单开票金额总额：{{ number_format($pohead_amount_ticketed_total / 10000.0, 4) }}万
+				<a href="{{ URL::to('/sales/projects/'.$project->id.'/purchaseticketamountdetailbyproject/') }}" class="btn btn-default btn-sm" target="_blank">采购开票明细</a></p>
 			<p>公用订单分摊成本金额：{{ number_format($poheadAmountBy7550 / 10000.0, 4)  }}万</p>
 			<p>税差：{{ number_format(($sohead_taxamount - $sohead_poheadtaxamount) / 10000.0, 4) }}万</p>
 			@if ($totalamount > 0.0)

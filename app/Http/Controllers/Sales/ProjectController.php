@@ -123,4 +123,28 @@ class ProjectController extends Controller
         $report=Report::where('name','pgetInventoryDetailByproject')->first();
         return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?projectid=' . $id);
     }
+
+    public function paymentdetailbyproject($id)
+    {
+        $report=Report::where('name','pgetpaymentDetailByproject')->first();
+        return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?projectid=' . $id);
+    }
+
+    public function ticketsdetailbyproject($id)
+    {
+        $report=Report::where('name','pgetticketsDetailByproject')->first();
+        return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?projectid=' . $id);
+    }
+
+    public function purchaseticketamountdetailbyproject($id)
+    {
+        $report=Report::where('name','pgetPurchaseTicketAmountDetailByproject')->first();
+        return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?projectid=' . $id);
+    }
+
+    public function purchaseamountdetailbyproject($id)
+    {
+        $report=Report::where('name','pgetPurchaseAmountDetailByproject')->first();
+        return redirect('/system/report/' . $report->id.  '/statistics/' . $report->autostatistics .'?projectid=' . $id);
+    }
 }
