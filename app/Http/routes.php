@@ -171,6 +171,15 @@ Route::group(['prefix' => 'inventory', 'namespace' => 'Inventory', 'middleware' 
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexinventory');
 });
 
+Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web', 'auth']], function() {
+    Route::resource('biddinginformationdefinefields', 'BiddinginformationdefinefieldController');
+
+    Route::group(['prefix' => 'biddinginformations'], function() {
+        Route::get('import', 'BiddinginformationController@import');
+    });
+    Route::resource('biddinginformations', 'BiddinginformationController');
+});
+
 Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => ['web', 'auth']], function() {
     Route::resource('itemclasses', 'ItemclassesController');
     Route::post('items/search', 'ItemsController@search');

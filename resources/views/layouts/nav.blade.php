@@ -35,6 +35,9 @@
                             @if (Auth::user()->email === "admin@admin.com")
                                 <li><a href="/product/pdms/">同步到PDM</a></li>
                             @endif
+                        @can('basic_biddinginformation_view')
+                            <li><a href="/basic/biddinginformations/">中标信息</a></li>
+                        @endcan
                     </ul>
                 </li>
                 <li class="dropdown">
