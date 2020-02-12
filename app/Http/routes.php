@@ -176,8 +176,13 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
 
     Route::group(['prefix' => 'biddinginformations'], function() {
         Route::get('import', 'BiddinginformationController@import');
+        Route::post('importstore', 'BiddinginformationController@importstore');
     });
     Route::resource('biddinginformations', 'BiddinginformationController');
+    Route::group(['prefix' => 'biddinginformationitems'], function() {
+        Route::get('jsondata', 'BiddinginformationitemController@jsondata');
+    });
+    Route::resource('biddinginformationitems', 'BiddinginformationitemController');
 });
 
 Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => ['web', 'auth']], function() {

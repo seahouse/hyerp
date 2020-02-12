@@ -5,7 +5,7 @@
 @section('main')
     @can('basic_biddinginformation_view')
     <div class="panel-heading">
-        <a href="import" class="btn btn-sm btn-success">导入</a>
+        <a href="{{ url('basic/biddinginformations/import') }}" class="btn btn-sm btn-success">导入</a>
         <a href="{{ url('basic/biddinginformationdefinefields') }}" class="btn btn-sm btn-success">维护字段</a>
     </div>
     
@@ -38,13 +38,17 @@
 
     
     @if ($biddinginformations->count())
+        <?php $types = ['序号', ]; ?>
     <table class="table table-striped table-hover table-condensed">
         <thead>
             <tr>
-                <th>创建时间</th>
-                <th>发起人</th>
-                <th>日志模板</th>
-                <th>备注</th>
+                <th>id</th>
+                @foreach($types as $type)
+                <th>{{ $type }}</th>
+                @endforeach
+                {{--<th>发起人</th>--}}
+                {{--<th>日志模板</th>--}}
+                {{--<th>备注</th>--}}
                 <th>操作</th>
             </tr>
         </thead>
@@ -52,25 +56,33 @@
             @foreach($biddinginformations as $biddinginformation)
                 <tr>
                     <td>
-                        {{ $biddinginformation->create_time }}
+                        {{ $biddinginformation->id }}
                     </td>
+                    @foreach($types as $type)
                     <td>
-                        {{ $biddinginformation->creator_name }}
+                    @if (isset($biddinginformation) && null != $biddinginformation->biddinginformationitems->where('key', $type)->first())
+                        {{ $biddinginformation->biddinginformationitems->where('key', $type)->first()->value }}
+                    @endif
                     </td>
-                    <td>
-                        {{ $biddinginformation->template_name }}
-                    </td>
-                    <td>
-                        {{ str_limit($biddinginformation->remark, 20) }}
-                    </td>
+                    @endforeach
+                    {{--<td>--}}
+                        {{--{{ $biddinginformation->creator_name }}--}}
+                    {{--</td>--}}
+                    {{--<td>--}}
+                        {{--{{ $biddinginformation->template_name }}--}}
+                    {{--</td>--}}
+                    {{--<td>--}}
+                        {{--{{ str_limit($biddinginformation->remark, 20) }}--}}
+                    {{--</td>--}}
                     <td>
                         <div class="form-inline">
-                            <a href="{{ URL::to('/dingtalk/dtlogs/'.$dtlog->id) }}" class="btn btn-success btn-sm" target="_blank">查看</a>
-                            <a href="{{ URL::to('/dingtalk/dtlogs/'.$dtlog->id.'/attachsohead') }}" class="btn btn-success btn-sm" target="_blank">关联订单</a>
-                            <a href="{{ URL::to('/dingtalk/dtlogs/'.$dtlog->id.'/peoplecount') }}" class="btn btn-success btn-sm" target="_blank">人数</a>
-                            {{--{!! Form::open(array('route' => array('dingtalk.dtlogs.destroy', $dtlog->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}--}}
-                            {{--{!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}--}}
-                            {{--{!! Form::close() !!}--}}
+                            <a href="{{ URL::to('/basic/biddinginformations/'.$biddinginformation->id) }}" class="btn btn-success btn-xs pull-left">查看</a>
+                            <a href="{{ URL::to('/basic/biddinginformations/'.$biddinginformation->id.'/edit') }}" class="btn btn-success btn-xs pull-left">编辑</a>
+                            {{--<a href="{{ URL::to('/dingtalk/dtlogs/'.$dtlog->id.'/attachsohead') }}" class="btn btn-success btn-sm" target="_blank">关联订单</a>--}}
+                            {{--<a href="{{ URL::to('/dingtalk/dtlogs/'.$dtlog->id.'/peoplecount') }}" class="btn btn-success btn-sm" target="_blank">人数</a>--}}
+                            {!! Form::open(array('route' => array('basic.biddinginformations.destroy', $biddinginformation->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
+                            {!! Form::submit('删除', ['class' => 'btn btn-danger btn-xs']) !!}
+                            {!! Form::close() !!}
                         </div>
                     </td>
                 </tr>
@@ -79,7 +91,7 @@
 
     </table>
 
-    {!! $biddinginformations->setPath('/dingtalk/dtlogs')->appends($inputs)->links() !!}
+    {!! $biddinginformations->setPath('/basic/biddinginformations')->appends($inputs)->links() !!}
 
 
     @else

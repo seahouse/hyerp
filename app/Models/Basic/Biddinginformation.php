@@ -9,4 +9,8 @@ class Biddinginformation extends Model
     //
     protected $fillable = [
     ];
+
+    public function biddinginformationitems() {
+        return $this->hasMany('App\Models\Basic\Biddinginformationitem');
+    }
 }
