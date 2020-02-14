@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Basic;
 
+use App\Http\Controllers\HelperController;
 use App\Models\Basic\Biddinginformation;
 use App\Models\Basic\Biddinginformationdefinefield;
 use App\Models\Basic\Biddinginformationitem;
@@ -101,6 +102,8 @@ class BiddinginformationController extends Controller
     public function create()
     {
         //
+        $biddinginformationdefinefields = Biddinginformationdefinefield::all();
+        return view('basic.biddinginformations.create', compact('biddinginformationdefinefields'));
     }
 
     /**
@@ -112,6 +115,34 @@ class BiddinginformationController extends Controller
     public function store(Request $request)
     {
         //
+        $inputs = $request->all();
+        $biddinginformation = Biddinginformation::create([]);
+        if (isset($biddinginformation))
+        {
+            $sort = 0;
+            $type = 0;
+            foreach ($inputs as $key => $value)
+            {
+                if ($key != '_token')
+                {
+                    $biddinginformationdefinefield = Biddinginformationdefinefield::where('name', $key)->first();
+                    if (isset($biddinginformationdefinefield))
+                    {
+                        $sort = $biddinginformationdefinefield->sort;
+                        $type = $biddinginformationdefinefield->type;
+                    }
+                    Biddinginformationitem::create([
+                        'biddinginformation_id' => $biddinginformation->id,
+                        'key' => $key,
+                        'value' => $value,
+                        'sort' => $sort,
+                        'type' => $type,
+                    ]);
+                }
+            }
+        }
+
+        return redirect('basic/biddinginformations');
     }
 
     /**

@@ -5,6 +5,7 @@
 @section('main')
     @can('basic_biddinginformation_view')
     <div class="panel-heading">
+        <a href="{{ url('basic/biddinginformations/create') }}" class="btn btn-sm btn-success">新建</a>
         <a href="{{ url('basic/biddinginformations/import') }}" class="btn btn-sm btn-success">导入</a>
         <a href="{{ url('basic/biddinginformationdefinefields') }}" class="btn btn-sm btn-success">维护字段</a>
     </div>

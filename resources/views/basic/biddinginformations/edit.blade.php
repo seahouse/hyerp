@@ -1,6 +1,7 @@
 @extends('navbarerp')
 
 @section('main')
+    @can('basic_biddinginformation_edit')
     <h1>编辑</h1>
     <hr/>
 
@@ -60,6 +61,9 @@
     {!! Form::close() !!}
 
     @include('errors.list')
+    @else
+        无权限
+    @endcan
 @endsection
 
 @section('script')
