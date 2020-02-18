@@ -17,4 +17,8 @@ class Projectsitepurchaseitem extends Model
         'price',
         'seq',
     ];
+
+    public function item() {
+        return $this->belongsTo('\App\Models\Product\Itemp_hxold', 'item_id', 'goods_id');
+    }
 }

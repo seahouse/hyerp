@@ -3,11 +3,16 @@
 namespace App\Http\Controllers\Approval;
 
 use App\Http\Controllers\DingTalkController;
+use App\Http\Controllers\HelperController;
 use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiProcessinstanceCspaceInfoRequest;
 use App\Models\Approval\Projectsitepurchase;
 use App\Models\Approval\Projectsitepurchaseattachment;
 use App\Models\Approval\Projectsitepurchaseitem;
+use App\Models\Purchase\Purchaseorder_hx;
+use App\Models\Sales\Salesorder_hxold;
+use App\Models\System\Userold;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -24,6 +29,7 @@ class ProjectsitepurchaseController extends Controller
     public function index()
     {
         //
+        self::updateStatusByProcessInstanceId('bc0b67e0-4d9e-43bb-b45d-6afda6bec6f8', 0);
     }
 
     public function getitemsbykey($key)
@@ -432,11 +438,11 @@ class ProjectsitepurchaseController extends Controller
 //                elseif ($projectsitepurchase->purchasecompany_id == 3)
 //                    $cp = 'HN';
 //
-//                $techpurchaseitem = $projectsitepurchase->techpurchaseitems->first();
+//                $projectsitepurchaseitem = $projectsitepurchase->projectsitepurchaseitems->first();
 //                $item_index = '';
-//                if (isset($techpurchaseitem))
+//                if (isset($projectsitepurchaseitem))
 //                {
-//                    $item_index = HelperController::pinyin_long($techpurchaseitem->item->goods_name);
+//                    $item_index = HelperController::pinyin_long($projectsitepurchaseitem->item->goods_name);
 //                }
 //                $item_index = strlen($item_index) > 0 ? $item_index : 'spmc';
 //                if (strlen($item_index) < 4)
@@ -452,9 +458,9 @@ class ProjectsitepurchaseController extends Controller
 //                if (isset($userold))
 //                    $userold_id = $userold->user_hxold_id;
 //
-//                $pohead_number = $cp . '-' . $item_index . '-' . Carbon::today()->format('Y-d') . '-' . $seqnumber;
+//                $pohead_number = $cp . '-' . $item_index . '-' . Carbon::today()->format('Y-m') . '-' . $seqnumber;
 //
-//                $techpurchaseattachment_techspecification = $projectsitepurchase->techpurchaseattachments->where('type', 'techspecification')->first();
+//                $techpurchaseattachment_techspecification = $projectsitepurchase->projectsitepurchaseattachments->where('type', 'image')->first();
 //
 //                $sohead_name = '';
 //                $sohead = Salesorder_hxold::find($projectsitepurchase->sohead_id);
@@ -473,21 +479,23 @@ class ProjectsitepurchaseController extends Controller
 //                    '编号年份'                => Carbon::today()->year,
 //                    '编号数字'                => $seqnumber,
 //                    '编号商品名称'            => $item_index,
+//                    '采购订单状态'            => 10,
 //                ];
+//                dd($data);
 //                $pohead = Purchaseorder_hx::create($data);
 //
 //                if (isset($pohead))
 //                {
-//                    foreach ($projectsitepurchase->techpurchaseitems as $techpurchaseitem)
+//                    foreach ($projectsitepurchase->projectsitepurchaseitems as $projectsitepurchaseitem)
 //                    {
-//                        $item = Itemp_hxold::where('goods_id', $techpurchaseitem->item_id)->first();
+//                        $item = Itemp_hxold::where('goods_id', $projectsitepurchaseitem->item_id)->first();
 //                        if (isset($item))
 //                        {
 //                            $data = [
 //                                'order_id'      => $pohead->id,
-//                                'goods_id'      => $techpurchaseitem->item_id,
+//                                'goods_id'      => $projectsitepurchaseitem->item_id,
 //                                'goods_name'    => $item->goods_name,
-//                                'goods_number'  => $techpurchaseitem->quantity,
+//                                'goods_number'  => $projectsitepurchaseitem->quantity,
 //                                'goods_unit'    => $item->goods_unit_name,
 //                            ];
 //                            Poitem_hx::create($data);

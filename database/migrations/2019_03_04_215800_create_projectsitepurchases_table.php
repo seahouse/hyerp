@@ -15,6 +15,7 @@ class CreateProjectsitepurchasesTable extends Migration
         Schema::create('projectsitepurchases', function (Blueprint $table) {
             $table->increments('id');
 
+            $table->integer('purchasecompany_id')->nullable();
             $table->integer('sohead_id');
             $table->string('projecttype');
             $table->string('vendordeduction_descrip');

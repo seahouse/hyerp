@@ -177,6 +177,8 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
     Route::group(['prefix' => 'biddinginformations'], function() {
         Route::get('import', 'BiddinginformationController@import');
         Route::post('importstore', 'BiddinginformationController@importstore');
+        Route::any('export', 'BiddinginformationController@export');
+        Route::get('downloadfile/{filename}', 'BiddinginformationController@downloadfile')->name('basic.biddinginformations.downloadfile');
     });
     Route::resource('biddinginformations', 'BiddinginformationController');
     Route::group(['prefix' => 'biddinginformationitems'], function() {

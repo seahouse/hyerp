@@ -461,7 +461,7 @@ class TechpurchaseController extends Controller
                 if (isset($userold))
                     $userold_id = $userold->user_hxold_id;
 
-                $pohead_number = $cp . '-' . $item_index . '-' . Carbon::today()->format('Y-d') . '-' . $seqnumber;
+                $pohead_number = $cp . '-' . $item_index . '-' . Carbon::today()->format('Y-m') . '-' . $seqnumber;
 
                 $techpurchaseattachment_techspecification = $techpurchase->techpurchaseattachments->where('type', 'techspecification')->first();
 

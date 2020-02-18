@@ -24,7 +24,7 @@ class BiddinginformationController extends Controller
         //
         $request = request();
         $inputs = $request->all();
-        $biddinginformations = $this->searchrequest($request);
+        $biddinginformations = $this->searchrequest($request)->paginate(15);
 //        $dtlogs = Dtlog::latest('create_time')->paginate(15);
         return view('basic.biddinginformations.index', compact('biddinginformations', 'inputs'));
     }
@@ -88,8 +88,7 @@ class BiddinginformationController extends Controller
             }
         }
 
-        $items = $query->select('biddinginformations.*')
-            ->paginate(15);
+        $items = $query->select('biddinginformations.*');
 
         return $items;
     }
@@ -362,4 +361,93 @@ class BiddinginformationController extends Controller
         return redirect('basic/biddinginformations');
     }
 
+    /**
+     * export to excel/pdf.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function export(Request $request)
+    {
+        //
+        // Excel::create('test1111')->export('xlsx');
+
+        $filename = iconv("UTF-8","GBK//IGNORE", '中标信息');
+        Excel::create($filename, function($excel) use ($request) {
+            $excel->sheet('Sheet1', function($sheet) use ($request) {
+
+                $biddinginformations = $this->searchrequest($request)->get();
+                $biddinginformationdefinefields = Biddinginformationdefinefield::orderBy('sort')->get();
+                $data = [];
+                foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+                {
+                    array_push($data, $biddinginformationdefinefield->name);
+                }
+                $sheet->appendRow($data);
+                foreach ($biddinginformations as $biddinginformation)
+                {
+                    $data = [];
+                    foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+                    {
+                        $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationdefinefield->name)->first();
+                        array_push($data, isset($biddinginformationitem) ? $biddinginformationitem->value : '');
+                    }
+                    $sheet->appendRow($data);
+                }
+
+//                $sheet->fromArray($biddinginformation["data"]);
+            });
+
+//            // Set the title
+//            $excel->setTitle('Our new awesome title');
+//
+//            // Chain the setters
+//            $excel->setCreator('Maatwebsite')
+//                ->setCompany('Maatwebsite');
+//
+//            // Call them separately
+//            $excel->setDescription('A demonstration to change the file properties');
+
+        })->store('xlsx', public_path('download/biddinginformations'));
+
+//        $newfilename = 'export_' . Carbon::now()->format('YmdHis') . '.xlsx';
+//        Log::info($newfilename);
+//        rename(public_path('download/shipment/Shipments.xlsx'), public_path('download/shipment/' . $newfilename));
+
+//        Log::info(route('basic.biddinginformations.downloadfile', ['filename' => $filename . '.xlsx']));
+        return route('basic.biddinginformations.downloadfile', ['filename' => $filename . '.xlsx']);
+
+        // // instantiate and use the dompdf class
+        // $dompdf = new Dompdf();
+        // // $dompdf->loadHtml('hello world');
+        // // $dompdf->set_option('isRemoteEnabled', true);
+        // // $dompdf->loadHtmlFile(url('/approval/paymentrequests/25'));
+        // $dompdf->loadHtmlFile('http://www.baidu.com');
+        // // $html = file_get_contents('http://www.baidu.com');
+        // // return $html;
+
+        // // (Optional) Setup the paper size and orientation
+        // $dompdf->setPaper('A4', 'landscape');
+
+        // // Render the HTML as PDF
+        // $dompdf->render();
+
+        // // Output the generated PDF to Browser
+        // $dompdf->stream();
+
+        // return PDF::loadFile(url('/approval/paymentrequests/25'))->save('/path-to/my_stored_file.pdf')->stream('download.pdf');
+
+        // return 'ssss';
+    }
+
+    // https://www.cnblogs.com/cyclzdblog/p/7670695.html
+    public function downloadfile($filename)
+    {
+//        Log::info('filename: ' . $filename);
+//        $newfilename = substr($filename, 0, strpos($filename, ".")) . Carbon::now()->format('YmdHis') . substr($filename, strpos($filename, "."));
+//        Log::info($newfilename);
+//        rename(public_path('download/shipment/' . $filename), public_path('download/shipment/' . $newfilename));
+        $file = public_path('download/biddinginformations/' . iconv("GBK//IGNORE","UTF-8", $filename));
+//        Log::info('file path:' . $file);
+        return response()->download($file);
+    }
 }

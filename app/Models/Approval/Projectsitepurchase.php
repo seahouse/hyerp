@@ -12,6 +12,7 @@ class Projectsitepurchase extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
+        'purchasecompany_id',
         'sohead_id',
         'purchasetype',
         'purchasereason',
@@ -33,6 +34,10 @@ class Projectsitepurchase extends Model
 
     public function projectsitepurchaseitems() {
         return $this->hasMany('\App\Models\Approval\Projectsitepurchaseitem', 'projectsitepurchase_id', 'id');
+    }
+
+    public function projectsitepurchaseattachments() {
+        return $this->hasMany('\App\Models\Approval\Projectsitepurchaseattachment');
     }
 
     public function approvers() {

@@ -8,18 +8,19 @@
         <a href="{{ url('basic/biddinginformations/create') }}" class="btn btn-sm btn-success">新建</a>
         <a href="{{ url('basic/biddinginformations/import') }}" class="btn btn-sm btn-success">导入</a>
         <a href="{{ url('basic/biddinginformationdefinefields') }}" class="btn btn-sm btn-success">维护字段</a>
+        {{--<a href="{{ url('basic/biddinginformations/export') }}" class="btn btn-sm btn-success">导出</a>--}}
     </div>
     
     <div class="panel-body">
-        {{--{!! Form::open(['url' => '/dingtalk/dtlogs/search', 'class' => 'pull-right form-inline', 'id' => 'frmCondition']) !!}--}}
-        {{--<div class="form-group-sm">--}}
+        {!! Form::open(['url' => '/basic/biddinginformations/search', 'class' => 'pull-right form-inline', 'id' => 'frmCondition']) !!}
+        <div class="form-group-sm">
             {{--{!! Form::label('createdatelabel', '发起时间:', ['class' => 'control-label']) !!}--}}
             {{--{!! Form::date('createdatestart', null, ['class' => 'form-control']) !!}--}}
             {{--{!! Form::label('createdatelabelto', '-', ['class' => 'control-label']) !!}--}}
             {{--{!! Form::date('createdateend', null, ['class' => 'form-control']) !!}--}}
-{{--            {!! Form::select('creator_name', $dtlog_creatornames, null, ['class' => 'form-control', 'placeholder' => '--发起人--']) !!}--}}
+            {{--{!! Form::select('creator_name', $dtlog_creatornames, null, ['class' => 'form-control', 'placeholder' => '--发起人--']) !!}--}}
 
-{{--            {!! Form::select('template_name', $dtlog_templatenames, null, ['class' => 'form-control', 'placeholder' => '--日志模板--']) !!}--}}
+            {{--{!! Form::select('template_name', $dtlog_templatenames, null, ['class' => 'form-control', 'placeholder' => '--日志模板--']) !!}--}}
 
 
             {{--{!! Form::label('select_xmjlsgrz_project_label', '项目经理施工日志对应项目', ['class' => 'control-label']) !!}--}}
@@ -29,12 +30,12 @@
             {{--{!! Form::select('other', ['xmjlsgrz_sohead_id_undefined' => '还未关联订单的项目经理施工日志', 'btn_xmjlsgrz_peoplecount_undefined' => '施工人数填写不符要求或未填'], null, ['class' => 'form-control', 'placeholder' => '--其他--']) !!}--}}
             {{--{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '备注']) !!}--}}
             {{--{!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}--}}
-            {{--@if (Auth::user()->email == "admin@admin.com")--}}
-            {{--{!! Form::button('关联项目经理施工日志到ERP订单', ['class' => 'btn btn-default btn-sm', 'id' => 'btn_xmjlsgrz_sohead_id']) !!}--}}
+            @can('basic_biddinginformation_export')
+            {!! Form::button('导出', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport']) !!}
             {{--{!! Form::button('关联工程调试日志到ERP订单', ['class' => 'btn btn-default btn-sm', 'id' => 'btn_gctsrz_sohead_id']) !!}--}}
-            {{--@endif--}}
-        {{--</div>--}}
-        {{--{!! Form::close() !!}--}}
+            @endcan
+        </div>
+        {!! Form::close() !!}
     </div> 
 
     
@@ -111,21 +112,13 @@
     <script type="text/javascript" src="/js/jquery-editable-select.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
-            $("#btn_xmjlsgrz_sohead_id").click(function() {
+            $("#btnExport").click(function() {
                 $.ajax({
                     type: "POST",
-                    url: "{!! url('dingtalk/dtlogs/relate_xmjlsgrz_sohead_id') !!}",
+                    url: "{!! url('basic/biddinginformations/export') !!}",
                     data : $('#frmCondition').serialize(),
                     success: function(result) {
-                        // alert(result);
-                        // alert(result.errmsg);
-                        if (result.errcode == 0)
-                        {
-                            alert(result.errmsg);
-                        }
-                        else
-                            alert(JSON.stringify(result));
-
+                        location.href = result;
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
                         alert(JSON.stringify(xhr));
