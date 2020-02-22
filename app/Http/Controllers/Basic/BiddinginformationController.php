@@ -483,7 +483,7 @@ class BiddinginformationController extends Controller
 //        Log::info($newfilename);
 //        rename(public_path('download/shipment/' . $filename), public_path('download/shipment/' . $newfilename));
 //        $file = public_path('download/biddinginformations/' . iconv("GBK//IGNORE","UTF-8", $filename));
-        $file = public_path('download/biddinginformations/' . mb_convert_encoding($filename, "GBK","UTF-8"));
+        $file = public_path('download/biddinginformations/' . mb_convert_encoding($filename, "GBK//IGNORE","UTF-8"));
         Log::info('file path:' . $file);
         return response()->download($file);
     }
