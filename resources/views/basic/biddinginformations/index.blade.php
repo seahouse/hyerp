@@ -119,7 +119,7 @@
                     url: "{!! url('basic/biddinginformations/export') !!}",
                     data : $('#frmCondition').serialize(),
                     success: function(result) {
-                        alert(result);
+//                        alert(result);
                         location.href = result;
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
