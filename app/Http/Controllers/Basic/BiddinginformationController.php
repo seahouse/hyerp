@@ -395,7 +395,8 @@ class BiddinginformationController extends Controller
         //
         // Excel::create('test1111')->export('xlsx');
 
-        $filename = iconv("UTF-8","GBK//IGNORE", '中标信息');
+        $filename = 'BAOJIA';
+//        $filename = iconv("UTF-8","GBK//IGNORE", '中标信息');
         Excel::create($filename, function($excel) use ($request) {
             $excel->sheet('Sheet1', function($sheet) use ($request) {
                 $biddinginformations = $this->searchrequest($request)->get();
@@ -483,7 +484,7 @@ class BiddinginformationController extends Controller
 //        Log::info($newfilename);
 //        rename(public_path('download/shipment/' . $filename), public_path('download/shipment/' . $newfilename));
 //        $file = public_path('download/biddinginformations/' . iconv("GBK//IGNORE","UTF-8", $filename));
-        $file = public_path('download/biddinginformations/' . mb_convert_encoding($filename, "GBK//IGNORE","UTF-8"));
+        $file = public_path('download/biddinginformations/' . $filename);
         Log::info('file path:' . $file);
         return response()->download($file);
     }
