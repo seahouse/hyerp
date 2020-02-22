@@ -11,6 +11,7 @@ class Biddinginformationitem extends Model
         'biddinginformation_id',
         'key',
         'value',
+        'remark',
         'sort',
         'type',
     ];

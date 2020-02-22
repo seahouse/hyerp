@@ -11,8 +11,11 @@
             @foreach($biddinginformationdefinefields as $biddinginformationdefinefield)
                 <div class="form-group">
                     {!! Form::label($biddinginformationdefinefield->name, $biddinginformationdefinefield->name, ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-                    <div class='col-xs-8 col-sm-10'>
+                    <div class='col-xs-4 col-sm-6'>
                         {!! Form::text($biddinginformationdefinefield->name, null, ['class' => 'form-control']) !!}
+                    </div>
+                    <div class='col-xs-4 col-sm-4'>
+                        {!! Form::text($biddinginformationdefinefield->name . '_remark', null, ['class' => 'form-control', 'placeholder' => '备注/批注']) !!}
                     </div>
                 </div>
             @endforeach

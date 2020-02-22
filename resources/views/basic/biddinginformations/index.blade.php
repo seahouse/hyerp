@@ -32,6 +32,7 @@
             {{--{!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}--}}
             @can('basic_biddinginformation_export')
             {!! Form::button('导出', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport']) !!}
+                {{--<a href="{{ url('basic/biddinginformations/export') }}" class="btn btn-sm btn-success">测试导出</a>--}}
             {{--{!! Form::button('关联工程调试日志到ERP订单', ['class' => 'btn btn-default btn-sm', 'id' => 'btn_gctsrz_sohead_id']) !!}--}}
             @endcan
         </div>
@@ -118,6 +119,7 @@
                     url: "{!! url('basic/biddinginformations/export') !!}",
                     data : $('#frmCondition').serialize(),
                     success: function(result) {
+                        alert(result);
                         location.href = result;
                     },
                     error: function(xhr, ajaxOptions, thrownError) {

@@ -18,6 +18,7 @@ class CreateBiddinginformationitemsTable extends Migration
             $table->integer('biddinginformation_id')->unsigned();
             $table->string('key');
             $table->string('value');
+            $table->string('remark', 2000)->nullable();
             $table->integer('sort');
             $table->integer('type');
 

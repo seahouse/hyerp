@@ -120,6 +120,7 @@ class BiddinginformationController extends Controller
         {
             $sort = 0;
             $type = 0;
+            $remark_suffix = '_remark';
             foreach ($inputs as $key => $value)
             {
                 if ($key != '_token')
@@ -130,10 +131,12 @@ class BiddinginformationController extends Controller
                         $sort = $biddinginformationdefinefield->sort;
                         $type = $biddinginformationdefinefield->type;
                     }
+                    $remark = isset($inputs[$key . $remark_suffix]) ? $inputs[$key . $remark_suffix] : '';
                     Biddinginformationitem::create([
                         'biddinginformation_id' => $biddinginformation->id,
                         'key' => $key,
                         'value' => $value,
+                        'remark' => $remark,
                         'sort' => $sort,
                         'type' => $type,
                     ]);
@@ -183,13 +186,20 @@ class BiddinginformationController extends Controller
 //        $biddinginformation = Biddinginformation::findOrFail($id);
 //        $biddinginformation->update($request->all());
         $inputs = $request->all();
+//        dd($inputs);
+        $remark_suffix = '_remark';
         foreach ($inputs as $key => $value)
         {
-            $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $id)->where('key', $key)->first();
-            if (isset($biddinginformationitem))
+            if (!(substr($key, -strlen($remark_suffix)) === $remark_suffix))
             {
+                $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $id)->where('key', $key)->first();
+                if (isset($biddinginformationitem))
+                {
 //                dd($biddinginformationitem);
-                $biddinginformationitem->update(['value' => $value]);
+                    $remark = isset($inputs[$key . $remark_suffix]) ? $inputs[$key . $remark_suffix] : '';
+//                    dd($key . ':' . $inputs[$key . $remark_suffix]);
+                    $biddinginformationitem->update(['value' => $value, 'remark' => $remark]);
+                }
             }
         }
         return redirect('basic/biddinginformations');
@@ -237,20 +247,63 @@ class BiddinginformationController extends Controller
         // 'force_sheets_collection' => true,   // !!
         Excel::load($file->getRealPath(), function ($reader) use ($request) {
             $biddinginformationdefinefields = Biddinginformationdefinefield::all();
-            $reader->each(function ($sheet) use (&$reader, $request, &$biddinginformationdefinefields) {
-                Log::info('sheet: ' . $sheet->getTitle());
-                $sheet->each(function ($row) use (&$reader, $request, &$biddinginformationdefinefields) {
-//                        dd($row->all());
-//                        $input = array_values($row->toArray());
-                    $input = $row->all();
-//                    dd($input);
-//                    if (count($input) >= 24)
+
+            $objExcel = $reader->getExcel();
+            for ($i = 0; $i < $objExcel->getSheetCount(); $i++)
+            {
+                $sheet = $objExcel->getSheet($i);
+                $highestRow = $sheet->getHighestRow();
+                $highestColumn = $sheet->getHighestColumn();
+                $highestColumn++;
+
+                //  Loop through each row of the worksheet in turn
+                $keys = [];
+                for ($row = 1; $row <= $highestRow; $row++)
+                {
+                    if ($row == 1)
                     {
-                        if (!empty($input['序号']))
+                        //  Read a row of data into an array
+                        $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                            NULL, TRUE, FALSE);
+
+                        // 第一行，关键字
+                        $keys = $rowData[0];
+                    }
+                    else
+                    {
+                        $input = [];
+                        $index = 0;
+//                        foreach ($keys as $key => $value)
+//                        {
+//                            $input[$value] = $rowData[0][$key];
+//                        }
+//                        $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+//                            NULL, TRUE, FALSE);
+//                        dd($rowData);
+                        for ($colIndex = 'A'; $colIndex != $highestColumn; $colIndex++)
                         {
-//                            dd($input['序号']);
-//                            $salarysheet = Salarysheet::where('username', $input['姓名'])->where('salary_date', $request->input('salary_date'))->first();
-//                            if (!isset($salarysheet))
+                            // 组装单元格标识  A1  A2
+                            $addr = $colIndex . $row;
+                            // 获取单元格内容
+//                            $cell = $sheet->getCell($addr)->getValue();
+                            $cell = $sheet->getCell($addr)->getCalculatedValue();
+                            //富文本转换字符串
+                            if ($cell instanceof PHPExcel_RichText) {
+                                $cell = $cell->__toString();
+                            }
+                            $comment = $sheet->getComment($addr)->getText()->getPlainText();
+//                            dd($comment);
+//                            if(empty($cell)){
+//                                continue ;
+//                            }
+                            $input[$keys[$index]] = [$cell, $comment];
+                            $index++;
+                        }
+//                        dd($input);
+
+                        if (array_key_exists('序号', $input) && !empty($input['序号'][0]))
+                        {
+//                            dd($input['序号'][0]);
                             {
                                 $data = [];
                                 $biddinginformation = Biddinginformation::create($data);
@@ -261,86 +314,57 @@ class BiddinginformationController extends Controller
                                     $itemdata = [];
                                     $itemdata['biddinginformation_id']      = $biddinginformation->id;
                                     $itemdata['key']                           = $biddinginformationdefinefield->name;
-                                    $itemdata['value']                         = isset($input[$biddinginformationdefinefield->name]) ? $input[$biddinginformationdefinefield->name] : '';
+                                    $itemdata['value']                         = isset($input[$biddinginformationdefinefield->name][0]) ? $input[$biddinginformationdefinefield->name][0] : '';
+                                    $itemdata['remark']                        = isset($input[$biddinginformationdefinefield->name][1]) ? $input[$biddinginformationdefinefield->name][1] : '';
                                     $itemdata['sort']                          = $biddinginformationdefinefield->sort;
                                     $itemdata['type']                          = $biddinginformationdefinefield->type;
 //                                    Log::info($itemdata);
                                     Biddinginformationitem::create($itemdata);
                                 }
-//                                $data['salary_date'] = $request->input('salary_date');
-//                                $data['username']               = $input['姓名'];
-//                                $user = User::where('name', $input['姓名'])->first();
-//                                if (isset($user))
-//                                    $data['user_id']            = $user->id;
-//                                $data['department']            = $input['部门'];
-//                                $data['attendance_days']       = isset($input['出勤天数']) ? $input['出勤天数'] : 0.0;
-//                                $data['basicsalary']            = isset($input['基本工资']) ? $input['基本工资'] : 0.0;
-//                                $data['overtime_hours']        = isset($input['加班小时']) ? $input['加班小时'] : 0.0;
-//                                $data['absenteeismreduce_hours'] = isset($input['缺勤减扣小时']) ? $input['缺勤减扣小时'] : 0.0;
-//                                $data['paid_hours']             = isset($input['计薪小时']) ? $input['计薪小时'] : 0.0;
-//                                $data['overtime_amount']       = isset($input['加班费']) ? $input['加班费'] : 0.0;
-//                                $data['fullfrequently_award'] = isset($input['满勤奖']) ? $input['满勤奖'] : 0.0;
-//                                $data['meal_amount']            = isset($input['餐贴']) ? $input['餐贴'] : 0.0;
-//                                $data['car_amount']             = isset($input['车贴']) ? $input['车贴'] : 0.0;
-//                                $data['business_amount']       = isset($input['外差补贴']) ? $input['外差补贴'] : 0.0;
-//                                $data['additional_amount']     = isset($input['补资']) ? $input['补资'] : 0.0;
-//                                $data['house_amount']           = isset($input['房贴']) ? $input['房贴'] : 0.0;
-//                                $data['hightemperature_amount'] = isset($input['高温费']) ? $input['高温费'] : 0.0;
-//                                $data['absenteeismreduce_amount'] = isset($input['缺勤扣款']) ? $input['缺勤扣款'] : 0.0;
-//                                $data['shouldpay_amount']       = isset($input['应发工资']) ? $input['应发工资'] : 0.0;
-//                                $data['borrowreduce_amount']   = isset($input['借款扣回']) ? $input['借款扣回'] : 0.0;
-//                                $data['personalsocial_amount'] = isset($input['个人社保']) ? $input['个人社保'] : 0.0;
-//                                $data['personalaccumulationfund_amount'] = isset($input['个人公积金']) ? $input['个人公积金'] : 0.0;
-//                                $data['individualincometax_amount'] = isset($input['个人所得税']) ? $input['个人所得税'] : 0.0;
-//                                $data['actualsalary_amount']    = isset($input['实发工资']) ? $input['实发工资'] : 0.0;
-//                                $data['remark']                    = isset($input['备注']) ? $input['备注'] : '';
                             }
-//                            else
-                            {
-//                                $user = User::where('name', $input['姓名'])->first();
-//                                if (isset($user))
-//                                    $salarysheet->user_id               = $user->id;
-//                                $salarysheet->department                = $input['部门'];
-//                                $salarysheet->attendance_days           = isset($input['出勤天数']) ? $input['出勤天数'] : 0.0;
-//                                $salarysheet->basicsalary               = isset($input['基本工资']) ? $input['基本工资'] : 0.0;
-//                                $salarysheet->overtime_hours            = isset($input['加班小时']) ? $input['加班小时'] : 0.0;
-//                                $salarysheet->absenteeismreduce_hours = isset($input['缺勤减扣小时']) ? $input['缺勤减扣小时'] : 0.0;
-//                                $salarysheet->paid_hours                = isset($input['计薪小时']) ? $input['计薪小时'] : 0.0;
-//                                $salarysheet->overtime_amount        = isset($input['加班费']) ? $input['加班费'] : 0.0;
-//                                $salarysheet->fullfrequently_award  = isset($input['满勤奖']) ? $input['满勤奖'] : 0.0;
-//                                $salarysheet->meal_amount               = isset($input['餐贴']) ? $input['餐贴'] : 0.0;
-//                                $salarysheet->car_amount                 = isset($input['车贴']) ? $input['车贴'] : 0.0;
-//                                $salarysheet->business_amount           = isset($input['外差补贴']) ? $input['外差补贴'] : 0.0;
-//                                $salarysheet->additional_amount         = isset($input['补资']) ? $input['补资'] : 0.0;
-//                                $salarysheet->house_amount              = isset($input['房贴']) ? $input['房贴'] : 0.0;
-//                                $salarysheet->hightemperature_amount = isset($input['高温费']) ? $input['高温费'] : 0.0;
-//                                $salarysheet->absenteeismreduce_amount = isset($input['缺勤扣款']) ? $input['缺勤扣款'] : 0.0;
-//                                $salarysheet->shouldpay_amount       = isset($input['应发工资']) ? $input['应发工资'] : 0.0;
-//                                $salarysheet->borrowreduce_amount       = isset($input['借款扣回']) ? $input['借款扣回'] : 0.0;
-//                                $salarysheet->personalsocial_amount     = isset($input['个人社保']) ? $input['个人社保'] : 0.0;
-//                                $salarysheet->personalaccumulationfund_amount = isset($input['个人公积金']) ? $input['个人公积金'] : 0.0;
-//                                $salarysheet->individualincometax_amount = isset($input['个人所得税']) ? $input['个人所得税'] : 0.0;
-//                                $salarysheet->actualsalary_amount       = isset($input['实发工资']) ? $input['实发工资'] : 0.0;
-//                                $salarysheet->remark                    = isset($input['备注']) ? $input['备注'] : '';
-//                                $salarysheet->save();
-                            }
-                        }
-                        else
-                        {
-//                                if (empty($input[3]) && !empty($input[5]) && isset($shipment))
-//                                {
-//                                    $input['shipment_id'] = $shipment->id;
-//                                    $input['contract_number'] = $input[5];
-//                                    $input['purchaseorder_number'] = $input[7];
-//                                    $input['qty_for_customer'] = $input[39];
-//                                    $input['amount_for_customer'] = $input[40];
-//                                    $input['volume'] = $input[53];
-//                                    Shipmentitem::create($input);
-//                                }
                         }
                     }
-                });
-            });
+                }
+            }
+
+//            $reader->each(function ($sheet) use (&$reader, $request, &$biddinginformationdefinefields) {
+////                dd('sheet: ' . $sheet->getTitle());
+//                $objExcel = $reader->getExcel();
+////                dd($objExcel->getSheet(0)->getComment('L30')->getText()->getPlainText());
+//                $sheet->each(function ($row) use (&$reader, $objExcel, $sheet, $request, &$biddinginformationdefinefields) {
+////                    dd($objExcel->getSheetByName($sheet->getTitle())->getComment('L30')->getText()->getPlainText());
+////                    dd($row);
+////                        $input = array_values($row->toArray());
+//                    $input = $row->all();
+////                    dd($input);
+////                    if (count($input) >= 24)
+//                    {
+//                        if (!empty($input['序号']))
+//                        {
+////                            dd($input['序号']);
+////                            $salarysheet = Salarysheet::where('username', $input['姓名'])->where('salary_date', $request->input('salary_date'))->first();
+////                            if (!isset($salarysheet))
+//                            {
+//                                $data = [];
+//                                $biddinginformation = Biddinginformation::create($data);
+////                                dd($biddinginformation);
+//                                foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+//                                {
+////                                    dd($input[$biddinginformationdefinefield->name]);
+//                                    $itemdata = [];
+//                                    $itemdata['biddinginformation_id']      = $biddinginformation->id;
+//                                    $itemdata['key']                           = $biddinginformationdefinefield->name;
+//                                    $itemdata['value']                         = isset($input[$biddinginformationdefinefield->name]) ? $input[$biddinginformationdefinefield->name] : '';
+//                                    $itemdata['sort']                          = $biddinginformationdefinefield->sort;
+//                                    $itemdata['type']                          = $biddinginformationdefinefield->type;
+////                                    Log::info($itemdata);
+//                                    Biddinginformationitem::create($itemdata);
+//                                }
+//                            }
+//                        }
+//                    }
+//                });
+//            });
 
             $objExcel = $reader->getExcel();
             $sheet = $objExcel->getSheet(0);
@@ -374,7 +398,6 @@ class BiddinginformationController extends Controller
         $filename = iconv("UTF-8","GBK//IGNORE", '中标信息');
         Excel::create($filename, function($excel) use ($request) {
             $excel->sheet('Sheet1', function($sheet) use ($request) {
-
                 $biddinginformations = $this->searchrequest($request)->get();
                 $biddinginformationdefinefields = Biddinginformationdefinefield::orderBy('sort')->get();
                 $data = [];
@@ -383,15 +406,28 @@ class BiddinginformationController extends Controller
                     array_push($data, $biddinginformationdefinefield->name);
                 }
                 $sheet->appendRow($data);
+                $rowCol = 2;        // 从第二行开始
                 foreach ($biddinginformations as $biddinginformation)
                 {
                     $data = [];
+                    $comments = [];
                     foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
                     {
                         $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationdefinefield->name)->first();
                         array_push($data, isset($biddinginformationitem) ? $biddinginformationitem->value : '');
+                        array_push($comments, isset($biddinginformationitem) ? $biddinginformationitem->remark : '');
                     }
                     $sheet->appendRow($data);
+
+                    // 添加批注
+                    $colIndex = 'A';
+                    foreach ($comments as $comment)
+                    {
+                        if (strlen($comment) > 0)
+                            $sheet->getComment($colIndex . $rowCol)->getText()->createTextRun($comment);
+                        $colIndex++;
+                    }
+                    $rowCol++;
                 }
 
 //                $sheet->fromArray($biddinginformation["data"]);
@@ -447,7 +483,7 @@ class BiddinginformationController extends Controller
 //        Log::info($newfilename);
 //        rename(public_path('download/shipment/' . $filename), public_path('download/shipment/' . $newfilename));
         $file = public_path('download/biddinginformations/' . iconv("GBK//IGNORE","UTF-8", $filename));
-//        Log::info('file path:' . $file);
+        Log::info('file path:' . $file);
         return response()->download($file);
     }
 }
