@@ -1,7 +1,7 @@
 @extends('navbarerp')
 
 @section('main')
-    <h1>导入中标信息</h1>
+    <h1>导入投标项目</h1>
     <hr/>
     
     {!! Form::open(['url' => 'basic/biddinginformations/importstore', 'class' => 'form-horizontal', 'files' => true]) !!}

@@ -34,11 +34,13 @@
                 {!! Form::text($biddinginformationitem->key, $biddinginformationitem->value, ['class' => 'form-control', 'readonly']) !!}
             </div>
             <div class='col-xs-4 col-sm-4'>
-                @if (strlen($biddinginformationitem->remark) > 0)
-                    {!! Form::textarea($biddinginformationitem->key, $biddinginformationitem->remark, ['class' => 'form-control', 'readonly', 'rows' => 3]) !!}
-                @else
-                    {!! Form::text($biddinginformationitem->key, $biddinginformationitem->remark, ['class' => 'form-control', 'readonly']) !!}
-                @endif
+                @can('basic_biddinginformation_remark')
+                    @if (strlen($biddinginformationitem->remark) > 0)
+                        {!! Form::textarea($biddinginformationitem->key, $biddinginformationitem->remark, ['class' => 'form-control', 'readonly', 'rows' => 3]) !!}
+                    @else
+                        {!! Form::text($biddinginformationitem->key, $biddinginformationitem->remark, ['class' => 'form-control', 'readonly']) !!}
+                    @endif
+                @endcan
             </div>
         </div>
     @endforeach

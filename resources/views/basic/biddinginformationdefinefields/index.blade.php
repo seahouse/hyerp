@@ -1,6 +1,6 @@
 @extends('navbarerp')
 
-@section('title', '中标信息')
+@section('title', '投标项目')
 
 @section('main')
     @can('basic_biddinginformation_view')

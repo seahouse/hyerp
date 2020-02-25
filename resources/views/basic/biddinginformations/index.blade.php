@@ -1,6 +1,6 @@
 @extends('navbarerp')
 
-@section('title', '中标信息')
+@section('title', '投标项目')
 
 @section('main')
     @can('basic_biddinginformation_view')
@@ -41,7 +41,8 @@
 
     
     @if ($biddinginformations->count())
-        <?php $types = ['序号', ]; ?>
+        <?php $types = ['序号', '名称', '规模', '工艺', '吸收塔（塔型Niro-Seghers-KS；各20t）', '面积', '安装']; ?>
+        <?php $simpletypes = ['刮板机斗提', '灰库', '稳定化', 'SNCR']; ?>
     <table class="table table-striped table-hover table-condensed">
         <thead>
             <tr>
@@ -49,8 +50,9 @@
                 @foreach($types as $type)
                 <th>{{ $type }}</th>
                 @endforeach
-                {{--<th>发起人</th>--}}
-                {{--<th>日志模板</th>--}}
+                @foreach($simpletypes as $simpletype)
+                    <th>{{ $simpletype }}</th>
+                @endforeach
                 {{--<th>备注</th>--}}
                 <th>操作</th>
             </tr>
@@ -68,12 +70,20 @@
                     @endif
                     </td>
                     @endforeach
-                    {{--<td>--}}
-                        {{--{{ $biddinginformation->creator_name }}--}}
-                    {{--</td>--}}
-                    {{--<td>--}}
-                        {{--{{ $biddinginformation->template_name }}--}}
-                    {{--</td>--}}
+                    @foreach($simpletypes as $simpletype)
+                        <td>
+                            @if (isset($biddinginformation) && null != $biddinginformation->biddinginformationitems->where('key', $simpletype)->first())
+                                <?php $value = $biddinginformation->biddinginformationitems->where('key', $simpletype)->first()->value; ?>
+                                @if ($value == '无' || empty($value))
+                                    无
+                                @else
+                                    有
+                                @endif
+                            @else
+                                -
+                            @endif
+                        </td>
+                    @endforeach
                     {{--<td>--}}
                         {{--{{ str_limit($biddinginformation->remark, 20) }}--}}
                     {{--</td>--}}

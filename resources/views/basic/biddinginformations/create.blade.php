@@ -2,7 +2,7 @@
 
 @section('main')
     @can('basic_biddinginformation_edit')
-        <h2>中标信息 -- 添加</h2>
+        <h2>投标项目 -- 添加</h2>
         <hr/>
 
         {!! Form::open(array('url' => 'basic/biddinginformations', 'class' => 'form-horizontal')) !!}
@@ -15,7 +15,9 @@
                         {!! Form::text($biddinginformationdefinefield->name, null, ['class' => 'form-control']) !!}
                     </div>
                     <div class='col-xs-4 col-sm-4'>
-                        {!! Form::text($biddinginformationdefinefield->name . '_remark', null, ['class' => 'form-control', 'placeholder' => '备注/批注']) !!}
+                        @can('basic_biddinginformation_remark')
+                            {!! Form::text($biddinginformationdefinefield->name . '_remark', null, ['class' => 'form-control', 'placeholder' => '备注/批注']) !!}
+                        @endcan
                     </div>
                 </div>
             @endforeach
