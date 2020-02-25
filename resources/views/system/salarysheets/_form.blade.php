@@ -3,8 +3,8 @@
 <div class="salary">
 
 <div class="board">
-    <div class="msg">吴雄飞，工作辛苦啦</div>
-    <div class="number">8923.23</div>
+    <div class="msg">{{ $salarysheet->username }}，工作辛苦啦</div>
+    <div class="number">{{ $salarysheet->actualsalary_amount }}</div>
     <div class="bottom">实放工资</div>
 </div>
 
