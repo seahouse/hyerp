@@ -297,7 +297,45 @@ body {
 .search-area .more-search {
     text-decoration: none;
 }
+/*mindexmyapproval_nav.blade.php*/
+.salary .row {
+    background-color: rgba(255,255,255,0.5);
+    padding: 10px 0;
+}
+.salary .title {
+    padding-left: 25px;
+}
 
+.salary .content {
+    text-align: right;
+    padding-right: 25px;
+}
+
+.salary .board {
+    padding: 15px;
+    background-color: rgba(1,123,251,0.7);
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.salary .msg {
+    padding: 15px;
+    padding-bottom:20px;
+    font-size: 13px;
+    color: rgba(205,242,249);
+}
+
+.salary .number {
+    color: #fff;
+    font-size: 30px;
+}
+
+.salary .bottom {
+    color: #ccc;
+    font-size: 12px;
+    padding-bottom:15px;
+    color: rgba(147,202,249);
+}
 
 
 
