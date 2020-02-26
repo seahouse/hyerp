@@ -488,4 +488,20 @@ class BiddinginformationController extends Controller
         Log::info('file path:' . $file);
         return response()->download($file);
     }
+
+    /**
+     * @param Request $request
+     * @return string
+     */
+    public function clear(Request $request)
+    {
+        $biddinginformations = $this->searchrequest($request)->get();
+        foreach ($biddinginformations as $biddinginformation)
+        {
+//            Log::info($biddinginformation->id);
+            $biddinginformation->delete();
+        }
+
+        return route('basic.biddinginformations.index');
+    }
 }

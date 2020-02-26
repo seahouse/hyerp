@@ -31,7 +31,7 @@
         <div class="form-group">
             {!! Form::label($biddinginformationitem->key, $biddinginformationitem->key, ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-4 col-sm-6'>
-                {!! Form::text($biddinginformationitem->key, $biddinginformationitem->value, ['class' => 'form-control', 'readonly']) !!}
+                {!! Form::text($biddinginformationitem->key, $biddinginformationitem->value, ['class' => 'form-control', 'readonly', 'oncopy' => 'return false', 'oncontextmenu' => 'return false']) !!}
             </div>
             <div class='col-xs-4 col-sm-4'>
                 @can('basic_biddinginformation_remark')
