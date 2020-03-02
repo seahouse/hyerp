@@ -8,6 +8,10 @@ class Biddinginformation extends Model
 {
     //
     protected $fillable = [
+        'number',
+        'year',
+        'digital_number',
+        'closed',
     ];
 
     public function biddinginformationitems() {

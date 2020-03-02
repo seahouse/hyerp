@@ -15,6 +15,11 @@ class CreateBiddinginformationsTable extends Migration
         Schema::create('biddinginformations', function (Blueprint $table) {
             $table->increments('id');
 
+            $table->string('number');
+            $table->integer('year');
+            $table->integer('digital_number');
+            $table->smallInteger('closed')->default(0);
+
 //            $table->integer('seq');
 //            $table->date('bidding_date');
 //            $table->string('name');

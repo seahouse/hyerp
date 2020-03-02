@@ -6,11 +6,14 @@ use App\Http\Controllers\HelperController;
 use App\Models\Basic\Biddinginformation;
 use App\Models\Basic\Biddinginformationdefinefield;
 use App\Models\Basic\Biddinginformationitem;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Excel, Log;
+use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\PhpWord;
 
 class BiddinginformationController extends Controller
 {
@@ -249,15 +252,31 @@ class BiddinginformationController extends Controller
             $biddinginformationdefinefields = Biddinginformationdefinefield::all();
 
             $objExcel = $reader->getExcel();
-            for ($i = 0; $i < $objExcel->getSheetCount(); $i++)
+            $sheet = $objExcel->getSheetByName('项目明细');
+            $sheet2 = $objExcel->getSheetByName('汇总表');
+            if (isset($sheet))
+//            for ($i = 0; $i < $objExcel->getSheetCount(); $i++)
             {
-                $sheet = $objExcel->getSheet($i);
+//                $sheet = $objExcel->getSheet($i);
                 $highestRow = $sheet->getHighestRow();
                 $highestColumn = $sheet->getHighestColumn();
                 $highestColumn++;
+                $highestRow2 = $sheet2->getHighestRow();
+                $highestColumn2 = $sheet2->getHighestColumn();
+                $highestColumn2++;
 
                 //  Loop through each row of the worksheet in turn
                 $keys = [];
+                $keys2 = [];
+                if (isset($sheet2))
+                {
+                    //  Read a row of data into an array
+                    $rowData2 = $sheet2->rangeToArray('A' . 1 . ':' . $highestColumn2 . 1,
+                        NULL, TRUE, FALSE);
+
+                    // 第一行，关键字
+                    $keys2 = $rowData2[0];
+                }
                 for ($row = 1; $row <= $highestRow; $row++)
                 {
                     if ($row == 1)
@@ -301,26 +320,102 @@ class BiddinginformationController extends Controller
                         }
 //                        dd($input);
 
-                        if (array_key_exists('序号', $input) && !empty($input['序号'][0]))
+                        if (array_key_exists('名称', $input) && !empty($input['名称'][0]))
                         {
-//                            dd($input['序号'][0]);
+                            // 查找汇总表里的数据
+                            if (isset($sheet2))
                             {
-                                $data = [];
+                                for ($row2 = 2; $row2 <= $highestRow2; $row2++)
+                                {
+                                    if ($row2 == 1)
+                                    {
+//                                    //  Read a row of data into an array
+//                                    $rowData2 = $sheet2->rangeToArray('A' . $row2 . ':' . $highestColumn2 . $row2,
+//                                        NULL, TRUE, FALSE);
+//
+//                                    // 第一行，关键字
+//                                    $keys2 = $rowData2[0];
+                                    }
+                                    else
+                                    {
+                                        $input2 = [];
+                                        $index = 0;
+                                        for ($colIndex = 'A'; $colIndex != $highestColumn2; $colIndex++)
+                                        {
+                                            // 组装单元格标识  A1  A2
+                                            $addr = $colIndex . $row2;
+                                            // 获取单元格内容
+//                            $cell = $sheet->getCell($addr)->getValue();
+                                            $cell = $sheet2->getCell($addr)->getCalculatedValue();
+                                            //富文本转换字符串
+                                            if ($cell instanceof PHPExcel_RichText) {
+                                                $cell = $cell->__toString();
+                                            }
+                                            $comment = $sheet2->getComment($addr)->getText()->getPlainText();
+                                            $input2[$keys2[$index]] = [$cell, $comment];
+                                            $index++;
+                                        }
+
+                                        // 先找 编号， 找不到 就找名称
+                                        // 编号是通用方法， 名称是第一次导入的方法
+                                        if (array_key_exists('编号', $input) && array_key_exists('编号', $input2) && !empty($input['编号'][0]) && !empty($input2['编号'][0]) && $input2['编号'][0] == $input['编号'][0])
+                                        {
+                                            $input = array_merge($input, $input2);
+                                            break;
+                                        }
+                                        elseif (array_key_exists('名称', $input2) && !empty($input2['名称'][0]) && $input2['名称'][0] == $input['名称'][0])
+                                        {
+                                            $input = array_merge($input, $input2);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+//                            dd($input);
+
+                            $number = '';
+                            if (array_key_exists('编号', $input) && !empty($input['编号'][0]))
+                                $number = $input['编号'][0];
+                            else
+                            {
+                                $seqnumber = Biddinginformation::where('year', Carbon::today()->year)->max('digital_number');
+                                $seqnumber += 1;
+                                $seqnumber = str_pad($seqnumber, 4, 0, STR_PAD_LEFT);
+
+                                $number = Carbon::today()->format('Y') . '-' . $seqnumber;
+                            }
+                            $data = [
+                                'number'    => $number,
+                                'year'      => Carbon::today()->year,
+                                'digital_number'    => isset($seqnumber) ? $seqnumber : 1,
+                            ];
+                            $biddinginformation = Biddinginformation::where('number', $number)->first();
+                            if (!isset($biddinginformation))
                                 $biddinginformation = Biddinginformation::create($data);
 //                                dd($biddinginformation);
-                                foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
-                                {
+                            foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+                            {
 //                                    dd($input[$biddinginformationdefinefield->name]);
-                                    $itemdata = [];
-                                    $itemdata['biddinginformation_id']      = $biddinginformation->id;
-                                    $itemdata['key']                           = $biddinginformationdefinefield->name;
-                                    $itemdata['value']                         = isset($input[$biddinginformationdefinefield->name][0]) ? $input[$biddinginformationdefinefield->name][0] : '';
-                                    $itemdata['remark']                        = isset($input[$biddinginformationdefinefield->name][1]) ? $input[$biddinginformationdefinefield->name][1] : '';
-                                    $itemdata['sort']                          = $biddinginformationdefinefield->sort;
-                                    $itemdata['type']                          = $biddinginformationdefinefield->type;
+
+                                $itemdata = [];
+                                $itemdata['biddinginformation_id']      = $biddinginformation->id;
+                                $itemdata['key']                           = $biddinginformationdefinefield->name;
+                                $itemdata['value']                         = isset($input[$biddinginformationdefinefield->name][0]) ? $input[$biddinginformationdefinefield->name][0] : '';
+                                $itemdata['remark']                        = isset($input[$biddinginformationdefinefield->name][1]) ? $input[$biddinginformationdefinefield->name][1] : '';
+                                $itemdata['sort']                          = $biddinginformationdefinefield->sort;
+                                $itemdata['type']                          = $biddinginformationdefinefield->type;
 //                                    Log::info($itemdata);
-                                    Biddinginformationitem::create($itemdata);
+                                $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationdefinefield->name)->first();
+                                if (isset($biddinginformationitem))
+                                {
+                                    if ($biddinginformationitem->value != $itemdata['value'])
+                                        $biddinginformationitem->value = $itemdata['value'];
+                                    if ($biddinginformationitem->remark != $itemdata['remark'])
+                                        $biddinginformationitem->remark = $itemdata['remark'];
+                                    $biddinginformationitem->save();
                                 }
+                                else
+                                    Biddinginformationitem::create($itemdata);
                             }
                         }
                     }
@@ -398,10 +493,11 @@ class BiddinginformationController extends Controller
         $filename = 'BAOJIA';
 //        $filename = iconv("UTF-8","GBK//IGNORE", '中标信息');
         Excel::create($filename, function($excel) use ($request) {
-            $excel->sheet('Sheet1', function($sheet) use ($request) {
+            $excel->sheet('项目明细', function($sheet) use ($request) {
                 $biddinginformations = $this->searchrequest($request)->get();
-                $biddinginformationdefinefields = Biddinginformationdefinefield::orderBy('sort')->get();
+                $biddinginformationdefinefields = Biddinginformationdefinefield::where('exceltype', '项目明细')->orderBy('sort')->get();
                 $data = [];
+                array_push($data, '编号');
                 foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
                 {
                     array_push($data, $biddinginformationdefinefield->name);
@@ -412,6 +508,47 @@ class BiddinginformationController extends Controller
                 {
                     $data = [];
                     $comments = [];
+                    array_push($data, $biddinginformation->number);
+                    array_push($comments, '');
+                    foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+                    {
+                        $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationdefinefield->name)->first();
+                        array_push($data, isset($biddinginformationitem) ? $biddinginformationitem->value : '');
+                        array_push($comments, isset($biddinginformationitem) ? $biddinginformationitem->remark : '');
+                    }
+                    $sheet->appendRow($data);
+
+                    // 添加批注
+                    $colIndex = 'A';
+                    foreach ($comments as $comment)
+                    {
+                        if (strlen($comment) > 0)
+                            $sheet->getComment($colIndex . $rowCol)->getText()->createTextRun($comment);
+                        $colIndex++;
+                    }
+                    $rowCol++;
+                }
+
+//                $sheet->fromArray($biddinginformation["data"]);
+            });
+
+            $excel->sheet('汇总表', function($sheet) use ($request) {
+                $biddinginformations = $this->searchrequest($request)->get();
+                $biddinginformationdefinefields = Biddinginformationdefinefield::where('exceltype', '汇总表')->orderBy('sort')->get();
+                $data = [];
+                array_push($data, '编号');
+                foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+                {
+                    array_push($data, $biddinginformationdefinefield->name);
+                }
+                $sheet->appendRow($data);
+                $rowCol = 2;        // 从第二行开始
+                foreach ($biddinginformations as $biddinginformation)
+                {
+                    $data = [];
+                    $comments = [];
+                    array_push($data, $biddinginformation->number);
+                    array_push($comments, '');
                     foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
                     {
                         $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationdefinefield->name)->first();
@@ -503,5 +640,151 @@ class BiddinginformationController extends Controller
         }
 
         return route('basic.biddinginformations.index');
+    }
+
+    public function exportword($id)
+    {
+        $biddinginformation = Biddinginformation::findOrFail($id);
+
+        $phpWord = new PhpWord();
+
+        $section = $phpWord->createSection();
+
+        $i = 1;
+        foreach ($biddinginformation->biddinginformationitems as $biddinginformationitem)
+        {
+            $str = $i . '、' . $biddinginformationitem->key . '：' . $biddinginformationitem->value;
+            $section->addText($str);
+            $i++;
+        }
+
+        $writer = IOFactory::createWriter($phpWord);
+        $writer->save(public_path('download/biddinginformations/TOUBIAO.docx'));
+
+        return response()->download(public_path('download/biddinginformations/TOUBIAO.docx'));
+
+
+        // https://www.cnblogs.com/duanyingkui/p/8367411.html
+//        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+//        //设置默认样式
+//        $phpWord->setDefaultFontName('仿宋');//字体
+//        $phpWord->setDefaultFontSize(16);//字号
+//
+//        //添加页面
+//        $section = $phpWord->createSection();
+//
+//        //添加目录
+//        $styleTOC  = ['tabLeader' => \PhpOffice\PhpWord\Style\TOC::TABLEADER_DOT];
+//        $styleFont = ['spaceAfter' => 60, 'name' => 'Tahoma', 'size' => 12];
+//        $section->addTOC($styleFont, $styleTOC);
+//
+//        //默认样式
+//        $section->addText('Hello PHP!');
+//        $section->addTextBreak();//换行符
+//
+//        //指定的样式
+//        $section->addText(
+//            'Hello world!',
+//            [
+//                'name' => '宋体',
+//                'size' => 16,
+//                'bold' => true,
+//            ]
+//        );
+//        $section->addTextBreak(5);//多个换行符
+//
+//        //自定义样式
+//        $myStyle = 'myStyle';
+//        $phpWord->addFontStyle(
+//            $myStyle,
+//            [
+//                'name' => 'Verdana',
+//                'size' => 12,
+//                'color' => '1BFF32',
+//                'bold' => true,
+//                'spaceAfter' => 20,
+//            ]
+//        );
+//        $section->addText('Hello Laravel!', $myStyle);
+//        $section->addText('Hello Vue.js!', $myStyle);
+//        $section->addPageBreak();//分页符
+//
+//        //添加文本资源
+//        $textrun = $section->createTextRun();
+//        $textrun->addText('加粗', ['bold' => true]);
+//        $section->addTextBreak();//换行符
+//        $textrun->addText('倾斜', ['italic' => true]);
+//        $section->addTextBreak();//换行符
+//        $textrun->addText('字体颜色', ['color' => 'AACC00']);
+//
+//        //超链接
+//        $linkStyle = ['color' => '0000FF', 'underline' => \PhpOffice\PhpWord\Style\Font::UNDERLINE_SINGLE];
+//        $phpWord->addLinkStyle('myLinkStyle', $linkStyle);
+//        $section->addLink('http://www.baidu.com', '百度一下', 'myLinkStyle');
+//        $section->addLink('http://www.baidu.com', null, 'myLinkStyle');
+//
+//        //添加图片
+//        $imageStyle = ['width' => 480, 'height' => 640, 'align' => 'center'];
+//        $section->addImage('./img/t1.jpg', $imageStyle);
+//        $section->addImage('./img/t2.jpg',$imageStyle);
+//
+//        //添加标题
+//        $phpWord->addTitleStyle(1, ['bold' => true, 'color' => '1BFF32', 'size' => 38, 'name' => 'Verdana']);
+//        $section->addTitle('标题1', 1);
+//        $section->addTitle('标题2', 1);
+//        $section->addTitle('标题3', 1);
+//
+//        //添加表格
+//        $styleTable = [
+//            'borderColor' => '006699',
+//            'borderSize' => 6,
+//            'cellMargin' => 50,
+//        ];
+//        $styleFirstRow = ['bgColor' => '66BBFF'];//第一行样式
+//        $phpWord->addTableStyle('myTable', $styleTable, $styleFirstRow);
+//
+//        $table = $section->addTable('myTable');
+//        $table->addRow(400);//行高400
+//        $table->addCell(2000)->addText('学号');
+//        $table->addCell(2000)->addText('姓名');
+//        $table->addCell(2000)->addText('专业');
+//        $table->addRow(400);//行高400
+//        $table->addCell(2000)->addText('2015123');
+//        $table->addCell(2000)->addText('小明');
+//        $table->addCell(2000)->addText('计算机科学与技术');
+//        $table->addRow(400);//行高400
+//        $table->addCell(2000)->addText('2016789');
+//        $table->addCell(2000)->addText('小傻');
+//        $table->addCell(2000)->addText('教育学技术');
+//
+//        //页眉与页脚
+//        $header = $section->createHeader();
+//        $footer = $section->createFooter();
+//        $header->addPreserveText('页眉');
+//        $footer->addPreserveText('页脚 - 页数 {PAGE} - {NUMPAGES}.');
+//
+//        //生成的文档为Word2007
+//        $writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+//        $writer->save('./word/hello.docx');
+//
+//        //将文档保存为ODT文件...
+//        $writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'ODText');
+//        $writer->save('./word/hello.odt');
+//
+//        //将文档保存为HTML文件...
+//        $writer = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'HTML');
+//        $writer->save('./word/hello.html');
+    }
+
+    public function close($id)
+    {
+        //
+        $biddinginformation = Biddinginformation::find($id);
+        if (isset($biddinginformation))
+        {
+            $biddinginformation->closed = 1;
+            $biddinginformation->save();
+        }
+        return redirect('basic/biddinginformations');
     }
 }

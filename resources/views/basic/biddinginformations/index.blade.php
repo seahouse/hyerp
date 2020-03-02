@@ -47,7 +47,7 @@
     <table class="table table-striped table-hover table-condensed">
         <thead>
             <tr>
-                <th>id</th>
+                <th>编号</th>
                 @foreach($types as $type)
                 <th>{{ $type }}</th>
                 @endforeach
@@ -62,7 +62,7 @@
             @foreach($biddinginformations as $biddinginformation)
                 <tr>
                     <td>
-                        {{ $biddinginformation->id }}
+                        {{ $biddinginformation->number }}
                     </td>
                     @foreach($types as $type)
                     <td>
@@ -91,9 +91,14 @@
                     <td>
                         <div class="form-inline">
                             <a href="{{ URL::to('/basic/biddinginformations/'.$biddinginformation->id) }}" class="btn btn-success btn-xs pull-left">查看</a>
-                            <a href="{{ URL::to('/basic/biddinginformations/'.$biddinginformation->id.'/edit') }}" class="btn btn-success btn-xs pull-left">编辑</a>
-                            {{--<a href="{{ URL::to('/dingtalk/dtlogs/'.$dtlog->id.'/attachsohead') }}" class="btn btn-success btn-sm" target="_blank">关联订单</a>--}}
-                            {{--<a href="{{ URL::to('/dingtalk/dtlogs/'.$dtlog->id.'/peoplecount') }}" class="btn btn-success btn-sm" target="_blank">人数</a>--}}
+                            @if ($biddinginformation->closed != 1)
+                                <a href="{{ URL::to('/basic/biddinginformations/'.$biddinginformation->id.'/edit') }}" class="btn btn-success btn-xs pull-left">编辑</a>
+                            @endif
+                            <a href="{{ url('basic/biddinginformations/exportword/' . $biddinginformation->id) }}" class="btn btn-success btn-xs pull-left" target="_blank">导出Word</a>
+                            {!! Form::open(array('action' => ['Basic\BiddinginformationController@close', $biddinginformation->id], 'method' => 'post', 'onsubmit' => 'return confirm("确定关闭此记录?");')) !!}
+                            {!! Form::submit('关闭', ['class' => 'btn btn-danger btn-xs pull-left']) !!}
+                            {!! Form::close() !!}
+
                             {!! Form::open(array('route' => array('basic.biddinginformations.destroy', $biddinginformation->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
                             {!! Form::submit('删除', ['class' => 'btn btn-danger btn-xs']) !!}
                             {!! Form::close() !!}
@@ -145,7 +150,7 @@
                     url: "{!! url('basic/biddinginformations/clear') !!}",
                     data : $('#frmCondition').serialize(),
                     success: function(result) {
-                        alert(result);
+//                        alert(result);
                         location.href = result;
                     },
                     error: function(xhr, ajaxOptions, thrownError) {

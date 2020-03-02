@@ -180,6 +180,8 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
         Route::any('export', 'BiddinginformationController@export');
         Route::get('downloadfile/{filename}', 'BiddinginformationController@downloadfile')->name('basic.biddinginformations.downloadfile');
         Route::post('clear', 'BiddinginformationController@clear');
+        Route::get('exportword/{id}', 'BiddinginformationController@exportword');
+        Route::post('close/{id}', 'BiddinginformationController@close');
     });
     Route::resource('biddinginformations', 'BiddinginformationController');
     Route::group(['prefix' => 'biddinginformationitems'], function() {
@@ -571,7 +573,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
 
     });
     Route::resource('techpurchase', 'TechpurchaseController');
-    Route::resource('techpurchaseattachment', 'TechpurchaseachmentController');
+    Route::resource('techpurchaseattachment', 'TechpurchaseattachmentController');
     Route::resource('techpurchaseitem', 'TechpurchaseitemController');
 
     Route::post('bingdingtalk', 'ApprovalController@bingdingtalk');

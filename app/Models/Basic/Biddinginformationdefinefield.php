@@ -11,5 +11,7 @@ class Biddinginformationdefinefield extends Model
         'name',
         'sort',
         'type',
+        'exceltype',
+        'projecttype',
     ];
 }

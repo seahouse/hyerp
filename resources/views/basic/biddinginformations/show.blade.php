@@ -44,6 +44,12 @@
             </div>
         </div>
     @endforeach
+
+    {{--<div class="form-group">--}}
+        {{--<div class="col-sm-offset-2 col-sm-10">--}}
+            {{--<a href="{{ url('basic/biddinginformations/exportword/' . $biddinginformation->id) }}" class="btn btn-primary" target="_blank">导出Word</a>--}}
+        {{--</div>--}}
+    {{--</div>--}}
     {!! Form::close() !!}
 
 @endsection
