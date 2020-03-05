@@ -164,7 +164,7 @@ class SupplierticketReminder extends Command
                 if ($needReminder)
                 {
                     $this->sendMsg($msg, $pohead->transactor_id);
-                    $this->sendMsg($msg, 186);      // to LiuYJ
+//                    $this->sendMsg($msg, 186);      // to LiuYJ
                 }
 
             }

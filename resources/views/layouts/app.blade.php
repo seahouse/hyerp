@@ -22,6 +22,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('DataTables/datatables.min.css') }}" />
     {{--<link rel="stylesheet" type="text/css" href="{{ asset('DataTables/DataTables-1.10.16/css/jquery.dataTables.css') }}" />--}}
     <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery-editable-select.css') }} ">
+    {{--<link rel="stylesheet" type="text/css" href="{{ asset('editTable/jquery.edittable.min.css') }} ">--}}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap3-editable/css/bootstrap-editable.css') }} ">
 
     <style>
         body {

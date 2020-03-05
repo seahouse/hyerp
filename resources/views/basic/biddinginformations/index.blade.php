@@ -8,7 +8,11 @@
         <a href="{{ url('basic/biddinginformations/create') }}" class="btn btn-sm btn-success">新建</a>
         <a href="{{ url('basic/biddinginformations/import') }}" class="btn btn-sm btn-success">导入</a>
         <a href="{{ url('basic/biddinginformationdefinefields') }}" class="btn btn-sm btn-success">维护字段</a>
-        {{--<a href="{{ url('basic/biddinginformations/export') }}" class="btn btn-sm btn-success">导出</a>--}}
+        @can('basic_biddinginformation_edittable')
+            @if (Auth::user()->email == 'admin@admin.com')
+                <a href="{{ url('basic/biddinginformations/edittable') }}" class="btn btn-sm btn-success">高级编辑</a>
+            @endif
+        @endcan
     </div>
     
     <div class="panel-body">

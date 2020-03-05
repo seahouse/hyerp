@@ -22,6 +22,8 @@ class CreateBiddinginformationdefinefieldsTable extends Migration
             $table->string('projecttype')->nullable();          // SDA, SCR, WET, SNCR, FAS（fly ash stable）, COM, CFB, BHF
 
             $table->timestamps();
+
+            $table->unique('name');
         });
     }
 

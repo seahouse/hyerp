@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Basic;
 
+use App\Http\Controllers\DingTalkController;
 use App\Http\Controllers\HelperController;
+use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiMessageCorpconversationAsyncsendV2Request;
 use App\Models\Basic\Biddinginformation;
 use App\Models\Basic\Biddinginformationdefinefield;
 use App\Models\Basic\Biddinginformationitem;
+use App\Models\System\Dtuser;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -104,7 +107,7 @@ class BiddinginformationController extends Controller
     public function create()
     {
         //
-        $biddinginformationdefinefields = Biddinginformationdefinefield::all();
+        $biddinginformationdefinefields = Biddinginformationdefinefield::orderBy('sort')->get();
         return view('basic.biddinginformations.create', compact('biddinginformationdefinefields'));
     }
 
@@ -186,7 +189,7 @@ class BiddinginformationController extends Controller
     public function update(Request $request, $id)
     {
         //
-//        $biddinginformation = Biddinginformation::findOrFail($id);
+        $biddinginformation = Biddinginformation::findOrFail($id);
 //        $biddinginformation->update($request->all());
         $inputs = $request->all();
 //        dd($inputs);
@@ -198,10 +201,32 @@ class BiddinginformationController extends Controller
                 $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $id)->where('key', $key)->first();
                 if (isset($biddinginformationitem))
                 {
-//                dd($biddinginformationitem);
+                    $oldvalue = $biddinginformationitem->value;
                     $remark = isset($inputs[$key . $remark_suffix]) ? $inputs[$key . $remark_suffix] : '';
 //                    dd($key . ':' . $inputs[$key . $remark_suffix]);
-                    $biddinginformationitem->update(['value' => $value, 'remark' => $remark]);
+                    if ($biddinginformationitem->update(['value' => $value, 'remark' => $remark]))
+                    {
+                        if ($oldvalue != $value)
+                        {
+                            $msg = $biddinginformation->number . '项目的[' . $biddinginformationitem->key .']字段内容已修改。原内容：' . $oldvalue . '，新内容：' . $value;
+                            $data = [
+                                'msgtype'       => 'text',
+                                'text' => [
+                                    'content' => $msg
+                                ]
+                            ];
+
+//                            $dtusers = Dtuser::where('user_id', 126)->orWhere('user_id', 126)->pluck('userid');        // test
+                            $dtusers = Dtuser::where('user_id', 2)->orWhere('user_id', 64)->pluck('userid');             // WuHL, Zhoub
+                            $useridList = implode(',', $dtusers->toArray());
+//                            dd(implode(',', $dtusers->toArray()));
+                            if ($dtusers->count() > 0)
+                            {
+                                $agentid = config('custom.dingtalk.agentidlist.bidding');
+                                DingTalkController::sendWorkNotificationMessage($useridList, $agentid, json_encode($data));
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -304,8 +329,11 @@ class BiddinginformationController extends Controller
                             // 组装单元格标识  A1  A2
                             $addr = $colIndex . $row;
                             // 获取单元格内容
+                            $cell = $sheet->getCell($addr)->getFormattedValue();        // 日期格式，可以用这个函数获取到期望的格式
+//                            if ($colIndex == 'D')
+//                                dd($cell . ':' . $sheet->getCell($addr)->getDataType());
 //                            $cell = $sheet->getCell($addr)->getValue();
-                            $cell = $sheet->getCell($addr)->getCalculatedValue();
+//                            $cell = $sheet->getCell($addr)->getCalculatedValue();
                             //富文本转换字符串
                             if ($cell instanceof PHPExcel_RichText) {
                                 $cell = $cell->__toString();
@@ -345,8 +373,9 @@ class BiddinginformationController extends Controller
                                             // 组装单元格标识  A1  A2
                                             $addr = $colIndex . $row2;
                                             // 获取单元格内容
+                                            $cell = $sheet2->getCell($addr)->getFormattedValue();
 //                            $cell = $sheet->getCell($addr)->getValue();
-                                            $cell = $sheet2->getCell($addr)->getCalculatedValue();
+//                                            $cell = $sheet2->getCell($addr)->getCalculatedValue();
                                             //富文本转换字符串
                                             if ($cell instanceof PHPExcel_RichText) {
                                                 $cell = $cell->__toString();
@@ -355,6 +384,7 @@ class BiddinginformationController extends Controller
                                             $input2[$keys2[$index]] = [$cell, $comment];
                                             $index++;
                                         }
+//                                        dd($input2);
 
                                         // 先找 编号， 找不到 就找名称
                                         // 编号是通用方法， 名称是第一次导入的方法
@@ -786,5 +816,29 @@ class BiddinginformationController extends Controller
             $biddinginformation->save();
         }
         return redirect('basic/biddinginformations');
+    }
+
+    public function edittable()
+    {
+        $request = request();
+        $inputs = $request->all();
+        $biddinginformations = $this->searchrequest($request)->paginate(15);
+        $biddinginformationdefinefields = Biddinginformationdefinefield::orderBy('sort')->pluck('name');
+//        dd(json_encode($biddinginformations->toArray()['data']) );
+        return view('basic.biddinginformations.edittable', compact('biddinginformations', 'inputs', 'biddinginformationdefinefields'));
+    }
+
+    public function updateedittable(Request $request)
+    {
+//        Log::info($request->all());
+//        $inputs = $request->all();
+//        dd($inputs);
+        $id = $request->get('pk');
+        $biddinginformation = Biddinginformation::findOrFail($id);
+        $name = $request->get('name');
+        $value = $request->get('value');
+        $biddinginformation->$name = $value;
+        $biddinginformation->save();
+        return 'success';
     }
 }

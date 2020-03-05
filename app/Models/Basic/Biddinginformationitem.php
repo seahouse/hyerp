@@ -15,4 +15,8 @@ class Biddinginformationitem extends Model
         'sort',
         'type',
     ];
+
+    public function biddinginformation() {
+        return $this->belongsTo('App\Models\Basic\Biddinginformation');
+    }
 }

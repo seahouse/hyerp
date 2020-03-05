@@ -182,10 +182,13 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
         Route::post('clear', 'BiddinginformationController@clear');
         Route::get('exportword/{id}', 'BiddinginformationController@exportword');
         Route::post('close/{id}', 'BiddinginformationController@close');
+        Route::get('edittable', 'BiddinginformationController@edittable');
+        Route::post('updateedittable', 'BiddinginformationController@updateedittable');
     });
     Route::resource('biddinginformations', 'BiddinginformationController');
     Route::group(['prefix' => 'biddinginformationitems'], function() {
         Route::get('jsondata', 'BiddinginformationitemController@jsondata');
+        Route::post('updateedittable', 'BiddinginformationitemController@updateedittable');
     });
     Route::resource('biddinginformationitems', 'BiddinginformationitemController');
 });

@@ -931,6 +931,20 @@ class DingTalkController extends Controller
 //        return response()->json($response);
     }
 
+    public static function sendWorkNotificationMessage($useridList, $agentid, $msg)
+    {
+        $c = new DingTalkClient();
+        $req = new OapiMessageCorpconversationAsyncsendV2Request();
+        $req->setUseridList($useridList);
+        $req->setAgentId($agentid);
+        $req->setMsg($msg);
+
+        $session = self::getAccessToken();
+        $response = $c->execute($req, $session);
+//        Log::info(json_encode($response));
+        return $response;
+    }
+
     public static function register_call_back_user()
     {
         // Cache::flush();

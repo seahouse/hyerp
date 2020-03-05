@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Basic;
 
+use App\Http\Controllers\DingTalkController;
 use App\Models\Basic\Biddinginformationitem;
+use App\Models\System\Dtuser;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -218,5 +220,42 @@ class BiddinginformationitemController extends Controller
 //            })
 //                ->orderColumn('created_at')
             ->make(true);
+    }
+
+    public function updateedittable(Request $request)
+    {
+        Log::info($request->all());
+//        $inputs = $request->all();
+//        dd($inputs);
+        $id = $request->get('pk');
+        $biddinginformationitem = Biddinginformationitem::findOrFail($id);
+//        $name = $request->get('name');
+        $oldvalue = $biddinginformationitem->value;
+        $value = $request->get('value');
+        $biddinginformationitem->value = $value;
+        if ($biddinginformationitem->save())
+        {
+            if ($oldvalue != $value)
+            {
+                $msg = $biddinginformationitem->biddinginformation->number . '项目的[' . $biddinginformationitem->key .']字段内容已修改。原内容：' . $oldvalue . '，新内容：' . $value;
+                $data = [
+                    'msgtype'       => 'text',
+                    'text' => [
+                        'content' => $msg
+                    ]
+                ];
+
+                $dtusers = Dtuser::where('user_id', 126)->orWhere('user_id', 126)->pluck('userid');        // test
+//                $dtusers = Dtuser::where('user_id', 2)->orWhere('user_id', 64)->pluck('userid');             // WuHL, Zhoub
+                $useridList = implode(',', $dtusers->toArray());
+//                            dd(implode(',', $dtusers->toArray()));
+                if ($dtusers->count() > 0)
+                {
+                    $agentid = config('custom.dingtalk.agentidlist.bidding');
+                    DingTalkController::sendWorkNotificationMessage($useridList, $agentid, json_encode($data));
+                }
+            }
+        }
+        return 'success';
     }
 }
