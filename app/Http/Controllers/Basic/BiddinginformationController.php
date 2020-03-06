@@ -302,6 +302,8 @@ class BiddinginformationController extends Controller
                     // 第一行，关键字
                     $keys2 = $rowData2[0];
                 }
+
+                $hasFoundRow2 = [];             // 汇总表已经被找到的行
                 for ($row = 1; $row <= $highestRow; $row++)
                 {
                     if ($row == 1)
@@ -355,6 +357,9 @@ class BiddinginformationController extends Controller
                             {
                                 for ($row2 = 2; $row2 <= $highestRow2; $row2++)
                                 {
+                                    if (in_array($row2, $hasFoundRow2))
+                                        continue;
+
                                     if ($row2 == 1)
                                     {
 //                                    //  Read a row of data into an array
@@ -391,11 +396,13 @@ class BiddinginformationController extends Controller
                                         if (array_key_exists('编号', $input) && array_key_exists('编号', $input2) && !empty($input['编号'][0]) && !empty($input2['编号'][0]) && $input2['编号'][0] == $input['编号'][0])
                                         {
                                             $input = array_merge($input, $input2);
+                                            array_push($hasFoundRow2, $row2);
                                             break;
                                         }
                                         elseif (array_key_exists('名称', $input2) && !empty($input2['名称'][0]) && $input2['名称'][0] == $input['名称'][0])
                                         {
-                                            $input = array_merge($input, $input2);
+                                            $input = array_merge($input2, $input);      // 把$input放后面，重复项会使用后面的这个数组
+                                            array_push($hasFoundRow2, $row2);
                                             break;
                                         }
                                     }
