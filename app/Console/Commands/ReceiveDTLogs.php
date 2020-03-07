@@ -180,7 +180,7 @@ class ReceiveDTLogs extends Command
                                 ->where('xmjlsgrz_sohead_id', $xmjlsgrz_sohead_id)
                                 ->where('generation_reason', 0)
                                 ->where('template_name', '项目经理施工日志')
-                                ->where('dtlogitems.[key]', '1、日志日期')
+                                ->where('dtlogitems.key', '1、日志日期')
                                 ->select('dtlogs.*', 'dtlogitems.value')
                                 ->first();
                             if (isset($dtlog_last))
@@ -196,7 +196,7 @@ class ReceiveDTLogs extends Command
                                         ->leftJoin('dtlogitems', 'dtlogitems.dtlog_id', '=', 'dtlogs.id')
                                         ->where('xmjlsgrz_sohead_id', $xmjlsgrz_sohead_id)
                                         ->where('template_name', '项目经理施工日志')
-                                        ->where('dtlogitems.[key]', '1、日志日期')
+                                        ->where('dtlogitems.key', '1、日志日期')
                                         ->select('dtlogs.*', 'dtlogitems.value')
                                         ->first();
                                     if (!isset($dtlog_temp))
