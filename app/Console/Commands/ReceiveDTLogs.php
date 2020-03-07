@@ -10,7 +10,7 @@ use App\Models\Dingtalk\Dtlogitem;
 use App\Models\Sales\Salesorder_hxold;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Log;
+use Log, DB;
 
 class ReceiveDTLogs extends Command
 {
@@ -95,6 +95,14 @@ class ReceiveDTLogs extends Command
 //                Log::info($report->remark);
 //                Log::info($report->template_name);
 
+                        $xmjlsgrz_sohead_id = 0;
+                        $xmjlsgrz_log_date = '';
+                        $xmjlsgrz_logitem_6 = 0;
+                        $xmjlsgrz_logitem_6_1 = 0;
+                        $xmjlsgrz_logitem_6_2 = 0;
+                        $xmjlsgrz_logitem_6_3 = 0;
+                        $xmjlsgrz_logitem_6_4 = 0;
+                        $xmjlsgrz_logitem_6_5 = 0;
                         $dtlog = Dtlog::where('report_id', $report->report_id)->first();
                         if (!isset($dtlog))
                         {
@@ -116,17 +124,37 @@ class ReceiveDTLogs extends Command
                                         $itemArray['value'] = "";
                                     Dtlogitem::create($itemArray);
 
-                                    if ($this->option('template') == '项目经理施工日志' && $itemArray['key'] == '2、工程项目名称')
+                                    if ($this->option('template') == '项目经理施工日志')
                                     {
-                                        $soheads = Salesorder_hxold::all();
-                                        foreach ($soheads as $sohead)
+                                        if ($itemArray['key'] == '2、工程项目名称')
                                         {
-                                            if (strpos($itemArray['value'], $sohead->number) !== false)
+                                            $soheads = Salesorder_hxold::all();
+                                            foreach ($soheads as $sohead)
                                             {
-                                                $dtlog->update(['xmjlsgrz_sohead_id' => $sohead->id]);
-                                                break;
+                                                if (strpos($itemArray['value'], $sohead->number) !== false)
+                                                {
+                                                    $dtlog->update(['xmjlsgrz_sohead_id' => $sohead->id]);
+                                                    $xmjlsgrz_sohead_id = $sohead->id;
+                                                    break;
+                                                }
                                             }
                                         }
+                                        if ($itemArray['key'] == '1、日志日期')
+                                        {
+                                            $xmjlsgrz_log_date = Carbon::parse($itemArray['value']);
+                                        }
+                                        if ($itemArray['key'] == '6、今日安装队总人数')
+                                            $xmjlsgrz_logitem_6 = $itemArray['value'];
+                                        if ($itemArray['key'] == '6-1、其中机组人员')
+                                            $xmjlsgrz_logitem_6_1 = $itemArray['value'];
+                                        if ($itemArray['key'] == '6-2、其中电气人员')
+                                            $xmjlsgrz_logitem_6_2 = $itemArray['value'];
+                                        if ($itemArray['key'] == '6-3、其中保温人员')
+                                            $xmjlsgrz_logitem_6_3 = $itemArray['value'];
+                                        if ($itemArray['key'] == '6-4、其中管道人员')
+                                            $xmjlsgrz_logitem_6_4 = $itemArray['value'];
+                                        if ($itemArray['key'] == '6-5、安装队管理人员')
+                                            $xmjlsgrz_logitem_6_5 = $itemArray['value'];
                                     }
                                     if ($this->option('template') == '工程调试日志' && $itemArray['key'] == '工程项目名称')
                                     {
@@ -143,6 +171,103 @@ class ReceiveDTLogs extends Command
                                 }
                             }
                         }
+
+                        // 项目经理施工日志，补全之前的日志，如果超过一定有效天数，则不增加
+                        if ($xmjlsgrz_sohead_id > 0 && null != $xmjlsgrz_log_date)
+                        {
+                            $dtlog_last = DB::table('dtlogs')
+                                ->leftJoin('dtlogitems', 'dtlogitems.dtlog_id', '=', 'dtlogs.id')
+                                ->where('xmjlsgrz_sohead_id', $xmjlsgrz_sohead_id)
+                                ->where('generation_reason', 0)
+                                ->where('template_name', '项目经理施工日志')
+                                ->where('dtlogitems.[key]', '1、日志日期')
+                                ->select('dtlogs.*', 'dtlogitems.value')
+                                ->first();
+                            if (isset($dtlog_last))
+                            {
+                                $xmjlsgrz_log_lastdate = Carbon::parse($dtlog_last->value);
+                                while (true)
+                                {
+                                    $xmjlsgrz_log_lastdate->addDay();
+                                    if ($xmjlsgrz_log_lastdate->gte($xmjlsgrz_log_date))
+                                        break;
+
+                                    $dtlog_temp = DB::table('dtlogs')
+                                        ->leftJoin('dtlogitems', 'dtlogitems.dtlog_id', '=', 'dtlogs.id')
+                                        ->where('xmjlsgrz_sohead_id', $xmjlsgrz_sohead_id)
+                                        ->where('template_name', '项目经理施工日志')
+                                        ->where('dtlogitems.[key]', '1、日志日期')
+                                        ->select('dtlogs.*', 'dtlogitems.value')
+                                        ->first();
+                                    if (!isset($dtlog_temp))
+                                    {
+                                        $dtlog = Dtlog::create([
+                                            'report_id'             => $xmjlsgrz_sohead_id . '_' . $xmjlsgrz_log_lastdate->toDateString(),
+                                            'create_time'           => Carbon::now()->toDateTimeString(),
+                                            'creator_id'            => '0',
+                                            'creator_name'          => '系统',
+                                            'remark'                 => '日志补全',
+                                            'template_name'         => '项目经理施工日志',
+                                            'generation_reason'    => 1,
+                                            'xmjlsgrz_sohead_id'   => $xmjlsgrz_sohead_id,
+                                        ]);
+                                        if (isset($dtlog))
+                                        {
+                                            Dtlogitem::create([
+                                                'dtlog_id'          => $dtlog->id,
+                                                'key'                => '1、日志日期',
+                                                'value'              => $xmjlsgrz_log_lastdate->toDateString(),
+                                                'sort'               => 0,
+                                                'type'               => 0,
+                                            ]);
+                                            Dtlogitem::create([
+                                                'dtlog_id'          => $dtlog->id,
+                                                'key'                => '6、今日安装队总人数',
+                                                'value'              => $xmjlsgrz_logitem_6,
+                                                'sort'               => 0,
+                                                'type'               => 0,
+                                            ]);
+                                            Dtlogitem::create([
+                                                'dtlog_id'          => $dtlog->id,
+                                                'key'                => '6-1、其中机组人员',
+                                                'value'              => $xmjlsgrz_logitem_6_1,
+                                                'sort'               => 0,
+                                                'type'               => 0,
+                                            ]);
+                                            Dtlogitem::create([
+                                                'dtlog_id'          => $dtlog->id,
+                                                'key'                => '6-2、其中电气人员',
+                                                'value'              => $xmjlsgrz_logitem_6_2,
+                                                'sort'               => 0,
+                                                'type'               => 0,
+                                            ]);
+                                            Dtlogitem::create([
+                                                'dtlog_id'          => $dtlog->id,
+                                                'key'                => '6-3、其中保温人员',
+                                                'value'              => $xmjlsgrz_logitem_6_3,
+                                                'sort'               => 0,
+                                                'type'               => 0,
+                                            ]);
+                                            Dtlogitem::create([
+                                                'dtlog_id'          => $dtlog->id,
+                                                'key'                => '6-4、其中管道人员',
+                                                'value'              => $xmjlsgrz_logitem_6_4,
+                                                'sort'               => 0,
+                                                'type'               => 0,
+                                            ]);
+                                            Dtlogitem::create([
+                                                'dtlog_id'          => $dtlog->id,
+                                                'key'                => '6-5、安装队管理人员',
+                                                'value'              => $xmjlsgrz_logitem_6_5,
+                                                'sort'               => 0,
+                                                'type'               => 0,
+                                            ]);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                     }
                 }
             }
