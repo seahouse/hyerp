@@ -121,7 +121,18 @@ class BiddinginformationController extends Controller
     {
         //
         $inputs = $request->all();
-        $biddinginformation = Biddinginformation::create([]);
+
+        $seqnumber = Biddinginformation::where('year', Carbon::today()->year)->max('digital_number');
+        $seqnumber += 1;
+        $seqnumber = str_pad($seqnumber, 4, 0, STR_PAD_LEFT);
+
+        $number = Carbon::today()->format('Y') . '-' . $seqnumber;
+        $data = [
+            'number'    => $number,
+            'year'      => Carbon::today()->year,
+            'digital_number'    => isset($seqnumber) ? $seqnumber : 1,
+        ];
+        $biddinginformation = Biddinginformation::create($data);
         if (isset($biddinginformation))
         {
             $sort = 0;

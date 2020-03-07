@@ -15,6 +15,7 @@ class Dtlog extends Model
         'dept_name',
         'remark',
         'template_name',
+        'generation_reason',
         'xmjlsgrz_sohead_id',
         'gctsrz_sohead_id',
     ];
