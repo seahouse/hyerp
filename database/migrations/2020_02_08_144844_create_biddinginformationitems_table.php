@@ -25,6 +25,8 @@ class CreateBiddinginformationitemsTable extends Migration
             $table->timestamps();
 
             $table->foreign('biddinginformation_id')->references('id')->on('biddinginformations')->onDelete('cascade');
+
+            $table->index('biddinginformation_id', 'key');
         });
     }
 

@@ -174,6 +174,7 @@ class BiddinginformationController extends Controller
     {
         //
         $biddinginformation = Biddinginformation::findOrFail($id);
+//        dd($biddinginformation->biddinginformationitems()->orderBy('id')->get());
         return view('basic.biddinginformations.show', compact('biddinginformation'));
     }
 
@@ -540,10 +541,10 @@ class BiddinginformationController extends Controller
 
         $filename = 'BAOJIA';
 //        $filename = iconv("UTF-8","GBK//IGNORE", '中标信息');
+        Log::info('export 1');
         Excel::create($filename, function($excel) use ($request) {
             $excel->sheet('项目明细', function($sheet) use ($request) {
-                $biddinginformations = $this->searchrequest($request)->get();
-                $biddinginformationdefinefields = Biddinginformationdefinefield::where('exceltype', '项目明细')->orderBy('sort')->get();
+                $biddinginformationdefinefields = Biddinginformationdefinefield::where('exceltype', '项目明细')->orWhere('exceltype', '汇总明细')->orderBy('sort')->get();
                 $data = [];
                 array_push($data, '编号');
                 foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
@@ -552,37 +553,69 @@ class BiddinginformationController extends Controller
                 }
                 $sheet->appendRow($data);
                 $rowCol = 2;        // 从第二行开始
-                foreach ($biddinginformations as $biddinginformation)
-                {
-                    $data = [];
-                    $comments = [];
-                    array_push($data, $biddinginformation->number);
-                    array_push($comments, '');
-                    foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
-                    {
-                        $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationdefinefield->name)->first();
-                        array_push($data, isset($biddinginformationitem) ? $biddinginformationitem->value : '');
-                        array_push($comments, isset($biddinginformationitem) ? $biddinginformationitem->remark : '');
-                    }
-                    $sheet->appendRow($data);
 
-                    // 添加批注
-                    $colIndex = 'A';
-                    foreach ($comments as $comment)
-                    {
-                        if (strlen($comment) > 0)
-                            $sheet->getComment($colIndex . $rowCol)->getText()->createTextRun($comment);
-                        $colIndex++;
-                    }
-                    $rowCol++;
-                }
+//                Log::info('export 1');
+//                $biddinginformations = $this->searchrequest($request)->get();
+//                foreach ($biddinginformations as $biddinginformation)
+//                {
+//                    $data = [];
+//                    $comments = [];
+//                    array_push($data, $biddinginformation->number);
+//                    array_push($comments, '');
+//                    foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+//                    {
+//                        $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationdefinefield->name)->first();
+//                        array_push($data, isset($biddinginformationitem) ? $biddinginformationitem->value : '');
+//                        array_push($comments, isset($biddinginformationitem) ? $biddinginformationitem->remark : '');
+//                    }
+//                    $sheet->appendRow($data);
+//
+//                    // 添加批注
+//                    $colIndex = 'A';
+//                    foreach ($comments as $comment)
+//                    {
+//                        if (strlen($comment) > 0)
+//                            $sheet->getComment($colIndex . $rowCol)->getText()->createTextRun($comment);
+//                        $colIndex++;
+//                    }
+//                    $rowCol++;
+//                }
+//                Log::info('export 2');
 
-//                $sheet->fromArray($biddinginformation["data"]);
+                $query = $this->searchrequest($request);
+                $query->chunk(100, function ($biddinginformations) use ($sheet, $biddinginformationdefinefields, &$rowCol) {
+                    foreach ($biddinginformations as $biddinginformation)
+                    {
+                        $data = [];
+                        $comments = [];
+                        array_push($data, $biddinginformation->number);
+                        array_push($comments, '');
+                        foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+                        {
+//                            $biddinginformationitem = $biddinginformation->biddinginformationitems()->where('key', $biddinginformationdefinefield->name)->first();
+                            $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationdefinefield->name)->first();
+                            array_push($data, isset($biddinginformationitem) ? $biddinginformationitem->value : '');
+                            array_push($comments, isset($biddinginformationitem) ? $biddinginformationitem->remark : '');
+                        }
+                        $sheet->appendRow($data);
+
+                        // 添加批注
+                        $colIndex = 'A';
+                        foreach ($comments as $comment)
+                        {
+                            if (strlen($comment) > 0)
+                                $sheet->getComment($colIndex . $rowCol)->getText()->createTextRun($comment);
+                            $colIndex++;
+                        }
+                        $rowCol++;
+                    }
+                });
+                $freezeCol = config('custom.bidding.freeze_detail_col', 'B');
+                $sheet->setFreeze($freezeCol . '2');
             });
 
             $excel->sheet('汇总表', function($sheet) use ($request) {
-                $biddinginformations = $this->searchrequest($request)->get();
-                $biddinginformationdefinefields = Biddinginformationdefinefield::where('exceltype', '汇总表')->orderBy('sort')->get();
+                $biddinginformationdefinefields = Biddinginformationdefinefield::where('exceltype', '汇总表')->orWhere('exceltype', '汇总明细')->orderBy('sort')->get();
                 $data = [];
                 array_push($data, '编号');
                 foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
@@ -591,33 +624,37 @@ class BiddinginformationController extends Controller
                 }
                 $sheet->appendRow($data);
                 $rowCol = 2;        // 从第二行开始
-                foreach ($biddinginformations as $biddinginformation)
-                {
-                    $data = [];
-                    $comments = [];
-                    array_push($data, $biddinginformation->number);
-                    array_push($comments, '');
-                    foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+                $query = $this->searchrequest($request);
+                $query->chunk(100, function ($biddinginformations) use ($sheet, $biddinginformationdefinefields, &$rowCol) {
+                    foreach ($biddinginformations as $biddinginformation)
                     {
-                        $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationdefinefield->name)->first();
-                        array_push($data, isset($biddinginformationitem) ? $biddinginformationitem->value : '');
-                        array_push($comments, isset($biddinginformationitem) ? $biddinginformationitem->remark : '');
-                    }
-                    $sheet->appendRow($data);
+                        $data = [];
+                        $comments = [];
+                        array_push($data, $biddinginformation->number);
+                        array_push($comments, '');
+                        foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+                        {
+                            $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationdefinefield->name)->first();
+                            array_push($data, isset($biddinginformationitem) ? $biddinginformationitem->value : '');
+                            array_push($comments, isset($biddinginformationitem) ? $biddinginformationitem->remark : '');
+                        }
+                        $sheet->appendRow($data);
 
-                    // 添加批注
-                    $colIndex = 'A';
-                    foreach ($comments as $comment)
-                    {
-                        if (strlen($comment) > 0)
-                            $sheet->getComment($colIndex . $rowCol)->getText()->createTextRun($comment);
-                        $colIndex++;
+                        // 添加批注
+                        $colIndex = 'A';
+                        foreach ($comments as $comment)
+                        {
+                            if (strlen($comment) > 0)
+                                $sheet->getComment($colIndex . $rowCol)->getText()->createTextRun($comment);
+                            $colIndex++;
+                        }
+                        $rowCol++;
                     }
-                    $rowCol++;
-                }
-
-//                $sheet->fromArray($biddinginformation["data"]);
+                });
+                $freezeCol = config('custom.bidding.freeze_summary_col', 'B');
+                $sheet->setFreeze($freezeCol . '2');
             });
+            Log::info('export 2');
 
 //            // Set the title
 //            $excel->setTitle('Our new awesome title');
@@ -638,27 +675,6 @@ class BiddinginformationController extends Controller
 //        Log::info(route('basic.biddinginformations.downloadfile', ['filename' => $filename . '.xlsx']));
         return route('basic.biddinginformations.downloadfile', ['filename' => $filename . '.xlsx']);
 
-        // // instantiate and use the dompdf class
-        // $dompdf = new Dompdf();
-        // // $dompdf->loadHtml('hello world');
-        // // $dompdf->set_option('isRemoteEnabled', true);
-        // // $dompdf->loadHtmlFile(url('/approval/paymentrequests/25'));
-        // $dompdf->loadHtmlFile('http://www.baidu.com');
-        // // $html = file_get_contents('http://www.baidu.com');
-        // // return $html;
-
-        // // (Optional) Setup the paper size and orientation
-        // $dompdf->setPaper('A4', 'landscape');
-
-        // // Render the HTML as PDF
-        // $dompdf->render();
-
-        // // Output the generated PDF to Browser
-        // $dompdf->stream();
-
-        // return PDF::loadFile(url('/approval/paymentrequests/25'))->save('/path-to/my_stored_file.pdf')->stream('download.pdf');
-
-        // return 'ssss';
     }
 
     // https://www.cnblogs.com/cyclzdblog/p/7670695.html

@@ -44,7 +44,7 @@
             'btnclass' => 'hidden',
         ])
 
-    @foreach($biddinginformation->biddinginformationitems as $biddinginformationitem)
+    @foreach($biddinginformation->biddinginformationitems()->orderBy('sort')->get() as $biddinginformationitem)
         <div class="form-group">
             {!! Form::label($biddinginformationitem->key, $biddinginformationitem->key, ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-4 col-sm-6'>

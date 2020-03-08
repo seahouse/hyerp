@@ -59,7 +59,7 @@
                     <th>{{ $simpletype }}</th>
                 @endforeach
                 {{--<th>备注</th>--}}
-                <th>操作</th>
+                <th width="250px">操作</th>
             </tr>
         </thead>
         <tbody>

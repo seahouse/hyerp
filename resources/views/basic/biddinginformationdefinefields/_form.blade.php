@@ -23,7 +23,7 @@
 <div class="form-group">
     {!! Form::label('exceltype', 'Excel类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-        {!! Form::select('exceltype', array('汇总表' => '汇总表', '项目明细' => '项目明细'), null, ['class' => 'form-control', $attr]) !!}
+        {!! Form::select('exceltype', array('汇总表' => '汇总表', '项目明细' => '项目明细', '汇总明细' => '汇总明细'), null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
