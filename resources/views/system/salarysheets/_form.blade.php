@@ -10,10 +10,10 @@
 
 <div class="form-group row">
     <div class='title col-xs-4 col-sm-2'>
-        工资日期
+        工资月份
     </div>
     <div class='content col-xs-8 col-sm-10'>
-        <?php echo $salarysheet->salary_date?>
+        {{ \Carbon\Carbon::parse($salarysheet->salary_date)->format('Y-m') }}
     </div>
 </div>
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\CorpMessageCorpconversationAsyncsendRequest;
 use App\Models\System\Salarysheet;
 use App\Models\System\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -147,6 +148,7 @@ class SalarysheetController extends Controller
     public function importstore(Request $request)
     {
         //
+//        dd(Carbon::parse($request->input('salary_date')));
         $this->validate($request, [
             'salary_date'       => 'required',
 //            'itemtype'                    => 'required',
@@ -156,6 +158,8 @@ class SalarysheetController extends Controller
 //            'detailuse'               => 'required',
         ]);
 
+        $salary_date = Carbon::parse($request->input('salary_date'))->toDateString();
+//        dd($salary_date);
         $file = $request->file('file');
 //        dd($file->getRealPath());
 //        $file = array_get($input,'file');
@@ -171,92 +175,94 @@ class SalarysheetController extends Controller
 //            });
 //        });
 
-        // !! set config/excel.php
-        // 'force_sheets_collection' => true,   // !!
-        Excel::load($file->getRealPath(), function ($reader) use ($request) {
-            $reader->each(function ($sheet) use (&$reader, $request) {
-                Log::info('sheet: ' . $sheet->getTitle());
-                $rowindex = 2;
-                $shipment = null;
-                $sheet->each(function ($row) use (&$rowindex, &$shipment, &$reader, $request) {
+        if (null != $file)
+        {
+            // !! set config/excel.php
+            // 'force_sheets_collection' => true,   // !!
+            Excel::load($file->getRealPath(), function ($reader) use ($request, $salary_date) {
+                $reader->each(function ($sheet) use (&$reader, $request, $salary_date) {
+                    Log::info('sheet: ' . $sheet->getTitle());
+                    $rowindex = 2;
+                    $shipment = null;
+                    $sheet->each(function ($row) use (&$rowindex, &$shipment, &$reader, $request, $salary_date) {
 //                    Log::info('importstore 1: ');
 //                    if ($rowindex > 3)
-                    {
+                        {
 //                        dd($row->all());
 //                        $input = array_values($row->toArray());
-                        $input = $row->all();
+                            $input = $row->all();
 //                        dd($input);
-                        if (count($input) >= 24)
-                        {
-                            if (!empty($input['姓名']))
+                            if (count($input) >= 24)
                             {
-//                                dd($input['姓名']);
-                                $salarysheet = Salarysheet::where('username', $input['姓名'])->where('salary_date', $request->input('salary_date'))->first();
-                                if (!isset($salarysheet))
+                                if (!empty($input['姓名']))
                                 {
-                                    $data = [];
-                                    $data['salary_date'] = $request->input('salary_date');
-                                    $data['username']               = $input['姓名'];
-                                    $user = User::where('name', $input['姓名'])->first();
-                                    if (isset($user))
-                                        $data['user_id']            = $user->id;
-                                    $data['department']            = $input['部门'];
-                                    $data['attendance_days']       = isset($input['出勤天数']) ? $input['出勤天数'] : 0.0;
-                                    $data['basicsalary']            = isset($input['基本工资']) ? $input['基本工资'] : 0.0;
-                                    $data['overtime_hours']        = isset($input['加班小时']) ? $input['加班小时'] : 0.0;
-                                    $data['absenteeismreduce_hours'] = isset($input['缺勤减扣小时']) ? $input['缺勤减扣小时'] : 0.0;
-                                    $data['paid_hours']             = isset($input['计薪小时']) ? $input['计薪小时'] : 0.0;
-                                    $data['overtime_amount']       = isset($input['加班费']) ? $input['加班费'] : 0.0;
-                                    $data['fullfrequently_award'] = isset($input['满勤奖']) ? $input['满勤奖'] : 0.0;
-                                    $data['meal_amount']            = isset($input['餐贴']) ? $input['餐贴'] : 0.0;
-                                    $data['car_amount']             = isset($input['车贴']) ? $input['车贴'] : 0.0;
-                                    $data['business_amount']       = isset($input['外差补贴']) ? $input['外差补贴'] : 0.0;
-                                    $data['additional_amount']     = isset($input['补资']) ? $input['补资'] : 0.0;
-                                    $data['house_amount']           = isset($input['房贴']) ? $input['房贴'] : 0.0;
-                                    $data['hightemperature_amount'] = isset($input['高温费']) ? $input['高温费'] : 0.0;
-                                    $data['absenteeismreduce_amount'] = isset($input['缺勤扣款']) ? $input['缺勤扣款'] : 0.0;
-                                    $data['shouldpay_amount']       = isset($input['应发工资']) ? $input['应发工资'] : 0.0;
-                                    $data['borrowreduce_amount']   = isset($input['借款扣回']) ? $input['借款扣回'] : 0.0;
-                                    $data['personalsocial_amount'] = isset($input['个人社保']) ? $input['个人社保'] : 0.0;
-                                    $data['personalaccumulationfund_amount'] = isset($input['个人公积金']) ? $input['个人公积金'] : 0.0;
-                                    $data['individualincometax_amount'] = isset($input['个人所得税']) ? $input['个人所得税'] : 0.0;
-                                    $data['actualsalary_amount']    = isset($input['实发工资']) ? $input['实发工资'] : 0.0;
-                                    $data['remark']                    = isset($input['备注']) ? $input['备注'] : '';
+//                                dd($input['姓名']);
+                                    $salarysheet = Salarysheet::where('username', $input['姓名'])->where('salary_date', $salary_date)->first();
+                                    if (!isset($salarysheet))
+                                    {
+                                        $data = [];
+                                        $data['salary_date'] = $salary_date;
+                                        $data['username']               = $input['姓名'];
+                                        $user = User::where('name', $input['姓名'])->first();
+                                        if (isset($user))
+                                            $data['user_id']            = $user->id;
+                                        $data['department']            = $input['部门'];
+                                        $data['attendance_days']       = isset($input['出勤天数']) ? $input['出勤天数'] : 0.0;
+                                        $data['basicsalary']            = isset($input['基本工资']) ? $input['基本工资'] : 0.0;
+                                        $data['overtime_hours']        = isset($input['加班小时']) ? $input['加班小时'] : 0.0;
+                                        $data['absenteeismreduce_hours'] = isset($input['缺勤减扣小时']) ? $input['缺勤减扣小时'] : 0.0;
+                                        $data['paid_hours']             = isset($input['计薪小时']) ? $input['计薪小时'] : 0.0;
+                                        $data['overtime_amount']       = isset($input['加班费']) ? $input['加班费'] : 0.0;
+                                        $data['fullfrequently_award'] = isset($input['满勤奖']) ? $input['满勤奖'] : 0.0;
+                                        $data['meal_amount']            = isset($input['餐贴']) ? $input['餐贴'] : 0.0;
+                                        $data['car_amount']             = isset($input['车贴']) ? $input['车贴'] : 0.0;
+                                        $data['business_amount']       = isset($input['外差补贴']) ? $input['外差补贴'] : 0.0;
+                                        $data['additional_amount']     = isset($input['补资']) ? $input['补资'] : 0.0;
+                                        $data['house_amount']           = isset($input['房贴']) ? $input['房贴'] : 0.0;
+                                        $data['hightemperature_amount'] = isset($input['高温费']) ? $input['高温费'] : 0.0;
+                                        $data['absenteeismreduce_amount'] = isset($input['缺勤扣款']) ? $input['缺勤扣款'] : 0.0;
+                                        $data['shouldpay_amount']       = isset($input['应发工资']) ? $input['应发工资'] : 0.0;
+                                        $data['borrowreduce_amount']   = isset($input['借款扣回']) ? $input['借款扣回'] : 0.0;
+                                        $data['personalsocial_amount'] = isset($input['个人社保']) ? $input['个人社保'] : 0.0;
+                                        $data['personalaccumulationfund_amount'] = isset($input['个人公积金']) ? $input['个人公积金'] : 0.0;
+                                        $data['individualincometax_amount'] = isset($input['个人所得税']) ? $input['个人所得税'] : 0.0;
+                                        $data['actualsalary_amount']    = isset($input['实发工资']) ? $input['实发工资'] : 0.0;
+                                        $data['remark']                    = isset($input['备注']) ? $input['备注'] : '';
 //                                    dd($data);
-                                    $salarysheet = Salarysheet::create($data);
+                                        $salarysheet = Salarysheet::create($data);
+                                    }
+                                    else
+                                    {
+                                        $user = User::where('name', $input['姓名'])->first();
+                                        if (isset($user))
+                                            $salarysheet->user_id               = $user->id;
+                                        $salarysheet->department                = $input['部门'];
+                                        $salarysheet->attendance_days           = isset($input['出勤天数']) ? $input['出勤天数'] : 0.0;
+                                        $salarysheet->basicsalary               = isset($input['基本工资']) ? $input['基本工资'] : 0.0;
+                                        $salarysheet->overtime_hours            = isset($input['加班小时']) ? $input['加班小时'] : 0.0;
+                                        $salarysheet->absenteeismreduce_hours = isset($input['缺勤减扣小时']) ? $input['缺勤减扣小时'] : 0.0;
+                                        $salarysheet->paid_hours                = isset($input['计薪小时']) ? $input['计薪小时'] : 0.0;
+                                        $salarysheet->overtime_amount        = isset($input['加班费']) ? $input['加班费'] : 0.0;
+                                        $salarysheet->fullfrequently_award  = isset($input['满勤奖']) ? $input['满勤奖'] : 0.0;
+                                        $salarysheet->meal_amount               = isset($input['餐贴']) ? $input['餐贴'] : 0.0;
+                                        $salarysheet->car_amount                 = isset($input['车贴']) ? $input['车贴'] : 0.0;
+                                        $salarysheet->business_amount           = isset($input['外差补贴']) ? $input['外差补贴'] : 0.0;
+                                        $salarysheet->additional_amount         = isset($input['补资']) ? $input['补资'] : 0.0;
+                                        $salarysheet->house_amount              = isset($input['房贴']) ? $input['房贴'] : 0.0;
+                                        $salarysheet->hightemperature_amount = isset($input['高温费']) ? $input['高温费'] : 0.0;
+                                        $salarysheet->absenteeismreduce_amount = isset($input['缺勤扣款']) ? $input['缺勤扣款'] : 0.0;
+                                        $salarysheet->shouldpay_amount       = isset($input['应发工资']) ? $input['应发工资'] : 0.0;
+                                        $salarysheet->borrowreduce_amount       = isset($input['借款扣回']) ? $input['借款扣回'] : 0.0;
+                                        $salarysheet->personalsocial_amount     = isset($input['个人社保']) ? $input['个人社保'] : 0.0;
+                                        $salarysheet->personalaccumulationfund_amount = isset($input['个人公积金']) ? $input['个人公积金'] : 0.0;
+                                        $salarysheet->individualincometax_amount = isset($input['个人所得税']) ? $input['个人所得税'] : 0.0;
+                                        $salarysheet->actualsalary_amount       = isset($input['实发工资']) ? $input['实发工资'] : 0.0;
+                                        $salarysheet->remark                    = isset($input['备注']) ? $input['备注'] : '';
+                                        $salarysheet->save();
+                                    }
                                 }
                                 else
                                 {
-                                    $user = User::where('name', $input['姓名'])->first();
-                                    if (isset($user))
-                                        $salarysheet->user_id               = $user->id;
-                                    $salarysheet->department                = $input['部门'];
-                                    $salarysheet->attendance_days           = isset($input['出勤天数']) ? $input['出勤天数'] : 0.0;
-                                    $salarysheet->basicsalary               = isset($input['基本工资']) ? $input['基本工资'] : 0.0;
-                                    $salarysheet->overtime_hours            = isset($input['加班小时']) ? $input['加班小时'] : 0.0;
-                                    $salarysheet->absenteeismreduce_hours = isset($input['缺勤减扣小时']) ? $input['缺勤减扣小时'] : 0.0;
-                                    $salarysheet->paid_hours                = isset($input['计薪小时']) ? $input['计薪小时'] : 0.0;
-                                    $salarysheet->overtime_amount        = isset($input['加班费']) ? $input['加班费'] : 0.0;
-                                    $salarysheet->fullfrequently_award  = isset($input['满勤奖']) ? $input['满勤奖'] : 0.0;
-                                    $salarysheet->meal_amount               = isset($input['餐贴']) ? $input['餐贴'] : 0.0;
-                                    $salarysheet->car_amount                 = isset($input['车贴']) ? $input['车贴'] : 0.0;
-                                    $salarysheet->business_amount           = isset($input['外差补贴']) ? $input['外差补贴'] : 0.0;
-                                    $salarysheet->additional_amount         = isset($input['补资']) ? $input['补资'] : 0.0;
-                                    $salarysheet->house_amount              = isset($input['房贴']) ? $input['房贴'] : 0.0;
-                                    $salarysheet->hightemperature_amount = isset($input['高温费']) ? $input['高温费'] : 0.0;
-                                    $salarysheet->absenteeismreduce_amount = isset($input['缺勤扣款']) ? $input['缺勤扣款'] : 0.0;
-                                    $salarysheet->shouldpay_amount       = isset($input['应发工资']) ? $input['应发工资'] : 0.0;
-                                    $salarysheet->borrowreduce_amount       = isset($input['借款扣回']) ? $input['借款扣回'] : 0.0;
-                                    $salarysheet->personalsocial_amount     = isset($input['个人社保']) ? $input['个人社保'] : 0.0;
-                                    $salarysheet->personalaccumulationfund_amount = isset($input['个人公积金']) ? $input['个人公积金'] : 0.0;
-                                    $salarysheet->individualincometax_amount = isset($input['个人所得税']) ? $input['个人所得税'] : 0.0;
-                                    $salarysheet->actualsalary_amount       = isset($input['实发工资']) ? $input['实发工资'] : 0.0;
-                                    $salarysheet->remark                    = isset($input['备注']) ? $input['备注'] : '';
-                                    $salarysheet->save();
-                                }
-                            }
-                            else
-                            {
 //                                if (empty($input[3]) && !empty($input[5]) && isset($shipment))
 //                                {
 //                                    $input['shipment_id'] = $shipment->id;
@@ -267,19 +273,19 @@ class SalarysheetController extends Controller
 //                                    $input['volume'] = $input[53];
 //                                    Shipmentitem::create($input);
 //                                }
+                                }
                             }
                         }
-                    }
-                    $rowindex++;
+                        $rowindex++;
+                    });
                 });
-            });
 
-            $objExcel = $reader->getExcel();
-            $sheet = $objExcel->getSheet(0);
-            $highestRow = $sheet->getHighestRow();
-            $highestColumn = $sheet->getHighestColumn();
-            Log::info('highestRow: ' . $highestRow);
-            Log::info('highestColumn: ' . $highestColumn);
+                $objExcel = $reader->getExcel();
+                $sheet = $objExcel->getSheet(0);
+                $highestRow = $sheet->getHighestRow();
+                $highestColumn = $sheet->getHighestColumn();
+                Log::info('highestRow: ' . $highestRow);
+                Log::info('highestColumn: ' . $highestColumn);
 
 //            //  Loop through each row of the worksheet in turn
 //            for ($row = 1; $row <= $highestRow; $row++)
@@ -288,7 +294,8 @@ class SalarysheetController extends Controller
 //                $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
 //                    NULL, TRUE, FALSE);
 //            }
-        });
+            });
+        }
 
         return redirect('system/salarysheet');
     }

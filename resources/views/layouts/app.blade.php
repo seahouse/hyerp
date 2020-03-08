@@ -24,6 +24,7 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('css/jquery-editable-select.css') }} ">
     {{--<link rel="stylesheet" type="text/css" href="{{ asset('editTable/jquery.edittable.min.css') }} ">--}}
     <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap3-editable/css/bootstrap-editable.css') }} ">
+    @yield('head')
 
     <style>
         body {

@@ -15,7 +15,7 @@
 
         {!! Form::open(['url' => '/system/salarysheet/search', 'class' => 'pull-right form-inline', 'id' => 'frmSearch']) !!}
         <div class="form-group-sm">
-            {!! Form::label('salary_datestartlabel', '工资日期:', ['class' => 'control-label']) !!}
+            {!! Form::label('salary_datestartlabel', '工资月份:', ['class' => 'control-label']) !!}
             {!! Form::date('salary_datestart', null, ['class' => 'form-control']) !!}
             {!! Form::label('salary_datelabelto', '-', ['class' => 'control-label']) !!}
             {!! Form::date('salary_dateend', null, ['class' => 'form-control']) !!}
@@ -36,7 +36,7 @@
             <table class="table table-striped table-hover table-condensed">
                 <thead>
                 <tr>
-                    <th>工资日期</th>
+                    <th>工资月份</th>
                     <th>姓名</th>
                     <th>部门</th>
                     <th>实发工资</th>
@@ -52,7 +52,7 @@
                 @foreach($salarysheets as $salarysheet)
                     <tr>
                         <td>
-                            {{ $salarysheet->salary_date }}
+                            {{ \Carbon\Carbon::parse($salarysheet->salary_date)->format('Y-m') }}
                         </td>
                         <td>
                             {{ $salarysheet->username }}
