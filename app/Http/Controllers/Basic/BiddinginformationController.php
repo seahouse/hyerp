@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Excel, Log;
+use Excel, Log, DB;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
 
@@ -32,6 +32,16 @@ class BiddinginformationController extends Controller
         $inputs = $request->all();
         $biddinginformations = $this->searchrequest($request)->paginate(15);
 //        $dtlogs = Dtlog::latest('create_time')->paginate(15);
+        return view('basic.biddinginformations.index', compact('biddinginformations', 'inputs'));
+    }
+
+    public function search(Request $request)
+    {
+        $inputs = $request->all();
+        $biddinginformations = $this->searchrequest($request)->paginate(15);
+//        $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
+//        $totalamount = Paymentrequest::sum('amount');
+
         return view('basic.biddinginformations.index', compact('biddinginformations', 'inputs'));
     }
 
@@ -53,7 +63,11 @@ class BiddinginformationController extends Controller
 
         if ($request->has('key') && strlen($request->input('key')) > 0)
         {
-            $query->where('remark', 'like', '%' . $request->input('key') . '%');
+            $query->whereExists(function ($query) use ($request) {
+                $query->select(DB::raw(1))
+                    ->from('biddinginformationitems')
+                    ->whereRaw('biddinginformationitems.biddinginformation_id=biddinginformations.id and biddinginformationitems.value like \'%' . $request->input('key') . '%\'');
+            });
         }
 
 //        // xmjlsgrz_sohead_id
@@ -220,7 +234,12 @@ class BiddinginformationController extends Controller
                     {
                         if ($oldvalue != $value)
                         {
-                            $msg = $biddinginformation->number . '项目的[' . $biddinginformationitem->key .']字段内容已修改。原内容：' . $oldvalue . '，新内容：' . $value;
+                            $projectname = '';
+                            $biddinginformationitem_mingcheng = Biddinginformationitem::where('biddinginformation_id', $id)->where('key', '名称')->first();
+                            if (isset($biddinginformationitem_mingcheng))
+                                $projectname = $biddinginformationitem_mingcheng->value;
+
+                            $msg = '[' . $projectname . ']项目[' . $biddinginformation->number . ']的[' . $biddinginformationitem->key .']字段内容已修改。原内容：' . $oldvalue . '，新内容：' . $value;
                             $data = [
                                 'msgtype'       => 'text',
                                 'text' => [
@@ -407,7 +426,7 @@ class BiddinginformationController extends Controller
                                         // 编号是通用方法， 名称是第一次导入的方法
                                         if (array_key_exists('编号', $input) && array_key_exists('编号', $input2) && !empty($input['编号'][0]) && !empty($input2['编号'][0]) && $input2['编号'][0] == $input['编号'][0])
                                         {
-                                            $input = array_merge($input, $input2);
+                                            $input = array_merge($input2, $input);      // 把$input放后面，重复项会使用后面的这个数组
                                             array_push($hasFoundRow2, $row2);
                                             break;
                                         }

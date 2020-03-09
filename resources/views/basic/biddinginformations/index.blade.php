@@ -32,8 +32,8 @@
             {{--{!! Form::hidden('xmjlsgrz_project_id', null, ['id' => 'xmjlsgrz_project_id']) !!}--}}
 
             {{--{!! Form::select('other', ['xmjlsgrz_sohead_id_undefined' => '还未关联订单的项目经理施工日志', 'btn_xmjlsgrz_peoplecount_undefined' => '施工人数填写不符要求或未填'], null, ['class' => 'form-control', 'placeholder' => '--其他--']) !!}--}}
-            {{--{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '备注']) !!}--}}
-            {{--{!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}--}}
+            {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '字段内容']) !!}
+            {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
             @can('basic_biddinginformation_export')
             {!! Form::button('导出', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport']) !!}
 {{--                {!! Form::button('清空数据（慎用！）', ['class' => 'btn btn-default btn-sm', 'id' => 'btnClear']) !!}--}}

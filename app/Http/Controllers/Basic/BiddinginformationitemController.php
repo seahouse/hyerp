@@ -237,7 +237,12 @@ class BiddinginformationitemController extends Controller
         {
             if ($oldvalue != $value)
             {
-                $msg = $biddinginformationitem->biddinginformation->number . '项目的[' . $biddinginformationitem->key .']字段内容已修改。原内容：' . $oldvalue . '，新内容：' . $value;
+                $projectname = '';
+                $biddinginformationitem_mingcheng = Biddinginformationitem::where('biddinginformation_id', $id)->where('key', '名称')->first();
+                if (isset($biddinginformationitem_mingcheng))
+                    $projectname = $biddinginformationitem_mingcheng->value;
+
+                $msg = '[' . $projectname . ']项目[' . $biddinginformationitem->biddinginformation->number . ']的[' . $biddinginformationitem->key .']字段内容已修改。原内容：' . $oldvalue . '，新内容：' . $value;
                 $data = [
                     'msgtype'       => 'text',
                     'text' => [
@@ -245,8 +250,8 @@ class BiddinginformationitemController extends Controller
                     ]
                 ];
 
-                $dtusers = Dtuser::where('user_id', 126)->orWhere('user_id', 126)->pluck('userid');        // test
-//                $dtusers = Dtuser::where('user_id', 2)->orWhere('user_id', 64)->pluck('userid');             // WuHL, Zhoub
+//                $dtusers = Dtuser::where('user_id', 126)->orWhere('user_id', 126)->pluck('userid');        // test
+                $dtusers = Dtuser::where('user_id', 2)->orWhere('user_id', 64)->pluck('userid');             // WuHL, Zhoub
                 $useridList = implode(',', $dtusers->toArray());
 //                            dd(implode(',', $dtusers->toArray()));
                 if ($dtusers->count() > 0)
