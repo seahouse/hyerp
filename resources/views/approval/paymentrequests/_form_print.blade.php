@@ -306,12 +306,16 @@
 </div>
 --}}
 
-{{--<div class="form-group">--}}
-    {{--{!! Form::label('descrip', '说明:', ['class' => 'col-xs-2 col-sm-2 control-label' ]) !!}--}}
-    {{--<div class='col-xs-10 col-sm-10'>--}}
-    {{--{!! Form::textarea('descrip', null, ['class' => 'form-control', $attr, 'rows' => 1]) !!}--}}
-    {{--</div>--}}
-{{--</div>--}}
+@if (isset($paymentrequest->supplier_hxold->name))
+    @if (in_array($paymentrequest->supplier_hxold->name, config('custom.paymentrequest.printpage_descrip_show_suppliers')))
+        <div class="form-group">
+            {!! Form::label('descrip', '说明:', ['class' => 'col-xs-2 col-sm-2 control-label' ]) !!}
+            <div class='col-xs-10 col-sm-10'>
+            {!! Form::textarea('descrip', null, ['class' => 'form-control', $attr, 'rows' => 1]) !!}
+            </div>
+        </div>
+    @endif
+@endif
 
 <div class="form-group">
     {!! Form::label('amount', '本次请款额:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}

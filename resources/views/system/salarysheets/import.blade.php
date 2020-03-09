@@ -45,6 +45,8 @@
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
             $('#salary_date').datetimepicker({
+                // https://www.bootcss.com/p/bootstrap-datetimepicker
+                // https://blog.csdn.net/u011628981/article/details/70213741
                 format: 'yyyy-mm',
                 autoclose: true,
                 startView: 3,
