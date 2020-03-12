@@ -2,6 +2,10 @@
 
 @section('title', '工资条')
 
+@section('head')
+    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css') }} ">
+@endsection
+
 @section('main')
     <div class="panel-heading">
         {{--<a href="salarysheet/create" class="btn btn-sm btn-success">新建</a>--}}
@@ -16,9 +20,9 @@
         {!! Form::open(['url' => '/system/salarysheet/search', 'class' => 'pull-right form-inline', 'id' => 'frmSearch']) !!}
         <div class="form-group-sm">
             {!! Form::label('salary_datestartlabel', '工资月份:', ['class' => 'control-label']) !!}
-            {!! Form::date('salary_datestart', null, ['class' => 'form-control']) !!}
+            {!! Form::text('salary_datestart', null, ['class' => 'form-control']) !!}
             {!! Form::label('salary_datelabelto', '-', ['class' => 'control-label']) !!}
-            {!! Form::date('salary_dateend', null, ['class' => 'form-control']) !!}
+            {!! Form::text('salary_dateend', null, ['class' => 'form-control']) !!}
 
             {{--{!! Form::label('amount_for_customer', 'Amount for Customer:', ['class' => 'control-label']) !!}--}}
             {{--{!! Form::select('amount_for_customer_opt', ['>=' => '>=', '<=' => '<=', '=' => '='], null, ['class' => 'form-control']) !!}--}}
@@ -28,7 +32,7 @@
 
             {{--{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => 'Invoice No.,Contact No.,Customer']) !!}--}}
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
-            {!! Form::button('发送工资条', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSendSalarysheet']) !!}
+{{--            {!! Form::button('发送工资条', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSendSalarysheet']) !!}--}}
         </div>
         {!! Form::close() !!}
 
@@ -108,42 +112,83 @@
         @endif
     </div>
 
+    <div class="panel panel-footer">
+        {!! Form::open(['url' => '/system/salarysheet/sendsalarysheet', 'class' => 'pull-right form-inline', 'id' => 'frmSendSalarysheet']) !!}
+        <div class="form-group-sm">
+            {!! Form::label('salary_datestartlabel', '发送工资月份:', ['class' => 'control-label']) !!}
+            {!! Form::text('salary_date', date('Y-m'), ['class' => 'form-control']) !!}
+
+            {!! Form::submit('发送工资条', ['class' => 'btn btn-primary', 'id' => 'btnSendSalarysheet']) !!}
+{{--            {!! Form::button('发送工资条', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSendSalarysheet']) !!}--}}
+        </div>
+        {!! Form::close() !!}
+    </div>
+
+    <div class="modal fade" id="submitModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">发送工资条确认</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                    <div id="dataDefine">
+
+                    </div>
+                    </p>
+                    <form id="formAccept">
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
+                    {!! Form::button('继续发送', ['class' => 'btn btn-sm', 'id' => 'btnSubmitContinue']) !!}
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
+    <script type="text/javascript" src="/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
             $("#btnSendSalarysheet").click(function() {
-                $.ajax({
-                    type: "POST",
-                    url: "{{ url('system/salarysheet/sendsalarysheet') }}",
-                    data: $("form#frmSearch").serialize(),
-//                    dataType: "json",
-                    error:function(xhr, ajaxOptions, thrownError){
-                        alert('error');
-                    },
-                    success:function(result){
-//                        location.href = result;
-                        alert(result);
-                    },
-                });
+                $('#submitModal').modal('toggle');
+                $("#dataDefine").empty().append("确定发送[" + $("input[name='salary_date']").val() + "]的工资条吗？");
+                return false;
             });
 
-            $("#btnExportPVH").click(function() {
-                $.ajax({
-                    type: "POST",
-                    url: "{{ url('shipment/shipments/exportpvh') }}",
-                    data: $("form#frmSearch").serialize(),
-//                    dataType: "json",
-                    error:function(xhr, ajaxOptions, thrownError){
-                        alert('error');
-                    },
-                    success:function(result){
-//                        alert(result);
-                        location.href = result;
-//                        alert("导出成功.");
-                    },
-                });
+            $("#btnSubmitContinue").click(function() {
+                $("form#frmSendSalarysheet").submit();
+            });
+
+            $("input[name='salary_datestart']").datetimepicker({
+                format: 'yyyy-mm',
+                autoclose: true,
+                startView: 3,
+                minView: 3,
+                language:"zh-CN",
+//                format: 'yyyy-mm-dd hh:ii'
+            });
+
+            $("input[name='salary_dateend']").datetimepicker({
+                format: 'yyyy-mm',
+                autoclose: true,
+                startView: 3,
+                minView: 3,
+                language:"zh-CN",
+//                format: 'yyyy-mm-dd hh:ii'
+            });
+
+            $("input[name='salary_date']").datetimepicker({
+                format: 'yyyy-mm',
+                autoclose: true,
+                startView: 3,
+                minView: 3,
+                language:"zh-CN",
+//                format: 'yyyy-mm-dd hh:ii'
             });
         });
     </script>

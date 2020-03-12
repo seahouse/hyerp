@@ -48,7 +48,17 @@
         <div class="form-group">
             {!! Form::label($biddinginformationitem->key, $biddinginformationitem->key, ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-4 col-sm-6'>
-                {!! Form::text($biddinginformationitem->key, $biddinginformationitem->value, ['class' => 'form-control']) !!}
+                <?php $biddinginformationdefinefield = $biddinginformationitem->biddinginformationdefinefield; ?>
+                @if (isset($biddinginformationdefinefield))
+                    @if ($biddinginformationdefinefield->type == 2)
+                        <?php $arr = explode(',', $biddinginformationdefinefield->select_strings); ?>
+                            {!! Form::select($biddinginformationitem->key, array_combine($arr, $arr), $biddinginformationitem->value, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
+                    @else
+                        {!! Form::text($biddinginformationitem->key, $biddinginformationitem->value, ['class' => 'form-control']) !!}
+                    @endif
+                @else
+                    {!! Form::text($biddinginformationitem->key, $biddinginformationitem->value, ['class' => 'form-control']) !!}
+                @endif
             </div>
             <div class='col-xs-4 col-sm-4'>
                 @can('basic_biddinginformation_remark')

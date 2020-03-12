@@ -110,6 +110,9 @@ class BiddinginformationdefinefieldController extends Controller
     public function store(Request $request)
     {
         //
+        $this->validate($request, [
+            'projecttype'               => 'required',
+        ]);
         $input = $request->all();
         Biddinginformationdefinefield::create($input);
         return redirect('basic/biddinginformationdefinefields');
@@ -149,6 +152,10 @@ class BiddinginformationdefinefieldController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $this->validate($request, [
+            'projecttype'               => 'required',
+        ]);
+
         $biddinginformationdefinefield = Biddinginformationdefinefield::findOrFail($id);
         $biddinginformationdefinefield->update($request->all());
         return redirect('basic/biddinginformationdefinefields');

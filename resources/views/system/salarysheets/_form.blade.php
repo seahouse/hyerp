@@ -5,7 +5,7 @@
 <div class="board">
     <div class="msg">{{ $salarysheet->username }}，工作辛苦啦</div>
     <div class="number">{{ $salarysheet->actualsalary_amount }}</div>
-    <div class="bottom">实放工资</div>
+    <div class="bottom">实发工资</div>
 </div>
 
 <div class="form-group row">

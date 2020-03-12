@@ -13,5 +13,6 @@ class Biddinginformationdefinefield extends Model
         'type',
         'exceltype',
         'projecttype',
+        'select_strings',
     ];
 }

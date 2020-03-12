@@ -50,10 +50,19 @@ class SalarysheetController extends Controller
 
         if ($request->has('salary_datestart') && $request->has('salary_dateend'))
         {
-            $query->whereRaw('salary_date between \'' . $request->input('salary_datestart') . '\' and \'' . $request->input('salary_dateend') . '\'');
+            $salary_datestart = Carbon::parse($request->input('salary_datestart'))->toDateString();
+            $salary_dateend = Carbon::parse($request->input('salary_dateend'))->addMonth()->addDay(-1)->toDateString();
+//            $query->whereRaw('salary_date between \'' . $salary_datestart . '\' and \'' . $salary_dateend . '\'');
+            $query->whereBetween('salary_date', [$salary_datestart, $salary_dateend]);
         }
 
-
+        if ($request->has('salary_date') && $request->has('salary_date'))
+        {
+            $salary_datestart = Carbon::parse($request->input('salary_date'))->toDateString();
+            $salary_dateend = Carbon::parse($request->input('salary_date'))->addMonth()->addDay(-1)->toDateString();
+//            $query->whereRaw('salary_date between \'' . $salary_datestart . '\' and \'' . $salary_dateend . '\'');
+            $query->whereBetween('salary_date', [$salary_datestart, $salary_dateend]);
+        }
 
         $items = $query->select('salarysheets.*');
 
@@ -337,7 +346,7 @@ class SalarysheetController extends Controller
                         'text' => '您的工资条等待签收'
                     ],
                     'body' => [
-                        'title' => '您的工资条等待签收，点击查看明细（仅手机端）。',
+                        'title' => '您的工资条等待签收，点击查看明细。',
                         'form' => $data
                     ]
                 ];
