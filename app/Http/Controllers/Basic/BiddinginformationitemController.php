@@ -263,4 +263,11 @@ class BiddinginformationitemController extends Controller
         }
         return 'success';
     }
+
+    public function getvaluesbykey($key)
+    {
+        $values = Biddinginformationitem::where('key', $key)->pluck('value');
+//        dd($values);
+        return $values;
+    }
 }

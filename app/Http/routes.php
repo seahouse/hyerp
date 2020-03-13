@@ -190,6 +190,7 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
     Route::group(['prefix' => 'biddinginformationitems'], function() {
         Route::get('jsondata', 'BiddinginformationitemController@jsondata');
         Route::post('updateedittable', 'BiddinginformationitemController@updateedittable');
+        Route::get('getvaluesbykey/{key}', 'BiddinginformationitemController@getvaluesbykey');
     });
     Route::resource('biddinginformationitems', 'BiddinginformationitemController');
 });
