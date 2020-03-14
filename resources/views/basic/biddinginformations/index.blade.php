@@ -2,10 +2,15 @@
 
 @section('title', '投标项目')
 
+@section('head')
+    <link rel="stylesheet" type="text/css" href="{{ asset('bootstrap-select/css/bootstrap-select.min.css') }} ">
+@endsection
+
 @section('main')
     @can('basic_biddinginformation_view')
     <div class="panel-heading">
-        <a href="{{ url('basic/biddinginformations/create') }}" class="btn btn-sm btn-success">新建</a>
+        <a href="{{ url('basic/biddinginformations/create') }}" class="btn btn-sm btn-success">测试历史下拉用</a>
+        {!! Form::button('新建', ['class' => 'btn btn-sm btn-success', 'data-toggle' => 'modal', 'data-target' => '#createModal']) !!}
         <a href="{{ url('basic/biddinginformations/import') }}" class="btn btn-sm btn-success">导入</a>
         <a href="{{ url('basic/biddinginformationdefinefields') }}" class="btn btn-sm btn-success">维护字段</a>
         @can('basic_biddinginformation_edittable')
@@ -27,18 +32,12 @@
             {{--{!! Form::select('template_name', $dtlog_templatenames, null, ['class' => 'form-control', 'placeholder' => '--日志模板--']) !!}--}}
 
 
-            {{--{!! Form::label('select_xmjlsgrz_project_label', '项目经理施工日志对应项目', ['class' => 'control-label']) !!}--}}
-            {{--{!! Form::select('select_xmjlsgrz_project', $projectList, null, ['class' => 'form-control', 'placeholder' => '', 'id' => 'select_xmjlsgrz_project']) !!}--}}
-            {{--{!! Form::hidden('xmjlsgrz_project_id', null, ['id' => 'xmjlsgrz_project_id']) !!}--}}
-
-            {{--{!! Form::select('other', ['xmjlsgrz_sohead_id_undefined' => '还未关联订单的项目经理施工日志', 'btn_xmjlsgrz_peoplecount_undefined' => '施工人数填写不符要求或未填'], null, ['class' => 'form-control', 'placeholder' => '--其他--']) !!}--}}
             {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '字段内容']) !!}
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
             @can('basic_biddinginformation_export')
             {!! Form::button('导出', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport']) !!}
 {{--                {!! Form::button('清空数据（慎用！）', ['class' => 'btn btn-default btn-sm', 'id' => 'btnClear']) !!}--}}
                 {{--<a href="{{ url('basic/biddinginformations/export') }}" class="btn btn-sm btn-success">测试导出</a>--}}
-            {{--{!! Form::button('关联工程调试日志到ERP订单', ['class' => 'btn btn-default btn-sm', 'id' => 'btn_gctsrz_sohead_id']) !!}--}}
             @endcan
         </div>
         {!! Form::close() !!}
@@ -127,10 +126,37 @@
     @else
         无权限
     @endcan
+
+
+    <div class="modal fade" id="createModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">创建投标项目</h4>
+                </div>
+                <div class="modal-body">
+                    {!! Form::open(['url' => 'basic/biddinginformations/storebyprojecttypes', 'id' => 'frmCreate']) !!}
+                        <div class="form-group">
+                            {!! Form::select('selectprojecttypes', array('SDA半干法系统' => 'SDA半干法系统', '湿法系统' => '湿法系统', 'SNCR系统' => 'SNCR系统', 'SCR系统' => 'SCR系统', '飞灰输送系统' => '飞灰输送系统',
+                                '灰库系统' => '灰库系统', '稳定化系统' => '稳定化系统', 'CFB系统' => 'CFB系统', '固定喷雾系统' => '固定喷雾系统', '公用系统' => '公用系统'), null,
+                                ['class' => 'form-control selectpicker', 'multiple']) !!}
+                            {!! Form::hidden('projecttypes', null, []) !!}
+                            {!! csrf_field() !!}
+                        </div>
+                    {!! Form::close() !!}
+                </div>
+                <div class="modal-footer">
+                    {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
+                    {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnCreate']) !!}
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
-    <script type="text/javascript" src="/js/jquery-editable-select.js"></script>
+    <script type="text/javascript" src="/bootstrap-select/js/bootstrap-select.min.js"></script>
+    <script type="text/javascript" src="/bootstrap-select/js/i18n/defaults-zh_CN.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
             $("#btnExport").click(function() {
@@ -163,64 +189,12 @@
                 });
             });
 
-            $("#btn_gctsrz_sohead_id").click(function() {
-                $.ajax({
-                    type: "POST",
-                    url: "{!! url('dingtalk/dtlogs/relate_gctsrz_sohead_id') !!}",
-                    data : $('#frmCondition').serialize(),
-                    success: function(result) {
-                        // alert(result);
-                        // alert(result.errmsg);
-                        if (result.errcode == 0)
-                        {
-                            alert(result.errmsg);
-                        }
-                        else
-                            alert(JSON.stringify(result));
-
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        alert(JSON.stringify(xhr));
-                    }
-                });
+            $("#btnCreate").click(function() {
+                $("input[name='projecttypes']").val($("select[name='selectprojecttypes']").val());
+//                alert($("input[name='projecttypes']").val());
+                $("form#frmCreate").submit();
             });
 
-
-            $('#select_xmjlsgrz_sohead')
-                .editableSelect({
-                    effects: 'slide',
-                })
-                //                .on('shown.editable-select', function (e) {
-                //                    console.log("shown");
-                //                    console.log($('#selectProject').val());
-                //                    if ($('#selectProject').val() == "--项目--")
-                //                        $('#selectProject').val("");
-                //                })
-                .on('select.editable-select', function (e, li) {
-//                    console.log(li.val() + li.text());
-                    if (li.val() > 0)
-                        $('input[name=xmjlsgrz_sohead_id]').val(li.val());
-                    else
-                        $('input[name=xmjlsgrz_sohead_id]').val('');
-//                    console.log($('input[name=sohead_id]').val());
-//                    console.log($('#project_id').val());
-                })
-            ;
-
-            $('#select_xmjlsgrz_project')
-                .editableSelect({
-                    effects: 'slide',
-                })
-                .on('select.editable-select', function (e, li) {
-//                    console.log(li.val() + li.text());
-                    if (li.val() > 0)
-                        $('input[name=xmjlsgrz_project_id]').val(li.val());
-                    else
-                        $('input[name=xmjlsgrz_project_id]').val('');
-//                    console.log($('input[name=sohead_id]').val());
-//                    console.log($('#project_id').val());
-                })
-            ;
         });
 
     </script>

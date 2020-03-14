@@ -266,7 +266,7 @@ class BiddinginformationitemController extends Controller
 
     public function getvaluesbykey($key)
     {
-        $values = Biddinginformationitem::where('key', $key)->pluck('value');
+        $values = Biddinginformationitem::where('key', $key)->where('value', '<>', '')->distinct()->pluck('value');
 //        dd($values);
         return $values;
     }

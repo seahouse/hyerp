@@ -7,6 +7,7 @@ use App\Http\Controllers\HelperController;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiMessageCorpconversationAsyncsendV2Request;
 use App\Models\Basic\Biddinginformation;
 use App\Models\Basic\Biddinginformationdefinefield;
+use App\Models\Basic\Biddinginformationfieldtype;
 use App\Models\Basic\Biddinginformationitem;
 use App\Models\System\Dtuser;
 use Carbon\Carbon;
@@ -176,6 +177,52 @@ class BiddinginformationController extends Controller
         }
 
         return redirect('basic/biddinginformations');
+    }
+
+    public function storebyprojecttypes(Request $request)
+    {
+        //
+        $inputs = $request->all();
+//        dd($inputs);
+        if (!$request->has('projecttypes') || $request->input('projecttypes') == '')
+            dd('没有选择项目类型');
+
+        $seqnumber = Biddinginformation::where('year', Carbon::today()->year)->max('digital_number');
+        $seqnumber += 1;
+        $seqnumber = str_pad($seqnumber, 4, 0, STR_PAD_LEFT);
+
+        $number = Carbon::today()->format('Y') . '-' . $seqnumber;
+        $data = [
+            'number'    => $number,
+            'year'      => Carbon::today()->year,
+            'digital_number'    => isset($seqnumber) ? $seqnumber : 1,
+        ];
+        $biddinginformation = Biddinginformation::create($data);
+        if (isset($biddinginformation))
+        {
+            $projecttypes = explode(',', $request->input('projecttypes'));
+            foreach ($projecttypes as $projecttype)
+            {
+                Biddinginformationfieldtype::create([
+                    'biddinginformation_id'     => $biddinginformation->id,
+                    'biddinginformation_fieldtype'  => $projecttype,
+                ]);
+            }
+            $biddinginformationdefinefields = Biddinginformationdefinefield::whereIn('projecttype', $projecttypes)->orderBy('sort')->get();
+            foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+            {
+                Biddinginformationitem::create([
+                    'biddinginformation_id' => $biddinginformation->id,
+                    'key' => $biddinginformationdefinefield->name,
+                    'value' => '',
+                    'remark' => '',
+                    'sort' => $biddinginformationdefinefield->sort,
+                    'type' => $biddinginformationdefinefield->type,
+                ]);
+            }
+        }
+
+        return redirect('basic/biddinginformations/' . $biddinginformation->id . '/edit');
     }
 
     /**
