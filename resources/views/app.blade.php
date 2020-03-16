@@ -5,7 +5,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>@yield('title')</title>
 <!--	<link href="{{ asset("//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css") }}" rel="stylesheet"> -->
-	<link href="{{ asset("css/bootstrap.min.css") }}" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="{{ asset('bootstrap-3.3.7/css/bootstrap.min.css') }}" />
 	<link href="{{ asset("fonts/iconfont.css") }}" rel="stylesheet">
 	<link href="{{ asset("css/styles.css?v=20170713") }}" rel="stylesheet">
 	{{--<link rel="stylesheet" type="text/css" href="{{ asset('DataTables/datatables.min.css') }}" />--}}
@@ -16,7 +16,8 @@
 	@yield('main')
 	<script src="/js/jquery.min.js"></script>
 	<!-- <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script> -->
-	<script src="/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+	{{--<script src="/js/bootstrap.min.js"></script>--}}
     <!-- <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> -->
     <!-- <script src="js/jquery.min.js"></script> -->
     <!-- <script src="js/bootstrap.min.js"></script> -->

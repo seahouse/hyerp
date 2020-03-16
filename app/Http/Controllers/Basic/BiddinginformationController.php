@@ -602,15 +602,24 @@ class BiddinginformationController extends Controller
      */
     public function export(Request $request)
     {
-        //
-        // Excel::create('test1111')->export('xlsx');
+//        Log::info($request->all());
 
         $filename = 'BAOJIA';
 //        $filename = iconv("UTF-8","GBK//IGNORE", '中标信息');
         Log::info('export 1');
         Excel::create($filename, function($excel) use ($request) {
             $excel->sheet('项目明细', function($sheet) use ($request) {
-                $biddinginformationdefinefields = Biddinginformationdefinefield::where('exceltype', '项目明细')->orWhere('exceltype', '汇总明细')->orderBy('sort')->get();
+                $query = Biddinginformationdefinefield::where(function ($query) {
+                    $query->where('exceltype', '项目明细')
+                        ->orWhere('exceltype', '汇总明细');
+                });
+                if ($request->has('projecttypes_export') && !empty($request->input('projecttypes_export')))
+                {
+                    $projecttypes = explode(',', $request->input('projecttypes_export'));
+                    $query->whereIn('projecttype', $projecttypes);
+                }
+                $biddinginformationdefinefields = $query->orderBy('sort')->get();
+//                $biddinginformationdefinefields = Biddinginformationdefinefield::where('exceltype', '项目明细')->orWhere('exceltype', '汇总明细')->orderBy('sort')->get();
                 $data = [];
                 array_push($data, '编号');
                 foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
@@ -681,7 +690,17 @@ class BiddinginformationController extends Controller
             });
 
             $excel->sheet('汇总表', function($sheet) use ($request) {
-                $biddinginformationdefinefields = Biddinginformationdefinefield::where('exceltype', '汇总表')->orWhere('exceltype', '汇总明细')->orderBy('sort')->get();
+                $query = Biddinginformationdefinefield::where(function ($query) {
+                    $query->where('exceltype', '汇总表')
+                        ->orWhere('exceltype', '汇总明细');
+                });
+                if ($request->has('projecttypes_export') && !empty($request->input('projecttypes_export')))
+                {
+                    $projecttypes = explode(',', $request->input('projecttypes_export'));
+                    $query->whereIn('projecttype', $projecttypes);
+                }
+                $biddinginformationdefinefields = $query->orderBy('sort')->get();
+//                $biddinginformationdefinefields = Biddinginformationdefinefield::where('exceltype', '汇总表')->orWhere('exceltype', '汇总明细')->orderBy('sort')->get();
                 $data = [];
                 array_push($data, '编号');
                 foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)

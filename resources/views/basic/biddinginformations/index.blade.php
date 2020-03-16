@@ -21,26 +21,42 @@
     </div>
     
     <div class="panel-body">
-        {!! Form::open(['url' => '/basic/biddinginformations/search', 'class' => 'pull-right form-inline', 'id' => 'frmCondition']) !!}
-        <div class="form-group-sm">
-            {{--{!! Form::label('createdatelabel', '发起时间:', ['class' => 'control-label']) !!}--}}
-            {{--{!! Form::date('createdatestart', null, ['class' => 'form-control']) !!}--}}
-            {{--{!! Form::label('createdatelabelto', '-', ['class' => 'control-label']) !!}--}}
-            {{--{!! Form::date('createdateend', null, ['class' => 'form-control']) !!}--}}
-            {{--{!! Form::select('creator_name', $dtlog_creatornames, null, ['class' => 'form-control', 'placeholder' => '--发起人--']) !!}--}}
+        <div class="pull-right">
+            <p>
+            {!! Form::open(['url' => '/basic/biddinginformations/search', 'class' => 'form-inline', 'id' => 'frmCondition']) !!}
+            <div class="form-group-sm">
+                {{--{!! Form::label('createdatelabel', '发起时间:', ['class' => 'control-label']) !!}--}}
+                {{--{!! Form::date('createdatestart', null, ['class' => 'form-control']) !!}--}}
+                {{--{!! Form::label('createdatelabelto', '-', ['class' => 'control-label']) !!}--}}
+                {{--{!! Form::date('createdateend', null, ['class' => 'form-control']) !!}--}}
+                {{--{!! Form::select('creator_name', $dtlog_creatornames, null, ['class' => 'form-control', 'placeholder' => '--发起人--']) !!}--}}
 
-            {{--{!! Form::select('template_name', $dtlog_templatenames, null, ['class' => 'form-control', 'placeholder' => '--日志模板--']) !!}--}}
+                {{--{!! Form::select('template_name', $dtlog_templatenames, null, ['class' => 'form-control', 'placeholder' => '--日志模板--']) !!}--}}
 
 
-            {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '字段内容']) !!}
-            {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
-            @can('basic_biddinginformation_export')
-            {!! Form::button('导出', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport']) !!}
-{{--                {!! Form::button('清空数据（慎用！）', ['class' => 'btn btn-default btn-sm', 'id' => 'btnClear']) !!}--}}
-                {{--<a href="{{ url('basic/biddinginformations/export') }}" class="btn btn-sm btn-success">测试导出</a>--}}
-            @endcan
+                {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '字段内容']) !!}
+                {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
+            </div>
+            {!! Form::close() !!}
+            </p>
+
+            <p>
+            {!! Form::open(['url' => '/basic/biddinginformations/export', 'class' => 'form-inline', 'id' => 'frmExport']) !!}
+            <div class="form-group-sm">
+                {!! Form::select('selectprojecttypes_export', array('SDA半干法系统' => 'SDA半干法系统', '湿法系统' => '湿法系统', 'SNCR系统' => 'SNCR系统', 'SCR系统' => 'SCR系统', '飞灰输送系统' => '飞灰输送系统',
+                    '灰库系统' => '灰库系统', '稳定化系统' => '稳定化系统', 'CFB系统' => 'CFB系统', '固定喷雾系统' => '固定喷雾系统', '公用系统' => '公用系统'), null,
+                    ['class' => 'form-control selectpicker', 'multiple']) !!}
+                {!! Form::hidden('projecttypes_export', null, []) !!}
+
+                @can('basic_biddinginformation_export')
+                    {!! Form::button('导出', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport']) !!}
+                    {{--                {!! Form::button('清空数据（慎用！）', ['class' => 'btn btn-default btn-sm', 'id' => 'btnClear']) !!}--}}
+                    {{--<a href="{{ url('basic/biddinginformations/export') }}" class="btn btn-sm btn-success">测试导出</a>--}}
+                @endcan
+            </div>
+            {!! Form::close() !!}
+            </p>
         </div>
-        {!! Form::close() !!}
     </div> 
 
     
@@ -141,7 +157,6 @@
                                 '灰库系统' => '灰库系统', '稳定化系统' => '稳定化系统', 'CFB系统' => 'CFB系统', '固定喷雾系统' => '固定喷雾系统', '公用系统' => '公用系统'), null,
                                 ['class' => 'form-control selectpicker', 'multiple']) !!}
                             {!! Form::hidden('projecttypes', null, []) !!}
-                            {!! csrf_field() !!}
                         </div>
                     {!! Form::close() !!}
                 </div>
@@ -156,16 +171,18 @@
 
 @section('script')
     <script type="text/javascript" src="/bootstrap-select/js/bootstrap-select.min.js"></script>
-    <script type="text/javascript" src="/bootstrap-select/js/i18n/defaults-zh_CN.js"></script>
+    <script type="text/javascript" src="/bootstrap-select/js/i18n/defaults-zh_CN.min.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
             $("#btnExport").click(function() {
+                $("input[name='projecttypes_export']").val($("select[name='selectprojecttypes_export']").val());
+//                $("form#frmExport").submit();
+
                 $.ajax({
                     type: "POST",
                     url: "{!! url('basic/biddinginformations/export') !!}",
-                    data : $('#frmCondition').serialize(),
+                    data : $('#frmExport').serialize(),
                     success: function(result) {
-//                        alert(result);
                         location.href = result;
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
