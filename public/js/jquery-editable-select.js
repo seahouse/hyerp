@@ -13,7 +13,7 @@
 		this.options = options;
 		this.$select = $(select);
 		this.$input  = $('<input type="text" autocomplete="off">');
-		this.$list   = $('<ul class="es-list">');
+		this.$list   = $('<ul id="listWrapper_' + this.options.id + '" class="es-list">');
 		this.utility = new EditableSelectUtility(this);
 		
 		if (['focus', 'manual'].indexOf(this.options.trigger) < 0) this.options.trigger = 'focus';
