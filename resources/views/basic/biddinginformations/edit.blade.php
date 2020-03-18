@@ -1,5 +1,9 @@
 @extends('navbarerp')
 
+@section('head')
+    <link href="{{ asset('css/jquery-editable-select.css') }}" rel="stylesheet" type="text/css" />
+@endsection
+
 @section('main')
     @can('basic_biddinginformation_edit')
     <h1>编辑</h1>
@@ -44,6 +48,7 @@
             'btnclass' => 'hidden',
         ])
 
+    <div id="dynamicSelectWrapper">
     @foreach($biddinginformation->biddinginformationitems()->orderBy('sort')->get() as $biddinginformationitem)
         <div class="form-group">
             {!! Form::label($biddinginformationitem->key, $biddinginformationitem->key, ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
@@ -54,7 +59,8 @@
                         <?php $arr = explode(',', $biddinginformationdefinefield->select_strings); ?>
                             {!! Form::select($biddinginformationitem->key, array_combine($arr, $arr), $biddinginformationitem->value, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
                     @else
-                        {!! Form::text($biddinginformationitem->key, $biddinginformationitem->value, ['class' => 'form-control']) !!}
+                        <!-- {!! Form::text($biddinginformationitem->key, $biddinginformationitem->value, ['class' => 'form-control']) !!} -->
+                        <div class="form-control dynamicSelect" data-value="<?php echo $biddinginformationitem->value?>" data-name="<?php echo $biddinginformationitem->key?>"></div>
                     @endif
                 @else
                     {!! Form::text($biddinginformationitem->key, $biddinginformationitem->value, ['class' => 'form-control']) !!}
@@ -71,6 +77,7 @@
             </div>
         </div>
     @endforeach
+    </div>
 
     <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
@@ -87,12 +94,40 @@
 
 @section('script')
     <script type="text/javascript" src="/DataTables/datatables.js"></script>
+    <script type="text/javascript" src="/js/jquery-editable-select.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
 
+       $('.dynamicSelect').each(function(index, select) {
+            var name = $(select).attr('data-name');
+            $(select).editableSelect({id: name});
+        });  
+        
+        $('.dynamicSelect').each(function(index, select) {
+            var val = $(select).attr('data-value');
+            $(select).val(val);
+        }); 
+            
+        $('#dynamicSelectWrapper').on('click', function (evt) {
+            var target = evt.target || evt.srcElement;
+            if ($(target).attr('data-name')) {
+                var name = $(target).attr('data-name');
+                var url = '/basic/biddinginformationitems/getvaluesbykey/' + name;
+                if (window['URL_' + url]) {
+                    return;
+                }
+                else {
+                    $.get(url, {}, function (result) {
+                        result && (window['URL_' + url] = true);
+                        $.each(result, function (i, t) {
+                            $(target).editableSelect('add', t);
+                        });
+                        $('#listWrapper_' + name).css('display', 'block');//fix plugin filter issue
+                    });
 
-
-
+                }
+            }     
+        });
 
             function format ( d ) {
                 // `d` is the original data object for the row
