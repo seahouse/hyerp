@@ -118,8 +118,8 @@ class SupplierticketReminder extends Command
         // 付款超过70%后，发票按照100%算；付款低于70%的，发票按照已付款金额为标准
 //        $query->whereRaw('amount_paid / amount > 0.6')->whereRaw('amount_paid / amount <= 1.0')->whereRaw('amount_ticketed < amount_paid');
         $query->where(function ($query) {
-            $query->whereRaw('amount_paid / amount >= 0.7 and amount_ticketed < amount')
-                ->orWhereRaw('amount_paid / amount < 0.7 and amount_ticketed < amount_paid');
+            $query->whereRaw('(amount_paid + amount_ticketed_purchase_noaudit) / amount >= 0.7 and (amount_ticketed + amount_ticketed_purchase_noaudit) < amount')
+                ->orWhereRaw('(amount_paid + amount_ticketed_purchase_noaudit) / amount < 0.7 and (amount_ticketed + amount_ticketed_purchase_noaudit) < amount_paid');
         });
 
         $msg = '';
@@ -127,7 +127,7 @@ class SupplierticketReminder extends Command
             foreach ($poheads as $pohead)
             {
                 $this->info($pohead->id . '  ' . $pohead->amount);
-                $msg = '采购订单（' . $pohead->number . '）已付款' . $pohead->amount_paid . '（' . number_format($pohead->amount_paid / $pohead->amount * 100, 2) . '%），' . '开票金额' . $pohead->amount_ticketed . '，请抓紧向' . $pohead->supplier_name .  '催开剩余票据。';
+                $msg = '采购订单（' . $pohead->number . '）已付款' . $pohead->amount_paid . '（' . number_format($pohead->amount_paid / $pohead->amount * 100, 2) . '%），' . '开票金额' . ($pohead->amount_ticketed + $pohead->amount_ticketed_purchase_noaudit) . '，请抓紧向' . $pohead->supplier_name .  '催开剩余票据。';
 //                Log::info($msg);
 
                 $needReminder = true;
@@ -152,9 +152,9 @@ class SupplierticketReminder extends Command
                                 $msgWuhl[$supplier_id]["ticketedamountlist"] = [];
                             }
                             // 付款超过70%后，发票按照100%算；付款低于70%的，发票按照已付款金额为标准
-                            array_push($msgWuhl[$supplier_id]["unticketedamountlist"], $pohead->amount_paid / $pohead->amount >= 0.7 ? $pohead->amount - $pohead->amount_ticketed : $pohead->amount_paid - $pohead->amount_ticketed);
+                            array_push($msgWuhl[$supplier_id]["unticketedamountlist"], $pohead->amount_paid / $pohead->amount >= 0.7 ? $pohead->amount - $pohead->amount_ticketed - $pohead->amount_ticketed_purchase_noaudit : $pohead->amount_paid - $pohead->amount_ticketed - $pohead->amount_ticketed_purchase_noaudit);
                             array_push($msgWuhl[$supplier_id]["paidamountlist"], $pohead->amount_paid);
-                            array_push($msgWuhl[$supplier_id]["ticketedamountlist"], $pohead->amount_ticketed);
+                            array_push($msgWuhl[$supplier_id]["ticketedamountlist"], $pohead->amount_ticketed + $pohead->amount_ticketed_purchase_noaudit);
                         }
 //                        else
 //                            $needReminder = false;

@@ -59,8 +59,8 @@
                         <?php $arr = explode(',', $biddinginformationdefinefield->select_strings); ?>
                             {!! Form::select($biddinginformationitem->key, array_combine($arr, $arr), $biddinginformationitem->value, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
                     @else
-                        <!-- {!! Form::text($biddinginformationitem->key, $biddinginformationitem->value, ['class' => 'form-control']) !!} -->
-                        <div class="form-control dynamicSelect" data-value="<?php echo $biddinginformationitem->value?>" data-name="<?php echo $biddinginformationitem->key?>"></div>
+                        {{--{!! Form::text($biddinginformationitem->key, $biddinginformationitem->value, ['class' => 'form-control']) !!}--}}
+                            {!! Form::text($biddinginformationitem->key, $biddinginformationitem->value, ['class' => 'form-control dynamicSelect', 'data-value' => $biddinginformationitem->value, 'data-name' => $biddinginformationitem->key]) !!}
                     @endif
                 @else
                     {!! Form::text($biddinginformationitem->key, $biddinginformationitem->value, ['class' => 'form-control']) !!}

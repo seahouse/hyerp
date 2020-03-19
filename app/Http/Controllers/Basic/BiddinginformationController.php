@@ -409,10 +409,10 @@ class BiddinginformationController extends Controller
                             // 组装单元格标识  A1  A2
                             $addr = $colIndex . $row;
                             // 获取单元格内容
-//                            $cell = $sheet->getCell($addr)->getFormattedValue();        // 日期格式，可以用这个函数获取到期望的格式
+                            $cell = $sheet->getCell($addr)->getFormattedValue();        // 日期格式，可以用这个函数获取到期望的格式
 //                            if ($colIndex == 'D')
 //                                dd($cell . ':' . $sheet->getCell($addr)->getDataType());
-                            $cell = $sheet->getCell($addr)->getValue();
+//                            $cell = $sheet->getCell($addr)->getValue();
 //                            $cell = $sheet->getCell($addr)->getCalculatedValue();
                             //富文本转换字符串
                             if ($cell instanceof PHPExcel_RichText) {
