@@ -351,6 +351,16 @@ class BiddinginformationController extends Controller
 
         // !! set config/excel.php
         // 'force_sheets_collection' => true,   // !!
+        Log::info('import start.');
+//        Excel::filter('chunk')->load($file->getRealPath())->chunk(250, function($results)
+//        {
+//            foreach($results as $row)
+//            {
+//                // do stuff
+//            }
+//        });
+//        return redirect('basic/biddinginformations');
+
         Excel::load($file->getRealPath(), function ($reader) use ($request) {
             $biddinginformationdefinefields = Biddinginformationdefinefield::all();
 
@@ -371,6 +381,12 @@ class BiddinginformationController extends Controller
                 //  Loop through each row of the worksheet in turn
                 $keys = [];
                 $keys2 = [];
+                //  Read a row of data into an array
+                $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+                    NULL, TRUE, FALSE);
+                // 第一行，关键字
+                $keys = $rowData[0];
+
                 if (isset($sheet2))
                 {
                     //  Read a row of data into an array
@@ -382,18 +398,20 @@ class BiddinginformationController extends Controller
                 }
 
                 $hasFoundRow2 = [];             // 汇总表已经被找到的行
-                for ($row = 1; $row <= $highestRow; $row++)
+                $chunkcount = 100;
+                for ($row = 2; $row <= $highestRow; $row++)
                 {
-                    if ($row == 1)
-                    {
-                        //  Read a row of data into an array
-                        $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
-                            NULL, TRUE, FALSE);
-
-                        // 第一行，关键字
-                        $keys = $rowData[0];
-                    }
-                    else
+                    Log::info($row);
+//                    if ($row == 1)
+//                    {
+//                        //  Read a row of data into an array
+//                        $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+//                            NULL, TRUE, FALSE);
+//
+//                        // 第一行，关键字
+//                        $keys = $rowData[0];
+//                    }
+//                    else
                     {
                         $input = [];
                         $index = 0;
@@ -591,6 +609,7 @@ class BiddinginformationController extends Controller
 //                    NULL, TRUE, FALSE);
 //            }
         });
+        Log::info('import end.');
 
         return redirect('basic/biddinginformations');
     }

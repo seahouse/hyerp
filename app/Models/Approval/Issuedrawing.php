@@ -23,6 +23,7 @@ class Issuedrawing extends Model
         'cabinetquantity',
         'tonnage',
         'productioncompany',
+        'outsourcingcompany_id',
         'materialsupplier',
         'drawingchecker_id',
         'requestdeliverydate',

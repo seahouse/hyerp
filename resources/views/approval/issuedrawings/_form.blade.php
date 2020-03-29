@@ -3,7 +3,7 @@
 <div class="form-group">
     {!! Form::label('designdepartment', '设计部门:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::select('designdepartment', array('工艺一室' => '工艺一室', '工艺二室' => '工艺二室', '工艺三室' => '工艺三室', '电控室' => '电控室'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable, 'onchange' => 'selectDesigndepartmentChange()']) !!}
+    {!! Form::select('designdepartment', array('工艺一室' => '工艺一室', '工艺二室' => '工艺二室', '工艺三室' => '工艺三室', '系统室' => '系统室', '电控室' => '电控室'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable, 'onchange' => 'selectDesigndepartmentChange()']) !!}
     </div>
 </div>
 
@@ -206,9 +206,24 @@
     {!! Form::label('productioncompany', '制作公司:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
     {!! Form::select('productioncompany', array('无锡生产中心' => '无锡生产中心', '无锡电气生产部' => '无锡电气生产部', '郎溪生产中心' => '郎溪生产中心',
-        '宣城子公司' => '宣城子公司', '许昌子公司' => '许昌子公司'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+        '宣城子公司' => '宣城子公司', '许昌子公司' => '许昌子公司', '外协单位' => '外协单位'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable, 'onchange' => 'selectProductioncompanyChange()']) !!}
     </div>
 </div>
+
+        <div id="divOutsourcingcompany">
+            <div class="form-group">
+                {!! Form::label('outsourcingcompany', '外协单位:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::text('outsourcingcompany', $drawingchecker, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectSupplierModal', 'data-name' => 'drawingchecker', 'data-id' => 'pohead_id', 'data-soheadid' => 'sohead_id', 'data-poheadamount' => 'pohead_amount']) !!}
+                    {!! Form::hidden('outsourcingcompany_id', 0, ['class' => 'btn btn-sm', 'id' => 'outsourcingcompany_id']) !!}
+                    @if (isset($reimbursement->customer_hxold->name))
+                        {!! Form::hidden('customer_name2', $reimbursement->customer_hxold->name, ['class' => 'btn btn-sm', 'id' => 'customer_name2']) !!}
+                    @else
+                        {!! Form::hidden('customer_name2', null, ['class' => 'btn btn-sm', 'id' => 'customer_name2']) !!}
+                    @endif
+                </div>
+            </div>
+        </div>
 
         <div class="form-group">
             {!! Form::label('materialsupplier', '材料供应方:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}

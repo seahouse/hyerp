@@ -23,6 +23,7 @@ class CreateIssuedrawingsTable extends Migration
             $table->decimal('cabinetquantity', 18, 2)->default(0.0);             // 柜体数量
             $table->decimal('tonnage', 18, 4)->default(0.0);
             $table->string('productioncompany');
+            $table->integer('outsourcingcompany_id')->nullable();
             $table->string('materialsupplier');
             $table->integer('drawingchecker_id');
             $table->date('requestdeliverydate');

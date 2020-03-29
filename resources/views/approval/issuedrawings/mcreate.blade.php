@@ -116,6 +116,40 @@
     </div>
 </div>
 
+<div class="modal fade" id="selectSupplierModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">选择外协单位</h4>
+			</div>
+			<div class="modal-body">
+				<div class="input-group">
+					{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '供应商名称', 'id' => 'keySupplier']) !!}
+					<span class="input-group-btn">
+                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchSupplier']) !!}
+                   	</span>
+				</div>
+				{!! Form::hidden('name', null, ['id' => 'name']) !!}
+				{!! Form::hidden('id', null, ['id' => 'id']) !!}
+				<p>
+				<div class="list-group" id="listsuppliers">
+
+				</div>
+				</p>
+				<form id="formAccept">
+					{!! csrf_field() !!}
+
+					{{--                    {!! Form::hidden('reimbursement_id', $reimbursement->id, ['class' => 'form-control']) !!}
+                                        {!! Form::hidden('status', 0, ['class' => 'form-control']) !!} --}}
+				</form>
+			</div>
+			{{--            <div class="modal-footer">
+                            {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
+                            {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnAccept']) !!}
+                        </div>--}}
+		</div>
+	</div>
+</div>
 
 <!-- before submit -->
 <div class="modal fade" id="submitModal" tabindex="-1" role="dialog">
@@ -363,63 +397,58 @@
 				});
 			}
 
-			$('#selectSupplierBankModal').on('show.bs.modal', function (e) {
-				$("#listsupplierbanks").empty();
-				$("form#formAddVendbank").hide();
-				$("#selectSupplierBankModal").find("#bankname").val("");
-				$("#selectSupplierBankModal").find("#accountnum").val("");
+            $('#selectSupplierModal').on('show.bs.modal', function (e) {
+                $("#listsuppliers").empty();
 
-				var text = $(e.relatedTarget);
-				var modal = $(this);
+                var text = $(e.relatedTarget);
+                // alert(text.data('id'));
 
-				modal.find('#name').val(text.data('name'));
-				modal.find('#id').val(text.data('id'));
-			});
+                var modal = $(this);
+                modal.find('#name').val(text.data('name'));
+                modal.find('#id').val(text.data('id'));
+                // alert(modal.find('#id').val());
+            });
 
-			$('#selectSupplierBankModal').on('shown.bs.modal', function (e) {
-				// $("#listsupplierbanks").empty();
+            $("#btnSearchSupplier").click(function() {
+                if ($("#keySupplier").val() == "") {
+                    alert('请输入关键字');
+                    return;
+                }
+                $.ajax({
+                    type: "GET",
+                    url: "{!! url('/purchase/vendinfos/getitemsbykey/') !!}" + "/" + $("#keySupplier").val(),
+                    success: function(result) {
+                        var strhtml = '';
+                        $.each(result.data, function(i, field) {
+                            btnId = 'btnSelectSupplier_' + String(i);
+                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.name + "</h4></button>"
+                        });
+                        if (strhtml == '')
+                            strhtml = '无记录。';
+                        $("#listsuppliers").empty().append(strhtml);
 
-				var text = $(e.relatedTarget);
-				var modal = $(this);
+                        $.each(result.data, function(i, field) {
+                            btnId = 'btnSelectSupplier_' + String(i);
+                            addBtnClickEventSupplier(btnId, field.id, field.name, field);
+                        });
+                        // addBtnClickEvent('btnSelectOrder_0');
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('error');
+                    }
+                });
+            });
 
-				// modal.find('#listsupplierbanks').append("aaaa");
-				
-				$.ajax({
-					type: "GET",
-					url: "{!! url('/purchase/vendbank/getitemsbyvendid/') !!}" + "/" + $("#supplier_id").val(),
-					success: function(result) {
-						var strhtml = '';
-						$.each(result.data, function(i, field) {
-							btnId = 'btnSelectSupplierbank_' + String(i);
-							// strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.bankname + "</h4><p>" + field.accountnum + "</p></button>"		
-							strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + field.bankname + ": " + field.accountnum + "</button>"					
-						});
-						if (strhtml == '')
-							strhtml = '无记录。';
-						modal.find('#listsupplierbanks').empty().append(strhtml);
-
-						$.each(result.data, function(i, field) {
-							btnId = 'btnSelectSupplierbank_' + String(i);
-							addBtnClickEventSupplierbank(btnId, field);
-						});
-					},
-					error: function(xhr, ajaxOptions, thrownError) {
-						alert('error');
-					}
-				});
-			});
-
-			function addBtnClickEventSupplierbank(btnId, field)
-			{
-				$("#" + btnId).bind("click", function() {
-					$('#selectSupplierBankModal').modal('toggle');
-					// $("#" + $("#selectSupplierModal").find('#name').val()).val(name);
-					// $("#" + $("#selectSupplierModal").find('#id').val()).val(supplierid);
-					$("#vendbank_id").val(field.id);
-					$("#supplier_bank").val(field.bankname);
-					$("#supplier_bankaccountnumber").val(field.accountnum);
-				});
-			}
+            function addBtnClickEventSupplier(btnId, supplierid, name, field)
+            {
+                $("#" + btnId).bind("click", function() {
+                    $('#selectSupplierModal').modal('toggle');
+//                    $("#" + $("#selectSupplierModal").find('#name').val()).val(name);
+//                    $("#" + $("#selectSupplierModal").find('#id').val()).val(supplierid);
+                    $("#outsourcingcompany").val(field.name);
+                    $("#outsourcingcompany_id").val(field.id);
+                });
+            }
 
             $("#btnAddItem").click(function() {
                 item_num++;
@@ -480,6 +509,25 @@
                     $("#cabinet_detail").attr("style", "display:none;");
 				}
 
+            }
+
+            selectProductioncompanyChange = function () {
+                var productioncompany = $("#productioncompany").val();
+
+                if (productioncompany == "外协单位")
+                {
+                    $("#divOutsourcingcompany").attr("style", "display:'';");
+//                    $("label[for='outsourcingcompany']").attr("style", "display:'';");
+//                    $("#outsourcingcompany").attr("style", "display:'';");
+                }
+                else
+                {
+                    $("#divOutsourcingcompany").attr("style", "display:none;");
+//                    $("label[for='outsourcingcompany']").attr("style", "display:none;");
+//                    $("#outsourcingcompany").attr("style", "display:none;");
+                    $("#outsourcingcompany").val("");
+                    $("#outsourcingcompany_id").val(0);
+                }
             }
 
 			dd.config({

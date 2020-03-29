@@ -66,7 +66,7 @@
     <table class="table table-striped table-hover table-condensed">
         <thead>
             <tr>
-                <th>编号</th>
+                <th>投标编号</th>
                 @foreach($types as $type)
                 <th>{{ $type }}</th>
                 @endforeach

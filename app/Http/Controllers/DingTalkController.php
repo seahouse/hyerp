@@ -1999,6 +1999,10 @@ class DingTalkController extends Controller
                 'value'     => $inputs['productioncompany'],
             ],
             [
+                'name'      => '外协单位',
+                'value'     => $inputs['outsourcingcompany'],
+            ],
+            [
                 'name'      => '材料供应方',
                 'value'     => $inputs['materialsupplier'],
             ],
