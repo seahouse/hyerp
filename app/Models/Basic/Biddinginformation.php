@@ -12,6 +12,7 @@ class Biddinginformation extends Model
         'year',
         'digital_number',
         'closed',
+        'remark',
     ];
 
     public function biddinginformationitems() {

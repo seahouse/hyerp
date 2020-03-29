@@ -9,7 +9,7 @@
 @section('main')
     @can('basic_biddinginformation_view')
     <div class="panel-heading">
-        <a href="{{ url('basic/biddinginformations/create') }}" class="btn btn-sm btn-success">测试历史下拉用</a>
+        {{--<a href="{{ url('basic/biddinginformations/create') }}" class="btn btn-sm btn-success">测试历史下拉用</a>--}}
         {!! Form::button('新建', ['class' => 'btn btn-sm btn-success', 'data-toggle' => 'modal', 'data-target' => '#createModal']) !!}
         <a href="{{ url('basic/biddinginformations/import') }}" class="btn btn-sm btn-success">导入</a>
         <a href="{{ url('basic/biddinginformationdefinefields') }}" class="btn btn-sm btn-success">维护字段</a>

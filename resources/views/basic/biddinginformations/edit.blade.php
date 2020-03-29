@@ -43,7 +43,7 @@
             'amountOtherTicket' => null,
             'stayamount' => null,
             'otheramount' => null,
-            'attr' => 'readonly',
+            'attr' => '',
             'attrdisable' => 'disabled',
             'btnclass' => 'hidden',
         ])

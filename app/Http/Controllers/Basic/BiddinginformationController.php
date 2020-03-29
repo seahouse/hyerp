@@ -263,6 +263,9 @@ class BiddinginformationController extends Controller
     {
         //
         $biddinginformation = Biddinginformation::findOrFail($id);
+        $biddinginformation->remark = $request->has('remark') ? $request->input('remark') : '';
+        $biddinginformation->save();
+
 //        $biddinginformation->update($request->all());
         $inputs = $request->all();
 //        dd($inputs);
