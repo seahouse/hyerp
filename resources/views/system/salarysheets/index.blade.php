@@ -170,7 +170,7 @@
                 startView: 3,
                 minView: 3,
                 language:"zh-CN",
-//                format: 'yyyy-mm-dd hh:ii'
+               // format: 'yyyy-mm-dd hh:ii'
             });
 
             $("input[name='salary_dateend']").datetimepicker({

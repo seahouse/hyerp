@@ -687,6 +687,7 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
         Route::post('search', 'SalarysheetController@search');
         Route::post('sendsalarysheet', 'SalarysheetController@sendsalarysheet');
         Route::get('{id}/mshow', 'SalarysheetController@mshow');
+        Route::get('mobileindex', 'SalarysheetController@mobileindex');
     });
     Route::resource('salarysheet', 'SalarysheetController');
 
