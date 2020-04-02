@@ -37,6 +37,7 @@ class SalarysheetController extends Controller
     {
         //
         $username=Auth::user()->name;
+        dd($username);
         $request = request();
 //        $key = $request->input('key', '');
         $inputs = $request->all();
