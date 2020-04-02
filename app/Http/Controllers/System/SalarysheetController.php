@@ -43,7 +43,7 @@ class SalarysheetController extends Controller
         $inputs = $request->all();
 //        $username='陆增贵';
         $salarysheets = Salarysheet::where('username',$username)->first();
-        dd($salarysheets);
+//        dd($salarysheets);
 //        $salarysheets = Salarysheet::latest('created_at')->paginate(10);
         return view('system.salarysheets.mobileindex', compact('salarysheets','inputs'));
     }

@@ -47,7 +47,7 @@
 
             </table>
             {{--{!! $salarysheets->render() !!}--}}
-            {{--{!! $salarysheets->setPath('/system/salarysheet')->appends($inputs)->links() !!}--}}
+            {!! $salarysheets->setPath('/system/salarysheet')->appends($inputs)->links() !!}
         @else
             <div class="alert alert-warning alert-block">
                 <i class="fa fa-warning"></i>
