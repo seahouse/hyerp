@@ -37,13 +37,13 @@ class SalarysheetController extends Controller
     {
         //
         $username=Auth::user()->name;
-        dd($username);
+//        dd($username);
         $request = request();
 //        $key = $request->input('key', '');
         $inputs = $request->all();
 //        $username='陆增贵';
         $salarysheets = Salarysheet::where('username',$username);
-
+        dd($salarysheets);
 //        $salarysheets = Salarysheet::latest('created_at')->paginate(10);
         return view('system.salarysheets.mobileindex', compact('salarysheets','inputs'));
     }
