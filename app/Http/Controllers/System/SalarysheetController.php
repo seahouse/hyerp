@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Excel, Log;
+use Excel, Log,Auth;
 
 class SalarysheetController extends Controller
 {
@@ -36,7 +36,8 @@ class SalarysheetController extends Controller
     public function mobileindex()
     {
         //
-        $username=Auth::user()->name;
+//        $username=Auth::user()->name;
+        $username='陆增贵';
         $salarysheets = Salarysheet::where('user_name',$username);
 
 //        $salarysheets = Salarysheet::latest('created_at')->paginate(10);
