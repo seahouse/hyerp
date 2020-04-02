@@ -41,7 +41,7 @@ class SalarysheetController extends Controller
         $salarysheets = Salarysheet::where('user_name',$username);
 
 //        $salarysheets = Salarysheet::latest('created_at')->paginate(10);
-        return view('system.salarysheets.moblieindex', compact('salarysheets'));
+        return view('system.salarysheets.mobileindex', compact('salarysheets'));
     }
 
     public function search(Request $request)
