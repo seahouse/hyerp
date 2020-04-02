@@ -38,7 +38,7 @@ class SalarysheetController extends Controller
         //
 //        $username=Auth::user()->name;
         $username='陆增贵';
-        $salarysheets = Salarysheet::where('user_name',$username);
+        $salarysheets = Salarysheet::where('username',$username);
 
 //        $salarysheets = Salarysheet::latest('created_at')->paginate(10);
         return view('system.salarysheets.mobileindex', compact('salarysheets'));
