@@ -36,12 +36,15 @@ class SalarysheetController extends Controller
     public function mobileindex()
     {
         //
-//        $username=Auth::user()->name;
-        $username='陆增贵';
+        $username=Auth::user()->name;
+        $request = request();
+//        $key = $request->input('key', '');
+        $inputs = $request->all();
+//        $username='陆增贵';
         $salarysheets = Salarysheet::where('username',$username);
 
 //        $salarysheets = Salarysheet::latest('created_at')->paginate(10);
-        return view('system.salarysheets.mobileindex', compact('salarysheets'));
+        return view('system.salarysheets.mobileindex', compact('salarysheets','$inputs'));
     }
 
     public function search(Request $request)
