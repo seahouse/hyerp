@@ -2084,11 +2084,15 @@ class ApprovalController extends Controller
                         'value'     => $value->brand,
                     ],
                     [
-                        'name'      => '数量',
-                        'value'     => $value->quantity . (strlen($value->unit_id) > 0 ? ' ' . $value->unit_name : ''),
+                        'name'      => '计价单位',
+                        'value'     => strlen($value->unit_id) > 0 ? ' ' . $value->unit_name : '',
                     ],
                     [
-                        'name'      => '单价',
+                        'name'      => '数量',
+                        'value'     => $value->quantity,
+                    ],
+                    [
+                        'name'      => '单价（元）',
                         'value'     => $value->unitprice,
                     ],
                     [
@@ -2101,12 +2105,20 @@ class ApprovalController extends Controller
         }
         $formdata = [
             [
+                'name'      => '采购公司',
+                'value'     => $inputs['purchasecompany_name'],
+            ],
+            [
                 'name'      => '工程名称',
                 'value'     => $inputs['project_name'],
             ],
             [
-                'name'      => '订单编号',
+                'name'      => '项目订单编号',
                 'value'     => $inputs['sohead_number'],
+            ],
+            [
+                'name'      => '订单所属销售经理',
+                'value'     => $inputs['sohead_salesmanager'],
             ],
             [
                 'name'      => '项目类型',
@@ -2117,8 +2129,8 @@ class ApprovalController extends Controller
                 'value'     => $inputs['vendordeduction_descrip'],
             ],
             [
-                'name'      => '订单所属销售经理',
-                'value'     => $inputs['sohead_salesmanager'],
+                'name'      => '关联相关扣款审批单',
+                'value'     => $inputs['associatedapprovals'],
             ],
             [
                 'name'      => '订单所属设计部门',
@@ -2129,8 +2141,16 @@ class ApprovalController extends Controller
                 'value'     => $inputs['productiondept'],
             ],
             [
+                'name'      => '外协设备商全称',
+                'value'     => $inputs['outsourcingcompany'],
+            ],
+            [
                 'name'      => '采购类型',
                 'value'     => $inputs['purchasetype'],
+            ],
+            [
+                'name'      => 'EP项目安装费原因',
+                'value'     => $inputs['epamountreason'],
             ],
             [
                 'name'      => '采购原因',
@@ -2141,13 +2161,13 @@ class ApprovalController extends Controller
                 'value'     => $inputs['remark'],
             ],
             [
-                'name'      => '交通或运费',
+                'name'      => '交通或运费（元）',
                 'value'     => $inputs['freight'],
             ],
-            [
-                'name'      => '合计总金额',
-                'value'     => $inputs['totalprice'],
-            ],
+//            [
+//                'name'      => '合计总金额',
+//                'value'     => $inputs['totalprice'],
+//            ],
             [
                 'name'      => '支付方式',
                 'value'     => $inputs['paymentmethod'],
@@ -2165,7 +2185,7 @@ class ApprovalController extends Controller
                 'value'     => $inputs['contact'],
             ],
             [
-                'name'      => '手机号码',
+                'name'      => '联系方式',
                 'value'     => $inputs['phonenumber'],
             ],
             [
@@ -2173,19 +2193,15 @@ class ApprovalController extends Controller
                 'value'     => $inputs['otherremark'],
             ],
             [
-                'name'      => '上传凭证',
+                'name'      => '上传购买凭证',
                 'value'     => $inputs['image_urls'],
             ],
             [
-                'name'      => '附件',
+                'name'      => '上传工程采购EXCEL表',
                 'value'     => $inputs['files_string'],
             ],
             [
-                'name'      => '关联相关审批单',
-                'value'     => $inputs['associatedapprovals'],
-            ],
-            [
-                'name'      => '采购明细',
+                'name'      => '采购明细（一个流程不超过15条明细）',
                 'value'     => json_encode($detail_array),
             ],
         ];

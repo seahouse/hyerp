@@ -21,7 +21,9 @@ class CreateProjectsitepurchasesTable extends Migration
             $table->string('vendordeduction_descrip');
             $table->string('designdept');
             $table->string('productiondept');
+            $table->integer('outsourcingcompany_id')->nullable();
             $table->string('purchasetype');
+            $table->string('epamountreason')->nullable();
             $table->string('purchasereason');
             $table->string('remark', 500)->default('');
             $table->decimal('freight', 18, 2)->default(0.0);

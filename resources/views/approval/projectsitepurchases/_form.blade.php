@@ -8,7 +8,7 @@
         </div>
 
         <div class="form-group">
-            {!! Form::label('project_name', '所属订单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            {!! Form::label('project_name', '工程名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
                 {!! Form::text('project_name', $project_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectProjectModal', 'data-name' => 'project_name_1', 'data-id' => 'sohead_id_1', 'data-num' => '1', 'id' => 'project_name_1']) !!}
                 {!! Form::hidden('sohead_id', 0, ['class' => 'btn btn-sm', 'id' => 'sohead_id_1']) !!}
@@ -16,7 +16,7 @@
         </div>
 
         <div class="form-group">
-            {!! Form::label('sohead_number', '订单编号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            {!! Form::label('sohead_number', '项目订单编号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
                 {!! Form::text('sohead_number', null, ['class' => 'form-control', 'readonly', $attr, 'id' => 'sohead_number_1']) !!}
             </div>
@@ -44,9 +44,19 @@
         </div>
 
         <div class="form-group">
+            {!! Form::label('associatedapprovals', '关联相关扣款审批单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::button('+', ['class' => 'btn btn-sm', 'data-toggle' => 'modal', 'data-target' => '#selectApproval']) !!}
+                {!! Form::hidden('associatedapprovals', null, ['class' => 'btn btn-sm']) !!}
+                <div id="lblAssociatedapprovals">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
             {!! Form::label('designdept', '订单所属设计部门:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('designdept', array('工艺一室' => '工艺一室', '工艺二室' => '工艺二室', '工艺三室' => '工艺三室', '电控室' => '电控室', '不涉及设计部门' => '不涉及设计部门'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                {!! Form::select('designdept', array('工艺一室' => '工艺一室', '工艺二室' => '工艺二室', '工艺三室' => '工艺三室', '系统室' => '系统室', '电控室' => '电控室', '不涉及设计部门' => '不涉及设计部门'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
             </div>
         </div>
 
@@ -59,10 +69,32 @@
         </div>
 
         <div class="form-group">
+            {!! Form::label('outsourcingcompany', '外协设备商全称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::text('outsourcingcompany', null, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectSupplierModal', 'data-name' => 'drawingchecker', 'data-id' => 'pohead_id', 'data-soheadid' => 'sohead_id', 'data-poheadamount' => 'pohead_amount']) !!}
+                {!! Form::hidden('outsourcingcompany_id', 0, ['class' => 'btn btn-sm', 'id' => 'outsourcingcompany_id']) !!}
+                @if (isset($reimbursement->customer_hxold->name))
+                    {!! Form::hidden('customer_name2', $reimbursement->customer_hxold->name, ['class' => 'btn btn-sm', 'id' => 'customer_name2']) !!}
+                @else
+                    {!! Form::hidden('customer_name2', null, ['class' => 'btn btn-sm', 'id' => 'customer_name2']) !!}
+                @endif
+            </div>
+        </div>
+
+        <div class="form-group">
             {!! Form::label('purchasetype', '采购类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('purchasetype', array('机务材料类' => '机务材料类', '电气材料类' => '电气材料类', '机务设备类' => '机务设备类', '电气设备类' => '电气设备类', '维修费用' => '维修费用',
-                    '工具类' => '工具类', '劳务费' => '劳务费', '劳保类' => '劳保类', '办公用品' => '办公用品', '生活用品' => '生活用品'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                {!! Form::select('purchasetype', array('机务材料类' => '机务材料类', '电气材料类' => '电气材料类', '机务设备类' => '机务设备类', '电气设备类' => '电气设备类', 'EP项目安装队相关费用' => 'EP项目安装队相关费用', '维修费用' => '维修费用',
+                    '工具类' => '工具类', '劳务费' => '劳务费', '劳保用品' => '劳保用品', '办公用品' => '办公用品', '生活用品' => '生活用品'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {!! Form::label('epamountreason', 'EP项目安装费原因:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::select('epamountreason', array('1、设计问题导致安装队额外施工。' => '1、设计问题导致安装队额外施工。', '2、装置生产加工问题导致安装队额外施工' => '2、装置生产加工问题导致安装队额外施工', '3、运输问题导致安装队额外施工-无锡仓库或生产中心直发' => '3、运输问题导致安装队额外施工-无锡仓库或生产中心直发',
+                    '4、运输问题导致安装队额外施工-外协厂直接' => '4、运输问题导致安装队额外施工-外协厂直接', '5、属我方供货范围，到货设备与技术协议及施工图纸不符，比如整体供货，到场为散件，需要现场安装队拼接。' => '5、属我方供货范围，到货设备与技术协议及施工图纸不符，比如整体供货，到场为散件，需要现场安装队拼接。'
+                    ), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
             </div>
         </div>
 
@@ -71,7 +103,8 @@
             <div class='col-xs-8 col-sm-10'>
                 {!! Form::select('purchasereason', array('不属我方供货范围，甲方要求增加。' => '不属我方供货范围，甲方要求增加。', '现场材料业主不满意，需更改，现场购买。' => '现场材料业主不满意，需更改，现场购买。', '现场施工质量甲方不满意，返工需增加部分现场购买。' => '现场施工质量甲方不满意，返工需增加部分现场购买。',
                     '属我方供货范围内，采购漏项。' => '属我方供货范围内，采购漏项。', '属我方供货范围内，外协厂漏发货。' => '属我方供货范围内，外协厂漏发货。', '属我方供货范围内，本公司漏发货。' => '属我方供货范围内，本公司漏发货。',
-                    '属我方供货范围内，需现场自行采购' => '属我方供货范围内，需现场自行采购', '现场消缺-领导决定材料当地采购。' => '现场消缺-领导决定材料当地采购。', '现场售后-公司发货不合算或来不及。' => '现场售后-公司发货不合算或来不及。'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                    '属我方供货范围内，需现场自行采购' => '属我方供货范围内，需现场自行采购', '现场消缺-领导决定材料当地采购。' => '现场消缺-领导决定材料当地采购。', '现场售后-公司发货不合算或来不及。' => '现场售后-公司发货不合算或来不及。',
+                    '其他原因（详见补充说明）' => '其他原因（详见补充说明）'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
             </div>
         </div>
 
@@ -82,42 +115,11 @@
             </div>
         </div>
 
-
 @if (isset($paymentrequest))
 
 
 
-<div class="form-group">
-    {!! Form::label('pohead_amount_paid', '已付金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-5 col-sm-9'>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount_paid)) 
-         {!! Form::text('pohead_amount', $paymentrequest->purchaseorder_hxold->amount_paid, ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('pohead_amount', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount_paid) and isset($paymentrequest->purchaseorder_hxold->amount) and $paymentrequest->purchaseorder_hxold->amount > 0.0)
-        {!! Form::label('amount_paid_percent', number_format($paymentrequest->purchaseorder_hxold->amount_paid / $paymentrequest->purchaseorder_hxold->amount * 100.0, 2, '.', '') . '%', ['class' => 'col-xs-3 col-sm-1 control-label']) !!}
-    @else
-        {!! Form::label('amount_paid_percent', '-', ['class' => 'col-xs-3 col-sm-1 control-label', 'id' => 'amount_paid_percent']) !!}
-    @endif
-</div>
 
-<div class="form-group">
-    {!! Form::label('pohead_amount_ticketed', '已开票金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-5 col-sm-9'>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount_ticketed)) 
-         {!! Form::text('pohead_amount_ticketed', $paymentrequest->purchaseorder_hxold->amount_ticketed, ['class' => 'form-control', $attr]) !!}
-    @else
-        {!! Form::text('pohead_amount_ticketed', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-    @if (isset($paymentrequest->purchaseorder_hxold->amount_ticketed) and isset($paymentrequest->purchaseorder_hxold->amount) and $paymentrequest->purchaseorder_hxold->amount > 0.0)
-        {!! Form::label('amount_ticketed_percent', number_format($paymentrequest->purchaseorder_hxold->amount_ticketed / $paymentrequest->purchaseorder_hxold->amount * 100.0, 2, '.', '') . '%', ['class' => 'col-xs-3 col-sm-1 control-label']) !!}
-    @else
-        {!! Form::label('amount_ticketed_percent', '-', ['class' => 'col-xs-3 col-sm-1 control-label', 'id' => 'amount_ticketed_percent']) !!}
-    @endif
-</div>
 
 <div class="form-group">
     {!! Form::label('pohead_arrived', '到货情况:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
@@ -151,8 +153,6 @@
 
 
 @else
-
-
 
 
 
@@ -207,12 +207,6 @@
                     </div>
                 </div>
 
-                {{--<div class="form-group">--}}
-                    {{--{!! Form::label('material', '材质:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
-                    {{--<div class='col-xs-8 col-sm-10'>--}}
-                        {{--{!! Form::text('material', null, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'material_1']) !!}--}}
-                    {{--</div>--}}
-                {{--</div>--}}
 
                 <div class="form-group">
                     {!! Form::label('unitprice', '单价:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
@@ -227,7 +221,6 @@
                         {!! Form::text('price', null, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'price_1']) !!}
                     </div>
                 </div>
-
             </div>
 
 
@@ -240,11 +233,7 @@
 
 
 
-
-
                 <div id="pppaymentitemtypecontainer_1" name="pppaymentitemtypecontainer"></div>
-
-
 
 
 
@@ -263,20 +252,17 @@
 
 
 
-
-
 @endif
         {!! Form::hidden('items_string', null, ['id' => 'items_string']) !!}
         {!! Form::hidden('items_string2', null, ['id' => 'items_string2']) !!}
 
 
         <div class="form-group">
-            {!! Form::label('freight', '交通或运费:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+            {!! Form::label('freight', '交通或运费（元）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
             <div class='col-xs-8 col-sm-10'>
                 {!! Form::text('freight', null, ['class' => 'form-control', 'placeholder' => '请输入', $attr]) !!}
             </div>
         </div>
-
 
         <div class="form-group">
             {!! Form::label('totalprice', '合计总金额:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
@@ -300,7 +286,6 @@
             </div>
         </div>
 
-
     <div class="form-group">
         {!! Form::label('companyname', '公司名称:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
         <div class='col-xs-8 col-sm-10'>
@@ -316,7 +301,7 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('phonenumber', '手机号码:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+        {!! Form::label('phonenumber', '联系方式:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
         <div class='col-xs-8 col-sm-10'>
             {!! Form::text('phonenumber', null, ['class' => 'form-control', 'placeholder' => '请输入拟采购联系人手机', $attr]) !!}
         </div>
@@ -330,10 +315,8 @@
     </div>
 
 
-
-
     <div class="form-group">
-        {!! Form::label('images', '上传凭证:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+        {!! Form::label('images', '上传购买凭证:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
         <div class='col-xs-8 col-sm-10'>
             <div class="row" id="previewimage">
@@ -361,7 +344,7 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('files', '附件:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+        {!! Form::label('files', '上传工程采购EXCEL表:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
         <div class='col-xs-8 col-sm-10'>
             @if (isset($issuedrawing))
@@ -375,17 +358,6 @@
                 </div>
                 {!! Form::hidden('files_string', null, ['id' => 'files_string']) !!}
             @endif
-        </div>
-    </div>
-
-    <div class="form-group">
-        {!! Form::label('associatedapprovals', '关联相关审批单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-
-        <div class='col-xs-8 col-sm-10'>
-            {!! Form::button('+', ['class' => 'btn btn-sm', 'data-toggle' => 'modal', 'data-target' => '#selectApproval']) !!}
-            {!! Form::hidden('associatedapprovals', null, ['class' => 'btn btn-sm']) !!}
-            <div id="lblAssociatedapprovals">
-            </div>
         </div>
     </div>
 

@@ -9,6 +9,10 @@ use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiProcessinstanceCspa
 use App\Models\Approval\Projectsitepurchase;
 use App\Models\Approval\Projectsitepurchaseattachment;
 use App\Models\Approval\Projectsitepurchaseitem;
+use App\Models\Basic\Company_hxold;
+use App\Models\Product\Itemp_hxold;
+use App\Models\Product\Unit_hxold;
+use App\Models\Purchase\Poitem_hx;
 use App\Models\Purchase\Purchaseorder_hx;
 use App\Models\Sales\Salesorder_hxold;
 use App\Models\System\Userold;
@@ -29,7 +33,7 @@ class ProjectsitepurchaseController extends Controller
     public function index()
     {
         //
-        self::updateStatusByProcessInstanceId('bc0b67e0-4d9e-43bb-b45d-6afda6bec6f8', 0);
+        self::updateStatusByProcessInstanceId('0f390e2b-7be7-4645-96d6-4f7efb9ecf70', 0);
     }
 
     public function getitemsbykey($key)
@@ -89,7 +93,6 @@ class ProjectsitepurchaseController extends Controller
     public function mstore(Request $request)
     {
         $input = $request->all();
-//        dd($input);
 //        $input['associatedapprovals'] = strlen($input['associatedapprovals']) > 0 ? json_encode(array($input['associatedapprovals'])) : "";
 //        dd($input['associatedapprovals']);
 
@@ -116,50 +119,18 @@ class ProjectsitepurchaseController extends Controller
         ]);
 //        $input = HelperController::skipEmptyValue($input);
 
-//        // valid
-//        $weight_purchase = 0.0;
-//        $mcitempurchase_items = json_decode($input['items_string']);
-//        foreach ($mcitempurchase_items as $value) {
-//            if ($value->item_id > 0)
-//            {
-//                $weight_purchase += $value->weight;
-//            }
-//        }
-//        $input['totalweight'] = $weight_purchase;
-//
-//        if ($input['sohead_id'] <> "7550")
-//        {
-//            $weight_issuedrawing = 0.0;
-//            $issuedrawing_values = $input['issuedrawing_values'];
-//            foreach (explode(",", $issuedrawing_values) as $value) {
-//                if ($value > 0)
-//                {
-//                    $issuedrawing = Issuedrawing::where('id', $value)->first();
-//                    if (isset($issuedrawing))
-//                        $weight_issuedrawing += $issuedrawing->tonnage;
-//                }
-//            }
-//            if ($weight_purchase > $weight_issuedrawing * 1.3)
-//                dd('申购重量超过了图纸重量');
-//            $weight_sohead_issuedrawing = 0.0;
-//            $weight_sohead_purchase = 0.0;
-//            $issuedrawings = Issuedrawing::where('sohead_id', $input['sohead_id'])->where('status', 0)->get();
-//            foreach ($issuedrawings as $issuedrawing)
-//            {
-//                $weight_sohead_issuedrawing += $issuedrawing->tonnage;
-//            }
-//            $mcitempurchases = Mcitempurchase::where('sohead_id', $input['sohead_id'])->where('status', '>=', 0)->get();
-//            foreach ($mcitempurchases as $mcitempurchase)
-//            {
-//                $weight_sohead_purchase += $mcitempurchase->mcitempurchaseitems->sum('weight');
-//            }
-//            if (($weight_sohead_purchase + $weight_purchase)  > $weight_sohead_issuedrawing * 1.2)
-//                dd("该订单的申购重量之和超过了图纸重量之和。订单下图单总重量：" . $weight_sohead_issuedrawing . "，已申购：" . $weight_sohead_purchase . "，此次申购：" . $weight_purchase . "。");
-//        }
 
         if ($input['totalprice'] == "")
             $input['totalprice'] = 0.0;
         $input['applicant_id'] = Auth::user()->id;
+
+        $input['purchasecompany_name'] = '';
+        if (array_key_exists('purchasecompany_id', $input) && $input['purchasecompany_id'] > 0)
+        {
+            $purchasecompany = Company_hxold::find($input['purchasecompany_id']);
+            if (isset($purchasecompany))
+                $input['purchasecompany_name'] = $purchasecompany->name;
+        }
 
 //        // set approversetting_id
 //        $approvaltype_id = self::typeid();
@@ -174,6 +145,7 @@ class ProjectsitepurchaseController extends Controller
 //        else
 //            $input['approversetting_id'] = -1;
 
+//        dd($input);
         $projectsitepurchase = Projectsitepurchase::create($input);
 //        dd($projectsitepurchase);
 
@@ -429,90 +401,94 @@ class ProjectsitepurchaseController extends Controller
             $projectsitepurchase->status = $status;
             $projectsitepurchase->save();
 
-//            // 如果是审批完成且通过，则创建老系统中的采购订单
-//            if ($status == 0)
-//            {
-//                $cp = 'WX';
-//                if ($projectsitepurchase->purchasecompany_id == 2)
-//                    $cp = 'AH';
-//                elseif ($projectsitepurchase->purchasecompany_id == 3)
-//                    $cp = 'HN';
-//
-//                $projectsitepurchaseitem = $projectsitepurchase->projectsitepurchaseitems->first();
-//                $item_index = '';
-//                if (isset($projectsitepurchaseitem))
-//                {
-//                    $item_index = HelperController::pinyin_long($projectsitepurchaseitem->item->goods_name);
-//                }
-//                $item_index = strlen($item_index) > 0 ? $item_index : 'spmc';
-//                if (strlen($item_index) < 4)
-//                    $item_index = str_pad($item_index, 4, 0, STR_PAD_LEFT);
-//                elseif (strlen($item_index) > 4)
-//                    $item_index = substr($item_index, 0, 4);
-//                $seqnumber = Purchaseorder_hx::where('编号年份', Carbon::today()->year)->max('编号数字');
-//                $seqnumber += 1;
-//                $seqnumber = str_pad($seqnumber, 4, 0, STR_PAD_LEFT);
-//
-//                $userold_id = 0;
-//                $userold = Userold::where('user_id', $projectsitepurchase->applicant_id)->first();
-//                if (isset($userold))
-//                    $userold_id = $userold->user_hxold_id;
-//
-//                $pohead_number = $cp . '-' . $item_index . '-' . Carbon::today()->format('Y-m') . '-' . $seqnumber;
-//
-//                $techpurchaseattachment_techspecification = $projectsitepurchase->projectsitepurchaseattachments->where('type', 'image')->first();
-//
-//                $sohead_name = '';
-//                $sohead = Salesorder_hxold::find($projectsitepurchase->sohead_id);
-//                if (isset($sohead))
-//                    $sohead_name = $sohead->number . "|" . $sohead->custinfo_name . "|" . $sohead->descrip . "|" . $sohead->amount;
-//
-//                $data = [
-//                    'purchasecompany_id'    => $projectsitepurchase->purchasecompany_id,
-//                    '采购订单编号'            => $pohead_number,
-//                    '申请人ID'                => $userold_id,
-//                    '对应项目ID'              => $projectsitepurchase->sohead_id,
-//                    '项目名称'                => $sohead_name,
-//                    '申请到位日期'            => $projectsitepurchase->arrivaldate,
-//                    '修造或工程'             => $cp,
-//                    '技术规范书'             => isset($techpurchaseattachment_techspecification) ? $techpurchaseattachment_techspecification->filename : '',
-//                    '编号年份'                => Carbon::today()->year,
-//                    '编号数字'                => $seqnumber,
-//                    '编号商品名称'            => $item_index,
-//                    '采购订单状态'            => 10,
-//                ];
+            // 如果是审批完成且通过，则创建老系统中的采购订单
+            if ($status == 0)
+            {
+                $cp = 'WX';
+                if ($projectsitepurchase->purchasecompany_id == 2)
+                    $cp = 'AH';
+                elseif ($projectsitepurchase->purchasecompany_id == 3)
+                    $cp = 'HN';
+
+                $projectsitepurchaseitem = $projectsitepurchase->projectsitepurchaseitems->first();
+                $item_index = '';
+                if (isset($projectsitepurchaseitem))
+                {
+                    $item_index = HelperController::pinyin_long($projectsitepurchaseitem->item->goods_name);
+                }
+                $item_index = strlen($item_index) > 0 ? $item_index : 'spmc';
+                if (strlen($item_index) < 4)
+                    $item_index = str_pad($item_index, 4, 0, STR_PAD_LEFT);
+                elseif (strlen($item_index) > 4)
+                    $item_index = substr($item_index, 0, 4);
+                $seqnumber = Purchaseorder_hx::where('编号年份', Carbon::today()->year)->max('编号数字');
+                $seqnumber += 1;
+                $seqnumber = str_pad($seqnumber, 4, 0, STR_PAD_LEFT);
+
+                $userold_id = 0;
+                $userold = Userold::where('user_id', $projectsitepurchase->applicant_id)->first();
+                if (isset($userold))
+                    $userold_id = $userold->user_hxold_id;
+
+                $pohead_number = $cp . '-' . $item_index . '-' . Carbon::today()->format('Y-m') . '-' . $seqnumber;
+
+                $techpurchaseattachment_techspecification = $projectsitepurchase->projectsitepurchaseattachments->where('type', 'image')->first();
+
+                $sohead_name = '';
+                $sohead = Salesorder_hxold::find($projectsitepurchase->sohead_id);
+                if (isset($sohead))
+                    $sohead_name = $sohead->number . "|" . $sohead->custinfo_name . "|" . $sohead->descrip . "|" . $sohead->amount;
+
+                $data = [
+                    'purchasecompany_id'    => $projectsitepurchase->purchasecompany_id,
+                    '采购订单编号'            => $pohead_number,
+                    '申请人ID'                => $userold_id,
+                    '对应项目ID'              => $projectsitepurchase->sohead_id,
+                    '项目名称'                => $sohead_name,
+                    '申请到位日期'            => $projectsitepurchase->arrivaldate,
+                    '修造或工程'             => $cp,
+                    '技术规范书'             => isset($techpurchaseattachment_techspecification) ? $techpurchaseattachment_techspecification->filename : '',
+                    '编号年份'                => Carbon::today()->year,
+                    '编号数字'                => $seqnumber,
+                    '编号商品名称'            => $item_index,
+                    '采购订单状态'            => 10,
+                ];
 //                dd($data);
-//                $pohead = Purchaseorder_hx::create($data);
-//
-//                if (isset($pohead))
-//                {
-//                    foreach ($projectsitepurchase->projectsitepurchaseitems as $projectsitepurchaseitem)
-//                    {
-//                        $item = Itemp_hxold::where('goods_id', $projectsitepurchaseitem->item_id)->first();
-//                        if (isset($item))
-//                        {
-//                            $data = [
-//                                'order_id'      => $pohead->id,
-//                                'goods_id'      => $projectsitepurchaseitem->item_id,
-//                                'goods_name'    => $item->goods_name,
-//                                'goods_number'  => $projectsitepurchaseitem->quantity,
-//                                'goods_unit'    => $item->goods_unit_name,
-//                            ];
-//                            Poitem_hx::create($data);
-//                        }
-//                    }
-//
-//                    // 拷贝“技术规范书”到对应的ERP目录下
-//                    if (isset($techpurchaseattachment_techspecification))
-//                    {
-//                        $dir = config('custom.hxold.purchase_techspecification_dir') . $pohead->id . "/";
-//                        if (!is_dir($dir)) {
-//                            mkdir($dir);
-//                        }
-//                        copy(public_path($techpurchaseattachment_techspecification->path), $dir . $techpurchaseattachment_techspecification->filename);
-//                    }
-//                }
-//            }
+                $pohead = Purchaseorder_hx::create($data);
+
+                if (isset($pohead))
+                {
+                    foreach ($projectsitepurchase->projectsitepurchaseitems as $projectsitepurchaseitem)
+                    {
+                        $item = Itemp_hxold::where('goods_id', $projectsitepurchaseitem->item_id)->first();
+                        if (isset($item))
+                        {
+                            $unit_name = '';
+                            $unit = Unit_hxold::find($projectsitepurchaseitem->unit_id);
+                            if (isset($unit))
+                                $unit_name = $unit->name;
+                            $data = [
+                                'order_id'      => $pohead->id,
+                                'goods_id'      => $projectsitepurchaseitem->item_id,
+                                'goods_name'    => $item->goods_name,
+                                'goods_number'  => $projectsitepurchaseitem->quantity,
+                                'goods_unit'    => $unit_name,
+                            ];
+                            Poitem_hx::create($data);
+                        }
+                    }
+
+                    // 拷贝“技术规范书”到对应的ERP目录下
+                    if (isset($techpurchaseattachment_techspecification))
+                    {
+                        $dir = config('custom.hxold.purchase_techspecification_dir') . $pohead->id . "/";
+                        if (!is_dir($dir)) {
+                            mkdir($dir);
+                        }
+                        copy(public_path($techpurchaseattachment_techspecification->path), $dir . $techpurchaseattachment_techspecification->filename);
+                    }
+                }
+            }
         }
     }
 

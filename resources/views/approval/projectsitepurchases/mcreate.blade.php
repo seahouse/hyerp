@@ -157,7 +157,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title">选择供应商</h4>
+				<h4 class="modal-title">选择外协单位</h4>
 			</div>
 			<div class="modal-body">
 				<div class="input-group">
@@ -644,12 +644,10 @@
             {
                 $("#" + btnId).bind("click", function() {
                     $('#selectSupplierModal').modal('toggle');
-                    $("#" + $("#selectSupplierModal").find('#name').val()).val(name);
-                    $("#" + $("#selectSupplierModal").find('#id').val()).val(supplierid);
-                    $("#supplier_bank").val(field.bank);
-                    $("#supplier_bankaccountnumber").val(field.bankaccountnumber);
-                    $("#vendbank_id").val(field.vendbank_id);
-                    $("#selectSupplierBankModal").find("#vendinfo_id").val(supplierid);
+//                    $("#" + $("#selectSupplierModal").find('#name').val()).val(name);
+//                    $("#" + $("#selectSupplierModal").find('#id').val()).val(supplierid);
+                    $("#outsourcingcompany").val(field.name);
+                    $("#outsourcingcompany_id").val(field.id);
                 });
             }
 

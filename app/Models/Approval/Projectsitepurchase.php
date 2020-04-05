@@ -15,6 +15,7 @@ class Projectsitepurchase extends Model
         'purchasecompany_id',
         'sohead_id',
         'purchasetype',
+        'outsourcingcompany_id',
         'purchasereason',
         'remark',
         'freight',
