@@ -24,5 +24,6 @@ class Purchaseorder_hx extends Model
         '编号年份',
         '编号数字',
         '编号商品名称',
+        '合同签订日期',
     ];
 }

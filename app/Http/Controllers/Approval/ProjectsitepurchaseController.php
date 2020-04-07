@@ -33,7 +33,12 @@ class ProjectsitepurchaseController extends Controller
     public function index()
     {
         //
-        self::updateStatusByProcessInstanceId('0f390e2b-7be7-4645-96d6-4f7efb9ecf70', 0);
+//        self::updateStatusByProcessInstanceId('0f390e2b-7be7-4645-96d6-4f7efb9ecf70', 0);
+        $request = request();
+        $inputs = $request->all();
+        $projectsitepurchases = $this->searchrequest($request)->paginate(15);
+
+        return view('approval.projectsitepurchases.index', compact('projectsitepurchases', 'inputs'));
     }
 
     public function getitemsbykey($key)
@@ -54,6 +59,74 @@ class ProjectsitepurchaseController extends Controller
         return $items;
         return response($items)
             ->header('Access-Control-Allow-Origin', 'http://www.huaxing-east.cn:2016');
+    }
+
+    public function searchrequest($request)
+    {
+//        dd($request->all());
+        $query = Projectsitepurchase::latest();
+
+        if ($request->has('createdatestart') && $request->has('createdateend'))
+        {
+            $query->whereRaw("DATEDIFF(DAY, create_time, '" . $request->input('createdatestart') . "') <= 0 and DATEDIFF(DAY, create_time, '" . $request->input('createdateend') . "') >=0");
+
+        }
+
+        if ($request->has('creator_name'))
+        {
+            $query->where('creator_name', $request->input('creator_name'));
+        }
+
+        if ($request->has('key') && strlen($request->input('key')) > 0)
+        {
+            $query->whereExists(function ($query) use ($request) {
+                $query->select(DB::raw(1))
+                    ->from('biddinginformationitems')
+                    ->whereRaw('biddinginformationitems.biddinginformation_id=biddinginformations.id and biddinginformationitems.value like \'%' . $request->input('key') . '%\'');
+            });
+        }
+
+//        // xmjlsgrz_sohead_id
+//        if ($request->has('xmjlsgrz_sohead_id') && $request->input('xmjlsgrz_sohead_id') > 0)
+//        {
+//            $query->where('xmjlsgrz_sohead_id', $request->input('xmjlsgrz_sohead_id'));
+//        }
+
+        // xmjlsgrz_project_id
+        if ($request->has('xmjlsgrz_project_id') && $request->input('xmjlsgrz_project_id') > 0)
+        {
+            $soheadids = Salesorder_hxold::where('project_id', $request->input('xmjlsgrz_project_id'))->pluck('id');
+//            dd($soheadids);
+            $query->whereIn('xmjlsgrz_sohead_id', $soheadids);
+        }
+
+        // other
+        if ($request->has('other'))
+        {
+            if ($request->input('other') == 'xmjlsgrz_sohead_id_undefined')
+            {
+                $query->where(function ($query) {
+                    $query->whereNull('xmjlsgrz_sohead_id')
+                        ->orWhere('xmjlsgrz_sohead_id', '<', 1);
+                });
+            }
+            elseif ($request->input('other') == 'btn_xmjlsgrz_peoplecount_undefined')
+            {
+                $xmjlsgrz_peoplecount_keys = config('custom.dingtalk.dtlogs.peoplecount_keys.xmjlsgrz');
+                Log::info('(select SUM(convert(int, value)) from dtlogitems	where dtlogs.id=dtlogitems.dtlog_id and value not like \'%[^0-9]%\' and dtlogitems.[key] in (\'' . implode(",", $xmjlsgrz_peoplecount_keys) . '\')) is null');
+                $query->whereRaw('(select SUM(convert(int, value)) from dtlogitems	where dtlogs.id=dtlogitems.dtlog_id and value not like \'%[^0-9]%\' and dtlogitems.[key] in (\'' . implode("','", $xmjlsgrz_peoplecount_keys) . '\')) is null');
+//                $query->leftJoin('dtlogitems', 'dtlogs.id', '=', 'dtlogitems.dtlog_id');
+//                if (isset($dtlogitem) && $request->has('xmjlsgrz_peoplecount'))
+//                {
+//                    $dtlogitem->value = $request->input('xmjlsgrz_peoplecount');
+//                    $dtlogitem->save();
+//                }
+            }
+        }
+
+        $items = $query->select('projectsitepurchases.*');
+
+        return $items;
     }
 
     /**
@@ -357,6 +430,8 @@ class ProjectsitepurchaseController extends Controller
     public function show($id)
     {
         //
+        $projectsitepurchase = Projectsitepurchase::findOrFail($id);
+        return view('approval.projectsitepurchases.show', compact('projectsitepurchase'));
     }
 
     /**
@@ -432,7 +507,7 @@ class ProjectsitepurchaseController extends Controller
 
                 $pohead_number = $cp . '-' . $item_index . '-' . Carbon::today()->format('Y-m') . '-' . $seqnumber;
 
-                $techpurchaseattachment_techspecification = $projectsitepurchase->projectsitepurchaseattachments->where('type', 'image')->first();
+//                $techpurchaseattachment_techspecification = $projectsitepurchase->projectsitepurchaseattachments->where('type', 'image')->first();
 
                 $sohead_name = '';
                 $sohead = Salesorder_hxold::find($projectsitepurchase->sohead_id);
@@ -447,11 +522,12 @@ class ProjectsitepurchaseController extends Controller
                     '项目名称'                => $sohead_name,
                     '申请到位日期'            => $projectsitepurchase->arrivaldate,
                     '修造或工程'             => $cp,
-                    '技术规范书'             => isset($techpurchaseattachment_techspecification) ? $techpurchaseattachment_techspecification->filename : '',
+//                    '技术规范书'             => isset($techpurchaseattachment_techspecification) ? $techpurchaseattachment_techspecification->filename : '',
                     '编号年份'                => Carbon::today()->year,
                     '编号数字'                => $seqnumber,
                     '编号商品名称'            => $item_index,
                     '采购订单状态'            => 10,
+                    '合同签订日期'            => Carbon::today(),
                 ];
 //                dd($data);
                 $pohead = Purchaseorder_hx::create($data);
@@ -478,15 +554,15 @@ class ProjectsitepurchaseController extends Controller
                         }
                     }
 
-                    // 拷贝“技术规范书”到对应的ERP目录下
-                    if (isset($techpurchaseattachment_techspecification))
-                    {
-                        $dir = config('custom.hxold.purchase_techspecification_dir') . $pohead->id . "/";
-                        if (!is_dir($dir)) {
-                            mkdir($dir);
-                        }
-                        copy(public_path($techpurchaseattachment_techspecification->path), $dir . $techpurchaseattachment_techspecification->filename);
-                    }
+//                    // 拷贝“技术规范书”到对应的ERP目录下
+//                    if (isset($techpurchaseattachment_techspecification))
+//                    {
+//                        $dir = config('custom.hxold.purchase_techspecification_dir') . $pohead->id . "/";
+//                        if (!is_dir($dir)) {
+//                            mkdir($dir);
+//                        }
+//                        copy(public_path($techpurchaseattachment_techspecification->path), $dir . $techpurchaseattachment_techspecification->filename);
+//                    }
                 }
             }
         }

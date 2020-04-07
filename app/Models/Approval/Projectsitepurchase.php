@@ -45,4 +45,8 @@ class Projectsitepurchase extends Model
         $approvers = config('custom.dingtalk.approversettings.projectsitepurchase.' . $this::getAttribute('purchasetype'), '');
         return $approvers;
     }
+
+    public function applicant() {
+        return $this->belongsTo('\App\Models\System\User');
+    }
 }
