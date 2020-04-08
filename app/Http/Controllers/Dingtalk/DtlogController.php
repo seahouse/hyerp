@@ -292,7 +292,12 @@ class DtlogController extends Controller
     {
         //
         $dtlog = Dtlog::findOrFail($id);
-        return view('dingtalk.dtlogs.peoplecount', compact('dtlog'));
+        $sohead=$dtlog->xmjlsgrz_sohead()->first();
+        if(isset($sohead))
+            $sohead_number=$sohead->number;
+        else
+            $sohead_number='';
+        return view('dingtalk.dtlogs.peoplecount', compact('dtlog','sohead_number'));
     }
 
     public function updatepeoplecount(Request $request, $id)

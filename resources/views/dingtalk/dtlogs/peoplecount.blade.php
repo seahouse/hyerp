@@ -41,6 +41,7 @@
                 {!! Form::submit('设置', ['class' => 'btn btn-primary btn-sm', 'id' => 'btnSubmit']) !!}
             </div>
         </div>
+
     @endif
 
     {!! Form::close() !!}
