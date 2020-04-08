@@ -49,4 +49,8 @@ class Projectsitepurchase extends Model
     public function applicant() {
         return $this->belongsTo('\App\Models\System\User');
     }
+
+    public function sohead_hxold() {
+        return $this->belongsTo('\App\Models\Sales\Salesorder_hxold', 'sohead_id');
+    }
 }

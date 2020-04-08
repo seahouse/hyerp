@@ -1,7 +1,5 @@
 @section('main')
 
-
-
 <!--startprint-->
     {!! Form::model($projectsitepurchase, ['class' => 'form-horizontal']) !!}
         @include('approval.projectsitepurchases._form',
@@ -120,51 +118,8 @@
     </div>
 </div>
 
-    {{-- 审批通过后，发起人可以申请撤回 --}}
-    {{-- todo: 已撤回的审批单，无法再次撤回 --}}
-    @if (Auth::user()->id == $projectsitepurchase->applicant_id and $projectsitepurchase->approversetting_id == 0)
-        {!! Form::button('申请撤回', ['class' => 'btn btn-warning btn-sm', 'data-toggle' => 'modal', 'data-target' => '#retractModal']) !!}
-        {!! Form::open(array('url' => 'approval/paymentrequests/retract/' . $projectsitepurchase->id)) !!}
-            {{--
-            {!! Form::submit('申请撤回', ['class' => 'btn btn-warning btn-sm']) !!}
-            {!! Form::button('申请撤回', ['class' => 'btn btn-warning btn-sm', 'data-toggle' => 'modal', 'data-target' => '#retractModal']) !!}
-            --}}
-        {!! Form::close() !!}
-    @endif
 
-    {{-- pdf 预览 --}}
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        &times;
-                    </button>
-                    <h4 class="modal-title" id="myModalLabel">
-                        PDF 预览标题
-                    </h4>
-                </div>
-                <div class="modal-body" >
-                        <a class="media" id="pdfContainer"
-                           @if (isset($projectsitepurchase->purchaseorder_hxold->businesscontract)) href="{!! config('custom.hxold.purchase_businesscontract_webdir') . $projectsitepurchase->purchaseorder_hxold->id . '/' . $projectsitepurchase->purchaseorder_hxold->businesscontract !!}" @else href="" @endif>
 
-                        </a>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal -->
-    </div>
-
-    {{--
-    {!! Form::button('预览PDF', ['class' => 'btn btn-warning btn-sm', 'data-toggle' => 'modal', 'data-target' => '#myModal']) !!}
-    <div class="media" style="width: 300px; height: 300px;" id="pdfContainer2"  href="http://www.huaxing-east.cn:2015/HxCgFiles/swht/7592/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf"></div>
-
-    <embed width="100%" height="800px" name="plugin" id="plugin" src="http://www.huaxing-east.cn:2015/HxCgFiles/swht/7592/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf" type="application/pdf" internalinstanceid="68" title="">
-    --}}
-
-    {{--
-    <a class="pdf" style="" href="/pdfjs/build/generic/web/viewer.html?file=compressed.tracemonkey-pldi-09.pdf" >aaa.pdf</a>
-    <a class="pdf" style="" href="/approval/paymentrequests/pdfjs/viewer" >bbb.pdf</a>
-    --}}
 @endsection
 
 
@@ -214,18 +169,7 @@
     {{--<script src="/js/pdf.min.js"></script>--}}
     <script type="text/javascript">
         jQuery(document).ready(function(e) {
-            DingTalkPC.config({
-                agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
-                corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID
-                timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
-                nonceStr: "{!! array_get($config, 'nonceStr') !!}", // 必填，生成签名的随机串
-                signature: "{!! array_get($config, 'signature') !!}", // 必填，签名
-                jsApiList: [] // 必填，需要使用的jsapi列表
-            });
 
-//            $(function() {
-//                $('a.media').media({width:800, height:600});
-//            });
 
 //            console.log($("#showPdf").attr("href"));
             console.log(DingTalkPC.ua.isInDingTalk);

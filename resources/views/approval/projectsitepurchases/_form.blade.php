@@ -10,22 +10,34 @@
         <div class="form-group">
             {!! Form::label('project_name', '工程名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::text('project_name', $project_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectProjectModal', 'data-name' => 'project_name_1', 'data-id' => 'sohead_id_1', 'data-num' => '1', 'id' => 'project_name_1']) !!}
-                {!! Form::hidden('sohead_id', 0, ['class' => 'btn btn-sm', 'id' => 'sohead_id_1']) !!}
+                @if (isset($projectsitepurchase->sohead_hxold->descrip))
+                    {!! Form::text('project_name', $projectsitepurchase->sohead_hxold->descrip, ['class' => 'form-control', $attr]) !!}
+                @else
+                    {!! Form::text('project_name', $project_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectProjectModal', 'data-name' => 'project_name_1', 'data-id' => 'sohead_id_1', 'data-num' => '1', 'id' => 'project_name_1']) !!}
+                    {!! Form::hidden('sohead_id', 0, ['class' => 'btn btn-sm', 'id' => 'sohead_id_1']) !!}
+                @endif
             </div>
         </div>
 
         <div class="form-group">
             {!! Form::label('sohead_number', '项目订单编号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::text('sohead_number', null, ['class' => 'form-control', 'readonly', $attr, 'id' => 'sohead_number_1']) !!}
+                @if (isset($projectsitepurchase->sohead_hxold->number))
+                    {!! Form::text('sohead_number', $projectsitepurchase->sohead_hxold->number, ['class' => 'form-control', 'readonly', $attr, 'id' => 'sohead_number_1']) !!}
+                @else
+                    {!! Form::text('sohead_number', null, ['class' => 'form-control', 'readonly', $attr, 'id' => 'sohead_number_1']) !!}
+                @endif
             </div>
         </div>
 
         <div class="form-group">
             {!! Form::label('sohead_salesmanager', '订单所属销售经理:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::text('sohead_salesmanager', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+                @if (isset($projectsitepurchase->sohead_hxold->salesmanager))
+                    {!! Form::text('sohead_salesmanager', $projectsitepurchase->sohead_hxold->salesmanager, ['class' => 'form-control', 'readonly', $attr]) !!}
+                @else
+                    {!! Form::text('sohead_salesmanager', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+                @endif
             </div>
         </div>
 
@@ -39,17 +51,24 @@
         <div class="form-group">
             {!! Form::label('vendordeduction_descrip', '采购是否涉及供应商扣款:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('vendordeduction_descrip', array('是，供应商扣款流程已审批完结，并在此流程后关联《供应商扣款》审批单。' => '是，供应商扣款流程已审批完结，并在此流程后关联《供应商扣款》审批单。', '不涉及供应商扣款' => '不涉及供应商扣款'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                @if (isset($projectsitepurchase->vendordeduction_descrip))
+                    {!! Form::select('vendordeduction_descrip', array('是，供应商扣款流程已审批完结，并在此流程后关联《供应商扣款》审批单。' => '是，供应商扣款流程已审批完结，并在此流程后关联《供应商扣款》审批单。', '不涉及供应商扣款' => '不涉及供应商扣款'), $projectsitepurchase->vendordeduction_descrip, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                @else
+                    {!! Form::select('vendordeduction_descrip', array('是，供应商扣款流程已审批完结，并在此流程后关联《供应商扣款》审批单。' => '是，供应商扣款流程已审批完结，并在此流程后关联《供应商扣款》审批单。', '不涉及供应商扣款' => '不涉及供应商扣款'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                @endif
             </div>
         </div>
 
         <div class="form-group">
             {!! Form::label('associatedapprovals', '关联相关扣款审批单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
+                @if (isset($projectsitepurchase))
+                    @else
                 {!! Form::button('+', ['class' => 'btn btn-sm', 'data-toggle' => 'modal', 'data-target' => '#selectApproval']) !!}
                 {!! Form::hidden('associatedapprovals', null, ['class' => 'btn btn-sm']) !!}
                 <div id="lblAssociatedapprovals">
                 </div>
+                    @endif
             </div>
         </div>
 
@@ -115,46 +134,68 @@
             </div>
         </div>
 
-@if (isset($paymentrequest))
+@if (isset($projectsitepurchase))
+    @foreach($projectsitepurchase->projectsitepurchaseitems as $projectsitepurchaseitem)
+                <div class="form-group">
+                    {!! Form::label('item_name', '物品名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                    <div class='col-xs-8 col-sm-10'>
+                        {!! Form::text('item_name', $projectsitepurchaseitem->item->goods_name, ['class' => 'form-control', $attr]) !!}
+                        {!! Form::hidden('item_id', 0, ['class' => 'btn btn-sm', 'id' => 'item_id_1']) !!}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {!! Form::label('item_spec', '规格型号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                    <div class='col-xs-8 col-sm-10'>
+                        {!! Form::text('item_spec', $projectsitepurchaseitem->item->goods_spec, ['class' => 'form-control', 'readonly', $attr, 'id' => 'item_spec_1']) !!}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {!! Form::label('unit', '单位:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                    <div class='col-xs-8 col-sm-10'>
+                        {!! Form::text('unit', $projectsitepurchaseitem->item->goods_unit_name, ['class' => 'form-control', 'readonly', $attr, 'id' => 'unit_1']) !!}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {!! Form::label('brand', '品牌:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                    <div class='col-xs-8 col-sm-10'>
+                        {!! Form::text('brand', $projectsitepurchaseitem->brand, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'size_1']) !!}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    {!! Form::label('quantity', '数量:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                    <div class='col-xs-5 col-sm-8'>
+                        {!! Form::text('quantity', $projectsitepurchaseitem->quantity, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'quantity_1']) !!}
+                    </div>
+                    <div class='col-xs-3 col-sm-2'>
+                        {!! Form::text('unit_id', $projectsitepurchaseitem->unit->name, ['class' => 'form-control', $attr]) !!}
+                    </div>
+                </div>
 
 
+                <div class="form-group">
+                    {!! Form::label('unitprice', '单价:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                    <div class='col-xs-8 col-sm-10'>
+                        {!! Form::text('unitprice', $projectsitepurchaseitem->unitprice, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'unitprice_1']) !!}
+                    </div>
+                </div>
 
+                <div class="form-group">
+                    {!! Form::label('price', '金额（元）:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                    <div class='col-xs-8 col-sm-10'>
+                        {!! Form::text('price', $projectsitepurchaseitem->price, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'price_1']) !!}
+                    </div>
+                </div>
+    @endforeach
 
-
-<div class="form-group">
-    {!! Form::label('pohead_arrived', '到货情况:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->arrival_percent))
-        @if ($paymentrequest->purchaseorder_hxold->arrival_percent <= 0.0)
-            {!! Form::text('pohead_arrived', '未到货', ['class' => 'form-control', $attr]) !!}
-        @elseif ($paymentrequest->purchaseorder_hxold->arrival_percent > 0.0 and $paymentrequest->purchaseorder_hxold->arrival_percent < 0.99)
-            {!! Form::text('pohead_arrived', '部分到货', ['class' => 'form-control', $attr]) !!}
-        @else
-            {!! Form::text('pohead_arrived', '全部到货', ['class' => 'form-control', $attr]) !!}
-        @endif
-    @else
-        {!! Form::text('pohead_arrived', null, ['class' => 'form-control', $attr]) !!}
-    @endif
-    </div>
-</div>
-
-<div class="form-group">
-    {!! Form::label('paymethod', '付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
-    <div class='col-xs-8 col-sm-10'>
-    @if (isset($paymentrequest->purchaseorder_hxold->paymethod)) 
-        {!! Form::textarea('paymethod', $paymentrequest->purchaseorder_hxold->paymethod, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
-    @else
-        {!! Form::textarea('paymethod', null, ['class' => 'form-control', $attr, 'rows' => 3]) !!}
-    @endif
-    </div>
-</div>
 
 
 
 
 @else
-
-
 
 
 
@@ -234,8 +275,6 @@
 
 
                 <div id="pppaymentitemtypecontainer_1" name="pppaymentitemtypecontainer"></div>
-
-
 
 
 
@@ -321,12 +360,12 @@
         <div class='col-xs-8 col-sm-10'>
             <div class="row" id="previewimage">
             </div>
-            @if (isset($paymentrequest))
+            @if (isset($projectsitepurchase))
                 <div class="row" id="previewimage2">
-                    @foreach ($paymentrequest->paymentrequestimages() as $paymentrequestimage)
+                    @foreach ($projectsitepurchase->projectsitepurchaseattachments() as $projectsitepurchaseattachment)
                         <div class="col-xs-6 col-md-3">
                             <div class="thumbnail">
-                                <img src="{!! $paymentrequestimage->path !!}" />
+                                {{--<img src="{!! $projectsitepurchaseattachment->path !!}" />--}}
                             </div>
                         </div>
                     @endforeach

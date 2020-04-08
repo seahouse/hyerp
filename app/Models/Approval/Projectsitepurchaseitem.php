@@ -21,4 +21,8 @@ class Projectsitepurchaseitem extends Model
     public function item() {
         return $this->belongsTo('\App\Models\Product\Itemp_hxold', 'item_id', 'goods_id');
     }
+
+    public function unit() {
+        return $this->belongsTo('\App\Models\Product\Unit_hxold');
+    }
 }
