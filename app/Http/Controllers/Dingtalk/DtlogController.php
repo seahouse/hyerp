@@ -80,7 +80,8 @@ class DtlogController extends Controller
             {
                 $query->where(function ($query) {
                     $query->whereNull('xmjlsgrz_sohead_id')
-                        ->orWhere('xmjlsgrz_sohead_id', '<', 1);
+                        ->orWhere('xmjlsgrz_sohead_id', '<', 1)
+                        ->where('template_name','项目经理施工日志');
                 });
             }
             elseif ($request->input('other') == 'btn_xmjlsgrz_peoplecount_undefined')
@@ -134,7 +135,13 @@ class DtlogController extends Controller
     {
         //
         $dtlog = Dtlog::findOrFail($id);
-        return view('dingtalk.dtlogs.show', compact('dtlog'));
+        $sohead=$dtlog->xmjlsgrz_sohead()->first();
+        if(isset($sohead))
+            $sohead_number=$sohead->number;
+        else
+            $sohead_number='';
+////        dd($sohead->number);
+        return view('dingtalk.dtlogs.show', compact('dtlog','sohead_number'));
     }
 
     /**
@@ -265,7 +272,12 @@ class DtlogController extends Controller
     {
         //
         $dtlog = Dtlog::findOrFail($id);
-        return view('dingtalk.dtlogs.attachsohead', compact('dtlog'));
+        $sohead=$dtlog->xmjlsgrz_sohead()->first();
+        if(isset($sohead))
+            $sohead_number=$sohead->number;
+        else
+            $sohead_number='';
+        return view('dingtalk.dtlogs.attachsohead', compact('dtlog','sohead_number'));
     }
 
     public function updateattachsohead(Request $request, $id)

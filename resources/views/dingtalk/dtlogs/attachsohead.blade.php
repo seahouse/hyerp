@@ -46,9 +46,17 @@
                     {!! Form::submit('设置', ['class' => 'btn btn-primary btn-sm', 'id' => 'btnSubmit']) !!}
             </div>
         </div>
+        <div class="form-group">
+            {!! Form::label('number', '关联订单编号', ['class' => 'col-xs-4 col-sm-2  control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::text('number', $sohead_number, ['class' => 'form-control','readonly']) !!}
+            </div>
+        </div>
     @endif
 
     {!! Form::close() !!}
+
+
 
     {!! Form::model($dtlog, ['class' => 'form-horizontal']) !!}
 

@@ -26,7 +26,14 @@
             'attrdisable' => 'disabled',
             'btnclass' => 'hidden',
         ])
-
+    @if ($dtlog->template_name == '项目经理施工日志')
+    <div class="form-group">
+    {!! Form::label('number', '关联订单编号', ['class' => 'col-xs-4 col-sm-2  control-label']) !!}
+        <div class='col-xs-8 col-sm-10'>
+    {!! Form::text('number', $sohead_number, ['class' => 'form-control','readonly']) !!}
+        </div>
+    </div>
+    @endif
     @foreach($dtlog->dtlogitems as $dtlogitem)
         <div class="form-group">
             {!! Form::label($dtlogitem->key, $dtlogitem->key, ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
