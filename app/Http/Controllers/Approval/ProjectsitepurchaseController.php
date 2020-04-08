@@ -520,7 +520,7 @@ class ProjectsitepurchaseController extends Controller
                     '申请人ID'                => $userold_id,
                     '对应项目ID'              => $projectsitepurchase->sohead_id,
                     '项目名称'                => $sohead_name,
-                    '申请到位日期'            => $projectsitepurchase->arrivaldate,
+                    '申请到位日期'            => Carbon::create(1900, 1, 1),
                     '修造或工程'             => $cp,
 //                    '技术规范书'             => isset($techpurchaseattachment_techspecification) ? $techpurchaseattachment_techspecification->filename : '',
                     '编号年份'                => Carbon::today()->year,

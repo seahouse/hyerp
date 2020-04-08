@@ -107,13 +107,13 @@
                         {{ $projectsitepurchase->applicant->name }}
                     </td>
                     <td>
-                        @if ($projectsitepurchase->approversetting_id > 0)
+                        @if ($projectsitepurchase->status > 0)
                             <div class="text-primary">审批中</div>
-                        @elseif ($projectsitepurchase->approversetting_id == 0)
+                        @elseif ($projectsitepurchase->status == 0)
                             <div class="text-success">已通过</div>
-                        @elseif ($projectsitepurchase->approversetting_id == -3)
-                            <div class="text-warning">撤回中</div>
-                        @elseif ($projectsitepurchase->approversetting_id == -4)
+                        @elseif ($projectsitepurchase->status == -1)
+                            <div class="text-warning">未通过</div>
+                        @elseif ($projectsitepurchase->status == -2)
                             <div class="text-danger">已撤回</div>
                         @else
                             <div class="text-danger">未通过</div>
