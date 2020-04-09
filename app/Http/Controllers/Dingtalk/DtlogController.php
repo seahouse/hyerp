@@ -80,9 +80,8 @@ class DtlogController extends Controller
             {
                 $query->where(function ($query) {
                     $query->whereNull('xmjlsgrz_sohead_id')
-                        ->orWhere('xmjlsgrz_sohead_id', '<', 1)
-                        ->where('template_name','项目经理施工日志');
-                });
+                        ->orWhere('xmjlsgrz_sohead_id', '<', 1);
+                })->where('template_name','=','项目经理施工日志');
             }
             elseif ($request->input('other') == 'btn_xmjlsgrz_peoplecount_undefined')
             {
@@ -97,7 +96,7 @@ class DtlogController extends Controller
 //                }
             }
         }
-
+//        dd($query);
         $dtlogs = $query->select('dtlogs.*')
             ->paginate(15);
 
