@@ -106,7 +106,7 @@
                         {{ $projectsitepurchase->business_id }}
                     </td>
                     <td>
-                        @if (isset($projectsitepurchase->sohead_hxold)) {{ $projectsitepurchase->sohead_hxold->descrip }} @else - @endif
+                        @if (isset($projectsitepurchase->sohead_hxold)) {{ $projectsitepurchase->sohead_hxold->projectjc }} @else - @endif
                     </td>
                     <td>
                         @if (isset($projectsitepurchase->sohead_hxold)) {{ $projectsitepurchase->sohead_hxold->number }} @else - @endif

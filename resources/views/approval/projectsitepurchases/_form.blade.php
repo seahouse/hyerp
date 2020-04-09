@@ -171,7 +171,7 @@
                         {!! Form::text('quantity', $projectsitepurchaseitem->quantity, ['class' => 'form-control', 'placeholder' => '', $attr, 'id' => 'quantity_1']) !!}
                     </div>
                     <div class='col-xs-3 col-sm-2'>
-                        {!! Form::text('unit_id', $projectsitepurchaseitem->unit->name, ['class' => 'form-control', $attr]) !!}
+                        {!! Form::text('unit_id', isset($projectsitepurchaseitem->unit) ? $projectsitepurchaseitem->unit->name : '', ['class' => 'form-control', $attr]) !!}
                     </div>
                 </div>
 
@@ -190,8 +190,6 @@
                     </div>
                 </div>
     @endforeach
-
-
 
 
 
