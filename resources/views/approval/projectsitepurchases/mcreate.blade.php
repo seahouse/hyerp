@@ -475,8 +475,10 @@
                     $("#sohead_number_" + $("#selectProjectModal").find('#num').val()).val(field.number);
                     $("#sohead_number").val(field.number);
 					$("#sohead_salesmanager").val(field.salesmanager);
-//					$("#supplier_bankaccountnumber").val(field.bankaccountnumber);
-//					$("#vendbank_id").val(field.vendbank_id);
+					if (field.C == 0)
+					    $("#projecttype").val('EP项目');
+					else
+                        $("#projecttype").val('EPC项目');
 //					$("#selectSupplierBankModal").find("#vendinfo_id").val(supplierid);
 				});
 			}
@@ -859,6 +861,29 @@
                      }
                  });
 			 });
+
+            selectVendorDeductionChange = function () {
+                var vendordeduction_descrip = $("#vendordeduction_descrip").val();
+                if (vendordeduction_descrip == "是，供应商扣款流程已审批完结，并在此流程后关联《供应商扣款》审批单。")
+                    $("#divAssociatedapprovals").attr("style", "display:block;");
+                else
+                    $("#divAssociatedapprovals").attr("style", "display:none;");
+            }
+
+            selectPurchasetypeChange = function () {
+                var purchasetype = $("#purchasetype").val();
+                if (purchasetype == "EP项目安装队相关费用")
+                {
+                    $("#divEpamountreason").attr("style", "display:block;");
+                    $("#divPurchasereason").attr("style", "display:none;");
+                }
+                else
+                {
+                    $("#divEpamountreason").attr("style", "display:none;");
+                    $("#epamountreason").val("");
+                    $("#divPurchasereason").attr("style", "display:block;");
+                }
+            }
 
 			dd.config({
 			    agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID

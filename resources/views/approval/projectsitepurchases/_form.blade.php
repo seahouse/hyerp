@@ -3,7 +3,7 @@
         <div class="form-group">
             {!! Form::label('purchasecompany_id', '采购公司:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('purchasecompany_id', $companyList, null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                {!! Form::select('purchasecompany_id', $companyList, null, ['class' => 'form-control', $attr, $attrdisable]) !!}
             </div>
         </div>
 
@@ -44,7 +44,7 @@
         <div class="form-group">
             {!! Form::label('projecttype', '项目类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('projecttype', array('EP项目' => 'EP项目', 'EPC项目' => 'EPC项目'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                {!! Form::select('projecttype', array('EP项目' => 'EP项目', 'EPC项目' => 'EPC项目'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'readonly', $attr, $attrdisable]) !!}
             </div>
         </div>
 
@@ -54,12 +54,12 @@
                 @if (isset($projectsitepurchase->vendordeduction_descrip))
                     {!! Form::select('vendordeduction_descrip', array('是，供应商扣款流程已审批完结，并在此流程后关联《供应商扣款》审批单。' => '是，供应商扣款流程已审批完结，并在此流程后关联《供应商扣款》审批单。', '不涉及供应商扣款' => '不涉及供应商扣款'), $projectsitepurchase->vendordeduction_descrip, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
                 @else
-                    {!! Form::select('vendordeduction_descrip', array('是，供应商扣款流程已审批完结，并在此流程后关联《供应商扣款》审批单。' => '是，供应商扣款流程已审批完结，并在此流程后关联《供应商扣款》审批单。', '不涉及供应商扣款' => '不涉及供应商扣款'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                    {!! Form::select('vendordeduction_descrip', array('是，供应商扣款流程已审批完结，并在此流程后关联《供应商扣款》审批单。' => '是，供应商扣款流程已审批完结，并在此流程后关联《供应商扣款》审批单。', '不涉及供应商扣款' => '不涉及供应商扣款'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'onchange' => 'selectVendorDeductionChange()', $attr, $attrdisable]) !!}
                 @endif
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" id="divAssociatedapprovals">
             {!! Form::label('associatedapprovals', '关联相关扣款审批单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
                 @if (isset($projectsitepurchase))
@@ -104,11 +104,11 @@
             {!! Form::label('purchasetype', '采购类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
                 {!! Form::select('purchasetype', array('机务材料类' => '机务材料类', '电气材料类' => '电气材料类', '机务设备类' => '机务设备类', '电气设备类' => '电气设备类', 'EP项目安装队相关费用' => 'EP项目安装队相关费用', '维修费用' => '维修费用',
-                    '工具类' => '工具类', '劳务费' => '劳务费', '劳保用品' => '劳保用品', '办公用品' => '办公用品', '生活用品' => '生活用品'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                    '工具类' => '工具类', '劳务费' => '劳务费', '劳保用品' => '劳保用品', '办公用品' => '办公用品', '生活用品' => '生活用品'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'onchange' => 'selectPurchasetypeChange()', $attr, $attrdisable]) !!}
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" id="divEpamountreason">
             {!! Form::label('epamountreason', 'EP项目安装费原因:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
                 {!! Form::select('epamountreason', array('1、设计问题导致安装队额外施工。' => '1、设计问题导致安装队额外施工。', '2、装置生产加工问题导致安装队额外施工' => '2、装置生产加工问题导致安装队额外施工', '3、运输问题导致安装队额外施工-无锡仓库或生产中心直发' => '3、运输问题导致安装队额外施工-无锡仓库或生产中心直发',
@@ -117,7 +117,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" id="divPurchasereason">
             {!! Form::label('purchasereason', '采购原因:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
                 {!! Form::select('purchasereason', array('不属我方供货范围，甲方要求增加。' => '不属我方供货范围，甲方要求增加。', '现场材料业主不满意，需更改，现场购买。' => '现场材料业主不满意，需更改，现场购买。', '现场施工质量甲方不满意，返工需增加部分现场购买。' => '现场施工质量甲方不满意，返工需增加部分现场购买。',
