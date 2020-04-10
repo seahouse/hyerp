@@ -82,8 +82,10 @@
         <thead>
             <tr>
                 <th>申请日期</th>
+                <th>钉钉审批单号</th>
+                <th>对应项目</th>
+                <th>项目编号</th>
                 <th>采购类型</th>
-
 
                 <th>申请人</th>
                 <th>审批状态</th>
@@ -99,6 +101,15 @@
                 <tr>
                     <td>
                         <a href="{{ url('/approval/projectsitepurchases', $projectsitepurchase->id) }}" target="_blank">{{ $projectsitepurchase->created_at }}</a>
+                    </td>
+                    <td>
+                        {{ $projectsitepurchase->business_id }}
+                    </td>
+                    <td>
+                        @if (isset($projectsitepurchase->sohead_hxold)) {{ $projectsitepurchase->sohead_hxold->projectjc }} @else - @endif
+                    </td>
+                    <td>
+                        @if (isset($projectsitepurchase->sohead_hxold)) {{ $projectsitepurchase->sohead_hxold->number }} @else - @endif
                     </td>
                     <td>
                         {{ $projectsitepurchase->purchasetype }}
