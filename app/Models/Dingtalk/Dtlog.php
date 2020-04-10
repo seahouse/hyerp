@@ -28,6 +28,10 @@ class Dtlog extends Model
         return $this->belongsTo('App\Models\Sales\Salesorder_hxold');
     }
 
+    public function gctsrz_sohead() {
+        return $this->belongsTo('App\Models\Sales\Salesorder_hxold');
+    }
+
     public function xmjlsgrz_peoplecount() {
         $xmjlsgrz_peoplecount_keys = config('custom.dingtalk.dtlogs.peoplecount_keys.xmjlsgrz');
         $dtlogitem = $this->dtlogitems()->whereIn('key', $xmjlsgrz_peoplecount_keys)->first();

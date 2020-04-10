@@ -49,6 +49,9 @@
                 <th>创建时间</th>
                 <th>发起人</th>
                 <th>日志模板</th>
+                <th>日志日期</th>
+                <th>项目名称</th>
+                <th>订单编号</th>
                 <th>备注</th>
                 <th>操作</th>
             </tr>
@@ -64,6 +67,23 @@
                     </td>
                     <td>
                         {{ $dtlog->template_name }}
+                    </td>
+                    <td>
+                        @if(isset($dtlog->dtlogitems->where('key','1、日志日期')->first()->value)) {{ $dtlog->dtlogitems->where('key','1、日志日期')->first()->value }} @else{{'-'}} @endif
+                    </td>
+                    <td>
+                        @if($dtlog->template_name == '项目经理施工日志')
+                            @if(isset($dtlog->xmjlsgrz_sohead)) {{ $dtlog->xmjlsgrz_sohead->projectjc }} @else {{'-'}} @endif
+                        @elseif($dtlog->template_name == '工程调试日志')
+                            @if(isset($dtlog->gctsrz_sohead)) {{ $dtlog->gctsrz_sohead->projectjc }} @else {{'-'}} @endif
+                         @endif
+                    </td>
+                    <td>
+                        @if($dtlog->template_name == '项目经理施工日志')
+                            @if(isset($dtlog->xmjlsgrz_sohead)) {{ $dtlog->xmjlsgrz_sohead->number }} @else {{'-'}} @endif
+                        @elseif($dtlog->template_name == '工程调试日志')
+                            @if(isset($dtlog->gctsrz_sohead)) {{ $dtlog->gctsrz_sohead->number }} @else {{'-'}} @endif
+                        @endif
                     </td>
                     <td>
                         {{ str_limit($dtlog->remark, 20) }}
