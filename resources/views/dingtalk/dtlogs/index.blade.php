@@ -79,6 +79,7 @@
                          @endif
                     </td>
                     <td>
+
                         @if($dtlog->template_name == '项目经理施工日志')
                             @if(isset($dtlog->xmjlsgrz_sohead)) {{ $dtlog->xmjlsgrz_sohead->number }} @else {{'-'}} @endif
                         @elseif($dtlog->template_name == '工程调试日志')

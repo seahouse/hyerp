@@ -23,7 +23,6 @@ class DtlogController extends Controller
         $request = request();
         $inputs = $request->all();
         $dtlogs = $this->searchrequest($request);
-
 //        $dtlogs = Dtlog::latest('create_time')->paginate(15);
         return view('dingtalk.dtlogs.index', compact('dtlogs', 'inputs'));
     }
