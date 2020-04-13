@@ -2205,6 +2205,12 @@ class ApprovalController extends Controller
                 'value'     => json_encode($detail_array),
             ],
         ];
+//        if (isset($inputs['epamountreason']) && strlen($inputs['epamountreason']) > 0)
+//            array_push($formdata,
+//                [
+//                    'name'      => 'EP项目安装费原因',
+//                    'value'     => $inputs['epamountreason'],
+//                ]);
         $form_component_values = json_encode($formdata);
 //        dd($form_component_values);
 //        Log::info('process_code: ' . $process_code);

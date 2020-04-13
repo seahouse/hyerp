@@ -166,6 +166,8 @@ class ProjectsitepurchaseController extends Controller
     public function mstore(Request $request)
     {
         $input = $request->all();
+//        Log::info($input);
+//        dd(isset($input['epamountreason']));
 //        $input['associatedapprovals'] = strlen($input['associatedapprovals']) > 0 ? json_encode(array($input['associatedapprovals'])) : "";
 //        dd($input['associatedapprovals']);
 
@@ -205,19 +207,8 @@ class ProjectsitepurchaseController extends Controller
                 $input['purchasecompany_name'] = $purchasecompany->name;
         }
 
-//        // set approversetting_id
-//        $approvaltype_id = self::typeid();
-//        if ($approvaltype_id > 0)
-//        {
-//            $approversettingFirst = Approversetting::where('approvaltype_id', $approvaltype_id)->orderBy('level')->first();
-//            if ($approversettingFirst)
-//                $input['approversetting_id'] = $approversettingFirst->id;
-//            else
-//                $input['approversetting_id'] = -1;
-//        }
-//        else
-//            $input['approversetting_id'] = -1;
-
+        $input['associatedapprovals'] = strlen($input['associatedapprovals']) > 0 ? json_encode(array($input['associatedapprovals'])) : "";
+//            dd($input['associatedapprovals']);
 //        dd($input);
         $projectsitepurchase = Projectsitepurchase::create($input);
 //        dd($projectsitepurchase);
@@ -366,8 +357,6 @@ class ProjectsitepurchaseController extends Controller
         {
             $input['totalprice'] = $projectsitepurchase->projectsitepurchaseitems->sum('price') + $input['freight'];
             $input['image_urls'] = json_encode($image_urls);
-            $input['associatedapprovals'] = strlen($input['associatedapprovals']) > 0 ? json_encode(array($input['associatedapprovals'])) : "";
-//            dd($input['associatedapprovals']);
             $input['approvers'] = $projectsitepurchase->approvers();
             $response = ApprovalController::projectsitepurchase($input);
 //            Log::info($response);

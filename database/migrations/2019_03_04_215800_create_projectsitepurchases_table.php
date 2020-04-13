@@ -19,6 +19,7 @@ class CreateProjectsitepurchasesTable extends Migration
             $table->integer('sohead_id');
             $table->string('projecttype');
             $table->string('vendordeduction_descrip');
+            $table->string('associatedapprovals')->nullable();
             $table->string('designdept');
             $table->string('productiondept');
             $table->integer('outsourcingcompany_id')->nullable();
