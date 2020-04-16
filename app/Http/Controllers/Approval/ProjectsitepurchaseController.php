@@ -34,6 +34,7 @@ class ProjectsitepurchaseController extends Controller
     {
         //
 //        self::updateStatusByProcessInstanceId('0f390e2b-7be7-4645-96d6-4f7efb9ecf70', 0);
+
         $request = request();
         $inputs = $request->all();
         $projectsitepurchases = $this->searchrequest($request)->paginate(15);
@@ -190,8 +191,10 @@ class ProjectsitepurchaseController extends Controller
 //            'drawingchecker_id'     => 'required|integer|min:1',
 //            'drawingcount'          => 'required|integer|min:1',
 //            'drawingattachments.*'  => 'required|file',
-//            'images.*'                => 'required|image',
+            'images.*'                => 'required|image',
+            'files_string'            => 'required',
         ]);
+//        dd($input);
 //        $input = HelperController::skipEmptyValue($input);
 
 
@@ -503,6 +506,7 @@ class ProjectsitepurchaseController extends Controller
                 if (isset($sohead))
                     $sohead_name = $sohead->number . "|" . $sohead->custinfo_name . "|" . $sohead->descrip . "|" . $sohead->amount;
 
+                $amount = $projectsitepurchase->projectsitepurchaseitems->sum('price') + $projectsitepurchase->freight;
                 $data = [
                     'purchasecompany_id'    => $projectsitepurchase->purchasecompany_id,
                     '采购订单编号'            => $pohead_number,
@@ -517,6 +521,9 @@ class ProjectsitepurchaseController extends Controller
                     '编号商品名称'            => $item_index,
                     '采购订单状态'            => 10,
                     '合同签订日期'            => Carbon::today(),
+                    '采购订单金额'            => $amount,
+                    'type'                    => '工程',
+                    'business_id'            => $projectsitepurchase->business_id,
                 ];
 //                dd($data);
                 $pohead = Purchaseorder_hx::create($data);

@@ -142,6 +142,9 @@
                     </td>
                     @if (Agent::isDesktop())
                     <td>
+                        @if (Auth::user()->email == "admin@admin.com")
+                            {{--<a href="{{ url('/approval/projectsitepurchases/' . $projectsitepurchase->id . 'updateStatusByProcessInstanceId') }}" target="_blank">{{ $projectsitepurchase->created_at }}</a>--}}
+                        @endif
                             @can('approval_paymentrequest_delete')
                         {{--{!! Form::open(array('route' => array('approval.projectsitepurchases.destroy', $projectsitepurchase->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}--}}
                             {{--{!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}--}}
