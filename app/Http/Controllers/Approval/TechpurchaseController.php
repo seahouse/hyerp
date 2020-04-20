@@ -482,6 +482,7 @@ class TechpurchaseController extends Controller
                     '编号年份'                => Carbon::today()->year,
                     '编号数字'                => $seqnumber,
                     '编号商品名称'            => $item_index,
+                    'type'                    => '技术',
                 ];
                 $pohead = Purchaseorder_hx::create($data);
 
