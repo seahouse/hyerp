@@ -880,7 +880,7 @@
                 else
                 {
                     $("#divEpamountreason").attr("style", "display:none;");
-                    $("#epamountreason").val("");
+                    $("#epamountreason").val("6、不涉及EP项目安装队费用");
                     $("#divPurchasereason").attr("style", "display:block;");
                 }
             }

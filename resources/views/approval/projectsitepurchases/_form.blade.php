@@ -44,7 +44,11 @@
         <div class="form-group">
             {!! Form::label('projecttype', '项目类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('projecttype', array('EP项目' => 'EP项目', 'EPC项目' => 'EPC项目'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'readonly', $attr, $attrdisable]) !!}
+                @if (isset($projectsitepurchase->sohead_hxold))
+                    {!! Form::text('projecttype', $projectsitepurchase->sohead_hxold->C == 0 ? 'EP项目' : 'EPC项目', ['class' => 'form-control', 'readonly', $attr]) !!}
+                @else
+                    {!! Form::text('projecttype', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+                @endif
             </div>
         </div>
 
@@ -112,7 +116,8 @@
             {!! Form::label('epamountreason', 'EP项目安装费原因:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
                 {!! Form::select('epamountreason', array('1、设计问题导致安装队额外施工。' => '1、设计问题导致安装队额外施工。', '2、装置生产加工问题导致安装队额外施工' => '2、装置生产加工问题导致安装队额外施工', '3、运输问题导致安装队额外施工-无锡仓库或生产中心直发' => '3、运输问题导致安装队额外施工-无锡仓库或生产中心直发',
-                    '4、运输问题导致安装队额外施工-外协厂直接' => '4、运输问题导致安装队额外施工-外协厂直接', '5、属我方供货范围，到货设备与技术协议及施工图纸不符，比如整体供货，到场为散件，需要现场安装队拼接。' => '5、属我方供货范围，到货设备与技术协议及施工图纸不符，比如整体供货，到场为散件，需要现场安装队拼接。'
+                    '4、运输问题导致安装队额外施工-外协厂直接' => '4、运输问题导致安装队额外施工-外协厂直接', '5、属我方供货范围，到货设备与技术协议及施工图纸不符，比如整体供货，到场为散件，需要现场安装队拼接。' => '5、属我方供货范围，到货设备与技术协议及施工图纸不符，比如整体供货，到场为散件，需要现场安装队拼接。',
+                    '6、不涉及EP项目安装队费用' => '6、不涉及EP项目安装队费用'
                     ), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
             </div>
         </div>
@@ -287,12 +292,9 @@
             </div>
 
 
-
-
 @endif
         {!! Form::hidden('items_string', null, ['id' => 'items_string']) !!}
         {!! Form::hidden('items_string2', null, ['id' => 'items_string2']) !!}
-
 
         <div class="form-group">
             {!! Form::label('freight', '交通或运费（元）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
