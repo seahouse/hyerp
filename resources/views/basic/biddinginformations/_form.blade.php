@@ -13,6 +13,12 @@
     </div>
 </div>
 
+<div class="form-group">
+    {!! Form::label('sohead_id', '关联销售订单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+        {!! Form::text('sohead_id', isset($biddinginformation->sohead)? $biddinginformation->sohead->number : null, ['class' => 'form-control', $attr,'data-toggle' => 'modal', 'data-target' => '#selectOrderModal','data-informationid' =>$biddinginformation->id]) !!}
+    </div>
+</div>
 {{--<div class="form-group">--}}
     {{--{!! Form::label('template_name', '日志模板:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
     {{--<div class='col-xs-8 col-sm-10'>--}}

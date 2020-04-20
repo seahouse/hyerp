@@ -73,6 +73,7 @@
                 @foreach($simpletypes as $simpletype)
                     <th>{{ $simpletype }}</th>
                 @endforeach
+                <th>关联销售订单</th>
                 {{--<th>备注</th>--}}
                 <th width="250px">操作</th>
             </tr>
@@ -108,7 +109,15 @@
                         {{--{{ str_limit($biddinginformation->remark, 20) }}--}}
                     {{--</td>--}}
                     <td>
+                        @if(isset($biddinginformation->sohead))
+                            {{$biddinginformation->sohead->number}}
+                        @else
+                            -
+                         @endif
+                    </td>
+                    <td>
                         <div class="form-inline">
+                            {!! Form::button('关联销售订单', ['class' => 'btn btn-success btn-xs pull-left', 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal','data-informationid' =>$biddinginformation->id]) !!}
                             <a href="{{ URL::to('/basic/biddinginformations/'.$biddinginformation->id) }}" class="btn btn-success btn-xs pull-left">查看</a>
                             @if ($biddinginformation->closed != 1)
                                 <a href="{{ URL::to('/basic/biddinginformations/'.$biddinginformation->id.'/edit') }}" class="btn btn-success btn-xs pull-left">编辑</a>
@@ -152,17 +161,47 @@
                 </div>
                 <div class="modal-body">
                     {!! Form::open(['url' => 'basic/biddinginformations/storebyprojecttypes', 'id' => 'frmCreate']) !!}
-                        <div class="form-group">
-                            {!! Form::select('selectprojecttypes', array('SDA半干法系统' => 'SDA半干法系统', '湿法系统' => '湿法系统', 'SNCR系统' => 'SNCR系统', 'SCR系统' => 'SCR系统', '飞灰输送系统' => '飞灰输送系统',
-                                '灰库系统' => '灰库系统', '稳定化系统' => '稳定化系统', 'CFB系统' => 'CFB系统', '固定喷雾系统' => '固定喷雾系统', '公用系统' => '公用系统'), null,
-                                ['class' => 'form-control selectpicker', 'multiple']) !!}
-                            {!! Form::hidden('projecttypes', null, []) !!}
-                        </div>
+                    <div class="form-group">
+                        {!! Form::select('selectprojecttypes', array('SDA半干法系统' => 'SDA半干法系统', '湿法系统' => '湿法系统', 'SNCR系统' => 'SNCR系统', 'SCR系统' => 'SCR系统', '飞灰输送系统' => '飞灰输送系统',
+                            '灰库系统' => '灰库系统', '稳定化系统' => '稳定化系统', 'CFB系统' => 'CFB系统', '固定喷雾系统' => '固定喷雾系统', '公用系统' => '公用系统'), null,
+                            ['class' => 'form-control selectpicker', 'multiple']) !!}
+                        {!! Form::hidden('projecttypes', null, []) !!}
+                    </div>
                     {!! Form::close() !!}
                 </div>
                 <div class="modal-footer">
                     {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
                     {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnCreate']) !!}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="selectOrderModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">关联销售订单</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '项目编号、项目名称', 'id' => 'keyProject']) !!}
+
+                        <span class="input-group-btn">
+                   		    {!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchProject']) !!}
+                   	    </span>
+                    </div>
+                    {!! Form::hidden('name', null, ['id' => 'name']) !!}
+                    <p>
+                    <div class="list-group" id="listsalesorders">
+
+                    </div>
+                    </p>
+                    <form id="formAccept">
+                        {!! csrf_field() !!}
+                        {!! Form::hidden('soheadid', 0, ['class' => 'form-control', 'id' => 'soheadid']) !!}
+                        {!! Form::hidden('informationid', 0, ['class' => 'form-control', 'id' => 'informationid']) !!}
+                    </form>
                 </div>
             </div>
         </div>
@@ -211,6 +250,90 @@
 //                alert($("input[name='projecttypes']").val());
                 $("form#frmCreate").submit();
             });
+
+            $('#selectOrderModal').on('show.bs.modal', function (e) {
+                $("#listsalesorders").empty();
+
+                var text = $(e.relatedTarget);
+                var modal = $(this);
+                modal.find('#name').val(text.data('name'));
+                modal.find('#informationid').val(text.data('informationid'));
+                // alert(modal.find('#informationid').val());
+            });
+
+            $("#btnSearchProject").click(function() {
+                if ($("#keyProject").val() == "") {
+                    alert('请输入关键字');
+                    return;
+                }
+                $.ajax({
+                    type: "GET",
+                    url: "{!! url('/sales/salesorders/getitemsbykey/') !!}" + "/" + $("#keyProject").val(),
+                    success: function(result) {
+                        var strhtml = '';
+                        $.each(result.data, function(i, field) {
+                            btnId = 'btnSelectProject_' + String(i);
+                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.number + "</h4><p>" + field.descrip + "</p></button>"
+                        });
+                        if (strhtml == '')
+                            strhtml = '无记录。';
+                        $("#listsalesorders").empty().append(strhtml);
+
+                        $.each(result.data, function(i, field) {
+                            btnId = 'btnSelectProject_' + String(i);
+                            $informationid=  $("#selectOrderModal").find('#informationid').val();
+                            // alert($informationid);
+                            addBtnClickEventProject(btnId, field.id, $informationid);
+                        });
+                        // addBtnClickEvent('btnSelectOrder_0');
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('error');
+                    }
+                });
+            });
+
+            function addBtnClickEventProject(btnId, soheadid, informationid)
+            {
+                $("#" + btnId).bind("click", function() {
+                    // $('#selectOrderModal').modal('toggle');
+                    // $("#" + $("#selectOrderModal").find('#name').val()).val(field.descrip);
+                    // $("#" + $("#selectOrderModal").find('#id').val()).val(soheadid);
+                    $("#soheadid").val(soheadid);
+                    $("#informationid").val(informationid);
+                    // data=[];
+
+// //					$("#supplier_bank").val(field.bank);
+// //					$("#supplier_bankaccountnumber").val(field.bankaccountnumber);
+// //					$("#vendbank_id").val(field.vendbank_id);
+// //					$("#selectSupplierBankModal").find("#vendinfo_id").val(supplierid);
+//                     alert(soheadid +"," + informationid);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{!! url('/basic/biddinginformations/updatesaleorderid/') !!}" ,
+                        data: $("form#formAccept").serialize(),
+                        // data: {id:soheadid,informationid:informationid},
+                        dataType:"json",
+                        success: function(result) {
+                            if (result.errorcode >= 0)
+                            {
+                                $('#selectOrderModal').modal('toggle');
+                                alert("关联成功。");
+                                window.location.reload('true');
+                                // redirect('development/fabricdischarges');
+                            }
+                            else
+                                alert(result.errormsg );
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            alert('error');
+                        }
+                    });
+                });
+
+
+            }
 
         });
 

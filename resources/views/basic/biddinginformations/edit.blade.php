@@ -90,6 +90,37 @@
     @else
         无权限
     @endcan
+
+    <div class="modal fade" id="selectOrderModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">关联销售订单</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '项目编号、项目名称', 'id' => 'keyProject']) !!}
+
+                        <span class="input-group-btn">
+                   		    {!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchProject']) !!}
+                   	    </span>
+                    </div>
+                    {!! Form::hidden('name', null, ['id' => 'name']) !!}
+                    <p>
+                    <div class="list-group" id="listsalesorders">
+
+                    </div>
+                    </p>
+                    <form id="formAccept">
+                        {!! csrf_field() !!}
+                        {!! Form::hidden('soheadid', 0, ['class' => 'form-control', 'id' => 'soheadid']) !!}
+                        {!! Form::hidden('informationid', 0, ['class' => 'form-control', 'id' => 'informationid']) !!}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('script')
@@ -292,6 +323,89 @@
                 tablePppayment.draw();
                 e.preventDefault();
             })
+            $('#selectOrderModal').on('show.bs.modal', function (e) {
+                $("#listsalesorders").empty();
+
+                var text = $(e.relatedTarget);
+                var modal = $(this);
+                modal.find('#name').val(text.data('name'));
+                modal.find('#informationid').val(text.data('informationid'));
+                // alert(modal.find('#informationid').val());
+            });
+
+            $("#btnSearchProject").click(function() {
+                if ($("#keyProject").val() == "") {
+                    alert('请输入关键字');
+                    return;
+                }
+                $.ajax({
+                    type: "GET",
+                    url: "{!! url('/sales/salesorders/getitemsbykey/') !!}" + "/" + $("#keyProject").val(),
+                    success: function(result) {
+                        var strhtml = '';
+                        $.each(result.data, function(i, field) {
+                            btnId = 'btnSelectProject_' + String(i);
+                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.number + "</h4><p>" + field.descrip + "</p></button>"
+                        });
+                        if (strhtml == '')
+                            strhtml = '无记录。';
+                        $("#listsalesorders").empty().append(strhtml);
+
+                        $.each(result.data, function(i, field) {
+                            btnId = 'btnSelectProject_' + String(i);
+                            $informationid=  $("#selectOrderModal").find('#informationid').val();
+                            // alert($informationid);
+                            addBtnClickEventProject(btnId, field.id, $informationid);
+                        });
+                        // addBtnClickEvent('btnSelectOrder_0');
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('error');
+                    }
+                });
+            });
+
+            function addBtnClickEventProject(btnId, soheadid, informationid)
+            {
+                $("#" + btnId).bind("click", function() {
+                    // $('#selectOrderModal').modal('toggle');
+                    // $("#" + $("#selectOrderModal").find('#name').val()).val(field.descrip);
+                    // $("#" + $("#selectOrderModal").find('#id').val()).val(soheadid);
+                    $("#soheadid").val(soheadid);
+                    $("#informationid").val(informationid);
+                    // data=[];
+
+// //					$("#supplier_bank").val(field.bank);
+// //					$("#supplier_bankaccountnumber").val(field.bankaccountnumber);
+// //					$("#vendbank_id").val(field.vendbank_id);
+// //					$("#selectSupplierBankModal").find("#vendinfo_id").val(supplierid);
+//                     alert(soheadid +"," + informationid);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{!! url('/basic/biddinginformations/updatesaleorderid/') !!}" ,
+                        data: $("form#formAccept").serialize(),
+                        // data: {id:soheadid,informationid:informationid},
+                        dataType:"json",
+                        success: function(result) {
+                            if (result.errorcode >= 0)
+                            {
+                                $('#selectOrderModal').modal('toggle');
+                                alert("关联成功。");
+                                window.location.reload('true');
+                                // redirect('development/fabricdischarges');
+                            }
+                            else
+                                alert(result.errormsg );
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            alert('error');
+                        }
+                    });
+                });
+
+
+            }
         });
     </script>
 @endsection

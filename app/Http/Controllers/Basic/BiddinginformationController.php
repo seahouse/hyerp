@@ -252,6 +252,27 @@ class BiddinginformationController extends Controller
         return view('basic.biddinginformations.edit', compact('biddinginformation'));
     }
 
+    public function updatesaleorderid(Request $request)
+    {
+        //
+        $input = $request->all();
+//        log::info($input);
+        $id=$input['informationid'];
+        $biddinginformation = Biddinginformation::findOrFail($id);
+        $retcode=$biddinginformation->update(['sohead_id'=>$input['soheadid']]);
+        if($retcode >=0)
+            $data = [
+                'errorcode' => 0,
+                'errormsg' => 'success',
+            ];
+        else
+            $data = [
+                'errorcode' =>$retcode,
+                'errormsg' => '更新失败',
+            ];
+        return response()->json($data);
+    }
+
     /**
      * Update the specified resource in storage.
      *

@@ -20,7 +20,7 @@ class CreateBiddinginformationsTable extends Migration
             $table->integer('digital_number');
             $table->smallInteger('closed')->default(0);
             $table->string('remark', 1000)->nullable();
-
+            $table->integer('sohead_id')->nullable();
             $table->timestamps();
         });
     }
