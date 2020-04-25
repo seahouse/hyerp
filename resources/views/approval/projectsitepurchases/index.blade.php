@@ -86,6 +86,7 @@
                 <th>对应项目</th>
                 <th>项目编号</th>
                 <th>采购类型</th>
+                <th>对应采购订单编号</th>
 
                 <th>申请人</th>
                 <th>审批状态</th>
@@ -113,6 +114,9 @@
                     </td>
                     <td>
                         {{ $projectsitepurchase->purchasetype }}
+                    </td>
+                    <td>
+                        {{ isset($projectsitepurchase->pohead_hxold) ? $projectsitepurchase->pohead_hxold->number : '' }}
                     </td>
                     <td>
                         {{ $projectsitepurchase->applicant->name }}

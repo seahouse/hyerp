@@ -58,4 +58,8 @@ class Projectsitepurchase extends Model
     public function sohead_hxold() {
         return $this->belongsTo('\App\Models\Sales\Salesorder_hxold', 'sohead_id');
     }
+
+    public function pohead_hxold() {
+        return $this->belongsTo('\App\Models\Purchase\Purchaseorder_hxold_simple', 'business_id', 'business_id');
+    }
 }
