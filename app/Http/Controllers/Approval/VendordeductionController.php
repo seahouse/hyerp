@@ -28,7 +28,7 @@ class VendordeductionController extends Controller
 
     public function getitemsbykey($key)
     {
-        $query = Vendordeduction::where('business_id', $key)->orderBy('id', 'desc');
+        $query = Vendordeduction::where('vendordeductions.business_id', $key)->orderBy('id', 'desc');
 //        if ($customerid > 0)
 //        {
 //            $query->where('custinfo_id', $customerid);
