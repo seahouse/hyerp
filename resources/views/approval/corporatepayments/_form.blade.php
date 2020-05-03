@@ -1,6 +1,20 @@
 <div class="reimb"><div class="form-d">
 
         <div class="form-group">
+            {!! Form::label('suppliertype', '供应商类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::select('suppliertype', array('安装公司' => '安装公司', '机务设备类' => '机务设备类', '电气设备类' => '电气设备类', '安装材料类' => '安装材料类', '代理或服务类' => '代理或服务类', '厂部常用类' => '厂部常用类', '其他' => '其他'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {!! Form::label('paymenttype', '付款类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::select('paymenttype', array('预付款' => '预付款', '进度款' => '进度款', '到货款' => '到货款', '安装结束款' => '安装结束款', '调试运行款' => '调试运行款', '环保验收款' => '环保验收款', '质保金' => '质保金'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+            </div>
+        </div>
+
+        <div class="form-group">
             {!! Form::label('position', '职位:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
                 @if (isset($projectsitepurchase->vendordeduction_descrip))

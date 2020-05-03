@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Approval;
 use App\Http\Controllers\DingTalkController;
 use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiProcessinstanceCspaceInfoRequest;
+use App\Models\Approval\Approversetting;
 use App\Models\Approval\Corporatepayment;
 use App\Models\Approval\Corporatepaymentattachment;
+use App\Models\Approval\Paymentrequest;
 use App\Models\Approval\Projectsitepurchase;
 use Illuminate\Http\Request;
 
@@ -24,6 +26,7 @@ class CorporatepaymentController extends Controller
     public function index()
     {
         //
+        $this->updateStatusByProcessInstanceId('56d181f9-d9bd-42f3-8385-dfa4b1c061de', 0);
     }
 
     /**
@@ -345,5 +348,177 @@ class CorporatepaymentController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public static function updateStatusByProcessInstanceId($processInstanceId, $status)
+    {
+        $corporatepayment = Corporatepayment::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if (isset($corporatepayment))
+        {
+            $corporatepayment->status = $status;
+            $corporatepayment->save();
+
+//            $techpurchaseattachment_techspecification = $corporatepayment->techpurchaseattachments->where('type', 'techspecification')->first();
+//            $dir = config('custom.hxold.purchase_techspecification_dir') . "12345" . "/";
+//            if (!is_dir($dir)) {
+//                mkdir($dir);
+//            }
+//            copy(public_path($techpurchaseattachment_techspecification->path), $dir . $techpurchaseattachment_techspecification->filename);
+//            dd(public_path($techpurchaseattachment_techspecification->path));
+//            dd(base_path(Storage::url($techpurchaseattachment_techspecification->path)));
+//            dd(Storage::get($techpurchaseattachment_techspecification->path));
+//            dd($corporatepayment->techpurchaseattachments->where('type', 'techspecification')->first());
+//            dd('aaa');
+
+            // 如果是审批完成且通过，则创建付款审批单
+            if ($status == 0)
+            {
+//                $associated_approval_projectpurchase = $corporatepayment->associated_approval_projectpurchase;
+                $associated_approval_projectpurchases = json_decode($corporatepayment->associated_approval_projectpurchase);
+                if (count($associated_approval_projectpurchases) > 0)
+                {
+                    $associated_approval_projectpurchase = array_first($associated_approval_projectpurchases);
+                    if (strlen($associated_approval_projectpurchase) > 0)
+                    {
+                        $projectsitepurchase = Projectsitepurchase::where('process_instance_id', $associated_approval_projectpurchase)->first();
+                        if (isset($projectsitepurchase))
+                        {
+//                            $techpurchaseattachment_techspecification = $corporatepayment->techpurchaseattachments->where('type', 'techspecification')->first();
+
+                            // set approversetting_id
+                            $approversetting_id = -1;
+                            $approvaltype_id = PaymentrequestsController::typeid();
+                            if ($approvaltype_id > 0)
+                            {
+                                $approversettingFirst = Approversetting::where('approvaltype_id', $approvaltype_id)->orderBy('level')->first();
+                                if ($approversettingFirst)
+                                    $approversetting_id = $approversettingFirst->id;
+                                else
+                                    $approversetting_id = -1;
+                            }
+                            else
+                                $approversetting_id = -1;
+
+                            $data = [
+                                'suppliertype'          => $corporatepayment->suppliertype,
+                                'paymenttype'            => $corporatepayment->paymenttype,
+                                'supplier_id'            => $corporatepayment->supplier_id,
+                                'pohead_id'              => isset($projectsitepurchase->pohead_hxold) ? $projectsitepurchase->pohead_hxold->id : 0,
+                                'descrip'                => '由工程部发起的付款-对公帐户付款通过后自动创建，对应的审批单号为：' . $corporatepayment->business_id,
+                                'amount'                  => $corporatepayment->amount,
+                                'paymentmethod'         => $corporatepayment->paymentmethod,
+                                'datepay'                => $corporatepayment->paydate,
+                                'vendbank_id'            => $corporatepayment->vendbank_id,
+                                'applicant_id'           => $corporatepayment->applicant_id,
+//                                'status'                  => 1,
+                                'approversetting_id'    => $approversetting_id,
+                            ];
+                            $paymentrequest = Paymentrequest::create($data);
+
+                            if (isset($paymentrequest))
+                            {
+                                // send dingtalk message.
+                                $touser = $paymentrequest->nextapprover();
+                                if ($touser)
+                                {
+                                    $data = [
+                                        [
+                                            'key' => '申请人:',
+                                            'value' => $paymentrequest->applicant->name,
+                                        ],
+                                        [
+                                            'key' => '付款对象:',
+                                            'value' => isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '',
+                                        ],
+                                        [
+                                            'key' => '金额:',
+                                            'value' => $paymentrequest->amount,
+                                        ],
+                                        [
+                                            'key' => '付款类型:',
+                                            'value' => $paymentrequest->paymenttype,
+                                        ],
+                                        [
+                                            'key' => '对应项目:',
+                                            'value' => isset($paymentrequest->purchaseorder_hxold->sohead->projectjc) ? $paymentrequest->purchaseorder_hxold->sohead->projectjc : '',
+                                        ],
+                                        [
+                                            'key' => '商品:',
+                                            'value' => isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '',
+                                        ],
+                                    ];
+
+                                    $msgcontent_data = [
+                                        'message_url' => url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'),
+                                        'pc_message_url' => '',
+                                        'head' => [
+                                            'bgcolor' => 'FFBBBBBB',
+                                            'text' => $paymentrequest->applicant->name . '的供应商付款审批'
+                                        ],
+                                        'body' => [
+                                            'title' => $paymentrequest->applicant->name . '提交的供应商付款审批需要您审批。',
+                                            'form' => $data
+                                        ]
+                                    ];
+                                    $msgcontent = json_encode($msgcontent_data);
+
+                                    $c = new DingTalkClient;
+                                    $req = new CorpMessageCorpconversationAsyncsendRequest;
+
+                                    $access_token = '';
+                                    if (isset($paymentrequest->purchaseorder_hxold->purchasecompany_id) && $paymentrequest->purchaseorder_hxold->purchasecompany_id == 3)
+                                    {
+                                        $access_token = DingTalkController::getAccessToken_appkey('approval');
+                                        $req->setAgentId(config('custom.dingtalk.hx_henan.apps.approval.agentid'));
+//                    $req->setUseridList('04090710367573');
+                                        $req->setUseridList($touser->dtuserid);
+                                    }
+                                    else
+                                    {
+                                        $access_token = DingTalkController::getAccessToken();
+                                        $req->setAgentId(config('custom.dingtalk.agentidlist.approval'));
+                                        $req->setUseridList($touser->dtuserid);
+                                    }
+
+                                    $req->setMsgtype("oa");
+//                $req->setDeptIdList("");
+                                    $req->setToAllUser("false");
+                                    $req->setMsgcontent("$msgcontent");
+                                    $resp = $c->execute($req, $access_token);
+                                    Log::info(json_encode($resp));
+                                    if ($resp->code != "0")
+                                    {
+                                        Log::info($resp->msg . ": " . $resp->sub_msg);
+                                    }
+                                }
+
+//                                // 拷贝“技术规范书”到对应的ERP目录下
+//                                if (isset($techpurchaseattachment_techspecification))
+//                                {
+//                                    // 将中文的字段名称转换后使用
+//                                    $pohead_id_key = iconv("UTF-8","GBK//IGNORE", '采购订单ID');
+//                                    $dir = config('custom.hxold.purchase_techspecification_dir') . $pohead->$pohead_id_key . "/";
+//                                    if (!is_dir($dir)) {
+//                                        mkdir($dir);
+//                                    }
+//                                    $dest = iconv("UTF-8","GBK//IGNORE", $dir . $techpurchaseattachment_techspecification->filename);
+//                                    copy(public_path($techpurchaseattachment_techspecification->path), $dest);
+//                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+    public static function deleteByProcessInstanceId($processInstanceId)
+    {
+        $corporatepayment = Corporatepayment::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if ($corporatepayment)
+        {
+            $corporatepayment->forceDelete();
+        }
     }
 }

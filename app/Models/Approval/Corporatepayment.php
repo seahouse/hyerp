@@ -12,6 +12,8 @@ class Corporatepayment extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
+        'suppliertype',
+        'paymenttype',
         'position',
         'amounttype',
         'remark',

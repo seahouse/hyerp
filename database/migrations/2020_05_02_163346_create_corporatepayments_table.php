@@ -15,6 +15,8 @@ class CreateCorporatepaymentsTable extends Migration
         Schema::create('corporatepayments', function (Blueprint $table) {
             $table->increments('id');
 
+			$table->string('suppliertype')->default('');
+			$table->string('paymenttype')->default('');
             $table->string('position');
             $table->string('amounttype');
             $table->string('remark')->nullable();
