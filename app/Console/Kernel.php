@@ -33,6 +33,7 @@ class Kernel extends ConsoleKernel
         Commands\SoheadPauseReminder::class,
         Commands\SitehoursReminder::class,
         Commands\ProjectpurchaseReminder::class,
+        Commands\RequestpayoutToPaymentrequestSync::class,
     ];
 
     /**

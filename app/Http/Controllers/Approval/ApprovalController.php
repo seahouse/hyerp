@@ -2001,16 +2001,12 @@ class ApprovalController extends Controller
         $v = '2.0';
 
         $process_code = config('custom.dingtalk.approval_processcode.' . $approvaltype);
-        $originator_user_id = $user->dtuserid;
-        $departmentList = json_decode($user->dtuser->department);
-        $dept_id = 0;
-        if (count($departmentList) > 0)
-            $dept_id = array_first($departmentList);
+//        $originator_user_id = $user->dtuserid;
+//        $departmentList = json_decode($user->dtuser->department);
+//        $dept_id = 0;
+//        if (count($departmentList) > 0)
+//            $dept_id = array_first($departmentList);
 
-//        $form_component_values = str_replace('#', '%23', $form_component_values);
-//        $form_component_values = str_replace(' ', '%20', $form_component_values);
-//        dd(json_decode(json_decode($form_component_values)[9]->value));
-//        Log::info('process_code: ' . $process_code);
 
         $startTime = $startTime->timestamp * 1000;
         $endTime = $endTime->timestamp * 1000;
@@ -2736,6 +2732,146 @@ class ApprovalController extends Controller
 //        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
         $response = $c->execute($req, $session);
 //        Log::info(json_encode($response));
+        return json_encode($response);
+        dd(json_encode($response, JSON_UNESCAPED_UNICODE));
+        return response()->json($response);
+
+//        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+//        $response = HttpDingtalkEco::post("", $params, json_encode($data));
+
+        return $response;
+    }
+
+    public static function corporatepayment($inputs)
+    {
+        $user = Auth::user();
+        $session = DingTalkController::getAccessToken();
+        $timestamp = time('2017-07-19 13:06:00');
+        $format = 'json';
+        $v = '2.0';
+
+        $process_code = config('custom.dingtalk.approval_processcode.corporatepayment');
+        $originator_user_id = $user->dtuserid;
+        $departmentList = json_decode($user->dtuser->department);
+        $dept_id = 0;
+        if (count($departmentList) > 0)
+            $dept_id = array_first($departmentList);
+//        $approvers = $inputs['approvers'];
+//        // if originator_user_id in approvers, skip pre approvers
+//        $approver_array = explode(',', $approvers);
+//        if (in_array($originator_user_id, $approver_array))
+//        {
+//            $offset = array_search($originator_user_id, $approver_array);
+//            $approver_array = array_slice($approver_array, $offset+1);
+//            $approvers = implode(",", $approver_array);
+//        }
+//        if ($approvers == "")
+//            $approvers = config('custom.dingtalk.default_approvers');       // wuceshi for test
+
+        $formdata = [
+            [
+                'name'      => '职位',
+                'value'     => $inputs['position'],
+            ],
+            [
+                'name'      => '费用类型',
+                'value'     => $inputs['amounttype'],
+            ],
+            [
+                'name'      => '现场采购费类说明',
+                'value'     => $inputs['remark'],
+            ],
+            [
+                'name'      => '项目属于销售员',
+                'value'     => $inputs['sohead_salesmanager'],
+            ],
+            [
+                'name'      => '付款说明',
+                'value'     => $inputs['remark'],
+            ],
+            [
+                'name'      => '付款总额',
+                'value'     => $inputs['amount'],
+            ],
+            [
+                'name'      => '支付日期',
+                'value'     => $inputs['paydate'],
+            ],
+            [
+                'name'      => '付款方式',
+                'value'     => $inputs['paymentmethod'],
+            ],
+            [
+                'name'      => '支付单位全称',
+                'value'     => $inputs['supplier_name'],
+            ],
+            [
+                'name'      => '开户行及帐号',
+                'value'     => $inputs['supplier_bank'] . ',' . $inputs['supplier_bankaccountnumber'],
+            ],
+//            [
+//                'name'      => '交通或运费（元）',
+//                'value'     => $inputs['freight'],
+//            ],
+//            [
+//                'name'      => '支付方式',
+//                'value'     => $inputs['paymentmethod'],
+//            ],
+//            [
+//                'name'      => '发票情况',
+//                'value'     => $inputs['invoicesituation'],
+//            ],
+//            [
+//                'name'      => '公司名称',
+//                'value'     => $inputs['companyname'],
+//            ],
+//            [
+//                'name'      => '联系人',
+//                'value'     => $inputs['contact'],
+//            ],
+//            [
+//                'name'      => '联系方式',
+//                'value'     => $inputs['phonenumber'],
+//            ],
+//            [
+//                'name'      => '备注',
+//                'value'     => $inputs['otherremark'],
+//            ],
+//            [
+//                'name'      => '上传购买凭证',
+//                'value'     => $inputs['image_urls'],
+//            ],
+            [
+                'name'      => '附件',
+                'value'     => $inputs['files_string'],
+            ],
+            [
+                'name'      => '关联《工程采购》审批单',
+                'value'     => $inputs['associated_approval_projectpurchase'],
+            ],
+        ];
+        $form_component_values = json_encode($formdata);
+//        dd($form_component_values);
+//        Log::info('process_code: ' . $process_code);
+//        Log::info('originator_user_id: ' . $originator_user_id);
+//        Log::info('dept_id: ' . $dept_id);
+//        Log::info('approvers: ' . $approvers);
+//        Log::info('form_component_values: ' . $form_component_values);
+
+//        Log::info(app_path());
+        $c = new DingTalkClient();
+//        $req = new SmartworkBpmsProcessinstanceCreateRequest();
+        $req = new OapiProcessinstanceCreateRequest();
+//        $req->setAgentId("41605932");
+        $req->setProcessCode($process_code);
+        $req->setOriginatorUserId($originator_user_id);
+        $req->setDeptId("$dept_id");
+
+        $req->setFormComponentValues("$form_component_values");
+
+//        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
+        $response = $c->execute($req, $session);
+        Log::info(json_encode($response));
         return json_encode($response);
         dd(json_encode($response, JSON_UNESCAPED_UNICODE));
         return response()->json($response);

@@ -37,6 +37,8 @@ return array(
     'CreateCharsTable' => $baseDir . '/database/migrations/2015_10_23_131206_create_chars_table.php',
     'CreateCitysTable' => $baseDir . '/database/migrations/2015_08_14_023611_create_citys_table.php',
     'CreateContactsTable' => $baseDir . '/database/migrations/2015_08_19_083901_create_contacts_table.php',
+    'CreateCorporatepaymentattachmentsTable' => $baseDir . '/database/migrations/2020_05_02_165735_create_corporatepaymentattachments_table.php',
+    'CreateCorporatepaymentsTable' => $baseDir . '/database/migrations/2020_05_02_163346_create_corporatepayments_table.php',
     'CreateCountrysTable' => $baseDir . '/database/migrations/2015_08_14_015912_create_countrys_table.php',
     'CreateCountysTable' => $baseDir . '/database/migrations/2015_08_14_023833_create_countys_table.php',
     'CreateCustinfosTable' => $baseDir . '/database/migrations/2015_08_20_065111_create_custinfos_table.php',

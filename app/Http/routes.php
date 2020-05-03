@@ -583,6 +583,14 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::resource('techpurchaseattachment', 'TechpurchaseattachmentController');
     Route::resource('techpurchaseitem', 'TechpurchaseitemController');
 
+    Route::group(['prefix' => 'corporatepayment'], function() {
+        Route::get('mcreate', 'CorporatepaymentController@mcreate');
+        Route::post('mstore', 'CorporatepaymentController@mstore');
+
+    });
+    Route::resource('corporatepayment', 'CorporatepaymentController');
+    Route::resource('Corporatepaymentattachment', 'CorporatepaymentattachmentController');
+
     Route::post('bingdingtalk', 'ApprovalController@bingdingtalk');
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexapproval');
     Route::group(['prefix' => 'report2'], function() {
