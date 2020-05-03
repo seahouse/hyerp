@@ -968,7 +968,7 @@
                     dd.biz.util.uploadAttachment({
                         {{--image:{multiple:true,compress:false,max:9,spaceId: "{!! array_get($config, 'spaceid') !!}"},--}}
                         space:{corpId:"{!! array_get($config, 'corpId') !!}",spaceId:"{!! array_get($config, 'spaceid') !!}",isCopy:1 , max:9},
-                        file:{spaceId:"{!! array_get($config, 'spaceid') !!}",max:1},
+                        file:{spaceId:"{!! array_get($config, 'spaceid') !!}",max:5},
                         types:["file","space"],//PC端支持["photo","file","space"]
                         onSuccess : function(result) {
                             //onSuccess将在文件上传成功之后调用

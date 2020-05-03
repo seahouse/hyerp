@@ -87,7 +87,7 @@ class CorporatepaymentController extends Controller
 //            'drawingcount'          => 'required|integer|min:1',
 //            'drawingattachments.*'  => 'required|file',
 //            'images.*'                => 'required|image',
-            'associated_approval_projectpurchase'            => 'required',
+//            'associated_approval_projectpurchase'            => 'required',
         ]);
 //        dd($input);
 //        $input = HelperController::skipEmptyValue($input);
