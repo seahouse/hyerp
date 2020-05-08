@@ -10,7 +10,9 @@ use App\Models\Approval\Approversetting;
 use App\Models\Approval\Corporatepayment;
 use App\Models\Approval\Corporatepaymentattachment;
 use App\Models\Approval\Paymentrequest;
+use App\Models\Approval\Paymentrequestattachment;
 use App\Models\Approval\Projectsitepurchase;
+use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -415,6 +417,118 @@ class CorporatepaymentController extends Controller
                                 'approversetting_id'    => $approversetting_id,
                             ];
                             $paymentrequest = Paymentrequest::create($data);
+
+                            // auto generate paymentnodeattachments (pdf)
+                            if ($paymentrequest)
+                            {
+                                $str = '<html>';
+                                $str .= '<head>';
+                                $str .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>';
+                                $str .= '</head>';
+                                $str .= '<body>';
+
+                                $str .= '<h1 style="font-family: DroidSansFallback; text-align:center">供应商付款节点' . '</h1>';
+
+                                $str .= '<table border="1px" cellpadding="0" cellspacing="0" width="100%"><tbody>';
+
+                                $str .= '<tr>';
+                                $str .= '<td style="font-family: DroidSansFallback;">申请人</td>';
+                                $str .= '<td style="font-family: DroidSansFallback;">' . $paymentrequest->applicant->name . '</td>';
+                                $str .= '</tr>';
+
+                                $str .= '<tr>';
+                                $str .= '<td style="font-family: DroidSansFallback;">申请人部门</td>';
+                                $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->applicant->dept->name) ? $paymentrequest->applicant->dept->name : '') . '</td>';
+                                $str .= '</tr>';
+
+//                                $str .= '<tr>';
+//                                $str .= '<td style="font-family: DroidSansFallback;">货到目的类型</td>';
+//                                $str .= '<td style="font-family: DroidSansFallback;">' . '发仓库 - ' . (isset($paymentrequest->purchaseorder_hxold->receiptorders->first()->rwrecord->handler->name) ? $paymentrequest->purchaseorder_hxold->receiptorders->first()->rwrecord->handler->name : '') . '</td>';
+//                                $str .= '</tr>';
+
+                                $str .= '<tr>';
+                                $str .= '<td style="font-family: DroidSansFallback;">供应商</td>';
+                                $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '') . '</td>';
+                                $str .= '</tr>';
+
+                                $str .= '<tr>';
+                                $str .= '<td style="font-family: DroidSansFallback;">采购商品名称</td>';
+                                $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '') . '</td>';
+                                $str .= '</tr>';
+
+                                $str .= '<tr>';
+                                $str .= '<td style="font-family: DroidSansFallback;">对应工程名称</td>';
+                                $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->sohead->descrip) ? $paymentrequest->purchaseorder_hxold->sohead->descrip : '') . '</td>';
+                                $str .= '</tr>';
+
+                                $str .= '<tr>';
+                                $str .= '<td style="font-family: DroidSansFallback;">项目所属销售经理</td>';
+                                $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->sohead->salesmanager) ? $paymentrequest->purchaseorder_hxold->sohead->salesmanager : '') . '</td>';
+                                $str .= '</tr>';
+
+                                $str .= '<tr>';
+                                $str .= '<td style="font-family: DroidSansFallback;">工程类型</td>';
+                                $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->sohead->equipmenttype) ? $paymentrequest->purchaseorder_hxold->sohead->equipmenttype : '') . '</td>';
+                                $str .= '</tr>';
+
+                                $str .= '<tr>';
+                                $str .= '<td style="font-family: DroidSansFallback;">采购合同</td>';
+                                $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->number) ? $paymentrequest->purchaseorder_hxold->number : '') . '</td>';
+                                $str .= '</tr>';
+
+                                $str .= '<tr>';
+                                $str .= '<td style="font-family: DroidSansFallback;">到货地</td>';
+                                $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->arrival) ? $paymentrequest->purchaseorder_hxold->arrival : '') . '</td>';
+                                $str .= '</tr>';
+
+                                $str .= '<tr>';
+                                $str .= '<td style="font-family: DroidSansFallback;">对应的付款-对公帐户付款审批单号</td>';
+                                $str .= '<td style="font-family: DroidSansFallback;">' . $corporatepayment->business_id . '</td>';
+                                $str .= '</tr>';
+
+                                $str .= '</tbody></table>';
+
+//            $str .= '<p style="font-family: DroidSansFallback;">申请人: ' . $paymentrequest->applicant->name . '</p>';
+//            $str .= '<p style="font-family: DroidSansFallback;">货到目的类型: ' . '</p>';
+//            $str .= '<p style="font-family: DroidSansFallback;">供应商: ' . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '') . '</p>';
+//            $str .= '<p style="font-family: DroidSansFallback;">采购商品名称: ' . (isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '') . '</p>';
+//            $str .= '<p style="font-family: DroidSansFallback;">对应工程名称: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->descrip) ? $paymentrequest->purchaseorder_hxold->sohead->descrip : '') . '</p>';
+//            $str .= '<p style="font-family: DroidSansFallback;">项目所属销售经理: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->salesmanager) ? $paymentrequest->purchaseorder_hxold->sohead->salesmanager : '') . '</p>';
+//            $str .= '<p style="font-family: DroidSansFallback;">工程类型: ' . '</p>';
+//            $str .= '<p style="font-family: DroidSansFallback;">采购合同: ' . (isset($paymentrequest->purchaseorder_hxold->number) ? $paymentrequest->purchaseorder_hxold->number : '') . '</p>';
+
+                                $str .= '</body>';
+                                $str .= '</html>';
+
+                                // instantiate and use the dompdf class
+                                $dompdf = new Dompdf();
+                                // $dompdf->set_option('isFontSubsettingEnabled', true);
+                                $dompdf->loadHtml($str);
+
+                                // (Optional) Setup the paper size and orientation
+                                // $dompdf->setPaper('A4', 'landscape');
+                                $dompdf->setPaper('A4');
+
+                                // Render the HTML as PDF
+                                $dompdf->render();
+                                $destdir = 'uploads/approval/paymentrequest/' . $paymentrequest->id;
+                                if (!is_dir($destdir))
+                                    mkdir($destdir);
+                                $dest = $destdir . '/' . date('YmdHis').rand(100, 200) . '.pdf';
+                                file_put_contents($dest, $dompdf->output());
+
+                                // Output the generated PDF to Browser
+//        $file = $dompdf->stream('供应商到货款节点');
+//        dd($dompdf->output());
+
+                                // add database record
+                                $paymentnodeattachment = new Paymentrequestattachment;
+                                $paymentnodeattachment->paymentrequest_id = $paymentrequest->id;
+                                $paymentnodeattachment->type = "paymentnode";
+                                $paymentnodeattachment->filename = '供应商付款节点(自动生成)';
+                                $paymentnodeattachment->path = "/$dest";     // add a '/' in the head.
+                                $paymentnodeattachment->save();
+                            }
 
                             if (isset($paymentrequest))
                             {
