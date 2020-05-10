@@ -19,7 +19,12 @@ class Biddinginformation extends Model
     public function biddinginformationitems() {
         return $this->hasMany('App\Models\Basic\Biddinginformationitem');
     }
+
     public function sohead() {
         return $this->hasOne('App\Models\Sales\Salesorder_hxold','id','sohead_id');
+    }
+
+    public function biddinginformationfieldtypes() {
+        return $this->hasMany('App\Models\Basic\Biddinginformationfieldtype');
     }
 }

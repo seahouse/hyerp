@@ -186,7 +186,9 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
         Route::post('updateedittable', 'BiddinginformationController@updateedittable');
         Route::post('search', 'BiddinginformationController@search');
         Route::post('storebyprojecttypes', 'BiddinginformationController@storebyprojecttypes');
+        Route::post('resetfieldtype', 'BiddinginformationController@resetfieldtype');
         Route::post('updatesaleorderid', 'BiddinginformationController@updatesaleorderid');
+        Route::get('{id}/getbiddinginformationfieldtypes', 'BiddinginformationController@getbiddinginformationfieldtypes');
     });
     Route::resource('biddinginformations', 'BiddinginformationController');
     Route::group(['prefix' => 'biddinginformationitems'], function() {

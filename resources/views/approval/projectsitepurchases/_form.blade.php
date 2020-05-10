@@ -355,7 +355,7 @@
 
 
     <div class="form-group">
-        {!! Form::label('images', '上传购买凭证:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+        {!! Form::label('images', '上传购买凭证（最多9张）:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
         <div class='col-xs-8 col-sm-10'>
             <div class="row" id="previewimage">

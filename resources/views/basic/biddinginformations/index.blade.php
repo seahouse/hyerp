@@ -75,7 +75,7 @@
                 @endforeach
                 <th>关联销售订单</th>
                 {{--<th>备注</th>--}}
-                <th width="250px">操作</th>
+                <th width="300px">操作</th>
             </tr>
         </thead>
         <tbody>
@@ -118,6 +118,9 @@
                     <td>
                         <div class="form-inline">
                             {!! Form::button('关联销售订单', ['class' => 'btn btn-success btn-xs pull-left', 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal','data-informationid' =>$biddinginformation->id]) !!}
+                            @can('basic_biddinginformation_resetfieldtype')
+                                {!! Form::button('重设字段类别', ['class' => 'btn btn-xs btn-success pull-left', 'data-toggle' => 'modal', 'data-target' => '#resetfieldtypeModal', 'data-biddinginformation_id' => $biddinginformation->id]) !!}
+                            @endcan
                             <a href="{{ URL::to('/basic/biddinginformations/'.$biddinginformation->id) }}" class="btn btn-success btn-xs pull-left">查看</a>
                             @if ($biddinginformation->closed != 1)
                                 <a href="{{ URL::to('/basic/biddinginformations/'.$biddinginformation->id.'/edit') }}" class="btn btn-success btn-xs pull-left">编辑</a>
@@ -172,6 +175,31 @@
                 <div class="modal-footer">
                     {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
                     {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnCreate']) !!}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="resetfieldtypeModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">重设字段类别</h4>
+                </div>
+                <div class="modal-body">
+                    {!! Form::open(['url' => 'basic/biddinginformations/resetfieldtype', 'id' => 'frmResetfieldtype']) !!}
+                    <div class="form-group">
+                        {!! Form::select('selectprojecttypes', array('SDA半干法系统' => 'SDA半干法系统', '湿法系统' => '湿法系统', 'SNCR系统' => 'SNCR系统', 'SCR系统' => 'SCR系统', '飞灰输送系统' => '飞灰输送系统',
+                            '灰库系统' => '灰库系统', '稳定化系统' => '稳定化系统', 'CFB系统' => 'CFB系统', '固定喷雾系统' => '固定喷雾系统', '公用系统' => '公用系统'), null,
+                            ['class' => 'form-control selectpicker', 'multiple']) !!}
+                        {!! Form::hidden('projecttypes', null, []) !!}
+                        {!! Form::hidden('biddinginformation_id', null, ['class' => 'form-control']) !!}
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+                <div class="modal-footer">
+                    {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
+                    {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnResetfieldtype']) !!}
                 </div>
             </div>
         </div>
@@ -246,9 +274,30 @@
             });
 
             $("#btnCreate").click(function() {
-                $("input[name='projecttypes']").val($("select[name='selectprojecttypes']").val());
+                $("#frmCreate input[name='projecttypes']").val($("#frmCreate select[name='selectprojecttypes']").val());
 //                alert($("input[name='projecttypes']").val());
                 $("form#frmCreate").submit();
+            });
+
+            $('#resetfieldtypeModal').on('show.bs.modal', function (e) {
+                var text = $(e.relatedTarget);
+                var modal = $(this);
+                modal.find("input[name='biddinginformation_id']").val(text.data('biddinginformation_id'));
+                // alert(modal.find('#informationid').val());
+
+                $.get("{{ url('basic/biddinginformations/') }}" + "/" + text.data('biddinginformation_id') + "/getbiddinginformationfieldtypes", function(data){
+//                    alert(data);
+//                    $("#frmResetfieldtype select[name='selectprojecttypes']").val(data);
+                    $("#frmResetfieldtype select[name='selectprojecttypes']").selectpicker('val', data);
+                });
+            });
+
+            $("#btnResetfieldtype").click(function(e) {
+//                alert($("#frmResetfieldtype select[name='selectprojecttypes']").val());
+//                alert($("#frmResetfieldtype").find("#projecttypes").val($("#frmResetfieldtype").find("#selectprojecttypes").val()));
+                $("#frmResetfieldtype input[name='projecttypes']").val($("#frmResetfieldtype select[name='selectprojecttypes']").val());
+//                alert($("#frmResetfieldtype input[name='projecttypes']").val());
+                $("form#frmResetfieldtype").submit();
             });
 
             $('#selectOrderModal').on('show.bs.modal', function (e) {

@@ -1003,4 +1003,63 @@ class BiddinginformationController extends Controller
         $biddinginformation->save();
         return 'success';
     }
+
+    public function resetfieldtype(Request $request)
+    {
+        //
+        $inputs = $request->all();
+//        dd($inputs);
+        if (!$request->has('biddinginformation_id') || $request->input('biddinginformation_id') <= 0)
+            dd('报价信息错误，无法继续。');
+        if (!$request->has('projecttypes') || $request->input('projecttypes') == '')
+            dd('没有选择项目类型');
+
+        $biddinginformation = Biddinginformation::findOrFail($request->input('biddinginformation_id'));
+        if (isset($biddinginformation))
+        {
+            Biddinginformationfieldtype::where('biddinginformation_id', $biddinginformation->id)->delete();
+            $projecttypes = explode(',', $request->input('projecttypes'));
+            foreach ($projecttypes as $projecttype)
+            {
+                Biddinginformationfieldtype::create([
+                    'biddinginformation_id'     => $biddinginformation->id,
+                    'biddinginformation_fieldtype'  => $projecttype,
+                ]);
+            }
+            $biddinginformationdefinefields = Biddinginformationdefinefield::whereIn('projecttype', $projecttypes)->orderBy('sort')->get();
+            foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+            {
+                $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationdefinefield->name)->first();
+                if (!isset($biddinginformationitem))
+                {
+                    Biddinginformationitem::create([
+                        'biddinginformation_id' => $biddinginformation->id,
+                        'key' => $biddinginformationdefinefield->name,
+                        'value' => '',
+                        'remark' => '',
+                        'sort' => $biddinginformationdefinefield->sort,
+                        'type' => $biddinginformationdefinefield->type,
+                    ]);
+//                    Log::info($biddinginformationitem->id);
+                }
+            }
+        }
+
+        return redirect('basic/biddinginformations/' . $biddinginformation->id . '/edit');
+    }
+
+    public function getbiddinginformationfieldtypes($id)
+    {
+        //
+        $srtn = "";
+        $biddinginformation = Biddinginformation::find($id);
+        if (isset($biddinginformation))
+        {
+            $biddinginformationfieldtypes = $biddinginformation->biddinginformationfieldtypes->pluck('biddinginformation_fieldtype')->toArray();
+//            dd($biddinginformationfieldtypes);
+//            $srtn = implode(",", $biddinginformationfieldtypes);
+            $srtn = $biddinginformationfieldtypes;
+        }
+        return $srtn;
+    }
 }
