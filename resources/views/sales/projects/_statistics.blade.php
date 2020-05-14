@@ -16,6 +16,8 @@
 			<?php $nowarehousecost = 0.0; ?>
 			<?php $nowarehousetaxcost = 0.0; ?>
 			<?php $nowarehouseamountby7550 = 0.0; ?>
+			<?php $warehouseqty = 0.0; ?>
+			<?php $drawingqty = 0.0; ?>
 		@foreach($project->soheads as $sohead)
             	<?php $totalamount += $sohead->amount; ?>
             	<?php $sohead_receiptpayments_total += $sohead->receiptpayments->sum('amount'); ?>
@@ -31,6 +33,8 @@
 				<?php $nowarehousecost +=array_first($sohead->getnowarehouseCost())->nowarehousecost;?>
 				<?php $nowarehousetaxcost +=array_first($sohead->getnowarehousetaxCost())->nowarehousetaxcost;?>
 				<?php $nowarehouseamountby7550 +=array_first($sohead->getnowarehouseamountby7550())->nowarehouseamountby7550;?>
+				<?php $warehouseqty +=array_first($sohead->getwarehouseqty())->warehouseqty;?>
+				<?php $drawingqty +=$sohead->Issuedrawings->sum('tonnage');?>
 		@endforeach
 			<p>订单总金额：{{ $totalamount }}万</p>
 			<p>订单收款总金额：{{ $sohead_receiptpayments_total }}万
@@ -71,6 +75,7 @@
 			@else
 				<p>出库类成本比例：-</p>
 			@endif
+			<p>理论废料数量：{{number_format(($warehouseqty/1000 - $drawingqty) , 4)}}吨</p>
 			<hr style="border-top-color:rgba(0,0,0,1);" >
 			@if (isset($project->group->id))
 				<a href="{{ URL::to('/sales/groups/' . $project->group->id . '/mstatistics') }}" target="_blank" class="btn btn-default btn-sm">备注</a>
