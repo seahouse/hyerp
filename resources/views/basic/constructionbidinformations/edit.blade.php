@@ -1,0 +1,299 @@
+@extends('navbarerp')
+
+@section('head')
+    <link href="{{ asset('css/jquery-editable-select.css') }}" rel="stylesheet" type="text/css" />
+@endsection
+
+@section('main')
+    @can('basic_constructionbidinformation_edit')
+    <h1>编辑</h1>
+    <hr/>
+
+    {{--<table id="tableBiddinginformation" class="table table-striped table-hover table-full-width"  width="100%">--}}
+        {{--<thead>--}}
+        {{--<tr>--}}
+            {{--<th>名称</th>--}}
+            {{--<th>数据</th>--}}
+            {{--<th>下图人</th>--}}
+            {{--<th>工厂</th>--}}
+
+            {{--<th>概述</th>--}}
+        {{--</tr>--}}
+        {{--</thead>--}}
+    {{--</table>--}}
+
+    {!! Form::model($constructionbidinformation, ['method' => 'PATCH', 'action' => ['Basic\ConstructionbidinformationController@update', $constructionbidinformation->id], 'class' => 'form-horizontal']) !!}
+    @include('basic.constructionbidinformations._form',
+        [
+            'submitButtonText' => '提交',
+            'datepay' => null,
+            'requestdeliverydate' => null,
+            'customer_name' => null,
+            'customer_id' => null,
+            'amount' => null,
+            'order_number' => null,
+            'order_id' => null,
+            'datego' => null,
+            'dateback' => null,
+            'mealamount' => null,
+            'ticketamount' => null,
+            'amountAirfares' => null,
+            'amountTrain' => null,
+            'amountTaxi' => null,
+            'amountOtherTicket' => null,
+            'stayamount' => null,
+            'otheramount' => null,
+            'attr' => '',
+            'attrdisable' => 'disabled',
+            'btnclass' => 'hidden',
+        ])
+
+    <table id="tableItems" class="table table-striped table-hover table-full-width">
+        <thead>
+        <tr>
+            <th>名称</th>
+            <th>采购方</th>
+            <th>规格及技术要求</th>
+            <th>一条线</th>
+            <th>二条线</th>
+            <th>三条线</th>
+            <th>四条线</th>
+            <th>单位</th>
+            <th>备注</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach($constructionbidinformation->constructionbidinformationitems as $constructionbidinformationitem)
+            <tr data-constructionbidinformationitem_id="{{ $constructionbidinformationitem->id }}">
+                <td>
+                    {{ $constructionbidinformationitem->key }}
+                </td>
+                <div id="div{{ $constructionbidinformationitem->id }}" name="constructionbidinformationitem_container" data-constructionbidinformationitem_id="{{ $constructionbidinformationitem->id }}">
+                    <td>
+                        {!! Form::select('purchaser', array('华星东方' => '华星东方', '投标人' => '投标人'), null, ['class' => 'form-control']) !!}
+                    </td>
+                    <td>
+                        {!! Form::text('specification_technicalrequirements', null, ['class' => 'form-control']) !!}
+                    </td>
+                    <td>
+                        {!! Form::text('value_line1', null, ['class' => 'form-control']) !!}
+                    </td>
+                    <td>
+                        {!! Form::text('value_line2', null, ['class' => 'form-control']) !!}
+                    </td>
+                    <td>
+                        {!! Form::text('value_line3', null, ['class' => 'form-control']) !!}
+                    </td>
+                    <td>
+                        {!! Form::text('value_line4', null, ['class' => 'form-control']) !!}
+                    </td>
+                    <td>
+                        {!! Form::text('unit', null, ['class' => 'form-control']) !!}
+                    </td>
+                    <td>
+                        {!! Form::text('remark', null, ['class' => 'form-control']) !!}
+                    </td>
+                </div>
+            </tr>
+        @endforeach
+        {!! Form::hidden('items_string', null, ['id' => 'items_string']) !!}
+
+        </tbody>
+    </table>
+
+
+    <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+        {!! Form::submit('保存', ['class' => 'btn btn-primary', 'id' => 'btnSubmit']) !!}
+    </div>
+    </div>
+    {!! Form::close() !!}
+
+    @include('errors.list')
+    @else
+        无权限
+    @endcan
+
+    <div class="modal fade" id="selectOrderModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">关联销售订单</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '项目编号、项目名称', 'id' => 'keyProject']) !!}
+
+                        <span class="input-group-btn">
+                   		    {!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchProject']) !!}
+                   	    </span>
+                    </div>
+                    {!! Form::hidden('name', null, ['id' => 'name']) !!}
+                    <p>
+                    <div class="list-group" id="listsalesorders">
+
+                    </div>
+                    </p>
+                    <form id="formAccept">
+                        {!! csrf_field() !!}
+                        {!! Form::hidden('soheadid', 0, ['class' => 'form-control', 'id' => 'soheadid']) !!}
+                        {!! Form::hidden('informationid', 0, ['class' => 'form-control', 'id' => 'informationid']) !!}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+@endsection
+
+@section('script')
+    <script type="text/javascript" src="/DataTables/datatables.js"></script>
+    <script type="text/javascript" src="/js/jquery-editable-select.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function(e) {
+
+       $('.dynamicSelect').each(function(index, select) {
+            var name = $(select).attr('data-name');
+            $(select).editableSelect({id: name});
+        });  
+        
+        $('.dynamicSelect').each(function(index, select) {
+            var val = $(select).attr('data-value');
+            $(select).val(val);
+        }); 
+            
+        $('#dynamicSelectWrapper').on('click', function (evt) {
+            var target = evt.target || evt.srcElement;
+            if ($(target).attr('data-name')) {
+                var name = $(target).attr('data-name');
+                var url = '/basic/constructionbidinformationitems/getvaluesbykey/' + name;
+                if (window['URL_' + url]) {
+                    return;
+                }
+                else {
+                    $.get(url, {}, function (result) {
+                        result && (window['URL_' + url] = true);
+                        $.each(result, function (i, t) {
+                            $(target).editableSelect('add', t);
+                        });
+                        $('#listWrapper_' + name).css('display', 'block');//fix plugin filter issue
+                    });
+
+                }
+            }     
+        });
+
+            $("#btnSubmit").click(function() {
+                var itemArray = new Array();
+
+                $("#tableItems tbody tr").each(function () {
+                    var constructionbidinformationitem_id = this.dataset.constructionbidinformationitem_id;
+                    console.info(constructionbidinformationitem_id);
+                    var trrow = $(this);
+
+                    var itemObject = new Object();
+//                    itemObject.poitemc_id = poitemc_id;
+//                    itemObject.quantity = trrow.find("input[name='quantity']").val();
+//                    itemObject.chinesedescrip = trrow.find("input[name='chinesedescrip']").val();
+//                    itemObject.unitprice = trrow.find("input[name='unitprice']").val();
+
+                    console.info(JSON.stringify(itemObject));
+                    itemArray.push(itemObject);
+                });
+
+                console.info(JSON.stringify(itemArray));
+                $("#items_string").val(JSON.stringify(itemArray));
+                alert('aaa');
+                return false;
+
+//                $("form#frmPurchaseorder").submit();
+            });
+
+
+
+            $('#selectOrderModal').on('show.bs.modal', function (e) {
+                $("#listsalesorders").empty();
+
+                var text = $(e.relatedTarget);
+                var modal = $(this);
+                modal.find('#name').val(text.data('name'));
+                modal.find('#informationid').val(text.data('informationid'));
+                // alert(modal.find('#informationid').val());
+            });
+
+            $("#btnSearchProject").click(function() {
+                if ($("#keyProject").val() == "") {
+                    alert('请输入关键字');
+                    return;
+                }
+                $.ajax({
+                    type: "GET",
+                    url: "{!! url('/sales/salesorders/getitemsbykey/') !!}" + "/" + $("#keyProject").val(),
+                    success: function(result) {
+                        var strhtml = '';
+                        $.each(result.data, function(i, field) {
+                            btnId = 'btnSelectProject_' + String(i);
+                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.number + "</h4><p>" + field.descrip + "</p></button>"
+                        });
+                        if (strhtml == '')
+                            strhtml = '无记录。';
+                        $("#listsalesorders").empty().append(strhtml);
+
+                        $.each(result.data, function(i, field) {
+                            btnId = 'btnSelectProject_' + String(i);
+                            $informationid=  $("#selectOrderModal").find('#informationid').val();
+                            // alert($informationid);
+                            addBtnClickEventProject(btnId, field.id, $informationid);
+                        });
+                        // addBtnClickEvent('btnSelectOrder_0');
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('error');
+                    }
+                });
+            });
+
+            function addBtnClickEventProject(btnId, soheadid, informationid)
+            {
+                $("#" + btnId).bind("click", function() {
+                    // $('#selectOrderModal').modal('toggle');
+                    // $("#" + $("#selectOrderModal").find('#name').val()).val(field.descrip);
+                    // $("#" + $("#selectOrderModal").find('#id').val()).val(soheadid);
+                    $("#soheadid").val(soheadid);
+                    $("#informationid").val(informationid);
+                    // data=[];
+
+// //					$("#supplier_bank").val(field.bank);
+// //					$("#supplier_bankaccountnumber").val(field.bankaccountnumber);
+// //					$("#vendbank_id").val(field.vendbank_id);
+// //					$("#selectSupplierBankModal").find("#vendinfo_id").val(supplierid);
+//                     alert(soheadid +"," + informationid);
+
+                    $.ajax({
+                        type: "POST",
+                        url: "{!! url('/basic/constructionbidinformations/updatesaleorderid/') !!}" ,
+                        data: $("form#formAccept").serialize(),
+                        // data: {id:soheadid,informationid:informationid},
+                        dataType:"json",
+                        success: function(result) {
+                            if (result.errorcode >= 0)
+                            {
+                                $('#selectOrderModal').modal('toggle');
+                                alert("关联成功。");
+                                window.location.reload('true');
+                                // redirect('development/fabricdischarges');
+                            }
+                            else
+                                alert(result.errormsg );
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            alert('error');
+                        }
+                    });
+                });
+
+
+            }
+        });
+    </script>
+@endsection

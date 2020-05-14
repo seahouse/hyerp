@@ -242,6 +242,12 @@ class ViewComposerServiceProvider extends ServiceProvider
             'approval.paymentrequests.index', 'approval.projectsitepurchases.mcreate', 'approval.projectsitepurchases.show'), function($view) {
             $view->with('companyList', \App\Models\Basic\Company_hxold::orderby('id', 'asc')->lists('name', 'id'));
         });
+
+        view()->composer(array('basic.constructionbidinformationfields.create', 'basic.constructionbidinformationfields.edit',
+            'basic.constructionbidinformations.index'), function($view) {
+            $view->with('projecttypes_constructionbidinformationfield',
+                array('钢结构' => '钢结构', '烟道' => '烟道', 'SCR系统' => 'SCR系统', 'SNCR系统' => 'SNCR系统'));
+        });
     }
 
     /**

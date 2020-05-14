@@ -197,6 +197,26 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
         Route::get('getvaluesbykey/{key}', 'BiddinginformationitemController@getvaluesbykey');
     });
     Route::resource('biddinginformationitems', 'BiddinginformationitemController');
+
+    Route::group(['prefix' => 'constructionbidinformations'], function() {
+        Route::get('import', 'ConstructionbidinformationController@import');
+        Route::post('importstore', 'ConstructionbidinformationController@importstore');
+        Route::any('export', 'ConstructionbidinformationController@export');
+        Route::get('downloadfile/{filename}', 'ConstructionbidinformationController@downloadfile')->name('basic.constructionbidinformations.downloadfile');
+        Route::post('clear', 'ConstructionbidinformationController@clear');
+        Route::get('exportword/{id}', 'ConstructionbidinformationController@exportword');
+        Route::post('close/{id}', 'ConstructionbidinformationController@close');
+        Route::get('edittable', 'ConstructionbidinformationController@edittable');
+        Route::post('updateedittable', 'ConstructionbidinformationController@updateedittable');
+        Route::post('search', 'ConstructionbidinformationController@search');
+        Route::post('storebyprojecttypes', 'ConstructionbidinformationController@storebyprojecttypes');
+        Route::post('resetfieldtype', 'ConstructionbidinformationController@resetfieldtype');
+        Route::post('updatesaleorderid', 'ConstructionbidinformationController@updatesaleorderid');
+        Route::get('{id}/getbiddinginformationfieldtypes', 'ConstructionbidinformationController@getbiddinginformationfieldtypes');
+    });
+    Route::resource('constructionbidinformations', 'ConstructionbidinformationController');
+
+    Route::resource('constructionbidinformationfields', 'ConstructionbidinformationfieldController');
 });
 
 Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => ['web', 'auth']], function() {

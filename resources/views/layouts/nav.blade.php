@@ -38,6 +38,9 @@
                         @can('basic_biddinginformation_view')
                             <li><a href="/basic/biddinginformations/">投标项目</a></li>
                         @endcan
+                            @can('basic_constructionbidinformation_view')
+                                <li><a href="/basic/constructionbidinformations/">施工标定额</a></li>
+                            @endcan
                     </ul>
                 </li>
                 <li class="dropdown">
