@@ -98,6 +98,16 @@ class Salesorder_hxold extends Model
         return DB::connection('sqlsrv')->select('select dbo.getNoWarehouseAmountBy7550(' . $this->id . ') as nowarehouseamountby7550');
     }
 
+    // 出库数量
+    public function getwarehouseqty() {
+        return DB::connection('sqlsrv')->select('select dbo.getWarehouseQtyByorder(' . $this->id . ') as warehouseqty');
+    }
+
+    //下图重量
+    public function Issuedrawings() {
+        return $this->hasMany('App\Models\Approval\Issuedrawing', 'sohead_id', 'id');
+    }
+
     public function soheadtaxratetypeasses() {
         return $this->hasMany('App\Models\Sales\Soheadtaxratetypeass_hxold', 'sohead_id', 'id');
     }
