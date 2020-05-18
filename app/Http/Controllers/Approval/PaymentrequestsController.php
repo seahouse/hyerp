@@ -1484,7 +1484,9 @@ class PaymentrequestsController extends Controller
             if (isset($paymentrequest->purchaseorder_hxold->payments))
             {
                 if ($paymentrequest->paymentrequestapprovals->max('created_at') > $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
-                    return redirect('/purchase/purchaseorders/' . $paymentrequest->pohead_id . '/payments/create_hxold');
+                {
+                    return redirect('/purchase/purchaseorders/' . $paymentrequest->pohead_id . '/payments/create_hxold/' . $paymentrequest->amount);
+                }
             }
         }
 

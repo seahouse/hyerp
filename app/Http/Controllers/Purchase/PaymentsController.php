@@ -40,11 +40,11 @@ class PaymentsController extends Controller
         return view('purchase.payments.create', compact('purchaseorder'));
     }
 
-    public function create_hxold($poheadid)
+    public function create_hxold($poheadid, $amount = 0.0)
     {
         //
         $purchaseorder = Purchaseorder_hxold::findOrFail($poheadid);
-        return view('purchase.payments.create_hxold', compact('purchaseorder'));
+        return view('purchase.payments.create_hxold', compact('purchaseorder', 'amount'));
     }
 
     /**

@@ -9,7 +9,7 @@
 <div class="form-group">
     {!! Form::label('付款金额', '付款金额:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::text('付款金额', null, ['class' => 'form-control']) !!}
+    {!! Form::text('付款金额', $amount, ['class' => 'form-control']) !!}
     </div>
 </div>
 

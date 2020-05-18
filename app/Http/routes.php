@@ -388,7 +388,7 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         Route::post('store', 'PaymentsController@store');
         Route::delete('destroy/{payment}', 'PaymentsController@destroy');
 
-        Route::get('create_hxold', 'PaymentsController@create_hxold');
+        Route::get('create_hxold/{amount?}', 'PaymentsController@create_hxold');
         Route::post('store_hxold', 'PaymentsController@store_hxold');
     });
     Route::group(['prefix' => 'purchaseorders'], function() {
