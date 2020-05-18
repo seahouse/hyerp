@@ -9,9 +9,8 @@
 @section('main')
     @can('basic_biddinginformation_view')
     <div class="panel-heading">
-        {{--<a href="{{ url('basic/constructionbidinformations/create') }}" class="btn btn-sm btn-success">测试历史下拉用</a>--}}
         {!! Form::button('新建', ['class' => 'btn btn-sm btn-success', 'data-toggle' => 'modal', 'data-target' => '#createModal']) !!}
-        <a href="{{ url('basic/constructionbidinformations/import') }}" class="btn btn-sm btn-success">导入</a>
+        {{--<a href="{{ url('basic/constructionbidinformations/import') }}" class="btn btn-sm btn-success">导入</a>--}}
         <a href="{{ url('basic/constructionbidinformationfields') }}" class="btn btn-sm btn-success">维护字段</a>
         @can('basic_constructionbidinformation_edittable')
             @if (Auth::user()->email == 'admin@admin.com')
@@ -34,8 +33,8 @@
                 {{--{!! Form::select('template_name', $dtlog_templatenames, null, ['class' => 'form-control', 'placeholder' => '--日志模板--']) !!}--}}
 
 
-                {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '字段内容']) !!}
-                {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
+                {{--{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '字段内容']) !!}--}}
+                {{--{!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}--}}
             </div>
             {!! Form::close() !!}
             </p>
@@ -61,8 +60,8 @@
 
     
     @if ($constructionbidinformations->count())
-        <?php $types = ['序号', '名称', '规模', '工艺', '吸收塔（塔型Niro-Seghers-KS；各20t）', '面积', '安装']; ?>
-        <?php $simpletypes = ['刮板机斗提', '灰库', '稳定化', 'SNCR']; ?>
+        <?php $types = []; ?>
+        <?php $simpletypes = []; ?>
     <table class="table table-striped table-hover table-condensed">
         <thead>
             <tr>
@@ -73,7 +72,6 @@
                 @foreach($simpletypes as $simpletype)
                     <th>{{ $simpletype }}</th>
                 @endforeach
-                <th>关联销售订单</th>
                 {{--<th>备注</th>--}}
                 <th width="300px">操作</th>
             </tr>
@@ -109,26 +107,19 @@
                         {{--{{ str_limit($constructionbidinformation->remark, 20) }}--}}
                     {{--</td>--}}
                     <td>
-                        @if(isset($constructionbidinformation->sohead))
-                            {{$constructionbidinformation->sohead->number}}
-                        @else
-                            -
-                         @endif
-                    </td>
-                    <td>
                         <div class="form-inline">
-                            {!! Form::button('关联销售订单', ['class' => 'btn btn-success btn-xs pull-left', 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal','data-informationid' =>$constructionbidinformation->id]) !!}
-                            @can('basic_biddinginformation_resetfieldtype')
-                                {!! Form::button('重设字段类别', ['class' => 'btn btn-xs btn-success pull-left', 'data-toggle' => 'modal', 'data-target' => '#resetfieldtypeModal', 'data-biddinginformation_id' => $constructionbidinformation->id]) !!}
-                            @endcan
+{{--                            {!! Form::button('关联销售订单', ['class' => 'btn btn-success btn-xs pull-left', 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal','data-informationid' =>$constructionbidinformation->id]) !!}--}}
+                            {{--@can('basic_biddinginformation_resetfieldtype')--}}
+                                {{--{!! Form::button('重设字段类别', ['class' => 'btn btn-xs btn-success pull-left', 'data-toggle' => 'modal', 'data-target' => '#resetfieldtypeModal', 'data-biddinginformation_id' => $constructionbidinformation->id]) !!}--}}
+                            {{--@endcan--}}
                             <a href="{{ URL::to('/basic/constructionbidinformations/'.$constructionbidinformation->id) }}" class="btn btn-success btn-xs pull-left">查看</a>
                             @if ($constructionbidinformation->closed != 1)
                                 <a href="{{ URL::to('/basic/constructionbidinformations/'.$constructionbidinformation->id.'/edit') }}" class="btn btn-success btn-xs pull-left">编辑</a>
                             @endif
-                            <a href="{{ url('basic/constructionbidinformations/exportword/' . $constructionbidinformation->id) }}" class="btn btn-success btn-xs pull-left" target="_blank">导出Word</a>
-                            {!! Form::open(array('action' => ['Basic\BiddinginformationController@close', $constructionbidinformation->id], 'method' => 'post', 'onsubmit' => 'return confirm("确定关闭此记录?");')) !!}
-                            {!! Form::submit('关闭', ['class' => 'btn btn-danger btn-xs pull-left']) !!}
-                            {!! Form::close() !!}
+{{--                            <a href="{{ url('basic/constructionbidinformations/exportword/' . $constructionbidinformation->id) }}" class="btn btn-success btn-xs pull-left" target="_blank">导出Word</a>--}}
+                            {{--{!! Form::open(array('action' => ['Basic\BiddinginformationController@close', $constructionbidinformation->id], 'method' => 'post', 'onsubmit' => 'return confirm("确定关闭此记录?");')) !!}--}}
+                            {{--{!! Form::submit('关闭', ['class' => 'btn btn-danger btn-xs pull-left']) !!}--}}
+                            {{--{!! Form::close() !!}--}}
 
                             {!! Form::open(array('route' => array('basic.constructionbidinformations.destroy', $constructionbidinformation->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
                             {!! Form::submit('删除', ['class' => 'btn btn-danger btn-xs']) !!}

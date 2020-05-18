@@ -6,8 +6,13 @@
 
 @section('main')
     @can('basic_constructionbidinformation_edit')
-    <h1>编辑</h1>
-    <hr/>
+        <div class="panel-heading">
+            @can('basic_constructionbidinformation_edittable')
+                @if (Auth::user()->email == 'admin@admin.com')
+                    <a href="{{ url('basic/constructionbidinformations/' . $constructionbidinformation->id . '/edittable') }}" class="btn btn-sm btn-success">高级编辑</a>
+                @endif
+            @endcan
+        </div>
 
     {{--<table id="tableBiddinginformation" class="table table-striped table-hover table-full-width"  width="100%">--}}
         {{--<thead>--}}
@@ -70,28 +75,28 @@
                 </td>
                 <div id="div{{ $constructionbidinformationitem->id }}" name="constructionbidinformationitem_container" data-constructionbidinformationitem_id="{{ $constructionbidinformationitem->id }}">
                     <td>
-                        {!! Form::select('purchaser', array('华星东方' => '华星东方', '投标人' => '投标人'), null, ['class' => 'form-control']) !!}
+                        {!! Form::select('purchaser', array('华星东方' => '华星东方', '投标人' => '投标人'), $constructionbidinformationitem->purchaser, ['class' => 'form-control']) !!}
                     </td>
                     <td>
-                        {!! Form::text('specification_technicalrequirements', null, ['class' => 'form-control']) !!}
+                        {!! Form::text('specification_technicalrequirements', $constructionbidinformationitem->specification_technicalrequirements, ['class' => 'form-control']) !!}
                     </td>
                     <td>
-                        {!! Form::text('value_line1', null, ['class' => 'form-control']) !!}
+                        {!! Form::text('value_line1', $constructionbidinformationitem->value_line1, ['class' => 'form-control']) !!}
                     </td>
                     <td>
-                        {!! Form::text('value_line2', null, ['class' => 'form-control']) !!}
+                        {!! Form::text('value_line2', $constructionbidinformationitem->value_line2, ['class' => 'form-control']) !!}
                     </td>
                     <td>
-                        {!! Form::text('value_line3', null, ['class' => 'form-control']) !!}
+                        {!! Form::text('value_line3', $constructionbidinformationitem->value_line3, ['class' => 'form-control']) !!}
                     </td>
                     <td>
-                        {!! Form::text('value_line4', null, ['class' => 'form-control']) !!}
+                        {!! Form::text('value_line4', $constructionbidinformationitem->value_line4, ['class' => 'form-control']) !!}
                     </td>
                     <td>
-                        {!! Form::text('unit', null, ['class' => 'form-control']) !!}
+                        {!! Form::text('unit', $constructionbidinformationitem->unit, ['class' => 'form-control']) !!}
                     </td>
                     <td>
-                        {!! Form::text('remark', null, ['class' => 'form-control']) !!}
+                        {!! Form::text('remark', $constructionbidinformationitem->remark, ['class' => 'form-control']) !!}
                     </td>
                 </div>
             </tr>
@@ -192,21 +197,25 @@
                     var trrow = $(this);
 
                     var itemObject = new Object();
-//                    itemObject.poitemc_id = poitemc_id;
-//                    itemObject.quantity = trrow.find("input[name='quantity']").val();
-//                    itemObject.chinesedescrip = trrow.find("input[name='chinesedescrip']").val();
-//                    itemObject.unitprice = trrow.find("input[name='unitprice']").val();
+                    itemObject.constructionbidinformationitem_id = constructionbidinformationitem_id;
+                    itemObject.purchaser = trrow.find("select[name='purchaser']").val();
+                    itemObject.specification_technicalrequirements = trrow.find("input[name='specification_technicalrequirements']").val();
+                    itemObject.value_line1 = trrow.find("input[name='value_line1']").val();
+                    itemObject.value_line2 = trrow.find("input[name='value_line2']").val();
+                    itemObject.value_line3 = trrow.find("input[name='value_line3']").val();
+                    itemObject.value_line4 = trrow.find("input[name='value_line4']").val();
+                    itemObject.unit = trrow.find("input[name='unit']").val();
+                    itemObject.remark = trrow.find("input[name='remark']").val();
 
-                    console.info(JSON.stringify(itemObject));
+//                    console.info(JSON.stringify(itemObject));
                     itemArray.push(itemObject);
                 });
 
                 console.info(JSON.stringify(itemArray));
                 $("#items_string").val(JSON.stringify(itemArray));
-                alert('aaa');
-                return false;
+//                return false;
 
-//                $("form#frmPurchaseorder").submit();
+                $("form#frmPurchaseorder").submit();
             });
 
 

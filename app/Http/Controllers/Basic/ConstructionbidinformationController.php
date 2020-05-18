@@ -202,50 +202,73 @@ class ConstructionbidinformationController extends Controller
 
 //        $biddinginformation->update($request->all());
         $inputs = $request->all();
-        dd($inputs);
+//        dd($inputs);
         $remark_suffix = '_remark';
-        foreach ($inputs as $key => $value)
+        if (isset($constructionbidinformation))
         {
-            if (!(substr($key, -strlen($remark_suffix)) === $remark_suffix))
-            {
-                $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $id)->where('key', $key)->first();
-                if (isset($biddinginformationitem))
+            $constructionbidinformation_items = json_decode($inputs['items_string']);
+            foreach ($constructionbidinformation_items as $constructionbidinformation_item) {
+                $constructionbidinformationitem = Constructionbidinformationitem::find($constructionbidinformation_item->constructionbidinformationitem_id);
+                if (isset($constructionbidinformationitem))
                 {
-                    $oldvalue = $biddinginformationitem->value;
-                    $remark = isset($inputs[$key . $remark_suffix]) ? $inputs[$key . $remark_suffix] : '';
-//                    dd($key . ':' . $inputs[$key . $remark_suffix]);
-                    if ($biddinginformationitem->update(['value' => $value, 'remark' => $remark]))
-                    {
-                        if ($oldvalue != $value)
-                        {
-                            $projectname = '';
-                            $biddinginformationitem_mingcheng = Biddinginformationitem::where('biddinginformation_id', $id)->where('key', '名称')->first();
-                            if (isset($biddinginformationitem_mingcheng))
-                                $projectname = $biddinginformationitem_mingcheng->value;
-
-                            $msg = '[' . $projectname . ']项目[' . $biddinginformation->number . ']的[' . $biddinginformationitem->key .']字段内容已修改。原内容：' . $oldvalue . '，新内容：' . $value;
-                            $data = [
-                                'msgtype'       => 'text',
-                                'text' => [
-                                    'content' => $msg
-                                ]
-                            ];
-
-//                            $dtusers = Dtuser::where('user_id', 126)->orWhere('user_id', 126)->pluck('userid');        // test
-                            $dtusers = Dtuser::where('user_id', 2)->orWhere('user_id', 64)->pluck('userid');             // WuHL, Zhoub
-                            $useridList = implode(',', $dtusers->toArray());
-//                            dd(implode(',', $dtusers->toArray()));
-                            if ($dtusers->count() > 0)
-                            {
-                                $agentid = config('custom.dingtalk.agentidlist.bidding');
-                                DingTalkController::sendWorkNotificationMessage($useridList, $agentid, json_encode($data));
-                            }
-                        }
-                    }
+//                    $item_array = json_decode(json_encode($issuedrawingcabinet_item), true);
+//                    $item_array['issuedrawing_id'] = $issuedrawing->id;
+//                    $issuedrawingcabinet = Issuedrawingcabinet::create($item_array);
+                    $constructionbidinformationitem->purchaser = $constructionbidinformation_item->purchaser;
+                    $constructionbidinformationitem->specification_technicalrequirements = $constructionbidinformation_item->specification_technicalrequirements;
+                    $constructionbidinformationitem->value_line1 = doubleval($constructionbidinformation_item->value_line1);
+                    $constructionbidinformationitem->value_line2 = doubleval($constructionbidinformation_item->value_line2);
+                    $constructionbidinformationitem->value_line3 = doubleval($constructionbidinformation_item->value_line3);
+                    $constructionbidinformationitem->value_line4 = doubleval($constructionbidinformation_item->value_line4);
+                    $constructionbidinformationitem->unit = $constructionbidinformation_item->unit;
+                    $constructionbidinformationitem->remark = $constructionbidinformation_item->remark;
+                    $constructionbidinformationitem->save();
                 }
             }
+
+//            foreach ($inputs as $key => $value)
+//            {
+//                if (!(substr($key, -strlen($remark_suffix)) === $remark_suffix))
+//                {
+//                    $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $id)->where('key', $key)->first();
+//                    if (isset($biddinginformationitem))
+//                    {
+//                        $oldvalue = $biddinginformationitem->value;
+//                        $remark = isset($inputs[$key . $remark_suffix]) ? $inputs[$key . $remark_suffix] : '';
+//                        if ($biddinginformationitem->update(['value' => $value, 'remark' => $remark]))
+//                        {
+//                            if ($oldvalue != $value)
+//                            {
+//                                $projectname = '';
+//                                $biddinginformationitem_mingcheng = Biddinginformationitem::where('biddinginformation_id', $id)->where('key', '名称')->first();
+//                                if (isset($biddinginformationitem_mingcheng))
+//                                    $projectname = $biddinginformationitem_mingcheng->value;
+//
+//                                $msg = '[' . $projectname . ']项目[' . $biddinginformation->number . ']的[' . $biddinginformationitem->key .']字段内容已修改。原内容：' . $oldvalue . '，新内容：' . $value;
+//                                $data = [
+//                                    'msgtype'       => 'text',
+//                                    'text' => [
+//                                        'content' => $msg
+//                                    ]
+//                                ];
+//
+////                            $dtusers = Dtuser::where('user_id', 126)->orWhere('user_id', 126)->pluck('userid');        // test
+//                                $dtusers = Dtuser::where('user_id', 2)->orWhere('user_id', 64)->pluck('userid');             // WuHL, Zhoub
+//                                $useridList = implode(',', $dtusers->toArray());
+////                            dd(implode(',', $dtusers->toArray()));
+//                                if ($dtusers->count() > 0)
+//                                {
+//                                    $agentid = config('custom.dingtalk.agentidlist.bidding');
+//                                    DingTalkController::sendWorkNotificationMessage($useridList, $agentid, json_encode($data));
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+
         }
-        return redirect('basic/biddinginformations');
+        return redirect('basic/constructionbidinformations');
     }
 
     /**
@@ -257,5 +280,15 @@ class ConstructionbidinformationController extends Controller
     public function destroy($id)
     {
         //
+        Constructionbidinformation::destroy($id);
+        return redirect('basic/constructionbidinformations');
+    }
+
+    public function edittable($id)
+    {
+        $constructionbidinformation = Constructionbidinformation::findOrFail($id);
+//        $biddinginformationdefinefields = Biddinginformationdefinefield::orderBy('sort')->pluck('name');
+//        dd(json_encode($biddinginformations->toArray()['data']) );
+        return view('basic.constructionbidinformations.edittable', compact('constructionbidinformation'));
     }
 }
