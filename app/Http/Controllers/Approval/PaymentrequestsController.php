@@ -52,12 +52,15 @@ class PaymentrequestsController extends Controller
         $approvalstatus = $request->input('approvalstatus', '');
         $paymentstatus = $request->input('paymentstatus');
         $inputs = $request->all();
-        if (null !== request('key'))
-            $paymentrequests = $this->searchrequest($request);
-        else
-            $paymentrequests = Paymentrequest::latest('created_at')->paginate(10);
+        $items = $this->searchrequest($request);
+        $totalamount = $items->get()->sum('amount');
+//        $totalamount = Paymentrequest::sum('amount');
+        $paymentrequests = $items->paginate(10);
+//        if (null !== request('key'))
+//            $paymentrequests = $this->searchrequest($request)->paginate(10);
+//        else
+//            $paymentrequests = Paymentrequest::latest('created_at')->paginate(10);
         $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
-        $totalamount = Paymentrequest::sum('amount');
 
 //        return view('approval.paymentrequests.index');
 
@@ -129,9 +132,12 @@ class PaymentrequestsController extends Controller
         $approvalstatus = $request->input('approvalstatus');
         $paymentstatus = $request->input('paymentstatus');
         $inputs = $request->all();
-        $paymentrequests = $this->searchrequest($request);
+        $items = $this->searchrequest($request);
+        $totalamount = $items->get()->sum('amount');
+//        $totalamount = Paymentrequest::sum('amount');
+        $paymentrequests = $items->paginate(10);
         $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
-        $totalamount = Paymentrequest::sum('amount');
+//        $totalamount = Paymentrequest::sum('amount');
 
         return view('approval.paymentrequests.index', compact('paymentrequests', 'key', 'inputs', 'purchaseorders', 'totalamount'));
     }
@@ -315,8 +321,7 @@ class PaymentrequestsController extends Controller
             $query->where('purchasecompany_id', $request->input('company_id'));
         }
 
-        $paymentrequests = $query->select('paymentrequests.*')
-            ->paginate(10);
+        $paymentrequests = $query->select('paymentrequests.*');
         // dd($paymentrequests->pluck('pohead_id'));
 
         // $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();

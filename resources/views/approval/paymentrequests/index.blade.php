@@ -198,15 +198,12 @@
                 @endif
             </tr>
 
-@if (Auth::user()->email == "admin@admin.com")
             <tr class="success">
                 <td>汇总</td>
                 <td></td>
                 <td></td>
                 <td>
-                @if (isset($totalamount))
                     {{ $totalamount }}
-                @endif
                 </td>
 @if (Agent::isDesktop())
                 <td></td>
@@ -225,7 +222,6 @@
                     <td></td>
                 @endif
             </tr>
-@endif
         </tbody>
 
     </table>
