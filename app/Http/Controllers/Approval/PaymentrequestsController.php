@@ -1479,7 +1479,7 @@ class PaymentrequestsController extends Controller
     public function pay($id)
     {
         $paymentrequest = Paymentrequest::findOrFail($id);
-        if ($paymentrequest->approversetting_id === 0)
+        if ($paymentrequest->approversetting_id == 0)
         {
             if (isset($paymentrequest->purchaseorder_hxold->payments))
             {
