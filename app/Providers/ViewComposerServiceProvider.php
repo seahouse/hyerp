@@ -246,7 +246,7 @@ class ViewComposerServiceProvider extends ServiceProvider
         view()->composer(array('basic.constructionbidinformationfields.create', 'basic.constructionbidinformationfields.edit',
             'basic.constructionbidinformations.index'), function($view) {
             $view->with('projecttypes_constructionbidinformationfield',
-                array('钢结构' => '钢结构', '烟道' => '烟道', 'SCR系统' => 'SCR系统', 'SNCR系统' => 'SNCR系统'));
+                array('SCR钢结构' => 'SCR钢结构', 'SCR烟道' => 'SCR烟道', 'SCR反应器系统' => 'SCR反应器系统', 'SNCR系统（尿素）' => 'SNCR系统（尿素）', 'SNCR系统（氨水）' => 'SNCR系统（氨水）'));
         });
     }
 

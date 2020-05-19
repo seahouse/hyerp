@@ -24,7 +24,7 @@ class CreateConstructionbidinformationfieldsTable extends Migration
 
             $table->timestamps();
 
-            $table->unique('name');
+            $table->unique(['name', 'projecttype']);
         });
     }
 
