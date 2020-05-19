@@ -246,7 +246,8 @@ class ViewComposerServiceProvider extends ServiceProvider
         view()->composer(array('basic.constructionbidinformationfields.create', 'basic.constructionbidinformationfields.edit',
             'basic.constructionbidinformations.index'), function($view) {
             $view->with('projecttypes_constructionbidinformationfield',
-                array('SCR钢结构' => 'SCR钢结构', 'SCR烟道' => 'SCR烟道', 'SCR反应器系统' => 'SCR反应器系统', 'SNCR系统（尿素）' => 'SNCR系统（尿素）', 'SNCR系统（氨水）' => 'SNCR系统（氨水）'));
+                array('SCR钢结构' => 'SCR钢结构', 'SCR烟道' => 'SCR烟道', 'SCR反应器系统' => 'SCR反应器系统', 'SNCR系统（尿素）' => 'SNCR系统（尿素）', 'SNCR系统（氨水）' => 'SNCR系统（氨水）',
+                    '脱酸系统钢结构' => '脱酸系统钢结构', '脱酸系统烟道' => '脱酸系统烟道', '脱酸反应塔系统' => '脱酸反应塔系统', '脱酸工艺水系统' => '脱酸工艺水系统', '消石灰粉给料系统' => '消石灰粉给料系统', '活性炭粉给料系统' => '活性炭粉给料系统', '石灰浆制备系统' => '石灰浆制备系统', '布袋除尘器' => '布袋除尘器', '脱酸压缩空气系统' => '脱酸压缩空气系统', '飞灰输送系统' => '飞灰输送系统', '飞灰储存及稳定化系统' => '飞灰储存及稳定化系统', '钠碱应急喷射系统' => '钠碱应急喷射系统', '渗滤液回喷系统' => '渗滤液回喷系统', '烟气回流系统' => '烟气回流系统', '其他' => '其他'));
         });
     }
 
