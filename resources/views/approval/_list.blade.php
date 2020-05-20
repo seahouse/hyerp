@@ -94,7 +94,7 @@
                 @endif
 
                     {{-- 已付款比例 --}}
-                    @if (isset($item->purchaseorder_hxold->amount_paid))
+                    @if (isset($item->purchaseorder_hxold->amount_paid) && $item->purchaseorder_hxold->amount > 0.0)
                         {{ number_format($item->purchaseorder_hxold->amount_paid / $item->purchaseorder_hxold->amount * 100.0, 2, '.', '') . '%' }}
                     @endif
             </div>
@@ -192,7 +192,7 @@
                     @endif
 
                     {{-- 已付款比例 --}}
-                    @if (isset($item->purchaseorder_hxold->amount_paid))
+                    @if (isset($item->purchaseorder_hxold->amount_paid) && $item->purchaseorder_hxold->amount > 0.0)
                         {{ number_format($item->purchaseorder_hxold->amount_paid / $item->purchaseorder_hxold->amount * 100.0, 2, '.', '') . '%' }}
                     @endif
                 </div>
@@ -283,7 +283,7 @@
                     @endif
 
                     {{-- 已付款比例 --}}
-                    @if (isset($item->purchaseorder_hxold->amount_paid))
+                    @if (isset($item->purchaseorder_hxold->amount_paid) && $item->purchaseorder_hxold->amount > 0.0)
                         {{ number_format($item->purchaseorder_hxold->amount_paid / $item->purchaseorder_hxold->amount * 100.0, 2, '.', '') . '%' }}
                     @endif
                 </div>
