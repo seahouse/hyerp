@@ -66,6 +66,7 @@
         <thead>
             <tr>
                 <th>投标编号</th>
+                <th>项目名称</th>
                 @foreach($types as $type)
                 <th>{{ $type }}</th>
                 @endforeach
@@ -81,6 +82,9 @@
                 <tr>
                     <td>
                         {{ $constructionbidinformation->number }}
+                    </td>
+                    <td>
+                        {{ $constructionbidinformation->name }}
                     </td>
                     @foreach($types as $type)
                     <td>
@@ -159,6 +163,9 @@
                         {!! Form::select('selectprojecttypes', $projecttypes_constructionbidinformationfield, null,
                             ['class' => 'form-control selectpicker', 'multiple']) !!}
                         {!! Form::hidden('projecttypes', null, []) !!}
+                    </div>
+                    <div class="form-group">
+                        {!! Form::text('name', null, ['class' => 'form-control', 'placeholder' => '项目名称']) !!}
                     </div>
                     {!! Form::close() !!}
                 </div>

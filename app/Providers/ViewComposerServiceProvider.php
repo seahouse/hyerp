@@ -179,6 +179,11 @@ class ViewComposerServiceProvider extends ServiceProvider
             $view->with('unitList_hxold', \App\Models\Product\Unit_hxold::orderby('id', 'asc')->lists('name', 'id'));
         });
 
+        // unitstrList
+        view()->composer(array('basic.constructionbidinformations.edit'), function($view) {
+            $view->with('unitstrList', \App\Models\Product\Unit_hxold::orderby('id', 'asc')->lists('name', 'name'));
+        });
+
         // salesmanagerList_hxold
         view()->composer(array('my.bonus.index_byorder', 'my.bonus.index_bonusbysalesmanager', 'system.report.statisticsindex'), function($view) {
             $view->with('salesmanagerList_hxold', \App\Models\Sales\Salesorder_hxold::orderby('id', 'asc')->lists('salesmanager', 'salesmanager'));

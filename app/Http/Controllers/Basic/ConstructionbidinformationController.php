@@ -135,6 +135,7 @@ class ConstructionbidinformationController extends Controller
             'number'    => $number,
             'year'      => Carbon::today()->year,
             'digital_number'    => isset($seqnumber) ? $seqnumber : 1,
+            'name'      => $request->input('name'),
         ];
         $constructionbidinformation = Constructionbidinformation::create($data);
         if (isset($constructionbidinformation))
@@ -171,6 +172,9 @@ class ConstructionbidinformationController extends Controller
     public function show($id)
     {
         //
+        $constructionbidinformation = Constructionbidinformation::findOrFail($id);
+//        dd($biddinginformation->biddinginformationitems()->orderBy('id')->get());
+        return view('basic.constructionbidinformations.show', compact('constructionbidinformation'));
     }
 
     /**
@@ -216,10 +220,10 @@ class ConstructionbidinformationController extends Controller
 //                    $issuedrawingcabinet = Issuedrawingcabinet::create($item_array);
                     $constructionbidinformationitem->purchaser = $constructionbidinformation_item->purchaser;
                     $constructionbidinformationitem->specification_technicalrequirements = $constructionbidinformation_item->specification_technicalrequirements;
-                    $constructionbidinformationitem->value_line1 = doubleval($constructionbidinformation_item->value_line1);
-                    $constructionbidinformationitem->value_line2 = doubleval($constructionbidinformation_item->value_line2);
-                    $constructionbidinformationitem->value_line3 = doubleval($constructionbidinformation_item->value_line3);
-                    $constructionbidinformationitem->value_line4 = doubleval($constructionbidinformation_item->value_line4);
+                    $constructionbidinformationitem->value = doubleval($constructionbidinformation_item->value);
+                    $constructionbidinformationitem->multiple = doubleval($constructionbidinformation_item->multiple);
+//                    $constructionbidinformationitem->value_line3 = doubleval($constructionbidinformation_item->value_line3);
+//                    $constructionbidinformationitem->value_line4 = doubleval($constructionbidinformation_item->value_line4);
                     $constructionbidinformationitem->unit = $constructionbidinformation_item->unit;
                     $constructionbidinformationitem->remark = $constructionbidinformation_item->remark;
                     $constructionbidinformationitem->save();

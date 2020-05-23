@@ -11,6 +11,7 @@ class Constructionbidinformation extends Model
         'number',
         'year',
         'digital_number',
+        'name',
         'closed',
         'remark',
     ];

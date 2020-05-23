@@ -19,10 +19,10 @@ class CreateConstructionbidinformationitemsTable extends Migration
             $table->string('key');
             $table->string('purchaser')->nullable();
             $table->string('specification_technicalrequirements')->nullable();
-            $table->decimal('value_line1')->nullable();
-            $table->decimal('value_line2')->nullable();
-            $table->decimal('value_line3')->nullable();
-            $table->decimal('value_line4')->nullable();
+            $table->decimal('value')->nullable();
+            $table->decimal('multiple')->nullable();
+//            $table->decimal('value_line3')->nullable();
+//            $table->decimal('value_line4')->nullable();
             $table->string('unit')->nullable();
             $table->string('remark', 1000)->nullable();
             $table->integer('sort');

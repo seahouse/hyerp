@@ -18,6 +18,7 @@ class CreateConstructionbidinformationsTable extends Migration
             $table->string('number');
             $table->integer('year');
             $table->integer('digital_number');
+            $table->string('name')->default('');
             $table->smallInteger('closed')->default(0);
             $table->string('remark', 1000)->nullable();
 

@@ -59,10 +59,10 @@
             <th>名称</th>
             <th>采购方</th>
             <th>规格及技术要求</th>
-            <th>一条线</th>
-            <th>二条线</th>
-            <th>三条线</th>
-            <th>四条线</th>
+            <th>单条线</th>
+            <th>倍数</th>
+            {{--<th>三条线</th>--}}
+            {{--<th>四条线</th>--}}
             <th>单位</th>
             <th>备注</th>
         </tr>
@@ -81,19 +81,19 @@
                         {!! Form::text('specification_technicalrequirements', $constructionbidinformationitem->specification_technicalrequirements, ['class' => 'form-control']) !!}
                     </td>
                     <td>
-                        {!! Form::text('value_line1', $constructionbidinformationitem->value_line1, ['class' => 'form-control']) !!}
+                        {!! Form::text('value', $constructionbidinformationitem->value, ['class' => 'form-control']) !!}
                     </td>
                     <td>
-                        {!! Form::text('value_line2', $constructionbidinformationitem->value_line2, ['class' => 'form-control']) !!}
+                        {!! Form::text('multiple', $constructionbidinformationitem->multiple, ['class' => 'form-control']) !!}
                     </td>
+                    {{--<td>--}}
+                        {{--{!! Form::text('value_line3', $constructionbidinformationitem->value_line3, ['class' => 'form-control']) !!}--}}
+                    {{--</td>--}}
+                    {{--<td>--}}
+                        {{--{!! Form::text('value_line4', $constructionbidinformationitem->value_line4, ['class' => 'form-control']) !!}--}}
+                    {{--</td>--}}
                     <td>
-                        {!! Form::text('value_line3', $constructionbidinformationitem->value_line3, ['class' => 'form-control']) !!}
-                    </td>
-                    <td>
-                        {!! Form::text('value_line4', $constructionbidinformationitem->value_line4, ['class' => 'form-control']) !!}
-                    </td>
-                    <td>
-                        {!! Form::text('unit', $constructionbidinformationitem->unit, ['class' => 'form-control']) !!}
+                        {!! Form::select('unit', $unitstrList, $constructionbidinformationitem->unit, ['class' => 'form-control']) !!}
                     </td>
                     <td>
                         {!! Form::text('remark', $constructionbidinformationitem->remark, ['class' => 'form-control']) !!}
@@ -200,11 +200,11 @@
                     itemObject.constructionbidinformationitem_id = constructionbidinformationitem_id;
                     itemObject.purchaser = trrow.find("select[name='purchaser']").val();
                     itemObject.specification_technicalrequirements = trrow.find("input[name='specification_technicalrequirements']").val();
-                    itemObject.value_line1 = trrow.find("input[name='value_line1']").val();
-                    itemObject.value_line2 = trrow.find("input[name='value_line2']").val();
-                    itemObject.value_line3 = trrow.find("input[name='value_line3']").val();
-                    itemObject.value_line4 = trrow.find("input[name='value_line4']").val();
-                    itemObject.unit = trrow.find("input[name='unit']").val();
+                    itemObject.value = trrow.find("input[name='value']").val();
+                    itemObject.multiple = trrow.find("input[name='multiple']").val();
+//                    itemObject.value_line3 = trrow.find("input[name='value_line3']").val();
+//                    itemObject.value_line4 = trrow.find("input[name='value_line4']").val();
+                    itemObject.unit = trrow.find("select[name='unit']").val();
                     itemObject.remark = trrow.find("input[name='remark']").val();
 
 //                    console.info(JSON.stringify(itemObject));
