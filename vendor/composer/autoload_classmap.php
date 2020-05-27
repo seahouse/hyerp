@@ -56,6 +56,7 @@ return array(
     'CreateIssuedrawingcabinetsTable' => $baseDir . '/database/migrations/2018_10_20_102057_create_issuedrawingcabinets_table.php',
     'CreateIssuedrawingmodifyweightlogsTable' => $baseDir . '/database/migrations/2018_06_25_203949_create_issuedrawingmodifyweightlogs_table.php',
     'CreateIssuedrawingsTable' => $baseDir . '/database/migrations/2018_01_08_153006_create_issuedrawings_table.php',
+    'CreateIssuedrawingtonnagedetailsTable' => $baseDir . '/database/migrations/2020_05_26_153856_create_issuedrawingtonnagedetails_table.php',
     'CreateItemclassesTable' => $baseDir . '/database/migrations/2015_07_08_024921_create_itemclasses_table.php',
     'CreateItemsTable' => $baseDir . '/database/migrations/2015_07_11_080212_create_items_table.php',
     'CreateItemsitesTable' => $baseDir . '/database/migrations/2015_08_31_012251_create_itemsites_table.php',

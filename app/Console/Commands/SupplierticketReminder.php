@@ -133,7 +133,7 @@ class SupplierticketReminder extends Command
                 $needReminder = true;
                 if ($pohead->arrival_status == '未到货')
                 {
-                    $payment = Payment_hxold::where('pohead_id', $pohead->id)->orderBy('payment_date', 'desc')->firstOrFail();
+                    $payment = Payment_hxold::where('pohead_id', $pohead->id)->orderBy('payment_date', 'desc')->first();
                     if (isset($payment))
                     {
                         $payment_date = Carbon::parse($payment->payment_date);

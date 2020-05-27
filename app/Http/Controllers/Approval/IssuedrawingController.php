@@ -9,6 +9,7 @@ use App\Models\Approval\Issuedrawing;
 use App\Models\Approval\Issuedrawingattachment;
 use App\Models\Approval\Issuedrawingcabinet;
 use App\Models\Approval\Issuedrawingmodifyweightlog;
+use App\Models\Approval\Issuedrawingtonnagedetail;
 use App\Models\Basic\Company_hxold;
 use App\Models\System\Operationlog;
 use Illuminate\Http\Request;
@@ -299,6 +300,8 @@ class IssuedrawingController extends Controller
         $input = $request->all();
 //        dd($input->file('image_file'));
 //        dd($input);
+//        $tonnagedetailArray = json_decode($request->input('tonnagedetails_string'), true);
+//        dd($tonnagedetailArray);
 
         $this->validate($request, [
             'designdepartment'      => 'required',
@@ -306,7 +309,7 @@ class IssuedrawingController extends Controller
             'materialsupplier'      => 'required',
             'sohead_id'             => 'required|integer|min:1',
             'overview'              => 'required',
-            'tonnage'               => 'required|numeric',
+//            'tonnage'               => 'required|numeric',
             'drawingchecker_id'     => 'required|integer|min:1',
             'requestdeliverydate'   => 'required',
             'drawingcount'          => 'required|integer|min:1',
@@ -329,10 +332,7 @@ class IssuedrawingController extends Controller
         if (isset($company))
             $input['company_name'] = $company->name;
 
-
-
         $input['applicant_id'] = Auth::user()->id;
-
 
         // set approversetting_id
         $approvaltype_id = self::typeid();
@@ -347,6 +347,7 @@ class IssuedrawingController extends Controller
         else
             $input['approversetting_id'] = -1;
 
+        $input['tonnage'] = 0.0;
         $issuedrawing = Issuedrawing::create($input);
 
         // create drawingattachments
@@ -407,6 +408,33 @@ class IssuedrawingController extends Controller
                     $issuedrawingcabinet = Issuedrawingcabinet::create($item_array);
                 }
             }
+        }
+
+        // create issuedrawingtonnagedetails
+        $totalprice = 0.0;
+        $totaltonnage = 0.0;
+        $dtunitpricedetail = [];
+        if (isset($issuedrawing))
+        {
+            $tonnagedetailArray = json_decode($request->input('tonnagedetails_string'), true);
+            foreach ($tonnagedetailArray as $tonnagedetaildata) {
+                $tonnagedetaildata['issuedrawing_id'] = $issuedrawing->id;
+                if (strlen($tonnagedetaildata['name']) > 0)
+                {
+                    $issuedrawingtonnagedetail = Issuedrawingtonnagedetail::create($tonnagedetaildata);
+
+                    if (isset($issuedrawingtonnagedetail))
+                    {
+                        $price = $issuedrawingtonnagedetail->unitprice * $issuedrawingtonnagedetail->tonnage;
+                        $totalprice += $price;
+                        $totaltonnage += $issuedrawingtonnagedetail->tonnage;
+                        array_push($dtunitpricedetail, $issuedrawingtonnagedetail->name . ':' . $issuedrawingtonnagedetail->tonnage . '吨*' . $issuedrawingtonnagedetail->unitprice . '元=' . $price . '元');
+                    }
+                }
+            }
+            $input['tonnage'] = $totaltonnage;
+            $input['tonnagedetails'] = implode("\n", $dtunitpricedetail);
+            $issuedrawing->update(['tonnage' => $totaltonnage]);
         }
 
         $image_urls = [];
@@ -690,5 +718,33 @@ class IssuedrawingController extends Controller
         //
         $issuedrawing = Issuedrawing::findOrFail($id);
         return view('approval.issuedrawings.modifyweight', compact('issuedrawing'));
+    }
+
+    public function gettonnagedetailhtml(Request $request)
+    {
+        $strhtml = "";
+        if ($request->has('selecttype') && $request->has('selectarea'))
+        {
+            foreach (config('custom.dingtalk.approversettings.issuedrawing.tonnagedetail.' . $request->input('selectarea') . '.' . $request->input('selecttype')) as $key => $value)
+            {
+                $strhtml .= "<div class=\"form-group\" name=\"div_unitpriceitem\">";
+                $strhtml .= '<label for="paowan" class="col-xs-4 col-sm-2 control-label">' . $value . ':</label>
+                            <div class="col-sm-5 col-xs-4">
+                            <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="' . $value . '">
+                            </div>
+                            <div class="col-sm-5 col-xs-4">';
+//                $strhtml .='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' . $value[$request->input('productioncompany')][$request->input('selectarea')] . '" readonly="readonly">';
+                $strhtml .= '</div>';
+                $strhtml .= '</div>';
+            }
+        }
+
+//        $data = [
+//            'productioncompany' => '泰州分公司',
+//            'selecttype'         => '国外',
+//        ];
+//        Log::info($strhtml);
+        return $strhtml;
+//        return response()->json($data);
     }
 }

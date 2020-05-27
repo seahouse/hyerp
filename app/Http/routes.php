@@ -61,6 +61,7 @@ Route::any('sales/salesorder/message/afteredit/{strJson}',  'Sales\SalesOrdersCo
 Route::post('approval/mcitempurchase/uploadparseexcel', 'Approval\McitempurchaseController@uploadparseexcel');
 
 Route::post('approval/pppayment/getpricedetailhtml', 'Approval\PppaymentController@getpricedetailhtml');
+Route::post('approval/issuedrawing/gettonnagedetailhtml', 'Approval\IssuedrawingController@gettonnagedetailhtml');
 
 Route::group(['middleware' => ['web']], function () {
     // Route::get('mddauth', function() { return view('mddauth'); });

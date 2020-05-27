@@ -195,10 +195,27 @@
         </div>
         --}}
 
+        <div class="form-group">
+            {!! Form::label('area', '地区:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::select('area', array('国内' => '国内', '国外' => '国外'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, 'id' => 'area_1', 'onchange' => 'selectTypeChange(this.dataset.num)', 'data-num' => '1']) !!}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {!! Form::label('type', '类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::select('type', array('抛丸' => '抛丸', '油漆' => '油漆', '人工' => '人工', '铆焊' => '铆焊', '外协油漆' => '外协油漆', '板拼型钢' => '板拼型钢'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, 'id' => 'type_1', 'onchange' => 'selectTypeChange(this.dataset.num)', 'data-num' => '1']) !!}
+            </div>
+        </div>
+
+        <div id="tonnagedetailcontainer" name="tonnagedetailcontainer"></div>
+        {!! Form::hidden('tonnagedetails_string', null, ['id' => 'tonnagedetails_string']) !!}
+
 <div class="form-group">
     {!! Form::label('tonnage', '吨位（吨）:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-    {!! Form::text('tonnage', null, ['class' => 'form-control', 'placeholder' => '请输入本次制作内容的总吨位', 'id' => 'amount', $attr]) !!}
+    {!! Form::text('tonnage', null, ['class' => 'form-control', 'placeholder' => '根据类型吨位自动计算', 'id' => 'amount', $attr, 'readonly']) !!}
     </div>
 </div>
 

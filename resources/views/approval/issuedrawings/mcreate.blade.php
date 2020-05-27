@@ -197,19 +197,6 @@
                      itemObject.name = container.find("input[name='cabinet_name']").val();
                      itemObject.quantity = container.find("input[name='cabinet_quantity']").val();
 
-//                     var unitpriceArray = new Array();
-//                     var pppaymentitemtypecontainer = container.find("div[name='pppaymentitemtypecontainer']");
-//                     pppaymentitemtypecontainer.find("div[name='div_unitpriceitem']").each(function (i) {
-//                         var unitpriceObject = new Object();
-//                         var unitpriceitemcontainer = $(this);
-//                         unitpriceObject.name = unitpriceitemcontainer.find("input[name='tonnage']").data("name");
-//                         unitpriceObject.tonnage = unitpriceitemcontainer.find("input[name='tonnage']").val();
-//                         if (unitpriceObject.tonnage == "")
-//                             unitpriceObject.tonnage = 0.0;
-//                         unitpriceObject.unitprice = unitpriceitemcontainer.find("input[name='unitprice']").val();
-//                         unitpriceArray.push(unitpriceObject);
-//                     });
-//
 //
 //                     itemObject.unitprice_array = unitpriceArray;
 
@@ -220,6 +207,21 @@
 //                    alert($("form#formMain").serialize());
                  });
                  $("#items_string").val(JSON.stringify(itemArray));
+
+                 var tonnagedetailArray = new Array();
+                 var tonnagedetailcontainer = $("#tonnagedetailcontainer");
+                 tonnagedetailcontainer.find("div[name='div_unitpriceitem']").each(function (i) {
+                     var tonnagedetailObject = new Object();
+                     var unitpriceitemcontainer = $(this);
+                     tonnagedetailObject.name = unitpriceitemcontainer.find("input[name='tonnage']").data("name");
+                     tonnagedetailObject.tonnage = unitpriceitemcontainer.find("input[name='tonnage']").val();
+                     if (tonnagedetailObject.tonnage == "")
+                         tonnagedetailObject.tonnage = 0.0;
+                     tonnagedetailObject.unitprice = 0.0;
+                     tonnagedetailArray.push(tonnagedetailObject);
+                 });
+                 $("#tonnagedetails_string").val(JSON.stringify(tonnagedetailArray));
+//                 return false;
 
                  $("form#formMain").submit();
 			 });
@@ -528,6 +530,20 @@
                     $("#outsourcingcompany").val("");
                     $("#outsourcingcompany_id").val(0);
                 }
+            }
+
+            selectTypeChange = function (num) {
+                var productioncompany = $("#productioncompany").val();
+                console.log(productioncompany);
+                var strhtml = '';
+                var strhtml2 = '';
+                var selecttype = $("#type_" + String(num));
+                var selectarea = $("#area_" + String(num));
+
+                $.post("{{ url('approval/issuedrawing/gettonnagedetailhtml') }}", { productioncompany: productioncompany, selectarea: selectarea.val(), selecttype: selecttype.val() }, function (data) {
+                    //
+                    $("#tonnagedetailcontainer").empty().append(data);
+                });
             }
 
 			dd.config({

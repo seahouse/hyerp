@@ -1996,6 +1996,10 @@ class DingTalkController extends Controller
                 'value'     => json_encode($detail_array),
             ],
             [
+                'name'      => '吨位明细',
+                'value'     => $inputs['tonnagedetails'],
+            ],
+            [
                 'name'      => '吨位（吨）',
                 'value'     => $inputs['tonnage'],
             ],
