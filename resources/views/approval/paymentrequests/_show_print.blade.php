@@ -144,4 +144,18 @@
 @endif
 
     @yield('for_paymentrequestapprovals_create_script')
+
+
+    <script src="/js/jquery.watermark.js"></script>
+    <script type="text/javascript">
+    // console.log('{!! $paymentrequest->purchaseorder_hxold !!}');
+    $('form').watermark({
+        texts : ['{!! $paymentrequest->purchaseorder_hxold->purchasecompany_id == "2" ? $paymentrequest->purchaseorder_hxold->companyname : "" !!}'], //水印文字 
+        textColor : "#d2d2d2", //文字颜色
+        textFont : '14px 微软雅黑', //字体
+        width : 200, //水印文字的水平间距
+        height : 200,  //水印文字的高度间距（低于文字高度会被替代）
+        textRotate : -30 //-90到0， 负数值，不包含-90
+    });  
+    </script>  
 @endsection
