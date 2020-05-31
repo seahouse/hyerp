@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Excel, Log;
 
 class ConstructionbidinformationController extends Controller
 {
@@ -285,6 +286,203 @@ class ConstructionbidinformationController extends Controller
     {
         //
         Constructionbidinformation::destroy($id);
+        return redirect('basic/constructionbidinformations');
+    }
+
+    public function import()
+    {
+        //
+        return view('basic.constructionbidinformations.import');
+    }
+
+    public function importstore(Request $request)
+    {
+        //
+        $this->validate($request, [
+//            'salary_date'       => 'required',
+//            'itemtype'                    => 'required',
+//            'expirationdate'             => 'required',
+//            'sohead_id'                   => 'required|integer|min:1',
+//            'items_string'               => 'required',
+//            'detailuse'               => 'required',
+        ]);
+
+        $file = $request->file('file');
+//        dd($file->getRealPath());
+//        $file = array_get($input,'file');
+//        dd($file->public_path());
+//        Log::info($request->getSession().getServletContext()->getReadPath("/xx"));
+
+
+        // !! set config/excel.php
+        // 'force_sheets_collection' => true,   // !!
+//        Log::info('import start.');
+//        Excel::filter('chunk')->load($file->getRealPath())->chunk(250, function($results)
+//        {
+//            foreach($results as $row)
+//            {
+//                // do stuff
+//            }
+//        });
+//        return redirect('basic/biddinginformations');
+
+        Excel::load($file->getRealPath(), function ($reader) use ($request) {
+//            $biddinginformationdefinefields = Biddinginformationdefinefield::all();
+
+            $objExcel = $reader->getExcel();
+            $sheet = $objExcel->getSheet(0);
+//            $sheet2 = $objExcel->getSheetByName('汇总表');
+            if (isset($sheet))
+//            for ($i = 0; $i < $objExcel->getSheetCount(); $i++)
+            {
+//                $sheet = $objExcel->getSheet($i);
+                $highestRow = $sheet->getHighestRow();
+                $highestColumn = $sheet->getHighestColumn();
+                $highestColumn++;
+
+                //  Loop through each row of the worksheet in turn
+                $keys = [];
+                $keys2 = [];
+                //  Read a row of data into an array
+                $rowData = $sheet->rangeToArray('A' . 1 . ':' . $highestColumn . 1,
+                    NULL, TRUE, FALSE);
+                // 第一行，关键字
+                $keys = $rowData[0];
+
+                $seqnumber = Constructionbidinformation::where('year', Carbon::today()->year)->max('digital_number');
+                $seqnumber += 1;
+                $seqnumber = str_pad($seqnumber, 4, 0, STR_PAD_LEFT);
+
+                $number = Carbon::today()->format('Y') . '-' . $seqnumber;
+                $data = [
+                    'number'    => $number,
+                    'year'      => Carbon::today()->year,
+                    'digital_number'    => isset($seqnumber) ? $seqnumber : 1,
+                ];
+                $constructionbidinformation = Constructionbidinformation::create($data);
+                if (isset($constructionbidinformation))
+                {
+                    $projecttype = '';
+                    for ($row = 5; $row <= $highestRow; $row++)
+                    {
+                        Log::info($row);
+                        $input = [];
+                        $index = 0;
+
+                        $input['constructionbidinformation_id'] = $constructionbidinformation->id;
+                        $input['seq'] = $sheet->getCell('A' . $row)->getValue();
+                        $input['key'] = $sheet->getCell('B' . $row)->getValue();
+                        $input['purchaser'] = $sheet->getCell('C' . $row)->getValue();
+                        $input['specification_technicalrequirements'] = $sheet->getCell('D' . $row)->getValue();
+                        $input['value'] = $sheet->getCell('E' . $row)->getValue();
+                        $input['multiple'] = $sheet->getCell('F' . $row)->getValue();
+                        $input['unit'] = $sheet->getCell('G' . $row)->getValue();
+                        $input['remark'] = $sheet->getCell('H' . $row)->getValue();
+//                    for ($colIndex = 'A'; $colIndex != $highestColumn; $colIndex++)
+//                    {
+//                        // 组装单元格标识  A1  A2
+//                        $addr = $colIndex . $row;
+//                        // 获取单元格内容
+//                        $cell = $sheet->getCell($addr)->getFormattedValue();        // 日期格式，可以用这个函数获取到期望的格式
+//                        //富文本转换字符串
+//                        if ($cell instanceof PHPExcel_RichText) {
+//                            $cell = $cell->__toString();
+//                        }
+//                    }
+//                    dd($input);
+
+                        if (isset($input['purchaser']) && isset($input['key']))
+                        {
+                            $sort = 0;
+                            $constructionbidinformationfield = Constructionbidinformationfield::where('name', $input['key'])->where('projecttype', $projecttype)->first();
+                            if (isset($constructionbidinformationfield))
+                                $sort = $constructionbidinformationfield->sort;
+                            $input['sort'] = $sort;
+
+
+                            Constructionbidinformationitem::create($input);
+//                            $constructionbidinformationfields = Constructionbidinformationfield::whereIn('projecttype', $projecttype)->orderBy('sort')->get();
+//                            foreach ($constructionbidinformationfields as $constructionbidinformationfield)
+//                            {
+//
+//                            }
+
+                        }
+                        elseif (!isset($input['purchaser']))
+                        {
+                            $projecttype = $input['key'];
+//                            dd($projecttype);
+
+                            $constructionbidinformationfieldtype = Constructionbidinformationfieldtype::where('constructionbidinformation_id', $constructionbidinformation->id)->where('constructionbidinformation_fieldtype', $projecttype)->first();
+                            if (!isset($constructionbidinformationfieldtype))
+                            {
+                                Constructionbidinformationfieldtype::create([
+                                    'constructionbidinformation_id'     => $constructionbidinformation->id,
+                                    'constructionbidinformation_fieldtype'  => $projecttype,
+                                ]);
+                            }
+                        }
+                    }
+                }
+
+            }
+
+//            $reader->each(function ($sheet) use (&$reader, $request, &$biddinginformationdefinefields) {
+////                dd('sheet: ' . $sheet->getTitle());
+//                $objExcel = $reader->getExcel();
+////                dd($objExcel->getSheet(0)->getComment('L30')->getText()->getPlainText());
+//                $sheet->each(function ($row) use (&$reader, $objExcel, $sheet, $request, &$biddinginformationdefinefields) {
+////                    dd($objExcel->getSheetByName($sheet->getTitle())->getComment('L30')->getText()->getPlainText());
+////                    dd($row);
+////                        $input = array_values($row->toArray());
+//                    $input = $row->all();
+////                    dd($input);
+////                    if (count($input) >= 24)
+//                    {
+//                        if (!empty($input['序号']))
+//                        {
+////                            dd($input['序号']);
+////                            $salarysheet = Salarysheet::where('username', $input['姓名'])->where('salary_date', $request->input('salary_date'))->first();
+////                            if (!isset($salarysheet))
+//                            {
+//                                $data = [];
+//                                $biddinginformation = Biddinginformation::create($data);
+////                                dd($biddinginformation);
+//                                foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+//                                {
+////                                    dd($input[$biddinginformationdefinefield->name]);
+//                                    $itemdata = [];
+//                                    $itemdata['biddinginformation_id']      = $biddinginformation->id;
+//                                    $itemdata['key']                           = $biddinginformationdefinefield->name;
+//                                    $itemdata['value']                         = isset($input[$biddinginformationdefinefield->name]) ? $input[$biddinginformationdefinefield->name] : '';
+//                                    $itemdata['sort']                          = $biddinginformationdefinefield->sort;
+//                                    $itemdata['type']                          = $biddinginformationdefinefield->type;
+////                                    Log::info($itemdata);
+//                                    Biddinginformationitem::create($itemdata);
+//                                }
+//                            }
+//                        }
+//                    }
+//                });
+//            });
+
+            $objExcel = $reader->getExcel();
+            $sheet = $objExcel->getSheet(0);
+            $highestRow = $sheet->getHighestRow();
+            $highestColumn = $sheet->getHighestColumn();
+            Log::info('highestRow: ' . $highestRow);
+            Log::info('highestColumn: ' . $highestColumn);
+
+//            //  Loop through each row of the worksheet in turn
+//            for ($row = 1; $row <= $highestRow; $row++)
+//            {
+//                //  Read a row of data into an array
+//                $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+//                    NULL, TRUE, FALSE);
+//            }
+        });
+        Log::info('import end.');
+
         return redirect('basic/constructionbidinformations');
     }
 

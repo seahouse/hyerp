@@ -10,7 +10,7 @@
     @can('basic_constructionbidinformation_view')
     <div class="panel-heading">
         {!! Form::button('新建', ['class' => 'btn btn-sm btn-success', 'data-toggle' => 'modal', 'data-target' => '#createModal']) !!}
-        {{--<a href="{{ url('basic/constructionbidinformations/import') }}" class="btn btn-sm btn-success">导入</a>--}}
+        <a href="{{ url('basic/constructionbidinformations/import') }}" class="btn btn-sm btn-success">导入</a>
         <a href="{{ url('basic/constructionbidinformationfields') }}" class="btn btn-sm btn-success">维护字段</a>
         @can('basic_constructionbidinformation_edittable')
             @if (Auth::user()->email == 'admin@admin.com')
