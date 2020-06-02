@@ -410,7 +410,7 @@ class ConstructionbidinformationController extends Controller
 //                            }
 
                         }
-                        elseif (!isset($input['purchaser']))
+                        elseif (!isset($input['purchaser']) && isset($input['key']) && isset($input['seq']))
                         {
                             $projecttype = $input['key'];
 //                            dd($projecttype);
