@@ -56,6 +56,7 @@
     <table id="tableItems" class="table table-striped table-hover table-full-width">
         <thead>
         <tr>
+            <th>项目类型</th>
             <th>名称</th>
             <th>采购方</th>
             <th>规格及技术要求</th>
@@ -70,6 +71,9 @@
         <tbody>
         @foreach($constructionbidinformation->constructionbidinformationitems as $constructionbidinformationitem)
             <tr data-constructionbidinformationitem_id="{{ $constructionbidinformationitem->id }}">
+                <td>
+                    {{ $constructionbidinformationitem->projecttype }}
+                </td>
                 <td>
                     {{ $constructionbidinformationitem->key }}
                 </td>

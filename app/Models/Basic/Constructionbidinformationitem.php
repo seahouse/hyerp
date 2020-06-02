@@ -9,6 +9,7 @@ class Constructionbidinformationitem extends Model
     //
     protected $fillable = [
         'constructionbidinformation_id',
+        'projecttype',
         'key',
         'purchaser',
         'specification_technicalrequirements',

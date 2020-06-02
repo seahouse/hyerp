@@ -1,6 +1,8 @@
 @extends('navbarerp')
 
 @section('main')
+    <?php use App\Models\Basic\Constructionbidinformationfield; ?>
+
     {!! Form::model($constructionbidinformation, ['class' => 'form-horizontal']) !!}
     @include('basic.constructionbidinformations._form',
         [
@@ -30,6 +32,7 @@
     <table id="tableItems" class="table table-striped table-hover table-full-width">
         <thead>
         <tr>
+            <th>项目类型</th>
             <th>名称</th>
             <th>采购方</th>
             <th>规格及技术要求</th>
@@ -45,7 +48,16 @@
         @foreach($constructionbidinformation->constructionbidinformationitems as $constructionbidinformationitem)
             <tr data-constructionbidinformationitem_id="{{ $constructionbidinformationitem->id }}">
                 <td>
+                    {{ $constructionbidinformationitem->projecttype }}
+                </td>
+                <td>
                     {{ $constructionbidinformationitem->key }}
+                    <?php $field_match = false;
+                    $constructionbidinformationfield = Constructionbidinformationfield::where('name', $constructionbidinformationitem->key)->where('projecttype', $constructionbidinformationitem->projecttype)->first();
+                    if (isset($constructionbidinformationfield))
+                        $field_match = true;
+                    ?>
+                    @if(!$field_match) {!! Form::button('设置字段', ['class' => 'btn btn-sm btn-danger', 'data-toggle' => 'modal', 'data-target' => '#resetFieldModal']) !!} @endif
                 </td>
                 <div id="div{{ $constructionbidinformationitem->id }}" name="constructionbidinformationitem_container" data-constructionbidinformationitem_id="{{ $constructionbidinformationitem->id }}">
                     <td>
@@ -80,23 +92,6 @@
         </tbody>
     </table>
 
-    {{--@foreach($constructionbidinformation->biddinginformationitems()->orderBy('sort')->get() as $constructionbidinformationitem)--}}
-        {{--<div class="form-group">--}}
-            {{--{!! Form::label($constructionbidinformationitem->key, $constructionbidinformationitem->key, ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
-            {{--<div class='col-xs-4 col-sm-6'>--}}
-                {{--{!! Form::text($constructionbidinformationitem->key, $constructionbidinformationitem->value, ['class' => 'form-control', 'readonly', 'oncopy' => 'return false', 'oncontextmenu' => 'return false']) !!}--}}
-            {{--</div>--}}
-            {{--<div class='col-xs-4 col-sm-4'>--}}
-                {{--@can('basic_biddinginformation_remark')--}}
-                    {{--@if (strlen($constructionbidinformationitem->remark) > 0)--}}
-                        {{--{!! Form::textarea($constructionbidinformationitem->key, $constructionbidinformationitem->remark, ['class' => 'form-control', 'readonly', 'rows' => 3]) !!}--}}
-                    {{--@else--}}
-                        {{--{!! Form::text($constructionbidinformationitem->key, $constructionbidinformationitem->remark, ['class' => 'form-control', 'readonly']) !!}--}}
-                    {{--@endif--}}
-                {{--@endcan--}}
-            {{--</div>--}}
-        {{--</div>--}}
-    {{--@endforeach--}}
 
     {{--<div class="form-group">--}}
         {{--<div class="col-sm-offset-2 col-sm-10">--}}
@@ -105,4 +100,33 @@
     {{--</div>--}}
     {!! Form::close() !!}
 
+    <div class="modal fade" id="resetFieldModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">关联销售订单</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '项目编号、项目名称', 'id' => 'keyProject']) !!}
+
+                        <span class="input-group-btn">
+                   		    {!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchProject']) !!}
+                   	    </span>
+                    </div>
+                    {!! Form::hidden('name', null, ['id' => 'name']) !!}
+                    <p>
+                    <div class="list-group" id="listsalesorders">
+
+                    </div>
+                    </p>
+                    <form id="formAccept">
+                        {!! csrf_field() !!}
+                        {!! Form::hidden('soheadid', 0, ['class' => 'form-control', 'id' => 'soheadid']) !!}
+                        {!! Form::hidden('informationid', 0, ['class' => 'form-control', 'id' => 'informationid']) !!}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

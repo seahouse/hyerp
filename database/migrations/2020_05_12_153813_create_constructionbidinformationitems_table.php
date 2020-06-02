@@ -16,6 +16,7 @@ class CreateConstructionbidinformationitemsTable extends Migration
             $table->increments('id');
 
             $table->integer('constructionbidinformation_id')->unsigned();
+            $table->string('projecttype');
             $table->string('key');
             $table->string('purchaser')->nullable();
             $table->string('specification_technicalrequirements')->nullable();

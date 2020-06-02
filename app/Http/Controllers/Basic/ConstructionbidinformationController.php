@@ -393,6 +393,8 @@ class ConstructionbidinformationController extends Controller
 
                         if (isset($input['purchaser']) && isset($input['key']))
                         {
+                            $input['projecttype'] = $projecttype;
+
                             $sort = 0;
                             $constructionbidinformationfield = Constructionbidinformationfield::where('name', $input['key'])->where('projecttype', $projecttype)->first();
                             if (isset($constructionbidinformationfield))
