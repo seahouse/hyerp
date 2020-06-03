@@ -57,7 +57,7 @@
                     if (isset($constructionbidinformationfield))
                         $field_match = true;
                     ?>
-                    @if(!$field_match) {!! Form::button('设置字段', ['class' => 'btn btn-sm btn-danger', 'data-toggle' => 'modal', 'data-target' => '#resetFieldModal']) !!} @endif
+                    @if(!$field_match) {!! Form::button('设置字段', ['class' => 'btn btn-sm btn-danger', 'data-toggle' => 'modal', 'data-target' => '#resetFieldModal', 'data-constructionbidinformationitem_id' => $constructionbidinformationitem->id]) !!} @endif
                 </td>
                 <div id="div{{ $constructionbidinformationitem->id }}" name="constructionbidinformationitem_container" data-constructionbidinformationitem_id="{{ $constructionbidinformationitem->id }}">
                     <td>
@@ -104,29 +104,63 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">关联销售订单</h4>
+                    <h4 class="modal-title">设置字段</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="input-group">
-                        {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '项目编号、项目名称', 'id' => 'keyProject']) !!}
-
-                        <span class="input-group-btn">
-                   		    {!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchProject']) !!}
-                   	    </span>
+                    {!! Form::open(array('url' => 'basic/constructionbidinformationitems/resetfield', 'class' => 'form-horizontal', 'id' => 'frmResetField')) !!}
+                    <div class="form-group">
+                        {!! Form::label('projecttype', '项目类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                        <div class='col-xs-8 col-sm-10'>
+                            {!! Form::select('projecttype', $projecttypes_constructionbidinformationfield, null, ['class' => 'form-control', 'placeholder' => '--项目类型--', 'onchange' => 'selectTypeChange()']) !!}
+                        </div>
                     </div>
-                    {!! Form::hidden('name', null, ['id' => 'name']) !!}
-                    <p>
-                    <div class="list-group" id="listsalesorders">
 
+                    <div class="form-group">
+                        {!! Form::label('fieldname', '字段名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                        <div class='col-xs-8 col-sm-10'>
+                            {!! Form::select('fieldname', array(), null, ['class' => 'form-control', 'placeholder' => '--字段名称--']) !!}
+                        </div>
                     </div>
-                    </p>
-                    <form id="formAccept">
-                        {!! csrf_field() !!}
-                        {!! Form::hidden('soheadid', 0, ['class' => 'form-control', 'id' => 'soheadid']) !!}
-                        {!! Form::hidden('informationid', 0, ['class' => 'form-control', 'id' => 'informationid']) !!}
-                    </form>
+
+                    {!! Form::hidden('constructionbidinformationitem_id', null, ['id' => 'constructionbidinformationitem_id']) !!}
+                    {!! csrf_field() !!}
+                    {!! Form::close() !!}
+
+
+                    <div class="modal-footer">
+                        {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
+                        {!! Form::button('确定', ['class' => 'btn btn-sm btn-primary', 'id' => 'btnResetField']) !!}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script type="text/javascript">
+        jQuery(document).ready(function(e) {
+            $('#resetFieldModal').on('show.bs.modal', function (e) {
+                var text = $(e.relatedTarget);
+                var modal = $(this);
+
+                modal.find('#constructionbidinformationitem_id').val(text.data('constructionbidinformationitem_id'));
+            });
+
+            selectTypeChange = function () {
+                var projecttype = $("#frmResetField").find("select[name='projecttype']").val();
+//                alert(projecttype);
+
+                $.post("{{ url('basic/constructionbidinformationfields/getfieldsbyprojecttype') }}", { projecttype: projecttype, _token: '{{ csrf_token() }}' }, function (data) {
+                    //
+                    $("#frmResetField").find("select[name='fieldname']").empty().append(data);
+//                    $("#pppaymentitemtypecontainer_" + String(num)).empty().append(data);
+                });
+            };
+
+            $("#btnResetField").click(function() {
+                $("form#frmResetField").submit();
+            });
+        });
+    </script>
 @endsection

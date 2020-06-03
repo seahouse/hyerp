@@ -220,9 +220,13 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
         Route::get('jsondata', 'ConstructionbidinformationitemController@jsondata');
         Route::post('updateedittable', 'ConstructionbidinformationitemController@updateedittable');
         Route::get('getvaluesbykey/{key}', 'ConstructionbidinformationitemController@getvaluesbykey');
+        Route::post('resetfield', 'ConstructionbidinformationitemController@resetfield');
     });
     Route::resource('constructionbidinformationitems', 'ConstructionbidinformationitemController');
 
+    Route::group(['prefix' => 'constructionbidinformationfields'], function() {
+        Route::post('getfieldsbyprojecttype', 'ConstructionbidinformationfieldController@getfieldsbyprojecttype');
+    });
     Route::resource('constructionbidinformationfields', 'ConstructionbidinformationfieldController');
 });
 

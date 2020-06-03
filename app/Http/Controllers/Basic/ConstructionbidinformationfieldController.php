@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Log;
 
 class ConstructionbidinformationfieldController extends Controller
 {
@@ -172,5 +173,20 @@ class ConstructionbidinformationfieldController extends Controller
         //
         Constructionbidinformationfield::destroy($id);
         return redirect('basic/constructionbidinformationfields');
+    }
+
+    public function getfieldsbyprojecttype(Request $request)
+    {
+        //
+        $strhtml = "";
+        if ($request->has('projecttype') && strlen($request->input('projecttype')) > 0)
+        {
+            $fields = Constructionbidinformationfield::where('projecttype', $request->input('projecttype'))->pluck('name');
+            foreach ($fields as $field)
+                $strhtml .= "<option value='" . $field . "'>" . $field . "</option>";
+            Log::info($fields);
+            Log::info($strhtml);
+        }
+        return $strhtml;
     }
 }

@@ -21,4 +21,8 @@ class Constructionbidinformationitem extends Model
         'remark',
         'sort',
     ];
+
+    public function constructionbidinformation() {
+        return $this->belongsTo('App\Models\Basic\Constructionbidinformation');
+    }
 }

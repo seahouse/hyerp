@@ -129,4 +129,24 @@ class ConstructionbidinformationitemController extends Controller
         }
         return 'success';
     }
+
+    public function resetfield(Request $request)
+    {
+        Log::info($request->all());
+        $constructionbidinformation_id = '';
+        if ($request->has('constructionbidinformationitem_id') && $request->input('constructionbidinformationitem_id') > 0)
+        {
+            $constructionbidinformationitem = Constructionbidinformationitem::findOrFail($request->input('constructionbidinformationitem_id'));
+            if (isset($constructionbidinformationitem))
+            {
+                $constructionbidinformationitem->update([
+                    'projecttype' => $request->input('projecttype'),
+                    'key' => $request->input('fieldname'),
+                ]);
+                $constructionbidinformation_id = $constructionbidinformationitem->constructionbidinformation_id;
+            }
+        }
+
+        return redirect('basic/constructionbidinformations/' . $constructionbidinformation_id);
+    }
 }
