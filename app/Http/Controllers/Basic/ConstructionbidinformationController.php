@@ -401,7 +401,7 @@ class ConstructionbidinformationController extends Controller
                                 $sort = $constructionbidinformationfield->sort;
                             $input['sort'] = $sort;
 
-
+//                            dd($input);
                             Constructionbidinformationitem::create($input);
 //                            $constructionbidinformationfields = Constructionbidinformationfield::whereIn('projecttype', $projecttype)->orderBy('sort')->get();
 //                            foreach ($constructionbidinformationfields as $constructionbidinformationfield)
@@ -494,5 +494,176 @@ class ConstructionbidinformationController extends Controller
 //        $biddinginformationdefinefields = Biddinginformationdefinefield::orderBy('sort')->pluck('name');
 //        dd(json_encode($biddinginformations->toArray()['data']) );
         return view('basic.constructionbidinformations.edittable', compact('constructionbidinformation'));
+    }
+
+    public function exportexcel($id)
+    {
+        Excel::load('exceltemplate/Constructionbidinformation.xlsx', function ($reader) use ($id) {
+            $objExcel = $reader->getExcel();
+            $sheet = $objExcel->getSheet(0);
+            $highestRow = $sheet->getHighestRow();
+            $highestColumn = $sheet->getHighestColumn();
+
+            $constructionbidinformation = Constructionbidinformation::findOrFail($id);
+            if (isset($constructionbidinformation))
+            {
+                $upperseqs = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十'];
+                $projecttype = '';
+                $row = 5;
+                $seq = 1;
+                $upperseq = 0;
+                foreach ($constructionbidinformation->constructionbidinformationitems as $constructionbidinformationitem)
+                {
+                    if ($projecttype <> $constructionbidinformationitem->projecttype)
+                    {
+                        if (count($upperseqs) > $upperseq)
+                        {
+                            $sheet->setCellValue('A' . $row, $upperseqs[$upperseq]);
+                            $upperseq++;
+                        }
+                        $sheet->setCellValue('B' . $row, $constructionbidinformationitem->projecttype);
+                        $projecttype = $constructionbidinformationitem->projecttype;
+                        $seq = 1;
+                        $row++;
+
+                        $sheet->setCellValue('A' . $row, $seq);
+                        $sheet->setCellValue('B' . $row, $constructionbidinformationitem->key);
+                        $sheet->setCellValue('C' . $row, $constructionbidinformationitem->purchaser);
+                        $sheet->setCellValue('D' . $row, $constructionbidinformationitem->specification_technicalrequirements);
+                        $sheet->setCellValue('E' . $row, $constructionbidinformationitem->value);
+                        $sheet->setCellValue('F' . $row, $constructionbidinformationitem->multiple);
+                        $sheet->setCellValue('G' . $row, $constructionbidinformationitem->unit);
+                        $sheet->setCellValue('H' . $row, $constructionbidinformationitem->remark);
+                        $seq++;
+                        $row++;
+                    }
+                    else
+                    {
+                        $sheet->setCellValue('A' . $row, $seq);
+                        $sheet->setCellValue('B' . $row, $constructionbidinformationitem->key);
+                        $sheet->setCellValue('C' . $row, $constructionbidinformationitem->purchaser);
+                        $sheet->setCellValue('D' . $row, $constructionbidinformationitem->specification_technicalrequirements);
+                        $sheet->setCellValue('E' . $row, $constructionbidinformationitem->value);
+                        $sheet->setCellValue('F' . $row, $constructionbidinformationitem->multiple);
+                        $sheet->setCellValue('G' . $row, $constructionbidinformationitem->unit);
+                        $sheet->setCellValue('H' . $row, $constructionbidinformationitem->remark);
+                        $seq++;
+                        $row++;
+                    }
+                }
+
+                $styleThinBlackBorderOutline = array(
+                    'borders' => array(
+                        'allborders' => array( //设置全部边框
+                            'style' => \PHPExcel_Style_Border::BORDER_THIN //粗的是thick
+                        ),
+
+                    ),
+                );
+                $sheet->getStyle( 'A5' . ':H' . ($row-1))->applyFromArray($styleThinBlackBorderOutline);
+
+//                $data_interchange_datetime = Carbon::parse($constructionbidinformation->data_interchange_datetime);
+//                $sheet->setCellValue('D5', $data_interchange_datetime->format('M d, Y'));
+//                $sheet->setCellValue('G5', $data_interchange_datetime->format('M d, Y'));
+//                $sheet->setCellValue('D6', $constructionbidinformation->salesman_name);
+//                $sheet->setCellValue('G6', $constructionbidinformation->purchase_order_number);
+//                $sheet->setCellValue('G10', $constructionbidinformation->supplier_name);
+//
+//                $totalprice = 0.0;
+//                $totalquantity = 0;
+//                $detail_startrow = 34;
+//                $detail_row = $detail_startrow;
+//                $currentitemcount = 1;
+//                foreach ($constructionbidinformation->poitemcs as $poitemc)
+//                {
+//                    if ($currentitemcount > 1)
+//                    {
+//                        $sheet->insertNewRowBefore($detail_row, 14);
+//
+//                        $sheet->setCellValue('B' . $detail_row, $sheet->getCell('B'.($detail_row-14))->getValue());
+//                        $sheet->setCellValue('E' . $detail_row, $sheet->getCell('E'.($detail_row-14))->getValue());
+//                        $sheet->setCellValue('B' . ($detail_row+1), $sheet->getCell('B'.($detail_row+1-14))->getValue());
+//                        $sheet->setCellValue('D' . ($detail_row+1), $sheet->getCell('D'.($detail_row+1-14))->getValue());
+//                        $sheet->setCellValue('B' . ($detail_row+2), $sheet->getCell('B'.($detail_row+2-14))->getValue());
+//                        $sheet->setCellValue('B' . ($detail_row+3), $sheet->getCell('B'.($detail_row+3-14))->getValue());
+//                        $sheet->setCellValue('C' . ($detail_row+3), $sheet->getCell('C'.($detail_row+3-14))->getValue());
+//                        $sheet->setCellValue('B' . ($detail_row+4), $sheet->getCell('B'.($detail_row+4-14))->getValue());
+//                        $sheet->setCellValue('E' . ($detail_row+4), $sheet->getCell('E'.($detail_row+4-14))->getValue());
+//                        $sheet->setCellValue('B' . ($detail_row+5), $sheet->getCell('B'.($detail_row+5-14))->getValue());
+//                        $sheet->setCellValue('E' . ($detail_row+5), $sheet->getCell('E'.($detail_row+5-14))->getValue());
+//                        $sheet->setCellValue('B' . ($detail_row+6), $sheet->getCell('B'.($detail_row+6-14))->getValue());
+//                        $sheet->setCellValue('B' . ($detail_row+7), $sheet->getCell('B'.($detail_row+7-14))->getValue());
+//                        $sheet->setCellValue('B' . ($detail_row+8), $sheet->getCell('B'.($detail_row+8-14))->getValue());
+//                        $sheet->setCellValue('B' . ($detail_row+9), $sheet->getCell('B'.($detail_row+9-14))->getValue());
+//                        $sheet->setCellValue('B' . ($detail_row+10), $sheet->getCell('B'.($detail_row+10-14))->getValue());
+//                        $sheet->setCellValue('E' . ($detail_row+11), $sheet->getCell('E'.($detail_row+11-14))->getValue());
+//                    }
+//
+//                    $totalprice += $poitemc->quantity * $poitemc->unit_price;
+//                    $totalquantity += $poitemc->quantity;
+//
+//                    $sheet->setCellValue('A' . $detail_row, $poitemc->fabric_sequence_no);
+//                    $sheet->setCellValue('D' . $detail_row, $poitemc->material_code);
+//                    $fabric_description = trim($poitemc->fabric_description);
+//                    $sheet->setCellValue('D' . ($detail_row+2), substr($fabric_description, 0, strpos($fabric_description, "::")));
+//                    $sheet->setCellValue('D' . ($detail_row+5), $poitemc->construction);
+//                    $sheet->setCellValue('G' . ($detail_row+2), substr($fabric_description, strpos($fabric_description, "::") + 2, strrpos($fabric_description, "::") - strpos($fabric_description, "::") - 2));
+//                    $sheet->setCellValue('D' . ($detail_row+6), $poitemc->yarn_count);
+//                    $sheet->setCellValue('D' . ($detail_row+7), $poitemc->fabric_width);
+//                    $sheet->setCellValue('G' . ($detail_row+11), $poitemc->unit_price);
+//
+//                    $detail_row += 14;
+//                    $currentitemcount += 1;
+//                }
+//                $sheet->setCellValue('G29', 'USD ' . $totalprice);
+//                $sheet->setCellValue('G30', 'USD ' . $totalprice);
+//
+//                $detail_startrow = 53 + ($currentitemcount-2) * 14;
+//                $detail_row = $detail_startrow;
+//                $currentitemcount = 1;
+//                foreach ($constructionbidinformation->poitemcs as $poitemc)
+//                {
+//                    if ($currentitemcount > 1)
+//                    {
+//                        $sheet->insertNewRowBefore($detail_row, 1);
+//                    }
+//
+//                    $sheet->setCellValue('A' . $detail_row, $poitemc->fabric_sequence_no);
+//                    Log::info('D' . $detail_row . ':' . $poitemc->color_desc1);
+//                    $sheet->setCellValue('D' . $detail_row, $poitemc->color_desc1);
+//                    $sheet->setCellValue('E' . $detail_row, $poitemc->quantity);
+//                    $shipment_date = Carbon::parse($poitemc->shipment_date);
+//                    $sheet->setCellValue('G' . $detail_row, $shipment_date->format('M d, Y'));
+//
+//                    $detail_row += 1;
+//                    $currentitemcount += 1;
+//                }
+//                $currentrow = $detail_startrow + 2 + ($currentitemcount-2) * 1;
+//                Log::info('E' . $currentrow . ', totalquantity:' . $totalquantity);
+//                $sheet->setCellValue('E' . $currentrow, $totalquantity);
+//                $sheet->setCellValue('G' . $currentrow, 'Line amount USD ' . $totalprice);
+            }
+
+
+        })->export('xlsx');
+
+//        $biddinginformation = Biddinginformation::findOrFail($id);
+//
+//        $phpWord = new PhpWord();
+//
+//        $section = $phpWord->createSection();
+//
+//        $i = 1;
+//        foreach ($biddinginformation->biddinginformationitems as $biddinginformationitem)
+//        {
+//            $str = $i . '、' . $biddinginformationitem->key . '：' . $biddinginformationitem->value;
+//            $section->addText($str);
+//            $i++;
+//        }
+//
+//        $writer = IOFactory::createWriter($phpWord);
+//        $writer->save(public_path('download/biddinginformations/TOUBIAO.docx'));
+//
+//        return response()->download(public_path('download/biddinginformations/TOUBIAO.docx'));
     }
 }

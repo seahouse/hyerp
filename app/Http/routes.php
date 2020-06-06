@@ -205,7 +205,7 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
         Route::any('export', 'ConstructionbidinformationController@export');
         Route::get('downloadfile/{filename}', 'ConstructionbidinformationController@downloadfile')->name('basic.constructionbidinformations.downloadfile');
         Route::post('clear', 'ConstructionbidinformationController@clear');
-        Route::get('exportword/{id}', 'ConstructionbidinformationController@exportword');
+        Route::get('exportexcel/{id}', 'ConstructionbidinformationController@exportexcel');
         Route::post('close/{id}', 'ConstructionbidinformationController@close');
         Route::get('{id}/edittable', 'ConstructionbidinformationController@edittable');
         Route::post('updateedittable', 'ConstructionbidinformationController@updateedittable');

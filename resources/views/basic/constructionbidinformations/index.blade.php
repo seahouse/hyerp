@@ -120,7 +120,7 @@
                             @if ($constructionbidinformation->closed != 1)
                                 <a href="{{ URL::to('/basic/constructionbidinformations/'.$constructionbidinformation->id.'/edit') }}" class="btn btn-success btn-xs pull-left">编辑</a>
                             @endif
-{{--                            <a href="{{ url('basic/constructionbidinformations/exportword/' . $constructionbidinformation->id) }}" class="btn btn-success btn-xs pull-left" target="_blank">导出Word</a>--}}
+                            <a href="{{ url('basic/constructionbidinformations/exportexcel/' . $constructionbidinformation->id) }}" class="btn btn-success btn-xs pull-left" target="_blank">导出Excel</a>
                             {{--{!! Form::open(array('action' => ['Basic\BiddinginformationController@close', $constructionbidinformation->id], 'method' => 'post', 'onsubmit' => 'return confirm("确定关闭此记录?");')) !!}--}}
                             {{--{!! Form::submit('关闭', ['class' => 'btn btn-danger btn-xs pull-left']) !!}--}}
                             {{--{!! Form::close() !!}--}}
