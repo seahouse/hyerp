@@ -207,6 +207,7 @@ class ConstructionbidinformationController extends Controller
 
 //        $biddinginformation->update($request->all());
         $inputs = $request->all();
+        $constructionbidinformation->update($inputs);
 //        dd($inputs);
         $remark_suffix = '_remark';
         if (isset($constructionbidinformation))
@@ -665,5 +666,26 @@ class ConstructionbidinformationController extends Controller
 //        $writer->save(public_path('download/biddinginformations/TOUBIAO.docx'));
 //
 //        return response()->download(public_path('download/biddinginformations/TOUBIAO.docx'));
+    }
+
+    public function updatesaleorderid(Request $request)
+    {
+        //
+        $input = $request->all();
+//        log::info($input);
+        $id=$input['informationid'];
+        $constructionbidinformation = Constructionbidinformation::findOrFail($id);
+        $retcode = $constructionbidinformation->update(['sohead_id'=>$input['soheadid']]);
+        if($retcode >=0)
+            $data = [
+                'errorcode' => 0,
+                'errormsg' => 'success',
+            ];
+        else
+            $data = [
+                'errorcode' =>$retcode,
+                'errormsg' => '更新失败',
+            ];
+        return response()->json($data);
     }
 }

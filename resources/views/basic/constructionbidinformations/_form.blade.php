@@ -1,10 +1,10 @@
 
-{{--<div class="form-group">--}}
-    {{--{!! Form::label('dept_name', '部门:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
-    {{--<div class='col-xs-8 col-sm-10'>--}}
-        {{--{!! Form::text('dept_name', null, ['class' => 'form-control', $attr]) !!}--}}
-    {{--</div>--}}
-{{--</div>--}}
+<div class="form-group">
+    {!! Form::label('name', '项目名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+        {!! Form::text('name', null, ['class' => 'form-control', $attr]) !!}
+    </div>
+</div>
 
 {{--<div class="form-group">--}}
     {{--{!! Form::label('remark', '备注:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}

@@ -14,9 +14,14 @@ class Constructionbidinformation extends Model
         'name',
         'closed',
         'remark',
+        'sohead_id',
     ];
 
     public function constructionbidinformationitems() {
         return $this->hasMany('App\Models\Basic\Constructionbidinformationitem');
+    }
+
+    public function sohead() {
+        return $this->belongsTo('App\Models\Sales\Salesorder_hxold');
     }
 }

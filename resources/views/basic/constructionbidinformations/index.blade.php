@@ -67,6 +67,7 @@
             <tr>
                 <th>投标编号</th>
                 <th>项目名称</th>
+                <th>关联订单编号</th>
                 @foreach($types as $type)
                 <th>{{ $type }}</th>
                 @endforeach
@@ -111,8 +112,15 @@
                         {{--{{ str_limit($constructionbidinformation->remark, 20) }}--}}
                     {{--</td>--}}
                     <td>
+                        @if(isset($constructionbidinformation->sohead))
+                            {{ $constructionbidinformation->sohead->number }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>
                         <div class="form-inline">
-{{--                            {!! Form::button('关联销售订单', ['class' => 'btn btn-success btn-xs pull-left', 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal','data-informationid' =>$constructionbidinformation->id]) !!}--}}
+                            {!! Form::button('关联销售订单', ['class' => 'btn btn-success btn-xs pull-left', 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal','data-informationid' =>$constructionbidinformation->id]) !!}
                             {{--@can('basic_biddinginformation_resetfieldtype')--}}
                                 {{--{!! Form::button('重设字段类别', ['class' => 'btn btn-xs btn-success pull-left', 'data-toggle' => 'modal', 'data-target' => '#resetfieldtypeModal', 'data-biddinginformation_id' => $constructionbidinformation->id]) !!}--}}
                             {{--@endcan--}}

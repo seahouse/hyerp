@@ -21,6 +21,7 @@ class CreateConstructionbidinformationsTable extends Migration
             $table->string('name')->default('');
             $table->smallInteger('closed')->default(0);
             $table->string('remark', 1000)->nullable();
+            $table->integer('sohead_id')->unsigned()->nullable();
 
             $table->timestamps();
         });

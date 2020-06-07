@@ -55,8 +55,8 @@
         <div class="form-group">
             {!! Form::label('outsourcingtype', '外协单位所属种类:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('outsourcingtype', array('安装公司' => '安装公司', '机务设备类外协单位' => '机务设备类外协单位', '电气类外协单位' => '电气类外协单位',
-                    '宣城生产中心生产队伍' => '宣城生产中心生产队伍', '许昌生产中心生产队伍' => '许昌生产中心生产队伍'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                {!! Form::select('outsourcingtype', array('安装公司' => '安装公司', '运输公司' => '运输公司', '机务设备类外协单位' => '机务设备类外协单位', '电气类外协单位' => '电气类外协单位',
+                    '宣城生产中心生产队伍' => '宣城生产中心生产队伍', '许昌生产中心生产队伍' => '许昌生产中心生产队伍', '其他类型供应商' => '其他类型供应商'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
             </div>
         </div>
 
