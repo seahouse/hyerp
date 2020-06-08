@@ -359,7 +359,7 @@
                         var strhtml = '';
                         $.each(result.data, function(i, field) {
                             btnId = 'btnSelectOrder_' + String(i);
-                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.number + "</h4><p>" + field.custinfo_name + " | " + field.sohead_descrip + "</p></button>"
+                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.number + "</h4><p>" + field.custinfo_name + " | " + field.sohead_descrip + " | " + field.productname + "</p></button>"
                         });
                         if (strhtml == '')
                             strhtml = '无记录。';

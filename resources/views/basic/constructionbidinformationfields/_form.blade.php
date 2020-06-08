@@ -42,6 +42,13 @@
 {{--</div>--}}
 
 <div class="form-group">
+    {!! Form::label('unitprice', '单价:', ['class' => 'col-sm-2 control-label']) !!}
+    <div class='col-sm-10'>
+        {!! Form::text('unitprice', null, ['class' => 'form-control', $attr]) !!}
+    </div>
+</div>
+
+<div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
     {!! Form::submit($submitButtonText, ['class' => 'btn btn-primary']) !!}
     </div>

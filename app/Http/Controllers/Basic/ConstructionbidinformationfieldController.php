@@ -115,6 +115,7 @@ class ConstructionbidinformationfieldController extends Controller
             'projecttype'               => 'required',
         ]);
         $input = $request->all();
+        $input['unitprice'] = floatval($input['unitprice']);
         Constructionbidinformationfield::create($input);
         return redirect('basic/constructionbidinformationfields');
     }
@@ -157,8 +158,11 @@ class ConstructionbidinformationfieldController extends Controller
             'projecttype'               => 'required',
         ]);
 
+        $inputs = $request->all();
+        $inputs['unitprice'] = floatval($inputs['unitprice']);
+//        dd($inputs);
         $constructionbidinformationfield = Constructionbidinformationfield::findOrFail($id);
-        $constructionbidinformationfield->update($request->all());
+        $constructionbidinformationfield->update($inputs);
         return redirect('basic/constructionbidinformationfields');
     }
 

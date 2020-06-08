@@ -13,6 +13,6 @@ class Constructionbidinformationfield extends Model
         'type',
 //        'exceltype',
         'projecttype',
-//        'select_strings',
+        'unitprice',
     ];
 }
