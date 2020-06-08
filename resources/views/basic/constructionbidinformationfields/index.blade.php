@@ -6,7 +6,7 @@
     @can('basic_constructionbidinformationfield_view')
     <div class="panel-heading">
         <a href="{{ url('basic/constructionbidinformationfields/create') }}" class="btn btn-sm btn-success">新增</a>
-        @can('basic_constructionbidinformationfield_edittable')
+        @can('basic_constructionbidinformationfield_edit')
             <a href="{{ url('basic/constructionbidinformationfields/edittable') }}" class="btn btn-sm btn-success">高级编辑</a>
         @endcan
     </div>
