@@ -508,6 +508,8 @@ class ConstructionbidinformationController extends Controller
             $constructionbidinformation = Constructionbidinformation::findOrFail($id);
             if (isset($constructionbidinformation))
             {
+                $sheet->setCellValue('A3', '       项目：' . $constructionbidinformation->name);
+
                 $upperseqs = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十'];
                 $projecttype = '';
                 $row = 5;
@@ -535,6 +537,12 @@ class ConstructionbidinformationController extends Controller
                         $sheet->setCellValue('F' . $row, $constructionbidinformationitem->multiple);
                         $sheet->setCellValue('G' . $row, $constructionbidinformationitem->unit);
                         $sheet->setCellValue('H' . $row, $constructionbidinformationitem->remark);
+                        $unitprice = 0.0;
+                        $constructionbidinformationfield = Constructionbidinformationfield::where('name', $constructionbidinformationitem->key)->where('projecttype', $projecttype)->first();
+                        if (isset($constructionbidinformationfield))
+                            $unitprice = $constructionbidinformationfield->unitprice;
+                        $sheet->setCellValue('I' . $row, $unitprice);
+                        $sheet->setCellValue('J' . $row, $unitprice * $constructionbidinformationitem->value * $constructionbidinformationitem->multiple);
                         $seq++;
                         $row++;
                     }
@@ -548,6 +556,12 @@ class ConstructionbidinformationController extends Controller
                         $sheet->setCellValue('F' . $row, $constructionbidinformationitem->multiple);
                         $sheet->setCellValue('G' . $row, $constructionbidinformationitem->unit);
                         $sheet->setCellValue('H' . $row, $constructionbidinformationitem->remark);
+                        $unitprice = 0.0;
+                        $constructionbidinformationfield = Constructionbidinformationfield::where('name', $constructionbidinformationitem->key)->where('projecttype', $projecttype)->first();
+                        if (isset($constructionbidinformationfield))
+                            $unitprice = $constructionbidinformationfield->unitprice;
+                        $sheet->setCellValue('I' . $row, $unitprice);
+                        $sheet->setCellValue('J' . $row, $unitprice * $constructionbidinformationitem->value * $constructionbidinformationitem->multiple);
                         $seq++;
                         $row++;
                     }
@@ -561,7 +575,7 @@ class ConstructionbidinformationController extends Controller
 
                     ),
                 );
-                $sheet->getStyle( 'A5' . ':H' . ($row-1))->applyFromArray($styleThinBlackBorderOutline);
+                $sheet->getStyle( 'A5' . ':J' . ($row-1))->applyFromArray($styleThinBlackBorderOutline);
 
 //                $data_interchange_datetime = Carbon::parse($constructionbidinformation->data_interchange_datetime);
 //                $sheet->setCellValue('D5', $data_interchange_datetime->format('M d, Y'));

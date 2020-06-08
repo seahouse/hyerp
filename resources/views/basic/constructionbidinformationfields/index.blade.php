@@ -6,7 +6,9 @@
     @can('basic_constructionbidinformationfield_view')
     <div class="panel-heading">
         <a href="{{ url('basic/constructionbidinformationfields/create') }}" class="btn btn-sm btn-success">新增</a>
-        {{--<a href="{{ url('basic/constructionbidinformationfields') }}" class="btn btn-sm btn-success">维护字段</a>--}}
+        @can('basic_constructionbidinformationfield_edittable')
+            <a href="{{ url('basic/constructionbidinformationfields/edittable') }}" class="btn btn-sm btn-success">高级编辑</a>
+        @endcan
     </div>
     
     <div class="panel-body">
@@ -44,7 +46,7 @@
                 <th>名称</th>
                 <th>排序</th>
                 <th>项目类型</th>
-                {{--<th>备注</th>--}}
+                <th>单价</th>
                 <th>操作</th>
             </tr>
         </thead>
@@ -60,9 +62,9 @@
                     <td>
                         {{ $constructionbidinformationfield->projecttype }}
                     </td>
-                    {{--<td>--}}
-                        {{--{{ str_limit($constructionbidinformationfield->remark, 20) }}--}}
-                    {{--</td>--}}
+                    <td>
+                        {{ $constructionbidinformationfield->unitprice }}
+                    </td>
                     <td>
                         <div class="form-inline">
                             <a href="{{ URL::to('/basic/constructionbidinformationfields/'.$constructionbidinformationfield->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>

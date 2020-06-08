@@ -193,4 +193,27 @@ class ConstructionbidinformationfieldController extends Controller
         }
         return $strhtml;
     }
+
+    public function edittable()
+    {
+        $request = request();
+        $inputs = $request->all();
+        $constructionbidinformationfields = $this->searchrequest($request);
+//        dd(json_encode($biddinginformations->toArray()['data']) );
+        return view('basic.constructionbidinformationfields.edittable', compact('constructionbidinformationfields', 'inputs'));
+    }
+
+    public function updateedittable(Request $request)
+    {
+//        Log::info($request->all());
+//        $inputs = $request->all();
+//        dd($inputs);
+        $id = $request->get('pk');
+        $constructionbidinformationfield = Constructionbidinformationfield::findOrFail($id);
+        $name = $request->get('name');
+        $value = $request->get('value');
+        $constructionbidinformationfield->$name = $value;
+        $constructionbidinformationfield->save();
+        return 'success';
+    }
 }
