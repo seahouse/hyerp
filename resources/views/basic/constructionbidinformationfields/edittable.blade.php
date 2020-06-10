@@ -53,7 +53,7 @@
             <th>排序</th>
             <th>项目类型</th>
             <th>单价</th>
-            {{--<th>二条线</th>--}}
+            <th>单位</th>
             {{--<th>三条线</th>--}}
             {{--<th>四条线</th>--}}
         </tr>
@@ -75,9 +75,9 @@
                 <td>
                     <a href="#" name="edititem" data-type="text" data-pk="{{ $constructionbidinformationfield->id }}" data-name="unitprice" data-url="{{ url('basic/constructionbidinformationfields/updateedittable') }}">{{ $constructionbidinformationfield->unitprice }}</a>
                 </td>
-                {{--<td>--}}
-                    {{--<a href="#" name="edititem" data-type="text" data-pk="{{ $constructionbidinformationfield->id }}" data-name="value_line2" data-url="{{ url('basic/constructionbidinformationfields/updateedittable') }}">{{ $constructionbidinformationfield->value_line2 }}</a>--}}
-                {{--</td>--}}
+                <td>
+                    <a href="#" name="edititem_select" data-type="select" data-pk="{{ $constructionbidinformationfield->id }}" data-name="unit" data-url="{{ url('basic/constructionbidinformationfields/updateedittable') }}">{{ $constructionbidinformationfield->unit }}</a>
+                </td>
                 {{--<td>--}}
                     {{--<a href="#" name="edititem" data-type="text" data-pk="{{ $constructionbidinformationfield->id }}" data-name="value_line3" data-url="{{ url('basic/constructionbidinformationfields/updateedittable') }}">{{ $constructionbidinformationfield->value_line3 }}</a>--}}
                 {{--</td>--}}
@@ -103,6 +103,15 @@
     @else
         无权限
     @endcan
+
+    <?php
+    $list = [];
+            foreach ($unitstrList as $item)
+                {
+                    array_push($list, "{ value: '" . $item . "', text: '" . $item . "'}");
+                }
+    $aaa = "[" . implode(",", $list) . "]";
+            ?>
 @endsection
 
 @section('script')
@@ -138,7 +147,9 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         }
                     },
-                    source: [{ value: "华星东方", text: "华星东方" }, { value: "投标人", text: "投标人" }],
+//                    source: {!! $aaa !!},
+                    source: '{!! $unitstrList !!}',
+//                    source: [{ value: "华星东方", text: "华星东方" }, { value: "投标人", text: "投标人" }],
                 }
             );
 

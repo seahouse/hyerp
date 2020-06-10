@@ -21,6 +21,7 @@ class CreateConstructionbidinformationfieldsTable extends Migration
             $table->string('projecttype')->nullable();          //
 //            $table->string('select_strings')->nullable();       // 选择字段，用逗号分隔
             $table->decimal('unitprice')->nullable();
+            $table->string('unit')->nullable();
 
             $table->timestamps();
 

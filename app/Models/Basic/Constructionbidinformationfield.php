@@ -14,5 +14,6 @@ class Constructionbidinformationfield extends Model
 //        'exceltype',
         'projecttype',
         'unitprice',
+        'unit',
     ];
 }

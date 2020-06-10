@@ -535,14 +535,22 @@ class ConstructionbidinformationController extends Controller
                         $sheet->setCellValue('D' . $row, $constructionbidinformationitem->specification_technicalrequirements);
                         $sheet->setCellValue('E' . $row, $constructionbidinformationitem->value);
                         $sheet->setCellValue('F' . $row, $constructionbidinformationitem->multiple);
-                        $sheet->setCellValue('G' . $row, $constructionbidinformationitem->unit);
+//                        $sheet->setCellValue('G' . $row, $constructionbidinformationitem->unit);
                         $sheet->setCellValue('H' . $row, $constructionbidinformationitem->remark);
                         $unitprice = 0.0;
+                        $unit = '';
                         $constructionbidinformationfield = Constructionbidinformationfield::where('name', $constructionbidinformationitem->key)->where('projecttype', $projecttype)->first();
                         if (isset($constructionbidinformationfield))
+                        {
                             $unitprice = $constructionbidinformationfield->unitprice;
+                            $unit = $constructionbidinformationfield->unit;
+                        }
                         $sheet->setCellValue('I' . $row, $unitprice);
                         $sheet->setCellValue('J' . $row, $unitprice * $constructionbidinformationitem->value * $constructionbidinformationitem->multiple);
+                        $sheet->setCellValue('G' . $row, $unit);
+                        // 数字单元格，左对齐
+                        $sheet->getStyle('E' . $row . ':F' . $row)->getAlignment()->setHorizontal('left');                // PHPExcel_Style_Alignment::HORIZONTAL_LEFT
+                        $sheet->getStyle('I' . $row . ':J' . $row)->getAlignment()->setHorizontal('left');                // PHPExcel_Style_Alignment::HORIZONTAL_LEFT
                         $seq++;
                         $row++;
                     }
@@ -554,14 +562,22 @@ class ConstructionbidinformationController extends Controller
                         $sheet->setCellValue('D' . $row, $constructionbidinformationitem->specification_technicalrequirements);
                         $sheet->setCellValue('E' . $row, $constructionbidinformationitem->value);
                         $sheet->setCellValue('F' . $row, $constructionbidinformationitem->multiple);
-                        $sheet->setCellValue('G' . $row, $constructionbidinformationitem->unit);
+//                        $sheet->setCellValue('G' . $row, $constructionbidinformationitem->unit);
                         $sheet->setCellValue('H' . $row, $constructionbidinformationitem->remark);
                         $unitprice = 0.0;
+                        $unit = '';
                         $constructionbidinformationfield = Constructionbidinformationfield::where('name', $constructionbidinformationitem->key)->where('projecttype', $projecttype)->first();
                         if (isset($constructionbidinformationfield))
+                        {
                             $unitprice = $constructionbidinformationfield->unitprice;
+                            $unit = $constructionbidinformationfield->unit;
+                        }
                         $sheet->setCellValue('I' . $row, $unitprice);
                         $sheet->setCellValue('J' . $row, $unitprice * $constructionbidinformationitem->value * $constructionbidinformationitem->multiple);
+                        $sheet->setCellValue('G' . $row, $unit);
+                        // 数字单元格，左对齐
+                        $sheet->getStyle('E' . $row . ':F' . $row)->getAlignment()->setHorizontal('left');
+                        $sheet->getStyle('I' . $row . ':J' . $row)->getAlignment()->setHorizontal('left');
                         $seq++;
                         $row++;
                     }

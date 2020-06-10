@@ -47,6 +47,7 @@
                 <th>排序</th>
                 <th>项目类型</th>
                 <th>单价</th>
+                <th>单位</th>
                 <th>操作</th>
             </tr>
         </thead>
@@ -64,6 +65,9 @@
                     </td>
                     <td>
                         {{ $constructionbidinformationfield->unitprice }}
+                    </td>
+                    <td>
+                        {{ $constructionbidinformationfield->unit }}
                     </td>
                     <td>
                         <div class="form-inline">
