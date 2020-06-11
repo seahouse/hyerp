@@ -231,10 +231,11 @@ class SalarysheetController extends Controller
                                         if (isset($user))
                                             $data['user_id']            = $user->id;
                                         $data['department']            = $input['部门'];
-                                        $data['attendance_days']       = isset($input['出勤天数']) ? $input['出勤天数'] : 0.0;
+                                        $data['workdays_target']       = isset($input['本月工作日']) ? $input['本月工作日'] : 0.0;
+                                        $data['attendance_days']       = isset($input['实际出勤天数']) ? $input['实际出勤天数'] : 0.0;
                                         $data['basicsalary']            = isset($input['基本工资']) ? $input['基本工资'] : 0.0;
                                         $data['overtime_hours']        = isset($input['加班小时']) ? $input['加班小时'] : 0.0;
-                                        $data['absenteeismreduce_hours'] = isset($input['缺勤减扣小时']) ? $input['缺勤减扣小时'] : 0.0;
+                                        $data['absenteeismreduce_hours'] = isset($input['缺勤减扣']) ? $input['缺勤减扣'] : 0.0;
                                         $data['paid_hours']             = isset($input['计薪小时']) ? $input['计薪小时'] : 0.0;
                                         $data['overtime_amount']       = isset($input['加班费']) ? $input['加班费'] : 0.0;
                                         $data['fullfrequently_award'] = isset($input['满勤奖']) ? $input['满勤奖'] : 0.0;
@@ -244,6 +245,7 @@ class SalarysheetController extends Controller
                                         $data['additional_amount']     = isset($input['补资']) ? $input['补资'] : 0.0;
                                         $data['house_amount']           = isset($input['房贴']) ? $input['房贴'] : 0.0;
                                         $data['hightemperature_amount'] = isset($input['高温费']) ? $input['高温费'] : 0.0;
+                                        $data['travel_amount']          = isset($input['差旅费']) ? $input['差旅费'] : 0.0;
                                         $data['absenteeismreduce_amount'] = isset($input['缺勤扣款']) ? $input['缺勤扣款'] : 0.0;
                                         $data['shouldpay_amount']       = isset($input['应发工资']) ? $input['应发工资'] : 0.0;
                                         $data['borrowreduce_amount']   = isset($input['借款扣回']) ? $input['借款扣回'] : 0.0;
@@ -261,10 +263,11 @@ class SalarysheetController extends Controller
                                         if (isset($user))
                                             $salarysheet->user_id               = $user->id;
                                         $salarysheet->department                = $input['部门'];
-                                        $salarysheet->attendance_days           = isset($input['出勤天数']) ? $input['出勤天数'] : 0.0;
+                                        $salarysheet->workdays_target           = isset($input['本月工作日']) ? $input['本月工作日'] : 0.0;
+                                        $salarysheet->attendance_days           = isset($input['实际出勤天数']) ? $input['实际出勤天数'] : 0.0;
                                         $salarysheet->basicsalary               = isset($input['基本工资']) ? $input['基本工资'] : 0.0;
                                         $salarysheet->overtime_hours            = isset($input['加班小时']) ? $input['加班小时'] : 0.0;
-                                        $salarysheet->absenteeismreduce_hours = isset($input['缺勤减扣小时']) ? $input['缺勤减扣小时'] : 0.0;
+                                        $salarysheet->absenteeismreduce_hours = isset($input['缺勤减扣']) ? $input['缺勤减扣'] : 0.0;
                                         $salarysheet->paid_hours                = isset($input['计薪小时']) ? $input['计薪小时'] : 0.0;
                                         $salarysheet->overtime_amount        = isset($input['加班费']) ? $input['加班费'] : 0.0;
                                         $salarysheet->fullfrequently_award  = isset($input['满勤奖']) ? $input['满勤奖'] : 0.0;
@@ -274,6 +277,7 @@ class SalarysheetController extends Controller
                                         $salarysheet->additional_amount         = isset($input['补资']) ? $input['补资'] : 0.0;
                                         $salarysheet->house_amount              = isset($input['房贴']) ? $input['房贴'] : 0.0;
                                         $salarysheet->hightemperature_amount = isset($input['高温费']) ? $input['高温费'] : 0.0;
+                                        $salarysheet->travel_amount             = isset($input['差旅费']) ? $input['差旅费'] : 0.0;
                                         $salarysheet->absenteeismreduce_amount = isset($input['缺勤扣款']) ? $input['缺勤扣款'] : 0.0;
                                         $salarysheet->shouldpay_amount       = isset($input['应发工资']) ? $input['应发工资'] : 0.0;
                                         $salarysheet->borrowreduce_amount       = isset($input['借款扣回']) ? $input['借款扣回'] : 0.0;

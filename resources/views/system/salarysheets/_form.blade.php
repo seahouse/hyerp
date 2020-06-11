@@ -35,9 +35,18 @@
     </div>
 </div>
 
+    <div class="form-group row">
+        <div class='title col-xs-4 col-sm-2'>
+            本月工作日
+        </div>
+        <div class='content col-xs-8 col-sm-10'>
+            {{ $salarysheet->workdays_target }}
+        </div>
+    </div>
+
 <div class="form-group row">
     <div class='title col-xs-4 col-sm-2'>
-        出勤天数
+        实际出勤天数
     </div>
     <div class='content col-xs-8 col-sm-10'>
         <?php echo $salarysheet->attendance_days?>
@@ -174,6 +183,16 @@
 </div>
 @endif
 
+    @if (isset($salarysheet) && $salarysheet->travel_amount != 0)
+        <div class="form-group row">
+            <div class='title col-xs-4 col-sm-2'>
+                差旅费
+            </div>
+            <div class='content col-xs-8 col-sm-10' >
+                {{ $salarysheet->travel_amount }}
+            </div>
+        </div>
+    @endif
 
 @if (isset($salarysheet) && $salarysheet->absenteeismreduce_amount != 0)
 <div class="form-group row">

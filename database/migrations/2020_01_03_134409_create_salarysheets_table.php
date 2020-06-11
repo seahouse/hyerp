@@ -19,10 +19,11 @@ class CreateSalarysheetsTable extends Migration
             $table->string('username');                                  				// 姓名
             $table->integer('user_id')->unsigned()->nullable();
             $table->string('department')->default('');                                  // 部门
-            $table->decimal('attendance_days')->default(0.0);                           // 出勤天数
+            $table->decimal('workdays_target')->default(0.0);                           // 本月工作日
+            $table->decimal('attendance_days')->default(0.0);                           // 实际出勤天数
             $table->decimal('basicsalary')->default(0.0);                               // 基本工资
             $table->decimal('overtime_hours')->default(0.0);                            // 加班小时
-            $table->decimal('absenteeismreduce_hours')->default(0.0);                   // 缺勤减扣小时
+            $table->decimal('absenteeismreduce_hours')->default(0.0);                   // 缺勤减扣
             $table->decimal('paid_hours')->default(0.0);                                    // 计薪小时
             $table->decimal('overtime_amount')->default(0.0);                           // 加班费
             $table->decimal('fullfrequently_award')->default(0.0);                      // 满勤奖
@@ -32,6 +33,7 @@ class CreateSalarysheetsTable extends Migration
             $table->decimal('additional_amount')->default(0.0);                         // 补资
             $table->decimal('house_amount')->default(0.0);                              // 房贴
             $table->decimal('hightemperature_amount')->default(0.0);                    // 高温费
+            $table->decimal('travel_amount')->default(0.0);                             // 差旅费
             $table->decimal('absenteeismreduce_amount')->default(0.0);                  // 缺勤扣款
             $table->decimal('shouldpay_amount')->default(0.0);                          // 应发工资
             $table->decimal('borrowreduce_amount')->default(0.0);                       // 借款扣回
