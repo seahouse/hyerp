@@ -2525,7 +2525,7 @@ class ApprovalController extends Controller
                 'value'     => $inputs['files_string'],
             ],
             [
-                'name'      => '供应商确认的或执行通知义务的截图',
+                'name'      => '供应商确认的或执行通知义务短信截图',
                 'value'     => $inputs['image_urls'],
             ],
             [

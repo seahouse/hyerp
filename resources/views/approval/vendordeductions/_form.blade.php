@@ -307,7 +307,7 @@
 
 
     <div class="form-group">
-        {!! Form::label('images', '供应商确认的或执行通知义务的截图:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+        {!! Form::label('images', '供应商确认的或执行通知义务短信截图:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
         <div class='col-xs-8 col-sm-10'>
             <div class="row" id="previewimage">
