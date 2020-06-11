@@ -165,14 +165,12 @@
 
 
 
-
-
             <p class="bannerTitle">明细(1)</p>
 
             <div name="container_item">
 
                 <div class="form-group">
-                    {!! Form::label('itemname', '设备名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                    {!! Form::label('itemname', '名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
                     <div class='col-xs-8 col-sm-10'>
                         {!! Form::text('itemname', null, ['class' => 'form-control', $attr, 'id' => 'itemname_1']) !!}
                     </div>

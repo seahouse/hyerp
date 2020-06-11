@@ -79,7 +79,7 @@
                         {{--{!! Form::text('value_line4', $constructionbidinformationitem->value_line4, ['class' => 'form-control', 'readonly']) !!}--}}
                     {{--</td>--}}
                     <td>
-                        {!! Form::text('unit', $constructionbidinformationitem->unit, ['class' => 'form-control', 'readonly']) !!}
+                        {!! Form::text('unit', $constructionbidinformationitem->constructionbidinformationfield()->unit, ['class' => 'form-control', 'readonly']) !!}
                     </td>
                     <td>
                         {!! Form::text('remark', $constructionbidinformationitem->remark, ['class' => 'form-control', 'readonly']) !!}

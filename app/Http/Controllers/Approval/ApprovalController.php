@@ -2447,7 +2447,7 @@ class ApprovalController extends Controller
             {
                 $item_array = [
                     [
-                        'name'      => '设备名称',
+                        'name'      => '名称',
                         'value'     => $value->itemname,
                     ],
                     [

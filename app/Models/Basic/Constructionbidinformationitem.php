@@ -25,4 +25,8 @@ class Constructionbidinformationitem extends Model
     public function constructionbidinformation() {
         return $this->belongsTo('App\Models\Basic\Constructionbidinformation');
     }
+
+    public function constructionbidinformationfield() {
+        return Constructionbidinformationfield::where('name', $this->key)->where('projecttype', $this->projecttype)->first();
+    }
 }

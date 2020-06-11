@@ -757,7 +757,7 @@
                 var itemHtml = '<div class="' + divName + '"><p class="bannerTitle">明细(' + String(item_num) + ')&nbsp;<button class="btn btn-sm" id="' + btnId + '" type="button">删除</button></p>\
                 	<div name="container_item">\
 						<div class="form-group">\
-							{!! Form::label('itemname', '设备名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}\
+							{!! Form::label('itemname', '名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}\
 							<div class="col-sm-10 col-xs-8">\
 							\<input class="form-control" ="" id="itemname_' + String(item_num) + '" name="itemname" type="text">\
                     </div>\
