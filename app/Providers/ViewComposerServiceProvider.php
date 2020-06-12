@@ -180,7 +180,7 @@ class ViewComposerServiceProvider extends ServiceProvider
         });
 
         // unitstrList
-        view()->composer(array('basic.constructionbidinformations.edit', 'basic.constructionbidinformationfields.edit', 'basic.constructionbidinformationfields.edittable'), function($view) {
+        view()->composer(array('basic.constructionbidinformations.edit', 'basic.constructionbidinformationfields.create', 'basic.constructionbidinformationfields.edit', 'basic.constructionbidinformationfields.edittable'), function($view) {
             $view->with('unitstrList', \App\Models\Product\Unit_hxold::orderby('id', 'asc')->lists('name', 'name'));
         });
 
