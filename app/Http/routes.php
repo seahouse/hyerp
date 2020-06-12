@@ -228,6 +228,8 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
         Route::post('getfieldsbyprojecttype', 'ConstructionbidinformationfieldController@getfieldsbyprojecttype');
         Route::get('edittable', 'ConstructionbidinformationfieldController@edittable');
         Route::post('updateedittable', 'ConstructionbidinformationfieldController@updateedittable');
+        Route::post('search', 'ConstructionbidinformationfieldController@search');
+        Route::post('searchedittable', 'ConstructionbidinformationfieldController@searchedittable');
     });
     Route::resource('constructionbidinformationfields', 'ConstructionbidinformationfieldController');
 });

@@ -26,6 +26,24 @@ class ConstructionbidinformationfieldController extends Controller
         return view('basic.constructionbidinformationfields.index', compact('constructionbidinformationfields', 'inputs'));
     }
 
+    public function search(Request $request)
+    {
+//        $key = $request->input('key');
+        $inputs = $request->all();
+        $constructionbidinformationfields = $this->searchrequest($request);
+
+        return view('basic.constructionbidinformationfields.index', compact('constructionbidinformationfields', 'inputs'));
+    }
+
+    public function searchedittable(Request $request)
+    {
+//        $key = $request->input('key');
+        $inputs = $request->all();
+        $constructionbidinformationfields = $this->searchrequest($request);
+
+        return view('basic.constructionbidinformationfields.edittable', compact('constructionbidinformationfields', 'inputs'));
+    }
+
     public function searchrequest($request)
     {
 //        dd($request->all());
@@ -37,21 +55,20 @@ class ConstructionbidinformationfieldController extends Controller
 
         }
 
-        if ($request->has('creator_name'))
+        if ($request->has('unit'))
         {
-            $query->where('creator_name', $request->input('creator_name'));
+            $query->where('unit', $request->input('unit'));
+        }
+
+        if ($request->has('projecttype'))
+        {
+            $query->where('projecttype', $request->input('projecttype'));
         }
 
         if ($request->has('key') && strlen($request->input('key')) > 0)
         {
-            $query->where('remark', 'like', '%' . $request->input('key') . '%');
+            $query->where('name', 'like', '%' . $request->input('key') . '%');
         }
-
-//        // xmjlsgrz_sohead_id
-//        if ($request->has('xmjlsgrz_sohead_id') && $request->input('xmjlsgrz_sohead_id') > 0)
-//        {
-//            $query->where('xmjlsgrz_sohead_id', $request->input('xmjlsgrz_sohead_id'));
-//        }
 
         // xmjlsgrz_project_id
         if ($request->has('xmjlsgrz_project_id') && $request->input('xmjlsgrz_project_id') > 0)

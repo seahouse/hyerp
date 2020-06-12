@@ -79,7 +79,11 @@
                         {{--{!! Form::text('value_line4', $constructionbidinformationitem->value_line4, ['class' => 'form-control', 'readonly']) !!}--}}
                     {{--</td>--}}
                     <td>
+                        @if (null != $constructionbidinformationitem->constructionbidinformationfield())
                         {!! Form::text('unit', $constructionbidinformationitem->constructionbidinformationfield()->unit, ['class' => 'form-control', 'readonly']) !!}
+                            @else
+                            {!! Form::text('unit', '-', ['class' => 'form-control', 'readonly']) !!}
+                        @endif
                     </td>
                     <td>
                         {!! Form::text('remark', $constructionbidinformationitem->remark, ['class' => 'form-control', 'readonly']) !!}
