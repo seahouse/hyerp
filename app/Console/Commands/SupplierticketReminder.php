@@ -46,18 +46,20 @@ class SupplierticketReminder extends Command
     {
         //
         $msg = '以下消息为超额付款的采购订单：';
-//        $this->sendMsg($msg, 379);      // to ZhouYP
         $this->sendMsg($msg, 8);        // to WuHL
         $this->sendMsg($msg, 196);      // to LiuHM
 
         $msgWuhl = [];
         $query = Purchaseorder_hxold_simple::where('amount', '>', 0.0)->orderBy('amount', 'desc');
-        $query->whereRaw('amount_paid / amount > 1.0')->whereRaw('amount_ticketed < amount_paid');
+        $query->whereRaw('amount_paid > amount - amount_vendordeduction')->whereRaw('amount_ticketed < amount_paid');
         $query->chunk(200, function ($poheads) use (&$msgWuhl) {
             foreach ($poheads as $pohead)
             {
                 $this->info($pohead->id . '  ' . $pohead->amount);
-                $msg = '采购订单（' . $pohead->number . '）的合同金额为' . $pohead->amount . '，付款金额为' . $pohead->amount_paid . '，付款金额大于合同金额，请检查。供应商：' . $pohead->supplier_name;
+                $msg = '采购订单（' . $pohead->number . '）的合同金额为' . $pohead->amount . '，付款金额为' . $pohead->amount_paid . '，';
+                if ($pohead->amount_vendordeduction > 0.0)
+                    $msg .= '扣款金额为' . $pohead->amount_vendordeduction . '，';
+                $msg .= '付款金额大于应付金额，请检查。供应商：' . $pohead->supplier_name;
 //                Log::info($msg);
 
                 $this->sendMsg($msg, $pohead->transactor_id);
