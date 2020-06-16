@@ -15,15 +15,21 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         'e7223560d890eab89cda23685e711e2c' => __DIR__ . '/..' . '/psy/psysh/src/Psy/functions.php',
         'f18cc91337d49233e5754e93f3ed9ec3' => __DIR__ . '/..' . '/laravelcollective/html/src/helpers.php',
+        'dc1275c308c5b416beb314b6317daca2' => __DIR__ . '/..' . '/overtrue/pinyin/src/const.php',
         'f0906e6318348a765ffb6eb24e0d0938' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Foundation/helpers.php',
         '58571171fd5812e6e447dce228f52f4d' => __DIR__ . '/..' . '/laravel/framework/src/Illuminate/Support/helpers.php',
         '8d3b2199cd129cab173c6d6470bfbcb5' => __DIR__ . '/..' . '/yajra/laravel-oci8/src/helper.php',
+        'cda2d2f579338909929d3104d0afc501' => __DIR__ . '/..' . '/overtrue/laravel-pinyin/src/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
         'p' => 
         array (
             'phpDocumentor\\Reflection\\' => 25,
+        ),
+        'Z' => 
+        array (
+            'Zend\\Escaper\\' => 13,
         ),
         'Y' => 
         array (
@@ -64,6 +70,13 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
             'Psr\\Log\\' => 8,
             'PragmaRX\\Google2FA\\' => 19,
             'PhpParser\\' => 10,
+            'PhpOffice\\PhpWord\\' => 18,
+            'PhpOffice\\Common\\' => 17,
+        ),
+        'O' => 
+        array (
+            'Overtrue\\Pinyin\\' => 16,
+            'Overtrue\\LaravelPinyin\\' => 23,
         ),
         'M' => 
         array (
@@ -111,6 +124,10 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+        ),
+        'Zend\\Escaper\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zendframework/zend-escaper/src',
         ),
         'Yajra\\Datatables\\' => 
         array (
@@ -212,6 +229,22 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         'PhpParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
+        ),
+        'PhpOffice\\PhpWord\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/phpword/src/PhpWord',
+        ),
+        'PhpOffice\\Common\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/common/src/Common',
+        ),
+        'Overtrue\\Pinyin\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/overtrue/pinyin/src',
+        ),
+        'Overtrue\\LaravelPinyin\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/overtrue/laravel-pinyin/src',
         ),
         'Monolog\\' => 
         array (
@@ -356,16 +389,28 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         'Cpdf' => __DIR__ . '/..' . '/dompdf/dompdf/lib/Cpdf.php',
         'CreateAccountingorder1sTable' => __DIR__ . '/../..' . '/database/migrations/2015_07_28_024208_create_accountingorder1s_table.php',
         'CreateAddrsTable' => __DIR__ . '/../..' . '/database/migrations/2015_08_14_050948_create_addrs_table.php',
+        'CreateAnnualbonussheetsTable' => __DIR__ . '/../..' . '/database/migrations/2020_01_22_151543_create_annualbonussheets_table.php',
         'CreateApprovaltypesTable' => __DIR__ . '/../..' . '/database/migrations/2016_03_23_095930_create_approvaltypes_table.php',
         'CreateApproversettingsTable' => __DIR__ . '/../..' . '/database/migrations/2016_03_23_101359_create_approversettings_table.php',
         'CreateAsnitemsTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_24_085741_create_asnitems_table.php',
         'CreateAsnsTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_24_085359_create_asns_table.php',
+        'CreateBiddinginformationdefinefieldsTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_08_085549_create_biddinginformationdefinefields_table.php',
+        'CreateBiddinginformationfieldtypesTable' => __DIR__ . '/../..' . '/database/migrations/2020_03_14_085622_create_biddinginformationfieldtypes_table.php',
+        'CreateBiddinginformationitemsTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_08_144844_create_biddinginformationitems_table.php',
+        'CreateBiddinginformationsTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_08_090144_create_biddinginformations_table.php',
+        'CreateBiddingprojectsTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_15_094706_create_biddingprojects_table.php',
         'CreateBomheadsTable' => __DIR__ . '/../..' . '/database/migrations/2015_08_04_064324_create_bomheads_table.php',
         'CreateBomitemsTable' => __DIR__ . '/../..' . '/database/migrations/2015_08_04_064352_create_bomitems_table.php',
         'CreateCharassesTable' => __DIR__ . '/../..' . '/database/migrations/2015_10_27_090944_create_charasses_table.php',
         'CreateCharsTable' => __DIR__ . '/../..' . '/database/migrations/2015_10_23_131206_create_chars_table.php',
         'CreateCitysTable' => __DIR__ . '/../..' . '/database/migrations/2015_08_14_023611_create_citys_table.php',
+        'CreateConstructionbidinformationfieldsTable' => __DIR__ . '/../..' . '/database/migrations/2020_05_12_153900_create_constructionbidinformationfields_table.php',
+        'CreateConstructionbidinformationfieldtypesTable' => __DIR__ . '/../..' . '/database/migrations/2020_05_12_153956_create_constructionbidinformationfieldtypes_table.php',
+        'CreateConstructionbidinformationitemsTable' => __DIR__ . '/../..' . '/database/migrations/2020_05_12_153813_create_constructionbidinformationitems_table.php',
+        'CreateConstructionbidinformationsTable' => __DIR__ . '/../..' . '/database/migrations/2020_05_12_153530_create_constructionbidinformations_table.php',
         'CreateContactsTable' => __DIR__ . '/../..' . '/database/migrations/2015_08_19_083901_create_contacts_table.php',
+        'CreateCorporatepaymentattachmentsTable' => __DIR__ . '/../..' . '/database/migrations/2020_05_02_165735_create_corporatepaymentattachments_table.php',
+        'CreateCorporatepaymentsTable' => __DIR__ . '/../..' . '/database/migrations/2020_05_02_163346_create_corporatepayments_table.php',
         'CreateCountrysTable' => __DIR__ . '/../..' . '/database/migrations/2015_08_14_015912_create_countrys_table.php',
         'CreateCountysTable' => __DIR__ . '/../..' . '/database/migrations/2015_08_14_023833_create_countys_table.php',
         'CreateCustinfosTable' => __DIR__ . '/../..' . '/database/migrations/2015_08_20_065111_create_custinfos_table.php',
@@ -379,6 +424,7 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         'CreateIssuedrawingcabinetsTable' => __DIR__ . '/../..' . '/database/migrations/2018_10_20_102057_create_issuedrawingcabinets_table.php',
         'CreateIssuedrawingmodifyweightlogsTable' => __DIR__ . '/../..' . '/database/migrations/2018_06_25_203949_create_issuedrawingmodifyweightlogs_table.php',
         'CreateIssuedrawingsTable' => __DIR__ . '/../..' . '/database/migrations/2018_01_08_153006_create_issuedrawings_table.php',
+        'CreateIssuedrawingtonnagedetailsTable' => __DIR__ . '/../..' . '/database/migrations/2020_05_26_153856_create_issuedrawingtonnagedetails_table.php',
         'CreateItemclassesTable' => __DIR__ . '/../..' . '/database/migrations/2015_07_08_024921_create_itemclasses_table.php',
         'CreateItemsTable' => __DIR__ . '/../..' . '/database/migrations/2015_07_11_080212_create_items_table.php',
         'CreateItemsitesTable' => __DIR__ . '/../..' . '/database/migrations/2015_08_31_012251_create_itemsites_table.php',
@@ -418,6 +464,8 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         'CreateReimbursementtypesTable' => __DIR__ . '/../..' . '/database/migrations/2016_02_29_140752_create_reimbursementtypes_table.php',
         'CreateReportsTable' => __DIR__ . '/../..' . '/database/migrations/2017_02_14_090808_create_reports_table.php',
         'CreateRolesAndPermissionsTables' => __DIR__ . '/../..' . '/database/migrations/2016_04_11_133951_create_roles_and_permissions_tables.php',
+        'CreateSalarysheetrepliesTable' => __DIR__ . '/../..' . '/database/migrations/2020_01_29_091400_create_salarysheetreplies_table.php',
+        'CreateSalarysheetsTable' => __DIR__ . '/../..' . '/database/migrations/2020_01_03_134409_create_salarysheets_table.php',
         'CreateSalesrepsTable' => __DIR__ . '/../..' . '/database/migrations/2015_08_26_024300_create_salesreps_table.php',
         'CreateShipitemsTable' => __DIR__ . '/../..' . '/database/migrations/2015_08_31_052239_create_shipitems_table.php',
         'CreateSitehoursreminderrecordsTable' => __DIR__ . '/../..' . '/database/migrations/2019_11_04_115655_create_sitehoursreminderrecords_table.php',
@@ -426,6 +474,9 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         'CreateTeachingadministratorsTable' => __DIR__ . '/../..' . '/database/migrations/2017_01_01_105758_create_teachingadministrators_table.php',
         'CreateTeachingpointsTable' => __DIR__ . '/../..' . '/database/migrations/2017_01_01_105213_create_teachingpoints_table.php',
         'CreateTeachingstudentimagesTable' => __DIR__ . '/../..' . '/database/migrations/2017_01_01_112515_create_teachingstudentimages_table.php',
+        'CreateTechpurchaseattachmentsTable' => __DIR__ . '/../..' . '/database/migrations/2019_11_10_110931_create_techpurchaseattachments_table.php',
+        'CreateTechpurchaseitemsTable' => __DIR__ . '/../..' . '/database/migrations/2019_11_10_110010_create_techpurchaseitems_table.php',
+        'CreateTechpurchasesTable' => __DIR__ . '/../..' . '/database/migrations/2019_11_10_104818_create_techpurchases_table.php',
         'CreateTermsTable' => __DIR__ . '/../..' . '/database/migrations/2015_08_27_024511_create_terms_table.php',
         'CreateUseroldsTable' => __DIR__ . '/../..' . '/database/migrations/2017_03_03_125434_create_userolds_table.php',
         'CreateUsersTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_000000_create_users_table.php',
@@ -945,6 +996,7 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         'PHP_Token_XOR_EQUAL' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_YIELD' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
         'PHP_Token_YIELD_FROM' => __DIR__ . '/..' . '/phpunit/php-token-stream/src/Token.php',
+        'PclZip' => __DIR__ . '/..' . '/pclzip/pclzip/pclzip.lib.php',
         'PermissionsTableSeeder' => __DIR__ . '/../..' . '/database/seeds/PermissionsTableSeeder.php',
         'ReimbursementtypesTableSeeder' => __DIR__ . '/../..' . '/database/seeds/ReimbursementtypesTableSeeder.php',
         'RoleSeeder' => __DIR__ . '/../..' . '/database/seeds/RoleSeeder.php',

@@ -121,6 +121,35 @@
         </div>
     </div>
 
+    <div class="modal fade" id="selectBiddingprojectModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">所属项目</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '项目名称', 'id' => 'keyBiddingProject']) !!}
+
+                        <span class="input-group-btn">
+                   		    {!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchBiddingProject']) !!}
+                   	    </span>
+                    </div>
+                    {!! Form::hidden('name', null, ['id' => 'name']) !!}
+                    <p>
+                    <div class="list-group" id="listbiddingprojects">
+
+                    </div>
+                    </p>
+                    <form id="formAccept">
+                        {!! csrf_field() !!}
+                        {!! Form::hidden('biddingprojectid', 0, ['class' => 'form-control', 'id' => 'biddingprojectid']) !!}
+                        {!! Form::hidden('informationid', 0, ['class' => 'form-control', 'id' => 'informationid']) !!}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
@@ -403,8 +432,80 @@
                         }
                     });
                 });
+            }
 
+            $('#selectBiddingprojectModal').on('show.bs.modal', function (e) {
+                $("#listbiddingprojects").empty();
 
+                var text = $(e.relatedTarget);
+                var modal = $(this);
+                modal.find('#name').val(text.data('name'));
+                modal.find('#informationid').val(text.data('informationid'));
+                // alert(modal.find('#informationid').val());
+            });
+
+            $("#btnSearchBiddingProject").click(function() {
+                if ($("#keyBiddingProject").val() == "") {
+                    alert('请输入关键字');
+                    return;
+                }
+                $.ajax({
+                    type: "GET",
+                    url: "{!! url('/basic/biddingprojects/getitemsbykey/') !!}" + "/" + $("#keyBiddingProject").val(),
+                    success: function(result) {
+                        var strhtml = '';
+                        $.each(result.data, function(i, field) {
+                            btnId = 'btnSelectBiddingProject_' + String(i);
+                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.name + "</h4></button>"
+                        });
+                        if (strhtml == '')
+                            strhtml = '无记录。';
+                        $("#listbiddingprojects").empty().append(strhtml);
+
+                        $.each(result.data, function(i, field) {
+                            btnId = 'btnSelectBiddingProject_' + String(i);
+                            $informationid=  $("#selectBiddingprojectModal").find('#informationid').val();
+                            // alert($informationid);
+                            addBtnClickEventBiddingProject(btnId, field.name,field.id, $informationid);
+                        });
+                        // addBtnClickEvent('btnSelectOrder_0');
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('error');
+                    }
+                });
+            });
+
+            function addBtnClickEventBiddingProject(btnId, projectname,biddingprojectid, informationid)
+            {
+                $("#" + btnId).bind("click", function() {
+                    $('#selectBiddingprojectModal').modal('toggle');
+                    $("#projectid").val(projectname);
+                    $("#biddingprojectid").val(biddingprojectid);
+                    $("#informationid").val(informationid);
+
+                    {{--$.ajax({--}}
+                    {{--type: "POST",--}}
+                    {{--url: "{!! url('/basic/biddinginformations/updatesaleorderid/') !!}" ,--}}
+                    {{--data: $("form#formAccept").serialize(),--}}
+                    {{--// data: {id:soheadid,informationid:informationid},--}}
+                    {{--dataType:"json",--}}
+                    {{--success: function(result) {--}}
+                    {{--if (result.errorcode >= 0)--}}
+                    {{--{--}}
+                    {{--$('#selectOrderModal').modal('toggle');--}}
+                    {{--alert("关联成功。");--}}
+                    {{--window.location.reload('true');--}}
+                    {{--// redirect('development/fabricdischarges');--}}
+                    {{--}--}}
+                    {{--else--}}
+                    {{--alert(result.errormsg );--}}
+                    {{--},--}}
+                    {{--error: function(xhr, ajaxOptions, thrownError) {--}}
+                    {{--alert('error');--}}
+                    {{--}--}}
+                    {{--});--}}
+                });
             }
         });
     </script>

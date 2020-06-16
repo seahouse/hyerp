@@ -136,7 +136,7 @@ class BiddinginformationController extends Controller
     {
         //
         $inputs = $request->all();
-
+//        dd($inputs);
         $seqnumber = Biddinginformation::where('year', Carbon::today()->year)->max('digital_number');
         $seqnumber += 1;
         $seqnumber = str_pad($seqnumber, 4, 0, STR_PAD_LEFT);
@@ -146,6 +146,7 @@ class BiddinginformationController extends Controller
             'number'    => $number,
             'year'      => Carbon::today()->year,
             'digital_number'    => isset($seqnumber) ? $seqnumber : 1,
+            'biddingprojectid'  => isset($inputs['biddingprojectid']) ? $inputs['biddingprojectid'] : '',
         ];
         $biddinginformation = Biddinginformation::create($data);
         if (isset($biddinginformation))
@@ -283,8 +284,10 @@ class BiddinginformationController extends Controller
     public function update(Request $request, $id)
     {
         //
+//        dd($request->all());
         $biddinginformation = Biddinginformation::findOrFail($id);
         $biddinginformation->remark = $request->has('remark') ? $request->input('remark') : '';
+        $biddinginformation->biddingprojectid = $request->has('biddingprojectid') ? $request->input('biddingprojectid') : '';
         $biddinginformation->save();
 
 //        $biddinginformation->update($request->all());

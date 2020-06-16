@@ -232,6 +232,13 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
         Route::post('searchedittable', 'ConstructionbidinformationfieldController@searchedittable');
     });
     Route::resource('constructionbidinformationfields', 'ConstructionbidinformationfieldController');
+
+    Route::group(['prefix' => 'biddingprojects'], function() {
+        Route::get('getitemsbykey/{key}', 'BiddingprojectController@getitemsbykey');
+        Route::get('{id}/showbiddinginformation', 'BiddingprojectController@showbiddinginformation');
+        Route::delete('deletebiddinginformation/{id}', 'BiddingprojectController@deletebiddinginformation')->name('basic.biddingprojects.deletebiddinginformation');
+    });
+    Route::resource('biddingprojects', 'BiddingprojectController');
 });
 
 Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => ['web', 'auth']], function() {
@@ -626,7 +633,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
 
     });
     Route::resource('corporatepayment', 'CorporatepaymentController');
-    Route::resource('Corporatepaymentattachment', 'CorporatepaymentattachmentController');
+//    Route::resource('Corporatepaymentattachment', 'CorporatepaymentattachmentController');
 
     Route::group(['prefix' => 'additionsalesorder'], function() {
         Route::get('mcreate', 'AdditionsalesorderController@mcreate');
