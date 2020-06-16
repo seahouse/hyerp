@@ -628,6 +628,14 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::resource('corporatepayment', 'CorporatepaymentController');
     Route::resource('Corporatepaymentattachment', 'CorporatepaymentattachmentController');
 
+    Route::group(['prefix' => 'additionsalesorder'], function() {
+        Route::get('mcreate', 'AdditionsalesorderController@mcreate');
+        Route::post('mstore', 'AdditionsalesorderController@mstore');
+
+    });
+    Route::resource('additionsalesorder', 'AdditionsalesorderController');
+    Route::resource('additionsalesorderattachment', 'AdditionsalesorderattachmentController');
+
     Route::post('bingdingtalk', 'ApprovalController@bingdingtalk');
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexapproval');
     Route::group(['prefix' => 'report2'], function() {

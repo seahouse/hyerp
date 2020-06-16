@@ -109,9 +109,9 @@
 		</div>
 		<div class="btn-group btn-group-justified" role="group" aria-label="...">
 			<div class="btn-group" role="group">
-				<a href="#" class="btn btn-default btn-lg">
+				<a href="{{ url('/approval/additionsalesorder/mcreate') }}" class="btn btn-default btn-lg">
 					<i class="icon iconfont btn-menu-2 color-grey icon-dingding"></i>
-					<span class="labble">XXX</span>
+					<span class="labble">销售合同增补</span>
 				</a>
 			</div>
 			<div class="btn-group" role="group">

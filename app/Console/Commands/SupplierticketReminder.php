@@ -71,7 +71,7 @@ class SupplierticketReminder extends Command
                     $msgWuhl[$supplier_id]["name"] = $pohead->supplier_name;
                     $msgWuhl[$supplier_id]["messages"] = [];
                 }
-                array_push($msgWuhl[$supplier_id]["messages"], $pohead->amount_paid - $pohead->amount);
+                array_push($msgWuhl[$supplier_id]["messages"], $pohead->amount_paid - $pohead->amount + $pohead->amount_vendordeduction);
             }
         });
 
