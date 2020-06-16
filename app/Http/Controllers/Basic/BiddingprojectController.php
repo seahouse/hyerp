@@ -136,10 +136,6 @@ class BiddingprojectController extends Controller
     public function destroy($id)
     {
         //
-        $biddingproject = Biddingproject::findOrFail($id);
-        $relatebiddingcnt=$biddingproject->biddinginformation->count();
-        if ($relatebiddingcnt>0)
-
         Biddingproject::destroy($id);
         return redirect('basic/biddingprojects');
     }
