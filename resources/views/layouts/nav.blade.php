@@ -36,6 +36,7 @@
                                 <li><a href="/product/pdms/">同步到PDM</a></li>
                             @endif
                         @can('basic_biddinginformation_view')
+                                <li><a href="/basic/biddingprojects/">投标项目管理</a></li>
                             <li><a href="/basic/biddinginformations/">投标项目</a></li>
                         @endcan
                             @can('basic_constructionbidinformation_view')

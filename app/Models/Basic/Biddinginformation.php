@@ -14,6 +14,7 @@ class Biddinginformation extends Model
         'closed',
         'remark',
         'sohead_id',
+        'biddingprojectid',
     ];
 
     public function biddinginformationitems() {
@@ -24,6 +25,9 @@ class Biddinginformation extends Model
         return $this->hasOne('App\Models\Sales\Salesorder_hxold','id','sohead_id');
     }
 
+    public function biddingproject() {
+        return $this->hasOne('App\Models\Basic\Biddingproject','id','biddingprojectid');
+    }
     public function biddinginformationfieldtypes() {
         return $this->hasMany('App\Models\Basic\Biddinginformationfieldtype');
     }
