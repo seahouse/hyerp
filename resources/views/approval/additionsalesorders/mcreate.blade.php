@@ -306,42 +306,23 @@
                     var itemObject = new Object();
                     var container = $(this);
 
-                    itemObject.item_id = container.find("input[name='item_id']").val();
-                    itemObject.item_name = container.find("input[name='item_name']").val();
-                    itemObject.item_spec = container.find("input[name='item_spec']").val();
-//                    itemObject.productionoverview = container.find("textarea[name='productionoverview']").val();
+                    itemObject.type = container.find("select[name='type']").val();
+                    itemObject.otherremark = container.find("input[name='otherremark']").val();
+                    itemObject.unit = container.find("input[name='unit']").val();
 //                    itemObject.tonnage = container.find("input[name='tonnage']").val();
 //                    if (itemObject.tonnage == "")
 //                        itemObject.tonnage = 0.0;
-                    itemObject.unit = container.find("input[name='unit']").val();
-                    itemObject.brand = container.find("input[name='brand']").val();
                     itemObject.quantity = container.find("input[name='quantity']").val();
                     if (itemObject.quantity == "")
                         itemObject.quantity = 0.0;
                     console.log(!isNaN(itemObject.quantity));
                     if (isNaN(itemObject.quantity))
                         flag = false;
-                    itemObject.unit_id = container.find("select[name='unit_id']").val();
-                    if (itemObject.unit_id == "")
-                        itemObject.unit_id = 0;
-                    itemObject.unit_name = container.find("select[name='unit_id']").find("option:selected").text();
-                    itemObject.unitprice = container.find("input[name='unitprice']").val();
-                    if (itemObject.unitprice == "")
-                        itemObject.unitprice = 0.0;
-                    itemObject.price = container.find("input[name='price']").val();
+//                    itemObject.unit_name = container.find("select[name='unit_id']").find("option:selected").text();
+                    itemObject.amount = container.find("input[name='amount']").val();
+                    if (itemObject.amount == "")
+                        itemObject.amount = 0.0;
 
-//                    var unitpriceArray = new Array();
-//                    var pppaymentitemtypecontainer = container.find("div[name='pppaymentitemtypecontainer']");
-//                    pppaymentitemtypecontainer.find("div[name='div_unitpriceitem']").each(function (i) {
-//                        var unitpriceObject = new Object();
-//                        var unitpriceitemcontainer = $(this);
-//                        unitpriceObject.name = unitpriceitemcontainer.find("input[name='tonnage']").data("name");
-//                        unitpriceObject.tonnage = unitpriceitemcontainer.find("input[name='tonnage']").val();
-//                        if (unitpriceObject.tonnage == "")
-//                            unitpriceObject.tonnage = 0.0;
-//                        unitpriceObject.unitprice = unitpriceitemcontainer.find("input[name='unitprice']").val();
-//                        unitpriceArray.push(unitpriceObject);
-//                    });
 
 
                     itemArray.push(itemObject);
@@ -750,43 +731,36 @@
                 item_num++;
                 var btnId = 'btnDeleteItem_' + String(item_num);
                 var divName = 'divClassItem_' + String(item_num);
-                var itemHtml = '<div class="' + divName + '"><p class="bannerTitle">采购明细(' + String(item_num) + ')&nbsp;<button class="btn btn-sm" id="' + btnId + '" type="button">删除</button></p>\
+                var itemHtml = '<div class="' + divName + '"><p class="bannerTitle">增补内容明细(' + String(item_num) + ')&nbsp;<button class="btn btn-sm" id="' + btnId + '" type="button">删除</button></p>\
                 	<div name="container_item">\
 						<div class="form-group">\
-							{!! Form::label('item_name', '物品名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}\
+							{!! Form::label('type', '增补内容:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}\
 							<div class="col-sm-10 col-xs-8">\
-							\<input class="form-control" ="" data-toggle="modal" data-target="#selectItemModal" data-name="item_name_' + String(item_num) + '" data-num="' + String(item_num) + '" id="item_name_' + String(item_num) + '" name="item_name" type="text">\
-							<input class="btn btn-sm" id="item_id_' + String(item_num) + '" name="item_id" type="hidden" value="0">\
+							\<input class="form-control" ="" id="type_' + String(item_num) + '" name="type" type="text">\
                     </div>\
 						</div>\
 						<div class="form-group">\
-							<label for="item_spec" class="col-xs-4 col-sm-2 control-label">规格型号:</label>\
+							<label for="otherremark" class="col-xs-4 col-sm-2 control-label">其他类别补充说明:</label>\
 							<div class="col-sm-10 col-xs-8">\
-							<input class="form-control" readonly="readonly" ="" name="item_spec" type="text" id="item_spec_' + String(item_num) + '">\
+							<input class="form-control" ="" name="otherremark" type="text" id="otherremark_' + String(item_num) + '">\
 							</div>\
 						</div>\
 						<div class="form-group">\
 							<label for="unit" class="col-xs-4 col-sm-2 control-label">单位:</label>\
 							<div class="col-sm-10 col-xs-8">\
-							    <input class="form-control" readonly="readonly" ="" id="unit_' + String(item_num) + '" name="unit" type="text">\
+							    <input class="form-control" ="" id="unit_' + String(item_num) + '" name="unit" type="text">\
 							</div>\
 						</div>\
 						<div class="form-group">\
-							<label for="brand" class="col-xs-4 col-sm-2 control-label">品牌:</label>\
+							<label for="quantity" class="col-xs-4 col-sm-2 control-label">数量:</label>\
 							<div class="col-sm-10 col-xs-8">\
-							<input class="form-control" placeholder="" ="" id="brand_' + String(item_num) + '" name="brand" type="text">\
+							<input class="form-control" placeholder="" ="" id="quantity_' + String(item_num) + '" name="quantity" type="text">\
 							</div>\
 						</div>\
 						<div class="form-group">\
-							<label for="unitprice" class="col-xs-4 col-sm-2 control-label">单价:</label>\
+							<label for="amount" class="col-xs-4 col-sm-2 control-label">此项增补金额（元）:</label>\
 							<div class="col-sm-10 col-xs-8">\
-							<input class="form-control" name="unitprice" type="text"  id="unitprice_' + String(item_num) + '">\
-							</div>\
-						</div>\
-						<div class="form-group">\
-							<label for="price" class="col-xs-4 col-sm-2 control-label">金额（元）:</label>\
-							<div class="col-sm-10 col-xs-8">\
-							    <input class="form-control" ="" id="price_' + String(item_num) + '" name="price" type="text">\
+							    <input class="form-control" ="" id="amount_' + String(item_num) + '" name="amount" type="text">\
 							</div>\
 						</div>\
 					</div>\
