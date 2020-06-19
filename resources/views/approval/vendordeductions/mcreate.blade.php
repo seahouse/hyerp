@@ -86,12 +86,29 @@
             <div class="modal-header">
                 <h4 class="modal-title">选择工程现场采购审批单</h4>
             </div>
+            <div class="apprNav">
+                <div class="btn-group btn-group-justified wrapper" role="group">
+                     <div class="btn-group btnw" role="group">            
+                        <div id="tab_huaxing" class="text selected" style="cursor:pointer;">华星审批单</div>
+                    </div>
+                    <div class="btn-group btnw" role="group">
+                        <div id="tab_dingding" class="text" style="cursor:pointer;">钉钉审批单</div>
+                    </div>
+                </div>
+            </div>
             <div class="modal-body">
-            	<div class="input-group">
-            		{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '审批单号', 'id' => 'keyProjectpurchase']) !!}
-            		<span class="input-group-btn">
-                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchProjectpurchaseApproval']) !!}
-                   	</span>
+            	<div class="input-group" style="width:100%;">
+                    <div class='col-xs-4 col-sm-4' style="padding:5px;">
+                        {!! Form::select('type_id', array(), null, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!} 
+                    </div>
+                    <div class='col-xs-6 col-sm-6' style="padding:5px;">
+                        {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '审批单号', 'id' => 'keyProjectpurchase']) !!}
+                    </div>
+                    <div class='col-xs-2 col-sm-2' style="padding:5px;">
+                        <span class="input-group-btn">
+                   		    {!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchProjectpurchaseApproval']) !!}
+                       </span>
+                    </div>
             	</div>
             	{!! Form::hidden('name', null, ['id' => 'name']) !!}
             	{!! Form::hidden('id', null, ['id' => 'id']) !!}
@@ -450,9 +467,12 @@
 					alert('请输入关键字');
 					return;
 				}
+                var requestUrl = document.getElementById('tab_huaxing').className.indexOf('selected') > -1 ?
+                    '/approval/projectsitepurchases/getitemsbykey' :
+                    '/approval/projectsitepurchases/getitemsbykey';//TODO change to dingding url
 				$.ajax({
 					type: "GET",
-					url: "{!! url('/approval/projectsitepurchases/getitemsbykey/') !!}" + "/" + $("#keyProjectpurchase").val(),
+					url: "{!! url('" + requestUrl + "') !!}" + "/" + $("#keyProjectpurchase").val(),
 					success: function(result) {
 						var strhtml = '';
 						$.each(result.data, function(i, field) {
@@ -475,12 +495,34 @@
 				});
 			});
 
+            $("#tab_huaxing, #tab_dingding").click(function(e) {
+                var nav1 = document.getElementById('tab_huaxing'), 
+                    nav2 = document.getElementById('tab_dingding');
+                function resetFilterForm () {
+                    $("#keyProjectpurchase").val('');
+                    //TODO reset Select
+                    $("#listproject").empty();
+                }
+                if (this.id == 'tab_huaxing') {
+                    nav1.className="text selected";
+                    nav2.className="text";
+                    resetFilterForm();
+                }
+                else if (this.id == 'tab_dingding') {
+                    nav2.className="text selected";
+                    nav1.className="text";
+                    resetFilterForm();
+                }
+                return false;
+            });
+
 			function addBtnClickEventProjectpurchase(btnId, soheadid, name, field)
 			{
 				$("#" + btnId).bind("click", function() {
 					$('#selectProjectpurchaseApproval').modal('toggle');
                     var strhtml = '关联审批单：' + field.business_id;
                     $("#lblAssociatedapprovals").empty().append(strhtml);
+                    $("#lblAssociatedapprovals").append('<button class="btn btn-sm" id="' + field.business_id + '" type="button">删除</button>');
 					$("#associatedapprovals").val(field.process_instance_id);
 //					$("#supplier_bankaccountnumber").val(field.bankaccountnumber);
 //					$("#vendbank_id").val(field.vendbank_id);
