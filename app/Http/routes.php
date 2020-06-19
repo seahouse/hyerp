@@ -236,6 +236,8 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
     Route::group(['prefix' => 'biddingprojects'], function() {
         Route::get('getitemsbykey/{key}', 'BiddingprojectController@getitemsbykey');
         Route::get('{id}/showbiddinginformation', 'BiddingprojectController@showbiddinginformation');
+        Route::any('export', 'BiddingprojectController@export')->name('basic.biddingprojects.export');
+        Route::get('downloadfile/{filename}', 'BiddingprojectController@downloadfile')->name('basic.biddingprojects.downloadfile');
         Route::delete('deletebiddinginformation/{id}', 'BiddingprojectController@deletebiddinginformation')->name('basic.biddingprojects.deletebiddinginformation');
     });
     Route::resource('biddingprojects', 'BiddingprojectController');
