@@ -736,7 +736,7 @@
 						<div class="form-group">\
 							{!! Form::label('type', '增补内容:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}\
 							<div class="col-sm-10 col-xs-8">\
-							\<input class="form-control" ="" id="type_' + String(item_num) + '" name="type" type="text">\
+							{!! Form::select('type', array('机务材料' => '机务材料', '机务设备' => '机务设备', '电气材料' => '电气材料', '电气设备' => '电气设备', '人工用量' => '人工用量', '运费' => '运费', '其他类别' => '其他类别'), null, ['class' => 'form-control']) !!}\
                     </div>\
 						</div>\
 						<div class="form-group">\
