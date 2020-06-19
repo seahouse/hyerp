@@ -646,6 +646,8 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::resource('additionsalesorderattachment', 'AdditionsalesorderattachmentController');
 
     Route::post('bingdingtalk', 'ApprovalController@bingdingtalk');
+    Route::get('gethxitemsbykey', 'ApprovalController@gethxitemsbykey');
+    Route::get('getdtitemsbykey', 'ApprovalController@getdtitemsbykey');
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexapproval');
     Route::group(['prefix' => 'report2'], function() {
         Route::get('issuedrawingpurchasedetail', 'ApprovalController@issuedrawingpurchasedetail');

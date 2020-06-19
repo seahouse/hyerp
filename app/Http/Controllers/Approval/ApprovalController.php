@@ -15,6 +15,7 @@ use App\Models\Approval\Mcitempurchase;
 use App\Models\Approval\Paymentrequestretract;
 use App\Models\Approval\Pppayment;
 use App\Models\Approval\Pppaymentitem;
+use App\Models\Approval\Projectsitepurchase;
 use App\Models\Sales\Project_hxold;
 use App\Models\Sales\Salesorder_hxold;
 use App\Models\System\User;
@@ -40,6 +41,230 @@ class ApprovalController extends Controller
     public function index()
     {
         //
+    }
+
+    public function gethxitemsbykey(Request $request)
+    {
+        Log::info($request->all());
+
+        $data = [];
+        $type = 'projectsitepurchase';
+        if ($request->has('type') && strlen($request->input('type')) > 0)
+        {
+            $type = $request->input('type');
+        }
+        switch ($type)
+        {
+            case 'projectsitepurchase':
+                $query = Projectsitepurchase::where('business_id', $request->input('key'))->orderBy('id', 'desc');
+        }
+//        $query = Projectsitepurchase::where('business_id', $key)->orderBy('id', 'desc');
+//        $query->leftJoin('users', 'users.id', '=', 'projectsitepurchases.applicant_id');
+//        $query->leftJoin('hxcrm2016.dbo.vorder', 'vorder.id', '=', 'projectsitepurchases.sohead_id');
+//        $items = $query->select('projectsitepurchases.*', 'users.name as applicant', 'hxcrm2016.dbo.vorder.projectjc', 'hxcrm2016.dbo.vorder.number as sohead_number', 'hxcrm2016.dbo.vorder.salesmanager')->paginate(20);
+
+//        $items = $query->paginate(20);
+        $items = $query->first();
+        if (isset($items))
+        {
+            $data['business_id'] = $items->business_id;
+            $data['process_instance_id'] = $items->process_instance_id;
+            $data['title'] = isset($items->applicant) ? $items->applicant->name . '发起的审批单' : '';
+        }
+        Log::info($data);
+
+        return $data;
+//        return response($items)
+//            ->header('Access-Control-Allow-Origin', 'http://www.huaxing-east.cn:2016');
+    }
+
+    public function getdtitemsbykey(Request $request)
+    {
+        $msg = '';
+
+        $data = [];
+        if (strlen($msg) == 0)
+        {
+            $business_id = $request->input('key');
+//            Log::info(substr($business_id, 0, 12));
+            $startTime = Carbon::createFromFormat('YmdHi', substr($business_id, 0, 12));
+            $endTime = $startTime->copy()->addMinute();
+//            Log::info($startTime);
+//            Log::info($endTime);
+            $approvaltype = $request->input('type');
+            $response = ApprovalController::processinstance_listids($approvaltype, $startTime, $endTime);
+            Log::info(json_encode($response));
+            if ($response->result->ding_open_errcode == "0")
+            {
+                foreach ($response->result->result->list->process_instance_top_vo as $item)
+                {
+                    if ($item->business_id == $business_id)
+                    {
+                        $data['business_id'] = $business_id;
+                        $data['process_instance_id'] = "$item->process_instance_id";
+                        $data['title'] = "$item->title";
+
+//                        $approvaltype = $request->get('approvaltype');
+                        $formData = [];
+                        $user = User::where('dtuserid', $item->originator_userid)->first();
+                        foreach ($item->form_component_values->form_component_value_vo as $formvalue)
+                        {
+//                            Log::info(json_encode($formvalue));
+//                            Log::info($formvalue->name . ": " . $formvalue->value);
+                            $formData["$formvalue->name"] = "$formvalue->value";
+                        }
+                        $data['content'] = json_encode(array_slice($formData, 0, 3));
+                        Log::info($data);
+                        if ($approvaltype == 'issuedrawing')
+                        {
+                            //                                Log::info(json_encode($formData));
+                            $input = [];
+//                                Log::info($formData['设计部门']);
+                            $input['designdepartment'] = $formData['设计部门'];
+
+                            $sohead = Salesorder_hxold::where('number', $formData['项目编号'])->first();
+                            if (isset($sohead))
+                                $input['sohead_id'] = $sohead->id;
+                            else
+                                $msg = '销售订单不存在，无法继续。';
+                            $input['overview'] = $formData['制作概述'];
+                            $input['tonnage'] = $formData['吨位（吨）'];
+                            $input['productioncompany'] = $formData['制作公司'];
+                            $input['materialsupplier'] = $formData['材料供应方'];
+                            $drawingchecker = User::where('name', $formData['图纸校核人'])->first();
+                            if (isset($drawingchecker))
+                                $input['drawingchecker_id'] = $drawingchecker->id;
+                            else
+                                $msg = '图纸校核人不存在，无法继续。';
+                            $input['requestdeliverydate'] = $formData['要求发货日'];
+                            $input['drawingcount'] = $formData['图纸份数（份）'];
+                            $input['remark'] = $formData['备注'];
+                            if (isset($user))
+                            {
+                                $input['applicant_id'] = $user->id;
+                            }
+                            else
+                                $msg = '发起人不存在，无法继续。';
+                            $input['approversetting_id'] = -1;
+                            if ($item->status == "COMPLETED")
+                            {
+                                if ($item->process_instance_result == "agree")
+                                    $input['status'] = 0;
+                                else
+                                    $input['status'] = -1;
+                            }
+                            else
+                                $msg = '此审批单还未结束，无法继续';
+                            $input['process_instance_id'] = "$item->process_instance_id";
+                            $input['business_id'] = "$item->business_id";
+
+//                                Log::info(json_encode($input));
+
+                        }
+                        elseif ($approvaltype == 'mcitempurchase')
+                        {
+                            //                                Log::info(json_encode($formData));
+                            $input = [];
+//                                Log::info($formData['设计部门']);
+                            $input['manufacturingcenter'] = $formData['所属制造中心'];
+                            $input['itemtype'] = $formData['申购物品类型'];
+                            $input['expirationdate'] = $formData['要求最晚到货时间'];
+
+                            $sohead = Salesorder_hxold::where('number', $formData['项目编号'])->first();
+                            if (isset($sohead))
+                                $input['sohead_id'] = $sohead->id;
+                            else
+                                $msg = '销售订单不存在，无法继续。';
+                            $input['totalprice'] = $formData['总价（元）'];
+                            $input['detailuse'] = $formData['采购物品详细用途'];
+                            if (isset($user))
+                            {
+                                $input['applicant_id'] = $user->id;
+                            }
+                            else
+                                $msg = '发起人不存在，无法继续。';
+                            $input['approversetting_id'] = -1;
+                            if ($item->status == "COMPLETED")
+                            {
+                                if ($item->process_instance_result == "agree")
+                                    $input['status'] = 0;
+                                else
+                                    $input['status'] = -1;
+                            }
+                            else
+                                $msg = '此审批单还未结束，无法继续';
+                            $input['process_instance_id'] = "$item->process_instance_id";
+                            $input['business_id'] = "$item->business_id";
+
+//                            Log::info(json_encode($input));
+//                            $issuedrawing_numbers = explode(',', $formData['下发图纸审批单号']);
+
+
+
+                            if (strlen($msg) == 0)
+                            {
+                            }
+                        }
+                        elseif ($approvaltype == 'pppayment')
+                        {
+                            $input = [];
+                            $input['productioncompany'] = $formData['制作公司'];
+                            $input['designdepartment'] = $formData['设计部门'];
+                            $input['paymentreason'] = $formData['付款事由'];
+                            $input['invoicingsituation'] = $formData['发票开具情况'];
+                            $input['totalpaid'] = $formData['该加工单已付款总额'];
+                            $input['amount'] = $formData['本次申请付款总额'];
+                            $input['paymentdate'] = $formData['支付日期'];
+                            $supplier = Vendinfo_hxold::where('name', $formData['支付对象'])->first();
+                            if (isset($supplier))
+                                $input['supplier_id'] = $supplier->id;
+                            else
+                                $input['supplier_id'] = 0;
+                            $vendbank = Vendbank_hxold::where('bankname', $formData['开户行'])->where('accountnum', $formData['开户行'])->first();
+                            if (isset($vendbank))
+                                $input['vendbank_id'] = $vendbank->id;
+                            else
+                                $input['vendbank_id'] = 0;
+
+                            if (isset($user))
+                            {
+                                $input['applicant_id'] = $user->id;
+                            }
+                            else
+                                $msg = '发起人不存在，无法继续。';
+                            $input['approversetting_id'] = -1;
+                            if ($item->status == "COMPLETED")
+                            {
+                                if ($item->process_instance_result == "agree")
+                                    $input['status'] = 0;
+                                else
+                                    $input['status'] = -1;
+                            }
+                            else
+                                $msg = '此审批单还未结束，无法继续';
+                            $input['process_instance_id'] = "$item->process_instance_id";
+                            $input['business_id'] = "$item->business_id";
+
+//                            Log::info(json_encode($input));
+
+                            if (strlen($msg) == 0)
+                            {
+                            }
+                        }
+
+                        break;
+                    }
+                    else
+                        continue;
+//                    Log::info(json_encode($item));
+                }
+            }
+            else
+                $msg = '获取钉钉审批单失败。';
+//            Log::info($response->result->ding_open_errcode);
+        }
+
+        return $data;
     }
 
     /**

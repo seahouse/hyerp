@@ -84,7 +84,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">选择工程现场采购审批单</h4>
+                <h4 class="modal-title">选择关联相关审批单</h4>
             </div>
             <div class="apprNav">
                 <div class="btn-group btn-group-justified wrapper" role="group">
@@ -99,7 +99,7 @@
             <div class="modal-body">
             	<div class="input-group" style="width:100%;">
                     <div class='col-xs-4 col-sm-4' style="padding:5px;">
-                        {!! Form::select('type_id', array(), null, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!} 
+                        {!! Form::select('type', array('projectsitepurchase' => '工程采购'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'id' => 'approvaltype']) !!}
                     </div>
                     <div class='col-xs-6 col-sm-6' style="padding:5px;">
                         {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '审批单号', 'id' => 'keyProjectpurchase']) !!}
@@ -468,11 +468,11 @@
 					return;
 				}
                 var requestUrl = document.getElementById('tab_huaxing').className.indexOf('selected') > -1 ?
-                    '/approval/projectsitepurchases/getitemsbykey' :
-                    '/approval/projectsitepurchases/getitemsbykey';//TODO change to dingding url
+                    '/approval/gethxitemsbykey' :
+                    '/approval/getdtitemsbykey';//TODO change to dingding url
 				$.ajax({
 					type: "GET",
-					url: "{!! url('" + requestUrl + "') !!}" + "/" + $("#keyProjectpurchase").val(),
+					url: "{!! url('" + requestUrl + "') !!}" + "?type=" + $("#approvaltype").val() + "&key=" + $("#keyProjectpurchase").val(),
 					success: function(result) {
 						var strhtml = '';
 						$.each(result.data, function(i, field) {
