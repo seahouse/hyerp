@@ -2890,7 +2890,7 @@ class ApprovalController extends Controller
         $format = 'json';
         $v = '2.0';
 
-        $process_code = config('custom.dingtalk.approval_processcode.corporatepayment');
+        $process_code = config('custom.dingtalk.approval_processcode.additionsalesorder');
         $originator_user_id = $user->dtuserid;
         $departmentList = json_decode($user->dtuser->department);
         $dept_id = 0;
@@ -2908,87 +2908,97 @@ class ApprovalController extends Controller
 //        if ($approvers == "")
 //            $approvers = config('custom.dingtalk.default_approvers');       // wuceshi for test
 
+        $detail_array = [];
+        $additionsalesorder_items = json_decode($inputs['items_string']);
+        $totalamount = 0.0;
+        foreach ($additionsalesorder_items as $value) {
+            if (strlen($value->type) > 0)
+            {
+//                Log::info(json_encode($value));
+                $item_array = [
+                    [
+                        'name'      => '增补内容',
+                        'value'     => $value->type,
+                    ],
+                    [
+                        'name'      => '其他类别补充说明',
+                        'value'     => $value->otherremark,
+                    ],
+                    [
+                        'name'      => '单位',
+                        'value'     => $value->unit,
+                    ],
+                    [
+                        'name'      => '数量',
+                        'value'     => $value->quantity,
+                    ],
+                    [
+                        'name'      => '此项增补金额（元）',
+                        'value'     => $value->amount,
+                    ],
+                ];
+                array_push($detail_array, $item_array);
+                $totalamount += $value->quantity;
+            }
+        }
+
         $formdata = [
             [
-                'name'      => '职位',
-                'value'     => $inputs['position'],
+                'name'      => '项目名称：',
+                'value'     => $inputs['project_name'],
             ],
             [
-                'name'      => '费用类型',
-                'value'     => $inputs['amounttype'],
+                'name'      => '项目编号：',
+                'value'     => $inputs['sohead_number'],
             ],
             [
-                'name'      => '现场采购费类说明',
-                'value'     => $inputs['remark'],
-            ],
-            [
-                'name'      => '项目属于销售员',
+                'name'      => '项目所属销售经理',
                 'value'     => $inputs['sohead_salesmanager'],
             ],
             [
-                'name'      => '付款说明',
+                'name'      => '已签增补合同？',
+                'value'     => $inputs['signcontract_condition'],
+            ],
+            [
+                'name'      => '本项签增原因详细说明',
+                'value'     => $inputs['reason'],
+            ],
+            [
+                'name'      => '本次增补总额总计',
+                'value'     => $totalamount,
+            ],
+            [
+                'name'      => '备注',
                 'value'     => $inputs['remark'],
             ],
-            [
-                'name'      => '付款总额',
-                'value'     => $inputs['amount'],
-            ],
-            [
-                'name'      => '支付日期',
-                'value'     => $inputs['paydate'],
-            ],
-            [
-                'name'      => '付款方式',
-                'value'     => $inputs['paymentmethod'],
-            ],
-            [
-                'name'      => '支付单位全称',
-                'value'     => $inputs['supplier_name'],
-            ],
-            [
-                'name'      => '开户行及帐号',
-                'value'     => $inputs['supplier_bank'] . ',' . $inputs['supplier_bankaccountnumber'],
-            ],
 //            [
-//                'name'      => '交通或运费（元）',
-//                'value'     => $inputs['freight'],
-//            ],
-//            [
-//                'name'      => '支付方式',
+//                'name'      => '付款方式',
 //                'value'     => $inputs['paymentmethod'],
 //            ],
 //            [
-//                'name'      => '发票情况',
-//                'value'     => $inputs['invoicesituation'],
+//                'name'      => '支付单位全称',
+//                'value'     => $inputs['supplier_name'],
 //            ],
 //            [
-//                'name'      => '公司名称',
-//                'value'     => $inputs['companyname'],
-//            ],
-//            [
-//                'name'      => '联系人',
-//                'value'     => $inputs['contact'],
-//            ],
-//            [
-//                'name'      => '联系方式',
-//                'value'     => $inputs['phonenumber'],
-//            ],
-//            [
-//                'name'      => '备注',
-//                'value'     => $inputs['otherremark'],
-//            ],
-//            [
-//                'name'      => '上传购买凭证',
-//                'value'     => $inputs['image_urls'],
+//                'name'      => '开户行及帐号',
+//                'value'     => $inputs['supplier_bank'] . ',' . $inputs['supplier_bankaccountnumber'],
 //            ],
             [
                 'name'      => '附件',
                 'value'     => $inputs['files_string'],
             ],
             [
-                'name'      => '关联《工程采购》审批单',
-                'value'     => $inputs['associated_approval_projectpurchase'],
+                'name'      => '增补合同上传',
+                'value'     => $inputs['image_urls'],
             ],
+            [
+                'name'      => '增补内容明细',
+                'value'     => json_encode($detail_array),
+            ],
+//            [
+//                'name'      => '关联《工程采购》审批单',
+//                'value'     => $inputs['associated_approval_projectpurchase'],
+//            ],
         ];
         $form_component_values = json_encode($formdata);
 //        dd($form_component_values);
