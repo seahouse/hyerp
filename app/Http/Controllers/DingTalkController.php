@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Approval\AdditionsalesorderController;
 use App\Http\Controllers\Approval\CorporatepaymentController;
 use App\Http\Controllers\Approval\IssuedrawingController;
 use App\Http\Controllers\Approval\McitempurchaseController;
@@ -1244,6 +1245,8 @@ class DingTalkController extends Controller
                         TechpurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.corporatepayment'))
                         CorporatepaymentController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.additionsalesorder'))
+                        AdditionsalesorderController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
                 }
                 elseif ($data->type == "finish" && $data->result == "refuse")
                 {
@@ -1261,6 +1264,8 @@ class DingTalkController extends Controller
                         TechpurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.corporatepayment'))
                         CorporatepaymentController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.additionsalesorder'))
+                        AdditionsalesorderController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
                 }
                 elseif ($data->type == "terminate")
                 {
@@ -1278,6 +1283,8 @@ class DingTalkController extends Controller
                         TechpurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.corporatepayment'))
                         CorporatepaymentController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.additionsalesorder'))
+                        AdditionsalesorderController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
                 }
                 elseif ($data->type == "delete")
                 {
@@ -1295,6 +1302,8 @@ class DingTalkController extends Controller
                         TechpurchaseController::deleteByProcessInstanceId($data->processInstanceId);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.corporatepayment'))
                         CorporatepaymentController::deleteByProcessInstanceId($data->processInstanceId);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.additionsalesorder'))
+                        AdditionsalesorderController::deleteByProcessInstanceId($data->processInstanceId);
                 }
             }
             else if ("bpms_task_change" === $eventType)

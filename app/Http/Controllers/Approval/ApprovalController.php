@@ -2938,7 +2938,7 @@ class ApprovalController extends Controller
                     ],
                 ];
                 array_push($detail_array, $item_array);
-                $totalamount += $value->quantity;
+                $totalamount += $value->amount;
             }
         }
 
@@ -2984,7 +2984,7 @@ class ApprovalController extends Controller
 //                'value'     => $inputs['supplier_bank'] . ',' . $inputs['supplier_bankaccountnumber'],
 //            ],
             [
-                'name'      => '附件',
+                'name'      => '签增单上传',
                 'value'     => $inputs['files_string'],
             ],
             [

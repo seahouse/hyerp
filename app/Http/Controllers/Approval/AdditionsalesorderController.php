@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Auth;
+use Auth, Storage;
 
 class AdditionsalesorderController extends Controller
 {
@@ -337,5 +337,24 @@ class AdditionsalesorderController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public static function updateStatusByProcessInstanceId($processInstanceId, $status)
+    {
+        $additionsalesorder = Additionsalesorder::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if (isset($additionsalesorder))
+        {
+            $additionsalesorder->status = $status;
+            $additionsalesorder->save();
+        }
+    }
+
+    public static function deleteByProcessInstanceId($processInstanceId)
+    {
+        $additionsalesorder = Additionsalesorder::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if ($additionsalesorder)
+        {
+            $additionsalesorder->forceDelete();
+        }
     }
 }
