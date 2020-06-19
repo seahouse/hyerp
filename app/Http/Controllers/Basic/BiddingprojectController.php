@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Basic;
 
 use App\Models\Basic\Biddinginformation;
+use App\Models\Basic\Biddinginformationdefinefield;
+use App\Models\Basic\Biddinginformationitem;
 use App\Models\Basic\Biddingproject;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Excel,DB,Log;
 
 class BiddingprojectController extends Controller
 {
@@ -126,6 +129,92 @@ class BiddingprojectController extends Controller
         $biddinginformation->biddingprojectid='';
         $biddinginformation->save();
         return redirect('/basic/biddingprojects/'.$id.'/showbiddinginformation');
+    }
+
+    public function export(Request $request)
+    {
+        $filename = 'Projectinfo';
+        Excel::create($filename, function($excel) use ($request) {
+            $excel->sheet('Sheet1', function($sheet) use ($request) {
+//                $query = Biddinginformationdefinefield::select('*');
+//
+//                $biddinginformationdefinefields = $query->orderBy('sort')->get();
+                $biddinginformationdefinefields = DB::table('biddinginformationdefinefields')->orderBy('sort')->get();
+                $data = [];
+                array_push($data, '项目名');
+                foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+                {
+                    array_push($data, $biddinginformationdefinefield->name);
+                }
+                $sheet->appendRow($data);
+                $rowCol = 2;        // 从第二行开始
+                $colCol=0;         //从第一列开始
+
+
+//                $query = DB::table('biddinginformations')->leftjoin('biddingprojects','biddinginformations.biddingprojectid','=','biddingprojects.id')->select('biddingprojects.name','biddinginformation.id')->get();
+
+                Biddingproject::chunk(100, function($biddingprojects) use ($sheet, $biddinginformationdefinefields, &$rowCol,&$colCol) {
+                    foreach ($biddingprojects as $biddingproject)
+                    {
+                        $data = [];
+
+                        array_push($data, $biddingproject->name);
+                        $sheet->getCell(\PHPExcel_Cell::stringFromColumnIndex($colCol).$rowCol)->setValue($biddingproject->name);
+                        $colCol++;
+//                        dd($sheet->getCell(\PHPExcel_Cell::stringFromColumnIndex($colCol-1).$rowCol)->getValue());
+                        $biddinginformations=DB::table('biddinginformations')->where('biddingprojectid',$biddingproject->id)->get();
+//                        dd();
+                        if(count($biddinginformations)>0)
+                        {
+//                                dd($biddinginformation);
+                           foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+                            {
+                                $list='';
+                                foreach($biddinginformations as $biddinginformation)
+                                    {
+//                                      $biddinginformationitem = $biddinginformation->biddinginformationitems()->where('key', $biddinginformationdefinefield->name)->first();
+                                        $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationdefinefield->name)->select('key', 'value')->first();
+
+                                        if(isset($biddinginformationitem) && $list<>'' )
+                                        {
+                                            $list= $list.';'. $biddinginformationitem->value;
+                                        }
+                                        else if(isset($biddinginformationitem) && $list=='')
+                                        {
+                                            $list= $biddinginformationitem->value;
+                                        }
+
+                                    }
+                                $sheet->getCell(\PHPExcel_Cell::stringFromColumnIndex($colCol).$rowCol)->setValue($list);
+                                $colCol++;
+                             }
+
+
+                        }
+
+                        $rowCol++;
+                        $colCol=0;
+                    }
+                });
+//                $freezeCol = config('custom.bidding.freeze_detail_col', 'B');
+//                $sheet->setFreeze($freezeCol . '2');
+            });
+
+        })->store('xlsx', public_path('download/biddingprojects'));
+
+        $file = public_path('download/biddingprojects/' . $filename . '.xlsx');
+        Log::info('file path:' . $file);
+//        dd($file);
+        return response()->download($file);
+//        return route('basic.biddingprojects.downloadfile', ['filename' => $filename . '.xlsx']);
+    }
+
+    public function downloadfile($filename)
+    {
+        $file = public_path('download/biddingprojects/' . $filename);
+        Log::info('file path:' . $file);
+//        dd($file);
+        return response()->download($file);
     }
     /**
      * Remove the specified resource from storage.

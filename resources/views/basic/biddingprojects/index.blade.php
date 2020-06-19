@@ -5,6 +5,7 @@
 @section('main')
     <div class="panel-heading">
         <a href="/basic/biddingprojects/create" class="btn btn-sm btn-success">新建</a>
+        <a href="/basic/biddingprojects/export" class="btn btn-sm btn-success pull-right">导出</a>
         {{--<a href="shipments/import" class="btn btn-sm btn-success">导入(Import)</a>--}}
     </div>
 
