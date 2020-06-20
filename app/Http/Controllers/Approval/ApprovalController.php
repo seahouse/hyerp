@@ -113,7 +113,7 @@ class ApprovalController extends Controller
 //                            Log::info($formvalue->name . ": " . $formvalue->value);
                             $formData["$formvalue->name"] = "$formvalue->value";
                         }
-                        $data['content'] = json_encode(array_slice($formData, 0, 3));
+                        $data['content'] = array_slice($formData, 0, 3);
                         Log::info($data);
                         if ($approvaltype == 'issuedrawing')
                         {
