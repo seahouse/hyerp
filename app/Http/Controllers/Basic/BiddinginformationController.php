@@ -271,6 +271,7 @@ class BiddinginformationController extends Controller
                 'errorcode' =>$retcode,
                 'errormsg' => '更新失败',
             ];
+//        Log::Info($retcode);
         return response()->json($data);
     }
 

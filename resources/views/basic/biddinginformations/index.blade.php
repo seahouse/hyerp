@@ -233,7 +233,7 @@
 
                     </div>
                     </p>
-                    <form id="formAccept">
+                    <form id="formsoheadAccept">
                         {!! csrf_field() !!}
                         {!! Form::hidden('soheadid', 0, ['class' => 'form-control', 'id' => 'soheadid']) !!}
                         {!! Form::hidden('informationid', 0, ['class' => 'form-control', 'id' => 'informationid']) !!}
@@ -395,11 +395,11 @@
 // //					$("#vendbank_id").val(field.vendbank_id);
 // //					$("#selectSupplierBankModal").find("#vendinfo_id").val(supplierid);
 //                     alert(soheadid +"," + informationid);
-
+//                     alert($("form#formsoheadAccept").serialize());
                     $.ajax({
                         type: "POST",
                         url: "{!! url('/basic/biddinginformations/updatesaleorderid/') !!}" ,
-                        data: $("form#formAccept").serialize(),
+                        data: $("form#formsoheadAccept").serialize(),
                         // data: {id:soheadid,informationid:informationid},
                         dataType:"json",
                         success: function(result) {
@@ -414,6 +414,7 @@
                                 alert(result.errormsg );
                         },
                         error: function(xhr, ajaxOptions, thrownError) {
+                            alert(xhr );
                             alert('error');
                         }
                     });
