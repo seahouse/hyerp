@@ -1,6 +1,6 @@
 @extends('app')
 
-@section('title', '创建付款-对公帐户付款')
+@section('title', '创建付款-销售合同增补')
 
 @section('main')
 
