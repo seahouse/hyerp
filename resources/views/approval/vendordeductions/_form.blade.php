@@ -335,13 +335,13 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('associatedapprovals', '关联增补审批单111:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+        {!! Form::label('associatedapprovals', '关联增补审批单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
         <div class='col-xs-8 col-sm-10'>
             {!! Form::button('+', ['class' => 'btn btn-sm', 'data-toggle' => 'modal', 'data-target' => '#selectProjectpurchaseApproval']) !!}
             {!! Form::hidden('associatedapprovals', null, ['class' => 'btn btn-sm']) !!}
             <div id="lblAssociatedapprovals">
-            </div>TODO
+            </div>
         </div>
     </div>
 

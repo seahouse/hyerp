@@ -86,16 +86,6 @@
             <div class="modal-header">
                 <h4 class="modal-title">选择关联相关审批单</h4>
             </div>
-            <div class="apprNav">
-                <div class="btn-group btn-group-justified wrapper" role="group">
-                     <div class="btn-group btnw" role="group">            
-                        <div id="tab_huaxing" class="text selected" style="cursor:pointer;">华星审批单</div>
-                    </div>
-                    <div class="btn-group btnw" role="group">
-                        <div id="tab_dingding" class="text" style="cursor:pointer;">钉钉审批单</div>
-                    </div>
-                </div>
-            </div>
             <div class="modal-body">
             	<div class="input-group" style="width:100%;">
                     <div class='col-xs-4 col-sm-4' style="padding:5px;">
@@ -451,6 +441,8 @@
 
 			$('#selectProjectpurchaseApproval').on('show.bs.modal', function (e) {
 				$("#listproject").empty();
+                $("#approvaltype").val('');
+                $("#keyProjectpurchase").val('');
 
 				var target = $(e.relatedTarget);
 				// alert(text.data('id'));
@@ -463,30 +455,43 @@
 			});
 
 			$("#btnSearchProjectpurchaseApproval").click(function() {
+                if ($("#approvaltype").val() == "") {
+                    alert('请选择审批单类型');
+                    return;
+                }
+
 				if ($("#keyProjectpurchase").val() == "") {
 					alert('请输入关键字');
 					return;
 				}
-                var requestUrl = document.getElementById('tab_huaxing').className.indexOf('selected') > -1 ?
-                    '/approval/gethxitemsbykey' :
-                    '/approval/getdtitemsbykey';//TODO change to dingding url
+
+                var requestUrl = 'approval/getdtitemsbykey';
 				$.ajax({
 					type: "GET",
 					url: "{!! url('" + requestUrl + "') !!}" + "?type=" + $("#approvaltype").val() + "&key=" + $("#keyProjectpurchase").val(),
 					success: function(result) {
-						var strhtml = '';
-						$.each(result.data, function(i, field) {
-							btnId = 'btnSelectProjectpurchase_' + String(i);
-							strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.business_id + "</h4><p>提交人：" + field.applicant + "，工程简称：" + field.projectjc + "，订单编号：" + field.sohead_number +"，订单销售经理：" + field.salesmanager + "</p></button>"
-						});
-						if (strhtml == '')
-							strhtml = '无记录。';
-						$("#listproject").empty().append(strhtml);
 
-						$.each(result.data, function(i, field) {
-							btnId = 'btnSelectProjectpurchase_' + String(i);
-							addBtnClickEventProjectpurchase(btnId, field.id, field.number, field);
-						});
+						var html = [];
+                        if (result && result.business_id) {
+                            html.push("<button type='button' class='list-group-item' id='btnSelectProjectpurchase_0'>");
+                            html.push("<h4>" + result.business_id + "</h4><p>");
+                            html.push(result.title+ '<br/>');
+                            if (result.content) {
+                                for(var key in result.content) {
+                                    if (result.content.hasOwnProperty(key)) {
+                                        html.push(key + ': ' + result.content[key] + '<br/>');
+                                    }
+                                }
+                            }
+                            html.push("</p></button>");
+                        }
+                        else {
+                            html.push('无记录。');
+                        }
+
+						$("#listproject").empty().append(html.join(''));
+
+						addBtnClickEventProjectpurchase('btnSelectProjectpurchase_0', result);
 						// addBtnClickEvent('btnSelectOrder_0');
 					},
 					error: function(xhr, ajaxOptions, thrownError) {
@@ -495,39 +500,44 @@
 				});
 			});
 
-            $("#tab_huaxing, #tab_dingding").click(function(e) {
-                var nav1 = document.getElementById('tab_huaxing'), 
-                    nav2 = document.getElementById('tab_dingding');
-                function resetFilterForm () {
-                    $("#keyProjectpurchase").val('');
-                    //TODO reset Select
-                    $("#listproject").empty();
-                }
-                if (this.id == 'tab_huaxing') {
-                    nav1.className="text selected";
-                    nav2.className="text";
-                    resetFilterForm();
-                }
-                else if (this.id == 'tab_dingding') {
-                    nav2.className="text selected";
-                    nav1.className="text";
-                    resetFilterForm();
-                }
-                return false;
-            });
-
-			function addBtnClickEventProjectpurchase(btnId, soheadid, name, field)
+			function addBtnClickEventProjectpurchase(btnId, field)
 			{
 				$("#" + btnId).bind("click", function() {
 					$('#selectProjectpurchaseApproval').modal('toggle');
-                    var strhtml = '关联审批单：' + field.business_id;
-                    $("#lblAssociatedapprovals").empty().append(strhtml);
-                    $("#lblAssociatedapprovals").append('<button class="btn btn-sm" id="' + field.business_id + '" type="button">删除</button>');
-					$("#associatedapprovals").val(field.process_instance_id);
+
+                    var html = [];
+                    html.push('<div id="divRemovePurchaseClick_' + field.business_id + '">');
+                    html.push("<span>关联审批单：" + field.business_id + "</span>");
+                    html.push('&nbsp;&nbsp;<a data-business_id="' + field.business_id + '" data-process_instance_id="' + field.process_instance_id + '" onclick="window.removeProjectpurchaseClick(this);" href="javascript:void(0);">删除</a>');
+                    html.push("</div>");
+
+                    var hVal = [];
+                    if ($("#associatedapprovals").val() != '') {
+                        hVal = $("#associatedapprovals").val().split(',');
+                    } 
+                    if ($.inArray(field.process_instance_id, hVal) < 0) {
+                        hVal.push(field.process_instance_id);
+                        $("#lblAssociatedapprovals").append(html.join(''));
+                    }
+                    $("#associatedapprovals").val(hVal.join(','));
 //					$("#supplier_bankaccountnumber").val(field.bankaccountnumber);
 //					$("#vendbank_id").val(field.vendbank_id);
 				});
 			}
+
+            window.removeProjectpurchaseClick = function(it) {
+                var process_instance_id = $(it).attr('data-process_instance_id');
+                $("#divRemovePurchaseClick_" + $(it).attr('data-business_id')).remove();
+                
+                var hVal = [];
+                if ($("#associatedapprovals").val() != '') {
+                    hVal = $("#associatedapprovals").val().split(',');
+                } 
+                var pos = $.inArray(process_instance_id, hVal);
+                hVal.splice(pos, 1);
+                $("#associatedapprovals").val(hVal.join(','));
+                return false;
+            }
 
             $('#selectItemModal').on('show.bs.modal', function (e) {
                 $("#listitem").empty();
