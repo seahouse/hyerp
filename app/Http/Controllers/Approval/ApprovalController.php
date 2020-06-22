@@ -96,167 +96,170 @@ class ApprovalController extends Controller
             Log::info(json_encode($response));
             if ($response->result->ding_open_errcode == "0")
             {
-                foreach ($response->result->result->list->process_instance_top_vo as $item)
+                if (isset($response->result->result->list))
                 {
-                    if ($item->business_id == $business_id)
+                    foreach ($response->result->result->list->process_instance_top_vo as $item)
                     {
-                        $data['business_id'] = $business_id;
-                        $data['process_instance_id'] = "$item->process_instance_id";
-                        $data['title'] = "$item->title";
+                        if ($item->business_id == $business_id)
+                        {
+                            $data['business_id'] = $business_id;
+                            $data['process_instance_id'] = "$item->process_instance_id";
+                            $data['title'] = "$item->title";
 
 //                        $approvaltype = $request->get('approvaltype');
-                        $formData = [];
-                        $user = User::where('dtuserid', $item->originator_userid)->first();
-                        foreach ($item->form_component_values->form_component_value_vo as $formvalue)
-                        {
+                            $formData = [];
+                            $user = User::where('dtuserid', $item->originator_userid)->first();
+                            foreach ($item->form_component_values->form_component_value_vo as $formvalue)
+                            {
 //                            Log::info(json_encode($formvalue));
 //                            Log::info($formvalue->name . ": " . $formvalue->value);
-                            $formData["$formvalue->name"] = "$formvalue->value";
-                        }
-                        $data['content'] = array_slice($formData, 0, 3);
-                        Log::info($data);
-                        if ($approvaltype == 'issuedrawing')
-                        {
-                            //                                Log::info(json_encode($formData));
-                            $input = [];
+                                $formData["$formvalue->name"] = "$formvalue->value";
+                            }
+                            $data['content'] = array_slice($formData, 0, 3);
+                            Log::info($data);
+                            if ($approvaltype == 'issuedrawing')
+                            {
+                                //                                Log::info(json_encode($formData));
+                                $input = [];
 //                                Log::info($formData['设计部门']);
-                            $input['designdepartment'] = $formData['设计部门'];
+                                $input['designdepartment'] = $formData['设计部门'];
 
-                            $sohead = Salesorder_hxold::where('number', $formData['项目编号'])->first();
-                            if (isset($sohead))
-                                $input['sohead_id'] = $sohead->id;
-                            else
-                                $msg = '销售订单不存在，无法继续。';
-                            $input['overview'] = $formData['制作概述'];
-                            $input['tonnage'] = $formData['吨位（吨）'];
-                            $input['productioncompany'] = $formData['制作公司'];
-                            $input['materialsupplier'] = $formData['材料供应方'];
-                            $drawingchecker = User::where('name', $formData['图纸校核人'])->first();
-                            if (isset($drawingchecker))
-                                $input['drawingchecker_id'] = $drawingchecker->id;
-                            else
-                                $msg = '图纸校核人不存在，无法继续。';
-                            $input['requestdeliverydate'] = $formData['要求发货日'];
-                            $input['drawingcount'] = $formData['图纸份数（份）'];
-                            $input['remark'] = $formData['备注'];
-                            if (isset($user))
-                            {
-                                $input['applicant_id'] = $user->id;
-                            }
-                            else
-                                $msg = '发起人不存在，无法继续。';
-                            $input['approversetting_id'] = -1;
-                            if ($item->status == "COMPLETED")
-                            {
-                                if ($item->process_instance_result == "agree")
-                                    $input['status'] = 0;
+                                $sohead = Salesorder_hxold::where('number', $formData['项目编号'])->first();
+                                if (isset($sohead))
+                                    $input['sohead_id'] = $sohead->id;
                                 else
-                                    $input['status'] = -1;
-                            }
-                            else
-                                $msg = '此审批单还未结束，无法继续';
-                            $input['process_instance_id'] = "$item->process_instance_id";
-                            $input['business_id'] = "$item->business_id";
+                                    $msg = '销售订单不存在，无法继续。';
+                                $input['overview'] = $formData['制作概述'];
+                                $input['tonnage'] = $formData['吨位（吨）'];
+                                $input['productioncompany'] = $formData['制作公司'];
+                                $input['materialsupplier'] = $formData['材料供应方'];
+                                $drawingchecker = User::where('name', $formData['图纸校核人'])->first();
+                                if (isset($drawingchecker))
+                                    $input['drawingchecker_id'] = $drawingchecker->id;
+                                else
+                                    $msg = '图纸校核人不存在，无法继续。';
+                                $input['requestdeliverydate'] = $formData['要求发货日'];
+                                $input['drawingcount'] = $formData['图纸份数（份）'];
+                                $input['remark'] = $formData['备注'];
+                                if (isset($user))
+                                {
+                                    $input['applicant_id'] = $user->id;
+                                }
+                                else
+                                    $msg = '发起人不存在，无法继续。';
+                                $input['approversetting_id'] = -1;
+                                if ($item->status == "COMPLETED")
+                                {
+                                    if ($item->process_instance_result == "agree")
+                                        $input['status'] = 0;
+                                    else
+                                        $input['status'] = -1;
+                                }
+                                else
+                                    $msg = '此审批单还未结束，无法继续';
+                                $input['process_instance_id'] = "$item->process_instance_id";
+                                $input['business_id'] = "$item->business_id";
 
 //                                Log::info(json_encode($input));
 
-                        }
-                        elseif ($approvaltype == 'mcitempurchase')
-                        {
-                            //                                Log::info(json_encode($formData));
-                            $input = [];
+                            }
+                            elseif ($approvaltype == 'mcitempurchase')
+                            {
+                                //                                Log::info(json_encode($formData));
+                                $input = [];
 //                                Log::info($formData['设计部门']);
-                            $input['manufacturingcenter'] = $formData['所属制造中心'];
-                            $input['itemtype'] = $formData['申购物品类型'];
-                            $input['expirationdate'] = $formData['要求最晚到货时间'];
+                                $input['manufacturingcenter'] = $formData['所属制造中心'];
+                                $input['itemtype'] = $formData['申购物品类型'];
+                                $input['expirationdate'] = $formData['要求最晚到货时间'];
 
-                            $sohead = Salesorder_hxold::where('number', $formData['项目编号'])->first();
-                            if (isset($sohead))
-                                $input['sohead_id'] = $sohead->id;
-                            else
-                                $msg = '销售订单不存在，无法继续。';
-                            $input['totalprice'] = $formData['总价（元）'];
-                            $input['detailuse'] = $formData['采购物品详细用途'];
-                            if (isset($user))
-                            {
-                                $input['applicant_id'] = $user->id;
-                            }
-                            else
-                                $msg = '发起人不存在，无法继续。';
-                            $input['approversetting_id'] = -1;
-                            if ($item->status == "COMPLETED")
-                            {
-                                if ($item->process_instance_result == "agree")
-                                    $input['status'] = 0;
+                                $sohead = Salesorder_hxold::where('number', $formData['项目编号'])->first();
+                                if (isset($sohead))
+                                    $input['sohead_id'] = $sohead->id;
                                 else
-                                    $input['status'] = -1;
-                            }
-                            else
-                                $msg = '此审批单还未结束，无法继续';
-                            $input['process_instance_id'] = "$item->process_instance_id";
-                            $input['business_id'] = "$item->business_id";
+                                    $msg = '销售订单不存在，无法继续。';
+                                $input['totalprice'] = $formData['总价（元）'];
+                                $input['detailuse'] = $formData['采购物品详细用途'];
+                                if (isset($user))
+                                {
+                                    $input['applicant_id'] = $user->id;
+                                }
+                                else
+                                    $msg = '发起人不存在，无法继续。';
+                                $input['approversetting_id'] = -1;
+                                if ($item->status == "COMPLETED")
+                                {
+                                    if ($item->process_instance_result == "agree")
+                                        $input['status'] = 0;
+                                    else
+                                        $input['status'] = -1;
+                                }
+                                else
+                                    $msg = '此审批单还未结束，无法继续';
+                                $input['process_instance_id'] = "$item->process_instance_id";
+                                $input['business_id'] = "$item->business_id";
 
 //                            Log::info(json_encode($input));
 //                            $issuedrawing_numbers = explode(',', $formData['下发图纸审批单号']);
 
 
 
-                            if (strlen($msg) == 0)
-                            {
+                                if (strlen($msg) == 0)
+                                {
+                                }
                             }
-                        }
-                        elseif ($approvaltype == 'pppayment')
-                        {
-                            $input = [];
-                            $input['productioncompany'] = $formData['制作公司'];
-                            $input['designdepartment'] = $formData['设计部门'];
-                            $input['paymentreason'] = $formData['付款事由'];
-                            $input['invoicingsituation'] = $formData['发票开具情况'];
-                            $input['totalpaid'] = $formData['该加工单已付款总额'];
-                            $input['amount'] = $formData['本次申请付款总额'];
-                            $input['paymentdate'] = $formData['支付日期'];
-                            $supplier = Vendinfo_hxold::where('name', $formData['支付对象'])->first();
-                            if (isset($supplier))
-                                $input['supplier_id'] = $supplier->id;
-                            else
-                                $input['supplier_id'] = 0;
-                            $vendbank = Vendbank_hxold::where('bankname', $formData['开户行'])->where('accountnum', $formData['开户行'])->first();
-                            if (isset($vendbank))
-                                $input['vendbank_id'] = $vendbank->id;
-                            else
-                                $input['vendbank_id'] = 0;
-
-                            if (isset($user))
+                            elseif ($approvaltype == 'pppayment')
                             {
-                                $input['applicant_id'] = $user->id;
-                            }
-                            else
-                                $msg = '发起人不存在，无法继续。';
-                            $input['approversetting_id'] = -1;
-                            if ($item->status == "COMPLETED")
-                            {
-                                if ($item->process_instance_result == "agree")
-                                    $input['status'] = 0;
+                                $input = [];
+                                $input['productioncompany'] = $formData['制作公司'];
+                                $input['designdepartment'] = $formData['设计部门'];
+                                $input['paymentreason'] = $formData['付款事由'];
+                                $input['invoicingsituation'] = $formData['发票开具情况'];
+                                $input['totalpaid'] = $formData['该加工单已付款总额'];
+                                $input['amount'] = $formData['本次申请付款总额'];
+                                $input['paymentdate'] = $formData['支付日期'];
+                                $supplier = Vendinfo_hxold::where('name', $formData['支付对象'])->first();
+                                if (isset($supplier))
+                                    $input['supplier_id'] = $supplier->id;
                                 else
-                                    $input['status'] = -1;
-                            }
-                            else
-                                $msg = '此审批单还未结束，无法继续';
-                            $input['process_instance_id'] = "$item->process_instance_id";
-                            $input['business_id'] = "$item->business_id";
+                                    $input['supplier_id'] = 0;
+                                $vendbank = Vendbank_hxold::where('bankname', $formData['开户行'])->where('accountnum', $formData['开户行'])->first();
+                                if (isset($vendbank))
+                                    $input['vendbank_id'] = $vendbank->id;
+                                else
+                                    $input['vendbank_id'] = 0;
+
+                                if (isset($user))
+                                {
+                                    $input['applicant_id'] = $user->id;
+                                }
+                                else
+                                    $msg = '发起人不存在，无法继续。';
+                                $input['approversetting_id'] = -1;
+                                if ($item->status == "COMPLETED")
+                                {
+                                    if ($item->process_instance_result == "agree")
+                                        $input['status'] = 0;
+                                    else
+                                        $input['status'] = -1;
+                                }
+                                else
+                                    $msg = '此审批单还未结束，无法继续';
+                                $input['process_instance_id'] = "$item->process_instance_id";
+                                $input['business_id'] = "$item->business_id";
 
 //                            Log::info(json_encode($input));
 
-                            if (strlen($msg) == 0)
-                            {
+                                if (strlen($msg) == 0)
+                                {
+                                }
                             }
-                        }
 
-                        break;
-                    }
-                    else
-                        continue;
+                            break;
+                        }
+                        else
+                            continue;
 //                    Log::info(json_encode($item));
+                    }
                 }
             }
             else

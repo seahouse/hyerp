@@ -86,10 +86,10 @@ class VendordeductionController extends Controller
 //        $vendordeduction->techdepart = '工艺二室';
 //        $vendordeduction->outsourcingtype = '宣城生产中心生产队伍';
 //        $vendordeduction->problemlocation = '项目现场';
-//        $techdepart = $vendordeduction->approvers();
-//        dd($techdepart);
 
         $input = $request->all();
+//        $input['associatedapprovals'] = strlen($input['associatedapprovals']) > 0 ? json_encode(explode(",", $input['associatedapprovals'])) : "";
+//        dd($input['associatedapprovals']);
 
         $this->validate($request, [
             'pohead_id'                   => 'required|integer|min:1',
@@ -262,7 +262,8 @@ class VendordeductionController extends Controller
         {
             $input['fileattachments_url'] = implode(" , ", $fileattachments_url2);
             $input['image_urls'] = json_encode($image_urls);
-            $input['associatedapprovals'] = strlen($input['associatedapprovals']) > 0 ? json_encode(array($input['associatedapprovals'])) : "";
+            $input['associatedapprovals'] = strlen($input['associatedapprovals']) > 0 ? json_encode(explode(",", $input['associatedapprovals'])) : "";
+//            $input['associatedapprovals'] = strlen($input['associatedapprovals']) > 0 ? json_encode(array($input['associatedapprovals'])) : "";
 //            dd($input['associatedapprovals']);
             $input['approvers'] = $vendordeduction->approvers();
             $response = ApprovalController::vendordeduction($input);
