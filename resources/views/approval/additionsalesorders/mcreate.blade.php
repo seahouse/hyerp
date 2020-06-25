@@ -736,14 +736,16 @@
 						<div class="form-group">\
 							{!! Form::label('type', '增补内容:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}\
 							<div class="col-sm-10 col-xs-8">\
-							{!! Form::select('type', array('机务材料' => '机务材料', '机务设备' => '机务设备', '电气材料' => '电气材料', '电气设备' => '电气设备', '人工用量' => '人工用量', '运费' => '运费', '其他类别' => '其他类别'), null, ['class' => 'form-control']) !!}\
+							<select class="form-control" onchange="selectTypeChange(this.dataset.num)" data-num="' + String(item_num) + '" ="" id="type_' + String(item_num) + '" name="type"><option value="机务材料">机务材料</option><option value="机务设备">机务设备</option><option value="电气材料">电气材料</option><option value="电气设备">电气设备</option><option value="人工用量">人工用量</option><option value="运费">运费</option><option value="其他类别">其他类别</option></select>\
                     </div>\
 						</div>\
-						<div class="form-group">\
-							<label for="otherremark" class="col-xs-4 col-sm-2 control-label">其他类别补充说明:</label>\
-							<div class="col-sm-10 col-xs-8">\
-							<input class="form-control" ="" name="otherremark" type="text" id="otherremark_' + String(item_num) + '">\
-							</div>\
+                    <div id="divOtherremark_' + String(item_num) + '">\
+                            <div class="form-group">\
+                                <label for="otherremark" class="col-xs-4 col-sm-2 control-label">其他类别补充说明:</label>\
+                                <div class="col-sm-10 col-xs-8">\
+                                <input class="form-control" ="" name="otherremark" type="text" id="otherremark_' + String(item_num) + '">\
+                                </div>\
+                            </div>\
 						</div>\
 						<div class="form-group">\
 							<label for="unit" class="col-xs-4 col-sm-2 control-label">单位:</label>\
@@ -777,81 +779,28 @@
                 });
             }
 
-
-			 $("#btnParseExcel").click(function() {
-//                 $('#formUploadParseExcel').append($(this).parent().children());
-//                 return false;
-//                 $('#formUploadParseExcel').submit();
-                 var formData = new FormData();
-                 formData.append('items_excelfile', $('#items_excelfile')[0].files[0]);
-                 $.ajax({
-                     type: "POST",
-                     url: "{!! url('approval/mcitempurchase/uploadparseexcel') !!}",
-					 data: formData,
-                     processData: false,
-                     contentType: false,
-                     success: function(result) {
-                         $("#items_string2").val(JSON.stringify(result));
-//                         alert(JSON.stringify(result));
-                         var strhtml = '';
-                         strhtml += '<table class="table table-striped table-hover table-condensed">';
-                         if (result.length > 0)
-						 {
-                             strhtml += '<thead><tr><th>物品名称</th><th>型号</th><th>单位</th><th>尺寸</th><th>数量</th><th>重量</th><th>备注</th></tr></thead>';
-						     strhtml += '<tbody>';
-						 }
-
-                         $.each(result, function(i, field) {
-//                             alert(field.item_name);
-                             strhtml += '<tr><td>' + field.item_name + '</td><td>' + field.item_spec + '</td><td>' + field.unit_name + '</td><td>' + field.size + '</td><td>' + field.quantity + '</td><td>' + field.weight + '</td><td>' + field.remark + '</td></tr>'
-//                             $.each(field, function(j, item) {
-//                                 if (j == 'item_name')
-//                                     alert(item);
-////                                 btnId = 'btnSelectDrawingchecker_' + String(i);
-////                                 strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.name + "</h4></button>"
-//                             });
-//                             btnId = 'btnSelectDrawingchecker_' + String(i);
-//                             strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.name + "</h4></button>"
-                         });
-                         if (result.length > 0)
-                             strhtml += '</tbody>';
-                         strhtml += '</table>';
-                         if (strhtml == '')
-                             strhtml = '无记录。';
-                         $("#items_excel").empty().append(strhtml);
-
-//                         $.each(result.data, function(i, field) {
-//                             btnId = 'btnSelectDrawingchecker_' + String(i);
-//                             addBtnClickEvent(btnId, field);
-//                         });
-                     },
-                     error: function(xhr, ajaxOptions, thrownError) {
-                         alert('error');
-                     }
-                 });
-			 });
-
-            selectVendorDeductionChange = function () {
-                var vendordeduction_descrip = $("#vendordeduction_descrip").val();
-                if (vendordeduction_descrip == "是，供应商扣款流程已审批完结，并在此流程后关联《供应商扣款》审批单。")
-                    $("#divAssociatedapprovals").attr("style", "display:block;");
+            selectSigncontract_conditionChange = function () {
+                var signcontract_condition = $("#signcontract_condition").val();
+                if (signcontract_condition == "甲方与我们已签定增补合同")
+                {
+                    $("#divFiles").attr("style", "display:none;");
+                    $("#divImages").attr("style", "display:block;");
+                }
                 else
-                    $("#divAssociatedapprovals").attr("style", "display:none;");
+                {
+                    $("#divFiles").attr("style", "display:block;");
+                    $("#divImages").attr("style", "display:none;");
+                }
             }
 
-            selectPurchasetypeChange = function () {
-                var purchasetype = $("#purchasetype").val();
-                if (purchasetype == "EP项目安装队相关费用")
+            selectTypeChange = function (num) {
+                var selecttype = $("#type_" + String(num));
+                if (selecttype.val() == "其他类别")
                 {
-                    $("#divEpamountreason").attr("style", "display:block;");
-                    $("#divPurchasereason").attr("style", "display:none;");
+                    $("#divOtherremark_" + String(num)).attr("style", "display:block;");
                 }
                 else
-                {
-                    $("#divEpamountreason").attr("style", "display:none;");
-                    $("#epamountreason").val("6、不涉及EP项目安装队费用");
-                    $("#divPurchasereason").attr("style", "display:block;");
-                }
+                    $("#divOtherremark_" + String(num)).attr("style", "display:none;");
             }
 
 			dd.config({

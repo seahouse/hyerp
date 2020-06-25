@@ -104,7 +104,7 @@ class Salesorder_hxold extends Model
     }
 
     //下图重量
-    public function Issuedrawings() {
+    public function issuedrawings() {
         return $this->hasMany('App\Models\Approval\Issuedrawing', 'sohead_id', 'id');
     }
 

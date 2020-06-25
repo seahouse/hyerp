@@ -59,7 +59,7 @@
         <div class="form-group">
             {!! Form::label('signcontract_condition', '已签增补合同？:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('signcontract_condition', array('甲方与我们已签定增补合同' => '甲方与我们已签定增补合同', '甲方与我们已签增补单，合同还未签定。' => '甲方与我们已签增补单，合同还未签定。'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                {!! Form::select('signcontract_condition', array('甲方与我们已签定增补合同' => '甲方与我们已签定增补合同', '甲方与我们已签增补单，合同还未签定。' => '甲方与我们已签增补单，合同还未签定。'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'onchange' => 'selectSigncontract_conditionChange()', $attr, $attrdisable]) !!}
             </div>
         </div>
 
@@ -78,14 +78,16 @@
             <div class="form-group">
                 {!! Form::label('type', '增补内容:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
                 <div class='col-xs-8 col-sm-10'>
-                    {!! Form::select('type', array('机务材料' => '机务材料', '机务设备' => '机务设备', '电气材料' => '电气材料', '电气设备' => '电气设备', '人工用量' => '人工用量', '运费' => '运费', '其他类别' => '其他类别'), null, ['class' => 'form-control', $attr, 'id' => 'type_1']) !!}
+                    {!! Form::select('type', array('机务材料' => '机务材料', '机务设备' => '机务设备', '电气材料' => '电气材料', '电气设备' => '电气设备', '人工用量' => '人工用量', '运费' => '运费', '其他类别' => '其他类别'), null, ['class' => 'form-control', 'onchange' => 'selectTypeChange(this.dataset.num)', 'data-num' => '1', $attr, 'id' => 'type_1']) !!}
                 </div>
             </div>
 
-            <div class="form-group">
-                {!! Form::label('otherremark', '其他类别补充说明:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-                <div class='col-xs-8 col-sm-10'>
-                    {!! Form::text('otherremark', null, ['class' => 'form-control', $attr, 'id' => 'otherremark_1']) !!}
+            <div id="divOtherremark_1">
+                <div class="form-group">
+                    {!! Form::label('otherremark', '其他类别补充说明:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                    <div class='col-xs-8 col-sm-10'>
+                        {!! Form::text('otherremark', null, ['class' => 'form-control', $attr, 'id' => 'otherremark_1']) !!}
+                    </div>
                 </div>
             </div>
 
@@ -176,7 +178,7 @@
             {{--</div>--}}
         {{--</div>--}}
 
-        <div class="form-group">
+        <div class="form-group" id="divFiles">
             {!! Form::label('files', '签增单上传（到钉钉审批）:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
             <div class='col-xs-8 col-sm-10'>
@@ -225,7 +227,7 @@
             {{--</div>--}}
         {{--</div>--}}
 
-        <div class="form-group">
+        <div class="form-group" id="divImages">
             {!! Form::label('images', '增补合同上传:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
             <div class='col-xs-8 col-sm-10'>

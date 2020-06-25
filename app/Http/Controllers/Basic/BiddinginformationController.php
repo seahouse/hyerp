@@ -9,6 +9,7 @@ use App\Models\Basic\Biddinginformation;
 use App\Models\Basic\Biddinginformationdefinefield;
 use App\Models\Basic\Biddinginformationfieldtype;
 use App\Models\Basic\Biddinginformationitem;
+use App\Models\Sales\Salesorder_hxold;
 use App\Models\System\Dtuser;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -669,6 +670,8 @@ class BiddinginformationController extends Controller
 //                $biddinginformationdefinefields = Biddinginformationdefinefield::where('exceltype', '项目明细')->orWhere('exceltype', '汇总明细')->orderBy('sort')->get();
                 $data = [];
                 array_push($data, '编号');
+                array_push($data, '执行成本（动态计算）');
+                array_push($data, '总纲耗（动态计算）');
                 foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
                 {
                     array_push($data, $biddinginformationdefinefield->name);
@@ -712,6 +715,52 @@ class BiddinginformationController extends Controller
                         $comments = [];
                         array_push($data, $biddinginformation->number);
                         array_push($comments, '');
+
+                        // 增加执行成本和总钢耗
+                        $bExist = false;
+                        if (isset($biddinginformation->sohead_id) && $biddinginformation->sohead_id > 0)
+                        {
+                            $sohead = Salesorder_hxold::find($biddinginformation->sohead_id);
+                            if (isset($sohead))
+                            {
+                                $pohead_amount_total = $sohead->poheads->sum('amount');
+                                $poheadAmountBy7550 = array_first($sohead->getPoheadAmountBy7550())->poheadAmountBy7550;
+                                $sohead_taxamount = isset($sohead->temTaxamountstatistics->sohead_taxamount) ? $sohead->temTaxamountstatistics->sohead_taxamount : 0.0;
+                                $sohead_poheadtaxamount = isset($sohead->temTaxamountstatistics->sohead_poheadtaxamount) ? $sohead->temTaxamountstatistics->sohead_poheadtaxamount : 0.0;
+                                $sohead_poheadtaxamountby7550 = array_first($sohead->getPoheadTaxAmountBy7550())->poheadTaxAmountBy7550;
+                                $totalpurchaseamount = $pohead_amount_total + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount - $sohead_poheadtaxamountby7550;
+
+                                $warehousecost=array_first($sohead->getwarehouseCost())->warehousecost;
+                                $nowarehousecost=array_first($sohead->getnowarehouseCost())->nowarehousecost;
+                                $nowarehouseamountby7550=array_first($sohead->getnowarehouseamountby7550())->nowarehouseamountby7550;
+                                $nowarehousetaxcost=array_first($sohead->getnowarehousetaxCost())->nowarehousetaxcost;
+                                $warehousetaxcost=array_first($sohead->getwarehousetaxCost())->warehousetaxcost;
+                                $totalwarehouseamount = $warehousecost  + $nowarehousecost + $sohead_taxamount + $nowarehouseamountby7550 - $nowarehousetaxcost - $warehousetaxcost;
+                                array_push($data, "采购成本：" . $totalpurchaseamount . "，出库成本：" . $totalwarehouseamount);
+                                array_push($comments, '');
+
+                                $issuedrawing_tonnage = $sohead->issuedrawings()->where('status', 0)->sum('tonnage');
+                                array_push($data, $issuedrawing_tonnage);
+                                array_push($comments, '');
+
+                                $bExist = true;
+                            }
+                        }
+                        if (!$bExist)
+                        {
+                            array_push($data, '');
+                            array_push($comments, '');
+
+                            array_push($data, '');
+                            array_push($comments, '');
+                        }
+
+                        $bExist = false;
+
+
+                        array_push($data, '');
+                        array_push($comments, '');
+
                         foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
                         {
 //                            $biddinginformationitem = $biddinginformation->biddinginformationitems()->where('key', $biddinginformationdefinefield->name)->first();

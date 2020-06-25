@@ -288,14 +288,19 @@ class PppaymentController extends Controller
                     $totalprice = 0.0;
                     foreach ($strunitprices as $unitprice_item) {
                         $unitprice_array = json_decode(json_encode($unitprice_item), true);
-                        $unitprice_array['pppaymentitem_id'] = $pppaymentitem->id;
-                        $pppaymentitemunitprice = Pppaymentitemunitprice::create($unitprice_array);
 
-                        if (isset($pppaymentitemunitprice))
+                        // 当吨位大于0的时候才有效，2020/6/24
+                        if ($unitprice_array['tonnage'] > 0.0)
                         {
-                            $price = $pppaymentitemunitprice->unitprice * $pppaymentitemunitprice->tonnage;
-                            $totalprice += $price;
-                            array_push($dtunitpricedetail, $pppaymentitemunitprice->name . ':' . $pppaymentitemunitprice->tonnage . '吨*' . $pppaymentitemunitprice->unitprice . '元=' . $price . '元');
+                            $unitprice_array['pppaymentitem_id'] = $pppaymentitem->id;
+                            $pppaymentitemunitprice = Pppaymentitemunitprice::create($unitprice_array);
+
+                            if (isset($pppaymentitemunitprice))
+                            {
+                                $price = $pppaymentitemunitprice->unitprice * $pppaymentitemunitprice->tonnage;
+                                $totalprice += $price;
+                                array_push($dtunitpricedetail, $pppaymentitemunitprice->name . ':' . $pppaymentitemunitprice->tonnage . '吨*' . $pppaymentitemunitprice->unitprice . '元=' . $price . '元');
+                            }
                         }
                     }
                     $totaltotalprice += $totalprice;
