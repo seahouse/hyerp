@@ -43,7 +43,7 @@
             <tr>
                 <th>名称</th>
                 <th>排序</th>
-                {{--<th>类型</th>--}}
+                <th>项目类型</th>
                 {{--<th>备注</th>--}}
                 <th>操作</th>
             </tr>
@@ -57,9 +57,9 @@
                     <td>
                         {{ $biddinginformationdefinefield->sort }}
                     </td>
-                    {{--<td>--}}
-                        {{--{{ $biddinginformationdefinefield->template_name }}--}}
-                    {{--</td>--}}
+                    <td>
+                        {{ $biddinginformationdefinefield->projecttype }}
+                    </td>
                     {{--<td>--}}
                         {{--{{ str_limit($biddinginformationdefinefield->remark, 20) }}--}}
                     {{--</td>--}}

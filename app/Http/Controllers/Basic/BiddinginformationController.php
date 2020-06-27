@@ -755,12 +755,6 @@ class BiddinginformationController extends Controller
                             array_push($comments, '');
                         }
 
-                        $bExist = false;
-
-
-                        array_push($data, '');
-                        array_push($comments, '');
-
                         foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
                         {
 //                            $biddinginformationitem = $biddinginformation->biddinginformationitems()->where('key', $biddinginformationdefinefield->name)->first();
