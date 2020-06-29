@@ -4,8 +4,8 @@
 
 @section('main')
     <div class="panel-heading">
-        <a href="/basic/biddingprojects/create" class="btn btn-sm btn-success">新建</a>
-        <a href="/basic/biddingprojects/export" class="btn btn-sm btn-success pull-right">导出</a>
+        {{--<a href="/basic/biddingprojects/create" class="btn btn-sm btn-success">新建</a>--}}
+        <a href="/basic/biddingprojects/export" class="btn btn-sm btn-success">导出</a>
         {{--<a href="shipments/import" class="btn btn-sm btn-success">导入(Import)</a>--}}
     </div>
 
@@ -20,7 +20,7 @@
                     <th>订单数量</th>
                     <th>订单明细</th>
                     <th>备注</th>
-                    <th>Operation</th>
+                    {{--<th>Operation</th>--}}
                 </tr>
                 </thead>
                 <tbody>
@@ -39,14 +39,14 @@
                             {{ $biddingproject->remark }}
                         </td>
                         <td>
-                            <a href="{{ URL::to('/basic/biddingprojects/'.$biddingproject->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>
-                            {!! Form::open(array('route' => array('basic.biddingprojects.destroy', $biddingproject->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录(Delete this record)?");')) !!}
-                            @if($biddingproject->biddinginformation->count()>0)
-                                {!! Form::button('删除', ['class' => 'btn btn-info btn-sm disabled','title'=>'有关联订单无法删除']) !!}
-                            @else
-                                {!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}
-                            @endif
-                            {!! Form::close() !!}
+                            {{--<a href="{{ URL::to('/basic/biddingprojects/'.$biddingproject->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>--}}
+                            {{--{!! Form::open(array('route' => array('basic.biddingprojects.destroy', $biddingproject->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录(Delete this record)?");')) !!}--}}
+                            {{--@if($biddingproject->biddinginformation->count()>0)--}}
+                                {{--{!! Form::button('删除', ['class' => 'btn btn-info btn-sm disabled','title'=>'有关联订单无法删除']) !!}--}}
+                            {{--@else--}}
+                                {{--{!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}--}}
+                            {{--@endif--}}
+                            {{--{!! Form::close() !!}--}}
                         </td>
                     </tr>
                 @endforeach
