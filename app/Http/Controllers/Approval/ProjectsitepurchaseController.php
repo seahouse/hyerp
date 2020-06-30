@@ -184,7 +184,7 @@ class ProjectsitepurchaseController extends Controller
         $this->validate($request, [
             'sohead_id'                   => 'required|integer|min:1',
             'purchasetype'               => 'required',
-            'purchasereason'             => 'required',
+//            'purchasereason'             => 'required',
 //            'issuedrawing_values'       => 'required',
             'items_string'               => 'required',
 //            'tonnage'               => 'required|numeric',
