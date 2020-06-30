@@ -17,8 +17,8 @@
                 <thead>
                 <tr>
                     <th>名称</th>
-                    <th>订单数量</th>
-                    <th>订单明细</th>
+                    <th>招标数量</th>
+                    <th>招标明细</th>
                     <th>备注</th>
                     {{--<th>Operation</th>--}}
                 </tr>
@@ -30,13 +30,13 @@
                             {{ $biddingproject->name }}
                         </td>
                         <td>
-                            {{ $biddingproject->biddinginformation->count() }}
+                            {{ $biddingproject->cntbidding }}
                         </td>
                         <td>
-                            <a href="{{ URL::to('/basic/biddingprojects/'.$biddingproject->id.'/showbiddinginformation') }}" class="btn btn-success btn-sm pull-left">订单明细</a>
+                            <a href="{{ URL::to('/basic/biddingprojects/'.$biddingproject->id.'/showbiddinginformation') }}" class="btn btn-success btn-sm pull-left">招标明细</a>
                         </td>
                         <td>
-                            {{ $biddingproject->remark }}
+                            {{ $biddingproject->discrip }}
                         </td>
                         <td>
                             {{--<a href="{{ URL::to('/basic/biddingprojects/'.$biddingproject->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a>--}}

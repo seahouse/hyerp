@@ -20,7 +20,5 @@ class Project_hxold extends Model
         return $this->belongsTo('App\Models\Sales\Group');
     }
 
-    public function biddinginformation() {
-        return $this->hasMany('App\Models\Basic\Biddinginformation','biddingprojectid','id');
-    }
+
 }

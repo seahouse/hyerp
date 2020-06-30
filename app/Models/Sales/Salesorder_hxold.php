@@ -45,6 +45,10 @@ class Salesorder_hxold extends Model
         return $this->hasMany('App\Models\Purchase\Purchaseorder_hxold', 'sohead_id', 'id');
     }
 
+    public function biddinginformations() {
+        return $this->hasMany('App\Models\Basic\Biddinginformation', 'sohead_id', 'id');
+    }
+
     public function poheads_simple() {
         return $this->hasMany('App\Models\Purchase\Purchaseorder_hxold_simple', 'sohead_id', 'id');
     }

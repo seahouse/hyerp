@@ -22,7 +22,14 @@ class BiddingprojectController extends Controller
     public function index(Request $request)
     {
         //
-        $biddingprojects = Project_hxold::orderby('id')->paginate(15);
+
+        $biddingprojects = Project_hxold::from('vproject')
+                           ->Join('vorder','vproject.id','=','vorder.project_id')
+                           ->Join(DB::raw('[hxerp].[dbo].[biddinginformations]'),'vorder.id','=',DB::raw('[hxerp].[dbo].[biddinginformations].[sohead_id]'))
+                           ->select('vproject.id','vproject.name',\DB::raw('count(*) as cntbidding'),'vproject.descrip')
+                           ->groupby('vproject.id','vproject.name','vproject.descrip')
+                           ->paginate(15);
+
         $inputs = $request->all();
         return view('basic.biddingprojects.index', compact('biddingprojects','inputs'));
 
@@ -116,7 +123,12 @@ class BiddingprojectController extends Controller
     public function showbiddinginformation($id)
     {
         $inputs='';
-        $biddinginformations =Biddinginformation::where('biddingprojectid','=',$id)->paginate(15);
+        $saleorderids=Salesorder_hxold::join('vproject','vproject.id','=','project_id')
+            ->where('vproject.id','=',$id)->pluck('vorder.id');
+        $query = Biddinginformation::latest('created_at');
+        $query->wherein('sohead_id',$saleorderids);
+        $biddinginformations = $query->select('biddinginformations.*')->paginate(15);
+//        dd($biddinginformations);
         return view('basic.biddingprojects.showbiddinginformation',compact('biddinginformations','id','inputs'));
     }
 
@@ -169,7 +181,13 @@ class BiddingprojectController extends Controller
                         $sheet->getCell(\PHPExcel_Cell::stringFromColumnIndex($colCol).$rowCol)->setValue($biddingproject->name);
                         $colCol++;
 //                        dd($sheet->getCell(\PHPExcel_Cell::stringFromColumnIndex($colCol-1).$rowCol)->getValue());
-                        $biddinginformations=DB::table('biddinginformations')->where('biddingprojectid',$biddingproject->id)->get();
+                        $saleorderids=Salesorder_hxold::join('vproject','vproject.id','=','project_id')
+                            ->where('vproject.id','=',$biddingproject->id)->pluck('vorder.id');
+                        $query = Biddinginformation::latest('created_at');
+                        $query->wherein('sohead_id',$saleorderids);
+                        $biddinginformations = $query->select('biddinginformations.*')->get();
+
+//                        $biddinginformations=DB::table('biddinginformations')->where('biddingprojectid',$biddingproject->id)->get();
 //                        dd();
                         if(count($biddinginformations)>0) {
 //                                dd($biddinginformation);
@@ -299,7 +317,11 @@ class BiddingprojectController extends Controller
                         $sheet->getCell(\PHPExcel_Cell::stringFromColumnIndex($colCol).$rowCol)->setValue($biddingproject->name);
                         $colCol++;
 //                        dd($sheet->getCell(\PHPExcel_Cell::stringFromColumnIndex($colCol-1).$rowCol)->getValue());
-                        $biddinginformations=DB::table('biddinginformations')->where('biddingprojectid',$biddingproject->id)->get();
+                        $saleorderids=Salesorder_hxold::join('vproject','vproject.id','=','project_id')
+                            ->where('vproject.id','=',$biddingproject->id)->pluck('vorder.id');
+                        $query = Biddinginformation::latest('created_at');
+                        $query->wherein('sohead_id',$saleorderids);
+                        $biddinginformations = $query->select('biddinginformations.*')->get();
 //                        dd();
                         if(count($biddinginformations)>0)
                         {
