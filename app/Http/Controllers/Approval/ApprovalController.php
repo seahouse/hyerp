@@ -475,7 +475,7 @@ class ApprovalController extends Controller
         if (strlen($key) > 0)
         {
             // 为了加快速度，将查询方式改成 whereRaw
-            $query->whereRaw("(supplier_id in (select id from hxcrm2016..vsupplier where name like '%" . $key . "%') or pohead_id in (select id from hxcrm2016..vpurchaseorder where descrip like '%" . $key . "%' or productname like '%" . $key . "%'))");
+            $query->whereRaw("(supplier_id in (select id from hxcrm2016..vsupplier where name like '%" . $key . "%') or pohead_id in (select id from hxcrm2016..vpurchaseorder where descrip like '%" . $key . "%' or productname like '%" . $key . "%') or paymentrequests.descrip like '%" . $key . "%')");
 
 //            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
 //            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
