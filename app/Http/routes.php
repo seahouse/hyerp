@@ -654,6 +654,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::post('issuedrawingpurchasedetailexport', 'ApprovalController@issuedrawingpurchasedetailexport');
         Route::post('issuedrawingpurchasedetailexport2', 'ApprovalController@issuedrawingpurchasedetailexport2');
         Route::post('issuedrawingpurchasedetailexport3', 'ApprovalController@issuedrawingpurchasedetailexport3');
+        Route::post('issuedrawingpurchasedetailexport4', 'ApprovalController@issuedrawingpurchasedetailexport4');
         Route::get('issuedrawingjson', 'ApprovalController@issuedrawingjson');
         Route::get('mcitempurchasejson', 'ApprovalController@mcitempurchasejson');
         Route::get('pppaymentjson', 'ApprovalController@pppaymentjson');

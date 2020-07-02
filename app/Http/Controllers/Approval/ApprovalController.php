@@ -1174,7 +1174,7 @@ class ApprovalController extends Controller
             $query->where('sohead_id', $request->get('sohead_id'));
         elseif ($sohead_id > 0)
             $query->where('sohead_id', $sohead_id);
-        elseif (strlen($factory) > 0)
+        if (strlen($factory) > 0)
             $query->where('productioncompany', 'like', '%' . $factory . '%');
 
         if ($project_id > 0)
@@ -2174,6 +2174,701 @@ class ApprovalController extends Controller
 //            $excel->setDescription('A demonstration to change the file properties');
 
         })->export('xlsx');
+    }
+
+    public function issuedrawingpurchasedetailexport4(Request $request)
+    {
+        //
+        if ($request->has('key') && strlen($request->input('key')) > 0)
+        {
+            $sohead = Salesorder_hxold::where('number', $request->input('key'))->first();
+            if (isset($sohead))
+            {
+                $filename = "下图申购结算报表_" . $request->input('key');
+                Excel::create($filename, function($excel) use ($request, $sohead) {
+                    $sheetname = "总表";
+                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                        $sheet->appendRow(["制造中心", "下图重量", "出库重量"]);
+
+                        $data = ['无锡生产中心'];
+                        $totaltonnage = 0.0;
+                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '无锡生产中心');
+                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                        foreach ($issuedrawingsArray as $value)
+                        {
+                            $totaltonnage += $value['tonnage'];
+                        }
+                        array_push($data, $totaltonnage);
+                        $totaltonnage = 0.0;
+                        $param = "@warehouse_number='001',@orderid=" . $sohead->id;
+                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
+                        if (count($items) > 0 && isset($items[0]))
+                            $totaltonnage = $items[0]->heights / 1000.0;
+                        array_push($data, $totaltonnage);
+                        array_push($data, '不含无锡原料2、3库');
+                        $sheet->appendRow($data);
+
+                        $data = ['郎溪生产中心'];
+                        $totaltonnage = 0.0;
+                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '郎溪生产中心');
+                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                        foreach ($issuedrawingsArray as $value)
+                        {
+                            $totaltonnage += $value['tonnage'];
+                        }
+                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '宣城子公司');
+                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                        foreach ($issuedrawingsArray as $value)
+                        {
+                            $totaltonnage += $value['tonnage'];
+                        }
+                        array_push($data, $totaltonnage);
+                        $totaltonnage = 0.0;
+                        $param = "@warehouse_number='010',@orderid=" . $sohead->id;
+                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
+                        if (count($items) > 0 && isset($items[0]))
+                            $totaltonnage = $items[0]->heights / 1000.0;
+                        array_push($data, $totaltonnage);
+                        $sheet->appendRow($data);
+
+                        $data = ['许昌子公司'];
+                        $totaltonnage = 0.0;
+                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '许昌子公司');
+                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                        foreach ($issuedrawingsArray as $value)
+                        {
+                            $totaltonnage += $value['tonnage'];
+                        }
+                        array_push($data, $totaltonnage);
+                        $totaltonnage = 0.0;
+                        $param = "@warehouse_number='012',@orderid=" . $sohead->id;
+                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
+                        if (count($items) > 0 && isset($items[0]))
+                            $totaltonnage = $items[0]->heights / 1000.0;
+                        array_push($data, $totaltonnage);
+                        $sheet->appendRow($data);
+
+                        $data = ['胶州生产中心'];
+                        $totaltonnage = 0.0;
+                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '胶州生产中心');
+                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                        foreach ($issuedrawingsArray as $value)
+                        {
+                            $totaltonnage += $value['tonnage'];
+                        }
+                        array_push($data, $totaltonnage);
+                        $totaltonnage = 0.0;
+                        $param = "@warehouse_number='004',@orderid=" . $sohead->id;
+                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
+                        if (count($items) > 0 && isset($items[0]))
+                            $totaltonnage = $items[0]->heights / 1000.0;
+                        $param = "@warehouse_number='008',@orderid=" . $sohead->id;
+                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
+                        if (count($items) > 0 && isset($items[0]))
+                            $totaltonnage += $items[0]->heights / 1000.0;
+                        array_push($data, $totaltonnage);
+                        $sheet->appendRow($data);
+
+                        $data = ['泰州生产中心'];
+                        $totaltonnage = 0.0;
+                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '泰州生产中心');
+                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                        foreach ($issuedrawingsArray as $value)
+                        {
+                            $totaltonnage += $value['tonnage'];
+                        }
+                        array_push($data, $totaltonnage);
+                        $totaltonnage = 0.0;
+                        $param = "@warehouse_number='003',@orderid=" . $sohead->id;
+                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
+                        if (count($items) > 0 && isset($items[0]))
+                            $totaltonnage = $items[0]->heights / 1000.0;
+                        array_push($data, $totaltonnage);
+                        $sheet->appendRow($data);
+                    });
+
+                    $sheetname = "无锡生产中心下图明细";
+                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                        // Sheet manipulation
+                        $data = [];
+                        $tonnagetotal_issuedrawing = 0.0;
+                        $tonnagetotal_mcitempurchase = 0.0;
+                        $tonnagetotal_pppayment = 0.0;
+
+                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '无锡生产中心');
+//                dd($issuedrawings->getData(true)["data"]);
+//                dd(json_decode($issuedrawings) );
+                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                        foreach ($issuedrawingsArray as $value)
+                        {
+                            $temp = [];
+                            $temp['下图日期']          = $value['created_date'];
+                            $temp['下图吨数']                = (double)$value['tonnage'];
+                            $temp['下图申请人']              = $value['applicant'];
+                            $temp['下图制作公司']     = $value['productioncompany'];
+                            $temp['下图概述']               = $value['overview'];
+
+                            array_push($data, $temp);
+                            $tonnagetotal_issuedrawing += $value['tonnage'];
+                        }
+
+                        $param = "@orderid=" . $sohead->id;
+                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
+                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
+                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
+
+                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
+                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
+                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
+//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+
+//                dd($data);
+                        $sheet->freezeFirstRow();
+                        $sheet->fromArray($data);
+
+                        $totalrowcolor = "#00FF00";       // green
+                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
+                            $totalrowcolor = "#FF0000"; // red
+//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+//                        ]);
+//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+//                            $row->setBackground($totalrowcolor);
+//                        });
+                    });
+
+                    $sheetname = "郎溪生产中心下图明细";
+                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                        // Sheet manipulation
+                        $data = [];
+                        $tonnagetotal_issuedrawing = 0.0;
+                        $tonnagetotal_mcitempurchase = 0.0;
+                        $tonnagetotal_pppayment = 0.0;
+                        $tonnagetotal_pppayment_paowan = 0.0;
+                        $tonnagetotal_pppayment_youqi = 0.0;
+                        $tonnagetotal_pppayment_rengong = 0.0;
+                        $tonnagetotal_pppayment_maohan = 0.0;
+                        $tonnagetotal_out = 0.0;
+                        $tonnagetotal_in = 0.0;
+
+                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '郎溪生产中心');
+//                dd($issuedrawings->getData(true)["data"]);
+//                dd(json_decode($issuedrawings) );
+                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                        foreach ($issuedrawingsArray as $value)
+                        {
+                            $temp = [];
+                            $temp['下图日期']          = $value['created_date'];
+                            $temp['下图吨数']                = (double)$value['tonnage'];
+                            $temp['下图申请人']              = $value['applicant'];
+                            $temp['下图制作公司']     = $value['productioncompany'];
+                            $temp['下图概述']               = $value['overview'];
+
+                            array_push($data, $temp);
+                            $tonnagetotal_issuedrawing += $value['tonnage'];
+                        }
+
+                        $param = "@orderid=" . $sohead->id;
+                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
+                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
+                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
+
+                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
+                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
+                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
+//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+
+//                dd($data);
+                        $sheet->freezeFirstRow();
+                        $sheet->fromArray($data);
+
+                        $totalrowcolor = "#00FF00";       // green
+                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
+                            $totalrowcolor = "#FF0000"; // red
+//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+//                        ]);
+//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+//                            $row->setBackground($totalrowcolor);
+//                        });
+                    });
+
+                    $sheetname = "宣城子公司下图明细";
+                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                        // Sheet manipulation
+                        $data = [];
+                        $tonnagetotal_issuedrawing = 0.0;
+                        $tonnagetotal_mcitempurchase = 0.0;
+                        $tonnagetotal_pppayment = 0.0;
+                        $tonnagetotal_pppayment_paowan = 0.0;
+                        $tonnagetotal_pppayment_youqi = 0.0;
+                        $tonnagetotal_pppayment_rengong = 0.0;
+                        $tonnagetotal_pppayment_maohan = 0.0;
+                        $tonnagetotal_out = 0.0;
+                        $tonnagetotal_in = 0.0;
+
+                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '宣城子公司');
+//                dd($issuedrawings->getData(true)["data"]);
+//                dd(json_decode($issuedrawings) );
+                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                        foreach ($issuedrawingsArray as $value)
+                        {
+                            $temp = [];
+                            $temp['下图日期']          = $value['created_date'];
+                            $temp['下图吨数']                = (double)$value['tonnage'];
+                            $temp['下图申请人']              = $value['applicant'];
+                            $temp['下图制作公司']     = $value['productioncompany'];
+                            $temp['下图概述']               = $value['overview'];
+
+                            array_push($data, $temp);
+                            $tonnagetotal_issuedrawing += $value['tonnage'];
+                        }
+
+                        $param = "@orderid=" . $sohead->id;
+                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
+                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
+                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
+
+                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
+                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
+                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
+//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+
+//                dd($data);
+                        $sheet->freezeFirstRow();
+                        $sheet->fromArray($data);
+
+                        $totalrowcolor = "#00FF00";       // green
+                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
+                            $totalrowcolor = "#FF0000"; // red
+//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+//                        ]);
+//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+//                            $row->setBackground($totalrowcolor);
+//                        });
+                    });
+
+                    $sheetname = "许昌子公司下图明细";
+                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                        // Sheet manipulation
+                        $data = [];
+                        $tonnagetotal_issuedrawing = 0.0;
+                        $tonnagetotal_mcitempurchase = 0.0;
+                        $tonnagetotal_pppayment = 0.0;
+                        $tonnagetotal_pppayment_paowan = 0.0;
+                        $tonnagetotal_pppayment_youqi = 0.0;
+                        $tonnagetotal_pppayment_rengong = 0.0;
+                        $tonnagetotal_pppayment_maohan = 0.0;
+                        $tonnagetotal_out = 0.0;
+                        $tonnagetotal_in = 0.0;
+
+                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '许昌子公司');
+//                dd($issuedrawings->getData(true)["data"]);
+//                dd(json_decode($issuedrawings) );
+                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                        foreach ($issuedrawingsArray as $value)
+                        {
+                            $temp = [];
+                            $temp['下图日期']          = $value['created_date'];
+                            $temp['下图吨数']                = (double)$value['tonnage'];
+                            $temp['下图申请人']              = $value['applicant'];
+                            $temp['下图制作公司']     = $value['productioncompany'];
+                            $temp['下图概述']               = $value['overview'];
+
+                            array_push($data, $temp);
+                            $tonnagetotal_issuedrawing += $value['tonnage'];
+                        }
+
+                        $param = "@orderid=" . $sohead->id;
+                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
+                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
+                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
+
+                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
+                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
+                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
+//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+
+//                dd($data);
+                        $sheet->freezeFirstRow();
+                        $sheet->fromArray($data);
+
+                        $totalrowcolor = "#00FF00";       // green
+                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
+                            $totalrowcolor = "#FF0000"; // red
+//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+//                        ]);
+//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+//                            $row->setBackground($totalrowcolor);
+//                        });
+                    });
+
+                    $sheetname = "外协单位下图明细";
+                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                        // Sheet manipulation
+                        $data = [];
+                        $tonnagetotal_issuedrawing = 0.0;
+                        $tonnagetotal_mcitempurchase = 0.0;
+                        $tonnagetotal_pppayment = 0.0;
+
+                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '外协单位');
+//                dd($issuedrawings->getData(true)["data"]);
+//                dd(json_decode($issuedrawings) );
+                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                        foreach ($issuedrawingsArray as $value)
+                        {
+                            $temp = [];
+                            $temp['下图日期']          = $value['created_date'];
+                            $temp['下图吨数']                = (double)$value['tonnage'];
+                            $temp['下图申请人']              = $value['applicant'];
+                            $temp['下图制作公司']     = $value['productioncompany'];
+                            $temp['下图概述']               = $value['overview'];
+
+                            array_push($data, $temp);
+                            $tonnagetotal_issuedrawing += $value['tonnage'];
+                        }
+
+                        $param = "@orderid=" . $sohead->id;
+                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
+                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
+                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
+
+                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
+                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
+                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
+//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+
+//                dd($data);
+                        $sheet->freezeFirstRow();
+                        $sheet->fromArray($data);
+
+                        $totalrowcolor = "#00FF00";       // green
+                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
+                            $totalrowcolor = "#FF0000"; // red
+//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+//                        ]);
+//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+//                            $row->setBackground($totalrowcolor);
+//                        });
+                    });
+
+                    $sheetname = "胶州生产中心下图明细";
+                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                        // Sheet manipulation
+                        $data = [];
+                        $tonnagetotal_issuedrawing = 0.0;
+                        $tonnagetotal_mcitempurchase = 0.0;
+                        $tonnagetotal_pppayment = 0.0;
+
+                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '胶州生产中心');
+//                dd($issuedrawings->getData(true)["data"]);
+//                dd(json_decode($issuedrawings) );
+                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                        foreach ($issuedrawingsArray as $value)
+                        {
+                            $temp = [];
+                            $temp['下图日期']          = $value['created_date'];
+                            $temp['下图吨数']                = (double)$value['tonnage'];
+                            $temp['下图申请人']              = $value['applicant'];
+                            $temp['下图制作公司']     = $value['productioncompany'];
+                            $temp['下图概述']               = $value['overview'];
+
+                            array_push($data, $temp);
+                            $tonnagetotal_issuedrawing += $value['tonnage'];
+                        }
+
+                        $param = "@orderid=" . $sohead->id;
+                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
+                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
+                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
+
+                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
+                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
+                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
+//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+
+//                dd($data);
+                        $sheet->freezeFirstRow();
+                        $sheet->fromArray($data);
+
+                        $totalrowcolor = "#00FF00";       // green
+                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
+                            $totalrowcolor = "#FF0000"; // red
+//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+//                        ]);
+//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+//                            $row->setBackground($totalrowcolor);
+//                        });
+                    });
+
+                    $sheetname = "苏州生产中心下图明细";
+                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                        // Sheet manipulation
+                        $data = [];
+                        $tonnagetotal_issuedrawing = 0.0;
+                        $tonnagetotal_mcitempurchase = 0.0;
+                        $tonnagetotal_pppayment = 0.0;
+
+                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '苏州生产中心');
+//                dd($issuedrawings->getData(true)["data"]);
+//                dd(json_decode($issuedrawings) );
+                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                        foreach ($issuedrawingsArray as $value)
+                        {
+                            $temp = [];
+                            $temp['下图日期']          = $value['created_date'];
+                            $temp['下图吨数']                = (double)$value['tonnage'];
+                            $temp['下图申请人']              = $value['applicant'];
+                            $temp['下图制作公司']     = $value['productioncompany'];
+                            $temp['下图概述']               = $value['overview'];
+
+                            array_push($data, $temp);
+                            $tonnagetotal_issuedrawing += $value['tonnage'];
+                        }
+
+                        $param = "@orderid=" . $sohead->id;
+                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
+                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
+                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
+
+                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
+                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
+                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
+//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+
+//                dd($data);
+                        $sheet->freezeFirstRow();
+                        $sheet->fromArray($data);
+
+                        $totalrowcolor = "#00FF00";       // green
+                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
+                            $totalrowcolor = "#FF0000"; // red
+//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+//                        ]);
+//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+//                            $row->setBackground($totalrowcolor);
+//                        });
+                    });
+
+                    $sheetname = "泰州生产中心下图明细";
+                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                        // Sheet manipulation
+                        $data = [];
+                        $tonnagetotal_issuedrawing = 0.0;
+                        $tonnagetotal_mcitempurchase = 0.0;
+                        $tonnagetotal_pppayment = 0.0;
+
+                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '泰州生产中心');
+//                dd($issuedrawings->getData(true)["data"]);
+//                dd(json_decode($issuedrawings) );
+                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                        foreach ($issuedrawingsArray as $value)
+                        {
+                            $temp = [];
+                            $temp['下图日期']          = $value['created_date'];
+                            $temp['下图吨数']                = (double)$value['tonnage'];
+                            $temp['下图申请人']              = $value['applicant'];
+                            $temp['下图制作公司']     = $value['productioncompany'];
+                            $temp['下图概述']               = $value['overview'];
+
+                            array_push($data, $temp);
+                            $tonnagetotal_issuedrawing += $value['tonnage'];
+                        }
+
+                        $param = "@orderid=" . $sohead->id;
+                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
+                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
+                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
+
+                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
+                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
+                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
+//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+
+//                dd($data);
+                        $sheet->freezeFirstRow();
+                        $sheet->fromArray($data);
+
+                        $totalrowcolor = "#00FF00";       // green
+                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
+                            $totalrowcolor = "#FF0000"; // red
+//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+//                        ]);
+//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+//                            $row->setBackground($totalrowcolor);
+//                        });
+                    });
+
+//                    $sheetname = "下图明细";
+//                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+//                        // Sheet manipulation
+//                        $data = [];
+//                        $tonnagetotal_issuedrawing = 0.0;
+//                        $tonnagetotal_mcitempurchase = 0.0;
+//                        $tonnagetotal_pppayment = 0.0;
+//
+//                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id);
+////                dd($issuedrawings->getData(true)["data"]);
+////                dd(json_decode($issuedrawings) );
+//                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+//                        foreach ($issuedrawingsArray as $value)
+//                        {
+//                            $temp = [];
+//                            $temp['下图日期']          = $value['created_date'];
+//                            $temp['下图吨数']                = (double)$value['tonnage'];
+//                            $temp['下图申请人']              = $value['applicant'];
+//                            $temp['下图制作公司']     = $value['productioncompany'];
+//                            $temp['下图概述']               = $value['overview'];
+//
+//                            array_push($data, $temp);
+//                            $tonnagetotal_issuedrawing += $value['tonnage'];
+//                        }
+//
+//                        $param = "@orderid=" . $sohead->id;
+//                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
+//                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
+//                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
+//
+//                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
+//                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
+//                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
+////                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+//
+////                dd($data);
+//                        $sheet->freezeFirstRow();
+//                        $sheet->fromArray($data);
+//
+//                        $totalrowcolor = "#00FF00";       // green
+//                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
+//                            $totalrowcolor = "#FF0000"; // red
+////                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+////                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+////                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+////                        ]);
+////                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+////                            $row->setBackground($totalrowcolor);
+////                        });
+//                    });
+
+                    $sheetname = "无锡生产中心出库明细";
+                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                        $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
+
+                        $param = "@orderid=" . $sohead->id . ", @warehouse_number='001'";       // 无锡原材料仓
+                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
+                        $dataArray = json_decode(json_encode($sohead_outitems), true);
+                        foreach ($dataArray as $value)
+                        {
+//                            dd($value);
+                            $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
+                        }
+                    });
+
+                    $sheetname = "宣城子公司出库明细";
+                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                        $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
+
+                        $param = "@orderid=" . $sohead->id . ", @warehouse_number='010'";       // 郎溪原材料仓
+                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
+                        $dataArray = json_decode(json_encode($sohead_outitems), true);
+                        foreach ($dataArray as $value)
+                        {
+//                            dd($value);
+                            $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
+                        }
+                    });
+
+                    $sheetname = "许昌子公司出库明细";
+                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                        $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
+
+                        $param = "@orderid=" . $sohead->id . ", @warehouse_number='012'";       // 许昌原材料仓
+                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
+                        $dataArray = json_decode(json_encode($sohead_outitems), true);
+                        foreach ($dataArray as $value)
+                        {
+//                            dd($value);
+                            $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
+                        }
+                    });
+
+                    $sheetname = "胶州生产中心出库明细";
+                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                        $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
+
+                        $param = "@orderid=" . $sohead->id . ", @warehouse_number='004'";       // 胶州原材料仓
+                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
+                        $dataArray = json_decode(json_encode($sohead_outitems), true);
+                        foreach ($dataArray as $value)
+                        {
+                            $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
+                        }
+
+                        $param = "@orderid=" . $sohead->id . ", @warehouse_number='008'";       // 胶州原材料二仓
+                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
+                        $dataArray = json_decode(json_encode($sohead_outitems), true);
+                        foreach ($dataArray as $value)
+                        {
+                            $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
+                        }
+                    });
+
+                    $sheetname = "泰州生产中心出库明细";
+                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                        $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
+
+                        $param = "@orderid=" . $sohead->id . ", @warehouse_number='003'";       // 泰州原材料仓
+                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
+                        $dataArray = json_decode(json_encode($sohead_outitems), true);
+                        foreach ($dataArray as $value)
+                        {
+                            $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
+                        }
+                    });
+
+//                    $sheetname = "出库明细";
+//                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+//                        $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
+//
+//                        $param = "@orderid=" . $sohead->id;
+//                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
+//                        $dataArray = json_decode(json_encode($sohead_outitems), true);
+//                        foreach ($dataArray as $value)
+//                        {
+////                            dd($value);
+//                            $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
+//                        }
+//                    });
+
+                    // Set the title
+//                    $excel->setTitle($filename);
+
+                    // Chain the setters
+                    $excel->setCreator('HXERP')
+                        ->setCompany('Huaxing East');
+
+                    // Call them separately
+//            $excel->setDescription('A demonstration to change the file properties');
+
+                })->export('xlsx');
+            }
+            else
+                dd('未找到对应的订单。');
+        }
     }
 
     public static function processinstance_listids_issuedrawing($startTime, $endTime)

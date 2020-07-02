@@ -26,48 +26,56 @@
     </div>
 
     <div class="panel-body">
-        {{--
-                <a href="{{ URL::to('approval/items/create') }}" class="btn btn-sm btn-success">新建</a>
-        --}}
-        {!! Form::open(['url' => '/approval/report2/issuedrawingpurchasedetailexport3', 'class' => 'pull-right form-inline', 'id' => 'formExport3']) !!}
-        <div class="form-group-sm">
-            {!! Form::hidden('project_id', null) !!}
-            {!! Form::button('按项目导出', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport3']) !!}
-        </div>
-        {!! Form::close() !!}
+        <div class="pull-right">
+            <div class="row">
+                {!! Form::open(['url' => '/approval/report2/issuedrawingpurchasedetailexport3', 'class' => 'pull-right form-inline', 'id' => 'formExport3']) !!}
+                <div class="form-group-sm">
+                    {!! Form::hidden('project_id', null) !!}
+                    {!! Form::button('按项目导出', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport3']) !!}
+                </div>
+                {!! Form::close() !!}
 
-        {!! Form::open(['url' => '/approval/report2/issuedrawingpurchasedetailexport2', 'class' => 'pull-right form-inline', 'id' => 'formExport2']) !!}
-        <div class="form-group-sm">
-            {!! Form::hidden('sohead_id', null) !!}
-            {!! Form::button('按工厂导出', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport2']) !!}
-        </div>
-        {!! Form::close() !!}
+                {!! Form::open(['url' => '/approval/report2/issuedrawingpurchasedetailexport2', 'class' => 'pull-right form-inline', 'id' => 'formExport2']) !!}
+                <div class="form-group-sm">
+                    {!! Form::hidden('sohead_id', null) !!}
+                    {!! Form::button('按工厂导出', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport2']) !!}
+                </div>
+                {!! Form::close() !!}
 
-        <form class="pull-right form-inline" action="/approval/report2/issuedrawingpurchasedetailexport" method="post" id="formExport">
-            {!! csrf_field() !!}
-            <input type="hidden" value="aaa" name="sohead_id" id="sohead_id">
-            <div class="pull-right">
-                <button type="button" class="btn btn-default btn-sm" id="btnExport">按订单导出</button>
+                <form class="pull-right form-inline" action="/approval/report2/issuedrawingpurchasedetailexport" method="post" id="formExport">
+                    {!! csrf_field() !!}
+                    <input type="hidden" value="aaa" name="sohead_id" id="sohead_id">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default btn-sm" id="btnExport">按订单导出</button>
+                    </div>
+                </form>
+
+                {!! Form::open(['url' => '/approval/reports2/issuedrawingpurchasedetail', 'class' => 'pull-right form-inline', 'id' => 'frmSearch']) !!}
+                <div class="form-group-sm">
+                    {!! Form::select('selectSohead', $soheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '--订单--', 'id' => 'selectSohead']) !!}
+                    {!! Form::hidden('sohead_id', null, ['id' => 'sohead_id']) !!}
+                    {!! Form::select('selectProject', $projectList, null, ['class' => 'form-control', 'placeholder' => '--项目--', 'id' => 'selectProject']) !!}
+                    {!! Form::hidden('project_id', null, ['id' => 'project_id']) !!}
+                    {!! Form::label('issuedrawingdatelabel', '下图时间:', ['class' => 'control-label']) !!}
+                    {!! Form::date('issuedrawingdatestart', null, ['class' => 'form-control']) !!}
+                    {!! Form::label('issuedrawingdatelabelto', '-', ['class' => 'control-label']) !!}
+                    {!! Form::date('issuedrawingdateend', null, ['class' => 'form-control']) !!}
+                    {{--
+                    {!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']); !!}
+                    {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称、申请人']); !!}
+                    --}}
+                    {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
+                </div>
+                {!! Form::close() !!}
             </div>
-        </form>
 
-        {!! Form::open(['url' => '/approval/reports2/issuedrawingpurchasedetail', 'class' => 'pull-right form-inline', 'id' => 'frmSearch']) !!}
-        <div class="form-group-sm">
-            {!! Form::select('selectSohead', $soheadList_hxold, null, ['class' => 'form-control', 'placeholder' => '--订单--', 'id' => 'selectSohead']) !!}
-            {!! Form::hidden('sohead_id', null, ['id' => 'sohead_id']) !!}
-            {!! Form::select('selectProject', $projectList, null, ['class' => 'form-control', 'placeholder' => '--项目--', 'id' => 'selectProject']) !!}
-            {!! Form::hidden('project_id', null, ['id' => 'project_id']) !!}
-            {!! Form::label('issuedrawingdatelabel', '下图时间:', ['class' => 'control-label']) !!}
-            {!! Form::date('issuedrawingdatestart', null, ['class' => 'form-control']) !!}
-            {!! Form::label('issuedrawingdatelabelto', '-', ['class' => 'control-label']) !!}
-            {!! Form::date('issuedrawingdateend', null, ['class' => 'form-control']) !!}
-            {{--
-            {!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']); !!}
-            {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称、申请人']); !!}
-            --}}
-            {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
+            <div class="row">
+                {!! Form::open(['url' => '/approval/report2/issuedrawingpurchasedetailexport4', 'class' => 'pull-right form-inline', 'id' => 'formExport4']) !!}
+                    {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '订单编号']) !!}
+                    {!! Form::submit('导出订单数据', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport4']) !!}
+                {!! Form::close() !!}
+            </div>
         </div>
-        {!! Form::close() !!}
     </div>
 
 
