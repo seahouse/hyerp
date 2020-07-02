@@ -47,8 +47,8 @@
                 {!! Form::select('paymentstatus', ['0' => '已付款', '-1' => '未付款'], null, ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}
                 {!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']) !!}
                 {!! Form::select('company_id', $companyList, null, ['class' => 'form-control', 'placeholder' => '--采购公司--']) !!}
-                {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称、申请人']) !!}
-                {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']); !!}
+                {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称、申请人、说明']) !!}
+                {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
             </div>
         {!! Form::close() !!}
     </div> 

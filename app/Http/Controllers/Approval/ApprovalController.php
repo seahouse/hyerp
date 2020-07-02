@@ -620,9 +620,10 @@ class ApprovalController extends Controller
                 ->orWhere('采购订单商品.goods_name', 'like', '%'.$key.'%')
 //                ->orWhere('productname', 'like', '%'.$key.'%')
                 ->pluck('vpurchaseorder.id');
-            $query->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
+            $query->where(function ($query) use ($supplier_ids, $purchaseorder_ids, $key) {
                 $query->whereIn('supplier_id', $supplier_ids)
-                    ->orWhereIn('pohead_id', $purchaseorder_ids);
+                    ->orWhereIn('pohead_id', $purchaseorder_ids)
+                    ->orWhere('descrip', 'like', '%'.$key.'%');
             });
         }
 
