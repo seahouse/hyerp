@@ -1027,6 +1027,23 @@ class BiddinginformationController extends Controller
         return redirect('basic/biddinginformations');
     }
 
+    /**
+     * 取消订单关联
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function cancelsohead($id)
+    {
+        //
+        $biddinginformation = Biddinginformation::find($id);
+        if (isset($biddinginformation))
+        {
+            $biddinginformation->sohead_id = null;
+            $biddinginformation->save();
+        }
+        return redirect('basic/biddinginformations');
+    }
+
     public function edittable()
     {
         $request = request();

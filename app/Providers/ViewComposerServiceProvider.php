@@ -180,7 +180,7 @@ class ViewComposerServiceProvider extends ServiceProvider
         });
 
         // unitstrList
-        view()->composer(array('basic.constructionbidinformations.edit', 'basic.constructionbidinformationfields.create', 'basic.constructionbidinformationfields.edit', 'basic.constructionbidinformationfields.edittable'), function($view) {
+        view()->composer(array('basic.constructionbidinformations.edit', 'basic.constructionbidinformationfields.index', 'basic.constructionbidinformationfields.create', 'basic.constructionbidinformationfields.edit', 'basic.constructionbidinformationfields.edittable'), function($view) {
             $view->with('unitstrList', \App\Models\Product\Unit_hxold::orderby('id', 'asc')->lists('name', 'name'));
         });
 
@@ -248,7 +248,7 @@ class ViewComposerServiceProvider extends ServiceProvider
             $view->with('companyList', \App\Models\Basic\Company_hxold::orderby('id', 'asc')->lists('name', 'id'));
         });
 
-        view()->composer(array('basic.constructionbidinformationfields.create', 'basic.constructionbidinformationfields.edit', 'basic.constructionbidinformationfields.edittable',
+        view()->composer(array('basic.constructionbidinformationfields.index', 'basic.constructionbidinformationfields.create', 'basic.constructionbidinformationfields.edit', 'basic.constructionbidinformationfields.edittable',
             'basic.constructionbidinformations.index', 'basic.constructionbidinformations.show'), function($view) {
             $view->with('projecttypes_constructionbidinformationfield',
                 array('SCR钢结构' => 'SCR钢结构', 'SCR烟道' => 'SCR烟道', 'SCR反应器系统' => 'SCR反应器系统', 'SNCR系统（尿素）' => 'SNCR系统（尿素）', 'SNCR系统（氨水）' => 'SNCR系统（氨水）',

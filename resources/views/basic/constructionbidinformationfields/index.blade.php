@@ -12,30 +12,16 @@
     </div>
     
     <div class="panel-body">
-        {{--{!! Form::open(['url' => '/dingtalk/dtlogs/search', 'class' => 'pull-right form-inline', 'id' => 'frmCondition']) !!}--}}
-        {{--<div class="form-group-sm">--}}
-            {{--{!! Form::label('createdatelabel', '发起时间:', ['class' => 'control-label']) !!}--}}
-            {{--{!! Form::date('createdatestart', null, ['class' => 'form-control']) !!}--}}
-            {{--{!! Form::label('createdatelabelto', '-', ['class' => 'control-label']) !!}--}}
-            {{--{!! Form::date('createdateend', null, ['class' => 'form-control']) !!}--}}
-{{--            {!! Form::select('creator_name', $dtlog_creatornames, null, ['class' => 'form-control', 'placeholder' => '--发起人--']) !!}--}}
+        {!! Form::open(['url' => '/basic/constructionbidinformationfields/search', 'class' => 'pull-right form-inline', 'id' => 'frmCondition']) !!}
+        <div class="form-group-sm">
+            {!! Form::select('unit', $unitstrList, null, ['class' => 'form-control', 'placeholder' => '--单位--']) !!}
 
-{{--            {!! Form::select('template_name', $dtlog_templatenames, null, ['class' => 'form-control', 'placeholder' => '--日志模板--']) !!}--}}
+            {!! Form::select('projecttype', $projecttypes_constructionbidinformationfield, null, ['class' => 'form-control', 'placeholder' => '--项目类型--']) !!}
 
-
-            {{--{!! Form::label('select_xmjlsgrz_project_label', '项目经理施工日志对应项目', ['class' => 'control-label']) !!}--}}
-            {{--{!! Form::select('select_xmjlsgrz_project', $projectList, null, ['class' => 'form-control', 'placeholder' => '', 'id' => 'select_xmjlsgrz_project']) !!}--}}
-            {{--{!! Form::hidden('xmjlsgrz_project_id', null, ['id' => 'xmjlsgrz_project_id']) !!}--}}
-
-            {{--{!! Form::select('other', ['xmjlsgrz_sohead_id_undefined' => '还未关联订单的项目经理施工日志', 'btn_xmjlsgrz_peoplecount_undefined' => '施工人数填写不符要求或未填'], null, ['class' => 'form-control', 'placeholder' => '--其他--']) !!}--}}
-            {{--{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '备注']) !!}--}}
-            {{--{!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}--}}
-            {{--@if (Auth::user()->email == "admin@admin.com")--}}
-            {{--{!! Form::button('关联项目经理施工日志到ERP订单', ['class' => 'btn btn-default btn-sm', 'id' => 'btn_xmjlsgrz_sohead_id']) !!}--}}
-            {{--{!! Form::button('关联工程调试日志到ERP订单', ['class' => 'btn btn-default btn-sm', 'id' => 'btn_gctsrz_sohead_id']) !!}--}}
-            {{--@endif--}}
-        {{--</div>--}}
-        {{--{!! Form::close() !!}--}}
+            {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '名称']) !!}
+            {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
+        </div>
+        {!! Form::close() !!}
     </div> 
 
     

@@ -183,6 +183,7 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
         Route::post('clear', 'BiddinginformationController@clear');
         Route::get('exportword/{id}', 'BiddinginformationController@exportword');
         Route::post('close/{id}', 'BiddinginformationController@close');
+        Route::post('cancelsohead/{id}', 'BiddinginformationController@cancelsohead');
         Route::get('edittable', 'BiddinginformationController@edittable');
         Route::post('updateedittable', 'BiddinginformationController@updateedittable');
         Route::post('search', 'BiddinginformationController@search');
