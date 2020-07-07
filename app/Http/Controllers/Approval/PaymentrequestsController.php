@@ -190,7 +190,7 @@ class PaymentrequestsController extends Controller
     {
         $key = $request->input('key');
         $approvalstatus = $request->input('approvalstatus');        
-        //dd($key);
+//        dd($key);
         //dd($request);
         $supplier_ids = [];
         $purchaseorder_ids = [];
@@ -204,9 +204,10 @@ class PaymentrequestsController extends Controller
 
         if (strlen($key) > 0)
         {
-            $query->where(function($query) use ($supplier_ids, $purchaseorder_ids) {
+            $query->where(function($query) use ($supplier_ids, $purchaseorder_ids, $key) {
                 $query->whereIn('supplier_id', $supplier_ids)
-                    ->orWhereIn('pohead_id', $purchaseorder_ids);
+                    ->orWhereIn('pohead_id', $purchaseorder_ids)
+                    ->orWhere('descrip', 'like', '%'.$key.'%');     // 增加 说明 字段的模糊查找
             });
         }
 

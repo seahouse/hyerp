@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Excel, Log, DB;
+use Excel, Log, DB, Auth;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
 
@@ -251,6 +251,8 @@ class BiddinginformationController extends Controller
     {
         //
         $biddinginformation = Biddinginformation::findOrFail($id);
+        if ($biddinginformation->closed == 1 && !Auth::user()->isSuperAdmin())
+            dd('该记录已关闭，无法编辑。');
         return view('basic.biddinginformations.edit', compact('biddinginformation'));
     }
 
@@ -1022,6 +1024,23 @@ class BiddinginformationController extends Controller
         if (isset($biddinginformation))
         {
             $biddinginformation->closed = 1;
+            $biddinginformation->save();
+        }
+        return redirect('basic/biddinginformations');
+    }
+
+    /**
+     * 取消订单关联
+     * @param $id
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function cancelsohead($id)
+    {
+        //
+        $biddinginformation = Biddinginformation::find($id);
+        if (isset($biddinginformation))
+        {
+            $biddinginformation->sohead_id = null;
             $biddinginformation->save();
         }
         return redirect('basic/biddinginformations');

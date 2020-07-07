@@ -183,6 +183,7 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
         Route::post('clear', 'BiddinginformationController@clear');
         Route::get('exportword/{id}', 'BiddinginformationController@exportword');
         Route::post('close/{id}', 'BiddinginformationController@close');
+        Route::post('cancelsohead/{id}', 'BiddinginformationController@cancelsohead');
         Route::get('edittable', 'BiddinginformationController@edittable');
         Route::post('updateedittable', 'BiddinginformationController@updateedittable');
         Route::post('search', 'BiddinginformationController@search');
@@ -654,6 +655,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::post('issuedrawingpurchasedetailexport', 'ApprovalController@issuedrawingpurchasedetailexport');
         Route::post('issuedrawingpurchasedetailexport2', 'ApprovalController@issuedrawingpurchasedetailexport2');
         Route::post('issuedrawingpurchasedetailexport3', 'ApprovalController@issuedrawingpurchasedetailexport3');
+        Route::post('issuedrawingpurchasedetailexport4', 'ApprovalController@issuedrawingpurchasedetailexport4');
         Route::get('issuedrawingjson', 'ApprovalController@issuedrawingjson');
         Route::get('mcitempurchasejson', 'ApprovalController@mcitempurchasejson');
         Route::get('pppaymentjson', 'ApprovalController@pppaymentjson');

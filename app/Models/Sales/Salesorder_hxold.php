@@ -133,6 +133,11 @@ class Salesorder_hxold extends Model
         return $this->hasMany('App\Models\Sales\Paywayass_hxold', 'paywayass_order_id');
     }
 
+    // 出库明细
+    public function shipitems() {
+        return $this->hasMany('App\Models\Inventory\Shipitem_hxold', 'sohead_id');
+    }
+
     // 奖金系数/折扣 如果没有字段值，则根据政策动态生成，不取字段值
     public function getBonusfactorByPolicy($date = '') {
         if (strlen($date) > 0)
