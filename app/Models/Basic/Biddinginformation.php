@@ -2,6 +2,7 @@
 
 namespace App\Models\Basic;
 
+use App\Models\Sales\Project_hxold;
 use Illuminate\Database\Eloquent\Model;
 
 class Biddinginformation extends Model
@@ -26,7 +27,14 @@ class Biddinginformation extends Model
     }
 
     public function biddingproject() {
-        return $this->hasOne('App\Models\Basic\Biddingproject','id','biddingprojectid');
+        if(null !==$this->sohead)
+        {
+            $project_id=$this->sohead->project_id;
+            return Project_hxold::find($project_id);
+        }
+        else
+            return null;
+
     }
     public function biddinginformationfieldtypes() {
         return $this->hasMany('App\Models\Basic\Biddinginformationfieldtype');

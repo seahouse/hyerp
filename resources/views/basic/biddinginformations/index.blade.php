@@ -117,8 +117,8 @@
                          @endif
                     </td>
                     <td>
-                        @if(isset($biddinginformation->biddingproject))
-                            {{$biddinginformation->biddingproject->name}}
+                        @if(null !==$biddinginformation->biddingproject() )
+                            {{$biddinginformation->biddingproject()->name}}
                         @else
                             -
                         @endif
