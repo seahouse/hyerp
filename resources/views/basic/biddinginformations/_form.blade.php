@@ -27,6 +27,7 @@
         {!! Form::text('projectid', null!==$biddinginformation->biddingproject()? $biddinginformation->biddingproject()->name : null, ['class' => 'form-control', $attrdisable]) !!}
     </div>
     {{--{!! Form::hidden('biddingprojectid', 0, ['class' => 'form-control', 'id' => 'biddingprojectid']) !!}--}}
+
 </div>
 {{--<div class="form-group">--}}
     {{--{!! Form::label('template_name', '日志模板:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}

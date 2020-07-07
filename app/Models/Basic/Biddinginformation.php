@@ -34,7 +34,6 @@ class Biddinginformation extends Model
         }
         else
             return null;
-
     }
     public function biddinginformationfieldtypes() {
         return $this->hasMany('App\Models\Basic\Biddinginformationfieldtype');
