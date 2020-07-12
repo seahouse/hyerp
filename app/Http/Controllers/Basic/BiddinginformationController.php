@@ -367,7 +367,7 @@ class BiddinginformationController extends Controller
                     'content' => $msg
                 ]
             ];
-            $dtusers = Dtuser::where('user_id', 2)->pluck('userid');             // WuHL
+            $dtusers = Dtuser::where('user_id', 2)->orWhere('user_id', 64)->pluck('userid');             // WuHL, Zhoub
             $useridList = implode(',', $dtusers->toArray());
             if ($dtusers->count() > 0)
             {

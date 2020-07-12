@@ -52,6 +52,7 @@ return array(
     'CreateCountysTable' => $baseDir . '/database/migrations/2015_08_14_023833_create_countys_table.php',
     'CreateCustinfosTable' => $baseDir . '/database/migrations/2015_08_20_065111_create_custinfos_table.php',
     'CreateDeptsTable' => $baseDir . '/database/migrations/2015_08_20_083905_create_depts_table.php',
+    'CreateDtlogcommentsTable' => $baseDir . '/database/migrations/2020_07_12_151123_create_dtlogcomments_table.php',
     'CreateDtlogitemsTable' => $baseDir . '/database/migrations/2019_03_13_193030_create_dtlogitems_table.php',
     'CreateDtlogsTable' => $baseDir . '/database/migrations/2019_03_13_163747_create_dtlogs_table.php',
     'CreateDtusersTable' => $baseDir . '/database/migrations/2016_10_21_133537_create_dtusers_table.php',

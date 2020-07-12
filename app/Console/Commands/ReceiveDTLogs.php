@@ -5,7 +5,9 @@ namespace App\Console\Commands;
 use App\Http\Controllers\DingTalkController;
 use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\CorpReportListRequest;
+use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiReportCommentListRequest;
 use App\Models\Dingtalk\Dtlog;
+use App\Models\Dingtalk\Dtlogcomment;
 use App\Models\Dingtalk\Dtlogitem;
 use App\Models\Sales\Salesorder_hxold;
 use Carbon\Carbon;
@@ -166,6 +168,26 @@ class ReceiveDTLogs extends Command
                                                 $dtlog->update(['gctsrz_sohead_id' => $sohead->id]);
                                                 break;
                                             }
+                                        }
+                                    }
+                                }
+
+                                // 下载日志评论, 默认最多100个评论，暂不考虑超过100的多次请求
+                                $client_comment = new DingTalkClient();
+                                $request_comment = new OapiReportCommentListRequest();
+                                $request_comment->setReportId("$report->report_id");
+                                $response_comment = $client_comment->execute($request_comment, $session);
+                                Log::info(json_encode($response_comment));
+                                if ($response_comment->errcode == "0")
+                                {
+                                    if (isset($response_comment->result->comments))
+                                    {
+                                        foreach ($response_comment->result->comments->report_comment_vo as $comment)
+                                        {
+                                            $inputs_comment = json_decode(json_encode($comment), true);
+                                            $inputs_comment['dtlog_id'] = $dtlog->id;
+                                            Log::info($inputs_comment);
+                                            Dtlogcomment::create($inputs_comment);
                                         }
                                     }
                                 }
