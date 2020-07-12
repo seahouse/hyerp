@@ -9,6 +9,7 @@ use App\Models\Basic\Biddinginformation;
 use App\Models\Basic\Biddinginformationdefinefield;
 use App\Models\Basic\Biddinginformationfieldtype;
 use App\Models\Basic\Biddinginformationitem;
+use App\Models\Basic\Biddinginformationitemmodifylog;
 use App\Models\Sales\Salesorder_hxold;
 use App\Models\System\Dtuser;
 use Carbon\Carbon;
@@ -298,21 +299,24 @@ class BiddinginformationController extends Controller
         $inputs = $request->all();
 //        dd($inputs);
         $remark_suffix = '_remark';
+        $isclarify_suffix = '_isclarify';
+        $clarify_msgs = [];
+        $projectname = '';
         foreach ($inputs as $key => $value)
         {
-            if (!(substr($key, -strlen($remark_suffix)) === $remark_suffix))
+            if (!(substr($key, -strlen($remark_suffix)) === $remark_suffix) && !(substr($key, -strlen($isclarify_suffix)) === $isclarify_suffix))
             {
                 $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $id)->where('key', $key)->first();
                 if (isset($biddinginformationitem))
                 {
                     $oldvalue = $biddinginformationitem->value;
                     $remark = isset($inputs[$key . $remark_suffix]) ? $inputs[$key . $remark_suffix] : '';
+                    $isclarify = isset($inputs[$key . $isclarify_suffix]) ? true : false;
 //                    dd($key . ':' . $inputs[$key . $remark_suffix]);
                     if ($biddinginformationitem->update(['value' => $value, 'remark' => $remark]))
                     {
                         if ($oldvalue != $value)
                         {
-                            $projectname = '';
                             $biddinginformationitem_mingcheng = Biddinginformationitem::where('biddinginformation_id', $id)->where('key', '名称')->first();
                             if (isset($biddinginformationitem_mingcheng))
                                 $projectname = $biddinginformationitem_mingcheng->value;
@@ -326,7 +330,7 @@ class BiddinginformationController extends Controller
                             ];
 
 //                            $dtusers = Dtuser::where('user_id', 126)->orWhere('user_id', 126)->pluck('userid');        // test
-                            $dtusers = Dtuser::where('user_id', 2)->orWhere('user_id', 64)->pluck('userid');             // WuHL, Zhoub
+                            $dtusers = Dtuser::where('user_id', 64)->pluck('userid');             // Zhoub
                             $useridList = implode(',', $dtusers->toArray());
 //                            dd(implode(',', $dtusers->toArray()));
                             if ($dtusers->count() > 0)
@@ -334,9 +338,41 @@ class BiddinginformationController extends Controller
                                 $agentid = config('custom.dingtalk.agentidlist.bidding');
                                 DingTalkController::sendWorkNotificationMessage($useridList, $agentid, json_encode($data));
                             }
+
+                            Biddinginformationitemmodifylog::create([
+                                'biddinginformationitem_id' => $biddinginformationitem->id,
+                                'oldvalue'      => $oldvalue,
+                                'value'         => $value,
+                                'isclarify'     => $isclarify,
+                            ]);
+
+                            if ($isclarify)
+                            {
+                                array_push($clarify_msgs, $key . ' 改为：' . $value);
+                            }
                         }
                     }
                 }
+            }
+        }
+
+        if (count($clarify_msgs) > 0)
+        {
+            $biddinginformation->update(['remark' => $biddinginformation->remark . "\n" . Carbon::now()->toDateString() . "澄清：\n" . implode("\n", $clarify_msgs)]);
+
+            $msg = '[' . $projectname . ']项目[' . $biddinginformation->number . ']的澄清：[' . implode("\n", $clarify_msgs);
+            $data = [
+                'msgtype'       => 'text',
+                'text' => [
+                    'content' => $msg
+                ]
+            ];
+            $dtusers = Dtuser::where('user_id', 2)->pluck('userid');             // WuHL
+            $useridList = implode(',', $dtusers->toArray());
+            if ($dtusers->count() > 0)
+            {
+                $agentid = config('custom.dingtalk.agentidlist.bidding');
+                DingTalkController::sendWorkNotificationMessage($useridList, $agentid, json_encode($data));
             }
         }
         return redirect('basic/biddinginformations');
