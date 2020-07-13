@@ -207,7 +207,7 @@ class PaymentrequestsController extends Controller
             $query->where(function($query) use ($supplier_ids, $purchaseorder_ids, $key) {
                 $query->whereIn('supplier_id', $supplier_ids)
                     ->orWhereIn('pohead_id', $purchaseorder_ids)
-                    ->orWhere('descrip', 'like', '%'.$key.'%');     // 增加 说明 字段的模糊查找
+                    ->orWhere('paymentrequests.descrip', 'like', '%'.$key.'%');     // 增加 说明 字段的模糊查找
             });
         }
 

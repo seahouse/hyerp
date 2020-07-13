@@ -13,4 +13,8 @@ class Dtlogcomment extends Model
         'create_time',
         'userid',
     ];
+
+    public function user() {
+        return $this->hasOne('App\Models\System\User', 'dtuserid', 'userid');
+    }
 }

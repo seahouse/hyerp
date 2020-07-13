@@ -42,6 +42,39 @@
             </div>
         </div>
     @endforeach
+
+    @if ($dtlog->dtlogcomments->count())
+        <p class="bannerTitle">评论</p>
+
+        @foreach ($dtlog->dtlogcomments as $dtlogcomment)
+
+            <div class="form-group">
+                {!! Form::label('content', '评论内容:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-sm-10 col-xs-8'>
+                    {!! Form::text('content', $dtlogcomment->content, ['class' => 'form-control', 'readonly']) !!}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {!! Form::label('create_time', '评论时间:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-sm-10 col-xs-8'>
+                    {!! Form::text('create_time', $dtlogcomment->create_time, ['class' => 'form-control', 'readonly']) !!}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {!! Form::label('comment_people', '评论人:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-sm-10 col-xs-8'>
+                    @if (isset($dtlogcomment->user))
+                    {!! Form::text('comment_people', $dtlogcomment->user->name, ['class' => 'form-control', 'readonly']) !!}
+                        @else
+                        {!! Form::text('comment_people', '', ['class' => 'form-control', 'readonly']) !!}
+                        @endif
+                </div>
+            </div>
+            <hr>
+        @endforeach
+    @endif
     {!! Form::close() !!}
 
 

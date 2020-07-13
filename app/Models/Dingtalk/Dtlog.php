@@ -24,6 +24,10 @@ class Dtlog extends Model
         return $this->hasMany('App\Models\Dingtalk\Dtlogitem');
     }
 
+    public function dtlogcomments() {
+        return $this->hasMany('App\Models\Dingtalk\Dtlogcomment');
+    }
+
     public function xmjlsgrz_sohead() {
         return $this->belongsTo('App\Models\Sales\Salesorder_hxold');
     }
