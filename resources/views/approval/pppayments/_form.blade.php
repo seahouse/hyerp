@@ -11,7 +11,7 @@
         <div class="form-group">
             {!! Form::label('designdepartment', '设计部门:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('designdepartment', array('工艺一室－杨青' => '工艺一室－杨青', '工艺二室－丁银红' => '工艺二室－丁银红', '工艺三室－钱明钢' => '工艺三室－钱明钢'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                {!! Form::select('designdepartment', array('工艺一室－杨青' => '工艺一室－杨青', '工艺二室－丁银红' => '工艺二室－丁银红', '工艺三室－钱明钢' => '工艺三室－钱明钢', '系统室' => '系统室'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
             </div>
         </div>
 
