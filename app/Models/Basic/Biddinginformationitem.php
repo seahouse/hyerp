@@ -23,4 +23,8 @@ class Biddinginformationitem extends Model
     public function biddinginformationdefinefield() {
         return $this->belongsTo('App\Models\Basic\Biddinginformationdefinefield', 'key', 'name');
     }
+
+    public function biddinginformationitemmodifylogs() {
+        return $this->hasMany('App\Models\Basic\Biddinginformationitemmodifylog');
+    }
 }

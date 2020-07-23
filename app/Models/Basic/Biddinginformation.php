@@ -22,6 +22,10 @@ class Biddinginformation extends Model
         return $this->hasMany('App\Models\Basic\Biddinginformationitem');
     }
 
+    public function biddinginformationeditems() {
+        return $this->hasMany(Biddinginformationeditem::class);
+    }
+
     public function sohead() {
         return $this->hasOne('App\Models\Sales\Salesorder_hxold','id','sohead_id');
     }

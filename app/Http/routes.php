@@ -191,6 +191,8 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
         Route::post('resetfieldtype', 'BiddinginformationController@resetfieldtype');
         Route::post('updatesaleorderid', 'BiddinginformationController@updatesaleorderid');
         Route::get('{id}/getbiddinginformationfieldtypes', 'BiddinginformationController@getbiddinginformationfieldtypes');
+        Route::get('/{id}/xyedit', 'BiddinginformationController@xyedit');
+        Route::patch('xyupdate/{id}', 'BiddinginformationController@xyupdate');
     });
     Route::resource('biddinginformations', 'BiddinginformationController');
     Route::group(['prefix' => 'biddinginformationitems'], function() {
@@ -644,7 +646,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
 
     });
     Route::resource('additionsalesorder', 'AdditionsalesorderController');
-    Route::resource('additionsalesorderattachment', 'AdditionsalesorderattachmentController');
+//    Route::resource('additionsalesorderattachment', 'AdditionsalesorderattachmentController');
 
     Route::post('bingdingtalk', 'ApprovalController@bingdingtalk');
     Route::get('gethxitemsbykey', 'ApprovalController@gethxitemsbykey');

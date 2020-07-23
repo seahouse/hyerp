@@ -5,80 +5,61 @@
 @endsection
 
 @section('main')
-    @can('basic_biddinginformation_edit')
+    @can('basic_biddinginformation_xyedit')
     <h1>编辑</h1>
     <hr/>
 
-    {{--<table id="tableBiddinginformation" class="table table-striped table-hover table-full-width"  width="100%">--}}
-        {{--<thead>--}}
-        {{--<tr>--}}
-            {{--<th>名称</th>--}}
-            {{--<th>数据</th>--}}
-            {{--<th>下图人</th>--}}
-            {{--<th>工厂</th>--}}
 
-            {{--<th>概述</th>--}}
-        {{--</tr>--}}
-        {{--</thead>--}}
-    {{--</table>--}}
+    {!! Form::model($biddinginformation, ['method' => 'PATCH', 'action' => ['Basic\BiddinginformationController@xyupdate', $biddinginformation->id], 'class' => 'form-horizontal']) !!}
 
-    {!! Form::model($biddinginformation, ['method' => 'PATCH', 'action' => ['Basic\BiddinginformationController@update', $biddinginformation->id], 'class' => 'form-horizontal']) !!}
-    @include('basic.biddinginformations._form',
-        [
-            'submitButtonText' => '提交',
-            'datepay' => null,
-            'requestdeliverydate' => null,
-            'customer_name' => null,
-            'customer_id' => null,
-            'amount' => null,
-            'order_number' => null,
-            'order_id' => null,
-            'datego' => null,
-            'dateback' => null,
-            'mealamount' => null,
-            'ticketamount' => null,
-            'amountAirfares' => null,
-            'amountTrain' => null,
-            'amountTaxi' => null,
-            'amountOtherTicket' => null,
-            'stayamount' => null,
-            'otheramount' => null,
-            'attr' => '',
-            'attrdisable' => 'disabled',
-            'btnclass' => 'hidden',
-        ])
+    {{--<div class="form-group">--}}
+        {{--{!! Form::label('sohead_id', '关联销售订单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
+        {{--<div class='col-xs-8 col-sm-10'>--}}
+            {{--{!! Form::text('sohead_id', isset($biddinginformation->sohead)? $biddinginformation->sohead->number : null, ['class' => 'form-control','data-toggle' => 'modal', 'data-target' => '#selectOrderModal','data-informationid' =>$biddinginformation->id]) !!}--}}
+        {{--</div>--}}
+    {{--</div>--}}
+
+    <div class="form-group">
+        {!! Form::label('projectid', '所属项目:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+        <div class='col-xs-8 col-sm-10'>
+            {{--        {!! Form::text('projectid', isset($biddinginformation->biddingproject)? $biddinginformation->biddingproject->name : null, ['class' => 'form-control', $attr,'data-toggle' => 'modal', 'data-target' => '#selectBiddingprojectModal','data-informationid' =>$biddinginformation->id]) !!}--}}
+            {!! Form::text('projectid', null!==$biddinginformation->biddingproject()? $biddinginformation->biddingproject()->name : null, ['class' => 'form-control', 'readonly']) !!}
+        </div>
+        {{--{!! Form::hidden('biddingprojectid', 0, ['class' => 'form-control', 'id' => 'biddingprojectid']) !!}--}}
+
+    </div>
 
     <div id="dynamicSelectWrapper">
-    @foreach($biddinginformation->biddinginformationitems()->orderBy('sort')->get() as $biddinginformationitem)
+    @foreach($biddinginformation->biddinginformationeditems()->orderBy('sort')->get() as $biddinginformationeditem)
         <div class="form-group">
-            {!! Form::label($biddinginformationitem->key, $biddinginformationitem->key, ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            {!! Form::label($biddinginformationeditem->key, $biddinginformationeditem->key, ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-4 col-sm-6'>
-                <?php $biddinginformationdefinefield = $biddinginformationitem->biddinginformationdefinefield; ?>
+                <?php $biddinginformationdefinefield = $biddinginformationeditem->biddinginformationdefinefield; ?>
                 @if (isset($biddinginformationdefinefield))
                     @if ($biddinginformationdefinefield->type == 2)
                         <?php $arr = explode(',', $biddinginformationdefinefield->select_strings); ?>
-                            {!! Form::select($biddinginformationitem->key, array_combine($arr, $arr), $biddinginformationitem->value, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
+                            {!! Form::select($biddinginformationeditem->key, array_combine($arr, $arr), $biddinginformationeditem->value, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}
                     @else
-                            {!! Form::text($biddinginformationitem->key, $biddinginformationitem->value, ['class' => 'form-control dynamicSelect', 'data-value' => $biddinginformationitem->value, 'data-name' => $biddinginformationitem->key]) !!}
-                            {!! Form::checkbox($biddinginformationitem->key . '_isclarify', true) !!}澄清
-                        @if ($biddinginformationitem->biddinginformationitemmodifylogs->where('isclarify', '1')->count())
+                            {!! Form::text($biddinginformationeditem->key, $biddinginformationeditem->value, ['class' => 'form-control dynamicSelect', 'data-value' => $biddinginformationeditem->value, 'data-name' => $biddinginformationeditem->key]) !!}
+                            {!! Form::checkbox($biddinginformationeditem->key . '_isclarify', true) !!}澄清
+                        @if ($biddinginformationeditem->biddinginformationitemmodifylogs->where('isclarify', '1')->count())
                             <?php $modifylogs = [] ?>
-                            @foreach($biddinginformationitem->biddinginformationitemmodifylogs->where('isclarify', '1') as $biddinginformationitemmodifylog)
+                            @foreach($biddinginformationeditem->biddinginformationitemmodifylogs->where('isclarify', '1') as $biddinginformationitemmodifylog)
                                 <?php array_push($modifylogs, \Carbon\Carbon::parse($biddinginformationitemmodifylog->created_at)->toDateString() . '澄清：原内容：' . $biddinginformationitemmodifylog->oldvalue . '；新内容：' . $biddinginformationitemmodifylog->value) ?>
                             @endforeach
                             {!! Form::textarea('modifylogs', implode("\n", $modifylogs), ['class' => 'form-control', 'readonly', 'rows' => 3]) !!}
                         @endif
                     @endif
                 @else
-                    {!! Form::text($biddinginformationitem->key, $biddinginformationitem->value, ['class' => 'form-control']) !!}
+                    {!! Form::text($biddinginformationeditem->key, $biddinginformationeditem->value, ['class' => 'form-control']) !!}
                 @endif
             </div>
             <div class='col-xs-4 col-sm-4'>
                 @can('basic_biddinginformation_remark')
-                    @if (strlen($biddinginformationitem->remark) > 0)
-                        {!! Form::textarea($biddinginformationitem->key . '_remark', $biddinginformationitem->remark, ['class' => 'form-control', 'rows' => 3]) !!}
+                    @if (strlen($biddinginformationeditem->remark) > 0)
+                        {!! Form::textarea($biddinginformationeditem->key . '_remark', $biddinginformationeditem->remark, ['class' => 'form-control', 'rows' => 3]) !!}
                     @else
-                        {!! Form::text($biddinginformationitem->key . '_remark', $biddinginformationitem->remark, ['class' => 'form-control', 'placeholder' => '备注/批注']) !!}
+                        {!! Form::text($biddinginformationeditem->key . '_remark', $biddinginformationeditem->remark, ['class' => 'form-control', 'placeholder' => '备注/批注']) !!}
                     @endif
                 @endcan
             </div>

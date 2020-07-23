@@ -7,6 +7,7 @@ use App\Http\Controllers\HelperController;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiMessageCorpconversationAsyncsendV2Request;
 use App\Models\Basic\Biddinginformation;
 use App\Models\Basic\Biddinginformationdefinefield;
+use App\Models\Basic\Biddinginformationeditem;
 use App\Models\Basic\Biddinginformationfieldtype;
 use App\Models\Basic\Biddinginformationitem;
 use App\Models\Basic\Biddinginformationitemmodifylog;
@@ -254,7 +255,28 @@ class BiddinginformationController extends Controller
         $biddinginformation = Biddinginformation::findOrFail($id);
         if ($biddinginformation->closed == 1 && !Auth::user()->isSuperAdmin())
             dd('该记录已关闭，无法编辑。');
+
+//        $biddinginformationitem = $biddinginformation->biddinginformationitems->where('key', '华光')->first();
+//        dd($biddinginformationitem->biddinginformationitemmodifylogs->where('isclarify', '1'));
         return view('basic.biddinginformations.edit', compact('biddinginformation'));
+    }
+
+    public function xyedit($id)
+    {
+        //
+        $biddinginformation = Biddinginformation::findOrFail($id);
+        if ($biddinginformation->closed == 1 && !Auth::user()->isSuperAdmin())
+            dd('该记录已关闭，无法编辑。');
+
+        foreach ($biddinginformation->biddinginformationitems as $biddinginformationitem)
+        {
+            $biddinginformationeditem = Biddinginformationeditem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationitem->key)->first();
+            if (!isset($biddinginformationeditem))
+                Biddinginformationeditem::create($biddinginformationitem->toArray());
+//                dd($biddinginformationitem->toArray());
+        }
+
+        return view('basic.biddinginformations.xyedit', compact('biddinginformation'));
     }
 
     public function updatesaleorderid(Request $request)
@@ -348,7 +370,7 @@ class BiddinginformationController extends Controller
 
                             if ($isclarify)
                             {
-                                array_push($clarify_msgs, $key . ' 改为：' . $value);
+                                array_push($clarify_msgs, $key . '，原内容：' . $oldvalue. '，新内容：' . $value);
                             }
                         }
                     }
@@ -375,6 +397,99 @@ class BiddinginformationController extends Controller
                 DingTalkController::sendWorkNotificationMessage($useridList, $agentid, json_encode($data));
             }
         }
+        return redirect('basic/biddinginformations');
+    }
+
+    public function xyupdate(Request $request, $id)
+    {
+        //
+//        dd($request->all());
+        $biddinginformation = Biddinginformation::findOrFail($id);
+        $biddinginformation->remark = $request->has('remark') ? $request->input('remark') : '';
+        $biddinginformation->biddingprojectid = $request->has('biddingprojectid') ? $request->input('biddingprojectid') : '';
+        $biddinginformation->save();
+
+//        $biddinginformation->update($request->all());
+        $inputs = $request->all();
+//        dd($inputs);
+        $remark_suffix = '_remark';
+        $isclarify_suffix = '_isclarify';
+        $clarify_msgs = [];
+        $projectname = '';
+        foreach ($inputs as $key => $value)
+        {
+            if (!(substr($key, -strlen($remark_suffix)) === $remark_suffix) && !(substr($key, -strlen($isclarify_suffix)) === $isclarify_suffix))
+            {
+                $biddinginformationeditem = Biddinginformationeditem::where('biddinginformation_id', $id)->where('key', $key)->first();
+                if (isset($biddinginformationeditem))
+                {
+                    $oldvalue = $biddinginformationeditem->value;
+                    $remark = isset($inputs[$key . $remark_suffix]) ? $inputs[$key . $remark_suffix] : '';
+                    $isclarify = isset($inputs[$key . $isclarify_suffix]) ? true : false;
+//                    dd($key . ':' . $inputs[$key . $remark_suffix]);
+                    if ($biddinginformationeditem->update(['value' => $value, 'remark' => $remark]))
+                    {
+                        if ($oldvalue != $value)
+                        {
+                            $biddinginformationitem_mingcheng = Biddinginformationitem::where('biddinginformation_id', $id)->where('key', '名称')->first();
+                            if (isset($biddinginformationitem_mingcheng))
+                                $projectname = $biddinginformationitem_mingcheng->value;
+
+                            $msg = '[' . $projectname . ']项目[' . $biddinginformation->number . ']的[' . $biddinginformationeditem->key .']字段内容已修改。原内容：' . $oldvalue . '，新内容：' . $value;
+                            $data = [
+                                'msgtype'       => 'text',
+                                'text' => [
+                                    'content' => $msg
+                                ]
+                            ];
+
+//                            $dtusers = Dtuser::where('user_id', 126)->orWhere('user_id', 126)->pluck('userid');        // test
+                            $dtusers = Dtuser::where('user_id', 64)->pluck('userid');             // Zhoub
+                            $useridList = implode(',', $dtusers->toArray());
+//                            dd(implode(',', $dtusers->toArray()));
+                            if ($dtusers->count() > 0)
+                            {
+                                $agentid = config('custom.dingtalk.agentidlist.bidding');
+                                DingTalkController::sendWorkNotificationMessage($useridList, $agentid, json_encode($data));
+                            }
+
+//                            // 由于修改的不再是原表，不做记录
+//                            Biddinginformationitemmodifylog::create([
+//                                'biddinginformationitem_id' => $biddinginformationeditem->id,
+//                                'oldvalue'      => $oldvalue,
+//                                'value'         => $value,
+//                                'isclarify'     => $isclarify,
+//                            ]);
+
+                            if ($isclarify)
+                            {
+                                array_push($clarify_msgs, $key . '，原内容：' . $oldvalue. '，新内容：' . $value);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+//        if (count($clarify_msgs) > 0)
+//        {
+//            $biddinginformation->update(['remark' => $biddinginformation->remark . "\n" . Carbon::now()->toDateString() . "澄清：\n" . implode("\n", $clarify_msgs)]);
+//
+//            $msg = '[' . $projectname . ']项目[' . $biddinginformation->number . ']的澄清：[' . implode("\n", $clarify_msgs);
+//            $data = [
+//                'msgtype'       => 'text',
+//                'text' => [
+//                    'content' => $msg
+//                ]
+//            ];
+//            $dtusers = Dtuser::where('user_id', 2)->orWhere('user_id', 64)->pluck('userid');             // WuHL, Zhoub
+//            $useridList = implode(',', $dtusers->toArray());
+//            if ($dtusers->count() > 0)
+//            {
+//                $agentid = config('custom.dingtalk.agentidlist.bidding');
+//                DingTalkController::sendWorkNotificationMessage($useridList, $agentid, json_encode($data));
+//            }
+//        }
         return redirect('basic/biddinginformations');
     }
 

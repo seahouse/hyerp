@@ -31,6 +31,7 @@ return array(
     'CreateAsnitemsTable' => $baseDir . '/database/migrations/2019_01_24_085741_create_asnitems_table.php',
     'CreateAsnsTable' => $baseDir . '/database/migrations/2019_01_24_085359_create_asns_table.php',
     'CreateBiddinginformationdefinefieldsTable' => $baseDir . '/database/migrations/2020_02_08_085549_create_biddinginformationdefinefields_table.php',
+    'CreateBiddinginformationeditemsTable' => $baseDir . '/database/migrations/2020_07_23_114406_create_biddinginformationeditems_table.php',
     'CreateBiddinginformationfieldtypesTable' => $baseDir . '/database/migrations/2020_03_14_085622_create_biddinginformationfieldtypes_table.php',
     'CreateBiddinginformationitemmodifylogsTable' => $baseDir . '/database/migrations/2020_07_08_132048_create_biddinginformationitemmodifylogs_table.php',
     'CreateBiddinginformationitemsTable' => $baseDir . '/database/migrations/2020_02_08_144844_create_biddinginformationitems_table.php',

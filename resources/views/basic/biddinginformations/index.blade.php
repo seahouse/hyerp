@@ -137,6 +137,11 @@
                             @if ($biddinginformation->closed != 1 || Auth::user()->isSuperAdmin())
                                 <a href="{{ URL::to('/basic/biddinginformations/'.$biddinginformation->id.'/edit') }}" class="btn btn-success btn-xs pull-left">编辑</a>
                             @endif
+                            @if ($biddinginformation->closed != 1)
+                                @can('basic_biddinginformation_xyedit')
+                                    <a href="{{ URL::to('/basic/biddinginformations/'.$biddinginformation->id.'/xyedit') }}" class="btn btn-success btn-xs pull-left">协议修改</a>
+                                @endcan
+                            @endif
                             <a href="{{ url('basic/biddinginformations/exportword/' . $biddinginformation->id) }}" class="btn btn-success btn-xs pull-left" target="_blank">导出Word</a>
                             {!! Form::open(array('action' => ['Basic\BiddinginformationController@close', $biddinginformation->id], 'method' => 'post', 'onsubmit' => 'return confirm("确定关闭此记录?");')) !!}
                             {!! Form::submit('关闭', ['class' => 'btn btn-danger btn-xs pull-left']) !!}

@@ -40,6 +40,10 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         array (
             'XdgBaseDir\\' => 11,
         ),
+        'W' => 
+        array (
+            'Webmozart\\Assert\\' => 17,
+        ),
         'T' => 
         array (
             'TijsVerkoyen\\CssToInlineStyles\\' => 31,
@@ -84,6 +88,7 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         ),
         'L' => 
         array (
+            'League\\Fractal\\' => 15,
             'League\\Flysystem\\' => 17,
         ),
         'J' => 
@@ -113,6 +118,7 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         'B' => 
         array (
             'Base32\\' => 7,
+            'Barryvdh\\DomPDF\\' => 16,
         ),
         'A' => 
         array (
@@ -124,6 +130,8 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'Zend\\Escaper\\' => 
         array (
@@ -141,6 +149,10 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         'XdgBaseDir\\' => 
         array (
             0 => __DIR__ . '/..' . '/dnoegel/php-xdg-base-dir/src',
+        ),
+        'Webmozart\\Assert\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/webmozart/assert/src',
         ),
         'TijsVerkoyen\\CssToInlineStyles\\' => 
         array (
@@ -250,6 +262,10 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
+        'League\\Fractal\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/fractal/src',
+        ),
         'League\\Flysystem\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/flysystem/src',
@@ -294,6 +310,10 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         array (
             0 => __DIR__ . '/..' . '/christian-riesen/base32/src',
         ),
+        'Barryvdh\\DomPDF\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/barryvdh/laravel-dompdf/src',
+        ),
         'App\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
@@ -301,6 +321,13 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
     );
 
     public static $prefixesPsr0 = array (
+        'S' => 
+        array (
+            'Svg\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/phenx/php-svg-lib/src',
+            ),
+        ),
         'P' => 
         array (
             'Prophecy\\' => 
@@ -343,6 +370,13 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
             'Httpful' => 
             array (
                 0 => __DIR__ . '/..' . '/nategood/httpful/src',
+            ),
+        ),
+        'F' => 
+        array (
+            'FontLib\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/phenx/php-font-lib/src',
             ),
         ),
         'D' => 
@@ -388,6 +422,9 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         'CountryTableSeeder' => __DIR__ . '/../..' . '/database/seeds/CountryTableSeeder.php',
         'Cpdf' => __DIR__ . '/..' . '/dompdf/dompdf/lib/Cpdf.php',
         'CreateAccountingorder1sTable' => __DIR__ . '/../..' . '/database/migrations/2015_07_28_024208_create_accountingorder1s_table.php',
+        'CreateAdditionsalesorderattachmentsTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_14_113125_create_additionsalesorderattachments_table.php',
+        'CreateAdditionsalesorderitemsTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_14_112646_create_additionsalesorderitems_table.php',
+        'CreateAdditionsalesordersTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_14_102652_create_additionsalesorders_table.php',
         'CreateAddrsTable' => __DIR__ . '/../..' . '/database/migrations/2015_08_14_050948_create_addrs_table.php',
         'CreateAnnualbonussheetsTable' => __DIR__ . '/../..' . '/database/migrations/2020_01_22_151543_create_annualbonussheets_table.php',
         'CreateApprovaltypesTable' => __DIR__ . '/../..' . '/database/migrations/2016_03_23_095930_create_approvaltypes_table.php',
@@ -395,7 +432,9 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         'CreateAsnitemsTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_24_085741_create_asnitems_table.php',
         'CreateAsnsTable' => __DIR__ . '/../..' . '/database/migrations/2019_01_24_085359_create_asns_table.php',
         'CreateBiddinginformationdefinefieldsTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_08_085549_create_biddinginformationdefinefields_table.php',
+        'CreateBiddinginformationeditemsTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_23_114406_create_biddinginformationeditems_table.php',
         'CreateBiddinginformationfieldtypesTable' => __DIR__ . '/../..' . '/database/migrations/2020_03_14_085622_create_biddinginformationfieldtypes_table.php',
+        'CreateBiddinginformationitemmodifylogsTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_08_132048_create_biddinginformationitemmodifylogs_table.php',
         'CreateBiddinginformationitemsTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_08_144844_create_biddinginformationitems_table.php',
         'CreateBiddinginformationsTable' => __DIR__ . '/../..' . '/database/migrations/2020_02_08_090144_create_biddinginformations_table.php',
         'CreateBiddingprojectsTable' => __DIR__ . '/../..' . '/database/migrations/2020_06_15_094706_create_biddingprojects_table.php',
@@ -415,6 +454,7 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         'CreateCountysTable' => __DIR__ . '/../..' . '/database/migrations/2015_08_14_023833_create_countys_table.php',
         'CreateCustinfosTable' => __DIR__ . '/../..' . '/database/migrations/2015_08_20_065111_create_custinfos_table.php',
         'CreateDeptsTable' => __DIR__ . '/../..' . '/database/migrations/2015_08_20_083905_create_depts_table.php',
+        'CreateDtlogcommentsTable' => __DIR__ . '/../..' . '/database/migrations/2020_07_12_151123_create_dtlogcomments_table.php',
         'CreateDtlogitemsTable' => __DIR__ . '/../..' . '/database/migrations/2019_03_13_193030_create_dtlogitems_table.php',
         'CreateDtlogsTable' => __DIR__ . '/../..' . '/database/migrations/2019_03_13_163747_create_dtlogs_table.php',
         'CreateDtusersTable' => __DIR__ . '/../..' . '/database/migrations/2016_10_21_133537_create_dtusers_table.php',
@@ -487,9 +527,14 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         'CreateVendtypesTable' => __DIR__ . '/../..' . '/database/migrations/2015_09_01_085017_create_vendtypes_table.php',
         'CreateWarehousesTable' => __DIR__ . '/../..' . '/database/migrations/2015_08_26_072428_create_warehouses_table.php',
         'DatabaseSeeder' => __DIR__ . '/../..' . '/database/seeds/DatabaseSeeder.php',
+        'FPDF_TPL' => __DIR__ . '/..' . '/setasign/fpdi/fpdf_tpl.php',
+        'FPDI' => __DIR__ . '/..' . '/setasign/fpdi/fpdi.php',
         'File_Iterator' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Iterator.php',
         'File_Iterator_Facade' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Facade.php',
         'File_Iterator_Factory' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Factory.php',
+        'FilterASCII85' => __DIR__ . '/..' . '/setasign/fpdi/filters/FilterASCII85.php',
+        'FilterASCIIHexDecode' => __DIR__ . '/..' . '/setasign/fpdi/filters/FilterASCIIHexDecode.php',
+        'FilterLZW' => __DIR__ . '/..' . '/setasign/fpdi/filters/FilterLZW.php',
         'HTML5_Data' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/Data.php',
         'HTML5_InputStream' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/InputStream.php',
         'HTML5_Parser' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/Parser.php',
@@ -1048,11 +1093,13 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         'bmp' => __DIR__ . '/..' . '/mpdf/mpdf/classes/bmp.php',
         'cssmgr' => __DIR__ . '/..' . '/mpdf/mpdf/classes/cssmgr.php',
         'directw' => __DIR__ . '/..' . '/mpdf/mpdf/classes/directw.php',
+        'fpdi_pdf_parser' => __DIR__ . '/..' . '/setasign/fpdi/fpdi_pdf_parser.php',
         'grad' => __DIR__ . '/..' . '/mpdf/mpdf/classes/grad.php',
         'mPDF' => __DIR__ . '/..' . '/mpdf/mpdf/mpdf.php',
         'meter' => __DIR__ . '/..' . '/mpdf/mpdf/classes/meter.php',
         'mpdfform' => __DIR__ . '/..' . '/mpdf/mpdf/classes/mpdfform.php',
         'otl' => __DIR__ . '/..' . '/mpdf/mpdf/classes/otl.php',
+        'pdf_context' => __DIR__ . '/..' . '/setasign/fpdi/pdf_context.php',
         'tocontents' => __DIR__ . '/..' . '/mpdf/mpdf/classes/tocontents.php',
         'wmf' => __DIR__ . '/..' . '/mpdf/mpdf/classes/wmf.php',
     );

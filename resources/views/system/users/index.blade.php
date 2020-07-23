@@ -11,7 +11,7 @@
 {{--
             <a href="{{ URL::to('system/images') }}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> {{'与钉钉强绑定', [], 'layouts'}}</a>
 --}}
-        </div> 
+        </div>
     </div>
 
     <div class="panel-body">
