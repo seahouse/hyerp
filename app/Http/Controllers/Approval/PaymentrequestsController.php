@@ -630,7 +630,18 @@ class PaymentrequestsController extends Controller
         {
             $approversettingFirst = Approversetting::where('approvaltype_id', $approvaltype_id)->orderBy('level')->first();
             if ($approversettingFirst)
-                $input['approversetting_id'] = $approversettingFirst->id;
+            {
+                // 如果发起人与第一个审批人相同，则跳过第一个审批人
+                if ($approversettingFirst->approver_id == Auth::user()->id)
+                {
+                    $approversettingSecond = Approversetting::where('approvaltype_id', $approvaltype_id)->where('id', '>', $approversettingFirst->id)->orderBy('level')->first();
+                    if (isset($approversettingSecond))
+                        $input['approversetting_id'] = $approversettingSecond->id;
+                }
+                else
+                    $input['approversetting_id'] = $approversettingFirst->id;
+
+            }
             else
                 $input['approversetting_id'] = -1;
         }
