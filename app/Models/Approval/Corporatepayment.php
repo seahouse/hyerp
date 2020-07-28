@@ -16,6 +16,8 @@ class Corporatepayment extends Model
         'paymenttype',
         'position',
         'amounttype',
+        'sohead_id',
+        'pohead_id',
         'remark',
         'amount',
         'paydate',

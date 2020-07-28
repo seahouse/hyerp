@@ -28,43 +28,43 @@
         <div class="form-group">
             {!! Form::label('amounttype', '费用类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('amounttype', array('工程现场采购费用相关' => '工程现场采购费用相关'), null, ['class' => 'form-control', $attr, $attrdisable]) !!}
+                {!! Form::select('amounttype', array('工程现场采购费用相关' => '工程现场采购费用相关', '安装合同安装费付款' => '安装合同安装费付款'), null, ['class' => 'form-control', $attr, $attrdisable]) !!}
             </div>
         </div>
 
-        {{--<div class="form-group">--}}
-            {{--{!! Form::label('project_name', '工程名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
-            {{--<div class='col-xs-8 col-sm-10'>--}}
-                {{--@if (isset($projectsitepurchase->sohead_hxold->descrip))--}}
-                    {{--{!! Form::text('project_name', $projectsitepurchase->sohead_hxold->descrip, ['class' => 'form-control', $attr]) !!}--}}
-                {{--@else--}}
-                    {{--{!! Form::text('project_name', $project_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectProjectModal', 'data-name' => 'project_name_1', 'data-id' => 'sohead_id_1', 'data-num' => '1', 'id' => 'project_name_1']) !!}--}}
-                    {{--{!! Form::hidden('sohead_id', 0, ['class' => 'btn btn-sm', 'id' => 'sohead_id_1']) !!}--}}
-                {{--@endif--}}
-            {{--</div>--}}
-        {{--</div>--}}
+        <div class="form-group">
+            {!! Form::label('project_name', '项目名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                @if (isset($projectsitepurchase->sohead_hxold->descrip))
+                    {!! Form::text('project_name', $projectsitepurchase->sohead_hxold->descrip, ['class' => 'form-control', $attr]) !!}
+                @else
+                    {!! Form::text('project_name', $project_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectProjectModal', 'data-name' => 'project_name_1', 'data-id' => 'sohead_id', 'data-num' => '1', 'id' => 'project_name_1']) !!}
+                    {!! Form::hidden('sohead_id', 0, ['class' => 'btn btn-sm', 'id' => 'sohead_id']) !!}
+                @endif
+            </div>
+        </div>
 
-        {{--<div class="form-group">--}}
-            {{--{!! Form::label('sohead_number', '项目订单编号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
-            {{--<div class='col-xs-8 col-sm-10'>--}}
-                {{--@if (isset($projectsitepurchase->sohead_hxold->number))--}}
-                    {{--{!! Form::text('sohead_number', $projectsitepurchase->sohead_hxold->number, ['class' => 'form-control', 'readonly', $attr, 'id' => 'sohead_number_1']) !!}--}}
-                {{--@else--}}
-                    {{--{!! Form::text('sohead_number', null, ['class' => 'form-control', 'readonly', $attr, 'id' => 'sohead_number_1']) !!}--}}
-                {{--@endif--}}
-            {{--</div>--}}
-        {{--</div>--}}
+        <div class="form-group">
+            {!! Form::label('sohead_number', '项目编号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                @if (isset($projectsitepurchase->sohead_hxold->number))
+                    {!! Form::text('sohead_number', $projectsitepurchase->sohead_hxold->number, ['class' => 'form-control', 'readonly', $attr, 'id' => 'sohead_number_1']) !!}
+                @else
+                    {!! Form::text('sohead_number', null, ['class' => 'form-control', 'readonly', $attr, 'id' => 'sohead_number_1']) !!}
+                @endif
+            </div>
+        </div>
 
-        {{--<div class="form-group">--}}
-            {{--{!! Form::label('sohead_salesmanager', '订单所属销售经理:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
-            {{--<div class='col-xs-8 col-sm-10'>--}}
-                {{--@if (isset($projectsitepurchase->sohead_hxold->salesmanager))--}}
-                    {{--{!! Form::text('sohead_salesmanager', $projectsitepurchase->sohead_hxold->salesmanager, ['class' => 'form-control', 'readonly', $attr]) !!}--}}
-                {{--@else--}}
-                    {{--{!! Form::text('sohead_salesmanager', null, ['class' => 'form-control', 'readonly', $attr]) !!}--}}
-                {{--@endif--}}
-            {{--</div>--}}
-        {{--</div>--}}
+        <div class="form-group">
+            {!! Form::label('sohead_salesmanager', '项目属于销售员:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                @if (isset($projectsitepurchase->sohead_hxold->salesmanager))
+                    {!! Form::text('sohead_salesmanager', $projectsitepurchase->sohead_hxold->salesmanager, ['class' => 'form-control', 'readonly', $attr]) !!}
+                @else
+                    {!! Form::text('sohead_salesmanager', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+                @endif
+            </div>
+        </div>
 
         {{--<div class="form-group">--}}
             {{--{!! Form::label('projecttype', '项目类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
@@ -93,6 +93,17 @@
             {{--</div>--}}
         {{--</div>--}}
 
+        <div class="form-group">
+            {!! Form::label('pohead_number', '外协合同编号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                @if (isset($projectsitepurchase->sohead_hxold->descrip))
+                    {!! Form::text('pohead_number', $projectsitepurchase->sohead_hxold->descrip, ['class' => 'form-control', $attr]) !!}
+                @else
+                    {!! Form::text('pohead_number', $project_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectPoheadModal', 'data-name' => 'project_name_1']) !!}
+                    {!! Form::hidden('pohead_id', 0, ['class' => 'btn btn-sm', 'id' => 'pohead_id']) !!}
+                @endif
+            </div>
+        </div>
 
         <div class="form-group">
             {!! Form::label('remark', '付款说明:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}

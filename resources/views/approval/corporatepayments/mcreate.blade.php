@@ -43,7 +43,6 @@
     </div>
 @endcan
 
-<!-- supplier selector -->
 <div class="modal fade" id="selectProjectModal" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -76,6 +75,42 @@
                 {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
                 {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnAccept']) !!}
             </div>--}}   
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="selectPoheadModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">选择外协合同编号</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '项目编号、项目名称', 'id' => 'keyPohead']) !!}
+                    <span class="input-group-btn">
+                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm disabled', 'id' => 'btnSearchPohead']) !!}
+                   	</span>
+                </div>
+                {!! Form::hidden('name', null, ['id' => 'name']) !!}
+                {!! Form::hidden('id', null, ['id' => 'id']) !!}
+                {!! Form::hidden('num', null, ['id' => 'num']) !!}
+                <p>
+                <div class="list-group" id="listpohead">
+
+                </div>
+                </p>
+                <form id="formAccept">
+                    {!! csrf_field() !!}
+
+                    {{--                    {!! Form::hidden('reimbursement_id', $reimbursement->id, ['class' => 'form-control']) !!}
+                                        {!! Form::hidden('status', 0, ['class' => 'form-control']) !!} --}}
+                </form>
+            </div>
+            {{--            <div class="modal-footer">
+                            {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
+                            {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnAccept']) !!}
+                        </div>--}}
         </div>
     </div>
 </div>
@@ -476,6 +511,7 @@
 					$("#" + $("#selectProjectModal").find('#id').val()).val(soheadid);
                     $("#sohead_number_" + $("#selectProjectModal").find('#num').val()).val(field.number);
                     $("#sohead_number").val(field.number);
+                    $("#sohead_id").val(field.id);
 					$("#sohead_salesmanager").val(field.salesmanager);
 					if (field.C == 0)
 					    $("#projecttype").val('EP项目');
@@ -483,6 +519,89 @@
                         $("#projecttype").val('EPC项目');
 				});
 			}
+
+            $('#selectPoheadModal').on('show.bs.modal', function (e) {
+                $("#listpohead").empty();
+
+                var target = $(e.relatedTarget);
+                // alert(text.data('id'));
+
+                var modal = $(this);
+                modal.find('#name').val(target.data('name'));
+                modal.find('#id').val(target.data('id'));
+                modal.find('#num').val(target.data('num'));
+                // alert(modal.find('#id').val());
+
+                // 初始化数据，含“钢结构安装”的采购订单
+                var url = "{!! url('/purchase/purchaseorders/getitemsbyproductname/') !!}" + "/钢结构安装";
+                if ($("#sohead_id").val() > 0)
+                {
+                    url += "?sohead_id=" + $("#sohead_id").val();
+
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        success: function(result) {
+                            var strhtml = '';
+                            $.each(result.data, function(i, field) {
+                                btnId = 'btnSelectPohead_' + String(i);
+                                strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.number + "</h4><p>" + field.descrip + "</p></button>"
+                            });
+                            if (strhtml == '')
+                                strhtml = '无记录。';
+                            $("#listpohead").empty().append(strhtml);
+
+                            $.each(result.data, function(i, field) {
+                                btnId = 'btnSelectPohead_' + String(i);
+                                addBtnClickEventPohead(btnId, field.id, field.number, field);
+                            });
+                            // addBtnClickEvent('btnSelectOrder_0');
+                        },
+                        error: function(xhr, ajaxOptions, thrownError) {
+                            alert('error');
+                        }
+                    });
+                }
+            });
+
+            $("#btnSearchPoead").click(function() {
+                if ($("#keyPoead").val() == "") {
+                    alert('请输入关键字');
+                    return;
+                }
+                $.ajax({
+                    type: "GET",
+                    url: "{!! url('/purchase/purchaseorders/getitemsbyorderkey_simple/') !!}" + "/" + $("#keyPoead").val(),
+                    success: function(result) {
+                        var strhtml = '';
+                        $.each(result.data, function(i, field) {
+                            btnId = 'btnSelectProject_' + String(i);
+                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.number + "</h4><p>" + field.descrip + "</p></button>"
+                        });
+                        if (strhtml == '')
+                            strhtml = '无记录。';
+                        $("#listpohead").empty().append(strhtml);
+
+                        $.each(result.data, function(i, field) {
+                            btnId = 'btnSelectPohead_' + String(i);
+                            addBtnClickEventPohead(btnId, field.id, field.number, field);
+                        });
+                        // addBtnClickEvent('btnSelectOrder_0');
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('error');
+                    }
+                });
+            });
+
+            function addBtnClickEventPohead(btnId, soheadid, name, field)
+            {
+                $("#" + btnId).bind("click", function() {
+                    $('#selectPoheadModal').modal('toggle');
+                    $("#pohead_number").val(field.number);
+                    $("#pohead_id").val(field.id);
+                });
+            }
 
             $('#selectItemModal').on('show.bs.modal', function (e) {
                 $("#listitem").empty();

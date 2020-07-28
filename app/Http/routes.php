@@ -415,6 +415,7 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
     Route::group(['prefix' => 'purchaseorders'], function() {
         Route::get('getitemsbyorderkey/{key}/{supplierid?}', 'PurchaseordersController@getitemsbyorderkey');
         Route::get('getitemsbyorderkey_simple/{key}/{supplierid?}', 'PurchaseordersController@getitemsbyorderkey_simple');
+        Route::get('getitemsbyproductname/{productname}', 'PurchaseordersController@getitemsbyproductname');
         Route::get('index_hx', 'PurchaseordersController@index_hx');
         Route::get('create_hx', 'PurchaseordersController@create_hx');
         Route::post('store_hx', 'PurchaseordersController@store_hx');

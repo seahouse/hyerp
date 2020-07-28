@@ -101,12 +101,12 @@ class CorporatepaymentController extends Controller
 
         $inputs['applicant_id'] = Auth::user()->id;
 
-        $inputs['sohead_salesmanager'] = '';
-        $projectsitepurchase = Projectsitepurchase::where('process_instance_id', $inputs['associated_approval_projectpurchase'])->first();
-        if (isset($projectsitepurchase))
-        {
-            $inputs['sohead_salesmanager'] = $projectsitepurchase->sohead_hxold->salesmanager;
-        }
+//        $inputs['sohead_salesmanager'] = '';
+//        $projectsitepurchase = Projectsitepurchase::where('process_instance_id', $inputs['associated_approval_projectpurchase'])->first();
+//        if (isset($projectsitepurchase))
+//        {
+//            $inputs['sohead_salesmanager'] = $projectsitepurchase->sohead_hxold->salesmanager;
+//        }
 
         $inputs['associated_approval_projectpurchase'] = strlen($inputs['associated_approval_projectpurchase']) > 0 ? json_encode(array($inputs['associated_approval_projectpurchase'])) : "";
 //        dd($inputs['associated_approval_projectpurchase']);

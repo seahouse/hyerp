@@ -91,6 +91,16 @@ class PurchaseordersController extends Controller
         return $purchaseorders;
     }
 
+    public function getitemsbyproductname(Request $request, $productname)
+    {
+        //
+        $query = Purchaseorder_hxold::where('productname', $productname);
+        if ($request->has('sohead_id') && $request->input('sohead_id') > 0)
+            $query->where('sohead_id', $request->input('sohead_id'));
+        $purchaseorders = $query->paginate(20);
+        return $purchaseorders;
+    }
+
     /**
      * Show the form for creating a new resource.
      *

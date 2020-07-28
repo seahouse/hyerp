@@ -3706,8 +3706,20 @@ class ApprovalController extends Controller
                 'value'     => $inputs['remark'],
             ],
             [
+                'name'      => '项目名称',
+                'value'     => $inputs['project_name'],
+            ],
+            [
+                'name'      => '项目编号',
+                'value'     => $inputs['sohead_number'],
+            ],
+            [
                 'name'      => '项目属于销售员',
                 'value'     => $inputs['sohead_salesmanager'],
+            ],
+            [
+                'name'      => '外协合同编号',
+                'value'     => $inputs['pohead_number'],
             ],
             [
                 'name'      => '付款说明',
