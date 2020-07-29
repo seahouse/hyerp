@@ -151,42 +151,6 @@
     </div>
 </div>
 
-<!-- item selector -->
-<div class="modal fade" id="selectItemModal" tabindex="-1" role="dialog">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title">选择物品</h4>
-			</div>
-			<div class="modal-body">
-				<div class="input-group">
-					{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '物品名称', 'id' => 'keyItem']) !!}
-					<span class="input-group-btn">
-                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchItem']) !!}
-                   	</span>
-				</div>
-				{!! Form::hidden('name', null, ['id' => 'name']) !!}
-				{!! Form::hidden('id', null, ['id' => 'id']) !!}
-				{!! Form::hidden('num', null, ['id' => 'num']) !!}
-				<p>
-				<div class="list-group" id="listitem">
-
-				</div>
-				</p>
-				<form id="formAccept">
-					{!! csrf_field() !!}
-
-					{{--                    {!! Form::hidden('reimbursement_id', $reimbursement->id, ['class' => 'form-control']) !!}
-                                        {!! Form::hidden('status', 0, ['class' => 'form-control']) !!} --}}
-				</form>
-			</div>
-			{{--            <div class="modal-footer">
-                            {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
-                            {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnAccept']) !!}
-                        </div>--}}
-		</div>
-	</div>
-</div>
 
 <!-- supplier selector -->
 <div class="modal fade" id="selectSupplierModal" tabindex="-1" role="dialog">
@@ -603,61 +567,6 @@
                 });
             }
 
-            $('#selectItemModal').on('show.bs.modal', function (e) {
-                $("#listitem").empty();
-
-                var target = $(e.relatedTarget);
-
-                var modal = $(this);
-                modal.find('#num').val(target.data('num'));
-//                modal.find('#id').val(target.data('id'));
-            });
-
-            $("#btnSearchItem").click(function() {
-                if ($("#keyItem").val() == "") {
-                    alert('请输入关键字');
-                    return;
-                }
-                $.ajax({
-                    type: "GET",
-                    url: "{!! url('/product/items/getitemsbykey/') !!}" + "/" + $("#keyItem").val(),
-                    success: function(result) {
-                        var strhtml = '';
-                        $.each(result.data, function(i, field) {
-                            btnId = 'btnSelectItem_' + String(i);
-                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.goods_name + "(" + field.goods_spec + ")</h4></button>"
-                        });
-                        if (strhtml == '')
-                            strhtml = '无记录。';
-                        $("#listitem").empty().append(strhtml);
-
-                        $.each(result.data, function(i, field) {
-                            btnId = 'btnSelectItem_' + String(i);
-                            addBtnClickEventItem(btnId, field);
-                        });
-                        // addBtnClickEvent('btnSelectOrder_0');
-                    },
-                    error: function(xhr, ajaxOptions, thrownError) {
-                        alert('error');
-                    }
-                });
-            });
-
-            function addBtnClickEventItem(btnId, field)
-            {
-                $("#" + btnId).bind("click", function() {
-                    $('#selectItemModal').modal('toggle');
-//                    $("#item_name").val(field.goods_name);
-//                    $("#item_id").val(field.goods_id);
-//                    $("#item_spec").val(field.goods_spec);
-//                    $("#unit").val(field.goods_unit_name);
-                    $("#item_name_" + $("#selectItemModal").find('#num').val()).val(field.goods_name);
-                    $("#item_id_" + $("#selectItemModal").find('#num').val()).val(field.goods_id);
-                    $("#item_spec_" + $("#selectItemModal").find('#num').val()).val(field.goods_spec);
-                    $("#unit_" +  + $("#selectItemModal").find('#num').val()).val(field.goods_unit_name);
-                });
-            }
-
 
 
 
@@ -865,64 +774,6 @@
                 });
             });
 
-            $("#btnAddItem").click(function() {
-                item_num++;
-                var btnId = 'btnDeleteItem_' + String(item_num);
-                var divName = 'divClassItem_' + String(item_num);
-                var itemHtml = '<div class="' + divName + '"><p class="bannerTitle">采购明细(' + String(item_num) + ')&nbsp;<button class="btn btn-sm" id="' + btnId + '" type="button">删除</button></p>\
-                	<div name="container_item">\
-						<div class="form-group">\
-							{!! Form::label('item_name', '物品名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}\
-							<div class="col-sm-10 col-xs-8">\
-							\<input class="form-control" ="" data-toggle="modal" data-target="#selectItemModal" data-name="item_name_' + String(item_num) + '" data-num="' + String(item_num) + '" id="item_name_' + String(item_num) + '" name="item_name" type="text">\
-							<input class="btn btn-sm" id="item_id_' + String(item_num) + '" name="item_id" type="hidden" value="0">\
-                    </div>\
-						</div>\
-						<div class="form-group">\
-							<label for="item_spec" class="col-xs-4 col-sm-2 control-label">规格型号:</label>\
-							<div class="col-sm-10 col-xs-8">\
-							<input class="form-control" readonly="readonly" ="" name="item_spec" type="text" id="item_spec_' + String(item_num) + '">\
-							</div>\
-						</div>\
-						<div class="form-group">\
-							<label for="unit" class="col-xs-4 col-sm-2 control-label">单位:</label>\
-							<div class="col-sm-10 col-xs-8">\
-							    <input class="form-control" readonly="readonly" ="" id="unit_' + String(item_num) + '" name="unit" type="text">\
-							</div>\
-						</div>\
-						<div class="form-group">\
-							<label for="brand" class="col-xs-4 col-sm-2 control-label">品牌:</label>\
-							<div class="col-sm-10 col-xs-8">\
-							<input class="form-control" placeholder="" ="" id="brand_' + String(item_num) + '" name="brand" type="text">\
-							</div>\
-						</div>\
-						<div class="form-group">\
-							<label for="unitprice" class="col-xs-4 col-sm-2 control-label">单价:</label>\
-							<div class="col-sm-10 col-xs-8">\
-							<input class="form-control" name="unitprice" type="text"  id="unitprice_' + String(item_num) + '">\
-							</div>\
-						</div>\
-						<div class="form-group">\
-							<label for="price" class="col-xs-4 col-sm-2 control-label">金额（元）:</label>\
-							<div class="col-sm-10 col-xs-8">\
-							    <input class="form-control" ="" id="price_' + String(item_num) + '" name="price" type="text">\
-							</div>\
-						</div>\
-					</div>\
-					</div>';
-                $("#itemMore").append(itemHtml);
-                addBtnDeleteItemClickEvent(btnId, divName);
-            });
-
-            function addBtnDeleteItemClickEvent(btnId, divName)
-            {
-                $("#" + btnId).bind("click", function() {
-                    // travelNum--; 	// 不需要减法，否则在删除中间段的时候会导致有重复div
-                    $("." + divName).remove();
-                });
-            }
-
-
 			 $("#btnParseExcel").click(function() {
 //                 $('#formUploadParseExcel').append($(this).parent().children());
 //                 return false;
@@ -976,12 +827,18 @@
                  });
 			 });
 
-            selectVendorDeductionChange = function () {
-                var vendordeduction_descrip = $("#vendordeduction_descrip").val();
-                if (vendordeduction_descrip == "是，供应商扣款流程已审批完结，并在此流程后关联《供应商扣款》审批单。")
-                    $("#divAssociatedapprovals").attr("style", "display:block;");
-                else
+            selectAmounttypeChange = function () {
+                var amounttype = $("#amounttype").val();
+                if (amounttype == "工程现场采购费用相关")
+                {
+                    $("#divPohead_number").attr("style", "display:none;");
                     $("#divAssociatedapprovals").attr("style", "display:none;");
+                }
+                else
+                {
+                    $("#divPohead_number").attr("style", "display:block;");
+                    $("#divAssociatedapprovals").attr("style", "display:block;");
+                }
             }
 
             selectPurchasetypeChange = function () {
@@ -1008,22 +865,6 @@
 			    jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile', 'biz.util.uploadAttachment', 'biz.cspace.preview'] // 必填，需要使用的jsapi列表
 			});
 
-//            window.selectImage_Mobile = function(evt) {
-////                alert('aaa');
-//                alert(i);
-//                var target = evt.srcElement|evt.target;
-////                var num = $(this).val();
-//                    alert($(this).val());
-//            }
-
-//            function selectImage_Mobile() {
-//                alert('aaa');
-//            }
-
-//            $("button[name=aaaaaa]").click(function() {
-//                var num = $(this).val();
-//                    alert($(this).val());
-//            });
 
 
 			dd.ready(function() {

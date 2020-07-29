@@ -28,7 +28,7 @@
         <div class="form-group">
             {!! Form::label('amounttype', '费用类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('amounttype', array('工程现场采购费用相关' => '工程现场采购费用相关', '安装合同安装费付款' => '安装合同安装费付款'), null, ['class' => 'form-control', $attr, $attrdisable]) !!}
+                {!! Form::select('amounttype', array('工程现场采购费用相关' => '工程现场采购费用相关', '安装合同安装费付款' => '安装合同安装费付款'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'onchange' => 'selectAmounttypeChange()', $attr, $attrdisable]) !!}
             </div>
         </div>
 
@@ -93,15 +93,17 @@
             {{--</div>--}}
         {{--</div>--}}
 
-        <div class="form-group">
-            {!! Form::label('pohead_number', '外协合同编号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-            <div class='col-xs-8 col-sm-10'>
-                @if (isset($projectsitepurchase->sohead_hxold->descrip))
-                    {!! Form::text('pohead_number', $projectsitepurchase->sohead_hxold->descrip, ['class' => 'form-control', $attr]) !!}
-                @else
-                    {!! Form::text('pohead_number', $project_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectPoheadModal', 'data-name' => 'project_name_1']) !!}
-                    {!! Form::hidden('pohead_id', 0, ['class' => 'btn btn-sm', 'id' => 'pohead_id']) !!}
-                @endif
+        <div id="divPohead_number">
+            <div class="form-group">
+                {!! Form::label('pohead_number', '外协合同编号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    @if (isset($projectsitepurchase->sohead_hxold->descrip))
+                        {!! Form::text('pohead_number', $projectsitepurchase->sohead_hxold->descrip, ['class' => 'form-control', $attr]) !!}
+                    @else
+                        {!! Form::text('pohead_number', $project_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectPoheadModal', 'data-name' => 'project_name_1']) !!}
+                        {!! Form::hidden('pohead_id', 0, ['class' => 'btn btn-sm', 'id' => 'pohead_id']) !!}
+                    @endif
+                </div>
             </div>
         </div>
 
