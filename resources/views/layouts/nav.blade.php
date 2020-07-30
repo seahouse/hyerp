@@ -67,8 +67,10 @@
                         @if (Auth::user()->isSuperAdmin())
                                 <li><a href="/sales/report2/bonusbysalesmanager">销售人员佣金报表</a></li>
                                 <li><a href="/sales/report2/bonusbytechdept">技术人员佣金报表</a></li>
-                                <li><a href="/my/bonus/byorder">销售人员佣金（按订单）</a></li>
                         @endif
+                        @can('sales_bonus_view')
+                                <li><a href="/my/bonus/byorder">销售人员佣金（按订单）</a></li>
+                        @endcan
                         @endcan
                     </ul>
                 </li>

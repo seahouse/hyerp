@@ -13,9 +13,9 @@
 </style>
 
 @section('main')
-    @if (Auth::user()->isSuperAdmin())
+    @can('sales_bonus_view')
     <div class="panel-heading">
-        <div class="panel-title">我的 -- 佣金
+        <div class="panel-title">佣金
             {{--            <div class="pull-right">
                             <a href="{{ URL::to('product/itemclasses') }}" target="_blank" class="btn btn-sm btn-success">{{'物料类型管理'}}</a>
                             <a href="{{ URL::to('product/characteristics') }}" target="_blank" class="btn btn-sm btn-success">{{'物料属性管理'}}</a>
@@ -103,7 +103,7 @@
 
     @else
         无权限。
-    @endif
+    @endcan
 
 @endsection
 

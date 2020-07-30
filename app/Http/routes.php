@@ -193,6 +193,7 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
         Route::get('{id}/getbiddinginformationfieldtypes', 'BiddinginformationController@getbiddinginformationfieldtypes');
         Route::get('/{id}/xyedit', 'BiddinginformationController@xyedit');
         Route::patch('xyupdate/{id}', 'BiddinginformationController@xyupdate');
+        Route::get('/{id}/xyshow', 'BiddinginformationController@xyshow');
     });
     Route::resource('biddinginformations', 'BiddinginformationController');
     Route::group(['prefix' => 'biddinginformationitems'], function() {

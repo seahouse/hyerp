@@ -15,4 +15,8 @@ class Biddinginformationeditem extends Model
         'sort',
         'type',
     ];
+
+    public function biddinginformationitem() {
+        return Biddinginformationitem::where('biddinginformation_id', $this->biddinginformation_id)->where('key', $this->key)->first();
+    }
 }

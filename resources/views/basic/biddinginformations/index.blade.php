@@ -76,7 +76,7 @@
                 <th>关联销售订单</th>
                 <th>所属项目</th>
                 {{--<th>备注</th>--}}
-                <th width="300px">操作</th>
+                <th width="320px">操作</th>
             </tr>
         </thead>
         <tbody>
@@ -134,6 +134,7 @@
                                 {!! Form::button('重设字段类别', ['class' => 'btn btn-xs btn-success pull-left', 'data-toggle' => 'modal', 'data-target' => '#resetfieldtypeModal', 'data-biddinginformation_id' => $biddinginformation->id]) !!}
                             @endcan
                             <a href="{{ URL::to('/basic/biddinginformations/'.$biddinginformation->id) }}" class="btn btn-success btn-xs pull-left">查看</a>
+                            <a href="{{ URL::to('/basic/biddinginformations/'.$biddinginformation->id) . '/xyshow' }}" class="btn btn-success btn-xs pull-left">查看协议版</a>
                             @if ($biddinginformation->closed != 1 || Auth::user()->isSuperAdmin())
                                 <a href="{{ URL::to('/basic/biddinginformations/'.$biddinginformation->id.'/edit') }}" class="btn btn-success btn-xs pull-left">编辑</a>
                             @endif

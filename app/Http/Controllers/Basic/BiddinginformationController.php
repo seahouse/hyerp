@@ -243,6 +243,14 @@ class BiddinginformationController extends Controller
         return view('basic.biddinginformations.show', compact('biddinginformation'));
     }
 
+    public function xyshow($id)
+    {
+        //
+        $biddinginformation = Biddinginformation::findOrFail($id);
+//        dd($biddinginformation->biddinginformationitems()->orderBy('id')->get());
+        return view('basic.biddinginformations.xyshow', compact('biddinginformation'));
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
