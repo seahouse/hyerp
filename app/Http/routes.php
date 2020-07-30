@@ -182,6 +182,7 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
         Route::get('downloadfile/{filename}', 'BiddinginformationController@downloadfile')->name('basic.biddinginformations.downloadfile');
         Route::post('clear', 'BiddinginformationController@clear');
         Route::get('exportword/{id}', 'BiddinginformationController@exportword');
+        Route::get('xyexportword/{id}', 'BiddinginformationController@xyexportword');
         Route::post('close/{id}', 'BiddinginformationController@close');
         Route::post('cancelsohead/{id}', 'BiddinginformationController@cancelsohead');
         Route::get('edittable', 'BiddinginformationController@edittable');

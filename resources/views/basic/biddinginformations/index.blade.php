@@ -76,7 +76,7 @@
                 <th>关联销售订单</th>
                 <th>所属项目</th>
                 {{--<th>备注</th>--}}
-                <th width="320px">操作</th>
+                <th width="380px">操作</th>
             </tr>
         </thead>
         <tbody>
@@ -144,6 +144,7 @@
                                 @endcan
                             @endif
                             <a href="{{ url('basic/biddinginformations/exportword/' . $biddinginformation->id) }}" class="btn btn-success btn-xs pull-left" target="_blank">导出Word</a>
+                            <a href="{{ url('basic/biddinginformations/xyexportword/' . $biddinginformation->id) }}" class="btn btn-success btn-xs pull-left" target="_blank">协议导出Word</a>
                             {!! Form::open(array('action' => ['Basic\BiddinginformationController@close', $biddinginformation->id], 'method' => 'post', 'onsubmit' => 'return confirm("确定关闭此记录?");')) !!}
                             {!! Form::submit('关闭', ['class' => 'btn btn-danger btn-xs pull-left']) !!}
                             {!! Form::close() !!}

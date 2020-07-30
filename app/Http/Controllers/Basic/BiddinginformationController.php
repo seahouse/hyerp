@@ -1176,6 +1176,28 @@ class BiddinginformationController extends Controller
 //        $writer->save('./word/hello.html');
     }
 
+    public function xyexportword($id)
+    {
+        $biddinginformation = Biddinginformation::findOrFail($id);
+
+        $phpWord = new PhpWord();
+
+        $section = $phpWord->createSection();
+
+        $i = 1;
+        foreach ($biddinginformation->biddinginformationeditems as $biddinginformationeditem)
+        {
+            $str = $i . '、' . $biddinginformationeditem->key . '：' . $biddinginformationeditem->value;
+            $section->addText($str);
+            $i++;
+        }
+
+        $writer = IOFactory::createWriter($phpWord);
+        $writer->save(public_path('download/biddinginformations/TOUBIAO.docx'));
+
+        return response()->download(public_path('download/biddinginformations/TOUBIAO.docx'));
+    }
+
     public function close($id)
     {
         //
