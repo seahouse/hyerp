@@ -126,10 +126,12 @@
                     </td>
                     <td>
                         <div class="form-inline">
-                            {!! Form::button('关联销售订单', ['class' => 'btn btn-success btn-xs pull-left', 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal','data-informationid' =>$biddinginformation->id]) !!}
-                            {!! Form::open(array('action' => ['Basic\BiddinginformationController@cancelsohead', $biddinginformation->id], 'method' => 'post', 'onsubmit' => 'return confirm("确定取消此记录的订单关联？");')) !!}
-                            {!! Form::submit('取消订单关联', ['class' => 'btn btn-danger btn-xs pull-left']) !!}
-                            {!! Form::close() !!}
+                            @can('basic_biddinginformation_edit')
+                                {!! Form::button('关联销售订单', ['class' => 'btn btn-success btn-xs pull-left', 'data-toggle' => 'modal', 'data-target' => '#selectOrderModal','data-informationid' =>$biddinginformation->id]) !!}
+                                {!! Form::open(array('action' => ['Basic\BiddinginformationController@cancelsohead', $biddinginformation->id], 'method' => 'post', 'onsubmit' => 'return confirm("确定取消此记录的订单关联？");')) !!}
+                                {!! Form::submit('取消订单关联', ['class' => 'btn btn-danger btn-xs pull-left']) !!}
+                                {!! Form::close() !!}
+                            @endcan
                             @can('basic_biddinginformation_resetfieldtype')
                                 {!! Form::button('重设字段类别', ['class' => 'btn btn-xs btn-success pull-left', 'data-toggle' => 'modal', 'data-target' => '#resetfieldtypeModal', 'data-biddinginformation_id' => $biddinginformation->id]) !!}
                             @endcan
