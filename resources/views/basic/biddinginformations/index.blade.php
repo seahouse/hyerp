@@ -147,7 +147,9 @@
                                     <a href="{{ URL::to('/basic/biddinginformations/'.$biddinginformation->id.'/xyedit') }}" class="btn btn-success btn-xs pull-left">协议修改</a>
                                 @endcan
                             @endif
-                            <a href="{{ url('basic/biddinginformations/exportword/' . $biddinginformation->id) }}" class="btn btn-success btn-xs pull-left" target="_blank">导出Word</a>
+                            @can('basic_biddinginformation_edit')
+                                <a href="{{ url('basic/biddinginformations/exportword/' . $biddinginformation->id) }}" class="btn btn-success btn-xs pull-left" target="_blank">导出Word</a>
+                            @endcan
                             <a href="{{ url('basic/biddinginformations/xyexportword/' . $biddinginformation->id) }}" class="btn btn-success btn-xs pull-left" target="_blank">协议导出Word</a>
                             @can('basic_biddinginformation_edit')
                                 {!! Form::open(array('action' => ['Basic\BiddinginformationController@close', $biddinginformation->id], 'method' => 'post', 'onsubmit' => 'return confirm("确定关闭此记录?");')) !!}
