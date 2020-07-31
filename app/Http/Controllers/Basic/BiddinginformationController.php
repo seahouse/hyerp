@@ -443,7 +443,7 @@ class BiddinginformationController extends Controller
                             if (isset($biddinginformationitem_mingcheng))
                                 $projectname = $biddinginformationitem_mingcheng->value;
 
-                            $msg = '[' . $projectname . ']项目[' . $biddinginformation->number . ']的[' . $biddinginformationeditem->key .']字段内容已修改。原内容：' . $oldvalue . '，新内容：' . $value;
+                            $msg = '[' . $projectname . ']项目[' . $biddinginformation->number . ']的[' . $biddinginformationeditem->key .']字段内容已协议修改。原内容：' . $oldvalue . '，新内容：' . $value;
                             $data = [
                                 'msgtype'       => 'text',
                                 'text' => [

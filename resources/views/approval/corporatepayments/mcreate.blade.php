@@ -832,12 +832,12 @@
                 if (amounttype == "工程现场采购费用相关")
                 {
                     $("#divPohead_number").attr("style", "display:none;");
-                    $("#divAssociatedapprovals").attr("style", "display:none;");
+                    $("#divAssociatedapprovals").attr("style", "display:block;");
                 }
                 else
                 {
                     $("#divPohead_number").attr("style", "display:block;");
-                    $("#divAssociatedapprovals").attr("style", "display:block;");
+                    $("#divAssociatedapprovals").attr("style", "display:none;");
                 }
             }
 
