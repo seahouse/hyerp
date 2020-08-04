@@ -245,7 +245,7 @@
         <div class="form-group">
             {!! Form::label('materialsupplier', '材料供应方:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('materialsupplier', array('华星东方' => '华星东方', '东方铁塔' => '东方铁塔', '外协单位' => '外协单位'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                {!! Form::select('materialsupplier', array('华星东方' => '华星东方', '东方铁塔' => '东方铁塔', '外协单位' => '外协单位', '中易新材料' => '中易新材料'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
             </div>
         </div>
 
