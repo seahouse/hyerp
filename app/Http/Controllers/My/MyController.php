@@ -278,7 +278,7 @@ class MyController extends Controller
             ->addColumn('bonusforpay', function (Salesorder_hxold $sohead) use ($request) {
                 if ($request->has('receivedateend'))
                 {
-                    return $sohead->receiptpayments->sum(function ($receiptpayment) use ($request, $sohead) {
+                    $amount = $sohead->receiptpayments->sum(function ($receiptpayment) use ($request, $sohead) {
                         if (Carbon::parse($receiptpayment->date)->lte(Carbon::parse($request->get('receivedateend'))))
                             return $receiptpayment->amount * $sohead->getBonusfactorByPolicy($request->get('receivedateend')) * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
                         else
@@ -286,7 +286,8 @@ class MyController extends Controller
                     }) - $sohead->bonuspayments->sum('amount');
                 }
                 else
-                    return $sohead->receiptpayments->sum('amount') * $sohead->getBonusfactorByPolicy() * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead - $sohead->bonuspayments->sum('amount');
+                    $amount = $sohead->receiptpayments->sum('amount') * $sohead->getBonusfactorByPolicy() * array_first($sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead - $sohead->bonuspayments->sum('amount');
+                return number_format($amount, 4);
             })
             ->addColumn('paybonus', function (Salesorder_hxold $sohead) {
                 return '<a href="'. url('sales/' . $sohead->id . '/bonuspayment/create') .'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> 支付</a>';
