@@ -38,7 +38,7 @@ class PurchaseordersController extends Controller
     public function index_hx()
     {
         //
-        $purchaseorders = Purchaseorder_hxold::orderBy('id', 'desc')->paginate(15);
+        $purchaseorders = Purchaseorder_hxold::where('status', 10)->orderBy('id', 'desc')->paginate(15);
         return view('purchase.purchaseorders.index_hx', compact('purchaseorders'));
     }
 
@@ -173,6 +173,8 @@ class PurchaseordersController extends Controller
     public function show($id)
     {
         //
+        $purchaseorder = Purchaseorder_hxold::findOrFail($id);
+        return view('purchase.purchaseorders.show', compact('purchaseorder'));
     }
 
     /**
@@ -325,5 +327,12 @@ class PurchaseordersController extends Controller
     {
         $receiptorders = Poheadtaxrateass_hxold::where('pohead_id', $id)->get();
         return $receiptorders;
+    }
+
+    public function arrivalticket($id)
+    {
+        //
+        $purchaseorder = Purchaseorder_hxold::findOrFail($id);
+        return view('purchase.arrivaltickets.create', compact('purchaseorder'));
     }
 }

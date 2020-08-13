@@ -1,7 +1,11 @@
 <div class="form-group">
     {!! Form::label('供应商名称', '供应商:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::text('供应商名称', $purchaseorder->vendinfo->name, ['class' => 'form-control', 'readonly' => 'true']) !!}
+        @if (isset($purchaseorder->vendinfo))
+            {!! Form::text('供应商名称', $purchaseorder->vendinfo->name, ['class' => 'form-control', 'readonly' => 'true']) !!}
+        @else
+            {!! Form::text('供应商名称', null, ['class' => 'form-control', 'readonly' => 'true']) !!}
+        @endif
     </div>
 </div>
 

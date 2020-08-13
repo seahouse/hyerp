@@ -404,6 +404,7 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         Route::get('edit_hx', 'PurchaseordersController@edit_hx');
         Route::patch('update_hx', 'PurchaseordersController@update_hx');
         Route::get('getpoheadtaxrateass_hx', 'PurchaseordersController@getpoheadtaxrateass_hx');
+        Route::get('arrivalticket', 'PurchaseordersController@arrivalticket');
     });
     Route::group(['prefix' => 'purchaseorders/{purchaseorder}/payments'], function () {
         Route::get('/', 'PaymentsController@index');
@@ -427,6 +428,7 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         Route::get('destorybyid/{id}', 'PoheadtaxrateassController@destorybyid');       // use get for page opt.
     });
     Route::resource('purchaseorders', 'PurchaseordersController');
+    Route::resource('arrivaltickets', 'ArrivalticketController');
     Route::resource('poheadtaxrateass', 'PoheadtaxrateassController');
     Route::get('poitems/{headId}/create', 'PoitemsController@createByPoheadId');
     Route::group(['prefix' => 'poitems/hxold'], function() {

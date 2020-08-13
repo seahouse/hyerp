@@ -45,14 +45,20 @@
         <thead>
             <tr>
                 <th>编号</th>
+                <th>订货日期</th>
+                <th>申请人</th>
                 <th>合同金额</th>
+                <th>扣款金额</th>
                 <th>供应商</th>
+                <th>项目简称</th>
                 <th>到货比例</th>
+                <th>采购商品</th>
                 <th>对应销售订单</th>
+                <th>已付金额</th>
+                <th>财务到票金额</th>
+                <th>总到票</th>
                 <th>入库记录</th>
-                {{--
                 <th>物料</th>
-                --}}
                 <th>操作</th>
             </tr>
         </thead>
@@ -63,29 +69,92 @@
                         {{ $purchaseorder->number }}
                     </td>
                     <td>
+                        {{ \Carbon\Carbon::parse($purchaseorder->orderdate)->toDateString() }}
+                    </td>
+                    <td>
+                        @if (isset($purchaseorder->applicant)) {{ $purchaseorder->applicant->name }} @else - @endif
+                    </td>
+                    <td>
                         {{ $purchaseorder->amount }}
                     </td>
                     <td>
-                        {{ $purchaseorder->custinfo_name }}
+                        {{
+                            $purchaseorder->vendordeductionitems->sum(function ($vendordeductionitem) {
+                                return $vendordeductionitem->quantity * $vendordeductionitem->unitprice;
+                            })
+                        }}
+                    </td>
+                    <td title="@if (isset($purchaseorder->vendinfo)) {{ $purchaseorder->vendinfo->name }} @endif">
+                        @if (isset($purchaseorder->vendinfo))
+                            {{ str_limit($purchaseorder->vendinfo->name, 20) }}
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>
+                        {{ $purchaseorder->sohead->projectjc }}
                     </td>
                     <td>
                         {{ $purchaseorder->arrival_percent }}
                     </td>
                     <td>
-                        @if (isset($purchaseorder->sohead)) {{ $purchaseorder->sohead->number . '|' . $purchaseorder->sohead->descrip }} @else @endif
+                        {{ $purchaseorder->productname }}
+                    </td>
+                    <td @if (isset($purchaseorder->sohead)) title="{{ $purchaseorder->sohead->number . '|' . $purchaseorder->sohead->descrip }}" @else @endif>
+                        @if (isset($purchaseorder->sohead)) {{ str_limit($purchaseorder->sohead->number . '|' . $purchaseorder->sohead->descrip, 30) }} @else - @endif
+                    </td>
+                    <td>
+                        {{ $purchaseorder->payments->sum('amount') }} {{ '(' }}
+                        @if ($purchaseorder->amount > 0.0)  {{ $purchaseorder->payments->sum('amount') / $purchaseorder->amount * 100 }}%
+                        @else -
+                        @endif {{ ')' }}
+                    </td>
+                    <td>
+                        {{ $purchaseorder->amount_ticketed }} {{ '(' }}
+                        @if ($purchaseorder->amount > 0.0)  {{ $purchaseorder->amount_ticketed / $purchaseorder->amount * 100 }}%
+                        @else -
+                        @endif {{ ')' }}
+                    </td>
+                    <td>
+                        {{ $purchaseorder->purchasetickets->sum('amount') + $purchaseorder->amount_ticketed }}
                     </td>
                     <td>
                         <a href="{{ URL::to('/purchase/purchaseorders/' . $purchaseorder->id . '/receiptorders_hx') }}" target="_blank" class="btn btn-default btn-sm">查看</a>
                     </td>
-                    {{--
                     <td>
-                        <a href="{{ URL::to('/purchase/purchaseorders/' . $purchaseorder->id . '/detail') }}" target="_blank">明细</a>
+                        <a href="{{ URL::to('/purchase/purchaseorders/' . $purchaseorder->id . '/detail_hxold') }}" target="_blank">明细</a>
                     </td>
-                    --}}
                     <td>
                         @if ($purchaseorder->status == 20)
                             <a href="{{ URL::to('/purchase/purchaseorders/'.$purchaseorder->id.'/edit_hx') }}" class="btn btn-success btn-sm pull-left">编辑</a>
                         @endif
+                            <a href="{{ URL::to('/purchase/purchaseorders/' . $purchaseorder->id) }}" class="btn btn-success btn-sm pull-left">查看</a>
+
+                        <?php $can_arrivalticket = false; ?>
+                        @can('purchase_purchaseorder_arrivalticket')
+                            <?php $can_arrivalticket = true; ?>
+                        @else
+                            {{-- 当 对公付款审批 的类型是“安装合同安装费付款”，且采购商品名称是“钢结构安装”，开放权限给发起人 --}}
+                            @if (strpos($purchaseorder->productname, '钢结构安装') >= 0)
+                                @if ($purchaseorder->corporatepayments()->where('status', '>=', 0)->where('applicant_id', Auth::user()->id)->count())
+                                    <?php $can_arrivalticket = true; ?>
+                                @endif
+                            @endif
+                        @endcan
+                        @if ($can_arrivalticket)
+                            <a href="{{ URL::to('/purchase/purchaseorders/' . $purchaseorder->id . '/arrivalticket') }}" class="btn btn-success btn-sm pull-left">到票</a>
+                        @endif
+
+                        <?php $can_payment = false; ?>
+                        @can('purchase_purchaseorder_payment')
+                            <?php $can_payment = true; ?>
+                        @else
+                            <?php $can_payment = $can_arrivalticket; ?>
+                        @endcan
+                        @if ($can_payment)
+                            <a href="{{ URL::to('/purchase/purchaseorders/' . $purchaseorder->id . '/payments/create_hxold') }}" class="btn btn-success btn-sm pull-left">付款</a>
+                        @endif
+
                         {{--
                         <a href="{{ URL::to('/purchase/purchaseorders/' . $purchaseorder->id . '/receiving') }}" class="btn btn-success btn-sm pull-left">收货</a>
                         <a href="{{ URL::to('/purchase/purchaseorders/' . $purchaseorder->id . '/payments') }}" target="_blank" class="btn btn-success btn-sm pull-left">付款</a>

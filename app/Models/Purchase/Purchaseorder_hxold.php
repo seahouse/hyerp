@@ -2,6 +2,10 @@
 
 namespace App\Models\Purchase;
 
+use App\Models\Approval\Corporatepayment;
+use App\Models\Approval\Vendordeduction;
+use App\Models\Approval\Vendordeductionitem;
+use App\Models\System\Employee_hxold;
 use Illuminate\Database\Eloquent\Model;
 
 class Purchaseorder_hxold extends Model
@@ -32,5 +36,27 @@ class Purchaseorder_hxold extends Model
 
     public function vendinfo() {
         return $this->hasOne('App\Models\Purchase\Vendinfo_hxold', 'id', 'vendinfo_id');
+    }
+
+    public function applicant() {
+        return $this->belongsTo(Employee_hxold::class);
+    }
+
+    public function operator() {
+        return $this->belongsTo(Employee_hxold::class);
+    }
+
+    public function vendordeductionitems() {
+        return $this->hasManyThrough(Vendordeductionitem::class, Vendordeduction::class, 'pohead_id');
+    }
+
+    // 采购部录入的到票记录
+    public function purchasetickets() {
+        return $this->hasMany(Purchaseticket_hxold::class, 'pohead_id');
+    }
+
+    // 对公付款审批单
+    public function corporatepayments() {
+        return $this->hasMany(Corporatepayment::class, 'pohead_id');
     }
 }
