@@ -151,6 +151,49 @@
 	</div>
 </div>
 
+<div class="modal fade" id="selectApprovalModal" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">选择关联相关审批单</h4>
+			</div>
+			<div class="modal-body">
+				<div class="input-group" style="width:100%;">
+					<div class='col-xs-4 col-sm-4' style="padding:5px;">
+						{!! Form::select('type', array('designchangenotice' => '通用-设计变更通知单', 'vendordeduction' => '扣款-供应商扣款流程（ERP）'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'id' => 'approvaltype']) !!}
+					</div>
+					<div class='col-xs-6 col-sm-6' style="padding:5px;">
+						{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '审批单号', 'id' => 'keyApproval']) !!}
+					</div>
+					<div class='col-xs-2 col-sm-2' style="padding:5px;">
+                        <span class="input-group-btn">
+                   		    {!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchApproval']) !!}
+                       </span>
+					</div>
+				</div>
+				{!! Form::hidden('name', null, ['id' => 'name']) !!}
+				{!! Form::hidden('id', null, ['id' => 'id']) !!}
+				{!! Form::hidden('num', null, ['id' => 'num']) !!}
+				<p>
+				<div class="list-group" id="listApproval">
+
+				</div>
+				</p>
+				<form id="formAccept">
+					{!! csrf_field() !!}
+
+					{{--                    {!! Form::hidden('reimbursement_id', $reimbursement->id, ['class' => 'form-control']) !!}
+                                        {!! Form::hidden('status', 0, ['class' => 'form-control']) !!} --}}
+				</form>
+			</div>
+			{{--            <div class="modal-footer">
+                            {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
+                            {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnAccept']) !!}
+                        </div>--}}
+		</div>
+	</div>
+</div>
+
 <!-- before submit -->
 <div class="modal fade" id="submitModal" tabindex="-1" role="dialog">
     <div class="modal-dialog">
@@ -545,6 +588,107 @@
                     $("#tonnagedetailcontainer").empty().append(data);
                 });
             }
+
+            $('#selectApprovalModal').on('show.bs.modal', function (e) {
+                $("#listApproval").empty();
+                $("#approvaltype").val('');
+                $("#keyApproval").val('');
+
+                var target = $(e.relatedTarget);
+                // alert(text.data('id'));
+
+                var modal = $(this);
+                modal.find('#name').val(target.data('name'));
+                modal.find('#id').val(target.data('id'));
+                modal.find('#num').val(target.data('num'));
+                // alert(modal.find('#id').val());
+            });
+
+            $("#btnSearchApproval").click(function() {
+                if ($("#approvaltype").val() == "") {
+                    alert('请选择审批单类型');
+                    return;
+                }
+
+                if ($("#keyApproval").val() == "") {
+                    alert('请输入关键字');
+                    return;
+                }
+
+                var requestUrl = 'approval/getdtitemsbykey';
+                $.ajax({
+                    type: "GET",
+                    url: "{!! url('" + requestUrl + "') !!}" + "?type=" + $("#approvaltype").val() + "&key=" + $("#keyApproval").val(),
+                    success: function(result) {
+
+                        var html = [];
+                        if (result && result.business_id) {
+                            html.push("<button type='button' class='list-group-item' id='btnSelectProjectpurchase_0'>");
+                            html.push("<h4>" + result.business_id + "</h4><p>");
+                            html.push(result.title+ '<br/>');
+                            if (result.content) {
+                                for(var key in result.content) {
+                                    if (result.content.hasOwnProperty(key)) {
+                                        html.push(key + ': ' + result.content[key] + '<br/>');
+                                    }
+                                }
+                            }
+                            html.push("</p></button>");
+                        }
+                        else {
+                            html.push('无记录。');
+                        }
+
+                        $("#listApproval").empty().append(html.join(''));
+
+                        addBtnClickEventProjectpurchase('btnSelectProjectpurchase_0', result);
+                        // addBtnClickEvent('btnSelectOrder_0');
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('error');
+                    }
+                });
+            });
+
+            function addBtnClickEventProjectpurchase(btnId, field)
+            {
+                $("#" + btnId).bind("click", function() {
+                    $('#selectApprovalModal').modal('toggle');
+
+                    var html = [];
+                    html.push('<div id="divRemovePurchaseClick_' + field.business_id + '">');
+                    html.push("<span>关联审批单：" + field.business_id + "</span>");
+                    html.push('&nbsp;&nbsp;<a data-business_id="' + field.business_id + '" data-process_instance_id="' + field.process_instance_id + '" onclick="window.removeProjectpurchaseClick(this);" href="javascript:void(0);">删除</a>');
+                    html.push("</div>");
+
+                    var hVal = [];
+                    if ($("#associatedapprovals").val() != '') {
+                        hVal = $("#associatedapprovals").val().split(',');
+                    }
+                    if ($.inArray(field.process_instance_id, hVal) < 0) {
+                        hVal.push(field.process_instance_id);
+                        $("#lblAssociatedapprovals").append(html.join(''));
+                    }
+                    $("#associatedapprovals").val(hVal.join(','));
+//					$("#supplier_bankaccountnumber").val(field.bankaccountnumber);
+//					$("#vendbank_id").val(field.vendbank_id);
+                });
+            }
+
+            window.removeProjectpurchaseClick = function(it) {
+                var process_instance_id = $(it).attr('data-process_instance_id');
+                $("#divRemovePurchaseClick_" + $(it).attr('data-business_id')).remove();
+
+                var hVal = [];
+                if ($("#associatedapprovals").val() != '') {
+                    hVal = $("#associatedapprovals").val().split(',');
+                }
+                var pos = $.inArray(process_instance_id, hVal);
+                hVal.splice(pos, 1);
+                $("#associatedapprovals").val(hVal.join(','));
+                return false;
+            }
+
 
 			dd.config({
 			    agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID

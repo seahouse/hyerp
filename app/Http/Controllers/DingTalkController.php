@@ -2058,6 +2058,10 @@ class DingTalkController extends Controller
                 'name'      => '图纸签收回执',
                 'value'     => $inputs['image_urls'],
             ],
+            [
+                'name'      => '关联审批单',
+                'value'     => $inputs['associatedapprovals'],
+            ],
         ];
 //        $form_component_values = '{name:\'测试1\', value:\'aaa\'}';
 //        dd(json_encode($formdata));

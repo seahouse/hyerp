@@ -525,7 +525,7 @@ class IssuedrawingController extends Controller
         if (isset($issuedrawing))
         {
             $input['drawingattachments_url'] = implode(" , ", $drawingattachments_url2);
-//            $input['drawingattachments_url'] = implode(" , ", $drawingattachments_url);
+            $input['associatedapprovals'] = strlen($input['associatedapprovals']) > 0 ? json_encode(explode(",", $input['associatedapprovals'])) : "";
 
             $input['image_urls'] = json_encode($image_urls);
             $input['approvers'] = $issuedrawing->approvers();

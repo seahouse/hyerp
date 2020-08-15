@@ -345,6 +345,17 @@
 </div>
 
         <div class="form-group">
+            {!! Form::label('associatedapprovals', '关联审批单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::button('+', ['class' => 'btn btn-sm', 'data-toggle' => 'modal', 'data-target' => '#selectApprovalModal']) !!}
+                {!! Form::hidden('associatedapprovals', null, ['class' => 'btn btn-sm']) !!}
+                <div id="lblAssociatedapprovals">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
             {!! Form::label('syncdtdesc', '同步到钉钉组织:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
                 {!! Form::select('syncdtdesc', array('无锡' => '无锡', '许昌' => '许昌'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
