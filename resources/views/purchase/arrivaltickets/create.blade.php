@@ -3,8 +3,20 @@
 @section('main')
     <h1>添加到票记录</h1>
     <hr/>
-    
-    {!! Form::open(['url' => 'purchase/arrivaltickets', 'class' => 'form-horizontal']) !!}
+
+    <?php $can_arrivalticket = false; ?>
+    @can('purchase_purchaseorder_arrivalticket')
+        <?php $can_arrivalticket = true; ?>
+    @else
+        {{-- 当 对公付款审批 的类型是“安装合同安装费付款”，且采购商品名称是“钢结构安装”，开放权限给发起人 --}}
+        @if (strpos($purchaseorder->productname, '钢结构安装') >= 0)
+            @if ($purchaseorder->corporatepayments()->where('status', '>=', 0)->where('applicant_id', Auth::user()->id)->count())
+                <?php $can_arrivalticket = true; ?>
+            @endif
+        @endif
+    @endcan
+    @if ($can_arrivalticket)
+        {!! Form::open(['url' => 'purchase/arrivaltickets', 'class' => 'form-horizontal']) !!}
         @include('purchase.arrivaltickets._form',
             [
                 'attr' => '',
@@ -12,8 +24,11 @@
                 'attrdisable' => '',
                 'submitButtonText' => '添加',
             ])
-    {!! Form::close() !!}
-    
+        {!! Form::close() !!}
+    @else
+        无权限。
+    @endif
+
 
     
     @include('errors.list')

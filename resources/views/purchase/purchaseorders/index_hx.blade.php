@@ -47,16 +47,20 @@
                 <th>编号</th>
                 <th>订货日期</th>
                 <th>申请人</th>
-                <th>合同金额</th>
-                <th>扣款金额</th>
+                @can('purchase_purchaseorder_viewamount')
+                    <th>合同金额</th>
+                    <th>扣款金额</th>
+                @endcan
                 <th>供应商</th>
                 <th>项目简称</th>
                 <th>到货比例</th>
                 <th>采购商品</th>
                 <th>对应销售订单</th>
-                <th>已付金额</th>
-                <th>财务到票金额</th>
-                <th>总到票</th>
+                @can('purchase_purchaseorder_viewamount')
+                    <th>已付金额</th>
+                    <th>财务到票金额</th>
+                    <th>总到票</th>
+                @endcan
                 <th>入库记录</th>
                 <th>物料</th>
                 <th>操作</th>
@@ -74,16 +78,18 @@
                     <td>
                         @if (isset($purchaseorder->applicant)) {{ $purchaseorder->applicant->name }} @else - @endif
                     </td>
-                    <td>
-                        {{ $purchaseorder->amount }}
-                    </td>
-                    <td>
-                        {{
-                            $purchaseorder->vendordeductionitems->sum(function ($vendordeductionitem) {
-                                return $vendordeductionitem->quantity * $vendordeductionitem->unitprice;
-                            })
-                        }}
-                    </td>
+                    @can('purchase_purchaseorder_viewamount')
+                        <td>
+                            {{ $purchaseorder->amount }}
+                        </td>
+                        <td>
+                            {{
+                                $purchaseorder->vendordeductionitems->sum(function ($vendordeductionitem) {
+                                    return $vendordeductionitem->quantity * $vendordeductionitem->unitprice;
+                                })
+                            }}
+                        </td>
+                    @endcan
                     <td title="@if (isset($purchaseorder->vendinfo)) {{ $purchaseorder->vendinfo->name }} @endif">
                         @if (isset($purchaseorder->vendinfo))
                             {{ str_limit($purchaseorder->vendinfo->name, 20) }}
@@ -103,21 +109,23 @@
                     <td @if (isset($purchaseorder->sohead)) title="{{ $purchaseorder->sohead->number . '|' . $purchaseorder->sohead->descrip }}" @else @endif>
                         @if (isset($purchaseorder->sohead)) {{ str_limit($purchaseorder->sohead->number . '|' . $purchaseorder->sohead->descrip, 30) }} @else - @endif
                     </td>
-                    <td>
-                        {{ $purchaseorder->payments->sum('amount') }} {{ '(' }}
-                        @if ($purchaseorder->amount > 0.0)  {{ $purchaseorder->payments->sum('amount') / $purchaseorder->amount * 100 }}%
-                        @else -
-                        @endif {{ ')' }}
-                    </td>
-                    <td>
-                        {{ $purchaseorder->amount_ticketed }} {{ '(' }}
-                        @if ($purchaseorder->amount > 0.0)  {{ $purchaseorder->amount_ticketed / $purchaseorder->amount * 100 }}%
-                        @else -
-                        @endif {{ ')' }}
-                    </td>
-                    <td>
-                        {{ $purchaseorder->purchasetickets->sum('amount') + $purchaseorder->amount_ticketed }}
-                    </td>
+                    @can('purchase_purchaseorder_viewamount')
+                        <td>
+                            {{ $purchaseorder->payments->sum('amount') }} {{ '(' }}
+                            @if ($purchaseorder->amount > 0.0)  {{ $purchaseorder->payments->sum('amount') / $purchaseorder->amount * 100 }}%
+                            @else -
+                            @endif {{ ')' }}
+                        </td>
+                        <td>
+                            {{ $purchaseorder->amount_ticketed }} {{ '(' }}
+                            @if ($purchaseorder->amount > 0.0)  {{ $purchaseorder->amount_ticketed / $purchaseorder->amount * 100 }}%
+                            @else -
+                            @endif {{ ')' }}
+                        </td>
+                        <td>
+                            {{ $purchaseorder->purchasetickets->sum('amount') + $purchaseorder->amount_ticketed }}
+                        </td>
+                    @endcan
                     <td>
                         <a href="{{ URL::to('/purchase/purchaseorders/' . $purchaseorder->id . '/receiptorders_hx') }}" target="_blank" class="btn btn-default btn-sm">查看</a>
                     </td>

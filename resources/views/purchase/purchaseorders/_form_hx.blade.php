@@ -48,12 +48,14 @@
     </div>
 </div>
 
-<div class="form-group">
-    {!! Form::label('amount', '合同金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('amount', null, ['class' => 'form-control', $attr]) !!}
+@can('purchase_purchaseorder_viewamount')
+    <div class="form-group">
+        {!! Form::label('amount', '合同金额:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+        <div class='col-xs-8 col-sm-10'>
+            {!! Form::text('amount', null, ['class' => 'form-control', $attr]) !!}
+        </div>
     </div>
-</div>
+@endcan
 
 <div class="form-group">
     {!! Form::label('operator', '合同经办人:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
