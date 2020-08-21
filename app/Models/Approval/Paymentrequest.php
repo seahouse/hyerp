@@ -90,7 +90,9 @@ class Paymentrequest extends Model
         if ($approversetting)
         {
             // 如果是河南华星，第5层为候S
-            if ($approversetting->level == 5 && isset($this->purchaseorder_hxold->purchasecompany_id) && $this->purchaseorder_hxold->purchasecompany_id == 3)
+            // 如果是中易新材料或者中易电力，第5层设置为侯S
+            if ($approversetting->level == 5 && isset($this->purchaseorder_hxold->purchasecompany_id) &&
+                ($this->purchaseorder_hxold->purchasecompany_id == 3 || $this->purchaseorder_hxold->purchasecompany_id == 2 || $this->purchaseorder_hxold->purchasecompany_id == 4))
             {
                 $user = User::where('id', 123)->first();
                 return $user;

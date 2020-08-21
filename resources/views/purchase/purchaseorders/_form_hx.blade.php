@@ -120,13 +120,15 @@
     </div>
 </div>
 
-<div class="form-group">
-    {!! Form::label('businesscontract', '商务合同:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-        {{--{!! Form::text('technicalspecification', null, ['class' => 'form-control', $attr]) !!}--}}
-        <a  href="{!! config('custom.hxold.purchase_businesscontract_webdir') . $purchaseorder->id . '/' . $purchaseorder->businesscontract !!}" target="_blank">{{ $purchaseorder->businesscontract }}</a>
+@can('purchase_purchaseorder_businesscontract')
+    <div class="form-group">
+        {!! Form::label('businesscontract', '商务合同:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+        <div class='col-xs-8 col-sm-10'>
+            {{--{!! Form::text('technicalspecification', null, ['class' => 'form-control', $attr]) !!}--}}
+            <a  href="{!! config('custom.hxold.purchase_businesscontract_webdir') . $purchaseorder->id . '/' . $purchaseorder->businesscontract !!}" target="_blank">{{ $purchaseorder->businesscontract }}</a>
+        </div>
     </div>
-</div>
+@endcan
 
 <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">
