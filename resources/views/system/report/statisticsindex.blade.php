@@ -122,6 +122,10 @@
                 {!! Form::text('goodsspec',  null, ['class' => 'form-control','placeholder'=>'规格', 'id' => 'goodsspec']) !!}
                 {!! Form::text('vendername',  null, ['class' => 'form-control','placeholder'=>'供应商', 'id' => 'vendername']) !!}
                 {!! Form::hidden('projectid', $input['projectid']) !!}
+            @elseif ($report->name == "po_costincrease_detail")
+                {!! Form::label('sohead_name', '订单', ['class' => 'control-label']) !!}
+                {!! Form::select('sohead_name', $soheadList_hxold, null, ['class' => 'form-control', 'id' => 'select_sohead']) !!}
+                {!! Form::hidden('sohead_id', null, ['id' => 'sohead_id']) !!}
             @endif
 
 {{--            {!! $report->condition !!}--}}
