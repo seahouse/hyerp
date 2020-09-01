@@ -102,9 +102,18 @@ class Salesorder_hxold extends Model
         return DB::connection('sqlsrv')->select('select dbo.getNoWarehouseAmountBy7550(' . $this->id . ') as nowarehouseamountby7550');
     }
 
+    // 厂部采购平摊费用
+    public function getnowarehousetaxamountby7550() {
+        return DB::connection('sqlsrv')->select('select dbo.getNoWarehouseTaxAmountBy7550(' . $this->id . ') as nowarehousetaxamountby7550');
+    }
     // 出库数量
     public function getwarehouseqty() {
         return DB::connection('sqlsrv')->select('select dbo.getWarehouseQtyByorder(' . $this->id . ') as warehouseqty');
+    }
+
+    // 库存费用
+    public function getinventorybyorder() {
+        return DB::connection('sqlsrv')->select('select dbo.getInventoryAmountByOrder(' . $this->id . ') as inventoryamount');
     }
 
     //下图重量

@@ -33,6 +33,8 @@
 				<?php $nowarehousecost +=array_first($sohead->getnowarehouseCost())->nowarehousecost;?>
 				<?php $nowarehousetaxcost +=array_first($sohead->getnowarehousetaxCost())->nowarehousetaxcost;?>
 				<?php $nowarehouseamountby7550 +=array_first($sohead->getnowarehouseamountby7550())->nowarehouseamountby7550;?>
+				<?php $nowarehousetaxamountby7550 +=array_first($sohead->getnowarehousetaxamountby7550())->nowarehousetaxamountby7550;?>
+				<?php $inventoryamount +=array_first($sohead->getinventorybyorder())->inventoryamount;?>
 				<?php $warehouseqty +=array_first($sohead->getwarehouseqty())->warehouseqty;?>
 				<?php $drawingqty +=$sohead->Issuedrawings->sum('tonnage');?>
 		@endforeach
@@ -71,7 +73,7 @@
 				<a href="{{ URL::to('/sales/projects/'.$project->id.'/nowarehousedetailbyproject/') }}" class="btn btn-default btn-sm" target="_blank">无入库明细</a></p>
 			<p>无入库记录物品税额：{{number_format(( $nowarehousetaxcost) / 10000.0, 4)}}万</p>
 			@if ($totalamount > 0.0)
-				<p>出库类成本比例：{{number_format(($warehousecost  + $nowarehousecost + $sohead_taxamount + $nowarehouseamountby7550  - $nowarehousetaxcost - $warehousetaxcost) / ($totalamount * 10000.0) * 100.0, 2)}}%</p>
+				<p>出库类成本比例：{{number_format(($warehousecost  + $nowarehousecost + $sohead_taxamount + $nowarehouseamountby7550 + $inventoryamount - $nowarehousetaxcost - $warehousetaxcost-$nowarehousetaxamountby7550) / ($totalamount * 10000.0) * 100.0, 2)}}%</p>
 			@else
 				<p>出库类成本比例：-</p>
 			@endif
