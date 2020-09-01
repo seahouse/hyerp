@@ -376,7 +376,7 @@ class CorporatepaymentController extends Controller
             // 如果是审批完成且通过，则创建付款审批单
             if ($status == 0)
             {
-//                $associated_approval_projectpurchase = $corporatepayment->associated_approval_projectpurchase;
+                $projectsitepurchase = null;
                 $associated_approval_projectpurchases = json_decode($corporatepayment->associated_approval_projectpurchase);
                 if (count($associated_approval_projectpurchases) > 0)
                 {
@@ -384,228 +384,213 @@ class CorporatepaymentController extends Controller
                     if (strlen($associated_approval_projectpurchase) > 0)
                     {
                         $projectsitepurchase = Projectsitepurchase::where('process_instance_id', $associated_approval_projectpurchase)->first();
-                        if (isset($projectsitepurchase))
-                        {
-//                            $techpurchaseattachment_techspecification = $corporatepayment->techpurchaseattachments->where('type', 'techspecification')->first();
+                    }
+                }
 
-                            // set approversetting_id
-                            $approversetting_id = -1;
-                            $approvaltype_id = PaymentrequestsController::typeid();
-                            if ($approvaltype_id > 0)
-                            {
-                                $approversettingFirst = Approversetting::where('approvaltype_id', $approvaltype_id)->orderBy('level')->first();
-                                if ($approversettingFirst)
-                                    $approversetting_id = $approversettingFirst->id;
-                                else
-                                    $approversetting_id = -1;
-                            }
-                            else
-                                $approversetting_id = -1;
+                // set approversetting_id
+                $approversetting_id = -1;
+                $approvaltype_id = PaymentrequestsController::typeid();
+                if ($approvaltype_id > 0)
+                {
+                    $approversettingFirst = Approversetting::where('approvaltype_id', $approvaltype_id)->orderBy('level')->first();
+                    if ($approversettingFirst)
+                        $approversetting_id = $approversettingFirst->id;
+                    else
+                        $approversetting_id = -1;
+                }
+                else
+                    $approversetting_id = -1;
 
-                            $data = [
-                                'suppliertype'          => $corporatepayment->suppliertype,
-                                'paymenttype'            => $corporatepayment->paymenttype,
-                                'supplier_id'            => $corporatepayment->supplier_id,
-                                'pohead_id'              => isset($projectsitepurchase->pohead_hxold) ? $projectsitepurchase->pohead_hxold->id : 0,
-                                'descrip'                => '由工程部发起的付款-对公帐户付款通过后自动创建，对应的审批单号为：' . $corporatepayment->business_id,
-                                'amount'                  => $corporatepayment->amount,
-                                'paymentmethod'         => $corporatepayment->paymentmethod,
-                                'datepay'                => $corporatepayment->paydate,
-                                'vendbank_id'            => $corporatepayment->vendbank_id,
-                                'applicant_id'           => $corporatepayment->applicant_id,
+                $data = [
+                    'suppliertype'          => $corporatepayment->suppliertype,
+                    'paymenttype'            => $corporatepayment->paymenttype,
+                    'supplier_id'            => $corporatepayment->supplier_id,
+                    'pohead_id'              => isset($projectsitepurchase->pohead_hxold) ? $projectsitepurchase->pohead_hxold->id : $corporatepayment->pohead_id,
+                    'descrip'                => '由工程部发起的付款-对公帐户付款通过后自动创建，对应的审批单号为：' . $corporatepayment->business_id,
+                    'amount'                  => $corporatepayment->amount,
+                    'paymentmethod'         => $corporatepayment->paymentmethod,
+                    'datepay'                => $corporatepayment->paydate,
+                    'vendbank_id'            => $corporatepayment->vendbank_id,
+                    'applicant_id'           => $corporatepayment->applicant_id,
 //                                'status'                  => 1,
-                                'approversetting_id'    => $approversetting_id,
-                            ];
-                            $paymentrequest = Paymentrequest::create($data);
+                    'approversetting_id'    => $approversetting_id,
+                ];
+                $paymentrequest = Paymentrequest::create($data);
 
-                            // auto generate paymentnodeattachments (pdf)
-                            if ($paymentrequest)
-                            {
-                                $str = '<html>';
-                                $str .= '<head>';
-                                $str .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>';
-                                $str .= '</head>';
-                                $str .= '<body>';
+                // auto generate paymentnodeattachments (pdf)
+                if ($paymentrequest)
+                {
+                    $str = '<html>';
+                    $str .= '<head>';
+                    $str .= '<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>';
+                    $str .= '</head>';
+                    $str .= '<body>';
 
-                                $str .= '<h1 style="font-family: DroidSansFallback; text-align:center">供应商付款节点' . '</h1>';
+                    $str .= '<h1 style="font-family: DroidSansFallback; text-align:center">供应商付款节点' . '</h1>';
 
-                                $str .= '<table border="1px" cellpadding="0" cellspacing="0" width="100%"><tbody>';
+                    $str .= '<table border="1px" cellpadding="0" cellspacing="0" width="100%"><tbody>';
 
-                                $str .= '<tr>';
-                                $str .= '<td style="font-family: DroidSansFallback;">申请人</td>';
-                                $str .= '<td style="font-family: DroidSansFallback;">' . $paymentrequest->applicant->name . '</td>';
-                                $str .= '</tr>';
+                    $str .= '<tr>';
+                    $str .= '<td style="font-family: DroidSansFallback;">申请人</td>';
+                    $str .= '<td style="font-family: DroidSansFallback;">' . $paymentrequest->applicant->name . '</td>';
+                    $str .= '</tr>';
 
-                                $str .= '<tr>';
-                                $str .= '<td style="font-family: DroidSansFallback;">申请人部门</td>';
-                                $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->applicant->dept->name) ? $paymentrequest->applicant->dept->name : '') . '</td>';
-                                $str .= '</tr>';
+                    $str .= '<tr>';
+                    $str .= '<td style="font-family: DroidSansFallback;">申请人部门</td>';
+                    $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->applicant->dept->name) ? $paymentrequest->applicant->dept->name : '') . '</td>';
+                    $str .= '</tr>';
 
-//                                $str .= '<tr>';
-//                                $str .= '<td style="font-family: DroidSansFallback;">货到目的类型</td>';
-//                                $str .= '<td style="font-family: DroidSansFallback;">' . '发仓库 - ' . (isset($paymentrequest->purchaseorder_hxold->receiptorders->first()->rwrecord->handler->name) ? $paymentrequest->purchaseorder_hxold->receiptorders->first()->rwrecord->handler->name : '') . '</td>';
-//                                $str .= '</tr>';
+                    $str .= '<tr>';
+                    $str .= '<td style="font-family: DroidSansFallback;">供应商</td>';
+                    $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '') . '</td>';
+                    $str .= '</tr>';
 
-                                $str .= '<tr>';
-                                $str .= '<td style="font-family: DroidSansFallback;">供应商</td>';
-                                $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '') . '</td>';
-                                $str .= '</tr>';
+                    $str .= '<tr>';
+                    $str .= '<td style="font-family: DroidSansFallback;">采购商品名称</td>';
+                    $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '') . '</td>';
+                    $str .= '</tr>';
 
-                                $str .= '<tr>';
-                                $str .= '<td style="font-family: DroidSansFallback;">采购商品名称</td>';
-                                $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '') . '</td>';
-                                $str .= '</tr>';
+                    $str .= '<tr>';
+                    $str .= '<td style="font-family: DroidSansFallback;">对应工程名称</td>';
+                    $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->sohead->descrip) ? $paymentrequest->purchaseorder_hxold->sohead->descrip : '') . '</td>';
+                    $str .= '</tr>';
 
-                                $str .= '<tr>';
-                                $str .= '<td style="font-family: DroidSansFallback;">对应工程名称</td>';
-                                $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->sohead->descrip) ? $paymentrequest->purchaseorder_hxold->sohead->descrip : '') . '</td>';
-                                $str .= '</tr>';
+                    $str .= '<tr>';
+                    $str .= '<td style="font-family: DroidSansFallback;">项目所属销售经理</td>';
+                    $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->sohead->salesmanager) ? $paymentrequest->purchaseorder_hxold->sohead->salesmanager : '') . '</td>';
+                    $str .= '</tr>';
 
-                                $str .= '<tr>';
-                                $str .= '<td style="font-family: DroidSansFallback;">项目所属销售经理</td>';
-                                $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->sohead->salesmanager) ? $paymentrequest->purchaseorder_hxold->sohead->salesmanager : '') . '</td>';
-                                $str .= '</tr>';
+                    $str .= '<tr>';
+                    $str .= '<td style="font-family: DroidSansFallback;">工程类型</td>';
+                    $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->sohead->equipmenttype) ? $paymentrequest->purchaseorder_hxold->sohead->equipmenttype : '') . '</td>';
+                    $str .= '</tr>';
 
-                                $str .= '<tr>';
-                                $str .= '<td style="font-family: DroidSansFallback;">工程类型</td>';
-                                $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->sohead->equipmenttype) ? $paymentrequest->purchaseorder_hxold->sohead->equipmenttype : '') . '</td>';
-                                $str .= '</tr>';
+                    $str .= '<tr>';
+                    $str .= '<td style="font-family: DroidSansFallback;">采购合同</td>';
+                    $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->number) ? $paymentrequest->purchaseorder_hxold->number : '') . '</td>';
+                    $str .= '</tr>';
 
-                                $str .= '<tr>';
-                                $str .= '<td style="font-family: DroidSansFallback;">采购合同</td>';
-                                $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->number) ? $paymentrequest->purchaseorder_hxold->number : '') . '</td>';
-                                $str .= '</tr>';
+                    $str .= '<tr>';
+                    $str .= '<td style="font-family: DroidSansFallback;">到货地</td>';
+                    $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->arrival) ? $paymentrequest->purchaseorder_hxold->arrival : '') . '</td>';
+                    $str .= '</tr>';
 
-                                $str .= '<tr>';
-                                $str .= '<td style="font-family: DroidSansFallback;">到货地</td>';
-                                $str .= '<td style="font-family: DroidSansFallback;">' . (isset($paymentrequest->purchaseorder_hxold->arrival) ? $paymentrequest->purchaseorder_hxold->arrival : '') . '</td>';
-                                $str .= '</tr>';
+                    $str .= '<tr>';
+                    $str .= '<td style="font-family: DroidSansFallback;">对应的付款-对公帐户付款审批单号</td>';
+                    $str .= '<td style="font-family: DroidSansFallback;">' . $corporatepayment->business_id . '</td>';
+                    $str .= '</tr>';
 
-                                $str .= '<tr>';
-                                $str .= '<td style="font-family: DroidSansFallback;">对应的付款-对公帐户付款审批单号</td>';
-                                $str .= '<td style="font-family: DroidSansFallback;">' . $corporatepayment->business_id . '</td>';
-                                $str .= '</tr>';
+                    $str .= '</tbody></table>';
 
-                                $str .= '</tbody></table>';
+                    $str .= '</body>';
+                    $str .= '</html>';
 
-//            $str .= '<p style="font-family: DroidSansFallback;">申请人: ' . $paymentrequest->applicant->name . '</p>';
-//            $str .= '<p style="font-family: DroidSansFallback;">货到目的类型: ' . '</p>';
-//            $str .= '<p style="font-family: DroidSansFallback;">供应商: ' . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '') . '</p>';
-//            $str .= '<p style="font-family: DroidSansFallback;">采购商品名称: ' . (isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '') . '</p>';
-//            $str .= '<p style="font-family: DroidSansFallback;">对应工程名称: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->descrip) ? $paymentrequest->purchaseorder_hxold->sohead->descrip : '') . '</p>';
-//            $str .= '<p style="font-family: DroidSansFallback;">项目所属销售经理: ' . (isset($paymentrequest->purchaseorder_hxold->sohead->salesmanager) ? $paymentrequest->purchaseorder_hxold->sohead->salesmanager : '') . '</p>';
-//            $str .= '<p style="font-family: DroidSansFallback;">工程类型: ' . '</p>';
-//            $str .= '<p style="font-family: DroidSansFallback;">采购合同: ' . (isset($paymentrequest->purchaseorder_hxold->number) ? $paymentrequest->purchaseorder_hxold->number : '') . '</p>';
+                    // instantiate and use the dompdf class
+                    $dompdf = new Dompdf();
+                    // $dompdf->set_option('isFontSubsettingEnabled', true);
+                    $dompdf->loadHtml($str);
 
-                                $str .= '</body>';
-                                $str .= '</html>';
+                    // (Optional) Setup the paper size and orientation
+                    // $dompdf->setPaper('A4', 'landscape');
+                    $dompdf->setPaper('A4');
 
-                                // instantiate and use the dompdf class
-                                $dompdf = new Dompdf();
-                                // $dompdf->set_option('isFontSubsettingEnabled', true);
-                                $dompdf->loadHtml($str);
+                    // Render the HTML as PDF
+                    $dompdf->render();
+                    $destdir = 'uploads/approval/paymentrequest/' . $paymentrequest->id;
+                    if (!is_dir($destdir))
+                        mkdir($destdir);
+                    $dest = $destdir . '/' . date('YmdHis').rand(100, 200) . '.pdf';
+                    file_put_contents($dest, $dompdf->output());
 
-                                // (Optional) Setup the paper size and orientation
-                                // $dompdf->setPaper('A4', 'landscape');
-                                $dompdf->setPaper('A4');
-
-                                // Render the HTML as PDF
-                                $dompdf->render();
-                                $destdir = 'uploads/approval/paymentrequest/' . $paymentrequest->id;
-                                if (!is_dir($destdir))
-                                    mkdir($destdir);
-                                $dest = $destdir . '/' . date('YmdHis').rand(100, 200) . '.pdf';
-                                file_put_contents($dest, $dompdf->output());
-
-                                // Output the generated PDF to Browser
+                    // Output the generated PDF to Browser
 //        $file = $dompdf->stream('供应商到货款节点');
 //        dd($dompdf->output());
 
-                                // add database record
-                                $paymentnodeattachment = new Paymentrequestattachment;
-                                $paymentnodeattachment->paymentrequest_id = $paymentrequest->id;
-                                $paymentnodeattachment->type = "paymentnode";
-                                $paymentnodeattachment->filename = '供应商付款节点(自动生成)';
-                                $paymentnodeattachment->path = "/$dest";     // add a '/' in the head.
-                                $paymentnodeattachment->save();
-                            }
+                    // add database record
+                    $paymentnodeattachment = new Paymentrequestattachment;
+                    $paymentnodeattachment->paymentrequest_id = $paymentrequest->id;
+                    $paymentnodeattachment->type = "paymentnode";
+                    $paymentnodeattachment->filename = '供应商付款节点(自动生成)';
+                    $paymentnodeattachment->path = "/$dest";     // add a '/' in the head.
+                    $paymentnodeattachment->save();
+                }
 
-                            if (isset($paymentrequest))
-                            {
-                                // send dingtalk message.
-                                $touser = $paymentrequest->nextapprover();
-                                if ($touser)
-                                {
-                                    $data = [
-                                        [
-                                            'key' => '申请人:',
-                                            'value' => $paymentrequest->applicant->name,
-                                        ],
-                                        [
-                                            'key' => '付款对象:',
-                                            'value' => isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '',
-                                        ],
-                                        [
-                                            'key' => '金额:',
-                                            'value' => $paymentrequest->amount,
-                                        ],
-                                        [
-                                            'key' => '付款类型:',
-                                            'value' => $paymentrequest->paymenttype,
-                                        ],
-                                        [
-                                            'key' => '对应项目:',
-                                            'value' => isset($paymentrequest->purchaseorder_hxold->sohead->projectjc) ? $paymentrequest->purchaseorder_hxold->sohead->projectjc : '',
-                                        ],
-                                        [
-                                            'key' => '商品:',
-                                            'value' => isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '',
-                                        ],
-                                    ];
+                if (isset($paymentrequest))
+                {
+                    // send dingtalk message.
+                    $touser = $paymentrequest->nextapprover();
+                    if ($touser)
+                    {
+                        $data = [
+                            [
+                                'key' => '申请人:',
+                                'value' => $paymentrequest->applicant->name,
+                            ],
+                            [
+                                'key' => '付款对象:',
+                                'value' => isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : '',
+                            ],
+                            [
+                                'key' => '金额:',
+                                'value' => $paymentrequest->amount,
+                            ],
+                            [
+                                'key' => '付款类型:',
+                                'value' => $paymentrequest->paymenttype,
+                            ],
+                            [
+                                'key' => '对应项目:',
+                                'value' => isset($paymentrequest->purchaseorder_hxold->sohead->projectjc) ? $paymentrequest->purchaseorder_hxold->sohead->projectjc : '',
+                            ],
+                            [
+                                'key' => '商品:',
+                                'value' => isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '',
+                            ],
+                        ];
 
-                                    $msgcontent_data = [
-                                        'message_url' => url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'),
-                                        'pc_message_url' => '',
-                                        'head' => [
-                                            'bgcolor' => 'FFBBBBBB',
-                                            'text' => $paymentrequest->applicant->name . '的供应商付款审批'
-                                        ],
-                                        'body' => [
-                                            'title' => $paymentrequest->applicant->name . '提交的供应商付款审批需要您审批。',
-                                            'form' => $data
-                                        ]
-                                    ];
-                                    $msgcontent = json_encode($msgcontent_data);
+                        $msgcontent_data = [
+                            'message_url' => url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'),
+                            'pc_message_url' => '',
+                            'head' => [
+                                'bgcolor' => 'FFBBBBBB',
+                                'text' => $paymentrequest->applicant->name . '的供应商付款审批'
+                            ],
+                            'body' => [
+                                'title' => $paymentrequest->applicant->name . '提交的供应商付款审批需要您审批。',
+                                'form' => $data
+                            ]
+                        ];
+                        $msgcontent = json_encode($msgcontent_data);
 
-                                    $c = new DingTalkClient;
-                                    $req = new CorpMessageCorpconversationAsyncsendRequest;
+                        $c = new DingTalkClient;
+                        $req = new CorpMessageCorpconversationAsyncsendRequest;
 
-                                    $access_token = '';
-                                    if (isset($paymentrequest->purchaseorder_hxold->purchasecompany_id) && $paymentrequest->purchaseorder_hxold->purchasecompany_id == 3)
-                                    {
-                                        $access_token = DingTalkController::getAccessToken_appkey('approval');
-                                        $req->setAgentId(config('custom.dingtalk.hx_henan.apps.approval.agentid'));
+                        $access_token = '';
+                        if (isset($paymentrequest->purchaseorder_hxold->purchasecompany_id) && $paymentrequest->purchaseorder_hxold->purchasecompany_id == 3)
+                        {
+                            $access_token = DingTalkController::getAccessToken_appkey('approval');
+                            $req->setAgentId(config('custom.dingtalk.hx_henan.apps.approval.agentid'));
 //                    $req->setUseridList('04090710367573');
-                                        $req->setUseridList($touser->dtuserid);
-                                    }
-                                    else
-                                    {
-                                        $access_token = DingTalkController::getAccessToken();
-                                        $req->setAgentId(config('custom.dingtalk.agentidlist.approval'));
-                                        $req->setUseridList($touser->dtuserid);
-                                    }
+                            $req->setUseridList($touser->dtuserid);
+                        }
+                        else
+                        {
+                            $access_token = DingTalkController::getAccessToken();
+                            $req->setAgentId(config('custom.dingtalk.agentidlist.approval'));
+                            $req->setUseridList($touser->dtuserid);
+                        }
 
-                                    $req->setMsgtype("oa");
+                        $req->setMsgtype("oa");
 //                $req->setDeptIdList("");
-                                    $req->setToAllUser("false");
-                                    $req->setMsgcontent("$msgcontent");
-                                    $resp = $c->execute($req, $access_token);
-                                    Log::info(json_encode($resp));
-                                    if ($resp->code != "0")
-                                    {
-                                        Log::info($resp->msg . ": " . $resp->sub_msg);
-                                    }
-                                }
+                        $req->setToAllUser("false");
+                        $req->setMsgcontent("$msgcontent");
+                        $resp = $c->execute($req, $access_token);
+                        Log::info(json_encode($resp));
+                        if ($resp->code != "0")
+                        {
+                            Log::info($resp->msg . ": " . $resp->sub_msg);
+                        }
+                    }
 
 //                                // 拷贝“技术规范书”到对应的ERP目录下
 //                                if (isset($techpurchaseattachment_techspecification))
@@ -619,9 +604,6 @@ class CorporatepaymentController extends Controller
 //                                    $dest = iconv("UTF-8","GBK//IGNORE", $dir . $techpurchaseattachment_techspecification->filename);
 //                                    copy(public_path($techpurchaseattachment_techspecification->path), $dest);
 //                                }
-                            }
-                        }
-                    }
                 }
 
             }

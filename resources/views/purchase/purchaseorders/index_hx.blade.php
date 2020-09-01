@@ -56,8 +56,8 @@
                 <th>到货比例</th>
                 <th>采购商品</th>
                 <th>对应销售订单</th>
+                <th>已付金额</th>
                 @can('purchase_purchaseorder_viewamount')
-                    <th>已付金额</th>
                     <th>财务到票金额</th>
                     <th>总到票</th>
                 @endcan
@@ -109,13 +109,26 @@
                     <td @if (isset($purchaseorder->sohead)) title="{{ $purchaseorder->sohead->number . '|' . $purchaseorder->sohead->descrip }}" @else @endif>
                         @if (isset($purchaseorder->sohead)) {{ str_limit($purchaseorder->sohead->number . '|' . $purchaseorder->sohead->descrip, 30) }} @else - @endif
                     </td>
-                    @can('purchase_purchaseorder_viewamount')
-                        <td>
+                    <td>
+                        @can('purchase_purchaseorder_viewamount')
                             {{ $purchaseorder->payments->sum('amount') }} {{ '(' }}
                             @if ($purchaseorder->amount > 0.0)  {{ $purchaseorder->payments->sum('amount') / $purchaseorder->amount * 100 }}%
                             @else -
                             @endif {{ ')' }}
-                        </td>
+                        @else
+                            {{-- 当 对公付款审批 的类型是“安装合同安装费付款”，且采购商品名称是“钢结构安装”，开放已付金额百分比给发起人 --}}
+                            @if (strpos($purchaseorder->productname, '钢结构安装') >= 0)
+                                @if ($purchaseorder->corporatepayments()->where('amounttype', '安装合同安装费付款')->where('status', '>=', 0)->where('applicant_id', Auth::user()->id)->count())
+                                    <td>
+                                        @if ($purchaseorder->amount > 0.0)  {{ $purchaseorder->payments->sum('amount') / $purchaseorder->amount * 100 }}%
+                                        @else -
+                                        @endif
+                                    </td>
+                                @endif
+                            @endif
+                        @endcan
+                    </td>
+                    @can('purchase_purchaseorder_viewamount')
                         <td>
                             {{ $purchaseorder->amount_ticketed }} {{ '(' }}
                             @if ($purchaseorder->amount > 0.0)  {{ $purchaseorder->amount_ticketed / $purchaseorder->amount * 100 }}%
