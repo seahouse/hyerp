@@ -116,6 +116,7 @@
                             @else -
                             @endif {{ ')' }}
                         @else
+                            {{ '-(' }}
                             {{-- 当 对公付款审批 的类型是“安装合同安装费付款”，且采购商品名称是“钢结构安装”，开放已付金额百分比给发起人 --}}
                             @if (strpos($purchaseorder->productname, '钢结构安装') >= 0)
                                 @if ($purchaseorder->corporatepayments()->where('amounttype', '安装合同安装费付款')->where('status', '>=', 0)->where('applicant_id', Auth::user()->id)->count())
@@ -124,6 +125,7 @@
                                     @endif
                                 @endif
                             @endif
+                            {{ ')' }}
                         @endcan
                     </td>
                     @can('purchase_purchaseorder_viewamount')
