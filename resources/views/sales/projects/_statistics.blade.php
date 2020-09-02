@@ -73,7 +73,7 @@
 				<a href="{{ URL::to('/sales/projects/'.$project->id.'/nowarehousedetailbyproject/') }}" class="btn btn-default btn-sm" target="_blank">无入库明细</a></p>
 			<p>无入库记录物品税额：{{number_format(( $nowarehousetaxcost) / 10000.0, 4)}}万</p>
 			@if ($totalamount > 0.0)
-				<p>出库类成本比例：{{number_format(($warehousecost  + $nowarehousecost + $sohead_taxamount + $nowarehouseamountby7550 + $inventoryamount - $nowarehousetaxcost - $warehousetaxcost-$nowarehousetaxamountby7550) / ($totalamount * 10000.0) * 100.0, 2)}}%</p>
+				<p>出库类成本比例：{{number_format(($warehousecost  + $nowarehousecost + $sohead_taxamount  - $nowarehousetaxcost - $warehousetaxcost) / ($totalamount * 10000.0) * 100.0, 2)}}%</p>
 			@else
 				<p>出库类成本比例：-</p>
 			@endif
