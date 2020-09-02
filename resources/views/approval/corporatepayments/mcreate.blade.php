@@ -273,18 +273,6 @@
     </div>
 </div>
 
-	{{-- upload and parse excel file form --}}
-{{--
-	<form id="formUploadParseExcel" method="post" action="{{ url('approval/mcitempurchase/uploadparseexcel') }}"  class="form-horizontal" enctype="multipart/form-data">
-		<div class="form-group">
-			{!! Form::label('items_excelfile', '解析明细模板文件:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-			<div class='col-xs-8 col-sm-10'>
-				{!! Form::file('items_excelfile', []) !!}
-				{!! Form::button('解析Excel', ['class' => 'btn btn-sm', 'id' => 'btnParseExcel']) !!}
-			</div>
-		</div>
-	</form>
---}}
 
 @endsection
 
@@ -833,11 +821,13 @@
                 {
                     $("#divPohead_number").attr("style", "display:none;");
                     $("#divAssociatedapprovals").attr("style", "display:block;");
+                    $("#divAmountpercent").attr("style", "display:none;");
                 }
                 else
                 {
                     $("#divPohead_number").attr("style", "display:block;");
                     $("#divAssociatedapprovals").attr("style", "display:none;");
+                    $("#divAmountpercent").attr("style", "display:block;");
                 }
             }
 
@@ -859,7 +849,7 @@
 			dd.config({
 			    agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID
 			    corpId: '{!! array_get($config, 'corpId') !!}',//必填，企业ID
-			    timeStamp: {!! array_get($config, 'timeStamp') !!}, // 必填，生成签名的时间戳
+			    timeStamp: '{!! array_get($config, 'timeStamp') !!}', // 必填，生成签名的时间戳
 			    nonceStr: '{!! array_get($config, 'nonceStr') !!}', // 必填，生成签名的随机串
 			    signature: '{!! array_get($config, 'signature') !!}', // 必填，签名
 			    jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile', 'biz.util.uploadAttachment', 'biz.cspace.preview'] // 必填，需要使用的jsapi列表

@@ -401,13 +401,23 @@ class CorporatepaymentController extends Controller
                 else
                     $approversetting_id = -1;
 
+                // 金额
+                $amount = $corporatepayment->amount;
+                if ($corporatepayment->amounttype == '安装合同安装费付款')
+                {
+                    $pohead = $corporatepayment->pohead;
+                    if (isset($pohead))
+                        $amount = $pohead->amount;
+                }
+
+
                 $data = [
                     'suppliertype'          => $corporatepayment->suppliertype,
                     'paymenttype'            => $corporatepayment->paymenttype,
                     'supplier_id'            => $corporatepayment->supplier_id,
                     'pohead_id'              => isset($projectsitepurchase->pohead_hxold) ? $projectsitepurchase->pohead_hxold->id : $corporatepayment->pohead_id,
                     'descrip'                => '由工程部发起的付款-对公帐户付款通过后自动创建，对应的审批单号为：' . $corporatepayment->business_id,
-                    'amount'                  => $corporatepayment->amount,
+                    'amount'                  => $amount,
                     'paymentmethod'         => $corporatepayment->paymentmethod,
                     'datepay'                => $corporatepayment->paydate,
                     'vendbank_id'            => $corporatepayment->vendbank_id,

@@ -3726,6 +3726,10 @@ class ApprovalController extends Controller
                 'value'     => $inputs['remark'],
             ],
             [
+                'name'      => '付款比例',
+                'value'     => $inputs['amountpercent'],
+            ],
+            [
                 'name'      => '付款总额',
                 'value'     => $inputs['amount'],
             ],
