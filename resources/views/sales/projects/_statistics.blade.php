@@ -32,9 +32,6 @@
 				<?php $warehousetaxcost +=array_first($sohead->getwarehousetaxCost())->warehousetaxcost;?>
 				<?php $nowarehousecost +=array_first($sohead->getnowarehouseCost())->nowarehousecost;?>
 				<?php $nowarehousetaxcost +=array_first($sohead->getnowarehousetaxCost())->nowarehousetaxcost;?>
-				<?php $nowarehouseamountby7550 +=array_first($sohead->getnowarehouseamountby7550())->nowarehouseamountby7550;?>
-				<?php $nowarehousetaxamountby7550 +=array_first($sohead->getnowarehousetaxamountby7550())->nowarehousetaxamountby7550;?>
-				<?php $inventoryamount +=array_first($sohead->getinventorybyorder())->inventoryamount;?>
 				<?php $warehouseqty +=array_first($sohead->getwarehouseqty())->warehouseqty;?>
 				<?php $drawingqty +=$sohead->Issuedrawings->sum('tonnage');?>
 		@endforeach
