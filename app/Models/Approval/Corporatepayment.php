@@ -2,6 +2,7 @@
 
 namespace App\Models\Approval;
 
+use App\Models\Purchase\Purchaseorder_hx;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -19,6 +20,7 @@ class Corporatepayment extends Model
         'sohead_id',
         'pohead_id',
         'remark',
+        'amountpercent',
         'amount',
         'paydate',
         'paymentmethod',
@@ -31,4 +33,8 @@ class Corporatepayment extends Model
         'process_instance_id',
         'business_id',
     ];
+
+    public function sohead() {
+        $this->belongsTo(Purchaseorder_hx::class);
+    }
 }

@@ -114,8 +114,14 @@
             </div>
         </div>
 
-        {{--{!! Form::hidden('items_string', null, ['id' => 'items_string']) !!}--}}
-        {{--{!! Form::hidden('items_string2', null, ['id' => 'items_string2']) !!}--}}
+        <div id="divAmountpercent">
+            <div class="form-group">
+                {!! Form::label('amountpercent', '付款比例（%）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::text('amountpercent', null, ['class' => 'form-control', 'placeholder' => '请输入', $attr]) !!}
+                </div>
+            </div>
+        </div>
 
         <div class="form-group">
             {!! Form::label('amount', '付款总额（元）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}

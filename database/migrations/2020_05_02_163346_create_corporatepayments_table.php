@@ -22,6 +22,7 @@ class CreateCorporatepaymentsTable extends Migration
             $table->integer('sohead_id')->nullable();
             $table->integer('pohead_id')->nullable();
             $table->string('remark')->nullable();
+            $table->decimal('amountpercent')->default(0.0);
             $table->decimal('amount')->default(0.0);
             $table->date('paydate');
             $table->string('paymentmethod');
