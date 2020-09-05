@@ -123,13 +123,14 @@
             </div>
         </div>
 
-        <div class="form-group">
-            {!! Form::label('amount', '付款总额（元）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
-            <div class='col-xs-8 col-sm-10'>
-                {!! Form::text('amount', null, ['class' => 'form-control', 'placeholder' => '请输入', $attr]) !!}
+        <div id="divAmount">
+            <div class="form-group">
+                {!! Form::label('amount', '付款总额（元）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::text('amount', null, ['class' => 'form-control', 'placeholder' => '请输入', $attr]) !!}
+                </div>
             </div>
         </div>
-
 
         <div class="form-group">
             {!! Form::label('paymentmethod', '付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}

@@ -12,6 +12,8 @@ use App\Models\Approval\Corporatepaymentattachment;
 use App\Models\Approval\Paymentrequest;
 use App\Models\Approval\Paymentrequestattachment;
 use App\Models\Approval\Projectsitepurchase;
+use App\Models\Purchase\Purchaseorder_hxold;
+use App\Models\Sales\Salesorder_hxold;
 use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 
@@ -98,15 +100,27 @@ class CorporatepaymentController extends Controller
 //        dd($input);
 //        $input = HelperController::skipEmptyValue($input);
 
+        if (!$request->has('sohead_id') || ($request->has('sohead_id') && $request->input('sohead_id') <= 0))
+        {
+            if ($request->has('sohead_number') && strlen($request->input('sohead_number')))
+            {
+                $sohead = Salesorder_hxold::where('number', $request->input('sohead_number'))->first();
+                if (isset($sohead))
+                    $inputs['sohead_id'] = $sohead->id;
+            }
+        }
+
+        if (!$request->has('pohead_id') || ($request->has('pohead_id') && $request->input('pohead_id') <= 0))
+        {
+            if ($request->has('pohead_number') && strlen($request->input('pohead_number')))
+            {
+                $pohead = Purchaseorder_hxold::where('number', $request->input('pohead_number'))->first();
+                if (isset($pohead))
+                    $inputs['pohead_id'] = $pohead->id;
+            }
+        }
 
         $inputs['applicant_id'] = Auth::user()->id;
-
-//        $inputs['sohead_salesmanager'] = '';
-//        $projectsitepurchase = Projectsitepurchase::where('process_instance_id', $inputs['associated_approval_projectpurchase'])->first();
-//        if (isset($projectsitepurchase))
-//        {
-//            $inputs['sohead_salesmanager'] = $projectsitepurchase->sohead_hxold->salesmanager;
-//        }
 
         $inputs['associated_approval_projectpurchase'] = strlen($inputs['associated_approval_projectpurchase']) > 0 ? json_encode(array($inputs['associated_approval_projectpurchase'])) : "";
 //        dd($inputs['associated_approval_projectpurchase']);

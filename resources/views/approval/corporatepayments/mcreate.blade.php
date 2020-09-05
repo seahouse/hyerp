@@ -497,7 +497,7 @@
                             var strhtml = '';
                             $.each(result.data, function(i, field) {
                                 btnId = 'btnSelectPohead_' + String(i);
-                                strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.number + "</h4><p>" + field.descrip + "</p></button>"
+                                strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.number + "</h4><p>" + field.sohead_descrip + "</p></button>"
                             });
                             if (strhtml == '')
                                 strhtml = '无记录。';
@@ -822,12 +822,14 @@
                     $("#divPohead_number").attr("style", "display:none;");
                     $("#divAssociatedapprovals").attr("style", "display:block;");
                     $("#divAmountpercent").attr("style", "display:none;");
+                    $("#divAmount").attr("style", "display:block;");
                 }
                 else
                 {
                     $("#divPohead_number").attr("style", "display:block;");
                     $("#divAssociatedapprovals").attr("style", "display:none;");
                     $("#divAmountpercent").attr("style", "display:block;");
+                    $("#divAmount").attr("style", "display:none;");
                 }
             }
 
