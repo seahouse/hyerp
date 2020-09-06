@@ -31,7 +31,7 @@ class CorporatepaymentController extends Controller
     public function index()
     {
         //
-        $this->updateStatusByProcessInstanceId('56d181f9-d9bd-42f3-8385-dfa4b1c061de', 0);
+//        $this->updateStatusByProcessInstanceId('56d181f9-d9bd-42f3-8385-dfa4b1c061de', 0);
     }
 
     /**
@@ -422,9 +422,8 @@ class CorporatepaymentController extends Controller
                 {
                     $pohead = $corporatepayment->pohead;
                     if (isset($pohead))
-                        $amount = $pohead->amount;
+                        $amount = $pohead->amount * $corporatepayment->amountpercent / 100;
                 }
-
 
                 $data = [
                     'suppliertype'          => $corporatepayment->suppliertype,
