@@ -552,6 +552,10 @@
                     $('#selectPoheadModal').modal('toggle');
                     $("#pohead_number").val(field.number);
                     $("#pohead_id").val(field.id);
+                    var paidpercent = 0;
+                    if (field.amount > 0)
+                        paidpercent = field.amount_paid / field.amount * 100.0;
+                    $("#paidpercent").val(paidpercent);
                 });
             }
 
@@ -821,6 +825,7 @@
                 {
                     $("#divPohead_number").attr("style", "display:none;");
                     $("#divAssociatedapprovals").attr("style", "display:block;");
+                    $("#divPaidpercent").attr("style", "display:none;");
                     $("#divAmountpercent").attr("style", "display:none;");
                     $("#divAmount").attr("style", "display:block;");
                 }
@@ -828,23 +833,9 @@
                 {
                     $("#divPohead_number").attr("style", "display:block;");
                     $("#divAssociatedapprovals").attr("style", "display:none;");
+                    $("#divPaidpercent").attr("style", "display:block;");
                     $("#divAmountpercent").attr("style", "display:block;");
                     $("#divAmount").attr("style", "display:none;");
-                }
-            }
-
-            selectPurchasetypeChange = function () {
-                var purchasetype = $("#purchasetype").val();
-                if (purchasetype == "EP项目安装队相关费用")
-                {
-                    $("#divEpamountreason").attr("style", "display:block;");
-                    $("#divPurchasereason").attr("style", "display:none;");
-                }
-                else
-                {
-                    $("#divEpamountreason").attr("style", "display:none;");
-                    $("#epamountreason").val("6、不涉及EP项目安装队费用");
-                    $("#divPurchasereason").attr("style", "display:block;");
                 }
             }
 
@@ -856,8 +847,6 @@
 			    signature: '{!! array_get($config, 'signature') !!}', // 必填，签名
 			    jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile', 'biz.util.uploadAttachment', 'biz.cspace.preview'] // 必填，需要使用的jsapi列表
 			});
-
-
 
 			dd.ready(function() {
 				$("#btnSelectImage").click(function() {

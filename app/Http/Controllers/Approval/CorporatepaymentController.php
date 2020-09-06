@@ -19,7 +19,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Auth, Log;
+use Auth, Log, Storage;
 
 class CorporatepaymentController extends Controller
 {
@@ -120,6 +120,8 @@ class CorporatepaymentController extends Controller
             }
         }
 
+        if (!$request->has('amount')) $inputs['amount'] = 0;
+
         $inputs['applicant_id'] = Auth::user()->id;
 
         $inputs['associated_approval_projectpurchase'] = strlen($inputs['associated_approval_projectpurchase']) > 0 ? json_encode(array($inputs['associated_approval_projectpurchase'])) : "";
@@ -164,7 +166,7 @@ class CorporatepaymentController extends Controller
 
                         // add database record
                         $corporatepaymentattachment = new Corporatepaymentattachment();
-                        $corporatepaymentattachment->projectsitepurchase_id = $corporatepayment->id;
+                        $corporatepaymentattachment->corporatepayment_id = $corporatepayment->id;
                         $corporatepaymentattachment->type = "file";
                         $corporatepaymentattachment->filename = $originalName;
                         $corporatepaymentattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
@@ -183,92 +185,91 @@ class CorporatepaymentController extends Controller
             }
         }
 
-//        $image_urls = [];
-//        // create images in the desktop
-//        if ($corporatepayment)
-//        {
-//            $files = array_get($inputs,'images');
-//            $destinationPath = 'uploads/approval/projectsitepurchase/' . $corporatepayment->id . '/images/';
-//            if ($files)
-//            {
-//                foreach ($files as $key => $file) {
-//                    if ($file)
-//                    {
-//                        $originalName = $file->getClientOriginalName();
-//                        $extension = $file->getClientOriginalExtension();       // .xlsx
-//                        $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
-//                        Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
-//
-//                        $extension = $file->getClientOriginalExtension();
-//                        $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
-//                        // $fileName = rand(11111, 99999) . '.' . $extension;
-//                        $upload_success = $file->move($destinationPath, $filename);
-//
-//                        // add database record
-//                        $projectsitepurchaseattachment = new Projectsitepurchaseattachment();
-//                        $projectsitepurchaseattachment->projectsitepurchase_id = $corporatepayment->id;
-//                        $projectsitepurchaseattachment->type = "image";
-//                        $projectsitepurchaseattachment->filename = $originalName;
-//                        $projectsitepurchaseattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
-//                        $projectsitepurchaseattachment->save();
-//
-//                        array_push($image_urls, url($destinationPath . $filename));
-//                    }
-//                }
-//            }
-//        }
+        $image_urls = [];
+        // create images in the desktop
+        if ($corporatepayment)
+        {
+            $files = array_get($inputs,'images');
+            $destinationPath = 'uploads/approval/corporatepayment/' . $corporatepayment->id . '/images/';
+            if ($files)
+            {
+                foreach ($files as $key => $file) {
+                    if ($file)
+                    {
+                        $originalName = $file->getClientOriginalName();
+                        $extension = $file->getClientOriginalExtension();       // .xlsx
+                        $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                        Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
 
-//        // create images from dingtalk mobile
-//        if ($corporatepayment)
-//        {
-//            $images = array_where($inputs, function($key, $value) {
-//                if (substr_compare($key, 'image_', 0, 6) == 0)
-//                    return $value;
-//            });
-//
-//            $destinationPath = 'uploads/approval/projectsitepurchase/' . $corporatepayment->id . '/images/';
-//            foreach ($images as $key => $value) {
-//                # code...
-//
-//                // save image file.
-//                $sExtension = substr($value, strrpos($value, '.') + 1);
-//                // $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
-//                // Storage::disk('local')->put($sFilename, file_get_contents($value));
-//                // Storage::move($sFilename, '../abcd.jpg');
-//                $dir = 'images/approval/projectsitepurchase/' . $corporatepayment->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
-//                $parts = explode('/', $dir);
-//                $filename = array_pop($parts);
-//                $dir = '';
-//                foreach ($parts as $part) {
-//                    # code...
-//                    $dir .= "$part/";
-//                    if (!is_dir($dir)) {
-//                        mkdir($dir);
-//                    }
-//                }
-//
-////                $originalName = $file->getClientOriginalName();
-//                Storage::put($destinationPath . $filename, file_get_contents($value));
-//
-//                file_put_contents("$dir/$filename", file_get_contents($value));
-//
-//
-//                // add image record
-//                $projectsitepurchaseattachment = new Projectsitepurchaseattachment;
-//                $projectsitepurchaseattachment->projectsitepurchase_id = $corporatepayment->id;
-//                $projectsitepurchaseattachment->type = "image";     // add a '/' in the head.
-//                $projectsitepurchaseattachment->path = "/$dir$filename";     // add a '/' in the head.
-//                $projectsitepurchaseattachment->save();
-//
-//                array_push($image_urls, $value);
-//            }
-//        }
-//        dd($corporatepayment);
+                        $extension = $file->getClientOriginalExtension();
+                        $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                        // $fileName = rand(11111, 99999) . '.' . $extension;
+                        $upload_success = $file->move($destinationPath, $filename);
+
+                        // add database record
+                        $corporatepaymentattachment = new Corporatepaymentattachment();
+                        $corporatepaymentattachment->corporatepayment_id = $corporatepayment->id;
+                        $corporatepaymentattachment->type = "image";
+                        $corporatepaymentattachment->filename = $originalName;
+                        $corporatepaymentattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
+                        $corporatepaymentattachment->save();
+
+                        array_push($image_urls, url($destinationPath . $filename));
+                    }
+                }
+            }
+        }
+
+        // create images from dingtalk mobile
+        if ($corporatepayment)
+        {
+            $images = array_where($inputs, function($key, $value) {
+                if (substr_compare($key, 'image_', 0, 6) == 0)
+                    return $value;
+            });
+
+            $destinationPath = 'uploads/approval/corporatepayment/' . $corporatepayment->id . '/images/';
+            foreach ($images as $key => $value) {
+                # code...
+
+                // save image file.
+                $sExtension = substr($value, strrpos($value, '.') + 1);
+                // $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                // Storage::disk('local')->put($sFilename, file_get_contents($value));
+                // Storage::move($sFilename, '../abcd.jpg');
+                $dir = 'images/approval/corporatepayment/' . $corporatepayment->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                $parts = explode('/', $dir);
+                $filename = array_pop($parts);
+                $dir = '';
+                foreach ($parts as $part) {
+                    # code...
+                    $dir .= "$part/";
+                    if (!is_dir($dir)) {
+                        mkdir($dir);
+                    }
+                }
+
+//                $originalName = $file->getClientOriginalName();
+                Storage::put($destinationPath . $filename, file_get_contents($value));
+
+                file_put_contents("$dir/$filename", file_get_contents($value));
+
+
+                // add image record
+                $corporatepaymentattachment = new Corporatepaymentattachment;
+                $corporatepaymentattachment->corporatepayment_id = $corporatepayment->id;
+                $corporatepaymentattachment->type = "image";     // add a '/' in the head.
+                $corporatepaymentattachment->path = "/$dir$filename";     // add a '/' in the head.
+                $corporatepaymentattachment->save();
+
+                array_push($image_urls, $value);
+            }
+        }
 
         if (isset($corporatepayment))
         {
 //            $inputs['totalprice'] = $corporatepayment->projectsitepurchaseitems->sum('price') + $inputs['freight'];
-//            $inputs['image_urls'] = json_encode($image_urls);
+            $inputs['image_urls'] = json_encode($image_urls);
 //            $inputs['approvers'] = $corporatepayment->approvers();
             $response = ApprovalController::corporatepayment($inputs);
 //            Log::info($response);

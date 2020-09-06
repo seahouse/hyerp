@@ -3726,6 +3726,10 @@ class ApprovalController extends Controller
                 'value'     => $inputs['remark'],
             ],
             [
+                'name'      => '已付比例',
+                'value'     => $inputs['paidpercent'],
+            ],
+            [
                 'name'      => '付款比例',
                 'value'     => $inputs['amountpercent'],
             ],
@@ -3769,18 +3773,10 @@ class ApprovalController extends Controller
 //                'name'      => '联系人',
 //                'value'     => $inputs['contact'],
 //            ],
-//            [
-//                'name'      => '联系方式',
-//                'value'     => $inputs['phonenumber'],
-//            ],
-//            [
-//                'name'      => '备注',
-//                'value'     => $inputs['otherremark'],
-//            ],
-//            [
-//                'name'      => '上传购买凭证',
-//                'value'     => $inputs['image_urls'],
-//            ],
+            [
+                'name'      => '图片',
+                'value'     => $inputs['image_urls'],
+            ],
             [
                 'name'      => '附件',
                 'value'     => $inputs['files_string'],

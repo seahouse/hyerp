@@ -20,6 +20,7 @@ class Corporatepayment extends Model
         'sohead_id',
         'pohead_id',
         'remark',
+        'paidpercent',
         'amountpercent',
         'amount',
         'paydate',

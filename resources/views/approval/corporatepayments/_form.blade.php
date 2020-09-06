@@ -114,6 +114,15 @@
             </div>
         </div>
 
+        <div id="divPaidpercent">
+            <div class="form-group">
+                {!! Form::label('paidpercent', '已付比例（%）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::text('paidpercent', null, ['class' => 'form-control', 'placeholder' => '请输入', 'readonly', $attr]) !!}
+                </div>
+            </div>
+        </div>
+
         <div id="divAmountpercent">
             <div class="form-group">
                 {!! Form::label('amountpercent', '付款比例（%）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
@@ -175,6 +184,33 @@
         </div>
 
         <div class="form-group">
+            {!! Form::label('images', '图片:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+
+            <div class='col-xs-8 col-sm-10'>
+                <div class="row" id="previewimage">
+                </div>
+                @if (isset($projectsitepurchase))
+                    <div class="row" id="previewimage2">
+                        @foreach ($projectsitepurchase->projectsitepurchaseattachments() as $projectsitepurchaseattachment)
+                            <div class="col-xs-6 col-md-3">
+                                <div class="thumbnail">
+                                    <img src="{!! $projectsitepurchaseattachment->path !!}" />
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    @if (Agent::isDesktop())
+                        {!! Form::file('images[]', ['multiple']) !!}
+                    @else
+                        {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
+                        {!! Form::hidden('imagesname_mobile', null, ['class' => 'btn btn-sm']) !!}
+                    @endif
+                @endif
+            </div>
+        </div>
+
+        <div class="form-group">
             {!! Form::label('files', '附件:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
             <div class='col-xs-8 col-sm-10'>
@@ -206,34 +242,6 @@
         </div>
 
 
-
-    {{--<div class="form-group">--}}
-        {{--{!! Form::label('images', '上传购买凭证:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
-
-        {{--<div class='col-xs-8 col-sm-10'>--}}
-            {{--<div class="row" id="previewimage">--}}
-            {{--</div>--}}
-            {{--@if (isset($projectsitepurchase))--}}
-                {{--<div class="row" id="previewimage2">--}}
-                    {{--@foreach ($projectsitepurchase->projectsitepurchaseattachments() as $projectsitepurchaseattachment)--}}
-                        {{--<div class="col-xs-6 col-md-3">--}}
-                            {{--<div class="thumbnail">--}}
-                                {{--<img src="{!! $projectsitepurchaseattachment->path !!}" />--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-                    {{--@endforeach--}}
-                {{--</div>--}}
-            {{--@else--}}
-                {{--@if (Agent::isDesktop())--}}
-                    {{--{!! Form::file('images[]', ['multiple']) !!}--}}
-                {{--@else--}}
-                    {{--{!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}--}}
-                    {{--{!! Form::hidden('imagesname_mobile', null, ['class' => 'btn btn-sm']) !!}--}}
-                {{--@endif--}}
-            {{--@endif--}}
-
-        {{--</div>--}}
-    {{--</div>--}}
 
 
 {!! Form::hidden('applicant_id', null, ['class' => 'btn btn-sm']) !!}
