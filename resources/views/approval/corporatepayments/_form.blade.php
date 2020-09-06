@@ -125,7 +125,7 @@
 
         <div id="divAmountpercent">
             <div class="form-group">
-                {!! Form::label('amountpercent', '付款比例（%）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+                {!! Form::label('amountpercent', '本次付款比例（%）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
                 <div class='col-xs-8 col-sm-10'>
                     {!! Form::text('amountpercent', null, ['class' => 'form-control', 'placeholder' => '请输入', $attr]) !!}
                 </div>

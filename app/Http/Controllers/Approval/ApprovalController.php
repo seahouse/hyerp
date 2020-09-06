@@ -3730,7 +3730,7 @@ class ApprovalController extends Controller
                 'value'     => $inputs['paidpercent'],
             ],
             [
-                'name'      => '付款比例',
+                'name'      => '本次付款比例',
                 'value'     => $inputs['amountpercent'],
             ],
             [
