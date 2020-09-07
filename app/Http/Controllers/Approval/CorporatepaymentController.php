@@ -6,6 +6,7 @@ use App\Http\Controllers\DingTalkController;
 use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\CorpMessageCorpconversationAsyncsendRequest;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiProcessinstanceCspaceInfoRequest;
+use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiProcessinstanceGetRequest;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Corporatepayment;
 use App\Models\Approval\Corporatepaymentattachment;
@@ -31,6 +32,24 @@ class CorporatepaymentController extends Controller
     public function index()
     {
         //
+        $client = new DingTalkClient();
+        $req = new OapiProcessinstanceGetRequest();
+        $req->setProcessInstanceId('f808e9fb-0197-44ba-b12b-32d2a5ae2875');
+        $accessToken = DingTalkController::getAccessToken();
+        $response = $client->execute($req, $accessToken);
+        $response = json_decode(json_encode($response, JSON_UNESCAPED_UNICODE));
+//        dd($response->errcode);
+        $operation_records = $response->process_instance->operation_records->operation_records_vo;
+//        dd($operation_records);
+        foreach ($operation_records as $operation_record)
+        {
+            if ($operation_record->operation_type == 'ADD_REMARK')
+            {
+                dd($operation_record->remark);
+            }
+        }
+        dd($response->process_instance->operation_records);
+        dd(json_encode($response, JSON_UNESCAPED_UNICODE));
 //        $this->updateStatusByProcessInstanceId('56d181f9-d9bd-42f3-8385-dfa4b1c061de', 0);
     }
 
@@ -121,6 +140,7 @@ class CorporatepaymentController extends Controller
         }
 
         if (!$request->has('amount')) $inputs['amount'] = 0;
+        if (!$request->has('paidpercent')) $inputs['paidpercent'] = 0;
 
         $inputs['applicant_id'] = Auth::user()->id;
 
