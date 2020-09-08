@@ -15,6 +15,7 @@ use App\Models\Approval\Paymentrequestattachment;
 use App\Models\Approval\Projectsitepurchase;
 use App\Models\Purchase\Purchaseorder_hxold;
 use App\Models\Sales\Salesorder_hxold;
+use App\Models\System\Dtuser;
 use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 
@@ -41,11 +42,12 @@ class CorporatepaymentController extends Controller
 //        dd($response->errcode);
         $operation_records = $response->process_instance->operation_records->operation_records_vo;
 //        dd($operation_records);
+        $dtuser_whl = Dtuser::where('user_id', 2)->first();
         foreach ($operation_records as $operation_record)
         {
             if ($operation_record->operation_type == 'ADD_REMARK')
             {
-                dd($operation_record->remark);
+                dd($operation_record);
             }
         }
         dd($response->process_instance->operation_records);
@@ -447,12 +449,35 @@ class CorporatepaymentController extends Controller
                         $amount = $pohead->amount * $corporatepayment->amountpercent / 100;
                 }
 
+                // 备注
+                $remark = '';
+                $client = new DingTalkClient();
+                $req = new OapiProcessinstanceGetRequest();
+                $req->setProcessInstanceId($processInstanceId);
+                $accessToken = DingTalkController::getAccessToken();
+                $response = $client->execute($req, $accessToken);
+                $response = json_decode(json_encode($response, JSON_UNESCAPED_UNICODE));
+                $operation_records = $response->process_instance->operation_records->operation_records_vo;
+                $dtuser_whl = Dtuser::where('user_id', 2)->first();
+                if (isset($dtuser_whl))
+                {
+                    foreach ($operation_records as $operation_record)
+                    {
+                        if ($operation_record->operation_type == 'ADD_REMARK' && $operation_record->userid == $dtuser_whl->userid)
+                        {
+                            $remark = $operation_record->remark;
+                        }
+                    }
+                }
+
+
                 $data = [
                     'suppliertype'          => $corporatepayment->suppliertype,
                     'paymenttype'            => $corporatepayment->paymenttype,
                     'supplier_id'            => $corporatepayment->supplier_id,
                     'pohead_id'              => isset($projectsitepurchase->pohead_hxold) ? $projectsitepurchase->pohead_hxold->id : $corporatepayment->pohead_id,
-                    'descrip'                => '由工程部发起的付款-对公帐户付款通过后自动创建，对应的审批单号为：' . $corporatepayment->business_id,
+//                    'descrip'                => '由工程部发起的付款-对公帐户付款通过后自动创建，对应的审批单号为：' . $corporatepayment->business_id,
+                    'descrip'                => $remark,
                     'amount'                  => $amount,
                     'paymentmethod'         => $corporatepayment->paymentmethod,
                     'datepay'                => $corporatepayment->paydate,
@@ -460,6 +485,8 @@ class CorporatepaymentController extends Controller
                     'applicant_id'           => $corporatepayment->applicant_id,
 //                                'status'                  => 1,
                     'approversetting_id'    => $approversetting_id,
+                    'associated_approval_type'  => 'corporatepayment',
+                    'associated_process_instance_id'  => $processInstanceId,
                 ];
                 $paymentrequest = Paymentrequest::create($data);
 

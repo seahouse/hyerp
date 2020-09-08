@@ -32,6 +32,8 @@ class Paymentrequest extends Model
         'applicant_id',
 		'status',
 		'approversetting_id',
+        'associated_approval_type',
+        'associated_process_instance_id',
     ];
 
 
@@ -81,6 +83,17 @@ class Paymentrequest extends Model
 
     public function paymentrequestretract() {
         return $this->hasOne('\App\Models\Approval\Paymentrequestretract', 'paymentrequest_id', 'id');
+    }
+
+    public function associated_business_id() {
+        $business_id = '';
+        if ($this::getAttribute('associated_approval_type') == 'corporatepayment')
+        {
+            $item = Corporatepayment::where('process_instance_id', $this::getAttribute('associated_process_instance_id'))->first();
+            if (isset($item))
+                $business_id = $item->business_id;
+        }
+        return $business_id;
     }
 	
 	public function nextapprover() {
