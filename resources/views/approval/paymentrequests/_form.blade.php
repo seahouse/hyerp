@@ -612,7 +612,7 @@
             </div>
 
             <div class="form-group">
-                {!! Form::label('associated_business_id', '关联审批单类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                {!! Form::label('associated_business_id', '关联审批单编号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
                 <div class='col-xs-8 col-sm-10'>
                     {!! Form::text('associated_business_id', $paymentrequest->associated_business_id(), ['class' => 'form-control', 'readonly', $attr]) !!}
                 </div>

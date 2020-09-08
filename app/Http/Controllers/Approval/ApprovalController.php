@@ -3073,10 +3073,6 @@ class ApprovalController extends Controller
                 'value'     => $inputs['epamountreason'],
             ],
             [
-                'name'      => '采购原因',
-                'value'     => $inputs['purchasereason'],
-            ],
-            [
                 'name'      => '采购原因补充说明',
                 'value'     => $inputs['remark'],
             ],
@@ -3125,12 +3121,18 @@ class ApprovalController extends Controller
                 'value'     => json_encode($detail_array),
             ],
         ];
-//        if (isset($inputs['epamountreason']) && strlen($inputs['epamountreason']) > 0)
-//            array_push($formdata,
-//                [
-//                    'name'      => 'EP项目安装费原因',
-//                    'value'     => $inputs['epamountreason'],
-//                ]);
+        if (isset($inputs['purchasetype']))
+        {
+            if ($inputs['purchasetype'] != 'EP项目安装队相关费用')
+            {
+                array_push($formdata,
+                    [
+                        'name'      => '采购原因',
+                        'value'     => $inputs['purchasereason'],
+                    ]);
+            }
+        }
+
         $form_component_values = json_encode($formdata);
 //        dd($form_component_values);
 //        Log::info('process_code: ' . $process_code);
