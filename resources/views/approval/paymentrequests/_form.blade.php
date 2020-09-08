@@ -603,7 +603,7 @@
     </div>
 </div>
 
-@if (isset($paymentrequest) && isset($paymentrequest->associated_approval_type))
+@if (isset($paymentrequest) && strlen($paymentrequest->associated_approval_type) > 0)
             <div class="form-group">
                 {!! Form::label('associated_approval_type', '关联审批单类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
                 <div class='col-xs-8 col-sm-10'>
