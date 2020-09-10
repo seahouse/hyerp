@@ -617,6 +617,13 @@
                     {!! Form::text('associated_business_id', $paymentrequest->associated_business_id(), ['class' => 'form-control', 'readonly', $attr]) !!}
                 </div>
             </div>
+
+            <div class="form-group">
+                {!! Form::label('associated_remark', '关联审批单备注:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::text('associated_remark', $paymentrequest->associated_remark, ['class' => 'form-control', 'readonly', $attr]) !!}
+                </div>
+            </div>
 @endif
 
 

@@ -34,6 +34,7 @@ class CreatePaymentrequestsTable extends Migration
 			$table->integer('approversetting_id');          			// 下一个审批流程id, 0表示已经走完流程, -1表示没有流程可以走，-2表示流程已走完，未通过，-3表示撤回过程中，-4表示已撤回, -5表示超期结束
             $table->string('associated_approval_type')->nullable(); // 关联审批单类型
             $table->string('associated_process_instance_id')->nullable();   // 关联审批单id
+            $table->string('associated_remark')->nullable();        // 关联审批单备注，比如评论
 
             $table->timestamps();
 			$table->softDeletes();

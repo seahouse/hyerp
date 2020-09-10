@@ -34,6 +34,7 @@ class Paymentrequest extends Model
 		'approversetting_id',
         'associated_approval_type',
         'associated_process_instance_id',
+        'associated_remark',
     ];
 
 

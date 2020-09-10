@@ -476,8 +476,7 @@ class CorporatepaymentController extends Controller
                     'paymenttype'            => $corporatepayment->paymenttype,
                     'supplier_id'            => $corporatepayment->supplier_id,
                     'pohead_id'              => isset($projectsitepurchase->pohead_hxold) ? $projectsitepurchase->pohead_hxold->id : $corporatepayment->pohead_id,
-//                    'descrip'                => '由工程部发起的付款-对公帐户付款通过后自动创建，对应的审批单号为：' . $corporatepayment->business_id,
-                    'descrip'                => $remark,
+                    'descrip'                => '由工程部发起的付款-对公帐户付款通过后自动创建，对应的审批单号为：' . $corporatepayment->business_id,
                     'amount'                  => $amount,
                     'paymentmethod'         => $corporatepayment->paymentmethod,
                     'datepay'                => $corporatepayment->paydate,
@@ -487,6 +486,7 @@ class CorporatepaymentController extends Controller
                     'approversetting_id'    => $approversetting_id,
                     'associated_approval_type'  => 'corporatepayment',
                     'associated_process_instance_id'  => $processInstanceId,
+                    'associated_remark'      => $remark,
                 ];
                 $paymentrequest = Paymentrequest::create($data);
 
