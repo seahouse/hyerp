@@ -28,7 +28,7 @@
         <div class="form-group">
             {!! Form::label('amounttype', '费用类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('amounttype', array('工程现场采购费用相关' => '工程现场采购费用相关', '安装合同安装费付款' => '安装合同安装费付款'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'onchange' => 'selectAmounttypeChange()', $attr, $attrdisable]) !!}
+                {!! Form::select('amounttype', array('工程现场采购费用相关（ERP）' => '工程现场采购费用相关（ERP）', '安装合同安装费付款（ERP）' => '安装合同安装费付款（ERP）'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'onchange' => 'selectAmounttypeChange()', $attr, $attrdisable]) !!}
             </div>
         </div>
 

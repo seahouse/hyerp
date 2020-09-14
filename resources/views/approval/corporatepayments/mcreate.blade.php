@@ -821,7 +821,7 @@
 
             selectAmounttypeChange = function () {
                 var amounttype = $("#amounttype").val();
-                if (amounttype == "工程现场采购费用相关")
+                if (amounttype == "工程现场采购费用相关（ERP）")
                 {
                     $("#divPohead_number").attr("style", "display:none;");
                     $("#divAssociatedapprovals").attr("style", "display:block;");

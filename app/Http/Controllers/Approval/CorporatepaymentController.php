@@ -442,7 +442,7 @@ class CorporatepaymentController extends Controller
 
                 // 金额
                 $amount = $corporatepayment->amount;
-                if ($corporatepayment->amounttype == '安装合同安装费付款')
+                if ($corporatepayment->amounttype == '安装合同安装费付款（ERP）')
                 {
                     $pohead = $corporatepayment->pohead;
                     if (isset($pohead))
