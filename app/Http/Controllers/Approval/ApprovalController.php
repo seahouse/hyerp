@@ -3118,7 +3118,7 @@ class ApprovalController extends Controller
             ],
             [
                 'name'      => '关联相关审批单',
-                'value'     => $inputs['associatedapprovals'],
+                'value'     => $inputs['associatedapprovals_2'],
             ],
             [
                 'name'      => '采购明细（一个流程不超过15条明细）',
