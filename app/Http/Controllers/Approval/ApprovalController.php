@@ -3117,6 +3117,10 @@ class ApprovalController extends Controller
                 'value'     => $inputs['files_string'],
             ],
             [
+                'name'      => '关联相关审批单',
+                'value'     => $inputs['associatedapprovals'],
+            ],
+            [
                 'name'      => '采购明细（一个流程不超过15条明细）',
                 'value'     => json_encode($detail_array),
             ],

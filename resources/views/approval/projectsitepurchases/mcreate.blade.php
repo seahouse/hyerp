@@ -188,64 +188,48 @@
 	</div>
 </div>
 
-<!-- supplier bank selector -->
-<div class="modal fade" id="selectSupplierBankModal" tabindex="-1" role="dialog">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title">选择开户行与账号</h4>
-			</div>
-			<div class="modal-body">
-				{{--
-                                <div class="input-group">
-                                    {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '供应商名称', 'id' => 'keySupplier']) !!}
-                                    <span class="input-group-btn">
-                                           {!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchSupplier']) !!}
-                                       </span>
-                                </div>
-                --}}
-				{!! Form::hidden('name', null, ['id' => 'name']) !!}
-				{!! Form::hidden('id', null, ['id' => 'id']) !!}
-				<p>
-				<div class="list-group" id="listsupplierbanks">
 
-				</div>
-				</p>
-				<p>
-				{!! Form::button('新增', ['class' => 'btn btn-sm', 'id' => 'btnShowAddVendbank']) !!}
-				<form id="formAddVendbank">
-					{!! csrf_field() !!}
-					<div class="form-group">
-						{!! Form::label('bankname', '开户行:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-						<div class='col-xs-8 col-sm-10'>
-							{!! Form::text('bankname', null, ['class' => 'form-control', 'placeholder' => '请输入开户行']) !!}
-						</div>
-					</div>
-					<div class="form-group">
-						{!! Form::label('accountnum', '银行账号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-						<div class='col-xs-8 col-sm-10'>
-							{!! Form::text('accountnum', null, ['class' => 'form-control', 'placeholder' => '请输入银行账号']) !!}
-						</div>
-					</div>
-					{!! Form::hidden('vendinfo_id', 0, ['id' => 'vendinfo_id']) !!}
-					{!! Form::hidden('isdefault', 1, ['id' => 'isdefault']) !!}
-					{!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnAddVendbank']) !!}
-					{{--
-                                        {!! Form::hidden('reimbursement_id', $reimbursement->id, ['class' => 'form-control']) !!}
-                                        {!! Form::hidden('status', 0, ['class' => 'form-control']) !!}
-                    --}}
-				</form>
-				</p>
+<div class="modal fade" id="selectApprovalModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">选择关联相关审批单</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group" style="width:100%;">
+                    <div class='col-xs-4 col-sm-4' style="padding:5px;">
+                        {!! Form::select('type', array('additionsalesorder' => '销售合同增补'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'id' => 'approvaltype']) !!}
+                    </div>
+                    <div class='col-xs-6 col-sm-6' style="padding:5px;">
+                        {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '审批单号', 'id' => 'keyProjectpurchase']) !!}
+                    </div>
+                    <div class='col-xs-2 col-sm-2' style="padding:5px;">
+                        <span class="input-group-btn">
+                   		    {!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchProjectpurchaseApproval']) !!}
+                       </span>
+                    </div>
+                </div>
+                {!! Form::hidden('name', null, ['id' => 'name']) !!}
+                {!! Form::hidden('id', null, ['id' => 'id']) !!}
+                {!! Form::hidden('num', null, ['id' => 'num']) !!}
+                <p>
+                <div class="list-group" id="listproject">
 
-			</div>
-			{{--
-                        <div class="modal-footer">
+                </div>
+                </p>
+                <form id="formAccept">
+                    {!! csrf_field() !!}
+
+                    {{--                    {!! Form::hidden('reimbursement_id', $reimbursement->id, ['class' => 'form-control']) !!}
+                                        {!! Form::hidden('status', 0, ['class' => 'form-control']) !!} --}}
+                </form>
+            </div>
+            {{--            <div class="modal-footer">
                             {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
                             {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnAccept']) !!}
-                        </div>
-            --}}
-		</div>
-	</div>
+                        </div>--}}
+        </div>
+    </div>
 </div>
 
 <!-- before submit -->
@@ -653,45 +637,60 @@
                 });
             }
 
-            $('#selectSupplierBankModal').on('show.bs.modal', function (e) {
-                $("#listsupplierbanks").empty();
-                $("form#formAddVendbank").hide();
-                $("#selectSupplierBankModal").find("#bankname").val("");
-                $("#selectSupplierBankModal").find("#accountnum").val("");
+            $('#selectApprovalModal').on('show.bs.modal', function (e) {
+                $("#listproject").empty();
+                $("#approvaltype").val('');
+                $("#keyProjectpurchase").val('');
 
-                var text = $(e.relatedTarget);
+                var target = $(e.relatedTarget);
+                // alert(text.data('id'));
+
                 var modal = $(this);
-
-                modal.find('#name').val(text.data('name'));
-                modal.find('#id').val(text.data('id'));
+                modal.find('#name').val(target.data('name'));
+                modal.find('#id').val(target.data('id'));
+                modal.find('#num').val(target.data('num'));
+                // alert(modal.find('#id').val());
             });
 
-            $('#selectSupplierBankModal').on('shown.bs.modal', function (e) {
-                // $("#listsupplierbanks").empty();
+            $("#btnSearchProjectpurchaseApproval").click(function() {
+                if ($("#approvaltype").val() == "") {
+                    alert('请选择审批单类型');
+                    return;
+                }
 
-                var text = $(e.relatedTarget);
-                var modal = $(this);
+                if ($("#keyProjectpurchase").val() == "") {
+                    alert('请输入关键字');
+                    return;
+                }
 
-                // modal.find('#listsupplierbanks').append("aaaa");
-
+                var requestUrl = 'approval/getdtitemsbykey';
                 $.ajax({
                     type: "GET",
-                    url: "{!! url('/purchase/vendbank/getitemsbyvendid/') !!}" + "/" + $("#supplier_id").val(),
+                    url: "{!! url('" + requestUrl + "') !!}" + "?type=" + $("#approvaltype").val() + "&key=" + $("#keyProjectpurchase").val(),
                     success: function(result) {
-                        var strhtml = '';
-                        $.each(result.data, function(i, field) {
-                            btnId = 'btnSelectSupplierbank_' + String(i);
-                            // strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.bankname + "</h4><p>" + field.accountnum + "</p></button>"
-                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + field.bankname + ": " + field.accountnum + "</button>"
-                        });
-                        if (strhtml == '')
-                            strhtml = '无记录。';
-                        modal.find('#listsupplierbanks').empty().append(strhtml);
 
-                        $.each(result.data, function(i, field) {
-                            btnId = 'btnSelectSupplierbank_' + String(i);
-                            addBtnClickEventSupplierbank(btnId, field);
-                        });
+                        var html = [];
+                        if (result && result.business_id) {
+                            html.push("<button type='button' class='list-group-item' id='btnSelectProjectpurchase_0'>");
+                            html.push("<h4>" + result.business_id + "</h4><p>");
+                            html.push(result.title+ '<br/>');
+                            if (result.content) {
+                                for(var key in result.content) {
+                                    if (result.content.hasOwnProperty(key)) {
+                                        html.push(key + ': ' + result.content[key] + '<br/>');
+                                    }
+                                }
+                            }
+                            html.push("</p></button>");
+                        }
+                        else {
+                            html.push('无记录。');
+                        }
+
+                        $("#listproject").empty().append(html.join(''));
+
+                        addBtnClickEventProjectpurchase('btnSelectProjectpurchase_0', result);
+                        // addBtnClickEvent('btnSelectOrder_0');
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
                         alert('error');
@@ -699,50 +698,44 @@
                 });
             });
 
-            function addBtnClickEventSupplierbank(btnId, field)
+            function addBtnClickEventProjectpurchase(btnId, field)
             {
                 $("#" + btnId).bind("click", function() {
-                    $('#selectSupplierBankModal').modal('toggle');
-                    // $("#" + $("#selectSupplierModal").find('#name').val()).val(name);
-                    // $("#" + $("#selectSupplierModal").find('#id').val()).val(supplierid);
-                    $("#vendbank_id").val(field.id);
-                    $("#supplier_bank").val(field.bankname);
-                    $("#supplier_bankaccountnumber").val(field.accountnum);
+                    $('#selectApprovalModal').modal('toggle');
+
+                    var html = [];
+                    html.push('<div id="divRemovePurchaseClick_' + field.business_id + '">');
+                    html.push("<span>关联审批单：" + field.business_id + "</span>");
+                    html.push('&nbsp;&nbsp;<a data-business_id="' + field.business_id + '" data-process_instance_id="' + field.process_instance_id + '" onclick="window.removeProjectpurchaseClick(this);" href="javascript:void(0);">删除</a>');
+                    html.push("</div>");
+
+                    var hVal = [];
+                    if ($("#associatedapprovals").val() != '') {
+                        hVal = $("#associatedapprovals").val().split(',');
+                    }
+                    if ($.inArray(field.process_instance_id, hVal) < 0) {
+                        hVal.push(field.process_instance_id);
+                        $("#lblAssociatedapprovals").append(html.join(''));
+                    }
+                    $("#associatedapprovals").val(hVal.join(','));
+//					$("#supplier_bankaccountnumber").val(field.bankaccountnumber);
+//					$("#vendbank_id").val(field.vendbank_id);
                 });
             }
 
-            $("#btnShowAddVendbank").click(function() {
-                $("form#formAddVendbank").show();
-            });
+            window.removeProjectpurchaseClick = function(it) {
+                var process_instance_id = $(it).attr('data-process_instance_id');
+                $("#divRemovePurchaseClick_" + $(it).attr('data-business_id')).remove();
 
-            $("#btnAddVendbank").click(function() {
-                if ($("#selectSupplierBankModal").find("#vendinfo_id").val() == 0)
-                {
-                    alert("还未选中供应商。");
-                    return;
+                var hVal = [];
+                if ($("#associatedapprovals").val() != '') {
+                    hVal = $("#associatedapprovals").val().split(',');
                 }
-                if ($("#selectSupplierBankModal").find("#bankname").val().trim() == "" || $("#selectSupplierBankModal").find("#accountnum").val().trim() == "")
-                {
-                    alert("开户行和银行账号不能为空。");
-                    return;
-                }
-                $.ajax({
-                    type: "POST",
-                    url: "{{ url('purchase/vendbank') }}",
-                    data: $("form#formAddVendbank").serialize(),
-                    dataType: "json",
-                    error:function(xhr, ajaxOptions, thrownError){
-                        alert('error');
-                    },
-                    success:function(result){
-                        alert("新增成功。");
-                        $('#selectSupplierBankModal').modal('toggle');
-                        $("#vendbank_id").val(result.id);
-                        $("#supplier_bank").val(result.bankname);
-                        $("#supplier_bankaccountnumber").val(result.accountnum);
-                    },
-                });
-            });
+                var pos = $.inArray(process_instance_id, hVal);
+                hVal.splice(pos, 1);
+                $("#associatedapprovals").val(hVal.join(','));
+                return false;
+            }
 
             $("#btnAddItem").click(function() {
                 item_num++;
