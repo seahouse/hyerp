@@ -213,7 +213,7 @@
                 {!! Form::hidden('id', null, ['id' => 'id']) !!}
                 {!! Form::hidden('num', null, ['id' => 'num']) !!}
                 <p>
-                <div class="list-group" id="listproject">
+                <div class="list-group" id="listApproval">
 
                 </div>
                 </p>
@@ -638,7 +638,7 @@
             }
 
             $('#selectApprovalModal').on('show.bs.modal', function (e) {
-                $("#listproject").empty();
+                $("#listApproval").empty();
                 $("#approvaltype").val('');
                 $("#keyProjectpurchase").val('');
 
@@ -687,7 +687,7 @@
                             html.push('无记录。');
                         }
 
-                        $("#listproject").empty().append(html.join(''));
+                        $("#listApproval").empty().append(html.join(''));
 
                         addBtnClickEventProjectpurchase('btnSelectProjectpurchase_0', result);
                         // addBtnClickEvent('btnSelectOrder_0');
