@@ -710,14 +710,14 @@
                     html.push("</div>");
 
                     var hVal = [];
-                    if ($("#associatedapprovals").val() != '') {
-                        hVal = $("#associatedapprovals").val().split(',');
+                    if ($("#associatedapprovals_2").val() != '') {
+                        hVal = $("#associatedapprovals_2").val().split(',');
                     }
                     if ($.inArray(field.process_instance_id, hVal) < 0) {
                         hVal.push(field.process_instance_id);
-                        $("#lblAssociatedapprovals").append(html.join(''));
+                        $("#lblAssociatedapprovals_2").append(html.join(''));
                     }
-                    $("#associatedapprovals").val(hVal.join(','));
+                    $("#associatedapprovals_2").val(hVal.join(','));
 //					$("#supplier_bankaccountnumber").val(field.bankaccountnumber);
 //					$("#vendbank_id").val(field.vendbank_id);
                 });
@@ -728,12 +728,12 @@
                 $("#divRemovePurchaseClick_" + $(it).attr('data-business_id')).remove();
 
                 var hVal = [];
-                if ($("#associatedapprovals").val() != '') {
-                    hVal = $("#associatedapprovals").val().split(',');
+                if ($("#associatedapprovals_2").val() != '') {
+                    hVal = $("#associatedapprovals_2").val().split(',');
                 }
                 var pos = $.inArray(process_instance_id, hVal);
                 hVal.splice(pos, 1);
-                $("#associatedapprovals").val(hVal.join(','));
+                $("#associatedapprovals_2").val(hVal.join(','));
                 return false;
             }
 

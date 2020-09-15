@@ -401,12 +401,12 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('associatedapprovals', '关联相关审批单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+        {!! Form::label('associatedapprovals_2', '关联相关审批单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
         <div class='col-xs-8 col-sm-10'>
             {!! Form::button('+', ['class' => 'btn btn-sm', 'data-toggle' => 'modal', 'data-target' => '#selectApprovalModal']) !!}
-            {!! Form::hidden('associatedapprovals', null, ['class' => 'btn btn-sm']) !!}
-            <div id="lblAssociatedapprovals">
+            {!! Form::hidden('associatedapprovals_2', null, ['class' => 'btn btn-sm']) !!}
+            <div id="lblAssociatedapprovals_2">
             </div>
         </div>
     </div>
