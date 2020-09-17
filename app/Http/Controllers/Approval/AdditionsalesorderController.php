@@ -3,17 +3,20 @@
 namespace App\Http\Controllers\Approval;
 
 use App\Http\Controllers\DingTalkController;
+use App\Http\Controllers\HelperController;
 use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiProcessinstanceCspaceInfoRequest;
 use App\Models\Approval\Additionsalesorder;
 use App\Models\Approval\Additionsalesorderattachment;
 use App\Models\Approval\Additionsalesorderitem;
+use App\Models\Sales\Equipmenttypeass_hxold;
+use App\Models\Sales\Salesorder_hxold;
 use App\Models\Sales\Salesorder_hxold_t;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Auth, Storage;
+use Auth, Storage, Carbon, Log;
 
 class AdditionsalesorderController extends Controller
 {
@@ -25,6 +28,7 @@ class AdditionsalesorderController extends Controller
     public function index()
     {
         //
+        self::updateStatusByProcessInstanceId('ttttt', 0);
     }
 
     /**
@@ -348,93 +352,82 @@ class AdditionsalesorderController extends Controller
             $additionsalesorder->status = $status;
             $additionsalesorder->save();
 
-//            // 如果是审批完成且通过，则创建老系统中的销售订单
-//            if ($status == 0)
-//            {
-//                $cp = 'WX';
-//                if ($techpurchase->purchasecompany_id == 2)
-//                    $cp = 'AH';
-//                elseif ($techpurchase->purchasecompany_id == 3)
-//                    $cp = 'HN';
-//
-//                $techpurchaseitem = $techpurchase->techpurchaseitems->first();
-//                $item_index = '';
-//                if (isset($techpurchaseitem))
-//                {
-//                    $item_index = HelperController::pinyin_long($techpurchaseitem->item->goods_name);
-//                }
-//                $item_index = strlen($item_index) > 0 ? $item_index : 'spmc';
-//                if (strlen($item_index) < 4)
-//                    $item_index = str_pad($item_index, 4, 0, STR_PAD_LEFT);
-//                elseif (strlen($item_index) > 4)
-//                    $item_index = substr($item_index, 0, 4);
-//                $seqnumber = Purchaseorder_hx::where('编号年份', Carbon::today()->year)->max('编号数字');
-//                $seqnumber += 1;
-//                $seqnumber = str_pad($seqnumber, 4, 0, STR_PAD_LEFT);
-//
-//                $userold_id = 0;
-//                $userold = Userold::where('user_id', $techpurchase->applicant_id)->first();
-//                if (isset($userold))
-//                    $userold_id = $userold->user_hxold_id;
-//
-//                $pohead_number = $cp . '-' . $item_index . '-' . Carbon::today()->format('Y-m') . '-' . $seqnumber;
-//
-//                $techpurchaseattachment_techspecification = $techpurchase->techpurchaseattachments->where('type', 'techspecification')->first();
-//
-//                $sohead_name = '';
-//                $sohead = Salesorder_hxold::find($techpurchase->sohead_id);
-//                if (isset($sohead))
-//                    $sohead_name = $sohead->number . "|" . $sohead->custinfo_name . "|" . $sohead->descrip . "|" . $sohead->amount;
-//
-//                $data = [
-//                    '接单公司名称'            => '无锡公司',
-//                    '采购订单编号'            => $pohead_number,
-//                    '申请人ID'                => $userold_id,
-//                    '对应项目ID'              => $techpurchase->sohead_id,
-//                    '项目名称'                => $sohead_name,
-//                    '申请到位日期'            => $techpurchase->arrivaldate,
-//                    '修造或工程'             => $cp,
-//                    '技术规范书'             => isset($techpurchaseattachment_techspecification) ? $techpurchaseattachment_techspecification->filename : '',
-//                    '编号年份'                => Carbon::today()->year,
-//                    '编号数字'                => $seqnumber,
-//                    '编号商品名称'            => $item_index,
-//                    'type'                    => '技术',
-//                ];
-//                $sohead = new Salesorder_hxold_t();
-//                $sohead->save($data);
-//
-//                if (isset($sohead))
-//                {
-//                    foreach ($techpurchase->techpurchaseitems as $techpurchaseitem)
-//                    {
-//                        $item = Itemp_hxold::where('goods_id', $techpurchaseitem->item_id)->first();
-//                        if (isset($item))
+            // 如果是审批完成且通过，则创建老系统中的销售订单
+            if ($status == 0)
+            {
+                $sohead_parent = $additionsalesorder->sohead;
+                if (isset($sohead_parent))
+                {
+                    $company_name = $sohead_parent->company_name;
+
+                    $sohead_number = $sohead_parent->province_name . '-';
+                    $sohead_number .= mb_substr($sohead_parent->company_name, 0, 2) . '-';
+                    $equipmenttype_chars = '';
+                    foreach ($sohead_parent->equipmenttypes as $equipmenttype)
+                        $equipmenttype_chars .= $equipmenttype->equipmenttype_char;
+                    $equipmenttype_chars = str_pad($equipmenttype_chars, 3, '0', STR_PAD_LEFT);
+                    $sohead_number .= $equipmenttype_chars . '-';
+                    $sohead_number .= Carbon\Carbon::today()->format('Y-m-');
+                    $sohead_number = HelperController::pinyin_long($sohead_number);
+                    $ordercount = Salesorder_hxold::where('orderdate', '>=', Carbon\Carbon::create(Carbon\Carbon::today()->year, 1, 1))->where('orderdate', '<', Carbon\Carbon::create(Carbon\Carbon::today()->year + 1, 1, 1))->count();
+                    $ordercount++;
+                    $sohead_number .= str_pad($ordercount, 4, '0', STR_PAD_LEFT);
+                    Log::info($sohead_number);
+
+                    $amount = $additionsalesorder->additionsalesorderitems->sum('amount') ;
+
+                    $data = [
+                        '接单公司名称'            => $company_name,
+                        '客户ID'                  => $sohead_parent->custinfo_id,
+                        '客户联系人ID'            => $sohead_parent->customer_contact_id,
+                        '工程所在省市ID'          => $sohead_parent->project_city_id,
+                        '工程名称'                => $sohead_parent->descrip,
+                        'projectjc'              => $sohead_parent->projectjc,
+                        '订货日期'                => Carbon\Carbon::today(),
+                        '交货日期'                => Carbon\Carbon::today()->addMonth(),
+                        '销售经理ID'              => $sohead_parent->salesmanager_id,
+                        '编号'                    => $sohead_number,
+                    ];
+                    $sohead = new Salesorder_hxold_t();
+                    $sohead->接单公司名称 = $company_name;
+                    $sohead->客户ID = $sohead_parent->custinfo_id;
+                    $sohead->客户联系人ID = $sohead_parent->customer_contact_id;
+                    $sohead->工程所在省市ID = $sohead_parent->project_city_id;
+                    $sohead->工程名称 = $sohead_parent->descrip;
+                    $sohead->projectjc = $sohead_parent->projectjc;
+                    $sohead->订货日期 = Carbon\Carbon::today();
+                    $sohead->交货日期 = Carbon\Carbon::today()->addMonth();
+                    $sohead->销售经理ID = $sohead_parent->salesmanager_id;
+                    $sohead->订单编号 = $sohead_number;
+                    $sohead->订单金额 = $amount;
+                    $sohead->save();
+
+                    if (isset($sohead))
+                    {
+                        foreach ($sohead_parent->equipmenttypeasses as $equipmenttypeass)
+                        {
+                            $data = [
+                                'equipmenttypeass_order_id'      => $sohead->订单ID,
+                                'equipmenttypeass_equipmenttype_id'      => $equipmenttypeass->equipmenttypeass_equipmenttype_id,
+                            ];
+                            Equipmenttypeass_hxold::create($data);
+                        }
+
+//                        // 拷贝“技术规范书”到对应的ERP目录下
+//                        if (isset($techpurchaseattachment_techspecification))
 //                        {
-//                            $data = [
-//                                'order_id'      => $pohead->id,
-//                                'goods_id'      => $techpurchaseitem->item_id,
-//                                'goods_name'    => $item->goods_name,
-//                                'goods_number'  => $techpurchaseitem->quantity,
-//                                'goods_unit'    => $item->goods_unit_name,
-//                            ];
-//                            Poitem_hx::create($data);
+//                            // 将中文的字段名称转换后使用
+//                            $pohead_id_key = iconv("UTF-8","GBK//IGNORE", '采购订单ID');
+//                            $dir = config('custom.hxold.purchase_techspecification_dir') . $pohead->$pohead_id_key . "/";
+//                            if (!is_dir($dir)) {
+//                                mkdir($dir);
+//                            }
+//                            $dest = iconv("UTF-8","GBK//IGNORE", $dir . $techpurchaseattachment_techspecification->filename);
+//                            copy(public_path($techpurchaseattachment_techspecification->path), $dest);
 //                        }
-//                    }
-//
-//                    // 拷贝“技术规范书”到对应的ERP目录下
-//                    if (isset($techpurchaseattachment_techspecification))
-//                    {
-//                        // 将中文的字段名称转换后使用
-//                        $pohead_id_key = iconv("UTF-8","GBK//IGNORE", '采购订单ID');
-//                        $dir = config('custom.hxold.purchase_techspecification_dir') . $pohead->$pohead_id_key . "/";
-//                        if (!is_dir($dir)) {
-//                            mkdir($dir);
-//                        }
-//                        $dest = iconv("UTF-8","GBK//IGNORE", $dir . $techpurchaseattachment_techspecification->filename);
-//                        copy(public_path($techpurchaseattachment_techspecification->path), $dest);
-//                    }
-//                }
-//            }
+                    }
+                }
+            }
         }
     }
 

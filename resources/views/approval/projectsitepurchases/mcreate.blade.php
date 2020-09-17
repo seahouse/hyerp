@@ -689,7 +689,7 @@
 
                         $("#listApproval").empty().append(html.join(''));
 
-                        addBtnClickEventProjectpurchase('btnSelectProjectpurchase_0', result);
+                        addBtnClickEventProjectpurchase2('btnSelectProjectpurchase_0', result);
                         // addBtnClickEvent('btnSelectOrder_0');
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
@@ -698,7 +698,7 @@
                 });
             });
 
-            function addBtnClickEventProjectpurchase(btnId, field)
+            function addBtnClickEventProjectpurchase2(btnId, field)
             {
                 $("#" + btnId).bind("click", function() {
                     $('#selectApprovalModal').modal('toggle');

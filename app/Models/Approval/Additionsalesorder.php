@@ -2,6 +2,7 @@
 
 namespace App\Models\Approval;
 
+use App\Models\Sales\Salesorder_hxold;
 use Illuminate\Database\Eloquent\Model;
 
 class Additionsalesorder extends Model
@@ -20,5 +21,9 @@ class Additionsalesorder extends Model
 
     public function additionsalesorderitems() {
         return $this->hasMany('\App\Models\Approval\Additionsalesorderitem');
+    }
+
+    public function sohead() {
+        return $this->belongsTo(Salesorder_hxold::class);
     }
 }

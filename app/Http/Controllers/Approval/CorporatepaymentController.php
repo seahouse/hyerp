@@ -470,7 +470,6 @@ class CorporatepaymentController extends Controller
                     }
                 }
 
-
                 $data = [
                     'suppliertype'          => $corporatepayment->suppliertype,
                     'paymenttype'            => $corporatepayment->paymenttype,

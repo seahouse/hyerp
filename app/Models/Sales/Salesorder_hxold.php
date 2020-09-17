@@ -138,6 +138,10 @@ class Salesorder_hxold extends Model
         return $this->belongsToMany('App\Models\Sales\Equipmenttype_hxold', 'equipmenttypeass', 'equipmenttypeass_order_id', 'equipmenttypeass_equipmenttype_id');
     }
 
+    public function equipmenttypeasses() {
+        return $this->hasMany(Equipmenttypeass_hxold::class, 'equipmenttypeass_order_id');
+    }
+
     public function paywayasses() {
         return $this->hasMany('App\Models\Sales\Paywayass_hxold', 'paywayass_order_id');
     }
