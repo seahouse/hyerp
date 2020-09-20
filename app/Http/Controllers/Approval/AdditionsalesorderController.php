@@ -400,6 +400,8 @@ class AdditionsalesorderController extends Controller
                     $sohead->销售经理ID = $sohead_parent->salesmanager_id;
                     $sohead->订单编号 = $sohead_number;
                     $sohead->订单金额 = $amount;
+                    $sohead->associated_approval_type = 'additionsalesorder';
+                    $sohead->associated_process_instance_id = $processInstanceId;
                     $sohead->save();
 
                     if (isset($sohead))
