@@ -369,12 +369,12 @@ class AdditionsalesorderController extends Controller
                     $sohead_number .= $equipmenttype_chars . '-';
                     $sohead_number .= Carbon\Carbon::today()->format('Y-m-');
                     $sohead_number = HelperController::pinyin_long($sohead_number);
-                    $ordercount = Salesorder_hxold::where('orderdate', '>=', Carbon\Carbon::create(Carbon\Carbon::today()->year, 1, 1))->where('orderdate', '<', Carbon\Carbon::create(Carbon\Carbon::today()->year + 1, 1, 1))->count();
-                    $ordercount++;
+                    $ordercount = Salesorder_hxold_t::where('订货日期', '>=', Carbon\Carbon::create(Carbon\Carbon::today()->year, 1, 1))->where('订货日期', '<', Carbon\Carbon::create(Carbon\Carbon::today()->year + 1, 1, 1))->count();
+                    $ordercount = $ordercount + 3;
                     $sohead_number .= str_pad($ordercount, 4, '0', STR_PAD_LEFT);
                     Log::info($sohead_number);
 
-                    $amount = $additionsalesorder->additionsalesorderitems->sum('amount') ;
+                    $amount = $additionsalesorder->additionsalesorderitems->sum('amount') / 10000 ;
 
                     $data = [
                         '接单公司名称'            => $company_name,
