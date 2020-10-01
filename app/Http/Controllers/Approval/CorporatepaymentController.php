@@ -14,6 +14,7 @@ use App\Models\Approval\Paymentrequest;
 use App\Models\Approval\Paymentrequestattachment;
 use App\Models\Approval\Projectsitepurchase;
 use App\Models\Purchase\Purchaseorder_hxold;
+use App\Models\Purchase\Vendinfo_hxold;
 use App\Models\Sales\Salesorder_hxold;
 use App\Models\System\Dtuser;
 use Dompdf\Dompdf;
@@ -109,7 +110,7 @@ class CorporatepaymentController extends Controller
         $this->validate($request, [
 //            'sohead_id'                   => 'required|integer|min:1',
             'amounttype'               => 'required',
-            'supplier_id'             => 'required',
+            'supplier_id'              => 'required',
 //            'issuedrawing_values'       => 'required',
 //            'items_string'               => 'required',
 //            'tonnage'               => 'required|numeric',
@@ -139,6 +140,16 @@ class CorporatepaymentController extends Controller
                 $pohead = Purchaseorder_hxold::where('number', $request->input('pohead_number'))->first();
                 if (isset($pohead))
                     $inputs['pohead_id'] = $pohead->id;
+            }
+        }
+
+        if (!$request->has('supplier_id') || ($request->has('supplier_id') && $request->input('supplier_id') <= 0))
+        {
+            if ($request->has('supplier_name') && strlen($request->input('supplier_name')))
+            {
+                $supplier = Vendinfo_hxold::where('name', $request->input('supplier_name'))->first();
+                if (isset($supplier))
+                    $inputs['supplier_id'] = $supplier->id;
             }
         }
 

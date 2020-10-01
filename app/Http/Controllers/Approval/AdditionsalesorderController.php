@@ -12,6 +12,7 @@ use App\Models\Approval\Additionsalesorderitem;
 use App\Models\Sales\Equipmenttypeass_hxold;
 use App\Models\Sales\Salesorder_hxold;
 use App\Models\Sales\Salesorder_hxold_t;
+use App\Models\System\User;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -427,6 +428,19 @@ class AdditionsalesorderController extends Controller
 //                            $dest = iconv("UTF-8","GBK//IGNORE", $dir . $techpurchaseattachment_techspecification->filename);
 //                            copy(public_path($techpurchaseattachment_techspecification->path), $dest);
 //                        }
+
+                        // 发送钉钉消息给 Zhang Junye
+                        $touser = User::where('email', "zhangjunye@huaxing-east.com")->first();
+                        if (isset($touser))
+                        {
+                            $msg = '根据销售增补审批单自动生成销售订单。销售增补单编号：' . $additionsalesorder->business_id . '，生成的销售订单编号：' . $sohead_number . '。';
+                            $data = [
+                                'userid'        => $touser->id,
+                                'msgcontent'    => urlencode($msg) ,
+                            ];
+
+                            DingTalkController::sendCorpMessageTextReminder(json_encode($data));
+                        }
                     }
                 }
             }
