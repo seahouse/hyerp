@@ -405,6 +405,7 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         Route::patch('update_hx', 'PurchaseordersController@update_hx');
         Route::get('getpoheadtaxrateass_hx', 'PurchaseordersController@getpoheadtaxrateass_hx');
         Route::get('arrivalticket', 'PurchaseordersController@arrivalticket');
+        Route::get('supplierquotes', 'PurchaseordersController@supplierquotes');
     });
     Route::group(['prefix' => 'purchaseorders/{purchaseorder}/payments'], function () {
         Route::get('/', 'PaymentsController@index');
@@ -419,6 +420,7 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         Route::get('getitemsbyorderkey/{key}/{supplierid?}', 'PurchaseordersController@getitemsbyorderkey');
         Route::get('getitemsbyorderkey_simple/{key}/{supplierid?}', 'PurchaseordersController@getitemsbyorderkey_simple');
         Route::get('getitemsbyproductname/{productname}', 'PurchaseordersController@getitemsbyproductname');
+        Route::get('index_sqd', 'PurchaseordersController@index_sqd');      // 申请单
         Route::get('index_hx', 'PurchaseordersController@index_hx');
         Route::get('create_hx', 'PurchaseordersController@create_hx');
         Route::post('store_hx', 'PurchaseordersController@store_hx');
@@ -436,6 +438,12 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
     });
     Route::resource('poitems', 'PoitemsController');
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexpurchase');
+
+    // 供应商报价
+    Route::group(['prefix' => 'supplierquotes'], function() {
+        Route::get('createbypohead/{pohead_id}', 'SupplierquoteController@createbypohead');
+    });
+    Route::resource('supplierquotes', 'SupplierquoteController');
 });
 
 Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase'], function() {
@@ -449,8 +457,6 @@ Route::group(['prefix' => 'purchaseorderc', 'namespace' => 'Purchaseorderc', 'mi
         Route::get('detail', 'PurchaseordercController@detail');
         Route::get('detailjson', 'PurchaseordercController@detailjson');
         Route::get('packing', 'PurchaseordercController@packing');
-//        Route::get('receiving', 'PurchaseordersController@receiving');
-//        Route::get('receiptorders', 'PurchaseordersController@receiptorders');
 //        Route::get('poitems', 'PurchaseordersController@poitems');
 //        Route::get('receiptorders_hx', 'PurchaseordersController@receiptorders_hx');
 //        Route::get('edit_hx', 'PurchaseordersController@edit_hx');

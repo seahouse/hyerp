@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Purchase;
 
+ use App\Models\Purchase\Poheadquote_hx;
  use App\Models\Purchase\Poheadtaxrateass_hxold;
  use App\Models\Purchase\Purchaseorder_hx;
  use App\Models\Sales\Salesorder_hxold;
@@ -33,6 +34,13 @@ class PurchaseordersController extends Controller
         //
         $purchaseorders = Purchaseorder::latest('created_at')->paginate(10);
         return view('purchase.purchaseorders.index', compact('purchaseorders'));
+    }
+
+    public function index_sqd()
+    {
+        //
+        $purchaseorders = Purchaseorder_hxold::where('status', 0)->orderBy('id', 'desc')->paginate(15);
+        return view('purchase.purchaseorders.index_sqd', compact('purchaseorders'));
     }
 
     public function index_hx()
@@ -334,5 +342,13 @@ class PurchaseordersController extends Controller
         //
         $purchaseorder = Purchaseorder_hxold::findOrFail($id);
         return view('purchase.arrivaltickets.create', compact('purchaseorder'));
+    }
+
+    // 供应商报价
+    public function supplierquotes($pohead_id)
+    {
+        //
+        $poheadquotes = Poheadquote_hx::where('pohead_id', $pohead_id)->paginate(15);
+        return view('purchase.supplierquotes.index', compact('poheadquotes', 'pohead_id'));
     }
 }
