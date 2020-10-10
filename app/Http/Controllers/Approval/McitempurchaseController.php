@@ -565,6 +565,9 @@ class McitempurchaseController extends Controller
             $mcitempurchase->status = $status;
             $mcitempurchase->save();
 
+            // 先不创建，直接返回，等其他流程做完后再放开
+            return;
+
             // 如果是审批完成且通过，则创建老系统中的采购申请单
             if ($status == 0)
             {
@@ -628,6 +631,7 @@ class McitempurchaseController extends Controller
                     '编号数字'                => $seqnumber,
                     '编号商品名称'            => $item_index,
                     'type'                    => '生产',
+                    'business_id'            => $mcitempurchase->business_id,
                 ];
                 $pohead = Purchaseorder_hx::create($data);
 

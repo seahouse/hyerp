@@ -26,6 +26,13 @@
         </div>
 
         <div class="form-group">
+            {!! Form::label('paymentcompany', '付款单位:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::select('paymentcompany', array('江苏华星东方电力环保科技有限公司' => '江苏华星东方电力环保科技有限公司', '安徽省中易环保新材料有限公司' => '安徽省中易环保新材料有限公司'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'onchange' => 'selectAmounttypeChange()', $attr, $attrdisable]) !!}
+            </div>
+        </div>
+
+        <div class="form-group">
             {!! Form::label('amounttype', '费用类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
                 {!! Form::select('amounttype', array('工程现场采购费用相关（ERP）' => '工程现场采购费用相关（ERP）', '安装合同安装费付款（ERP）' => '安装合同安装费付款（ERP）'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'onchange' => 'selectAmounttypeChange()', $attr, $attrdisable]) !!}

@@ -18,6 +18,7 @@ class CreateCorporatepaymentsTable extends Migration
 			$table->string('suppliertype')->default('');
 			$table->string('paymenttype')->default('');
             $table->string('position');
+            $table->string('paymentcompany')->nullable();
             $table->string('amounttype');
             $table->integer('sohead_id')->nullable();
             $table->integer('pohead_id')->nullable();

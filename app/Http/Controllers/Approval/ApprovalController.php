@@ -3704,6 +3704,10 @@ class ApprovalController extends Controller
                 'value'     => $inputs['position'],
             ],
             [
+                'name'      => '付款单位',
+                'value'     => $inputs['paymentcompany'],
+            ],
+            [
                 'name'      => '费用类型',
                 'value'     => $inputs['amounttype'],
             ],
