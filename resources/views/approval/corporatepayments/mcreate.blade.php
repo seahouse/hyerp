@@ -552,9 +552,15 @@
                     $('#selectPoheadModal').modal('toggle');
                     $("#pohead_number").val(field.number);
                     $("#pohead_id").val(field.id);
+                    $("#pohead_supplier_name").val(field.supplier_name);
+                    var ticketedpercent = 0;
                     var paidpercent = 0;
                     if (field.amount > 0)
+                    {
+                        ticketedpercent = field.amount_ticketed / field.amount * 100.0;
                         paidpercent = field.amount_paid / field.amount * 100.0;
+                    }
+                    $("#ticketedpercent").val(ticketedpercent);
                     $("#paidpercent").val(paidpercent);
                 });
             }

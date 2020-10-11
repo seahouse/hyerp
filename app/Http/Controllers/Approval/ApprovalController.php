@@ -3732,8 +3732,16 @@ class ApprovalController extends Controller
                 'value'     => $inputs['pohead_number'],
             ],
             [
+                'name'      => '外协合同供应商',
+                'value'     => $inputs['pohead_supplier_name'],
+            ],
+            [
                 'name'      => '付款说明',
                 'value'     => $inputs['remark'],
+            ],
+            [
+                'name'      => '已开票比例',
+                'value'     => $inputs['ticketedpercent'],
             ],
             [
                 'name'      => '已付比例',

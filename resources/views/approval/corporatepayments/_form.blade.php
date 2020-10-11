@@ -85,21 +85,6 @@
         {{--</div>--}}
 
 
-
-
-        {{--<div class="form-group">--}}
-            {{--{!! Form::label('outsourcingcompany', '外协设备商全称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
-            {{--<div class='col-xs-8 col-sm-10'>--}}
-                {{--{!! Form::text('outsourcingcompany', null, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectSupplierModal', 'data-name' => 'drawingchecker', 'data-id' => 'pohead_id', 'data-soheadid' => 'sohead_id', 'data-poheadamount' => 'pohead_amount']) !!}--}}
-                {{--{!! Form::hidden('outsourcingcompany_id', 0, ['class' => 'btn btn-sm', 'id' => 'outsourcingcompany_id']) !!}--}}
-                {{--@if (isset($reimbursement->customer_hxold->name))--}}
-                    {{--{!! Form::hidden('customer_name2', $reimbursement->customer_hxold->name, ['class' => 'btn btn-sm', 'id' => 'customer_name2']) !!}--}}
-                {{--@else--}}
-                    {{--{!! Form::hidden('customer_name2', null, ['class' => 'btn btn-sm', 'id' => 'customer_name2']) !!}--}}
-                {{--@endif--}}
-            {{--</div>--}}
-        {{--</div>--}}
-
         <div id="divPohead_number">
             <div class="form-group">
                 {!! Form::label('pohead_number', '外协合同编号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
@@ -109,6 +94,17 @@
                     @else
                         {!! Form::text('pohead_number', $project_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectPoheadModal', 'data-name' => 'project_name_1']) !!}
                         {!! Form::hidden('pohead_id', 0, ['class' => 'btn btn-sm', 'id' => 'pohead_id']) !!}
+                    @endif
+                </div>
+            </div>
+
+            <div class="form-group">
+                {!! Form::label('pohead_supplier_name', '外协合同供应商:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    @if (isset($projectsitepurchase->sohead_hxold->descrip))
+                        {!! Form::text('pohead_supplier_name', null, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectSupplierModal', 'data-name' => 'drawingchecker', 'data-id' => 'pohead_id', 'data-soheadid' => 'sohead_id', 'data-poheadamount' => 'pohead_amount']) !!}
+                    @else
+                        {!! Form::text('pohead_supplier_name', null, ['class' => 'form-control', 'id' => 'pohead_supplier_name', 'readonly']) !!}
                     @endif
                 </div>
             </div>
@@ -122,6 +118,13 @@
         </div>
 
         <div id="divPaidpercent">
+            <div class="form-group">
+                {!! Form::label('ticketedpercent', '已开票比例（%）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::text('ticketedpercent', null, ['class' => 'form-control', 'placeholder' => '请输入', 'readonly', $attr]) !!}
+                </div>
+            </div>
+
             <div class="form-group">
                 {!! Form::label('paidpercent', '已付比例（%）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
                 <div class='col-xs-8 col-sm-10'>
