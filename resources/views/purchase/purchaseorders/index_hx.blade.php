@@ -33,6 +33,9 @@
                         {!! Form::select('ticketedstatus', array(0 => '未开票', 1 => '部分开票', 2 => '全部开票'), null, ['class' => 'form-control', 'placeholder' => '--开票状态--']) !!}
                         {!! Form::text('batch', null, ['class' => 'form-control', 'placeholder' => '批号']) !!}
             --}}
+            {!! Form::text('supplier_name', null, ['class' => 'form-control', 'placeholder' => '供应商']) !!}
+            {!! Form::text('project_name', null, ['class' => 'form-control', 'placeholder' => '项目名称']) !!}
+            {!! Form::text('product_name', null, ['class' => 'form-control', 'placeholder' => '商品名称']) !!}
             {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '采购订单编号']) !!}
 
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}

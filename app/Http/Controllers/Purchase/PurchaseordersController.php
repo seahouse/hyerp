@@ -60,8 +60,12 @@ class PurchaseordersController extends Controller
         {
             $query->where('number', 'like', '%' . $key . '%');
         }
-//        if ($request->has('sohead_id'))
-//            $query->where('sohead_id', $request->get('sohead_id'));
+        if ($request->has('supplier_name') && strlen($request->input('supplier_name')))
+            $query->where('supplier_name', 'like', '%' . $request->input('supplier_name') . '%');
+        if ($request->has('project_name') && strlen($request->input('project_name')))
+            $query->where('sohead_descrip', 'like', '%' . $request->input('project_name') . '%');
+        if ($request->has('product_name') && strlen($request->input('product_name')))
+            $query->where('productname', 'like', '%' . $request->input('product_name') . '%');
 
         $purchaseorders = $query->paginate(15);
         return view('purchase.purchaseorders.index_hx', compact('purchaseorders'));
