@@ -24,9 +24,9 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('custinfo_name', '供应商名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('supplier_name', '供应商名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('custinfo_name', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+        {!! Form::text('supplier_name', null, ['class' => 'form-control', 'readonly', $attr]) !!}
     </div>
 </div>
 
