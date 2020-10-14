@@ -31,10 +31,31 @@
 </div>
 
 <div class="form-group">
+    {!! Form::label('supplier_contact_name', '供应商联系人:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+        {!! Form::text('supplier_contact_name', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('supplier_contact_phonenumber', '联系电话:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+        {!! Form::text('supplier_contact_phonenumber', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('supplier_contact_phonenumber2', '联系人手机:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+        {!! Form::text('supplier_contact_phonenumber2', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+    </div>
+</div>
+
+<div class="form-group">
     {!! Form::label('project_name', '对应项目:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
         @if (isset($purchaseorder->sohead))
-            {!! Form::text('project_name', $purchaseorder->sohead->number . '|' . $purchaseorder->sohead->descrip, ['class' => 'form-control', 'readonly', $attr]) !!}
+            {!! Form::text('project_name', $purchaseorder->sohead->number . '|' . $purchaseorder->sohead->custinfo_name . '|' .$purchaseorder->sohead->descrip, ['class' => 'form-control', 'readonly', $attr]) !!}
         @else
             {!! Form::text('project_name', null, ['class' => 'form-control', 'readonly', $attr]) !!}
         @endif
