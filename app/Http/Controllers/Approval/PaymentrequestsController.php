@@ -53,13 +53,11 @@ class PaymentrequestsController extends Controller
         $paymentstatus = $request->input('paymentstatus');
         $inputs = $request->all();
         $items = $this->searchrequest($request);
-        $totalamount = $items->get()->sum('amount');
+        // 临时去掉汇总，由于数据太大，获取数据失败。后面重新实现获取汇总值
+        $totalamount = 0.0;
+//        $totalamount = $items->get()->sum('amount');
 //        $totalamount = Paymentrequest::sum('amount');
         $paymentrequests = $items->paginate(10);
-//        if (null !== request('key'))
-//            $paymentrequests = $this->searchrequest($request)->paginate(10);
-//        else
-//            $paymentrequests = Paymentrequest::latest('created_at')->paginate(10);
         $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
 
 //        return view('approval.paymentrequests.index');
