@@ -9,6 +9,8 @@ use App\Models\Product\Pdm\Cffdr;
 use App\Models\Product\Pdm\Cffdrref;
 use App\Models\Product\Pdm\Cfobjkind;
 use App\Models\Product\Pdmitem;
+use App\Models\Purchase\Prhead;
+use App\Models\Purchase\Purchaseorder_hxold;
 use Illuminate\Http\Request;
 //use Request;
 use App\Http\Requests\ItemRequest;
@@ -157,6 +159,16 @@ class ItemsController extends Controller
             })
                 ->whereNull('end_date')
                 ->paginate(500);
+
+        return $items;
+    }
+
+    // 获取采购申请单中的物料
+    public function getitemsbyprhead($prhead_id)
+    {
+        //
+        $prhead = Prhead::findOrFail($prhead_id);
+        $items = $prhead->pritems->pluck('item');
 
         return $items;
     }

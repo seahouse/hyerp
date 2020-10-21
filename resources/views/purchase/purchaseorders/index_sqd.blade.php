@@ -83,6 +83,7 @@
                             <a href="{{ URL::to('/purchase/purchaseorders/'.$purchaseorder->id.'/edit_hx') }}" class="btn btn-success btn-sm pull-left">编辑</a>
                         @endif
                             <a href="{{ URL::to('/purchase/purchaseorders/' . $purchaseorder->id) }}" class="btn btn-success btn-sm pull-left">查看</a>
+                            <a href="{{ URL::to('/purchase/prtypes/') . '?prhead_id=' . $purchaseorder->id }}" class="btn btn-success btn-sm pull-left">分组</a>
                             <a href="{{ URL::to('/purchase/purchaseorders/' . $purchaseorder->id . '/supplierquotes') }}" class="btn btn-success btn-sm pull-left">供应商报价</a>
 
                             {{--

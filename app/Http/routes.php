@@ -255,6 +255,7 @@ Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => [
         Route::get('mmindex', 'ItemsController@mmindex');
         Route::get('mindex', 'ItemsController@mindex');
         Route::get('getitemsbykey/{key}', 'ItemsController@getitemsbykey');
+        Route::get('getitemsbyprhead/{prhead_id}', 'ItemsController@getitemsbyprhead');     // 获取采购申请单中的物料
     });
     Route::group(['prefix' => 'items/{id}'], function() {
         Route::get('receiptitems', 'ItemsController@receiptitems');
@@ -391,6 +392,12 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         Route::get('getitemsbyvendid/{vendid}', 'VendbankController@getitemsbyvendid');
     });
     Route::resource('vendbank', 'VendbankController');
+
+    // 采购申请单
+    Route::resource('prheads', 'PrheadController');
+    // 采购申请单明细
+    Route::resource('pritems', 'PritemController');
+
     // Route::get('purchaseorders/{id}/detail', 'PurchaseordersController@detail');
     // Route::get('purchaseorders/{id}/receiving', 'PurchaseordersController@receiving');
     // Route::get('purchaseorders/{id}/receiptorders', 'PurchaseordersController@receiptorders');
@@ -438,6 +445,11 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
     });
     Route::resource('poitems', 'PoitemsController');
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexpurchase');
+
+    // 采购申请单类别
+    Route::resource('prtypes', 'PrtypeController');
+    // 采购申请单类别明细
+    Route::resource('prtypeitems', 'PrtypeitemController');
 
     // 供应商报价
     Route::group(['prefix' => 'supplierquotes'], function() {

@@ -13,6 +13,8 @@ use App\Models\Approval\Mcitempurchaseitem;
 use App\Models\Product\Itemp_hxold;
 use App\Models\Product\Unit_hxold;
 use App\Models\Purchase\Poitem_hx;
+use App\Models\Purchase\Prhead;
+use App\Models\Purchase\Pritem;
 use App\Models\Purchase\Purchaseorder_hx;
 use App\Models\Sales\Salesorder_hxold;
 use App\Models\System\Userold;
@@ -566,7 +568,7 @@ class McitempurchaseController extends Controller
             $mcitempurchase->save();
 
             // 先不创建，直接返回，等其他流程做完后再放开
-            return;
+//            return;
 
             // 如果是审批完成且通过，则创建老系统中的采购申请单
             if ($status == 0)
@@ -618,24 +620,79 @@ class McitempurchaseController extends Controller
                 if (isset($sohead))
                     $sohead_name = $sohead->number . "|" . $sohead->custinfo_name . "|" . $sohead->descrip . "|" . $sohead->amount;
 
-                $data = [
-                    'purchasecompany_id'    => $purchasecompany_id,
-                    '采购订单编号'            => $pohead_number,
-                    '申请人ID'                => $userold_id,
-                    '对应项目ID'              => $mcitempurchase->sohead_id,
-                    '项目名称'                => $sohead_name,
-                    '申请到位日期'            => $mcitempurchase->expirationdate,
-                    '修造或工程'             => $cp,
-//                    '技术规范书'             => isset($techpurchaseattachment_techspecification) ? $techpurchaseattachment_techspecification->filename : '',
-                    '编号年份'                => Carbon::today()->year,
-                    '编号数字'                => $seqnumber,
-                    '编号商品名称'            => $item_index,
-                    'type'                    => '生产',
-                    'business_id'            => $mcitempurchase->business_id,
-                ];
-                $pohead = Purchaseorder_hx::create($data);
+//                $data = [
+//                    'purchasecompany_id'    => $purchasecompany_id,
+//                    '采购订单编号'            => $pohead_number,
+//                    '申请人ID'                => $userold_id,
+//                    '对应项目ID'              => $mcitempurchase->sohead_id,
+//                    '项目名称'                => $sohead_name,
+//                    '申请到位日期'            => $mcitempurchase->expirationdate,
+//                    '修造或工程'             => $cp,
+////                    '技术规范书'             => isset($techpurchaseattachment_techspecification) ? $techpurchaseattachment_techspecification->filename : '',
+//                    '编号年份'                => Carbon::today()->year,
+//                    '编号数字'                => $seqnumber,
+//                    '编号商品名称'            => $item_index,
+//                    'type'                    => '生产',
+//                    'business_id'            => $mcitempurchase->business_id,
+//                ];
+//                $pohead = Purchaseorder_hx::create($data);
+//
+//                if (isset($pohead))
+//                {
+//                    foreach ($mcitempurchase->mcitempurchaseitems as $mcitempurchaseitem)
+//                    {
+//                        $item = Itemp_hxold::where('goods_id', $mcitempurchaseitem->item_id)->first();
+//                        if (isset($item))
+//                        {
+//                            $data = [
+//                                'order_id'      => $pohead->id,
+//                                'goods_id'      => $mcitempurchaseitem->item_id,
+//                                'goods_name'    => $item->goods_name,
+//                                'goods_number'  => $mcitempurchaseitem->quantity,
+//                                'goods_unit'    => $item->goods_unit_name,
+//                            ];
+//                            Poitem_hx::create($data);
+//                        }
+//                    }
+//
+////                    // 拷贝“技术规范书”到对应的ERP目录下
+////                    if (isset($techpurchaseattachment_techspecification))
+////                    {
+////                        // 将中文的字段名称转换后使用
+////                        $pohead_id_key = iconv("UTF-8","GBK//IGNORE", '采购订单ID');
+////                        $dir = config('custom.hxold.purchase_techspecification_dir') . $pohead->$pohead_id_key . "/";
+////                        if (!is_dir($dir)) {
+////                            mkdir($dir);
+////                        }
+////                        $dest = iconv("UTF-8","GBK//IGNORE", $dir . $techpurchaseattachment_techspecification->filename);
+////                        copy(public_path($techpurchaseattachment_techspecification->path), $dest);
+////                    }
+//                }
 
-                if (isset($pohead))
+                $number = 'PR' . Carbon::today()->format('Ymd');
+                $dayseq = Prhead::where('number', 'like', $number . '%')->max('dayseq');
+                if (isset($dayseq))
+                    $dayseq++;
+                else
+                    $dayseq = 1;
+                $number .= str_pad($dayseq, 4, 0, STR_PAD_LEFT);
+
+                // 新的采购申请单
+                $data = [
+                    'number'                 => $number,
+                    'dayseq'                 => $dayseq,
+                    'company_id'            => $purchasecompany_id,
+                    'sohead_id'              => $mcitempurchase->sohead_id,
+                    'type'                    => '生产',
+                    'applicant_id'          => $mcitempurchase->applicant_id,
+//                    '申请到位日期'            => $mcitempurchase->expirationdate,
+//                    '技术规范书'             => isset($techpurchaseattachment_techspecification) ? $techpurchaseattachment_techspecification->filename : '',
+                    'approval_type'         => 'mcitempurchase',
+                    'process_instance_id'  => $processInstanceId,
+                ];
+                $prhead = Prhead::create($data);
+
+                if (isset($prhead))
                 {
                     foreach ($mcitempurchase->mcitempurchaseitems as $mcitempurchaseitem)
                     {
@@ -643,13 +700,11 @@ class McitempurchaseController extends Controller
                         if (isset($item))
                         {
                             $data = [
-                                'order_id'      => $pohead->id,
-                                'goods_id'      => $mcitempurchaseitem->item_id,
-                                'goods_name'    => $item->goods_name,
-                                'goods_number'  => $mcitempurchaseitem->quantity,
-                                'goods_unit'    => $item->goods_unit_name,
+                                'prhead_id'      => $prhead->id,
+                                'item_id'      => $mcitempurchaseitem->item_id,
+                                'quantity'      => $mcitempurchaseitem->quantity,
                             ];
-                            Poitem_hx::create($data);
+                            Pritem::create($data);
                         }
                     }
 
@@ -658,7 +713,7 @@ class McitempurchaseController extends Controller
 //                    {
 //                        // 将中文的字段名称转换后使用
 //                        $pohead_id_key = iconv("UTF-8","GBK//IGNORE", '采购订单ID');
-//                        $dir = config('custom.hxold.purchase_techspecification_dir') . $pohead->$pohead_id_key . "/";
+//                        $dir = config('custom.hxold.purchase_techspecification_dir') . $prhead->$pohead_id_key . "/";
 //                        if (!is_dir($dir)) {
 //                            mkdir($dir);
 //                        }
