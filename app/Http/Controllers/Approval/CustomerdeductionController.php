@@ -325,4 +325,23 @@ class CustomerdeductionController extends Controller
     {
         //
     }
+
+    public static function updateStatusByProcessInstanceId($processInstanceId, $status)
+    {
+        $customerdeduction = Customerdeduction::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if (isset($customerdeduction))
+        {
+            $customerdeduction->status = $status;
+            $customerdeduction->save();
+        }
+    }
+
+    public static function deleteByProcessInstanceId($processInstanceId)
+    {
+        $customerdeduction = Customerdeduction::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if ($customerdeduction)
+        {
+            $customerdeduction->forceDelete();
+        }
+    }
 }
