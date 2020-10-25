@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Sales\Custinfo;
 use App\Models\Sales\Custinfo_hxold;
 use App\Http\Requests\CustinfoRequest;
-use Request;
+use Request, Log;
 
 class CustinfosController extends Controller
 {
@@ -31,6 +31,7 @@ class CustinfosController extends Controller
         // $salesorders = Salesorder::latest('created_at')->where('number', 'like', '%' . $key . '%')
         //     ->orWhere('descrip', 'like', '%'.$key.'%')->paginate(20);
         $custinfos = Custinfo_hxold::where('name', 'like', '%' . $key . '%')->paginate(20);
+        Log::info($custinfos);
         return $custinfos;
     }
 

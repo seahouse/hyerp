@@ -666,10 +666,15 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::group(['prefix' => 'additionsalesorder'], function() {
         Route::get('mcreate', 'AdditionsalesorderController@mcreate');
         Route::post('mstore', 'AdditionsalesorderController@mstore');
-
     });
     Route::resource('additionsalesorder', 'AdditionsalesorderController');
 //    Route::resource('additionsalesorderattachment', 'AdditionsalesorderattachmentController');
+
+    Route::group(['prefix' => 'customerdeduction'], function() {
+        Route::get('mcreate', 'CustomerdeductionController@mcreate');
+        Route::post('mstore', 'CustomerdeductionController@mstore');
+    });
+    Route::resource('customerdeduction', 'CustomerdeductionController');
 
     Route::post('bingdingtalk', 'ApprovalController@bingdingtalk');
     Route::get('gethxitemsbykey', 'ApprovalController@gethxitemsbykey');

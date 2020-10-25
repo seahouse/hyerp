@@ -3985,4 +3985,137 @@ class ApprovalController extends Controller
 
         return $response;
     }
+
+    public static function customerdeduction($inputs)
+    {
+        $user = Auth::user();
+        $session = DingTalkController::getAccessToken();
+        $timestamp = time('2017-07-19 13:06:00');
+        $format = 'json';
+        $v = '2.0';
+
+        $process_code = config('custom.dingtalk.approval_processcode.customerdeduction');
+        $originator_user_id = $user->dtuserid;
+        $departmentList = json_decode($user->dtuser->department);
+        $dept_id = 0;
+        if (count($departmentList) > 0)
+            $dept_id = array_first($departmentList);
+//        $approvers = $inputs['approvers'];
+//        // if originator_user_id in approvers, skip pre approvers
+//        $approver_array = explode(',', $approvers);
+//        if (in_array($originator_user_id, $approver_array))
+//        {
+//            $offset = array_search($originator_user_id, $approver_array);
+//            $approver_array = array_slice($approver_array, $offset+1);
+//            $approvers = implode(",", $approver_array);
+//        }
+//        if ($approvers == "")
+//            $approvers = config('custom.dingtalk.default_approvers');       // wuceshi for test
+
+//        $detail_array = [];
+//        $additionsalesorder_items = json_decode($inputs['items_string']);
+//        $totalamount = 0.0;
+//        foreach ($additionsalesorder_items as $value) {
+//            if (strlen($value->type) > 0)
+//            {
+//                $item_array = [
+//                    [
+//                        'name'      => '增补内容',
+//                        'value'     => $value->type,
+//                    ],
+//                    [
+//                        'name'      => '其他类别补充说明',
+//                        'value'     => $value->otherremark,
+//                    ],
+//                    [
+//                        'name'      => '单位',
+//                        'value'     => $value->unit,
+//                    ],
+//                    [
+//                        'name'      => '数量',
+//                        'value'     => $value->quantity,
+//                    ],
+//                    [
+//                        'name'      => '此项增补金额（元）',
+//                        'value'     => $value->amount,
+//                    ],
+//                ];
+//                array_push($detail_array, $item_array);
+//                $totalamount += $value->amount;
+//            }
+//        }
+
+        $formdata = [
+            [
+                'name'      => '客户名称',
+                'value'     => $inputs['customer_name'],
+            ],
+            [
+                'name'      => '项目名称',
+                'value'     => $inputs['project_name'],
+            ],
+            [
+                'name'      => '项目编号',
+                'value'     => $inputs['sohead_number'],
+            ],
+            [
+                'name'      => '销售所属销售经理',
+                'value'     => $inputs['sohead_salesmanager'],
+            ],
+            [
+                'name'      => '扣款原因及明细',
+                'value'     => $inputs['deductions_for'],
+            ],
+            [
+                'name'      => '扣款金额（元）',
+                'value'     => $inputs['amount'],
+            ],
+//            [
+//                'name'      => '备注',
+//                'value'     => $inputs['remark'],
+//            ],
+            [
+                'name'      => '附件',
+                'value'     => $inputs['files_string'],
+            ],
+            [
+                'name'      => '图片',
+                'value'     => $inputs['image_urls'],
+            ],
+//            [
+//                'name'      => '增补内容明细',
+//                'value'     => json_encode($detail_array),
+//            ],
+        ];
+        $form_component_values = json_encode($formdata);
+//        dd($form_component_values);
+//        Log::info('process_code: ' . $process_code);
+//        Log::info('originator_user_id: ' . $originator_user_id);
+//        Log::info('dept_id: ' . $dept_id);
+//        Log::info('approvers: ' . $approvers);
+//        Log::info('form_component_values: ' . $form_component_values);
+
+//        Log::info(app_path());
+        $c = new DingTalkClient();
+//        $req = new SmartworkBpmsProcessinstanceCreateRequest();
+        $req = new OapiProcessinstanceCreateRequest();
+//        $req->setAgentId("41605932");
+        $req->setProcessCode($process_code);
+        $req->setOriginatorUserId($originator_user_id);
+        $req->setDeptId("$dept_id");
+
+        $req->setFormComponentValues("$form_component_values");
+
+//        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
+        $response = $c->execute($req, $session);
+        Log::info(json_encode($response));
+        return json_encode($response);
+        dd(json_encode($response, JSON_UNESCAPED_UNICODE));
+        return response()->json($response);
+
+//        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+//        $response = HttpDingtalkEco::post("", $params, json_encode($data));
+
+        return $response;
+    }
 }

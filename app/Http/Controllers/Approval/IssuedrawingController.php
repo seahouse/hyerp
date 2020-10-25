@@ -305,6 +305,7 @@ class IssuedrawingController extends Controller
 
         $this->validate($request, [
             'designdepartment'      => 'required',
+//            'company_id'             => 'required|integer|min:1',
             'productioncompany'      => 'required',
             'materialsupplier'      => 'required',
             'sohead_id'             => 'required|integer|min:1',
