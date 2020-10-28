@@ -1740,4 +1740,16 @@ class PaymentrequestsController extends Controller
         return redirect('/pdfjs/build/generic/web/viewer.html?file=http://www.huaxing-east.cn:2015/HxCgFiles/swht/7592/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf') ;
 //        view('/pdfjs/build/generic/web/viewer.html?file=compressed.tracemonkey-pldi-09.pdf');
     }
+
+    // 打印多个记录的页面
+    public function printmulti(Request $request)
+    {
+        if ($request->has('ids') && strlen($request->input('ids')))
+        {
+            $ids = explode(',', $request->input('ids'));
+            $paymentrequests = Paymentrequest::whereIn('id', $ids)->get();
+
+            return view('approval.paymentrequests.printmulti', compact('paymentrequests'));
+        }
+    }
 }

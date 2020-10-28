@@ -553,7 +553,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('hasrepeat/{pohead_id}/{amount?}', 'PaymentrequestsController@hasrepeat');    // pdfjs viewer.html
         Route::get('exceedingpay/{pohead_id}/{amount?}', 'PaymentrequestsController@exceedingpay');
         Route::get('indexjson', 'PaymentrequestsController@indexjson');    // pdfjs viewer.html
-//        Route::get('pdfjs/viewer/{pdffile?}', 'PaymentrequestsController@pdfjsviewer');
+        Route::get('printmulti', 'PaymentrequestsController@printmulti');
     });
     Route::resource('paymentrequests', 'PaymentrequestsController');
     Route::group(['prefix' => 'issuedrawing'], function() {

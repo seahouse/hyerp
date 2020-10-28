@@ -20,10 +20,11 @@
 --}}
 
         @if (Auth::user()->email === "admin@admin.com")
-        <form class="pull-right" action="/approval/paymentrequests/export" method="post">
+        <form class="pull-right form-inline" action="/approval/paymentrequests/export" method="post">
             {!! csrf_field() !!}
             <div class="pull-right">
                 <button type="submit" class="btn btn-default btn-sm">导出</button>
+                <a class="btn btn-default btn-sm" id="btnPrint">打印</a>
             </div>
         </form>
         @endif
@@ -59,6 +60,7 @@
     <table id="userDataTable" class="table table-striped table-hover table-condensed">
         <thead>
             <tr>
+                <th>选择</th>
                 <th>申请日期</th>
                 <th>采购公司</th>
                 <th>支付对象</th>
@@ -84,6 +86,9 @@
         <tbody>
             @foreach($paymentrequests as $paymentrequest)
                 <tr>
+                    <td>
+                        {{ Form::checkbox('select', $paymentrequest->id) }}
+                    </td>
                     <td>
                         @if (Agent::isDesktop() && (Auth::user()->email == "wangai@huaxing-east.com" || Auth::user()->email == "shenhaixia@huaxing-east.com"))
                             <a href="{{ url('/approval/paymentrequests/' . $paymentrequest->id . '/printpage') }}" target="_blank">{{ $paymentrequest->created_at }}</a>
@@ -175,6 +180,7 @@
                 <td>合计</td>
                 <td></td>
                 <td></td>
+                <td></td>
                 <td>{{ $paymentrequests->sum('amount') }}</td>
 @if (Agent::isDesktop())
                 <td></td>
@@ -200,6 +206,7 @@
 
             <tr class="success">
                 <td>汇总</td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td>
@@ -284,6 +291,22 @@
                 ]
             });
             --}}
+
+            $("#btnPrint").click(function() {
+                var checkvalues = [];
+                $('table input:checkbox').each(function (i) {
+                    if ($(this).is(':checked') == true)
+                        checkvalues.push($(this).val());
+                });
+                if (checkvalues.length > 0)
+                {
+                    {{--alert('{{ url('approval/paymentrequests/printmulti') . '?ids=' }}' + checkvalues.join(","));--}}
+                    {{--window.location.href = '{{ url('approval/paymentrequests/printmulti') . '?ids=' }}' + checkvalues.join(",");--}}
+                    window.open("{{ url('approval/paymentrequests/printmulti') . '?ids=' }}" + checkvalues.join(","), "_blank");
+                }
+                else
+                    alert('没有选择任何对象。');
+            });
         });
     </script>
 @endsection
