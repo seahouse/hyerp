@@ -422,14 +422,17 @@ class IssuedrawingController extends Controller
                 $tonnagedetaildata['issuedrawing_id'] = $issuedrawing->id;
                 if (strlen($tonnagedetaildata['name']) > 0)
                 {
-                    $issuedrawingtonnagedetail = Issuedrawingtonnagedetail::create($tonnagedetaildata);
-
-                    if (isset($issuedrawingtonnagedetail))
+                    if ($tonnagedetaildata['tonnage'] > 0.0)
                     {
-                        $price = $issuedrawingtonnagedetail->unitprice * $issuedrawingtonnagedetail->tonnage;
-                        $totalprice += $price;
-                        $totaltonnage += $issuedrawingtonnagedetail->tonnage;
-                        array_push($dtunitpricedetail, $issuedrawingtonnagedetail->name . ':' . $issuedrawingtonnagedetail->tonnage . '吨*' . $issuedrawingtonnagedetail->unitprice . '元=' . $price . '元');
+                        $issuedrawingtonnagedetail = Issuedrawingtonnagedetail::create($tonnagedetaildata);
+
+                        if (isset($issuedrawingtonnagedetail))
+                        {
+                            $price = $issuedrawingtonnagedetail->unitprice * $issuedrawingtonnagedetail->tonnage;
+                            $totalprice += $price;
+                            $totaltonnage += $issuedrawingtonnagedetail->tonnage;
+                            array_push($dtunitpricedetail, $issuedrawingtonnagedetail->name . ':' . $issuedrawingtonnagedetail->tonnage . '吨*' . $issuedrawingtonnagedetail->unitprice . '元=' . $price . '元');
+                        }
                     }
                 }
             }

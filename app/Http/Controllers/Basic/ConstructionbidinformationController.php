@@ -224,9 +224,7 @@ class ConstructionbidinformationController extends Controller
                     $constructionbidinformationitem->specification_technicalrequirements = $constructionbidinformation_item->specification_technicalrequirements;
                     $constructionbidinformationitem->value = doubleval($constructionbidinformation_item->value);
                     $constructionbidinformationitem->multiple = doubleval($constructionbidinformation_item->multiple);
-//                    $constructionbidinformationitem->value_line3 = doubleval($constructionbidinformation_item->value_line3);
-//                    $constructionbidinformationitem->value_line4 = doubleval($constructionbidinformation_item->value_line4);
-                    $constructionbidinformationitem->unit = $constructionbidinformation_item->unit;
+//                    $constructionbidinformationitem->unit = $constructionbidinformation_item->unit;
                     $constructionbidinformationitem->remark = $constructionbidinformation_item->remark;
                     $constructionbidinformationitem->save();
                 }

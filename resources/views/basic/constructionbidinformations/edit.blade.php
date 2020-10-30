@@ -97,7 +97,8 @@
                         {{--{!! Form::text('value_line4', $constructionbidinformationitem->value_line4, ['class' => 'form-control']) !!}--}}
                     {{--</td>--}}
                     <td>
-                        {!! Form::select('unit', $unitstrList, $constructionbidinformationitem->unit, ['class' => 'form-control']) !!}
+                        {{ $constructionbidinformationitem->unit }}
+{{--                        {!! Form::select('unit', $unitstrList, $constructionbidinformationitem->unit, ['class' => 'form-control']) !!}--}}
                     </td>
                     <td>
                         {!! Form::text('remark', $constructionbidinformationitem->remark, ['class' => 'form-control']) !!}
