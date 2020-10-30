@@ -41,20 +41,17 @@ class IssuedrawingController extends Controller
             $issuedrawings = $this->searchrequest($request);
         else
             $issuedrawings = Issuedrawing::latest('created_at')->paginate(10);
-//        $purchaseorders = Purchaseorder_hxold::whereIn('id', $issuedrawings->pluck('pohead_id'))->get();
-//        $totalamount = Issuedrawing::sum('amount');
+        //        $purchaseorders = Purchaseorder_hxold::whereIn('id', $issuedrawings->pluck('pohead_id'))->get();
+        //        $totalamount = Issuedrawing::sum('amount');
 
-//        return view('approval.paymentrequests.index');
+        //        return view('approval.paymentrequests.index');
 
         // if ($request->has('key'))
         // use request('key') for null compare, not $request->has('key')
 
-        if (null !== request('key'))
-        {
+        if (null !== request('key')) {
             return view('approval.issuedrawings.index', compact('issuedrawings', 'key', 'inputs', 'purchaseorders', 'totalamount'));
-        }
-        else
-        {
+        } else {
             return view('approval.issuedrawings.index', compact('issuedrawings', 'purchaseorders', 'totalamount'));
         }
     }
@@ -74,8 +71,8 @@ class IssuedrawingController extends Controller
         $paymentstatus = $request->input('paymentstatus');
         $inputs = $request->all();
         $issuedrawings = $this->searchrequest($request);
-//        $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
-//        $totalamount = Paymentrequest::sum('amount');
+        //        $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
+        //        $totalamount = Paymentrequest::sum('amount');
 
         return view('approval.issuedrawings.index', compact('issuedrawings', 'key', 'inputs', 'purchaseorders', 'totalamount'));
     }
@@ -87,21 +84,20 @@ class IssuedrawingController extends Controller
 
         $supplier_ids = [];
         $purchaseorder_ids = [];
-//        if (strlen($key) > 0)
-//        {
-//            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
-//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
-//        }
+        //        if (strlen($key) > 0)
+        //        {
+        //            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+        //            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
+        //        }
 
         $query = Issuedrawing::latest('created_at');
 
-        if (strlen($key) > 0)
-        {
-//            $query->where('business_id', 'like', '%'.$key.'%');
+        if (strlen($key) > 0) {
+            //            $query->where('business_id', 'like', '%'.$key.'%');
             $query->leftJoin('hxcrm2016.dbo.vorder', 'vorder.id', '=', 'issuedrawings.sohead_id');
-            $query->where(function ($query) use ($key){
-                $query->where('business_id', 'like', '%'.$key.'%')
-                    ->orWhere('hxcrm2016.dbo.vorder.number', 'like', '%'.$key.'%');
+            $query->where(function ($query) use ($key) {
+                $query->where('business_id', 'like', '%' . $key . '%')
+                    ->orWhere('hxcrm2016.dbo.vorder.number', 'like', '%' . $key . '%');
             });
         }
 
@@ -111,55 +107,55 @@ class IssuedrawingController extends Controller
         if ($request->has('sohead_id') && $request->input('sohead_id') > 0)
             $query->where('sohead_id', $request->input('sohead_id'));
 
-//        // paymentmethod
-//        if ($request->has('paymentmethod'))
-//        {
-//            $query->where('paymentmethod', $request->input('paymentmethod'));
-//        }
-//
-//        // payment status
-//        // because need search hxold database, so select this condition last.
-//        if ($request->has('paymentstatus'))
-//        {
-//            $paymentstatus = $request->input('paymentstatus');
-//            if ($paymentstatus == 0)
-//            {
-//                $query->where('approversetting_id', '0');
-//
-//                $paymentrequestids = [];
-//                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
-//                    foreach ($paymentrequests as $paymentrequest) {
-//                        # code...
-//                        if (isset($paymentrequest->purchaseorder_hxold->payments))
-//                        {
-//                            if ($paymentrequest->paymentrequestapprovals->max('created_at') < $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
-//                                array_push($paymentrequestids, $paymentrequest->id);
-//                        }
-//                    }
-//                });
-//
-//                // dd($paymentrequestids);
-//                $query->whereIn('id', $paymentrequestids);
-//            }
-//            elseif ($paymentstatus == -1)
-//            {
-//                $query->where('approversetting_id', '0');
-//
-//                $paymentrequestids = [];
-//                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
-//                    foreach ($paymentrequests as $paymentrequest) {
-//                        # code...
-//                        if (isset($paymentrequest->purchaseorder_hxold->payments))
-//                        {
-//                            if ($paymentrequest->paymentrequestapprovals->max('created_at') > $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
-//                                array_push($paymentrequestids, $paymentrequest->id);
-//                        }
-//                    }
-//                });
-//
-//                $query->whereIn('id', $paymentrequestids);
-//            }
-//        }
+        //        // paymentmethod
+        //        if ($request->has('paymentmethod'))
+        //        {
+        //            $query->where('paymentmethod', $request->input('paymentmethod'));
+        //        }
+        //
+        //        // payment status
+        //        // because need search hxold database, so select this condition last.
+        //        if ($request->has('paymentstatus'))
+        //        {
+        //            $paymentstatus = $request->input('paymentstatus');
+        //            if ($paymentstatus == 0)
+        //            {
+        //                $query->where('approversetting_id', '0');
+        //
+        //                $paymentrequestids = [];
+        //                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
+        //                    foreach ($paymentrequests as $paymentrequest) {
+        //                        # code...
+        //                        if (isset($paymentrequest->purchaseorder_hxold->payments))
+        //                        {
+        //                            if ($paymentrequest->paymentrequestapprovals->max('created_at') < $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
+        //                                array_push($paymentrequestids, $paymentrequest->id);
+        //                        }
+        //                    }
+        //                });
+        //
+        //                // dd($paymentrequestids);
+        //                $query->whereIn('id', $paymentrequestids);
+        //            }
+        //            elseif ($paymentstatus == -1)
+        //            {
+        //                $query->where('approversetting_id', '0');
+        //
+        //                $paymentrequestids = [];
+        //                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
+        //                    foreach ($paymentrequests as $paymentrequest) {
+        //                        # code...
+        //                        if (isset($paymentrequest->purchaseorder_hxold->payments))
+        //                        {
+        //                            if ($paymentrequest->paymentrequestapprovals->max('created_at') > $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
+        //                                array_push($paymentrequestids, $paymentrequest->id);
+        //                        }
+        //                    }
+        //                });
+        //
+        //                $query->whereIn('id', $paymentrequestids);
+        //            }
+        //        }
 
 
         $issuedrawings = $query->select('issuedrawings.*')
@@ -181,37 +177,36 @@ class IssuedrawingController extends Controller
         $query->where('applicant_id', $userid);
         $query->where('status', '>', 0);
 
-        if (strlen($key) > 0)
-        {
-            $query->where('business_id', 'like', '%'.$key.'%');
+        if (strlen($key) > 0) {
+            $query->where('business_id', 'like', '%' . $key . '%');
         }
 
-//        if (strlen($paymenttype) > 0)
-//        {
-//            $query->where('paymenttype', $paymenttype);
-//        }
-//
-//        if (strlen($projectname) > 0)
-//        {
-//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
-//                ->where('descrip', 'like', '%'.$projectname .'%')
-//                ->pluck('id');
-//            $query->whereIn('pohead_id', $purchaseorder_ids);
-//        }
-//
-//        if (strlen($productname) > 0)
-//        {
-//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
-//                ->where('productname', 'like', '%'.$productname .'%')
-//                ->pluck('id');
-//            $query->whereIn('pohead_id', $purchaseorder_ids);
-//        }
-//
-//        if (strlen($suppliername) > 0)
-//        {
-//            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$suppliername.'%')->pluck('id');
-//            $query->whereIn('supplier_id', $supplier_ids);
-//        }
+        //        if (strlen($paymenttype) > 0)
+        //        {
+        //            $query->where('paymenttype', $paymenttype);
+        //        }
+        //
+        //        if (strlen($projectname) > 0)
+        //        {
+        //            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+        //                ->where('descrip', 'like', '%'.$projectname .'%')
+        //                ->pluck('id');
+        //            $query->whereIn('pohead_id', $purchaseorder_ids);
+        //        }
+        //
+        //        if (strlen($productname) > 0)
+        //        {
+        //            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+        //                ->where('productname', 'like', '%'.$productname .'%')
+        //                ->pluck('id');
+        //            $query->whereIn('pohead_id', $purchaseorder_ids);
+        //        }
+        //
+        //        if (strlen($suppliername) > 0)
+        //        {
+        //            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$suppliername.'%')->pluck('id');
+        //            $query->whereIn('supplier_id', $supplier_ids);
+        //        }
 
         $issuedrawings = $query->select()->paginate(10);
         return $issuedrawings;
@@ -227,37 +222,36 @@ class IssuedrawingController extends Controller
         $query->where('applicant_id', $userid);
         $query->where('status', '<=', 0);
 
-        if (strlen($key) > 0)
-        {
-            $query->where('business_id', 'like', '%'.$key.'%');
+        if (strlen($key) > 0) {
+            $query->where('business_id', 'like', '%' . $key . '%');
         }
 
-//        if (strlen($paymenttype) > 0)
-//        {
-//            $query->where('paymenttype', $paymenttype);
-//        }
-//
-//        if (strlen($projectname) > 0)
-//        {
-//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
-//                ->where('descrip', 'like', '%'.$projectname .'%')
-//                ->pluck('id');
-//            $query->whereIn('pohead_id', $purchaseorder_ids);
-//        }
-//
-//        if (strlen($productname) > 0)
-//        {
-//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
-//                ->where('productname', 'like', '%'.$productname .'%')
-//                ->pluck('id');
-//            $query->whereIn('pohead_id', $purchaseorder_ids);
-//        }
-//
-//        if (strlen($suppliername) > 0)
-//        {
-//            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$suppliername.'%')->pluck('id');
-//            $query->whereIn('supplier_id', $supplier_ids);
-//        }
+        //        if (strlen($paymenttype) > 0)
+        //        {
+        //            $query->where('paymenttype', $paymenttype);
+        //        }
+        //
+        //        if (strlen($projectname) > 0)
+        //        {
+        //            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+        //                ->where('descrip', 'like', '%'.$projectname .'%')
+        //                ->pluck('id');
+        //            $query->whereIn('pohead_id', $purchaseorder_ids);
+        //        }
+        //
+        //        if (strlen($productname) > 0)
+        //        {
+        //            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+        //                ->where('productname', 'like', '%'.$productname .'%')
+        //                ->pluck('id');
+        //            $query->whereIn('pohead_id', $purchaseorder_ids);
+        //        }
+        //
+        //        if (strlen($suppliername) > 0)
+        //        {
+        //            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$suppliername.'%')->pluck('id');
+        //            $query->whereIn('supplier_id', $supplier_ids);
+        //        }
 
         $issuedrawings = $query->select()->paginate(10);
         return $issuedrawings;
@@ -277,9 +271,9 @@ class IssuedrawingController extends Controller
     {
         //
         $config = DingTalkController::getconfig();
-//        $agent = new Agent();
-//
-//        return view('approval/paymentrequests/mcreate', compact('config', 'agent'));
+        //        $agent = new Agent();
+        //
+        //        return view('approval/paymentrequests/mcreate', compact('config', 'agent'));
         return view('approval/issuedrawings/mcreate', compact('config'));
     }
 
@@ -298,54 +292,52 @@ class IssuedrawingController extends Controller
     {
         //
         $input = $request->all();
-//        dd($input->file('image_file'));
-//        dd($input);
-//        $tonnagedetailArray = json_decode($request->input('tonnagedetails_string'), true);
-//        dd($tonnagedetailArray);
+        //        dd($input->file('image_file'));
+        //        dd($input);
+        //        $tonnagedetailArray = json_decode($request->input('tonnagedetails_string'), true);
+        //        dd($tonnagedetailArray);
 
         $this->validate($request, [
             'designdepartment'      => 'required',
-//            'company_id'             => 'required|integer|min:1',
+            //            'company_id'             => 'required|integer|min:1',
             'productioncompany'      => 'required',
             'materialsupplier'      => 'required',
             'sohead_id'             => 'required|integer|min:1',
             'overview'              => 'required',
-//            'tonnage'               => 'required|numeric',
+            //            'tonnage'               => 'required|numeric',
             'drawingchecker_id'     => 'required|integer|min:1',
             'requestdeliverydate'   => 'required',
             'drawingcount'          => 'required|integer|min:1',
             'drawingattachments.*'  => 'required|file',
-//            'images.*'                => 'required|file',
+            //            'images.*'                => 'required|file',
             'images.*'                => 'required|image',
-//            'images.*'                => 'required|image|mimetypes:application/octet-stream',
-//            'images.*'                => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
-//            'image_file'            => 'required|image',
-//            'image_file'            => 'required|file|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+            //            'images.*'                => 'required|image|mimetypes:application/octet-stream',
+            //            'images.*'                => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+            //            'image_file'            => 'required|image',
+            //            'image_file'            => 'required|file|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
         ]);
-//        $input = HelperController::skipEmptyValue($input);
+        //        $input = HelperController::skipEmptyValue($input);
 
 
         // dd($request->file('paymentnodeattachments')->getClientOriginalExtension());
         // dd($request->input('amount', '0.0'));
 
-        $input['company_name'] = '';
-        $company = Company_hxold::find($input['company_id']);
-        if (isset($company))
-            $input['company_name'] = $company->name;
+        // $input['company_name'] = '';
+        // $company = Company_hxold::find($input['company_id']);
+        // if (isset($company))
+        //     $input['company_name'] = $company->name;
 
         $input['applicant_id'] = Auth::user()->id;
 
         // set approversetting_id
         $approvaltype_id = self::typeid();
-        if ($approvaltype_id > 0)
-        {
+        if ($approvaltype_id > 0) {
             $approversettingFirst = Approversetting::where('approvaltype_id', $approvaltype_id)->orderBy('level')->first();
             if ($approversettingFirst)
                 $input['approversetting_id'] = $approversettingFirst->id;
             else
                 $input['approversetting_id'] = -1;
-        }
-        else
+        } else
             $input['approversetting_id'] = -1;
 
         $input['tonnage'] = 0.0;
@@ -354,17 +346,15 @@ class IssuedrawingController extends Controller
         // create drawingattachments
         $drawingattachments_url = [];
         $drawingattachments_url2 = [];
-        if ($issuedrawing)
-        {
-            $files = array_get($input,'drawingattachments');
+        if ($issuedrawing) {
+            $files = array_get($input, 'drawingattachments');
             $destinationPath = 'uploads/approval/issuedrawing/' . $issuedrawing->id . '/drawingattachments/';
             foreach ($files as $key => $file) {
-                if ($file)
-                {
+                if ($file) {
                     $originalName = $file->getClientOriginalName();         // aa.xlsx
                     $extension = $file->getClientOriginalExtension();       // .xlsx
-//                    Log::info('extension: ' . $extension);
-                    $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                    //                    Log::info('extension: ' . $extension);
+                    $filename = date('YmdHis') . rand(100, 200) . '.' . $extension;
                     Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
 
                     // $fileName = rand(11111, 99999) . '.' . $extension;
@@ -381,29 +371,26 @@ class IssuedrawingController extends Controller
                     array_push($drawingattachments_url, url($destinationPath . $filename));
                     if (strcasecmp($extension, "pdf") == 0)
                         array_push($drawingattachments_url2, url('pdfjs/viewer') . "?file=" . "/$destinationPath$filename");
-                    else
-                    {
+                    else {
                         $filename2 = str_replace(".", "_", $filename);
                         array_push($drawingattachments_url2, url("$destinationPath$filename2"));
                     }
-//                    array_push($drawingattachments_url2, url('mddauth/pdfjs-viewer') . "?file=" . "/$destinationPath$filename");
+                    //                    array_push($drawingattachments_url2, url('mddauth/pdfjs-viewer') . "?file=" . "/$destinationPath$filename");
 
 
-//                    DingTalkController::send_oa_paymentrequest($touser->dtuserid, '',
-//                        url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
-//                        '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', $paymentrequest,
-//                        config('custom.dingtalk.agentidlist.approval'));
+                    //                    DingTalkController::send_oa_paymentrequest($touser->dtuserid, '',
+                    //                        url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
+                    //                        '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.', $paymentrequest,
+                    //                        config('custom.dingtalk.agentidlist.approval'));
                 }
             }
         }
 
         // create issuedrawingcabinets
-        if (isset($issuedrawing))
-        {
+        if (isset($issuedrawing)) {
             $issuedrawingcabinet_items = json_decode($input['items_string']);
             foreach ($issuedrawingcabinet_items as $issuedrawingcabinet_item) {
-                if (strlen($issuedrawingcabinet_item->name) > 0)
-                {
+                if (strlen($issuedrawingcabinet_item->name) > 0) {
                     $item_array = json_decode(json_encode($issuedrawingcabinet_item), true);
                     $item_array['issuedrawing_id'] = $issuedrawing->id;
                     $issuedrawingcabinet = Issuedrawingcabinet::create($item_array);
@@ -415,13 +402,11 @@ class IssuedrawingController extends Controller
         $totalprice = 0.0;
         $totaltonnage = 0.0;
         $dtunitpricedetail = [];
-        if (isset($issuedrawing))
-        {
+        if (isset($issuedrawing)) {
             $tonnagedetailArray = json_decode($request->input('tonnagedetails_string'), true);
             foreach ($tonnagedetailArray as $tonnagedetaildata) {
                 $tonnagedetaildata['issuedrawing_id'] = $issuedrawing->id;
-                if (strlen($tonnagedetaildata['name']) > 0)
-                {
+                if (strlen($tonnagedetaildata['name']) > 0) {
                     if ($tonnagedetaildata['tonnage'] > 0.0)
                     {
                         $issuedrawingtonnagedetail = Issuedrawingtonnagedetail::create($tonnagedetaildata);
@@ -443,22 +428,19 @@ class IssuedrawingController extends Controller
 
         $image_urls = [];
         // create images in the desktop
-        if ($issuedrawing)
-        {
-            $files = array_get($input,'images');
+        if ($issuedrawing) {
+            $files = array_get($input, 'images');
             $destinationPath = 'uploads/approval/issuedrawing/' . $issuedrawing->id . '/images/';
-            if ($files)
-            {
+            if ($files) {
                 foreach ($files as $key => $file) {
-                    if ($file)
-                    {
+                    if ($file) {
                         $originalName = $file->getClientOriginalName();
                         $extension = $file->getClientOriginalExtension();       // .xlsx
-                        $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                        $filename = date('YmdHis') . rand(100, 200) . '.' . $extension;
                         Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
 
                         $extension = $file->getClientOriginalExtension();
-                        $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                        $filename = date('YmdHis') . rand(100, 200) . '.' . $extension;
                         // $fileName = rand(11111, 99999) . '.' . $extension;
                         $upload_success = $file->move($destinationPath, $filename);
 
@@ -472,15 +454,13 @@ class IssuedrawingController extends Controller
 
                         array_push($image_urls, url($destinationPath . $filename));
                     }
-
                 }
             }
         }
 
         // create images from dingtalk mobile
-        if ($issuedrawing)
-        {
-            $images = array_where($input, function($key, $value) {
+        if ($issuedrawing) {
+            $images = array_where($input, function ($key, $value) {
                 if (substr_compare($key, 'image_', 0, 6) == 0)
                     return $value;
             });
@@ -494,7 +474,7 @@ class IssuedrawingController extends Controller
                 // $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
                 // Storage::disk('local')->put($sFilename, file_get_contents($value));
                 // Storage::move($sFilename, '../abcd.jpg');
-                $dir = 'images/approval/issuedrawing/' . $issuedrawing->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                $dir = 'images/approval/issuedrawing/' . $issuedrawing->id . '/' . date('YmdHis') . rand(100, 200) . '.' . $sExtension;
                 $parts = explode('/', $dir);
                 $filename = array_pop($parts);
                 $dir = '';
@@ -506,7 +486,7 @@ class IssuedrawingController extends Controller
                     }
                 }
 
-//                $originalName = $file->getClientOriginalName();
+                //                $originalName = $file->getClientOriginalName();
                 Storage::put($destinationPath . $filename, file_get_contents($value));
 
                 file_put_contents("$dir/$filename", file_get_contents($value));
@@ -526,8 +506,7 @@ class IssuedrawingController extends Controller
             }
         }
 
-        if (isset($issuedrawing))
-        {
+        if (isset($issuedrawing)) {
             $input['drawingattachments_url'] = implode(" , ", $drawingattachments_url2);
             $input['associatedapprovals'] = strlen($input['associatedapprovals']) > 0 ? json_encode(explode(",", $input['associatedapprovals'])) : "";
 
@@ -535,22 +514,19 @@ class IssuedrawingController extends Controller
             $input['approvers'] = $issuedrawing->approvers();
             if ($input['approvers'] == "")
                 $input['approvers'] = config('custom.dingtalk.default_approvers');       // wuceshi for test
-//            $input['cabinet'] = $input['cabinetname'] . ":" . $input['cabinetquantity'];
+            //            $input['cabinet'] = $input['cabinetname'] . ":" . $input['cabinetquantity'];
             if ($request->has('bolt') && $request->get('bolt') == '1')
                 $input['bolt_str'] = '是';
             else
                 $input['bolt_str'] = '否';
             $response = DingTalkController::issuedrawing($input);
-//            Log::info($response);
+            //            Log::info($response);
             $responsejson = json_decode($response);
-            if ($responsejson->result->ding_open_errcode <> 0)
-            {
+            if ($responsejson->result->ding_open_errcode <> 0) {
                 $issuedrawing->forceDelete();
                 Log::info(json_encode($input));
                 dd('钉钉端创建失败: ' . $responsejson->result->error_msg);
-            }
-            else
-            {
+            } else {
                 // save process_instance_id and business_id
                 $process_instance_id = $responsejson->result->process_instance_id;
 
@@ -569,21 +545,20 @@ class IssuedrawingController extends Controller
 
                 // send dingtalk message.
                 $touser = $issuedrawing->nextapprover();
-                if ($touser)
-                {
+                if ($touser) {
 
-//                    DingTalkController::send_link($touser->dtuserid, '',
-//                        url('mddauth/approval/approval-paymentrequestapprovals-' . $issuedrawing->id . '-mcreate'), '',
-//                        '供应商付款审批', '来自' . $issuedrawing->applicant->name . '的付款申请单需要您审批.',
-//                        config('custom.dingtalk.agentidlist.approval'));
-//
-//                    if (Auth::user()->email == "admin@admin.com")
-//                    {
-//                        DingTalkController::send_oa_paymentrequest($touser->dtuserid, '',
-//                            url('mddauth/approval/approval-paymentrequestapprovals-' . $issuedrawing->id . '-mcreate'), '',
-//                            '供应商付款审批', '来自' . $issuedrawing->applicant->name . '的付款申请单需要您审批.', $issuedrawing,
-//                            config('custom.dingtalk.agentidlist.approval'));
-//                    }
+                    //                    DingTalkController::send_link($touser->dtuserid, '',
+                    //                        url('mddauth/approval/approval-paymentrequestapprovals-' . $issuedrawing->id . '-mcreate'), '',
+                    //                        '供应商付款审批', '来自' . $issuedrawing->applicant->name . '的付款申请单需要您审批.',
+                    //                        config('custom.dingtalk.agentidlist.approval'));
+                    //
+                    //                    if (Auth::user()->email == "admin@admin.com")
+                    //                    {
+                    //                        DingTalkController::send_oa_paymentrequest($touser->dtuserid, '',
+                    //                            url('mddauth/approval/approval-paymentrequestapprovals-' . $issuedrawing->id . '-mcreate'), '',
+                    //                            '供应商付款审批', '来自' . $issuedrawing->applicant->name . '的付款申请单需要您审批.', $issuedrawing,
+                    //                            config('custom.dingtalk.agentidlist.approval'));
+                    //                    }
 
                 }
             }
@@ -603,8 +578,8 @@ class IssuedrawingController extends Controller
     public function show($id)
     {
         //
-        $issuedrawing = Issuedrawing::findOrFail($id);
-//        $agent = new Agent();
+        $issuedrawing = Issuedrawing::findOrFail($id);  //dd($issuedrawing->drawingchecker);
+        //        $agent = new Agent();
         $config = DingTalkController::getconfig();
         return view('approval.issuedrawings.show', compact('issuedrawing', 'config'));
     }
@@ -654,11 +629,11 @@ class IssuedrawingController extends Controller
 
         Issuedrawingmodifyweightlog::create($input);
 
-//        Operationlog::create(['table_name' => Operationlog::$ISSUEDRAWING,
-//            'table_id' => $issuedrawing->id,
-//            'operation'     => '重量由' . $request->input('tonnage_before') . '更新为' . $request->input('tonnage'),
-//            'operator_id'   => Auth::user()->id,
-//        ]);
+        //        Operationlog::create(['table_name' => Operationlog::$ISSUEDRAWING,
+        //            'table_id' => $issuedrawing->id,
+        //            'operation'     => '重量由' . $request->input('tonnage_before') . '更新为' . $request->input('tonnage'),
+        //            'operator_id'   => Auth::user()->id,
+        //        ]);
 
         return redirect('approval/issuedrawing');
     }
@@ -691,8 +666,7 @@ class IssuedrawingController extends Controller
     public static function typeid()
     {
         $approvaltype = Approvaltype::where('name', self::$approvaltype_name)->first();
-        if ($approvaltype)
-        {
+        if ($approvaltype) {
             return $approvaltype->id;
         }
         return 0;
@@ -701,8 +675,7 @@ class IssuedrawingController extends Controller
     public static function updateStatusByProcessInstanceId($processInstanceId, $status)
     {
         $issuedrawing = Issuedrawing::where('process_instance_id', $processInstanceId)->firstOrFail();
-        if ($issuedrawing)
-        {
+        if ($issuedrawing) {
             $issuedrawing->status = $status;
             $issuedrawing->save();
         }
@@ -711,8 +684,7 @@ class IssuedrawingController extends Controller
     public static function deleteByProcessInstanceId($processInstanceId)
     {
         $issuedrawing = Issuedrawing::where('process_instance_id', $processInstanceId)->firstOrFail();
-        if ($issuedrawing)
-        {
+        if ($issuedrawing) {
             $issuedrawing->forceDelete();
         }
     }
@@ -727,28 +699,26 @@ class IssuedrawingController extends Controller
     public function gettonnagedetailhtml(Request $request)
     {
         $strhtml = "";
-        if ($request->has('selecttype') && $request->has('selectarea'))
-        {
-            foreach (config('custom.dingtalk.approversettings.issuedrawing.tonnagedetail.' . $request->input('selectarea') . '.' . $request->input('selecttype')) as $key => $value)
-            {
+        if ($request->has('selecttype') && $request->has('selectarea')) {
+            foreach (config('custom.dingtalk.approversettings.issuedrawing.tonnagedetail.' . $request->input('selectarea') . '.' . $request->input('selecttype')) as $key => $value) {
                 $strhtml .= "<div class=\"form-group\" name=\"div_unitpriceitem\">";
                 $strhtml .= '<label for="paowan" class="col-xs-4 col-sm-2 control-label">' . $value . ':</label>
                             <div class="col-sm-5 col-xs-4">
                             <input class="form-control" placeholder="吨数" ="" name="tonnage" type="text" data-name="' . $value . '">
                             </div>
                             <div class="col-sm-5 col-xs-4">';
-//                $strhtml .='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' . $value[$request->input('productioncompany')][$request->input('selectarea')] . '" readonly="readonly">';
+                //                $strhtml .='<input class="form-control" placeholder="单价" ="" name="unitprice" type="text" value="' . $value[$request->input('productioncompany')][$request->input('selectarea')] . '" readonly="readonly">';
                 $strhtml .= '</div>';
                 $strhtml .= '</div>';
             }
         }
 
-//        $data = [
-//            'productioncompany' => '泰州分公司',
-//            'selecttype'         => '国外',
-//        ];
-//        Log::info($strhtml);
+        //        $data = [
+        //            'productioncompany' => '泰州分公司',
+        //            'selecttype'         => '国外',
+        //        ];
+        //        Log::info($strhtml);
         return $strhtml;
-//        return response()->json($data);
+        //        return response()->json($data);
     }
 }
