@@ -5,6 +5,7 @@ namespace App\Models\Purchase;
 use App\Models\Approval\Corporatepayment;
 use App\Models\Approval\Vendordeduction;
 use App\Models\Approval\Vendordeductionitem;
+use App\Models\Product\Itemp_hxold;
 use App\Models\System\Employee_hxold;
 use Illuminate\Database\Eloquent\Model;
 

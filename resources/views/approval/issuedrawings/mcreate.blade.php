@@ -410,7 +410,8 @@
 						var strhtml = '';
 						$.each(result.data, function(i, field) {
 							btnId = 'btnSelectProject_' + String(i);
-							strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.number + "</h4><p>" + field.descrip + "</p></button>"
+							strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" +
+								field.number + "</h4><p>" + field.descrip + "</p><p>" + field.company_name + "</p></button>"
 						});
 						if (strhtml == '')
 							strhtml = '无记录。';
@@ -435,6 +436,7 @@
 					$("#" + $("#selectProjectModal").find('#name').val()).val(field.descrip);
 					$("#" + $("#selectProjectModal").find('#id').val()).val(soheadid);
                     $("#sohead_number").val(field.number);
+					$("#company_name").val(field.company_name);
 //					$("#supplier_bank").val(field.bank);
 //					$("#supplier_bankaccountnumber").val(field.bankaccountnumber);
 //					$("#vendbank_id").val(field.vendbank_id);

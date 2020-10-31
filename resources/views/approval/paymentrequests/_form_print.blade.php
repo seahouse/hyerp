@@ -399,7 +399,6 @@
             {!! Form::text('supplier_bankaccountnumber2', null, ['class' => 'form-control', $attr]) !!}
         @endif
     </div>
-
 </div>
 
 <div class="form-group">
@@ -424,7 +423,19 @@
     --}}
 </div>
 
+@if (isset($paymentrequest) && strlen($paymentrequest->associated_approval_type) > 0)
+    <div class="form-group">
+        {!! Form::label('associated_approval_type', '关联审批单类型:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
+        <div class='col-xs-4 col-sm-4'>
+            {!! Form::select('associated_approval_type', array('corporatepayment' => '付款-对公帐户付款'), $paymentrequest->associated_approval_type, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+        </div>
 
+        {!! Form::label('associated_remark', '关联审批单备注:', ['class' => 'col-xs-2 col-sm-2 control-label']) !!}
+        <div class='col-xs-4 col-sm-4'>
+            {!! Form::text('associated_remark', $paymentrequest->associated_remark, ['class' => 'form-control', $attr]) !!}
+        </div>
+    </div>
+@endif
 
 @else
     记录异常，请联系管理员。

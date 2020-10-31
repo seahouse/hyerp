@@ -603,9 +603,28 @@
     </div>
 </div>
 
+@if (isset($paymentrequest) && strlen($paymentrequest->associated_approval_type) > 0)
+            <div class="form-group">
+                {!! Form::label('associated_approval_type', '关联审批单类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::select('associated_approval_type', array('corporatepayment' => '付款-对公帐户付款'), $paymentrequest->associated_approval_type, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                </div>
+            </div>
 
+            <div class="form-group">
+                {!! Form::label('associated_business_id', '关联审批单编号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::text('associated_business_id', $paymentrequest->associated_business_id(), ['class' => 'form-control', 'readonly', $attr]) !!}
+                </div>
+            </div>
 
-
+            <div class="form-group">
+                {!! Form::label('associated_remark', '关联审批单备注:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::text('associated_remark', $paymentrequest->associated_remark, ['class' => 'form-control', 'readonly', $attr]) !!}
+                </div>
+            </div>
+@endif
 
 
 {!! Form::hidden('applicant_id', null, ['class' => 'btn btn-sm']) !!}

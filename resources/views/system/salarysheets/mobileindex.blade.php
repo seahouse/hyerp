@@ -1,4 +1,4 @@
-@extends('navbarerp')
+@extends('app')
 
 @section('title', '工资条')
 

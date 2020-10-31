@@ -420,17 +420,8 @@ class TechpurchaseController extends Controller
             $techpurchase->status = $status;
             $techpurchase->save();
 
-//            $techpurchaseattachment_techspecification = $techpurchase->techpurchaseattachments->where('type', 'techspecification')->first();
-//            $dir = config('custom.hxold.purchase_techspecification_dir') . "12345" . "/";
-//            if (!is_dir($dir)) {
-//                mkdir($dir);
-//            }
-//            copy(public_path($techpurchaseattachment_techspecification->path), $dir . $techpurchaseattachment_techspecification->filename);
-//            dd(public_path($techpurchaseattachment_techspecification->path));
-//            dd(base_path(Storage::url($techpurchaseattachment_techspecification->path)));
-//            dd(Storage::get($techpurchaseattachment_techspecification->path));
-//            dd($techpurchase->techpurchaseattachments->where('type', 'techspecification')->first());
-//            dd('aaa');
+            // 先不创建，直接返回，等其他流程做完后再放开
+            return;
 
             // 如果是审批完成且通过，则创建老系统中的采购申请单
             if ($status == 0)
@@ -483,6 +474,7 @@ class TechpurchaseController extends Controller
                     '编号数字'                => $seqnumber,
                     '编号商品名称'            => $item_index,
                     'type'                    => '技术',
+                    'business_id'            => $techpurchase->business_id,
                 ];
                 $pohead = Purchaseorder_hx::create($data);
 

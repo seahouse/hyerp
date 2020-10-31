@@ -361,6 +361,7 @@ class ProjectsitepurchaseController extends Controller
             $input['totalprice'] = $projectsitepurchase->projectsitepurchaseitems->sum('price') + $input['freight'];
             $input['image_urls'] = json_encode($image_urls);
             $input['approvers'] = $projectsitepurchase->approvers();
+            $input['associatedapprovals_2'] = strlen($input['associatedapprovals_2']) > 0 ? json_encode(explode(",", $input['associatedapprovals_2'])) : "";
             $response = ApprovalController::projectsitepurchase($input);
 //            Log::info($response);
 //            dd($response);

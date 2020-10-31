@@ -115,9 +115,9 @@
 				</a>
 			</div>
 			<div class="btn-group" role="group">
-				<a href="#" class="btn btn-default btn-lg">
+				<a href="{{ url('/approval/customerdeduction/mcreate') }}" class="btn btn-default btn-lg">
 					<i class="icon iconfont btn-menu-2 color-grey icon-dingding"></i>
-					<span class="labble">XXX</span>
+					<span class="labble">客户扣款</span>
 				</a>
 			</div>
 			<div class="btn-group" role="group">

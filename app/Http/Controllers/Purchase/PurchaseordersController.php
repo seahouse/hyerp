@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Purchase;
 
+ use App\Models\Purchase\Poheadquote_hx;
  use App\Models\Purchase\Poheadtaxrateass_hxold;
  use App\Models\Purchase\Purchaseorder_hx;
  use App\Models\Sales\Salesorder_hxold;
@@ -35,6 +36,13 @@ class PurchaseordersController extends Controller
         return view('purchase.purchaseorders.index', compact('purchaseorders'));
     }
 
+    public function index_sqd()
+    {
+        //
+        $purchaseorders = Purchaseorder_hxold::where('status', 0)->orderBy('id', 'desc')->paginate(15);
+        return view('purchase.purchaseorders.index_sqd', compact('purchaseorders'));
+    }
+
     public function index_hx()
     {
         //
@@ -52,8 +60,12 @@ class PurchaseordersController extends Controller
         {
             $query->where('number', 'like', '%' . $key . '%');
         }
-//        if ($request->has('sohead_id'))
-//            $query->where('sohead_id', $request->get('sohead_id'));
+        if ($request->has('supplier_name') && strlen($request->input('supplier_name')))
+            $query->where('supplier_name', 'like', '%' . $request->input('supplier_name') . '%');
+        if ($request->has('project_name') && strlen($request->input('project_name')))
+            $query->where('sohead_descrip', 'like', '%' . $request->input('project_name') . '%');
+        if ($request->has('product_name') && strlen($request->input('product_name')))
+            $query->where('productname', 'like', '%' . $request->input('product_name') . '%');
 
         $purchaseorders = $query->paginate(15);
         return view('purchase.purchaseorders.index_hx', compact('purchaseorders'));
@@ -334,5 +346,13 @@ class PurchaseordersController extends Controller
         //
         $purchaseorder = Purchaseorder_hxold::findOrFail($id);
         return view('purchase.arrivaltickets.create', compact('purchaseorder'));
+    }
+
+    // 供应商报价
+    public function supplierquotes($pohead_id)
+    {
+        //
+        $poheadquotes = Poheadquote_hx::where('pohead_id', $pohead_id)->paginate(15);
+        return view('purchase.supplierquotes.index', compact('poheadquotes', 'pohead_id'));
     }
 }

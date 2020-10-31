@@ -36,6 +36,7 @@ class Issuedrawing extends Model
         'process_instance_id',
         'business_id',
         'syncdtdesc',
+        'company_name'
     ];
 
     public function nextapprover() {

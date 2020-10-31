@@ -255,6 +255,7 @@ Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => [
         Route::get('mmindex', 'ItemsController@mmindex');
         Route::get('mindex', 'ItemsController@mindex');
         Route::get('getitemsbykey/{key}', 'ItemsController@getitemsbykey');
+        Route::get('getitemsbyprhead/{prhead_id}', 'ItemsController@getitemsbyprhead');     // 获取采购申请单中的物料
     });
     Route::group(['prefix' => 'items/{id}'], function() {
         Route::get('receiptitems', 'ItemsController@receiptitems');
@@ -391,6 +392,12 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         Route::get('getitemsbyvendid/{vendid}', 'VendbankController@getitemsbyvendid');
     });
     Route::resource('vendbank', 'VendbankController');
+
+    // 采购申请单
+    Route::resource('prheads', 'PrheadController');
+    // 采购申请单明细
+    Route::resource('pritems', 'PritemController');
+
     // Route::get('purchaseorders/{id}/detail', 'PurchaseordersController@detail');
     // Route::get('purchaseorders/{id}/receiving', 'PurchaseordersController@receiving');
     // Route::get('purchaseorders/{id}/receiptorders', 'PurchaseordersController@receiptorders');
@@ -405,6 +412,7 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         Route::patch('update_hx', 'PurchaseordersController@update_hx');
         Route::get('getpoheadtaxrateass_hx', 'PurchaseordersController@getpoheadtaxrateass_hx');
         Route::get('arrivalticket', 'PurchaseordersController@arrivalticket');
+        Route::get('supplierquotes', 'PurchaseordersController@supplierquotes');
     });
     Route::group(['prefix' => 'purchaseorders/{purchaseorder}/payments'], function () {
         Route::get('/', 'PaymentsController@index');
@@ -419,6 +427,7 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         Route::get('getitemsbyorderkey/{key}/{supplierid?}', 'PurchaseordersController@getitemsbyorderkey');
         Route::get('getitemsbyorderkey_simple/{key}/{supplierid?}', 'PurchaseordersController@getitemsbyorderkey_simple');
         Route::get('getitemsbyproductname/{productname}', 'PurchaseordersController@getitemsbyproductname');
+        Route::get('index_sqd', 'PurchaseordersController@index_sqd');      // 申请单
         Route::get('index_hx', 'PurchaseordersController@index_hx');
         Route::get('create_hx', 'PurchaseordersController@create_hx');
         Route::post('store_hx', 'PurchaseordersController@store_hx');
@@ -436,6 +445,17 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
     });
     Route::resource('poitems', 'PoitemsController');
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexpurchase');
+
+    // 采购申请单类别
+    Route::resource('prtypes', 'PrtypeController');
+    // 采购申请单类别明细
+    Route::resource('prtypeitems', 'PrtypeitemController');
+
+    // 供应商报价
+    Route::group(['prefix' => 'supplierquotes'], function() {
+        Route::get('createbypohead/{pohead_id}', 'SupplierquoteController@createbypohead');
+    });
+    Route::resource('supplierquotes', 'SupplierquoteController');
 });
 
 Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase'], function() {
@@ -449,8 +469,6 @@ Route::group(['prefix' => 'purchaseorderc', 'namespace' => 'Purchaseorderc', 'mi
         Route::get('detail', 'PurchaseordercController@detail');
         Route::get('detailjson', 'PurchaseordercController@detailjson');
         Route::get('packing', 'PurchaseordercController@packing');
-//        Route::get('receiving', 'PurchaseordersController@receiving');
-//        Route::get('receiptorders', 'PurchaseordersController@receiptorders');
 //        Route::get('poitems', 'PurchaseordersController@poitems');
 //        Route::get('receiptorders_hx', 'PurchaseordersController@receiptorders_hx');
 //        Route::get('edit_hx', 'PurchaseordersController@edit_hx');
@@ -535,7 +553,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('hasrepeat/{pohead_id}/{amount?}', 'PaymentrequestsController@hasrepeat');    // pdfjs viewer.html
         Route::get('exceedingpay/{pohead_id}/{amount?}', 'PaymentrequestsController@exceedingpay');
         Route::get('indexjson', 'PaymentrequestsController@indexjson');    // pdfjs viewer.html
-//        Route::get('pdfjs/viewer/{pdffile?}', 'PaymentrequestsController@pdfjsviewer');
+        Route::get('printmulti', 'PaymentrequestsController@printmulti');
     });
     Route::resource('paymentrequests', 'PaymentrequestsController');
     Route::group(['prefix' => 'issuedrawing'], function() {
@@ -648,10 +666,15 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::group(['prefix' => 'additionsalesorder'], function() {
         Route::get('mcreate', 'AdditionsalesorderController@mcreate');
         Route::post('mstore', 'AdditionsalesorderController@mstore');
-
     });
     Route::resource('additionsalesorder', 'AdditionsalesorderController');
 //    Route::resource('additionsalesorderattachment', 'AdditionsalesorderattachmentController');
+
+    Route::group(['prefix' => 'customerdeduction'], function() {
+        Route::get('mcreate', 'CustomerdeductionController@mcreate');
+        Route::post('mstore', 'CustomerdeductionController@mstore');
+    });
+    Route::resource('customerdeduction', 'CustomerdeductionController');
 
     Route::post('bingdingtalk', 'ApprovalController@bingdingtalk');
     Route::get('gethxitemsbykey', 'ApprovalController@gethxitemsbykey');

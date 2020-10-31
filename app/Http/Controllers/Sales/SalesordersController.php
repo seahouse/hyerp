@@ -16,7 +16,6 @@ use Request;
 use App\Inventory\Itemsite;
 use Carbon\Carbon;
 use App\Inventory\Shipitem;
-use App\Sales\Soitem;
 use App\Models\Sales\Salesorder_hxold;
 use App\Models\Sales\Custinfo_hxold;
 use Log;

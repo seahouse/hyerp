@@ -78,6 +78,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">采购<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         @can('module_purchase')
+                            <li><a href="/purchase/prheads">采购申请单</a></li>
                             <li><a href="/purchase/purchaseorders/index_hx">采购订单</a></li>
                             {{--
                         <li><a href="/purchase/purchaseorders">采购订单</a></li>

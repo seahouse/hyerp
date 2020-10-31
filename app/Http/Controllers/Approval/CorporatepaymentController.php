@@ -6,18 +6,23 @@ use App\Http\Controllers\DingTalkController;
 use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\CorpMessageCorpconversationAsyncsendRequest;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiProcessinstanceCspaceInfoRequest;
+use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiProcessinstanceGetRequest;
 use App\Models\Approval\Approversetting;
 use App\Models\Approval\Corporatepayment;
 use App\Models\Approval\Corporatepaymentattachment;
 use App\Models\Approval\Paymentrequest;
 use App\Models\Approval\Paymentrequestattachment;
 use App\Models\Approval\Projectsitepurchase;
+use App\Models\Purchase\Purchaseorder_hxold;
+use App\Models\Purchase\Vendinfo_hxold;
+use App\Models\Sales\Salesorder_hxold;
+use App\Models\System\Dtuser;
 use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Auth, Log;
+use Auth, Log, Storage;
 
 class CorporatepaymentController extends Controller
 {
@@ -29,7 +34,26 @@ class CorporatepaymentController extends Controller
     public function index()
     {
         //
-        $this->updateStatusByProcessInstanceId('56d181f9-d9bd-42f3-8385-dfa4b1c061de', 0);
+        $client = new DingTalkClient();
+        $req = new OapiProcessinstanceGetRequest();
+        $req->setProcessInstanceId('f808e9fb-0197-44ba-b12b-32d2a5ae2875');
+        $accessToken = DingTalkController::getAccessToken();
+        $response = $client->execute($req, $accessToken);
+        $response = json_decode(json_encode($response, JSON_UNESCAPED_UNICODE));
+//        dd($response->errcode);
+        $operation_records = $response->process_instance->operation_records->operation_records_vo;
+//        dd($operation_records);
+        $dtuser_whl = Dtuser::where('user_id', 2)->first();
+        foreach ($operation_records as $operation_record)
+        {
+            if ($operation_record->operation_type == 'ADD_REMARK')
+            {
+                dd($operation_record);
+            }
+        }
+        dd($response->process_instance->operation_records);
+        dd(json_encode($response, JSON_UNESCAPED_UNICODE));
+//        $this->updateStatusByProcessInstanceId('56d181f9-d9bd-42f3-8385-dfa4b1c061de', 0);
     }
 
     /**
@@ -70,6 +94,7 @@ class CorporatepaymentController extends Controller
     {
         $inputs = $request->all();
 //        dd($inputs);
+//        dd($request->has('paidpercent'));
 //        $input['associatedapprovals'] = strlen($input['associatedapprovals']) > 0 ? json_encode(array($input['associatedapprovals'])) : "";
 //        dd($input['associatedapprovals']);
 
@@ -85,7 +110,7 @@ class CorporatepaymentController extends Controller
         $this->validate($request, [
 //            'sohead_id'                   => 'required|integer|min:1',
             'amounttype'               => 'required',
-            'supplier_id'             => 'required',
+            'supplier_id'              => 'required',
 //            'issuedrawing_values'       => 'required',
 //            'items_string'               => 'required',
 //            'tonnage'               => 'required|numeric',
@@ -98,15 +123,41 @@ class CorporatepaymentController extends Controller
 //        dd($input);
 //        $input = HelperController::skipEmptyValue($input);
 
+        if (!$request->has('sohead_id') || ($request->has('sohead_id') && $request->input('sohead_id') <= 0))
+        {
+            if ($request->has('sohead_number') && strlen($request->input('sohead_number')))
+            {
+                $sohead = Salesorder_hxold::where('number', $request->input('sohead_number'))->first();
+                if (isset($sohead))
+                    $inputs['sohead_id'] = $sohead->id;
+            }
+        }
+
+        if (!$request->has('pohead_id') || ($request->has('pohead_id') && $request->input('pohead_id') <= 0))
+        {
+            if ($request->has('pohead_number') && strlen($request->input('pohead_number')))
+            {
+                $pohead = Purchaseorder_hxold::where('number', $request->input('pohead_number'))->first();
+                if (isset($pohead))
+                    $inputs['pohead_id'] = $pohead->id;
+            }
+        }
+
+        if (!$request->has('supplier_id') || ($request->has('supplier_id') && $request->input('supplier_id') <= 0))
+        {
+            if ($request->has('supplier_name') && strlen($request->input('supplier_name')))
+            {
+                $supplier = Vendinfo_hxold::where('name', $request->input('supplier_name'))->first();
+                if (isset($supplier))
+                    $inputs['supplier_id'] = $supplier->id;
+            }
+        }
+
+        if (!$request->has('amount')) $inputs['amount'] = 0;
+        if (!$request->has('paidpercent')) $inputs['paidpercent'] = 0;
+        if (!$request->has('amountpercent')) $inputs['amountpercent'] = 0;
 
         $inputs['applicant_id'] = Auth::user()->id;
-
-//        $inputs['sohead_salesmanager'] = '';
-//        $projectsitepurchase = Projectsitepurchase::where('process_instance_id', $inputs['associated_approval_projectpurchase'])->first();
-//        if (isset($projectsitepurchase))
-//        {
-//            $inputs['sohead_salesmanager'] = $projectsitepurchase->sohead_hxold->salesmanager;
-//        }
 
         $inputs['associated_approval_projectpurchase'] = strlen($inputs['associated_approval_projectpurchase']) > 0 ? json_encode(array($inputs['associated_approval_projectpurchase'])) : "";
 //        dd($inputs['associated_approval_projectpurchase']);
@@ -150,7 +201,7 @@ class CorporatepaymentController extends Controller
 
                         // add database record
                         $corporatepaymentattachment = new Corporatepaymentattachment();
-                        $corporatepaymentattachment->projectsitepurchase_id = $corporatepayment->id;
+                        $corporatepaymentattachment->corporatepayment_id = $corporatepayment->id;
                         $corporatepaymentattachment->type = "file";
                         $corporatepaymentattachment->filename = $originalName;
                         $corporatepaymentattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
@@ -169,92 +220,91 @@ class CorporatepaymentController extends Controller
             }
         }
 
-//        $image_urls = [];
-//        // create images in the desktop
-//        if ($corporatepayment)
-//        {
-//            $files = array_get($inputs,'images');
-//            $destinationPath = 'uploads/approval/projectsitepurchase/' . $corporatepayment->id . '/images/';
-//            if ($files)
-//            {
-//                foreach ($files as $key => $file) {
-//                    if ($file)
-//                    {
-//                        $originalName = $file->getClientOriginalName();
-//                        $extension = $file->getClientOriginalExtension();       // .xlsx
-//                        $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
-//                        Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
-//
-//                        $extension = $file->getClientOriginalExtension();
-//                        $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
-//                        // $fileName = rand(11111, 99999) . '.' . $extension;
-//                        $upload_success = $file->move($destinationPath, $filename);
-//
-//                        // add database record
-//                        $projectsitepurchaseattachment = new Projectsitepurchaseattachment();
-//                        $projectsitepurchaseattachment->projectsitepurchase_id = $corporatepayment->id;
-//                        $projectsitepurchaseattachment->type = "image";
-//                        $projectsitepurchaseattachment->filename = $originalName;
-//                        $projectsitepurchaseattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
-//                        $projectsitepurchaseattachment->save();
-//
-//                        array_push($image_urls, url($destinationPath . $filename));
-//                    }
-//                }
-//            }
-//        }
+        $image_urls = [];
+        // create images in the desktop
+        if ($corporatepayment)
+        {
+            $files = array_get($inputs,'images');
+            $destinationPath = 'uploads/approval/corporatepayment/' . $corporatepayment->id . '/images/';
+            if ($files)
+            {
+                foreach ($files as $key => $file) {
+                    if ($file)
+                    {
+                        $originalName = $file->getClientOriginalName();
+                        $extension = $file->getClientOriginalExtension();       // .xlsx
+                        $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                        Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
 
-//        // create images from dingtalk mobile
-//        if ($corporatepayment)
-//        {
-//            $images = array_where($inputs, function($key, $value) {
-//                if (substr_compare($key, 'image_', 0, 6) == 0)
-//                    return $value;
-//            });
-//
-//            $destinationPath = 'uploads/approval/projectsitepurchase/' . $corporatepayment->id . '/images/';
-//            foreach ($images as $key => $value) {
-//                # code...
-//
-//                // save image file.
-//                $sExtension = substr($value, strrpos($value, '.') + 1);
-//                // $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
-//                // Storage::disk('local')->put($sFilename, file_get_contents($value));
-//                // Storage::move($sFilename, '../abcd.jpg');
-//                $dir = 'images/approval/projectsitepurchase/' . $corporatepayment->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
-//                $parts = explode('/', $dir);
-//                $filename = array_pop($parts);
-//                $dir = '';
-//                foreach ($parts as $part) {
-//                    # code...
-//                    $dir .= "$part/";
-//                    if (!is_dir($dir)) {
-//                        mkdir($dir);
-//                    }
-//                }
-//
-////                $originalName = $file->getClientOriginalName();
-//                Storage::put($destinationPath . $filename, file_get_contents($value));
-//
-//                file_put_contents("$dir/$filename", file_get_contents($value));
-//
-//
-//                // add image record
-//                $projectsitepurchaseattachment = new Projectsitepurchaseattachment;
-//                $projectsitepurchaseattachment->projectsitepurchase_id = $corporatepayment->id;
-//                $projectsitepurchaseattachment->type = "image";     // add a '/' in the head.
-//                $projectsitepurchaseattachment->path = "/$dir$filename";     // add a '/' in the head.
-//                $projectsitepurchaseattachment->save();
-//
-//                array_push($image_urls, $value);
-//            }
-//        }
-//        dd($corporatepayment);
+                        $extension = $file->getClientOriginalExtension();
+                        $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                        // $fileName = rand(11111, 99999) . '.' . $extension;
+                        $upload_success = $file->move($destinationPath, $filename);
+
+                        // add database record
+                        $corporatepaymentattachment = new Corporatepaymentattachment();
+                        $corporatepaymentattachment->corporatepayment_id = $corporatepayment->id;
+                        $corporatepaymentattachment->type = "image";
+                        $corporatepaymentattachment->filename = $originalName;
+                        $corporatepaymentattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
+                        $corporatepaymentattachment->save();
+
+                        array_push($image_urls, url($destinationPath . $filename));
+                    }
+                }
+            }
+        }
+
+        // create images from dingtalk mobile
+        if ($corporatepayment)
+        {
+            $images = array_where($inputs, function($key, $value) {
+                if (substr_compare($key, 'image_', 0, 6) == 0)
+                    return $value;
+            });
+
+            $destinationPath = 'uploads/approval/corporatepayment/' . $corporatepayment->id . '/images/';
+            foreach ($images as $key => $value) {
+                # code...
+
+                // save image file.
+                $sExtension = substr($value, strrpos($value, '.') + 1);
+                // $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                // Storage::disk('local')->put($sFilename, file_get_contents($value));
+                // Storage::move($sFilename, '../abcd.jpg');
+                $dir = 'images/approval/corporatepayment/' . $corporatepayment->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                $parts = explode('/', $dir);
+                $filename = array_pop($parts);
+                $dir = '';
+                foreach ($parts as $part) {
+                    # code...
+                    $dir .= "$part/";
+                    if (!is_dir($dir)) {
+                        mkdir($dir);
+                    }
+                }
+
+//                $originalName = $file->getClientOriginalName();
+                Storage::put($destinationPath . $filename, file_get_contents($value));
+
+                file_put_contents("$dir/$filename", file_get_contents($value));
+
+
+                // add image record
+                $corporatepaymentattachment = new Corporatepaymentattachment;
+                $corporatepaymentattachment->corporatepayment_id = $corporatepayment->id;
+                $corporatepaymentattachment->type = "image";     // add a '/' in the head.
+                $corporatepaymentattachment->path = "/$dir$filename";     // add a '/' in the head.
+                $corporatepaymentattachment->save();
+
+                array_push($image_urls, $value);
+            }
+        }
 
         if (isset($corporatepayment))
         {
 //            $inputs['totalprice'] = $corporatepayment->projectsitepurchaseitems->sum('price') + $inputs['freight'];
-//            $inputs['image_urls'] = json_encode($image_urls);
+            $inputs['image_urls'] = json_encode($image_urls);
 //            $inputs['approvers'] = $corporatepayment->approvers();
             $response = ApprovalController::corporatepayment($inputs);
 //            Log::info($response);
@@ -403,13 +453,33 @@ class CorporatepaymentController extends Controller
 
                 // 金额
                 $amount = $corporatepayment->amount;
-                if ($corporatepayment->amounttype == '安装合同安装费付款')
+                if ($corporatepayment->amounttype == '安装合同安装费付款（ERP）')
                 {
                     $pohead = $corporatepayment->pohead;
                     if (isset($pohead))
-                        $amount = $pohead->amount;
+                        $amount = $pohead->amount * $corporatepayment->amountpercent / 100;
                 }
 
+                // 备注
+                $remark = '';
+                $client = new DingTalkClient();
+                $req = new OapiProcessinstanceGetRequest();
+                $req->setProcessInstanceId($processInstanceId);
+                $accessToken = DingTalkController::getAccessToken();
+                $response = $client->execute($req, $accessToken);
+                $response = json_decode(json_encode($response, JSON_UNESCAPED_UNICODE));
+                $operation_records = $response->process_instance->operation_records->operation_records_vo;
+                $dtuser_whl = Dtuser::where('user_id', 2)->first();
+                if (isset($dtuser_whl))
+                {
+                    foreach ($operation_records as $operation_record)
+                    {
+                        if ($operation_record->operation_type == 'ADD_REMARK' && $operation_record->userid == $dtuser_whl->userid)
+                        {
+                            $remark = $operation_record->remark;
+                        }
+                    }
+                }
 
                 $data = [
                     'suppliertype'          => $corporatepayment->suppliertype,
@@ -424,6 +494,9 @@ class CorporatepaymentController extends Controller
                     'applicant_id'           => $corporatepayment->applicant_id,
 //                                'status'                  => 1,
                     'approversetting_id'    => $approversetting_id,
+                    'associated_approval_type'  => 'corporatepayment',
+                    'associated_process_instance_id'  => $processInstanceId,
+                    'associated_remark'      => $remark,
                 ];
                 $paymentrequest = Paymentrequest::create($data);
 

@@ -17,4 +17,8 @@ class Poitem_hxold extends Model
     public function item2() {
         return $this->hasOne('App\Models\Product\Itemp_hxold2', 'goods_no', 'goods_no2');
     }
+
+    public function suppliermaterials() {
+	    return $this->hasMany(SupplierMaterial_hxv::class, 'goods_id', 'item_id');
+    }
 }

@@ -175,6 +175,10 @@
                                 {
                                     location.href = "{{ url('/') }}";
                                 }
+                                else if ("{!! array_get($config, 'appname') !!}" == "salary")
+                                {
+                                    location.href = "{{ url('/system/salarysheet/mobileindex') }}";
+                                }
 			                },
 			         	});
 				    },
@@ -366,6 +370,10 @@
                                         }
                                         else
                                             location.href = "{{ url('/') }}";
+                                    }
+                                    else if ("{!! array_get($config, 'appname') !!}" == "salary")
+                                    {
+                                        location.href = "{{ url('/system/salarysheet/mobileindex') }}";
                                     }
                                     // else
                                     // 	console.log('else ~~');

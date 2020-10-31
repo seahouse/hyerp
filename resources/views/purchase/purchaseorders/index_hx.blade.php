@@ -33,6 +33,9 @@
                         {!! Form::select('ticketedstatus', array(0 => '未开票', 1 => '部分开票', 2 => '全部开票'), null, ['class' => 'form-control', 'placeholder' => '--开票状态--']) !!}
                         {!! Form::text('batch', null, ['class' => 'form-control', 'placeholder' => '批号']) !!}
             --}}
+            {!! Form::text('supplier_name', null, ['class' => 'form-control', 'placeholder' => '供应商']) !!}
+            {!! Form::text('project_name', null, ['class' => 'form-control', 'placeholder' => '项目名称']) !!}
+            {!! Form::text('product_name', null, ['class' => 'form-control', 'placeholder' => '商品名称']) !!}
             {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '采购订单编号']) !!}
 
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
@@ -119,7 +122,7 @@
                             {{ '-(' }}
                             {{-- 当 对公付款审批 的类型是“安装合同安装费付款”，且采购商品名称是“钢结构安装”，开放已付金额百分比给发起人 --}}
                             @if (strpos($purchaseorder->productname, '钢结构安装') >= 0)
-                                @if ($purchaseorder->corporatepayments()->where('amounttype', '安装合同安装费付款')->where('status', '>=', 0)->where('applicant_id', Auth::user()->id)->count())
+                                @if ($purchaseorder->corporatepayments()->where('amounttype', '安装合同安装费付款（ERP）')->where('status', '>=', 0)->where('applicant_id', Auth::user()->id)->count())
                                     @if ($purchaseorder->amount > 0.0)  {{ number_format($purchaseorder->payments->sum('amount') / $purchaseorder->amount * 100, 4) }}%
                                     @else -
                                     @endif
@@ -157,7 +160,7 @@
                         @else
                             {{-- 当 对公付款审批 的类型是“安装合同安装费付款”，且采购商品名称是“钢结构安装”，开放权限给发起人 --}}
                             @if (strpos($purchaseorder->productname, '钢结构安装') >= 0)
-                                @if ($purchaseorder->corporatepayments()->where('amounttype', '安装合同安装费付款')->where('status', '>=', 0)->where('applicant_id', Auth::user()->id)->count())
+                                @if ($purchaseorder->corporatepayments()->where('amounttype', '安装合同安装费付款（ERP）')->where('status', '>=', 0)->where('applicant_id', Auth::user()->id)->count())
                                     <?php $can_arrivalticket = true; ?>
                                 @endif
                             @endif

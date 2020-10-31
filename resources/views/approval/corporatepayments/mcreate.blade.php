@@ -497,7 +497,7 @@
                             var strhtml = '';
                             $.each(result.data, function(i, field) {
                                 btnId = 'btnSelectPohead_' + String(i);
-                                strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.number + "</h4><p>" + field.descrip + "</p></button>"
+                                strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.number + "</h4><p>" + field.sohead_descrip + "</p></button>"
                             });
                             if (strhtml == '')
                                 strhtml = '无记录。';
@@ -552,6 +552,16 @@
                     $('#selectPoheadModal').modal('toggle');
                     $("#pohead_number").val(field.number);
                     $("#pohead_id").val(field.id);
+                    $("#pohead_supplier_name").val(field.supplier_name);
+                    var ticketedpercent = 0;
+                    var paidpercent = 0;
+                    if (field.amount > 0)
+                    {
+                        ticketedpercent = field.amount_ticketed / field.amount * 100.0;
+                        paidpercent = field.amount_paid / field.amount * 100.0;
+                    }
+                    $("#ticketedpercent").val(ticketedpercent);
+                    $("#paidpercent").val(paidpercent);
                 });
             }
 
@@ -817,32 +827,21 @@
 
             selectAmounttypeChange = function () {
                 var amounttype = $("#amounttype").val();
-                if (amounttype == "工程现场采购费用相关")
+                if (amounttype == "工程现场采购费用相关（ERP）")
                 {
                     $("#divPohead_number").attr("style", "display:none;");
                     $("#divAssociatedapprovals").attr("style", "display:block;");
+                    $("#divPaidpercent").attr("style", "display:none;");
                     $("#divAmountpercent").attr("style", "display:none;");
+                    $("#divAmount").attr("style", "display:block;");
                 }
                 else
                 {
                     $("#divPohead_number").attr("style", "display:block;");
                     $("#divAssociatedapprovals").attr("style", "display:none;");
+                    $("#divPaidpercent").attr("style", "display:block;");
                     $("#divAmountpercent").attr("style", "display:block;");
-                }
-            }
-
-            selectPurchasetypeChange = function () {
-                var purchasetype = $("#purchasetype").val();
-                if (purchasetype == "EP项目安装队相关费用")
-                {
-                    $("#divEpamountreason").attr("style", "display:block;");
-                    $("#divPurchasereason").attr("style", "display:none;");
-                }
-                else
-                {
-                    $("#divEpamountreason").attr("style", "display:none;");
-                    $("#epamountreason").val("6、不涉及EP项目安装队费用");
-                    $("#divPurchasereason").attr("style", "display:block;");
+                    $("#divAmount").attr("style", "display:none;");
                 }
             }
 
@@ -854,8 +853,6 @@
 			    signature: '{!! array_get($config, 'signature') !!}', // 必填，签名
 			    jsApiList: ['biz.util.uploadImage', 'biz.cspace.saveFile', 'biz.util.uploadAttachment', 'biz.cspace.preview'] // 必填，需要使用的jsapi列表
 			});
-
-
 
 			dd.ready(function() {
 				$("#btnSelectImage").click(function() {

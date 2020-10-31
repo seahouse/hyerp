@@ -18,10 +18,12 @@ class CreateCorporatepaymentsTable extends Migration
 			$table->string('suppliertype')->default('');
 			$table->string('paymenttype')->default('');
             $table->string('position');
+            $table->string('paymentcompany')->nullable();
             $table->string('amounttype');
             $table->integer('sohead_id')->nullable();
             $table->integer('pohead_id')->nullable();
             $table->string('remark')->nullable();
+            $table->decimal('paidpercent')->default(0.0);
             $table->decimal('amountpercent')->default(0.0);
             $table->decimal('amount')->default(0.0);
             $table->date('paydate');

@@ -24,9 +24,48 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('custinfo_name', '供应商名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    {!! Form::label('supplier_name', '供应商名称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
-        {!! Form::text('custinfo_name', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+        {!! Form::text('supplier_name', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('supplier_contact_name', '供应商联系人:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+        @if (isset($purchaseorder->supplier_contact_name))
+            @if ($purchaseorder->supplier_contact_name != '0')
+                {!! Form::text('supplier_contact_name', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+            @else
+                {!! Form::text('supplier_contact_name', $purchaseorder->vendinfo->contact_name1, ['class' => 'form-control', 'readonly', $attr]) !!}
+            @endif
+        @endif
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('supplier_contact_phonenumber', '联系电话:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+        @if (isset($purchaseorder->supplier_contact_phonenumber))
+            @if ($purchaseorder->supplier_contact_phonenumber != '0')
+                {!! Form::text('supplier_contact_phonenumber', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+            @else
+                {!! Form::text('supplier_contact_phonenumber', $purchaseorder->vendinfo->supplier_phonenumber, ['class' => 'form-control', 'readonly', $attr]) !!}
+            @endif
+        @endif
+    </div>
+</div>
+
+<div class="form-group">
+    {!! Form::label('supplier_contact_phonenumber2', '联系人手机:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+    <div class='col-xs-8 col-sm-10'>
+        @if (isset($purchaseorder->supplier_contact_phonenumber2))
+            @if ($purchaseorder->supplier_contact_phonenumber2 != '0')
+                {!! Form::text('supplier_contact_phonenumber2', null, ['class' => 'form-control', 'readonly', $attr]) !!}
+            @else
+                {!! Form::text('supplier_contact_phonenumber2', $purchaseorder->vendinfo->contact1_phonenumber1, ['class' => 'form-control', 'readonly', $attr]) !!}
+            @endif
+        @endif
     </div>
 </div>
 
@@ -34,7 +73,7 @@
     {!! Form::label('project_name', '对应项目:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     <div class='col-xs-8 col-sm-10'>
         @if (isset($purchaseorder->sohead))
-            {!! Form::text('project_name', $purchaseorder->sohead->number . '|' . $purchaseorder->sohead->descrip, ['class' => 'form-control', 'readonly', $attr]) !!}
+            {!! Form::text('project_name', $purchaseorder->sohead->number . '|' . $purchaseorder->sohead->custinfo_name . '|' .$purchaseorder->sohead->descrip, ['class' => 'form-control', 'readonly', $attr]) !!}
         @else
             {!! Form::text('project_name', null, ['class' => 'form-control', 'readonly', $attr]) !!}
         @endif

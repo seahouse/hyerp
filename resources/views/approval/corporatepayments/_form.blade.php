@@ -26,9 +26,16 @@
         </div>
 
         <div class="form-group">
+            {!! Form::label('paymentcompany', '付款单位:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::select('paymentcompany', array('江苏华星东方电力环保科技有限公司' => '江苏华星东方电力环保科技有限公司', '安徽省中易环保新材料有限公司' => '安徽省中易环保新材料有限公司'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'onchange' => 'selectAmounttypeChange()', $attr, $attrdisable]) !!}
+            </div>
+        </div>
+
+        <div class="form-group">
             {!! Form::label('amounttype', '费用类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('amounttype', array('工程现场采购费用相关' => '工程现场采购费用相关', '安装合同安装费付款' => '安装合同安装费付款'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'onchange' => 'selectAmounttypeChange()', $attr, $attrdisable]) !!}
+                {!! Form::select('amounttype', array('工程现场采购费用相关（ERP）' => '工程现场采购费用相关（ERP）', '安装合同安装费付款（ERP）' => '安装合同安装费付款（ERP）'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'onchange' => 'selectAmounttypeChange()', $attr, $attrdisable]) !!}
             </div>
         </div>
 
@@ -78,21 +85,6 @@
         {{--</div>--}}
 
 
-
-
-        {{--<div class="form-group">--}}
-            {{--{!! Form::label('outsourcingcompany', '外协设备商全称:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
-            {{--<div class='col-xs-8 col-sm-10'>--}}
-                {{--{!! Form::text('outsourcingcompany', null, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectSupplierModal', 'data-name' => 'drawingchecker', 'data-id' => 'pohead_id', 'data-soheadid' => 'sohead_id', 'data-poheadamount' => 'pohead_amount']) !!}--}}
-                {{--{!! Form::hidden('outsourcingcompany_id', 0, ['class' => 'btn btn-sm', 'id' => 'outsourcingcompany_id']) !!}--}}
-                {{--@if (isset($reimbursement->customer_hxold->name))--}}
-                    {{--{!! Form::hidden('customer_name2', $reimbursement->customer_hxold->name, ['class' => 'btn btn-sm', 'id' => 'customer_name2']) !!}--}}
-                {{--@else--}}
-                    {{--{!! Form::hidden('customer_name2', null, ['class' => 'btn btn-sm', 'id' => 'customer_name2']) !!}--}}
-                {{--@endif--}}
-            {{--</div>--}}
-        {{--</div>--}}
-
         <div id="divPohead_number">
             <div class="form-group">
                 {!! Form::label('pohead_number', '外协合同编号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
@@ -105,6 +97,17 @@
                     @endif
                 </div>
             </div>
+
+            <div class="form-group">
+                {!! Form::label('pohead_supplier_name', '外协合同供应商:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    @if (isset($projectsitepurchase->sohead_hxold->descrip))
+                        {!! Form::text('pohead_supplier_name', null, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectSupplierModal', 'data-name' => 'drawingchecker', 'data-id' => 'pohead_id', 'data-soheadid' => 'sohead_id', 'data-poheadamount' => 'pohead_amount']) !!}
+                    @else
+                        {!! Form::text('pohead_supplier_name', null, ['class' => 'form-control', 'id' => 'pohead_supplier_name', 'readonly']) !!}
+                    @endif
+                </div>
+            </div>
         </div>
 
         <div class="form-group">
@@ -114,22 +117,39 @@
             </div>
         </div>
 
+        <div id="divPaidpercent">
+            <div class="form-group">
+                {!! Form::label('ticketedpercent', '已开票比例（%）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::text('ticketedpercent', null, ['class' => 'form-control', 'placeholder' => '请输入', 'readonly', $attr]) !!}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {!! Form::label('paidpercent', '已付比例（%）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::text('paidpercent', null, ['class' => 'form-control', 'placeholder' => '请输入', 'readonly', $attr]) !!}
+                </div>
+            </div>
+        </div>
+
         <div id="divAmountpercent">
             <div class="form-group">
-                {!! Form::label('amountpercent', '付款比例（%）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+                {!! Form::label('amountpercent', '本次付款比例（%）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
                 <div class='col-xs-8 col-sm-10'>
                     {!! Form::text('amountpercent', null, ['class' => 'form-control', 'placeholder' => '请输入', $attr]) !!}
                 </div>
             </div>
         </div>
 
-        <div class="form-group">
-            {!! Form::label('amount', '付款总额（元）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
-            <div class='col-xs-8 col-sm-10'>
-                {!! Form::text('amount', null, ['class' => 'form-control', 'placeholder' => '请输入', $attr]) !!}
+        <div id="divAmount">
+            <div class="form-group">
+                {!! Form::label('amount', '付款总额（元）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::text('amount', null, ['class' => 'form-control', 'placeholder' => '请输入', $attr]) !!}
+                </div>
             </div>
         </div>
-
 
         <div class="form-group">
             {!! Form::label('paymentmethod', '付款方式:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
@@ -174,6 +194,33 @@
         </div>
 
         <div class="form-group">
+            {!! Form::label('images', '图片:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+
+            <div class='col-xs-8 col-sm-10'>
+                <div class="row" id="previewimage">
+                </div>
+                @if (isset($projectsitepurchase))
+                    <div class="row" id="previewimage2">
+                        @foreach ($projectsitepurchase->projectsitepurchaseattachments() as $projectsitepurchaseattachment)
+                            <div class="col-xs-6 col-md-3">
+                                <div class="thumbnail">
+                                    <img src="{!! $projectsitepurchaseattachment->path !!}" />
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    @if (Agent::isDesktop())
+                        {!! Form::file('images[]', ['multiple']) !!}
+                    @else
+                        {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
+                        {!! Form::hidden('imagesname_mobile', null, ['class' => 'btn btn-sm']) !!}
+                    @endif
+                @endif
+            </div>
+        </div>
+
+        <div class="form-group">
             {!! Form::label('files', '附件:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
             <div class='col-xs-8 col-sm-10'>
@@ -205,34 +252,6 @@
         </div>
 
 
-
-    {{--<div class="form-group">--}}
-        {{--{!! Form::label('images', '上传购买凭证:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
-
-        {{--<div class='col-xs-8 col-sm-10'>--}}
-            {{--<div class="row" id="previewimage">--}}
-            {{--</div>--}}
-            {{--@if (isset($projectsitepurchase))--}}
-                {{--<div class="row" id="previewimage2">--}}
-                    {{--@foreach ($projectsitepurchase->projectsitepurchaseattachments() as $projectsitepurchaseattachment)--}}
-                        {{--<div class="col-xs-6 col-md-3">--}}
-                            {{--<div class="thumbnail">--}}
-                                {{--<img src="{!! $projectsitepurchaseattachment->path !!}" />--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-                    {{--@endforeach--}}
-                {{--</div>--}}
-            {{--@else--}}
-                {{--@if (Agent::isDesktop())--}}
-                    {{--{!! Form::file('images[]', ['multiple']) !!}--}}
-                {{--@else--}}
-                    {{--{!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}--}}
-                    {{--{!! Form::hidden('imagesname_mobile', null, ['class' => 'btn btn-sm']) !!}--}}
-                {{--@endif--}}
-            {{--@endif--}}
-
-        {{--</div>--}}
-    {{--</div>--}}
 
 
 {!! Form::hidden('applicant_id', null, ['class' => 'btn btn-sm']) !!}
