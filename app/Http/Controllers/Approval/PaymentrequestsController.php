@@ -52,10 +52,13 @@ class PaymentrequestsController extends Controller
         $approvalstatus = $request->input('approvalstatus', '');
         $paymentstatus = $request->input('paymentstatus');
         $inputs = $request->all();
+//        dd($inputs);
         $items = $this->searchrequest($request);
+//        dd($items->count());
         $totalamount = $items->get()->sum('amount');
 //        $totalamount = Paymentrequest::sum('amount');
         $paymentrequests = $items->paginate(10);
+//        dd($paymentrequests);
 //        if (null !== request('key'))
 //            $paymentrequests = $this->searchrequest($request)->paginate(10);
 //        else
@@ -199,9 +202,9 @@ class PaymentrequestsController extends Controller
             $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
             $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
         }
-        //dd($purchaseorder_ids);
+//        dd($purchaseorder_ids);
         $query = Paymentrequest::latest('paymentrequests.created_at');
-
+//        dd($query);
         if (strlen($key) > 0)
         {
             $query->where(function($query) use ($supplier_ids, $purchaseorder_ids, $key) {
@@ -323,10 +326,10 @@ class PaymentrequestsController extends Controller
         }
 
         $paymentrequests = $query->select('paymentrequests.*');
-        // dd($paymentrequests->pluck('pohead_id'));
+         dd($paymentrequests->count());
 
         // $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
-        // dd($purchaseorders->pluck('id'));
+//         dd($paymentrequests);
 
         return $paymentrequests;
     }
