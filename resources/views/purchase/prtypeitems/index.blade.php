@@ -22,6 +22,7 @@
             <tr>
                 <th>供应商</th>
                 <th>物料</th>
+                <th>型号</th>
                 <th>数量</th>
                 <th>操作</th>
             </tr>
@@ -34,6 +35,9 @@
                     </td>
                     <td>
                         {{ $prtypeitem->item->goods_name }}
+                    </td>
+                    <td>
+                        {{ $prtypeitem->item->goods_spec }}
                     </td>
                     <td>
                         {{ $prtypeitem->quantity }}

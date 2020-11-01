@@ -83,7 +83,7 @@
                         var strhtml = '';
                         $.each(result, function(i, field) {
                             btnId = 'btnSelectItem_' + String(i);
-                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.goods_name + "(" + field.goods_spec + ")</h4><h5>" + field.goods_old_name + "</h5></button>"
+                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.goods_name + "(" + field.goods_spec + ")</h4><h5>" + field.quantity + "</h5></button>"
                         });
                         if (strhtml == '')
                             strhtml = '无记录。';
@@ -136,9 +136,10 @@
                 $("#" + btnId).bind("click", function() {
                     $('#selectItemModal').modal('toggle');
                     $("#item_name").val(field.goods_name);
-                    $("#item_id").val(field.goods_id);
+                    $("#item_id").val(field.item_id);
 //                    $("#item_spec").val(field.goods_spec);
                     $("#item_unit_name").val(field.goods_unit_name);
+                    $("#quantity").val(field.quantity);
                 });
             }
         })

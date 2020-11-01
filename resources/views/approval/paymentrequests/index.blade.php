@@ -24,7 +24,6 @@
             {!! csrf_field() !!}
             <div class="pull-right">
                 <button type="submit" class="btn btn-default btn-sm">导出</button>
-                <a class="btn btn-default btn-sm" id="btnPrint">打印</a>
             </div>
         </form>
         @endif
@@ -41,7 +40,7 @@
                 {!! Form::date('approvaldatestart', null, ['class' => 'form-control']) !!}
                 {!! Form::label('approvaldatelabelto', '-', ['class' => 'control-label']) !!}
                 {!! Form::date('approvaldateend', null, ['class' => 'form-control']) !!}
-                {!! Form::select('approver_id_date', $approvers_paymentrequest, null, ['class' => 'form-control', 'placeholder' => '--审批人--']) !!}
+                {!! Form::select('approver_id', $approvers_paymentrequest, null, ['class' => 'form-control', 'placeholder' => '--审批人--']) !!}
                 
                 {!! Form::select('paymentmethod', ['支票' => '支票', '贷记' => '贷记', '电汇' => '电汇', '汇票' => '汇票', '现金' => '现金', '银行卡' => '银行卡', '其他' => '其他'], null, ['class' => 'form-control', 'placeholder' => '--付款方式--']) !!}
 
@@ -50,6 +49,7 @@
                 {!! Form::select('company_id', $companyList, null, ['class' => 'form-control', 'placeholder' => '--采购公司--']) !!}
                 {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '支付对象、对应项目名称、申请人、说明']) !!}
                 {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
+                <a class="btn btn-default btn-sm" id="btnPrint">打印</a>
             </div>
         {!! Form::close() !!}
     </div> 

@@ -189,7 +189,7 @@ class PaymentrequestsController extends Controller
         $key = $request->input('key');
         $approvalstatus = $request->input('approvalstatus');        
 //        dd($key);
-        //dd($request);
+//        dd($request->all());
         $supplier_ids = [];
         $purchaseorder_ids = [];
         if (strlen($key) > 0)
@@ -219,10 +219,10 @@ class PaymentrequestsController extends Controller
 
         if ($request->has('approvaldatestart') && $request->has('approvaldateend'))
         {
-            if ($request->has('approver_id_date'))
+            if ($request->has('approver_id'))
             {
                 $paymentrequestids = DB::table('paymentrequestapprovals')
-                    ->where('approver_id', $request->input('approver_id_date'))
+                    ->where('approver_id', $request->input('approver_id'))
                     ->select('paymentrequest_id')
                     ->groupBy('paymentrequest_id')
                     ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'')
@@ -254,8 +254,16 @@ class PaymentrequestsController extends Controller
             //         ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'::timestamp + interval \'1D\'');
                 // ->select('paymentrequests.id', DB::raw('max(paymentrequestapprovals.created_at)'))
 
-                
+        }
 
+        if ($request->has('approver_id') && $request->input('approver_id') > 0)
+        {
+            $query->whereExists(function ($query) use ($request) {
+                $query->select(DB::raw(1))
+                    ->from('paymentrequestapprovals')
+                    ->where('paymentrequestapprovals.approver_id', $request->input('approver_id'))
+                    ->whereRaw('paymentrequestapprovals.paymentrequest_id=paymentrequests.id');
+            });
         }
 
         // paymentmethod

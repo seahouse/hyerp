@@ -168,7 +168,12 @@ class ItemsController extends Controller
     {
         //
         $prhead = Prhead::findOrFail($prhead_id);
-        $items = $prhead->pritems->pluck('item');
+
+//        $items = $prhead->pritems->pluck('item');
+
+        $items = DB::table('pritems')
+            ->leftJoin('hxcrm2016.dbo.vgoods', 'vgoods.goods_id', '=', 'pritems.item_id')->where('prhead_id', $prhead_id)
+            ->select('pritems.*', 'vgoods.goods_name', 'vgoods.goods_spec')->get();
 
         return $items;
     }

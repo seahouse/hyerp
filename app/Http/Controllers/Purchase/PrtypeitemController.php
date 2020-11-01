@@ -74,7 +74,7 @@ class PrtypeitemController extends Controller
 //        $input = HelperController::skipEmptyValue($input);
 
         Prtypeitem::create($inputs);
-        return redirect('purchase/prtypeitems?srtype_id=' . $inputs['prtype_id']);
+        return redirect('purchase/prtypeitems?prtype_id=' . $inputs['prtype_id']);
     }
 
     /**

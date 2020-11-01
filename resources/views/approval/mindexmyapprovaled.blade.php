@@ -23,7 +23,9 @@
             <div class="row">
                 <button id="btnMore" type="button" class="btn btn-link more-search">展开更多条件</button>
                 {!! Form::submit('搜索', ['class' => 'btn btn-primary search']) !!}
-                {{--<input class="btn btn-primary search" type="submit" value="搜索">--}}
+                {{--@if (Agent::isDesktop())--}}
+                    {{--<a class="btn btn-default btn-sm" id="btnPrint">打印</a>--}}
+                {{--@endif--}}
             </div>
             <div id="expandArea" style="display:none;">
                 <div class="row">
