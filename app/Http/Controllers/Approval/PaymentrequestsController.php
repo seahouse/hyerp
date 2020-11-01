@@ -52,12 +52,17 @@ class PaymentrequestsController extends Controller
         $approvalstatus = $request->input('approvalstatus', '');
         $paymentstatus = $request->input('paymentstatus');
         $inputs = $request->all();
+//        dd($inputs);
         $items = $this->searchrequest($request);
-        // 临时去掉汇总，由于数据太大，获取数据失败。后面重新实现获取汇总值
-        $totalamount = 0.0;
-//        $totalamount = $items->get()->sum('amount');
+//        dd($items->count());
+        $totalamount = $items->get()->sum('amount');
 //        $totalamount = Paymentrequest::sum('amount');
         $paymentrequests = $items->paginate(10);
+//        dd($paymentrequests);
+//        if (null !== request('key'))
+//            $paymentrequests = $this->searchrequest($request)->paginate(10);
+//        else
+//            $paymentrequests = Paymentrequest::latest('created_at')->paginate(10);
         $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
 
 //        return view('approval.paymentrequests.index');
@@ -197,9 +202,9 @@ class PaymentrequestsController extends Controller
             $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
             $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
         }
-        //dd($purchaseorder_ids);
+//        dd($purchaseorder_ids);
         $query = Paymentrequest::latest('paymentrequests.created_at');
-
+//        dd($query);
         if (strlen($key) > 0)
         {
             $query->where(function($query) use ($supplier_ids, $purchaseorder_ids, $key) {
@@ -329,10 +334,10 @@ class PaymentrequestsController extends Controller
         }
 
         $paymentrequests = $query->select('paymentrequests.*');
-        // dd($paymentrequests->pluck('pohead_id'));
+         dd($paymentrequests->count());
 
         // $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
-        // dd($purchaseorders->pluck('id'));
+//         dd($paymentrequests);
 
         return $paymentrequests;
     }
@@ -1747,17 +1752,5 @@ class PaymentrequestsController extends Controller
 
         return redirect('/pdfjs/build/generic/web/viewer.html?file=http://www.huaxing-east.cn:2015/HxCgFiles/swht/7592/S30C-916092615220%EF%BC%88%E5%8D%8E%E4%BA%9A%E7%94%B5%E8%A2%8B%E9%99%A4%E5%B0%98%E5%90%88%E5%90%8C%EF%BC%89.pdf') ;
 //        view('/pdfjs/build/generic/web/viewer.html?file=compressed.tracemonkey-pldi-09.pdf');
-    }
-
-    // 打印多个记录的页面
-    public function printmulti(Request $request)
-    {
-        if ($request->has('ids') && strlen($request->input('ids')))
-        {
-            $ids = explode(',', $request->input('ids'));
-            $paymentrequests = Paymentrequest::whereIn('id', $ids)->get();
-
-            return view('approval.paymentrequests.printmulti', compact('paymentrequests'));
-        }
     }
 }
