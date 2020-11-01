@@ -19,13 +19,13 @@ class CreateEpcseceningsTable extends Migration
             $table->string('projectno')->nullable();
             $table->string('installingcompanyname')->nullable();
             $table->string('erpcontractno')->nullable();
-            $table->string('erpcontractno')->nullable();
+            // $table->string('erpcontractno')->nullable();
             $table->string('projectsalename')->nullable();
             $table->string('additional_design_department')->nullable();
             $table->string('additional_source')->nullable();
             $table->string('additional_source_department')->nullable();
             $table->string('additional_reason')->nullable();
-            $table->string('additional_source')->nullable();
+            // $table->string('additional_source')->nullable();
             $table->string('need_issuedrawing')->nullable();
             $table->string('design_change_sheetno')->nullable();
             $table->string('short_additional_reason')->nullable();

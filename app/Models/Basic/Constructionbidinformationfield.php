@@ -11,9 +11,10 @@ class Constructionbidinformationfield extends Model
         'name',
         'sort',
         'type',
-//        'exceltype',
+        // 'exceltype',
         'projecttype',
         'unitprice',
         'unit',
+        'unitprice_bidder'
     ];
 }

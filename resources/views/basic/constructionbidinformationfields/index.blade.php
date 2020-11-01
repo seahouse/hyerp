@@ -32,7 +32,8 @@
                 <th>名称</th>
                 <th>排序</th>
                 <th>项目类型</th>
-                <th>单价</th>
+                <th>华星单价</th>
+                <th>投标人单价</th>
                 <th>单位</th>
                 <th>操作</th>
             </tr>
@@ -51,6 +52,9 @@
                     </td>
                     <td>
                         {{ $constructionbidinformationfield->unitprice }}
+                    </td>
+                    <td>
+                        {{ $constructionbidinformationfield->unitprice_bidder }}
                     </td>
                     <td>
                         {{ $constructionbidinformationfield->unit }}

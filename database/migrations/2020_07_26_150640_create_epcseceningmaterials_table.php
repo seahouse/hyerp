@@ -20,7 +20,7 @@ class CreateEpcseceningmaterialsTable extends Migration
             $table->string('materialname')->nullable();
             $table->string('specification')->nullable();
             $table->string('price_unit')->nullable();
-            $table->string('specification')->nullable();
+            // $table->string('specification')->nullable();
             $table->decimal('number',8,2)->nullable();
             $table->decimal('price',8,2)->nullable();
             $table->decimal('total',8,2)->nullable();
