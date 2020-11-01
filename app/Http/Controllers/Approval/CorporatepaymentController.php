@@ -93,7 +93,7 @@ class CorporatepaymentController extends Controller
     public function mstore(Request $request)
     {
         $inputs = $request->all();
-//        dd($inputs);
+        dd($inputs);
 //        dd($request->has('paidpercent'));
 //        $input['associatedapprovals'] = strlen($input['associatedapprovals']) > 0 ? json_encode(array($input['associatedapprovals'])) : "";
 //        dd($input['associatedapprovals']);
@@ -154,6 +154,7 @@ class CorporatepaymentController extends Controller
         }
 
         if (!$request->has('amount')) $inputs['amount'] = 0;
+        if (!$request->has('ticketedpercent')) $inputs['ticketedpercent'] = 0;
         if (!$request->has('paidpercent')) $inputs['paidpercent'] = 0;
         if (!$request->has('amountpercent')) $inputs['amountpercent'] = 0;
 
