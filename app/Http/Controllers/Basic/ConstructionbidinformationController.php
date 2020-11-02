@@ -214,6 +214,8 @@ class ConstructionbidinformationController extends Controller
                     $constructionbidinformationitem->multiple = doubleval($constructionbidinformation_item->multiple);
                     $constructionbidinformationitem->unit = $constructionbidinformation_item->unit;
                     $constructionbidinformationitem->remark = $constructionbidinformation_item->remark;
+                    $constructionbidinformationitem->material_fee = $constructionbidinformation_item->material_fee;
+                    $constructionbidinformationitem->install_fee = $constructionbidinformation_item->install_fee;
                     $constructionbidinformationitem->save();
                 }
             }
@@ -507,55 +509,33 @@ class ConstructionbidinformationController extends Controller
                         $projecttype = $constructionbidinformationitem->projecttype;
                         $seq = 1;
                         $row++;
-
-                        $sheet->setCellValue('A' . $row, $seq);
-                        $sheet->setCellValue('B' . $row, $constructionbidinformationitem->key);
-                        $sheet->setCellValue('C' . $row, $constructionbidinformationitem->purchaser);
-                        $sheet->setCellValue('D' . $row, $constructionbidinformationitem->specification_technicalrequirements);
-                        $sheet->setCellValue('E' . $row, $constructionbidinformationitem->value);
-                        $sheet->setCellValue('F' . $row, $constructionbidinformationitem->multiple);
-                        //                        $sheet->setCellValue('G' . $row, $constructionbidinformationitem->unit);
-                        $sheet->setCellValue('H' . $row, $constructionbidinformationitem->remark);
-                        $unitprice = 0.0;
-                        $unit = '';
-                        $constructionbidinformationfield = Constructionbidinformationfield::where('name', $constructionbidinformationitem->key)->where('projecttype', $projecttype)->first();
-                        if (isset($constructionbidinformationfield)) {
-                            $unitprice = $constructionbidinformationfield->unitprice;
-                            $unit = $constructionbidinformationfield->unit;
-                        }
-                        $sheet->setCellValue('I' . $row, $unitprice);
-                        $sheet->setCellValue('J' . $row, $unitprice * $constructionbidinformationitem->value * $constructionbidinformationitem->multiple);
-                        $sheet->setCellValue('G' . $row, $unit);
-                        // 数字单元格，左对齐
-                        $sheet->getStyle('E' . $row . ':F' . $row)->getAlignment()->setHorizontal('left');                // PHPExcel_Style_Alignment::HORIZONTAL_LEFT
-                        $sheet->getStyle('I' . $row . ':J' . $row)->getAlignment()->setHorizontal('left');                // PHPExcel_Style_Alignment::HORIZONTAL_LEFT
-                        $seq++;
-                        $row++;
-                    } else {
-                        $sheet->setCellValue('A' . $row, $seq);
-                        $sheet->setCellValue('B' . $row, $constructionbidinformationitem->key);
-                        $sheet->setCellValue('C' . $row, $constructionbidinformationitem->purchaser);
-                        $sheet->setCellValue('D' . $row, $constructionbidinformationitem->specification_technicalrequirements);
-                        $sheet->setCellValue('E' . $row, $constructionbidinformationitem->value);
-                        $sheet->setCellValue('F' . $row, $constructionbidinformationitem->multiple);
-                        //                        $sheet->setCellValue('G' . $row, $constructionbidinformationitem->unit);
-                        $sheet->setCellValue('H' . $row, $constructionbidinformationitem->remark);
-                        $unitprice = 0.0;
-                        $unit = '';
-                        $constructionbidinformationfield = Constructionbidinformationfield::where('name', $constructionbidinformationitem->key)->where('projecttype', $projecttype)->first();
-                        if (isset($constructionbidinformationfield)) {
-                            $unitprice = $constructionbidinformationfield->unitprice;
-                            $unit = $constructionbidinformationfield->unit;
-                        }
-                        $sheet->setCellValue('I' . $row, $unitprice);
-                        $sheet->setCellValue('J' . $row, $unitprice * $constructionbidinformationitem->value * $constructionbidinformationitem->multiple);
-                        $sheet->setCellValue('G' . $row, $unit);
-                        // 数字单元格，左对齐
-                        $sheet->getStyle('E' . $row . ':F' . $row)->getAlignment()->setHorizontal('left');
-                        $sheet->getStyle('I' . $row . ':J' . $row)->getAlignment()->setHorizontal('left');
-                        $seq++;
-                        $row++;
                     }
+
+                    $sheet->setCellValue('A' . $row, $seq);
+                    $sheet->setCellValue('B' . $row, $constructionbidinformationitem->key);
+                    $sheet->setCellValue('C' . $row, $constructionbidinformationitem->purchaser);
+                    $sheet->setCellValue('D' . $row, $constructionbidinformationitem->specification_technicalrequirements);
+                    $sheet->setCellValue('E' . $row, $constructionbidinformationitem->value);
+                    $sheet->setCellValue('F' . $row, $constructionbidinformationitem->multiple);
+                    //                        $sheet->setCellValue('G' . $row, $constructionbidinformationitem->unit);
+                    $sheet->setCellValue('H' . $row, $constructionbidinformationitem->remark);
+                    $unitprice = 0.0;
+                    $unit = '';
+                    $constructionbidinformationfield = Constructionbidinformationfield::where('name', $constructionbidinformationitem->key)->where('projecttype', $projecttype)->first();
+                    if (isset($constructionbidinformationfield)) {
+                        $unitprice = $constructionbidinformationfield->unitprice;
+                        $unit = $constructionbidinformationfield->unit;
+                    }
+                    $sheet->setCellValue('I' . $row, $unitprice);
+                    $sheet->setCellValue('J' . $row, $constructionbidinformationitem->material_fee);
+                    $sheet->setCellValue('K' . $row, $constructionbidinformationitem->install_fee);
+                    $sheet->setCellValue('L' . $row, $unitprice * $constructionbidinformationitem->value * $constructionbidinformationitem->multiple);
+                    $sheet->setCellValue('G' . $row, $unit);
+                    // 数字单元格，左对齐
+                    $sheet->getStyle('E' . $row . ':F' . $row)->getAlignment()->setHorizontal('left');                // PHPExcel_Style_Alignment::HORIZONTAL_LEFT
+                    $sheet->getStyle('I' . $row . ':L' . $row)->getAlignment()->setHorizontal('left');                // PHPExcel_Style_Alignment::HORIZONTAL_LEFT
+                    $seq++;
+                    $row++;
                 }
 
                 $styleThinBlackBorderOutline = array(
@@ -566,7 +546,7 @@ class ConstructionbidinformationController extends Controller
 
                     ),
                 );
-                $sheet->getStyle('A5' . ':J' . ($row - 1))->applyFromArray($styleThinBlackBorderOutline);
+                $sheet->getStyle('A5' . ':L' . ($row - 1))->applyFromArray($styleThinBlackBorderOutline);
 
                 //                $data_interchange_datetime = Carbon::parse($constructionbidinformation->data_interchange_datetime);
                 //                $sheet->setCellValue('D5', $data_interchange_datetime->format('M d, Y'));

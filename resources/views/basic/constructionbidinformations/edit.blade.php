@@ -66,6 +66,8 @@
             {{--<th>四条线</th>--}}
             <th>单位</th>
             <th>备注</th>
+            <th>材料费</th>
+            <th>安装费</th>
         </tr>
     </thead>
     <tbody>
@@ -86,10 +88,12 @@
                     {!! Form::text('specification_technicalrequirements', $constructionbidinformationitem->specification_technicalrequirements, ['class' => 'form-control']) !!}
                 </td>
                 <td>
-                    {!! Form::text('value', $constructionbidinformationitem->value, ['class' => 'form-control']) !!}
+                    <!-- {!! Form::text('value', $constructionbidinformationitem->value, ['class' => 'form-control']) !!} -->
+                    <input type="number" name="value" value="{{ $constructionbidinformationitem->value }}" class="form-control" min="0" step="0.01">
                 </td>
                 <td>
-                    {!! Form::text('multiple', $constructionbidinformationitem->multiple, ['class' => 'form-control']) !!}
+                    <!-- {!! Form::text('multiple', $constructionbidinformationitem->multiple, ['class' => 'form-control']) !!} -->
+                    <input type="number" name="multiple" value="{{ $constructionbidinformationitem->multiple }}" class="form-control" min="0" step="0.01">
                 </td>
                 {{--<td>--}}
                 {{--{!! Form::text('value_line3', $constructionbidinformationitem->value_line3, ['class' => 'form-control']) !!}--}}
@@ -103,6 +107,12 @@
                 </td>
                 <td>
                     {!! Form::text('remark', $constructionbidinformationitem->remark, ['class' => 'form-control']) !!}
+                </td>
+                <td>
+                    <input type="number" name="material_fee" @if($constructionbidinformationitem->purchaser != "投标人") readonly @endif value="{{ $constructionbidinformationitem->material_fee }}" class="form-control" min="0" step="0.01">
+                </td>
+                <td>
+                    <input type="text" name="install_fee" readonly value="{{ $constructionbidinformationitem->install_fee }}" class="form-control">
                 </td>
             </div>
         </tr>
@@ -213,6 +223,8 @@
                 //                    itemObject.value_line4 = trrow.find("input[name='value_line4']").val();
                 itemObject.unit = trrow.find("input[name='unit']").val();
                 itemObject.remark = trrow.find("input[name='remark']").val();
+                itemObject.material_fee = trrow.find("input[name='material_fee']").val();
+                itemObject.install_fee = trrow.find("input[name='install_fee']").val();
 
                 //                    console.info(JSON.stringify(itemObject));
                 itemArray.push(itemObject);
@@ -312,9 +324,38 @@
             var purchase = $(this).val();
             var data = $(this).data("price");
             var objValue = $(this).parent().parent().find("input[name='value']");
-            objValue.val(purchase == "华星东方" ? data.unitprice : data.unitprice_bidder);
+            var objMatrial = $(this).parent().parent().find("input[name='material_fee']");
+            var objInstall = $(this).parent().parent().find("input[name='install_fee']");
+
+            // 当选择采购方是投标人时， 根据输入的材料费自动计算安装费 = 单条*倍数 - 材料费
+            // 如果选择的采购方是华星东方时， 材料费和安装费设置为不可编辑。（ 如果很难实现就先放放， 也可以多花点时间研究研究）
+            objMatrial.attr('readonly', true);
+            objInstall.val(0);
+            if (purchase == "华星东方") {
+                objValue.val(data.unitprice);
+                objMatrial.val(0);
+            } else {
+                objValue.val(data.unitprice_bidder);
+                objMatrial.removeAttr('readonly');
+
+                var objMultiple = $(this).parent().parent().find("input[name='multiple']");
+                objInstall.val(data.unitprice_bidder * objMultiple.val() - objMatrial.val());
+            }
+
             var objUnit = $(this).parent().parent().find("input[name='unit']");
             objUnit.val(data.unit);
+        });
+
+        // 当材料费启用时，计算安装费
+        $("input[name='value'],input[name='multiple'],input[name='material_fee']").change(function() {
+            // console.info($(this).val());
+            var objMatrial = $(this).parent().parent().find("input[name='material_fee']");
+            if (objMatrial.attr('readonly') == 'readonly') return;
+
+            var objValue = $(this).parent().parent().find("input[name='value']");
+            var objMultiple = $(this).parent().parent().find("input[name='multiple']");
+            var objInstall = $(this).parent().parent().find("input[name='install_fee']");
+            objInstall.val(objValue.val() * objMultiple.val() - objMatrial.val());
         });
     });
 </script>

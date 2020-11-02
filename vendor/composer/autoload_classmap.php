@@ -17,7 +17,7 @@ return array(
     'CGIFIMAGE' => $vendorDir . '/mpdf/mpdf/classes/gif.php',
     'CGIFIMAGEHEADER' => $vendorDir . '/mpdf/mpdf/classes/gif.php',
     'CGIFLZW' => $vendorDir . '/mpdf/mpdf/classes/gif.php',
-    'ChangeConstructionbidinformationfieldsTable' => $baseDir . '/database/migrations/2020_11_01_120638_change_constructionbidinformationfields_table.php',
+    'ChangeConstructionbidinformationitemsTable' => $baseDir . '/database/migrations/2020_11_02_092209_change_constructionbidinformationitems_table.php',
     'ChangeIssuedrawingsTable' => $baseDir . '/database/migrations/2020_10_30_151437_change_issuedrawings_table.php',
     'CharacteristicTableSeeder' => $baseDir . '/database/seeds/CharacteristicTableSeeder.php',
     'CountryTableSeeder' => $baseDir . '/database/seeds/CountryTableSeeder.php',

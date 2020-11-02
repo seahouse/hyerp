@@ -418,7 +418,7 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         'CGIFIMAGE' => __DIR__ . '/..' . '/mpdf/mpdf/classes/gif.php',
         'CGIFIMAGEHEADER' => __DIR__ . '/..' . '/mpdf/mpdf/classes/gif.php',
         'CGIFLZW' => __DIR__ . '/..' . '/mpdf/mpdf/classes/gif.php',
-        'ChangeConstructionbidinformationfieldsTable' => __DIR__ . '/../..' . '/database/migrations/2020_11_01_120638_change_constructionbidinformationfields_table.php',
+        'ChangeConstructionbidinformationitemsTable' => __DIR__ . '/../..' . '/database/migrations/2020_11_02_092209_change_constructionbidinformationitems_table.php',
         'ChangeIssuedrawingsTable' => __DIR__ . '/../..' . '/database/migrations/2020_10_30_151437_change_issuedrawings_table.php',
         'CharacteristicTableSeeder' => __DIR__ . '/../..' . '/database/seeds/CharacteristicTableSeeder.php',
         'CountryTableSeeder' => __DIR__ . '/../..' . '/database/seeds/CountryTableSeeder.php',
