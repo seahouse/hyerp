@@ -214,8 +214,8 @@ class ConstructionbidinformationController extends Controller
                     $constructionbidinformationitem->multiple = doubleval($constructionbidinformation_item->multiple);
                     $constructionbidinformationitem->unit = $constructionbidinformation_item->unit;
                     $constructionbidinformationitem->remark = $constructionbidinformation_item->remark;
-                    $constructionbidinformationitem->material_fee = $constructionbidinformation_item->material_fee;
-                    $constructionbidinformationitem->install_fee = $constructionbidinformation_item->install_fee;
+                    $constructionbidinformationitem->material_fee = empty($constructionbidinformation_item->material_fee) ? 0 : $constructionbidinformation_item->material_fee;
+                    $constructionbidinformationitem->install_fee = empty($constructionbidinformation_item->install_fee) ?  : $constructionbidinformation_item->install_fee;
                     $constructionbidinformationitem->save();
                 }
             }
