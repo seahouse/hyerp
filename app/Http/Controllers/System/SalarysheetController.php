@@ -9,10 +9,10 @@ use App\Models\System\Salarysheet;
 use App\Models\System\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Excel, Log,Auth,DB,Datatables;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class SalarysheetController extends Controller
 {
@@ -25,27 +25,28 @@ class SalarysheetController extends Controller
     {
         //
         $request = request();
-//        $key = $request->input('key', '');
+        //        $key = $request->input('key', '');
         $inputs = $request->all();
         $salarysheets = $this->searchrequest($request)->paginate(15);
 
-//        $salarysheets = Salarysheet::latest('created_at')->paginate(10);
+        //        $salarysheets = Salarysheet::latest('created_at')->paginate(10);
         return view('system.salarysheets.index', compact('salarysheets', 'inputs'));
     }
 
     public function mobileindex()
     {
-        //
-        $username=Auth::user()->name;
-//        dd($username);
+        $username = Auth::user()->name;
+        //        dd($username);
         $request = request();
-//        $key = $request->input('key', '');
+        //        $key = $request->input('key', '');
         $inputs = $request->all();
-//        $username='陆增贵';
-//        $salarysheets = Salarysheet::where('username',$username)->first();
-//        dd($salarysheets);
-        $salarysheets = Salarysheet::where('username',$username)->latest('salary_date')->paginate(15);
-        return view('system.salarysheets.mobileindex', compact('salarysheets','inputs'));
+        //        $username='陆增贵';
+        //        $salarysheets = Salarysheet::where('username',$username)->first();
+        //        dd($salarysheets);
+        // 只列出一年（12个月）以内的工资单列表
+        $months = 12;
+        $salarysheets = Salarysheet::where('username', $username)->latest('salary_date')->take($months)->get();
+        return view('system.salarysheets.mobileindex', compact('salarysheets', 'inputs', 'months'));
     }
 
     public function search(Request $request)
@@ -63,19 +64,17 @@ class SalarysheetController extends Controller
         $query = Salarysheet::latest('created_at');
 
 
-        if ($request->has('salary_datestart') && $request->has('salary_dateend'))
-        {
+        if ($request->has('salary_datestart') && $request->has('salary_dateend')) {
             $salary_datestart = Carbon::parse($request->input('salary_datestart'))->toDateString();
             $salary_dateend = Carbon::parse($request->input('salary_dateend'))->addMonth()->addDay(-1)->toDateString();
-//            $query->whereRaw('salary_date between \'' . $salary_datestart . '\' and \'' . $salary_dateend . '\'');
+            //            $query->whereRaw('salary_date between \'' . $salary_datestart . '\' and \'' . $salary_dateend . '\'');
             $query->whereBetween('salary_date', [$salary_datestart, $salary_dateend]);
         }
 
-        if ($request->has('salary_date') && $request->has('salary_date'))
-        {
+        if ($request->has('salary_date') && $request->has('salary_date')) {
             $salary_datestart = Carbon::parse($request->input('salary_date'))->toDateString();
             $salary_dateend = Carbon::parse($request->input('salary_date'))->addMonth()->addDay(-1)->toDateString();
-//            $query->whereRaw('salary_date between \'' . $salary_datestart . '\' and \'' . $salary_dateend . '\'');
+            //            $query->whereRaw('salary_date between \'' . $salary_datestart . '\' and \'' . $salary_dateend . '\'');
             $query->whereBetween('salary_date', [$salary_datestart, $salary_dateend]);
         }
 
@@ -172,35 +171,34 @@ class SalarysheetController extends Controller
     public function importstore(Request $request)
     {
         //
-//        dd(Carbon::parse($request->input('salary_date')));
+        //        dd(Carbon::parse($request->input('salary_date')));
         $this->validate($request, [
             'salary_date'       => 'required',
-//            'itemtype'                    => 'required',
-//            'expirationdate'             => 'required',
-//            'sohead_id'                   => 'required|integer|min:1',
-//            'items_string'               => 'required',
-//            'detailuse'               => 'required',
+            //            'itemtype'                    => 'required',
+            //            'expirationdate'             => 'required',
+            //            'sohead_id'                   => 'required|integer|min:1',
+            //            'items_string'               => 'required',
+            //            'detailuse'               => 'required',
         ]);
 
         $salary_date = Carbon::parse($request->input('salary_date'))->toDateString();
-//        dd($salary_date);
+        //        dd($salary_date);
         $file = $request->file('file');
-//        dd($file->getRealPath());
-//        $file = array_get($input,'file');
-//        dd($file->public_path());
-//        Log::info($request->getSession().getServletContext()->getReadPath("/xx"));
+        //        dd($file->getRealPath());
+        //        $file = array_get($input,'file');
+        //        dd($file->public_path());
+        //        Log::info($request->getSession().getServletContext()->getReadPath("/xx"));
 
-//        Excel::load(iconv('UTF-8', 'GBK', public_path("aaa.xls")) , function ($reader) {
-//            dd($reader->get());
-//            $reader->each(function ($sheet) {
-//                $sheet->each(function ($row) {
-//                    dd($row);
-//                });
-//            });
-//        });
+        //        Excel::load(iconv('UTF-8', 'GBK', public_path("aaa.xls")) , function ($reader) {
+        //            dd($reader->get());
+        //            $reader->each(function ($sheet) {
+        //                $sheet->each(function ($row) {
+        //                    dd($row);
+        //                });
+        //            });
+        //        });
 
-        if (null != $file)
-        {
+        if (null != $file) {
             // !! set config/excel.php
             // 'force_sheets_collection' => true,   // !!
             Excel::load($file->getRealPath(), function ($reader) use ($request, $salary_date) {
@@ -209,21 +207,18 @@ class SalarysheetController extends Controller
                     $rowindex = 2;
                     $shipment = null;
                     $sheet->each(function ($row) use (&$rowindex, &$shipment, &$reader, $request, $salary_date) {
-//                    Log::info('importstore 1: ');
-//                    if ($rowindex > 3)
+                        //                    Log::info('importstore 1: ');
+                        //                    if ($rowindex > 3)
                         {
-//                        dd($row->all());
-//                        $input = array_values($row->toArray());
+                            //                        dd($row->all());
+                            //                        $input = array_values($row->toArray());
                             $input = $row->all();
-//                        dd($input);
-                            if (count($input) >= 24)
-                            {
-                                if (!empty($input['姓名']))
-                                {
-//                                dd($input['姓名']);
+                            //                        dd($input);
+                            if (count($input) >= 24) {
+                                if (!empty($input['姓名'])) {
+                                    //                                dd($input['姓名']);
                                     $salarysheet = Salarysheet::where('username', $input['姓名'])->where('salary_date', $salary_date)->first();
-                                    if (!isset($salarysheet))
-                                    {
+                                    if (!isset($salarysheet)) {
                                         $data = [];
                                         $data['salary_date'] = $salary_date;
                                         $data['username']               = $input['姓名'];
@@ -254,11 +249,9 @@ class SalarysheetController extends Controller
                                         $data['individualincometax_amount'] = isset($input['个人所得税']) ? $input['个人所得税'] : 0.0;
                                         $data['actualsalary_amount']    = isset($input['实发工资']) ? $input['实发工资'] : 0.0;
                                         $data['remark']                    = isset($input['备注']) ? $input['备注'] : '';
-//                                    dd($data);
+                                        //                                    dd($data);
                                         $salarysheet = Salarysheet::create($data);
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         $user = User::where('name', $input['姓名'])->first();
                                         if (isset($user))
                                             $salarysheet->user_id               = $user->id;
@@ -288,19 +281,17 @@ class SalarysheetController extends Controller
                                         $salarysheet->remark                    = isset($input['备注']) ? $input['备注'] : '';
                                         $salarysheet->save();
                                     }
-                                }
-                                else
-                                {
-//                                if (empty($input[3]) && !empty($input[5]) && isset($shipment))
-//                                {
-//                                    $input['shipment_id'] = $shipment->id;
-//                                    $input['contract_number'] = $input[5];
-//                                    $input['purchaseorder_number'] = $input[7];
-//                                    $input['qty_for_customer'] = $input[39];
-//                                    $input['amount_for_customer'] = $input[40];
-//                                    $input['volume'] = $input[53];
-//                                    Shipmentitem::create($input);
-//                                }
+                                } else {
+                                    //                                if (empty($input[3]) && !empty($input[5]) && isset($shipment))
+                                    //                                {
+                                    //                                    $input['shipment_id'] = $shipment->id;
+                                    //                                    $input['contract_number'] = $input[5];
+                                    //                                    $input['purchaseorder_number'] = $input[7];
+                                    //                                    $input['qty_for_customer'] = $input[39];
+                                    //                                    $input['amount_for_customer'] = $input[40];
+                                    //                                    $input['volume'] = $input[53];
+                                    //                                    Shipmentitem::create($input);
+                                    //                                }
                                 }
                             }
                         }
@@ -315,13 +306,13 @@ class SalarysheetController extends Controller
                 Log::info('highestRow: ' . $highestRow);
                 Log::info('highestColumn: ' . $highestColumn);
 
-//            //  Loop through each row of the worksheet in turn
-//            for ($row = 1; $row <= $highestRow; $row++)
-//            {
-//                //  Read a row of data into an array
-//                $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
-//                    NULL, TRUE, FALSE);
-//            }
+                //            //  Loop through each row of the worksheet in turn
+                //            for ($row = 1; $row <= $highestRow; $row++)
+                //            {
+                //                //  Read a row of data into an array
+                //                $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                //                    NULL, TRUE, FALSE);
+                //            }
             });
         }
 
@@ -331,12 +322,10 @@ class SalarysheetController extends Controller
     public function sendsalarysheet(Request $request)
     {
         $salarysheets = $this->searchrequest($request)->get();
-        foreach ($salarysheets as $salarysheet)
-        {
-            if ($salarysheet->user_id > 0)
-            {
+        foreach ($salarysheets as $salarysheet) {
+            if ($salarysheet->user_id > 0) {
                 Log::info($salarysheet->username);
-//                DingTalkController::send_link($salarysheet->user->dtuserid, '', );
+                //                DingTalkController::send_link($salarysheet->user->dtuserid, '', );
 
                 $data = [
                     [
@@ -379,13 +368,12 @@ class SalarysheetController extends Controller
                 $req->setUseridList($salarysheet->user->dtuserid);
 
                 $req->setMsgtype("oa");
-//                $req->setDeptIdList("");
+                //                $req->setDeptIdList("");
                 $req->setToAllUser("false");
                 $req->setMsgcontent("$msgcontent");
                 $resp = $c->execute($req, $access_token);
                 Log::info(json_encode($resp));
-                if ($resp->code != "0")
-                {
+                if ($resp->code != "0") {
                     Log::info($resp->msg . ": " . $resp->sub_msg);
                 }
             }
