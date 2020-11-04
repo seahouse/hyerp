@@ -15,11 +15,51 @@ class PrheadController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-        $prheads = Prhead::latest('created_at')->paginate(10);
-        return view('purchase.prheads.index', compact('prheads'));
+        $inputs = $request->all();
+        $prheads = $this->searchrequest($request)->paginate(10);
+
+//        $prheads = Prhead::latest('created_at')->paginate(10);
+        return view('purchase.prheads.index', compact('prheads', 'inputs'));
+    }
+
+    public function search(Request $request)
+    {
+        $inputs = $request->all();
+        $prheads = $this->searchrequest($request)->paginate(15);
+
+        return view('purchase.prheads.index', compact('prheads', 'inputs'));
+    }
+
+    public function searchrequest($request)
+    {
+//        dd($request->all());
+        $query = Prhead::latest('created_at');
+
+//        if ($request->has('createdatestart') && $request->has('createdateend'))
+//        {
+//            $query->whereRaw("DATEDIFF(DAY, create_time, '" . $request->input('createdatestart') . "') <= 0 and DATEDIFF(DAY, create_time, '" . $request->input('createdateend') . "') >=0");
+//
+//        }
+//
+//        if ($request->has('creator_name'))
+//        {
+//            $query->where('creator_name', $request->input('creator_name'));
+//        }
+
+        if ($request->has('key') && strlen($request->input('key')) > 0)
+        {
+            $query->where('number', 'like', '%'.$request->input('key').'%');
+        }
+
+        return $query;
+
+
+//        $items = $query->select('prheads.*');
+
+//        return $items;
     }
 
     /**

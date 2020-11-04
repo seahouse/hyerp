@@ -14,7 +14,6 @@
             <a href="{{ URL::to('purchase/vendtypes') }}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> {{'客户类型管理', [], 'layouts'}}</a>
         </div> --}}
     </div>
-    
 
     @if ($prtypes->count())
     <table class="table table-striped table-hover table-condensed">

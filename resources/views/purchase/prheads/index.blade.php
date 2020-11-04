@@ -10,7 +10,26 @@
             <a href="{{ URL::to('purchase/vendtypes') }}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> {{'客户类型管理', [], 'layouts'}}</a>
         </div> --}}
     </div>
-    
+
+    <div class="panel-body">
+
+        {!! Form::open(['url' => '/purchase/prheads/search', 'class' => 'pull-right form-inline']) !!}
+        <div class="form-group-sm">
+            {{--{!! Form::label('approvaldatelabel', '审批时间:', ['class' => 'control-label']) !!}--}}
+            {{--{!! Form::date('approvaldatestart', null, ['class' => 'form-control']) !!}--}}
+            {{--{!! Form::label('approvaldatelabelto', '-', ['class' => 'control-label']) !!}--}}
+            {{--{!! Form::date('approvaldateend', null, ['class' => 'form-control']) !!}--}}
+
+            {{--{!! Form::select('paymentmethod', ['支票' => '支票', '贷记' => '贷记', '电汇' => '电汇', '汇票' => '汇票', '现金' => '现金', '银行卡' => '银行卡', '其他' => '其他'], null, ['class' => 'form-control', 'placeholder' => '--付款方式--']) !!}--}}
+
+            {{--{!! Form::select('paymentstatus', ['0' => '已付款', '-1' => '未付款'], null, ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}--}}
+            {{--{!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']) !!}--}}
+            {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '编号']) !!}
+            {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
+            {{--<a class="btn btn-default btn-sm" id="btnPrint">打印</a>--}}
+        </div>
+        {!! Form::close() !!}
+    </div>
 
     @if ($prheads->count())
     <table class="table table-striped table-hover table-condensed">
@@ -57,7 +76,7 @@
         </tbody>
 
     </table>
-    {!! $prheads->render() !!}
+    {!! $prheads->setPath('/basic/prheads')->appends($inputs)->links() !!}
     @else
     <div class="alert alert-warning alert-block">
         <i class="fa fa-warning"></i>

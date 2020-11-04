@@ -394,6 +394,9 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
     Route::resource('vendbank', 'VendbankController');
 
     // 采购申请单
+    Route::group(['prefix' => 'prheads'], function() {
+        Route::post('search', 'PrheadController@search');
+    });
     Route::resource('prheads', 'PrheadController');
     // 采购申请单明细
     Route::resource('pritems', 'PritemController');
