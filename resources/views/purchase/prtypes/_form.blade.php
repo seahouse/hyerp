@@ -26,14 +26,12 @@
             </div>
         </div>
 
-        {{--<div class="form-group">--}}
-            {{--{!! Form::label('sohead_salesmanager', '项目所属销售经理:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
-            {{--<div class='col-xs-8 col-sm-10'>--}}
-                {{--{!! Form::text('sohead_salesmanager', null, ['class' => 'form-control', 'readonly', $attr]) !!}--}}
-            {{--</div>--}}
-        {{--</div>--}}
-
-
+        <div class="form-group">
+            {!! Form::label('quoteamount', '报价:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::text('quoteamount', null, ['class' => 'form-control', $attr]) !!}
+            </div>
+        </div>
 
 
 

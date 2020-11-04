@@ -10,6 +10,7 @@ class Prtype extends Model
     protected $fillable = [
         'prhead_id',
         'supplier_id',
+        'quoteamount',
     ];
 
     public function prhead() {

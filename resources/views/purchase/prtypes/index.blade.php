@@ -22,6 +22,7 @@
             <tr>
                 <th>采购申请单编号</th>
                 <th>供应商</th>
+                <th>报价</th>
                 <th>商品</th>
                 <th>操作</th>
             </tr>
@@ -34,6 +35,9 @@
                     </td>
                     <td>
                         {{ $prtype->supplier->name }}
+                    </td>
+                    <td>
+                        {{ $prtype->quoteamount }}
                     </td>
                     <td>
                         <a href="{{ URL::to('/purchase/prtypeitems/') . '?prtype_id=' . $prtype->id }}" target="_blank">明细</a>

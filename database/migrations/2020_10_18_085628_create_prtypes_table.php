@@ -17,6 +17,7 @@ class CreatePrtypesTable extends Migration
 
             $table->integer('prhead_id')->unsigned();               // 采购申请单ID
             $table->integer('supplier_id');
+            $table->decimal('quoteamount')->nullable();              // 报价金额
 
             $table->timestamps();
 
