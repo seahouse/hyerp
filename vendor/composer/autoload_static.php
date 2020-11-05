@@ -418,6 +418,7 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         'CGIFIMAGE' => __DIR__ . '/..' . '/mpdf/mpdf/classes/gif.php',
         'CGIFIMAGEHEADER' => __DIR__ . '/..' . '/mpdf/mpdf/classes/gif.php',
         'CGIFLZW' => __DIR__ . '/..' . '/mpdf/mpdf/classes/gif.php',
+        'ChangeConstructionbidinformationfieldsTable' => __DIR__ . '/../..' . '/database/migrations/2020_11_01_120638_change_constructionbidinformationfields_table.php',
         'ChangeConstructionbidinformationitemsTable' => __DIR__ . '/../..' . '/database/migrations/2020_11_02_092209_change_constructionbidinformationitems_table.php',
         'ChangeIssuedrawingsTable' => __DIR__ . '/../..' . '/database/migrations/2020_10_30_151437_change_issuedrawings_table.php',
         'CharacteristicTableSeeder' => __DIR__ . '/../..' . '/database/seeds/CharacteristicTableSeeder.php',
@@ -1113,6 +1114,7 @@ class ComposerStaticInit3cd2b9696e44dd82b171a237891aae14
         'mpdfform' => __DIR__ . '/..' . '/mpdf/mpdf/classes/mpdfform.php',
         'otl' => __DIR__ . '/..' . '/mpdf/mpdf/classes/otl.php',
         'pdf_context' => __DIR__ . '/..' . '/setasign/fpdi/pdf_context.php',
+        'sp_po_supplier_amount_seeder' => __DIR__ . '/../..' . '/database/seeds/sp_po_supplier_amount_seeder.php',
         'tocontents' => __DIR__ . '/..' . '/mpdf/mpdf/classes/tocontents.php',
         'wmf' => __DIR__ . '/..' . '/mpdf/mpdf/classes/wmf.php',
     );
