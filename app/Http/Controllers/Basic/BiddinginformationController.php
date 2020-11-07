@@ -833,6 +833,7 @@ class BiddinginformationController extends Controller
                 array_push($data, '编号');
                 array_push($data, '执行成本（动态计算）');
                 array_push($data, '总纲耗（动态计算）');
+                array_push($data, '开工日期');
                 foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
                 {
                     array_push($data, $biddinginformationdefinefield->name);
@@ -904,11 +905,18 @@ class BiddinginformationController extends Controller
                                 array_push($data, $issuedrawing_tonnage);
                                 array_push($comments, '');
 
+                                // 开工日期
+                                array_push($data, Carbon::parse($sohead->startDate)->toDateString());
+                                array_push($comments, '');
+
                                 $bExist = true;
                             }
                         }
                         if (!$bExist)
                         {
+                            array_push($data, '');
+                            array_push($comments, '');
+
                             array_push($data, '');
                             array_push($comments, '');
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiProcessinstanceCspaceInfoRequest;
 use App\Models\Approval\Customerdeduction;
 use App\Models\Approval\Customerdeductionattachment;
+use App\Models\Sales\Salesorder_hxold_t;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -23,6 +24,7 @@ class CustomerdeductionController extends Controller
     public function index()
     {
         //
+        self::updateStatusByProcessInstanceId('d942340c-81a1-464f-baeb-c8e1ba79a3b9', 0);
     }
 
     /**
@@ -333,6 +335,21 @@ class CustomerdeductionController extends Controller
         {
             $customerdeduction->status = $status;
             $customerdeduction->save();
+
+            if ($status == 0)
+            {
+                $sohead = Salesorder_hxold_t::find($customerdeduction->sohead_id);
+
+                $msg = '客户扣款审批单[' . $customerdeduction->business_id . ']已通过，扣款金额：' . $customerdeduction->amount . "\n";
+                Salesorder_hxold_t::where('订单ID', $customerdeduction->sohead_id)->update(['associated_remark' => $sohead->associated_remark . $msg]);
+
+                // 这种方式保存失败了，奇怪。
+//                if (isset($sohead))
+//                {
+//                    $sohead->associated_remark = $msg . "\n";
+//                    $sohead->save();
+//                }
+            }
         }
     }
 
