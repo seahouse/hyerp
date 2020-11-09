@@ -48,7 +48,9 @@
                         {{--['class' => 'form-control selectpicker', 'multiple']) !!}--}}
                     {!! Form::hidden('projecttypes_export', null, []) !!}
 
-                    {!! Form::button('导出', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport']) !!}
+                    @if (Auth::user()->isSuperAdmin())
+                        {!! Form::button('导出', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport']) !!}
+                    @endif
                     {{--<a href="{{ url('basic/constructionbidinformations/export') }}" class="btn btn-sm btn-success">测试导出</a>--}}
                 </div>
                 {!! Form::close() !!}

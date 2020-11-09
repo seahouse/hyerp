@@ -680,7 +680,6 @@ class ConstructionbidinformationController extends Controller
     public function export(Request $request)
     {
 //        Log::info($request->all());
-
         $filename = 'Shigongbiao';
 //        $filename = iconv("UTF-8","GBK//IGNORE", '中标信息');
         Log::info('export 1');
