@@ -14,13 +14,17 @@ class CreateEpcseceninghumandaysTable extends Migration
     {
         Schema::create('epcseceninghumandays', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('epcsecening_id');
-            $table->string('humdays_type');
-            $table->integer('humdays');
-            $table->decimal('humdays_price',8,2);
-            $table->decimal('humdays_totalprice',8,2);
-            $table->string('remark');
+
+            $table->integer('epcsecening_id')->unsigned();
+            $table->string('humandays_type');
+            $table->decimal('humandays')->default(0);
+            $table->decimal('humandays_unitprice')->default(0.0);
+//            $table->decimal('humandays_totalprice',8,2);
+            $table->string('remark')->nullable();
+
             $table->timestamps();
+
+            $table->foreign('epcsecening_id')->references('id')->on('epcsecenings')->onDelete('cascade');
         });
     }
 
