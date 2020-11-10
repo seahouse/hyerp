@@ -699,9 +699,16 @@ class ConstructionbidinformationController extends Controller
                 $data = [];
                 array_push($data, '编号');
                 array_push($data, '项目名称');
+                array_push($data, '对应订单');
+                array_push($data, '对应项目');
+                array_push($data, '吨位');
+                array_push($data, '工艺');
                 array_push($data, '执行成本（动态计算）');
                 array_push($data, '总纲耗（动态计算）');
                 array_push($data, '开工日期');
+                array_push($data, '华星总吨位');
+                array_push($data, '投标人总吨位');
+                array_push($data, '总面积');
                 foreach ($constructionbidinformationfields as $constructionbidinformationfield)
                 {
                     array_push($data, $constructionbidinformationfield->name);
@@ -726,6 +733,21 @@ class ConstructionbidinformationController extends Controller
                             $sohead = Salesorder_hxold::find($constructionbidinformation->sohead_id);
                             if (isset($sohead))
                             {
+                                array_push($data, $sohead->projectjc);
+                                array_push($data, isset($sohead->project) ? $sohead->project->name : '');
+                                array_push($data, $sohead->boilerduty);
+
+                                $biddinginformation = $sohead->biddinginformation;
+                                if (isset($biddinginformation))
+                                {
+                                    if (null != $biddinginformation->biddinginformationitems->where('key', '工艺')->first())
+                                        array_push($data, $biddinginformation->biddinginformationitems->where('key', '工艺')->first()->value);
+                                    else
+                                        array_push($data, '');
+                                }
+                                else
+                                    array_push($data, '');
+
                                 $pohead_amount_total = $sohead->poheads->sum('amount');
                                 $poheadAmountBy7550 = array_first($sohead->getPoheadAmountBy7550())->poheadAmountBy7550;
                                 $sohead_taxamount = isset($sohead->temTaxamountstatistics->sohead_taxamount) ? $sohead->temTaxamountstatistics->sohead_taxamount : 0.0;
@@ -756,6 +778,11 @@ class ConstructionbidinformationController extends Controller
                         if (!$bExist)
                         {
                             array_push($data, '');
+                            array_push($data, '');
+                            array_push($data, '');
+                            array_push($data, '');
+
+                            array_push($data, '');
                             array_push($comments, '');
 
                             array_push($data, '');
@@ -765,13 +792,32 @@ class ConstructionbidinformationController extends Controller
                             array_push($comments, '');
                         }
 
+                        $huaxingtonnagetotal = 0.0;
+                        $toubiaotonnagetotal = 0.0;
+                        $areatotal = 0.0;
                         foreach ($constructionbidinformationfields as $constructionbidinformationfield)
                         {
 //                            $constructionbidinformationitem = $constructionbidinformation->biddinginformationitems()->where('key', $biddinginformationdefinefield->name)->first();
                             $constructionbidinformationitem = Constructionbidinformationitem::where('constructionbidinformation_id', $constructionbidinformation->id)->where('key', $constructionbidinformationfield->name)->first();
                             array_push($data, isset($constructionbidinformationitem) ? $constructionbidinformationitem->value : '');
 //                            array_push($comments, isset($constructionbidinformationitem) ? $constructionbidinformationitem->remark : '');
+
+                            if (isset($constructionbidinformationitem))
+                            {
+                                if ($constructionbidinformationfield->unit == '吨')
+                                {
+                                    if ($constructionbidinformationitem->purchaser == '华星东方')
+                                        $huaxingtonnagetotal += $constructionbidinformationitem->value;
+                                    elseif ($constructionbidinformationitem->purchaser == '投标人')
+                                        $toubiaotonnagetotal += $constructionbidinformationitem->value;
+                                }
+                                elseif ($constructionbidinformationfield->unit == '平方米')
+                                    $areatotal += $constructionbidinformationitem->value;
+                            }
                         }
+                        array_splice($data, 9, 0, $areatotal);  // 在第9个位置插入
+                        array_splice($data, 9, 0, $toubiaotonnagetotal);
+                        array_splice($data, 9, 0, $huaxingtonnagetotal);
                         $sheet->appendRow($data);
 
 //                        // 添加批注

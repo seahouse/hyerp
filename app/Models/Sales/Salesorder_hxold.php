@@ -2,6 +2,7 @@
 
 namespace App\Models\Sales;
 
+use App\Models\Basic\Biddinginformation;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use DB, Log;
@@ -47,6 +48,11 @@ class Salesorder_hxold extends Model
 
     public function biddinginformations() {
         return $this->hasMany('App\Models\Basic\Biddinginformation', 'sohead_id', 'id');
+    }
+
+    // 投标信息
+    public function biddinginformation() {
+        return $this->hasOne(Biddinginformation::class, 'sohead_id');
     }
 
     public function poheads_simple() {
