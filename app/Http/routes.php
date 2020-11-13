@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 /*
 |--------------------------------------------------------------------------
 | Routes File
@@ -27,11 +28,11 @@
 |
 */
 
-Route::get('app', function() {
+Route::get('app', function () {
     return view('app');
 });
 
-Route::get('app2', function() {
+Route::get('app2', function () {
     return view('app2');
 });
 
@@ -67,10 +68,10 @@ Route::group(['middleware' => ['web']], function () {
     // Route::get('mddauth', function() { return view('mddauth'); });
     Route::get('mddauth/{appname?}/{url?}', 'DingTalkController@mddauth');
     Route::get('mddauth2/{agentid?}/{url?}', 'DingTalkController@mddauth2');
-//    Route::get('test', 'DingTalkController@test');
+    //    Route::get('test', 'DingTalkController@test');
     Route::get('ddauth/{appname?}/{url?}', 'DingTalkController@ddauth');
 
-	Route::get('dingtalk/getuserinfo/{code}', 'DingTalkController@getuserinfo');
+    Route::get('dingtalk/getuserinfo/{code}', 'DingTalkController@getuserinfo');
     Route::get('dingtalk/getuserinfo2/{code}', 'DingTalkController@getuserinfo2');
     Route::get('dingtalk/getuserinfoByScancode/{code}', 'DingTalkController@getuserinfoByScancode');
     Route::get('dingtalk/getuserinfoByScancode_hxold/{code}', 'DingTalkController@getuserinfoByScancode_hxold');
@@ -98,16 +99,18 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('dingtalk/processinstance/list', 'DingTalkController@processinstance_list');
 
     // run .bat shell command to run git pull.
-    Route::get('gitpullbybat', function() { return view('gitpullbybat'); });
+    Route::get('gitpullbybat', function () {
+        return view('gitpullbybat');
+    });
 
     Route::get('test', 'TestController@test');
     Route::get('testoracle', 'TestController@testoracle');
 
     // test page
-    Route::get('test1', function() {
+    Route::get('test1', function () {
         return view('approval.paymentrequests.test1');
     });
-    Route::get('test2', function() {
+    Route::get('test2', function () {
         return view('approval.paymentrequests.test2');
     });
 
@@ -115,7 +118,7 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('facepp/demo/msearch', 'FaceplusplusController@msearch');
 
     // suning
-    Route::group(['prefix' => 'suning'], function() {
+    Route::group(['prefix' => 'suning'], function () {
         Route::get('gateway', 'SuningController@gateway');
         Route::get('verifysign', 'SuningController@verifysign');
     });
@@ -123,17 +126,22 @@ Route::group(['middleware' => ['web']], function () {
 
 Route::group(['middleware' => ['web', 'auth']], function () {
     //
-    Route::get('/', function() { return view('navbarerp'); });
-	Route::get('/home', function() { return view('navbarerp'); });
-    Route::get('mapproval', function() { return view('mapproval'); });
+    Route::get('/', function () {
+        return view('navbarerp');
+    });
+    Route::get('/home', function () {
+        return view('navbarerp');
+    });
+    Route::get('mapproval', function () {
+        return view('mapproval');
+    });
 
 
     Route::get('api/dropdown', 'Addr\ProvincesController@getIndex');
 
     Route::get('dingtalk/issuedrawing', 'DingTalkController@issuedrawing');
 
-    Route::get('pdfjs/viewer', function ()
-    {
+    Route::get('pdfjs/viewer', function () {
         return view('pdfjs/viewer');
     });
     Route::get('uploads/approval/issuedrawing/{id}/drawingattachments/{filename}', function ($id, $filename) {
@@ -154,13 +162,13 @@ Route::group(['middleware' => ['web', 'auth']], function () {
 });
 
 
-Route::group(['prefix' => 'addr', 'namespace' => 'Addr', 'middleware' => ['web', 'auth']], function() {
+Route::group(['prefix' => 'addr', 'namespace' => 'Addr', 'middleware' => ['web', 'auth']], function () {
     Route::resource('addrs', 'AddrsController');
     Route::resource('provinces', 'ProvincesController');
     Route::resource('citys', 'CitysController');
 });
 
-Route::group(['prefix' => 'inventory', 'namespace' => 'Inventory', 'middleware' => ['web', 'auth']], function() {
+Route::group(['prefix' => 'inventory', 'namespace' => 'Inventory', 'middleware' => ['web', 'auth']], function () {
     Route::resource('warehouses', 'WarehousesController');
     Route::get('inventoryAvailability', 'InventoryAvailabilityController@listByItems');
     Route::get('inventoryAvailabilityBySalesorder', 'InventoryAvailabilityController@listBySalesorder');
@@ -172,10 +180,10 @@ Route::group(['prefix' => 'inventory', 'namespace' => 'Inventory', 'middleware' 
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexinventory');
 });
 
-Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web', 'auth']], function() {
+Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web', 'auth']], function () {
     Route::resource('biddinginformationdefinefields', 'BiddinginformationdefinefieldController');
 
-    Route::group(['prefix' => 'biddinginformations'], function() {
+    Route::group(['prefix' => 'biddinginformations'], function () {
         Route::get('import', 'BiddinginformationController@import');
         Route::post('importstore', 'BiddinginformationController@importstore');
         Route::any('export', 'BiddinginformationController@export');
@@ -197,14 +205,14 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
         Route::get('/{id}/xyshow', 'BiddinginformationController@xyshow');
     });
     Route::resource('biddinginformations', 'BiddinginformationController');
-    Route::group(['prefix' => 'biddinginformationitems'], function() {
+    Route::group(['prefix' => 'biddinginformationitems'], function () {
         Route::get('jsondata', 'BiddinginformationitemController@jsondata');
         Route::post('updateedittable', 'BiddinginformationitemController@updateedittable');
         Route::get('getvaluesbykey/{key}', 'BiddinginformationitemController@getvaluesbykey');
     });
     Route::resource('biddinginformationitems', 'BiddinginformationitemController');
 
-    Route::group(['prefix' => 'constructionbidinformations'], function() {
+    Route::group(['prefix' => 'constructionbidinformations'], function () {
         Route::get('import', 'ConstructionbidinformationController@import');
         Route::post('importstore', 'ConstructionbidinformationController@importstore');
         Route::any('export', 'ConstructionbidinformationController@export');
@@ -221,7 +229,7 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
         Route::get('{id}/getbiddinginformationfieldtypes', 'ConstructionbidinformationController@getbiddinginformationfieldtypes');
     });
     Route::resource('constructionbidinformations', 'ConstructionbidinformationController');
-    Route::group(['prefix' => 'constructionbidinformationitems'], function() {
+    Route::group(['prefix' => 'constructionbidinformationitems'], function () {
         Route::get('jsondata', 'ConstructionbidinformationitemController@jsondata');
         Route::post('updateedittable', 'ConstructionbidinformationitemController@updateedittable');
         Route::get('getvaluesbykey/{key}', 'ConstructionbidinformationitemController@getvaluesbykey');
@@ -229,7 +237,7 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
     });
     Route::resource('constructionbidinformationitems', 'ConstructionbidinformationitemController');
 
-    Route::group(['prefix' => 'constructionbidinformationfields'], function() {
+    Route::group(['prefix' => 'constructionbidinformationfields'], function () {
         Route::post('getfieldsbyprojecttype', 'ConstructionbidinformationfieldController@getfieldsbyprojecttype');
         Route::get('edittable', 'ConstructionbidinformationfieldController@edittable');
         Route::post('updateedittable', 'ConstructionbidinformationfieldController@updateedittable');
@@ -238,7 +246,7 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
     });
     Route::resource('constructionbidinformationfields', 'ConstructionbidinformationfieldController');
 
-    Route::group(['prefix' => 'biddingprojects'], function() {
+    Route::group(['prefix' => 'biddingprojects'], function () {
         Route::get('getitemsbykey/{key}', 'BiddingprojectController@getitemsbykey');
         Route::get('{id}/showbiddinginformation', 'BiddingprojectController@showbiddinginformation');
         Route::any('export', 'BiddingprojectController@export')->name('basic.biddingprojects.export');
@@ -248,22 +256,22 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
     Route::resource('biddingprojects', 'BiddingprojectController');
 });
 
-Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => ['web', 'auth']], function() {
+Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => ['web', 'auth']], function () {
     Route::resource('itemclasses', 'ItemclassesController');
     Route::post('items/search', 'ItemsController@search');
-    Route::group(['prefix' => 'items'], function() {
+    Route::group(['prefix' => 'items'], function () {
         Route::get('mmindex', 'ItemsController@mmindex');
         Route::get('mindex', 'ItemsController@mindex');
         Route::get('getitemsbykey/{key}', 'ItemsController@getitemsbykey');
         Route::get('getitemsbyprhead/{prhead_id}', 'ItemsController@getitemsbyprhead');     // 获取采购申请单中的物料
     });
-    Route::group(['prefix' => 'items/{id}'], function() {
+    Route::group(['prefix' => 'items/{id}'], function () {
         Route::get('receiptitems', 'ItemsController@receiptitems');
     });
 
     // hxold itemp
     Route::get('indexp_hxold', 'ItemsController@indexp_hxold');
-    Route::group(['prefix' => 'indexp_hxold'], function() {
+    Route::group(['prefix' => 'indexp_hxold'], function () {
         Route::post('search', 'ItemsController@itemp_hxold_search');
         Route::get('{id}/sethxold2', 'ItemsController@sethxold2');
         Route::get('{id}/msethxold2', 'ItemsController@msethxold2');
@@ -279,31 +287,31 @@ Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => [
     Route::get('bomitems/{id}/createitem', 'BomitemsController@createitem');
     Route::resource('bomitems', 'BomitemsController');
     Route::resource('characteristics', 'CharacteristicsController');
-    Route::group(['prefix' => 'charasses'], function() {
+    Route::group(['prefix' => 'charasses'], function () {
         Route::post('addrecord', 'CharassesController@addrecord');
         Route::get('removerecord/{id}', 'CharassesController@removerecord');
         Route::get('getCharassesByTargetId/{targetType}/{targetId}', 'CharassesController@getCharassesByTargetId');
         Route::resource('/', 'CharassesController');
     });
 
-    Route::group(['prefix' => 'pdms'], function() {
+    Route::group(['prefix' => 'pdms'], function () {
         Route::get('k3topdm', 'PdmController@k3topdm');
     });
     Route::resource('pdms', 'PdmController');
 });
 
-Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web']], function() {
-    Route::group(['prefix' => 'salesorders'], function() {
+Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web']], function () {
+    Route::group(['prefix' => 'salesorders'], function () {
         Route::get('getitemsbykey/{key}/{customerid?}', 'SalesordersController@getitemsbykey');
     });
 });
 
-Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web', 'auth']], function() {
-    Route::group(['prefix' => 'groups'], function() {
+Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web', 'auth']], function () {
+    Route::group(['prefix' => 'groups'], function () {
         Route::get('{id}/mstatistics', 'GroupController@mstatistics');
     });
     Route::resource('groups', 'GroupController');
-    Route::group(['prefix' => 'projects'], function() {
+    Route::group(['prefix' => 'projects'], function () {
         Route::get('{id}/mstatistics', 'ProjectController@mstatistics');
         Route::get('{id}/warehousedetailbyproject', 'ProjectController@warehousedetailbyproject');
         Route::get('{id}/otherwarehousedetailbyproject', 'ProjectController@otherwarehousedetailbyproject');
@@ -327,16 +335,16 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
     Route::resource('projects', 'ProjectController');
     Route::get('salesorders/{id}/ship', 'SalesordersController@ship');
     Route::post('salesorders/search', 'SalesordersController@search');
-    Route::group(['prefix' => 'salesorders'], function() {
+    Route::group(['prefix' => 'salesorders'], function () {
         Route::get('mindex', 'SalesordersController@mindex');
-//        Route::get('getitemsbykey/{key}/{customerid?}', 'SalesordersController@getitemsbykey');
+        //        Route::get('getitemsbykey/{key}/{customerid?}', 'SalesordersController@getitemsbykey');
         Route::get('getitembyid/{id}', 'SalesordersController@getitembyid');
         Route::get('getsohx', 'SalesordersController@getsohx');
         Route::get('{id}/mstatistics', 'SalesordersController@mstatistics');
         Route::get('{id}/setpurchasereminderactive/{active}', 'SalesordersController@setpurchasereminderactive');
     });
     Route::resource('salesorders', 'SalesordersController');
-    Route::group(['prefix' => 'salesorderhx'], function() {
+    Route::group(['prefix' => 'salesorderhx'], function () {
         Route::post('search', 'SalesorderhxController@search');
         Route::get('{id}/checktaxrateinput', 'SalesorderhxController@checktaxrateinput');
         Route::get('{id}/dwgbom', 'SalesorderhxController@dwgbom');
@@ -355,19 +363,19 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
     Route::get('soitems/{headId}/list', 'SoitemsController@listBySoheadId');
     Route::get('soitems/{headId}/create', 'SoitemsController@createBySoheadId');
     Route::resource('soitems', 'SoitemsController');
-    Route::group(['prefix' => 'custinfos'], function() {
+    Route::group(['prefix' => 'custinfos'], function () {
         Route::get('getitemsbykey/{key}', 'CustinfosController@getitemsbykey');
     });
     Route::resource('custinfos', 'CustinfosController');
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexsales');
-    Route::group(['prefix' => 'report2'], function() {
+    Route::group(['prefix' => 'report2'], function () {
         Route::get('bonusbysalesmanager', '\App\Http\Controllers\My\MyController@bonusbysalesmanager');
         Route::get('bonusbytechdept', '\App\Http\Controllers\My\MyController@bonusbytechdept');
     });
     Route::group(['prefix' => '{sohead_id}/bonuspayment'], function () {
         Route::get('create', 'BonuspaymentController@create');
         Route::post('store', 'BonuspaymentController@store');
-//        Route::delete('destroy/{receiptpayment}', 'ReceiptpaymentsController@destroy');
+        //        Route::delete('destroy/{receiptpayment}', 'ReceiptpaymentsController@destroy');
     });
     Route::group(['prefix' => 'bonuspayments'], function () {
         Route::get('import', 'BonuspaymentController@import');
@@ -376,25 +384,25 @@ Route::group(['prefix' => 'sales', 'namespace' => 'Sales', 'middleware' => ['web
     Route::resource('bonuspayments', 'BonuspaymentController');
 });
 
-Route::group(['prefix' => 'sales', 'namespace' => 'Sales'], function() {
+Route::group(['prefix' => 'sales', 'namespace' => 'Sales'], function () {
     Route::group(['prefix' => 'salesorders/receiptpayments'], function () {
         Route::post('storebync', 'ReceiptpaymentsController@storebync');
     });
 });
 
-Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' => ['web', 'auth']], function() {
-    Route::group(['prefix' => 'vendinfos'], function() {
+Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' => ['web', 'auth']], function () {
+    Route::group(['prefix' => 'vendinfos'], function () {
         Route::get('getitemsbykey/{key}', 'VendinfosController@getitemsbykey');
     });
     Route::resource('vendinfos', 'VendinfosController');
     Route::resource('vendtypes', 'VendtypesController');
-    Route::group(['prefix' => 'vendbank'], function() {
+    Route::group(['prefix' => 'vendbank'], function () {
         Route::get('getitemsbyvendid/{vendid}', 'VendbankController@getitemsbyvendid');
     });
     Route::resource('vendbank', 'VendbankController');
 
     // 采购申请单
-    Route::group(['prefix' => 'prheads'], function() {
+    Route::group(['prefix' => 'prheads'], function () {
         Route::post('search', 'PrheadController@search');
     });
     Route::resource('prheads', 'PrheadController');
@@ -426,7 +434,7 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         Route::get('create_hxold/{amount?}', 'PaymentsController@create_hxold');
         Route::post('store_hxold', 'PaymentsController@store_hxold');
     });
-    Route::group(['prefix' => 'purchaseorders'], function() {
+    Route::group(['prefix' => 'purchaseorders'], function () {
         Route::get('getitemsbyorderkey/{key}/{supplierid?}', 'PurchaseordersController@getitemsbyorderkey');
         Route::get('getitemsbyorderkey_simple/{key}/{supplierid?}', 'PurchaseordersController@getitemsbyorderkey_simple');
         Route::get('getitemsbyproductname/{productname}', 'PurchaseordersController@getitemsbyproductname');
@@ -436,14 +444,14 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         Route::post('store_hx', 'PurchaseordersController@store_hx');
         Route::post('search_hx', 'PurchaseordersController@search_hx');
     });
-    Route::group(['prefix' => 'poheadtaxrateass'], function() {
+    Route::group(['prefix' => 'poheadtaxrateass'], function () {
         Route::get('destorybyid/{id}', 'PoheadtaxrateassController@destorybyid');       // use get for page opt.
     });
     Route::resource('purchaseorders', 'PurchaseordersController');
     Route::resource('arrivaltickets', 'ArrivalticketController');
     Route::resource('poheadtaxrateass', 'PoheadtaxrateassController');
     Route::get('poitems/{headId}/create', 'PoitemsController@createByPoheadId');
-    Route::group(['prefix' => 'poitems/hxold'], function() {
+    Route::group(['prefix' => 'poitems/hxold'], function () {
         Route::get('', 'PoitemsController@index_hxold');
     });
     Route::resource('poitems', 'PoitemsController');
@@ -455,75 +463,75 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
     Route::resource('prtypeitems', 'PrtypeitemController');
 
     // 供应商报价
-    Route::group(['prefix' => 'supplierquotes'], function() {
+    Route::group(['prefix' => 'supplierquotes'], function () {
         Route::get('createbypohead/{pohead_id}', 'SupplierquoteController@createbypohead');
     });
     Route::resource('supplierquotes', 'SupplierquoteController');
 });
 
-Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase'], function() {
+Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase'], function () {
     Route::group(['prefix' => 'purchaseorders/payments'], function () {
         Route::post('storebync', 'PaymentsController@storebync');
     });
 });
 
-Route::group(['prefix' => 'purchaseorderc', 'namespace' => 'Purchaseorderc', 'middleware' => ['web', 'auth']], function() {
+Route::group(['prefix' => 'purchaseorderc', 'namespace' => 'Purchaseorderc', 'middleware' => ['web', 'auth']], function () {
     Route::group(['prefix' => 'purchaseordercs/{id}'], function () {
         Route::get('detail', 'PurchaseordercController@detail');
         Route::get('detailjson', 'PurchaseordercController@detailjson');
         Route::get('packing', 'PurchaseordercController@packing');
-//        Route::get('poitems', 'PurchaseordersController@poitems');
-//        Route::get('receiptorders_hx', 'PurchaseordersController@receiptorders_hx');
-//        Route::get('edit_hx', 'PurchaseordersController@edit_hx');
-//        Route::patch('update_hx', 'PurchaseordersController@update_hx');
-//        Route::get('getpoheadtaxrateass_hx', 'PurchaseordersController@getpoheadtaxrateass_hx');
+        //        Route::get('poitems', 'PurchaseordersController@poitems');
+        //        Route::get('receiptorders_hx', 'PurchaseordersController@receiptorders_hx');
+        //        Route::get('edit_hx', 'PurchaseordersController@edit_hx');
+        //        Route::patch('update_hx', 'PurchaseordersController@update_hx');
+        //        Route::get('getpoheadtaxrateass_hx', 'PurchaseordersController@getpoheadtaxrateass_hx');
     });
-//    Route::group(['prefix' => 'purchaseorders/{purchaseorder}/payments'], function () {
-//        Route::get('/', 'PaymentsController@index');
-//        Route::get('create', 'PaymentsController@create');
-//        Route::post('store', 'PaymentsController@store');
-//        Route::delete('destroy/{payment}', 'PaymentsController@destroy');
-//
-//        Route::get('create_hxold', 'PaymentsController@create_hxold');
-//        Route::post('store_hxold', 'PaymentsController@store_hxold');
-//    });
-//    Route::group(['prefix' => 'purchaseorders'], function() {
-//        Route::get('getitemsbyorderkey/{key}/{supplierid?}', 'PurchaseordersController@getitemsbyorderkey');
-//        Route::get('index_hx', 'PurchaseordersController@index_hx');
-//        Route::get('create_hx', 'PurchaseordersController@create_hx');
-//        Route::post('store_hx', 'PurchaseordersController@store_hx');
-//        Route::post('search_hx', 'PurchaseordersController@search_hx');
-//    });
-//    Route::group(['prefix' => 'poheadtaxrateass'], function() {
-//        Route::get('destorybyid/{id}', 'PoheadtaxrateassController@destorybyid');       // use get for page opt.
-//    });
+    //    Route::group(['prefix' => 'purchaseorders/{purchaseorder}/payments'], function () {
+    //        Route::get('/', 'PaymentsController@index');
+    //        Route::get('create', 'PaymentsController@create');
+    //        Route::post('store', 'PaymentsController@store');
+    //        Route::delete('destroy/{payment}', 'PaymentsController@destroy');
+    //
+    //        Route::get('create_hxold', 'PaymentsController@create_hxold');
+    //        Route::post('store_hxold', 'PaymentsController@store_hxold');
+    //    });
+    //    Route::group(['prefix' => 'purchaseorders'], function() {
+    //        Route::get('getitemsbyorderkey/{key}/{supplierid?}', 'PurchaseordersController@getitemsbyorderkey');
+    //        Route::get('index_hx', 'PurchaseordersController@index_hx');
+    //        Route::get('create_hx', 'PurchaseordersController@create_hx');
+    //        Route::post('store_hx', 'PurchaseordersController@store_hx');
+    //        Route::post('search_hx', 'PurchaseordersController@search_hx');
+    //    });
+    //    Route::group(['prefix' => 'poheadtaxrateass'], function() {
+    //        Route::get('destorybyid/{id}', 'PoheadtaxrateassController@destorybyid');       // use get for page opt.
+    //    });
     Route::resource('purchaseordercs', 'PurchaseordercController');
     Route::get('poitemcs/{headId}/create', 'PoitemcController@createByPoheadId');
     Route::resource('poitemcs', 'PoitemcController');
     Route::group(['prefix' => 'asns'], function () {
         Route::post('packingstore', 'AsnController@packingstore');
-//        Route::get('packing', 'PurchaseordercController@packing');
+        //        Route::get('packing', 'PurchaseordercController@packing');
     });
     Route::group(['prefix' => 'asns/{id}'], function () {
         Route::get('detail', 'AsnController@detail');
         Route::get('labelpreprint', 'AsnController@labelpreprint');
-//        Route::get('packing', 'PurchaseordercController@packing');
+        //        Route::get('packing', 'PurchaseordercController@packing');
     });
     Route::resource('asns', 'AsnController');
-//    Route::resource('asnitems', 'AsnitemController');
+    //    Route::resource('asnitems', 'AsnitemController');
 });
 
-Route::group(['prefix' => 'crm', 'namespace' => 'Crm', 'middleware' => ['web', 'auth']], function() {
+Route::group(['prefix' => 'crm', 'namespace' => 'Crm', 'middleware' => ['web', 'auth']], function () {
     Route::resource('contacts', 'ContactsController');
 });
 
-Route::group(['prefix' => 'accounting', 'namespace' => 'Accounting', 'middleware' => ['web', 'auth']], function() {
+Route::group(['prefix' => 'accounting', 'namespace' => 'Accounting', 'middleware' => ['web', 'auth']], function () {
     Route::resource('receivables', 'ReceivablesController');
     Route::resource('payables', 'PayablesController');
 });
 
-Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' => ['web', 'auth']], function() {
-    Route::group(['prefix' => 'reimbursements'], function() {
+Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' => ['web', 'auth']], function () {
+    Route::group(['prefix' => 'reimbursements'], function () {
         Route::get('mindex', 'ReimbursementsController@mindex');
         Route::get('mindexmy', 'ReimbursementsController@mindexmy');      // 我发起的
         Route::get('mcreate', 'ReimbursementsController@mcreate');
@@ -535,7 +543,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('search/{key}', 'ReimbursementsController@search');
     });
     Route::resource('reimbursements', 'ReimbursementsController');
-    Route::group(['prefix' => 'paymentrequests'], function() {
+    Route::group(['prefix' => 'paymentrequests'], function () {
         Route::get('mcreate', 'PaymentrequestsController@mcreate');
         Route::post('mstore', 'PaymentrequestsController@mstore');
         Route::get('mshow/{id}', 'PaymentrequestsController@mshow');
@@ -559,7 +567,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('printmulti', 'PaymentrequestsController@printmulti');
     });
     Route::resource('paymentrequests', 'PaymentrequestsController');
-    Route::group(['prefix' => 'issuedrawing'], function() {
+    Route::group(['prefix' => 'issuedrawing'], function () {
         Route::get('getitemsbysoheadid/{sohead_id}', 'IssuedrawingController@getitemsbysoheadid');
         Route::get('mcreate', 'IssuedrawingController@mcreate');
         Route::post('mstore', 'IssuedrawingController@mstore');
@@ -572,36 +580,36 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::resource('issuedrawing', 'IssuedrawingController');
     Route::resource('approversettings', 'ApproversettingsController');
 
-    Route::group(['prefix' => 'reimbursementapprovals'], function() {
+    Route::group(['prefix' => 'reimbursementapprovals'], function () {
         Route::get('{reimbursementid}/mcreate', 'ReimbursementapprovalsController@mcreate');
         Route::post('mstore', 'ReimbursementapprovalsController@mstore');
     });
     Route::resource('reimbursementapprovals', 'ReimbursementapprovalsController');
-    Route::group(['prefix' => 'paymentrequestapprovals'], function() {
+    Route::group(['prefix' => 'paymentrequestapprovals'], function () {
         Route::get('{paymentrequestid}/mcreate', 'PaymentrequestapprovalsController@mcreate');
         Route::post('mstore', 'PaymentrequestapprovalsController@mstore');
     });
     Route::resource('paymentrequestapprovals', 'PaymentrequestapprovalsController');
-    Route::group(['prefix' => 'mindexmy'], function() {
+    Route::group(['prefix' => 'mindexmy'], function () {
         Route::get('', 'ApprovalController@mindexmy');      // 我发起的
         Route::any('search/{key?}', 'ApprovalController@searchmindexmy');      // 我发起的
     });
     Route::get('mindexmying', 'ApprovalController@mindexmying');      // 我发起的
-    Route::group(['prefix' => 'mindexmyed'], function() {
+    Route::group(['prefix' => 'mindexmyed'], function () {
         Route::get('', 'ApprovalController@mindexmyed');      // 我发起的
         Route::any('search/{key?}', 'ApprovalController@searchmindexmyed');      // 我发起的
     });
-    Route::group(['prefix' => 'mindexmyapproval', 'as' => 'approval/mindexmyapproval'], function() {
+    Route::group(['prefix' => 'mindexmyapproval', 'as' => 'approval/mindexmyapproval'], function () {
         Route::any('', 'ApprovalController@mindexmyapproval');      // 待我审批的
         Route::any('search/{key?}', 'ApprovalController@searchmindexmyapproval');      // 待我审批的
     });
-    Route::group(['prefix' => 'mindexmyapprovaled'], function() {
+    Route::group(['prefix' => 'mindexmyapprovaled'], function () {
         Route::get('', 'ApprovalController@mindexmyapprovaled');      // 我已审批的
         Route::any('search/{key?}', 'ApprovalController@searchmindexmyapprovaled');      // 我已审批的
     });
     // Route::get('mindexmyapprovaled', 'ApprovalController@mindexmyapprovaled');      // 我已审批的
 
-    Route::group(['prefix' => 'reports'], function() {
+    Route::group(['prefix' => 'reports'], function () {
         Route::get('paymentrequest', 'ApprovalreportsController@paymentrequest');
     });
 
@@ -609,23 +617,22 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::resource('approvaltypes', 'ApprovaltypesController');
 
     Route::resource('paymentrequestretract', 'PaymentrequestretractController');
-    Route::group(['prefix' => 'paymentrequestretractapproval'], function() {
+    Route::group(['prefix' => 'paymentrequestretractapproval'], function () {
         Route::get('{paymentrequestretractid}/mcreate', 'PaymentrequestretractapprovalController@mcreate');
         Route::post('mstore', 'PaymentrequestretractapprovalController@mstore');
     });
     Route::resource('paymentrequestretractapproval', 'PaymentrequestretractapprovalController');
 
-    Route::group(['prefix' => 'mcitempurchase'], function() {
+    Route::group(['prefix' => 'mcitempurchase'], function () {
         Route::get('mcreate', 'McitempurchaseController@mcreate');
         Route::post('mstore', 'McitempurchaseController@mstore');
-
     });
     Route::resource('mcitempurchase', 'McitempurchaseController');
     Route::resource('mcitempurchaseattachment', 'McitempurchaseattachmentController');
     Route::resource('mcitempurchaseissuedrawing', 'McitempurchaseissuedrawingController');
     Route::resource('mcitempurchaseitem', 'McitempurchaseitemController');
 
-    Route::group(['prefix' => 'pppayment'], function() {
+    Route::group(['prefix' => 'pppayment'], function () {
         Route::get('mcreate', 'PppaymentController@mcreate');
         Route::post('mstore', 'PppaymentController@mstore');
         Route::post('synchronize_status_to_erp', 'PppaymentController@synchronize_status_to_erp');
@@ -635,45 +642,43 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::resource('pppaymentitemissuedrawing', 'PppaymentitemissuedrawingController');
     Route::resource('pppaymentitemattachment', 'PppaymentitemattachmentController');
 
-    Route::group(['prefix' => 'projectsitepurchases'], function() {
+    Route::group(['prefix' => 'projectsitepurchases'], function () {
         Route::get('mcreate', 'ProjectsitepurchaseController@mcreate');
         Route::post('mstore', 'ProjectsitepurchaseController@mstore');
         Route::get('getitemsbykey/{key}', 'ProjectsitepurchaseController@getitemsbykey');
     });
     Route::resource('projectsitepurchases', 'ProjectsitepurchaseController');
 
-    Route::group(['prefix' => 'vendordeductions'], function() {
+    Route::group(['prefix' => 'vendordeductions'], function () {
         Route::get('mcreate', 'VendordeductionController@mcreate');
         Route::post('mstore', 'VendordeductionController@mstore');
         Route::get('getitemsbykey/{key}', 'VendordeductionController@getitemsbykey');
     });
     Route::resource('vendordeductions', 'VendordeductionController');
 
-    Route::group(['prefix' => 'techpurchase'], function() {
+    Route::group(['prefix' => 'techpurchase'], function () {
         Route::get('mcreate', 'TechpurchaseController@mcreate');
         Route::post('mstore', 'TechpurchaseController@mstore');
-
     });
     Route::resource('techpurchase', 'TechpurchaseController');
     Route::resource('techpurchaseattachment', 'TechpurchaseattachmentController');
     Route::resource('techpurchaseitem', 'TechpurchaseitemController');
 
-    Route::group(['prefix' => 'corporatepayment'], function() {
+    Route::group(['prefix' => 'corporatepayment'], function () {
         Route::get('mcreate', 'CorporatepaymentController@mcreate');
         Route::post('mstore', 'CorporatepaymentController@mstore');
-
     });
     Route::resource('corporatepayment', 'CorporatepaymentController');
-//    Route::resource('Corporatepaymentattachment', 'CorporatepaymentattachmentController');
+    //    Route::resource('Corporatepaymentattachment', 'CorporatepaymentattachmentController');
 
-    Route::group(['prefix' => 'additionsalesorder'], function() {
+    Route::group(['prefix' => 'additionsalesorder'], function () {
         Route::get('mcreate', 'AdditionsalesorderController@mcreate');
         Route::post('mstore', 'AdditionsalesorderController@mstore');
     });
     Route::resource('additionsalesorder', 'AdditionsalesorderController');
-//    Route::resource('additionsalesorderattachment', 'AdditionsalesorderattachmentController');
+    //    Route::resource('additionsalesorderattachment', 'AdditionsalesorderattachmentController');
 
-    Route::group(['prefix' => 'customerdeduction'], function() {
+    Route::group(['prefix' => 'customerdeduction'], function () {
         Route::get('mcreate', 'CustomerdeductionController@mcreate');
         Route::post('mstore', 'CustomerdeductionController@mstore');
     });
@@ -683,7 +688,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::get('gethxitemsbykey', 'ApprovalController@gethxitemsbykey');
     Route::get('getdtitemsbykey', 'ApprovalController@getdtitemsbykey');
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexapproval');
-    Route::group(['prefix' => 'report2'], function() {
+    Route::group(['prefix' => 'report2'], function () {
         Route::get('issuedrawingpurchasedetail', 'ApprovalController@issuedrawingpurchasedetail');
         Route::post('issuedrawingpurchasedetailexport', 'ApprovalController@issuedrawingpurchasedetailexport');
         Route::post('issuedrawingpurchasedetailexport2', 'ApprovalController@issuedrawingpurchasedetailexport2');
@@ -699,9 +704,9 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     });
 });
 
-Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' => ['web', 'auth']], function() {
+Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' => ['web', 'auth']], function () {
 
-    Route::group(['prefix' => 'paymentrequests'], function() {
+    Route::group(['prefix' => 'paymentrequests'], function () {
         Route::get('pdfjs/viewer/{pdffile?}', 'PaymentrequestsController@pdfjsviewer');
     });
 });
@@ -722,7 +727,7 @@ Route::group(['prefix' => 'dingtalk', 'namespace' => 'Dingtalk', 'middleware' =>
     Route::get('report', '\App\Http\Controllers\System\ReportController@indexdingtalk');
 });
 
-Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['web', 'auth']], function() {
+Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['web', 'auth']], function () {
     Route::resource('employees', 'EmployeesController');
     Route::resource('depts', 'DeptsController');
     Route::resource('images', 'ImagesController');
@@ -731,14 +736,14 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
     Route::post('users/{id}/updaterole', 'UsersController@updaterole');
     Route::post('userroles/store', 'UserrolesController@store');
     Route::get('users/{id}/roles/edit', 'UserrolesController@edit');
-    Route::group(['prefix' => 'users'], function() {
+    Route::group(['prefix' => 'users'], function () {
         Route::post('updateuseroldall', 'UsersController@updateuseroldall');
 
         Route::post('search', 'UsersController@search');              // 搜索功能
         Route::post('msearch', 'UsersController@msearch');              // 搜索功能
         Route::get('getitemsbykey/{key}', 'UsersController@getitemsbykey');
     });
-    Route::group(['prefix' => 'users/{id}'], function() {
+    Route::group(['prefix' => 'users/{id}'], function () {
         Route::get('editpass', 'UsersController@editpass');
         Route::post('updatepass', 'UsersController@updatepass');
         Route::get('edituserold', 'UsersController@edituserold');
@@ -758,8 +763,8 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
         Route::delete('destroy/{role}', 'UserrolesController@destroy');
     });
     Route::resource('roles', 'RolesController');
-     Route::resource('permissions', 'PermissionsController');
-    Route::group(['prefix' => 'roles/{role}/permissions'], function() {
+    Route::resource('permissions', 'PermissionsController');
+    Route::group(['prefix' => 'roles/{role}/permissions'], function () {
         Route::get('/', 'RolepermissionsController@index');
         Route::get('create', 'RolepermissionsController@create');
         Route::delete('destroy/{permission}', 'RolepermissionsController@destroy');
@@ -770,18 +775,18 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
     Route::post('report/{id}/export', 'ReportController@export');
     Route::resource('report', 'ReportController');
 
-    Route::group(['prefix' => 'userold'], function() {
+    Route::group(['prefix' => 'userold'], function () {
         Route::get('hasrepeatoldid/{oldid}', 'UseroldController@hasrepeatoldid');
     });
     Route::resource('userold', 'UseroldController');
 
     Route::resource('operationlog', 'OperationlogController');
-    Route::group(['prefix' => 'reminderswitches'], function() {
+    Route::group(['prefix' => 'reminderswitches'], function () {
         Route::get('storebyclick/{tablename}/{tableid}/{type}/{value}', 'ReminderswitchController@storebyclick');
     });
     Route::resource('reminderswitches', 'ReminderswitchController');
 
-    Route::group(['prefix' => 'salarysheet'], function() {
+    Route::group(['prefix' => 'salarysheet'], function () {
         Route::get('import', 'SalarysheetController@import');
         Route::post('importstore', 'SalarysheetController@importstore');
         Route::post('search', 'SalarysheetController@search');
@@ -791,12 +796,12 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
     });
     Route::resource('salarysheet', 'SalarysheetController');
 
-    Route::group(['prefix' => 'salarysheetreply'], function() {
+    Route::group(['prefix' => 'salarysheetreply'], function () {
         Route::post('mstore', 'SalarysheetreplyController@mstore');
     });
     Route::resource('salarysheetreply', 'SalarysheetreplyController');
 
-    Route::group(['prefix' => 'annualbonussheet'], function() {
+    Route::group(['prefix' => 'annualbonussheet'], function () {
         Route::get('import', 'AnnualbonussheetController@import');
         Route::post('importstore', 'AnnualbonussheetController@importstore');
         Route::post('search', 'AnnualbonussheetController@search');
@@ -806,7 +811,7 @@ Route::group(['prefix' => 'system', 'namespace' => 'System', 'middleware' => ['w
     Route::resource('annualbonussheet', 'AnnualbonussheetController');
 });
 
-Route::group(['prefix' => 'teaching', 'namespace' => 'Teaching', 'middleware' => ['web', 'auth']], function() {
+Route::group(['prefix' => 'teaching', 'namespace' => 'Teaching', 'middleware' => ['web', 'auth']], function () {
     Route::resource('teachingpoint', 'TeachingpointController');
     Route::resource('teachingadministrator', 'TeachingadministratorController');
     Route::resource('teachingstudentimage', 'TeachingstudentimageController');
@@ -836,8 +841,8 @@ Route::group(['prefix' => 'teaching', 'namespace' => 'Teaching', 'middleware' =>
     // Route::resource('approvaltypes', 'ApprovaltypesController');
 });
 
-Route::group(['prefix' => 'my', 'namespace' => 'My', 'middleware' => ['web', 'auth']], function() {
-    Route::group(['prefix' => 'bonus'], function() {
+Route::group(['prefix' => 'my', 'namespace' => 'My', 'middleware' => ['web', 'auth']], function () {
+    Route::group(['prefix' => 'bonus'], function () {
         Route::any('', 'MyController@bonus');
         Route::any('byorder', 'MyController@bonusbyorder');
         Route::post('byorderexport', 'MyController@byorderexport');
@@ -846,26 +851,29 @@ Route::group(['prefix' => 'my', 'namespace' => 'My', 'middleware' => ['web', 'au
         Route::get('detailjsonbyorder/{sohead_id}', 'MyController@detailjsonbyorder');
         Route::get('indexjsonbysalesmanager', 'MyController@indexjsonbysalesmanager');
         Route::get('indexjsonbytechdept', 'MyController@indexjsonbytechdept');
-//        Route::any('search', 'MyController@searchbonus');
+        //        Route::any('search', 'MyController@searchbonus');
     });
-//    Route::group(['prefix' => 'bonusbyorder'], function() {
-//        Route::get('', 'MyController@bonusbyorder');
-//    });
+    //    Route::group(['prefix' => 'bonusbyorder'], function() {
+    //        Route::get('', 'MyController@bonusbyorder');
+    //    });
 });
 
 Route::group(['middleware' => 'web'], function () {
     Route::auth();
 
     // for admin login
-//    Route::post('login2', 'Auth\AuthController@login2');
+    //    Route::post('login2', 'Auth\AuthController@login2');
     Route::get('login2', 'Auth\AuthController@showLoginForm2');
-//    Route::get('/home', 'HomeController@index');
+    //    Route::get('/home', 'HomeController@index');
+
+    Route::post('sendsms', util\AliyunSMSController::class . '@send');
+    Route::post('loginbysms', Auth\AuthController::class . '@loginbysms');
 });
 
 
 
 // Load other urls.
-$GodPath = __DIR__.'/../God/routes.php';
+$GodPath = __DIR__ . '/../God/routes.php';
 if (file_exists($GodPath)) {
     include_once $GodPath;
 }
@@ -875,10 +883,10 @@ if (file_exists($GodPath)) {
 //     return view('gitpull');
 // });
 
-Route::post('gitpull2', function() {
+Route::post('gitpull2', function () {
     return view('gitpull2');
 });
 
-Route::post('gitpullpost', function() {
+Route::post('gitpullpost', function () {
     return view('gitpullpost');
 });
