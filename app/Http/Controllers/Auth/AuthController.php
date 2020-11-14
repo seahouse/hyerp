@@ -3,14 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\System\User;
-use Validator;
 use App\Http\Controllers\Controller;
-use App\Models\System\Dtuser;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -150,6 +148,10 @@ class AuthController extends Controller
 
     public function loginbysms(Request $request)
     {
+        $this->validate($request, [
+            'phonenum' => 'required',
+            'code' => 'required|integer',
+        ]);
         // dd($request->all());
         $mobile = $request->phonenum;
         $code = $request->code;
@@ -157,17 +159,17 @@ class AuthController extends Controller
 
         if ($code != $syscode) {
             return redirect()->back()
-                ->withInput(['phonenum' => $mobile])
+                ->withInput(['phonenum' => $mobile, 'tab_active' => 1, 'syscode' => $syscode])
                 ->withErrors(['code' => '验证码不正确']);
         }
 
-        $user = Dtuser::where('mobile', $mobile)->first();
+        $user = User::where('mobile', $mobile)->first();
         if (isset($user)) {
-            Auth::login($user->user);
+            Auth::login($user);
             return redirect()->intended($this->redirectTo);
         } else {
             return redirect()->back()
-                ->withInput(['phonenum' => $mobile])
+                ->withInput(['phonenum' => $mobile, 'tab_active' => 1, 'syscode' => $syscode])
                 ->withErrors(['phonenum' => '手机号不存在']);
         }
     }
