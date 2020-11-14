@@ -684,6 +684,13 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     });
     Route::resource('customerdeduction', 'CustomerdeductionController');
 
+    // EPC-安装队现场增补
+    Route::group(['prefix' => 'customerdeduction'], function () {
+        Route::get('mcreate', 'CustomerdeductionController@mcreate');
+        Route::post('mstore', 'CustomerdeductionController@mstore');
+    });
+    Route::resource('epcsecening', 'EpcseceningController');
+
     Route::post('bingdingtalk', 'ApprovalController@bingdingtalk');
     Route::get('gethxitemsbykey', 'ApprovalController@gethxitemsbykey');
     Route::get('getdtitemsbykey', 'ApprovalController@getdtitemsbykey');

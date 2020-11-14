@@ -6,7 +6,7 @@ Agent
 A PHP desktop/mobile user agent parser with support for Laravel, based on [Mobile Detect](https://github.com/serbanghita/Mobile-Detect) with desktop support and additional functionality.
 
 <p align="center">
-<img src="http://jenssegers.be/uploads/images/agent.png?v4" height="275">
+<img src="https://jenssegers.com/static/media/agent.png" height="275">
 </p>
 
 Installation
@@ -21,16 +21,16 @@ composer require jenssegers/agent
 Laravel (optional)
 ------------------
 
-Add the service provider in `app/config/app.php`:
+Add the service provider in `config/app.php`:
 
 ```php
-'Jenssegers\Agent\AgentServiceProvider',
+Jenssegers\Agent\AgentServiceProvider::class,
 ```
 
-And add the Agent alias to `app/config/app.php`:
+And add the Agent alias to `config/app.php`:
 
 ```php
-'Agent' => 'Jenssegers\Agent\Facades\Agent',
+'Agent' => Jenssegers\Agent\Facades\Agent::class,
 ```
 
 Basic Usage
@@ -147,7 +147,7 @@ $agent->isPhone();
 
 ### Robot detection
 
-Check if the user is a robot.
+Check if the user is a robot. This uses [jaybizzle/crawler-detect](https://github.com/JayBizzle/Crawler-Detect) to do the actual robot detection.
 
 ```php
 $agent->isRobot();
@@ -155,7 +155,7 @@ $agent->isRobot();
 
 ### Robot name
 
-Get the robot name. Note: this currently only works for major robots like Google, Facebook, Twitter, Bing, Baidu etc ...
+Get the robot name.
 
 ```php
 $robot = $agent->robot();
@@ -178,3 +178,7 @@ $version = $agent->version($platform);
 ## License
 
 Laravel User Agent is licensed under [The MIT License (MIT)](LICENSE).
+
+## Security contact information
+
+To report a security vulnerability, follow [these steps](https://tidelift.com/security).

@@ -807,9 +807,9 @@ class ConstructionbidinformationController extends Controller
                                 if ($constructionbidinformationfield->unit == '吨')
                                 {
                                     if ($constructionbidinformationitem->purchaser == '华星东方')
-                                        $huaxingtonnagetotal += $constructionbidinformationitem->value;
+                                        $huaxingtonnagetotal += $constructionbidinformationitem->value * $constructionbidinformationitem->multiple;
                                     elseif ($constructionbidinformationitem->purchaser == '投标人')
-                                        $toubiaotonnagetotal += $constructionbidinformationitem->value;
+                                        $toubiaotonnagetotal += $constructionbidinformationitem->value * $constructionbidinformationitem->multiple;
                                 }
                                 elseif ($constructionbidinformationfield->unit == '平方米')
                                     $areatotal += $constructionbidinformationitem->value;
