@@ -5,10 +5,10 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <ul id="myTab" class="nav nav-tabs">
-                <li class="active">
+                <li class="{{ old('tab_active')==''? 'active' : '' }}">
                     <a href="#bypassword" data-toggle="tab">密码登录</a>
                 </li>
-                <li>
+                <li class="{{ old('tab_active')=='1'? 'active' : '' }}">
                     <a href="#bymessage" data-toggle="tab">短信登录</a>
                 </li>
                 <li>
@@ -16,7 +16,7 @@
                 </li>
             </ul>
             <div id="myTabContent" class="tab-content">
-                <div class="tab-pane fade in active" id="bypassword">
+                <div class="tab-pane fade {{ old('tab_active')==''? 'active in' : '' }}" id="bypassword">
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/login') }}" style="margin-top: 10px;">
                         {!! csrf_field() !!}
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
@@ -74,7 +74,7 @@
                     </form>
                 </div>
 
-                <div class="tab-pane fade" id="bymessage">
+                <div class="tab-pane fade {{ old('tab_active')=='1'? 'active in' : '' }}" id="bymessage">
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/loginbysms') }}" style="margin-top: 10px;">
                         {!! csrf_field() !!}
                         <div class="form-group{{ $errors->has('phonenum') ? ' has-error' : '' }}">
@@ -102,7 +102,7 @@
                                         <input class="btn btn-default" type="button" id="btnSend" value="发送验证码">
                                     </span>
 
-                                    <input type="hidden" id="syscode" name="syscode">
+                                    <input type="hidden" id="syscode" name="syscode" value="{{ old('syscode') }}">
                                 </div>
 
                                 @if ($errors->has('code'))
@@ -210,7 +210,7 @@
         var phonenum = $("#phonenum").val();
         var result = isPhoneNum();
         if (result) {
-            doPostBack('sendsms', {
+            doPostBack('sendsmscode', {
                 "phonenum": phonenum,
                 "_token": "{{ csrf_token() }}",
             });
@@ -228,15 +228,15 @@
             url: url,
             data: queryParam,
             error: function(data) {
-                console.error(data);
+                console.log(data);
             },
             success: function(data) {
                 console.log(data);
 
-                if (!data.success) {
-                    alert(data.msg);
+                if (data.Code == "OK") {
+                    $("#syscode").val(data.vcode);
                 } else {
-                    $("#syscode").val(data.code);
+                    alert(data.Message);
                 }
             }
         });

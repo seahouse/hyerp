@@ -14,19 +14,28 @@ use Illuminate\Support\Facades\Log;
 
 class AliyunSMSController extends Controller
 {
-    public function send(Request $request)
+    /**
+     * 发送验证信息
+     */
+    public function sendsmscode(Request $request)
     {
-        // Log::info($request);
-        $data = [
-            'success' => true,
-            'msg' => 'ok',
-            'code' => rand(1000, 9999),
-            'phonenum' => $request->phonenum,
-        ];
+        $code = rand(1000, 9999);
 
+        // {Message: "OK", RequestId: "81E325BF-062B-4AE8-A104-F477F88A1A35", BizId: "618121105352368202^0", Code: "OK"}
+        // 模拟数据
+        // $data = ['Message' => 'OK', 'Code' => 'OK'];
+        $data = static::send($request->phonenum, config('custom.aliyun.sms_signname'), config('custom.aliyun.sms_templatecode'), json_encode(['code' => $code]));
+        $data['vcode'] = $code;
+        Log::info($data);
         return response()->json($data);
+    }
 
-        AlibabaCloud::accessKeyClient('LTAI4G9stCP8utMpMHZDGdvC', '6d67vYxyBy5DW6JGEPVlgpcp3EbdK7')
+    /**
+     * 发送信息
+     */
+    protected static function send($phone, $signname, $templatecode, $param)
+    {
+        AlibabaCloud::accessKeyClient(config('custom.aliyun.keyid'), config('custom.aliyun.keysecret'))
             ->regionId('cn-hangzhou')
             ->asDefaultClient();
 
@@ -40,19 +49,21 @@ class AliyunSMSController extends Controller
                 ->host('dysmsapi.aliyuncs.com')
                 ->options(['query' => [
                     'RegionId' => "cn-hangzhou",
-                    'PhoneNumbers' => "13656188391",
-                    'SignName' => "HX网站",
-                    'TemplateCode' => "SMS_205432234",
-                    'TemplateParam' => "{'code': '1234'}",
-                    'SmsUpExtendCode' => "1234",
-                    'OutId' => "1234",
+                    'PhoneNumbers' => $phone,
+                    'SignName' => $signname,
+                    'TemplateCode' => $templatecode,
+                    'TemplateParam' => $param,
+                    // 'SmsUpExtendCode' => "1234",
+                    // 'OutId' => "1234",
                 ],])
                 ->request();
-            print_r($result->toArray());
+
+            $data = $result->toArray();
+            return $data;
         } catch (ClientException $e) {
-            echo $e->getErrorMessage() . PHP_EOL;
+            return ['Code' => 'NG', 'Message' => $e->getErrorMessage()];
         } catch (ServerException $e) {
-            echo $e->getErrorMessage() . PHP_EOL;
+            return ['Code' => 'NG', 'Message' => $e->getErrorMessage()];
         }
     }
 }

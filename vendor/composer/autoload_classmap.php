@@ -562,6 +562,7 @@ return array(
     'ChangeConstructionbidinformationfieldsTable' => $baseDir . '/database/migrations/2020_11_01_120638_change_constructionbidinformationfields_table.php',
     'ChangeConstructionbidinformationitemsTable' => $baseDir . '/database/migrations/2020_11_02_092209_change_constructionbidinformationitems_table.php',
     'ChangeIssuedrawingsTable' => $baseDir . '/database/migrations/2020_10_30_151437_change_issuedrawings_table.php',
+    'ChangeUsersTable' => $baseDir . '/database/migrations/2020_11_14_000000_change_users_table.php',
     'CharacteristicTableSeeder' => $baseDir . '/database/seeds/CharacteristicTableSeeder.php',
     'ClassPreloader\\ClassList' => $vendorDir . '/classpreloader/classpreloader/src/ClassList.php',
     'ClassPreloader\\ClassLoader' => $vendorDir . '/classpreloader/classpreloader/src/ClassLoader.php',

@@ -873,7 +873,7 @@ Route::group(['middleware' => 'web'], function () {
     Route::get('login2', 'Auth\AuthController@showLoginForm2');
     //    Route::get('/home', 'HomeController@index');
 
-    Route::post('sendsms', util\AliyunSMSController::class . '@send');
+    Route::post('sendsmscode', util\AliyunSMSController::class . '@sendsmscode');
     Route::post('loginbysms', Auth\AuthController::class . '@loginbysms');
 });
 
