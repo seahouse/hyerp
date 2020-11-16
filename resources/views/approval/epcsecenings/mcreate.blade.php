@@ -1,13 +1,13 @@
 @extends('app')
 
-@section('title', '创建图纸下发申请单')
+@section('title', 'EPC-安装队现场增补')
 
 @section('main')
 
 
-@can('approval_issuedrawing_create')
-    {!! Form::open(array('url' => 'approval/issuedrawing/mstore', 'class' => 'form-horizontal', 'id' => 'formMain', 'files' => true)) !!}
-        @include('approval.issuedrawings._form',
+@can('approval_epcsecening_create')
+    {!! Form::open(array('url' => 'approval/epcsecening/mstore', 'class' => 'form-horizontal', 'id' => 'formMain', 'files' => true)) !!}
+        @include('approval.epcsecenings._form',
         	[
         		'submitButtonText' => '提交',
         		'project_name' => null,
@@ -149,6 +149,121 @@
                         </div>--}}
 		</div>
 	</div>
+</div>
+
+<div class="modal fade" id="selectPoheadModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">选择安装合同ERP编号</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    {!! Form::text('keyPohead', null, ['class' => 'form-control', 'placeholder' => '项目编号、项目名称', 'id' => 'keyPohead']) !!}
+                    <span class="input-group-btn">
+                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchPohead']) !!}
+                   	</span>
+                </div>
+                {!! Form::hidden('name', null, ['id' => 'name']) !!}
+                {!! Form::hidden('id', null, ['id' => 'id']) !!}
+                {!! Form::hidden('num', null, ['id' => 'num']) !!}
+                <p>
+                <div class="list-group" id="listpohead">
+
+                </div>
+                </p>
+                <form id="formAccept">
+                    {!! csrf_field() !!}
+
+                    {{--                    {!! Form::hidden('reimbursement_id', $reimbursement->id, ['class' => 'form-control']) !!}
+                                        {!! Form::hidden('status', 0, ['class' => 'form-control']) !!} --}}
+                </form>
+            </div>
+            {{--            <div class="modal-footer">
+                            {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
+                            {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnAccept']) !!}
+                        </div>--}}
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="selectItemModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">选择物品</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '物品名称', 'id' => 'keyItem']) !!}
+                    <span class="input-group-btn">
+                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchItem']) !!}
+                   	</span>
+                </div>
+                {!! Form::hidden('name', null, ['id' => 'name']) !!}
+                {!! Form::hidden('id', null, ['id' => 'id']) !!}
+                {!! Form::hidden('num', null, ['id' => 'num']) !!}
+                <p>
+                <div class="list-group" id="listitem">
+
+                </div>
+                </p>
+                <form id="formAccept">
+                    {!! csrf_field() !!}
+
+                    {{--                    {!! Form::hidden('reimbursement_id', $reimbursement->id, ['class' => 'form-control']) !!}
+                                        {!! Form::hidden('status', 0, ['class' => 'form-control']) !!} --}}
+                </form>
+            </div>
+            {{--            <div class="modal-footer">
+                            {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
+                            {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnAccept']) !!}
+                        </div>--}}
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="selectApprovalModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">选择关联相关审批单</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group" style="width:100%;">
+                    <div class='col-xs-4 col-sm-4' style="padding:5px;">
+                        {!! Form::select('type', array('customerdeduction' => '供应商扣款'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'id' => 'approvaltype']) !!}
+                    </div>
+                    <div class='col-xs-6 col-sm-6' style="padding:5px;">
+                        {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '审批单号', 'id' => 'keyProjectpurchase']) !!}
+                    </div>
+                    <div class='col-xs-2 col-sm-2' style="padding:5px;">
+                        <span class="input-group-btn">
+                   		    {!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchApproval']) !!}
+                       </span>
+                    </div>
+                </div>
+                {!! Form::hidden('name', null, ['id' => 'name']) !!}
+                {!! Form::hidden('id', null, ['id' => 'id']) !!}
+                {!! Form::hidden('num', null, ['id' => 'num']) !!}
+                <p>
+                <div class="list-group" id="listApproval">
+
+                </div>
+                </p>
+                <form id="formAccept">
+                    {!! csrf_field() !!}
+
+                    {{--                    {!! Form::hidden('reimbursement_id', $reimbursement->id, ['class' => 'form-control']) !!}
+                                        {!! Form::hidden('status', 0, ['class' => 'form-control']) !!} --}}
+                </form>
+            </div>
+            {{--            <div class="modal-footer">
+                            {!! Form::button('取消', ['class' => 'btn btn-sm', 'data-dismiss' => 'modal']) !!}
+                            {!! Form::button('确定', ['class' => 'btn btn-sm', 'id' => 'btnAccept']) !!}
+                        </div>--}}
+        </div>
+    </div>
 </div>
 
 <!-- before submit -->
@@ -392,8 +507,7 @@
 					$("#" + $("#selectProjectModal").find('#name').val()).val(field.descrip);
 					$("#" + $("#selectProjectModal").find('#id').val()).val(soheadid);
                     $("#sohead_number").val(field.number);
-//					$("#supplier_bank").val(field.bank);
-//					$("#supplier_bankaccountnumber").val(field.bankaccountnumber);
+                    $("#sohead_salesmanager").val(field.salesmanager);
 //					$("#vendbank_id").val(field.vendbank_id);
 //					$("#selectSupplierBankModal").find("#vendinfo_id").val(supplierid);
 				});
@@ -445,29 +559,248 @@
             {
                 $("#" + btnId).bind("click", function() {
                     $('#selectSupplierModal').modal('toggle');
-//                    $("#" + $("#selectSupplierModal").find('#name').val()).val(name);
-//                    $("#" + $("#selectSupplierModal").find('#id').val()).val(supplierid);
-                    $("#outsourcingcompany").val(field.name);
-                    $("#outsourcingcompany_id").val(field.id);
+                    $("#supplier_name").val(field.name);
+                    $("#supplier_id").val(field.id);
                 });
+            }
+
+            $('#selectPoheadModal').on('show.bs.modal', function (e) {
+                $("#listpohead").empty();
+
+                var target = $(e.relatedTarget);
+                // alert(text.data('id'));
+
+                var modal = $(this);
+                modal.find('#name').val(target.data('name'));
+                modal.find('#id').val(target.data('id'));
+                modal.find('#num').val(target.data('num'));
+                // alert(modal.find('#id').val());
+
+            });
+
+            $("#btnSearchPohead").click(function() {
+                if ($("#keyPohead").val() == "") {
+                    alert('请输入关键字');
+                    return;
+                }
+                $.ajax({
+                    type: "GET",
+                    url: "{!! url('/purchase/purchaseorders/getitemsbyorderkey_simple/') !!}" + "/" + $("#keyPohead").val(),
+                    success: function(result) {
+                        var strhtml = '';
+                        $.each(result.data, function(i, field) {
+                            btnId = 'btnSelectPohead_' + String(i);
+                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.number + "</h4><p>" + field.descrip + "</p></button>"
+                        });
+                        if (strhtml == '')
+                            strhtml = '无记录。';
+                        $("#listpohead").empty().append(strhtml);
+
+                        $.each(result.data, function(i, field) {
+                            btnId = 'btnSelectPohead_' + String(i);
+                            addBtnClickEventPohead(btnId, field.id, field.number, field);
+                        });
+                        // addBtnClickEvent('btnSelectOrder_0');
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('error');
+                    }
+                });
+            });
+
+            function addBtnClickEventPohead(btnId, soheadid, name, field)
+            {
+                $("#" + btnId).bind("click", function() {
+                    $('#selectPoheadModal').modal('toggle');
+                    $("#pohead_number").val(field.number);
+                    $("#pohead_id").val(field.id);
+                    $("#pohead_supplier_name").val(field.supplier_name);
+                    var ticketedpercent = 0;
+                    var paidpercent = 0;
+                    if (field.amount > 0)
+                    {
+                        ticketedpercent = field.amount_ticketed / field.amount * 100.0;
+                        paidpercent = field.amount_paid / field.amount * 100.0;
+                    }
+                    $("#ticketedpercent").val(ticketedpercent);
+                    $("#paidpercent").val(paidpercent);
+                });
+            }
+
+            $('#selectItemModal').on('show.bs.modal', function (e) {
+                $("#listitem").empty();
+
+                var target = $(e.relatedTarget);
+
+                var modal = $(this);
+                modal.find('#num').val(target.data('num'));
+//                modal.find('#id').val(target.data('id'));
+            });
+
+            $("#btnSearchItem").click(function() {
+                if ($("#keyItem").val() == "") {
+                    alert('请输入关键字');
+                    return;
+                }
+                $.ajax({
+                    type: "GET",
+                    url: "{!! url('/product/items/getitemsbykey/') !!}" + "/" + $("#keyItem").val(),
+                    success: function(result) {
+                        var strhtml = '';
+                        $.each(result.data, function(i, field) {
+                            btnId = 'btnSelectItem_' + String(i);
+                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.goods_name + "(" + field.goods_spec + ")</h4><h5>" + field.goods_old_name + "</h5></button>"
+                        });
+                        if (strhtml == '')
+                            strhtml = '无记录。';
+                        $("#listitem").empty().append(strhtml);
+
+                        $.each(result.data, function(i, field) {
+                            btnId = 'btnSelectItem_' + String(i);
+                            addBtnClickEventItem(btnId, field);
+                        });
+                        // addBtnClickEvent('btnSelectOrder_0');
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('error');
+                    }
+                });
+            });
+
+            function addBtnClickEventItem(btnId, field)
+            {
+                $("#" + btnId).bind("click", function() {
+                    $('#selectItemModal').modal('toggle');
+//                    $("#item_name").val(field.goods_name);
+//                    $("#item_id").val(field.goods_id);
+//                    $("#item_spec").val(field.goods_spec);
+//                    $("#unit").val(field.goods_unit_name);
+                    $("#item_name_" + $("#selectItemModal").find('#num').val()).val(field.goods_name);
+                    $("#item_id_" + $("#selectItemModal").find('#num').val()).val(field.goods_id);
+                    $("#item_spec_" + $("#selectItemModal").find('#num').val()).val(field.goods_spec);
+                    $("#item_type_" + $("#selectItemModal").find('#num').val()).val(field.type_name);
+                    $("#unit_" +  + $("#selectItemModal").find('#num').val()).val(field.goods_unit_name);
+                });
+            }
+
+            $('#selectApprovalModal').on('show.bs.modal', function (e) {
+                $("#listApproval").empty();
+                $("#approvaltype").val('');
+                $("#keyProjectpurchase").val('');
+
+                var target = $(e.relatedTarget);
+                // alert(text.data('id'));
+
+                var modal = $(this);
+                modal.find('#name').val(target.data('name'));
+                modal.find('#id').val(target.data('id'));
+                modal.find('#num').val(target.data('num'));
+                // alert(modal.find('#id').val());
+            });
+
+            $("#btnSearchApproval").click(function() {
+                if ($("#approvaltype").val() == "") {
+                    alert('请选择审批单类型');
+                    return;
+                }
+
+                if ($("#keyProjectpurchase").val() == "") {
+                    alert('请输入关键字');
+                    return;
+                }
+
+                var requestUrl = 'approval/getdtitemsbykey';
+                $.ajax({
+                    type: "GET",
+                    url: "{!! url('" + requestUrl + "') !!}" + "?type=" + $("#approvaltype").val() + "&key=" + $("#keyProjectpurchase").val(),
+                    success: function(result) {
+
+                        var html = [];
+                        if (result && result.business_id) {
+                            html.push("<button type='button' class='list-group-item' id='btnSelectProjectpurchase_0'>");
+                            html.push("<h4>" + result.business_id + "</h4><p>");
+                            html.push(result.title+ '<br/>');
+                            if (result.content) {
+                                for(var key in result.content) {
+                                    if (result.content.hasOwnProperty(key)) {
+                                        html.push(key + ': ' + result.content[key] + '<br/>');
+                                    }
+                                }
+                            }
+                            html.push("</p></button>");
+                        }
+                        else {
+                            html.push('无记录。');
+                        }
+
+                        $("#listApproval").empty().append(html.join(''));
+
+                        addBtnClickEventProjectpurchase2('btnSelectProjectpurchase_0', result);
+                        // addBtnClickEvent('btnSelectOrder_0');
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert('error');
+                    }
+                });
+            });
+
+            function addBtnClickEventProjectpurchase2(btnId, field)
+            {
+                $("#" + btnId).bind("click", function() {
+                    $('#selectApprovalModal').modal('toggle');
+
+                    var html = [];
+                    html.push('<div id="divRemovePurchaseClick_' + field.business_id + '">');
+                    html.push("<span>关联审批单：" + field.business_id + "</span>");
+                    html.push('&nbsp;&nbsp;<a data-business_id="' + field.business_id + '" data-process_instance_id="' + field.process_instance_id + '" onclick="window.removeProjectpurchaseClick(this);" href="javascript:void(0);">删除</a>');
+                    html.push("</div>");
+
+                    var hVal = [];
+                    if ($("#associatedapprovals").val() != '') {
+                        hVal = $("#associatedapprovals").val().split(',');
+                    }
+                    if ($.inArray(field.process_instance_id, hVal) < 0) {
+                        hVal.push(field.process_instance_id);
+                        $("#lblAssociatedapprovals").append(html.join(''));
+                    }
+                    $("#associatedapprovals").val(hVal.join(','));
+//					$("#supplier_bankaccountnumber").val(field.bankaccountnumber);
+//					$("#vendbank_id").val(field.vendbank_id);
+                });
+            }
+
+            window.removeProjectpurchaseClick = function(it) {
+                var process_instance_id = $(it).attr('data-process_instance_id');
+                $("#divRemovePurchaseClick_" + $(it).attr('data-business_id')).remove();
+
+                var hVal = [];
+                if ($("#associatedapprovals").val() != '') {
+                    hVal = $("#associatedapprovals").val().split(',');
+                }
+                var pos = $.inArray(process_instance_id, hVal);
+                hVal.splice(pos, 1);
+                $("#associatedapprovals").val(hVal.join(','));
+                return false;
             }
 
             $("#btnAddItem").click(function() {
                 item_num++;
                 var btnId = 'btnDeleteItem_' + String(item_num);
                 var divName = 'divClassItem_' + String(item_num);
-                var itemHtml = '<div class="' + divName + '"><p class="bannerTitle">柜体明细(' + String(item_num) + ')&nbsp;<button class="btn btn-sm" id="' + btnId + '" type="button">删除</button></p>\
+                var itemHtml = '<div class="' + divName + '"><p class="bannerTitle">增补所用材料部分（明细<15项）(' + String(item_num) + ')&nbsp;<button class="btn btn-sm" id="' + btnId + '" type="button">删除</button></p>\
                 	<div name="container_item">\
 						<div class="form-group">\
-							<label for="cabinet_name" class="col-xs-4 col-sm-2 control-label">柜体名称:</label>\
+							<label for="material_type" class="col-xs-4 col-sm-2 control-label">材料类别:</label>\
 							<div class="col-sm-10 col-xs-8">\
-							<input class="form-control" ="" name="cabinet_name" type="text" id="cabinet_name_' + String(item_num) + '">\
+							{!! Form::select('material_type', array('不锈钢管材' => '不锈钢管材', '不锈钢板材' => '不锈钢板材', '钢材型材' => '钢材型材', '钢材板材' => '钢材板材', '钢材管材' => '钢材管材',
+                            '保温材料' => '保温材料', '电气材料' => '电气材料', '安装消耗材料' => '安装消耗材料', '管材配件' => '管材配件', '防腐材料' => '防腐材料',
+                            '劳保用品' => '劳保用品', '施工期间甲方收取的费用' => '施工期间甲方收取的费用', '其他类别' => '其他类别'), null, ['class' => 'form-control', 'placeholder' => '--请选择--']) !!}\
 							</div>\
 						</div>\
 						<div class="form-group">\
-							<label for="cabinet_quantity" class="col-xs-4 col-sm-2 control-label">数量:</label>\
+							<label for="item_name" class="col-xs-4 col-sm-2 control-label">物品名称:</label>\
 							<div class="col-sm-10 col-xs-8">\
-							<input class="form-control" placeholder="" ="" id="cabinet_quantity_' + String(item_num) + '" name="cabinet_quantity" type="text">\
+							{!! Form::text('item_name', null, ['class' => 'form-control', 'data-toggle' => 'modal', 'data-target' => '#selectItemModal', 'data-num' => '1']) !!}\
 							</div>\
 						</div>\
                 </div>\
@@ -495,28 +828,58 @@
 				}
 			});
 
-            selectDesigndepartmentChange = function () {
-                var designdepartment = $("#designdepartment").val();
-//                alert(designdepartment);
-//                $("#pppaymentitemtypecontainer_1" + String(num)).empty();
-                var strhtml = '';
-                var strhtml2 = '';
+            selectAdditionalReasonChange = function () {
+                var selectvalue = $("#additional_reason").val();
+//                alert(selectvalue);
 
-                if (designdepartment == "电控室")
-                {
-                    $("#cabinet_detail").attr("style", "display:'';");
+                $("#div_short_additional_reason").attr("style", "display:none;");
+                $("#div_design_change_sheet").attr("style", "display:none;");
+                $("#div_installworksheet").attr("style", "display:none;");
+                $("#div_drawing_additional_reason").attr("style", "display:none;");
+                $("#div_extra_additional_reason").attr("style", "display:none;");
+                $("#div_huaxingworksheet").attr("style", "display:none;");
+                $("#div_owner_additional_reason").attr("style", "display:none;");
+                $("#div_owner_additional_reasonalreason").attr("style", "display:none;");
+                $("#div_coordinate_additional_reason").attr("style", "display:none;");
+
+                if (selectvalue == "短缺增补") {
+                    $("#div_short_additional_reason").attr("style", "display:'';");
+                    $("#div_design_change_sheet").attr("style", "display:'';");
+                    $("#div_installworksheet").attr("style", "display:'';");
                 }
-                else
-				{
-                    $("#cabinet_detail").attr("style", "display:none;");
-				}
-
+                else if (selectvalue == "图纸差异增补")
+                {
+                    $("#div_drawing_additional_reason").attr("style", "display:'';");
+                    $("#div_design_change_sheet").attr("style", "display:'';");
+                    $("#div_installworksheet").attr("style", "display:'';");
+                }
+                else if (selectvalue == "图纸差异增补")
+                {
+                    $("#div_extra_additional_reason").attr("style", "display:'';");
+                    $("#div_huaxingworksheet").attr("style", "display:'';");
+                }
+                else if (selectvalue == "业主额外增补")
+                {
+                    $("#div_owner_additional_reason").attr("style", "display:'';");
+                    $("#div_huaxingworksheet").attr("style", "display:'';");
+                }
+                else if (selectvalue == "业主合理增补")
+                {
+                    $("#div_owner_additional_reasonalreason").attr("style", "display:'';");
+                    $("#div_design_change_sheet").attr("style", "display:'';");
+                    $("#div_huaxingworksheet").attr("style", "display:'';");
+                }
+                else if (selectvalue == "业主合理增补")
+                {
+                    $("#div_coordinate_additional_reason").attr("style", "display:'';");
+                    $("#div_huaxingworksheet").attr("style", "display:'';");
+                }
             }
 
-            selectProductioncompanyChange = function () {
-                var productioncompany = $("#productioncompany").val();
+            selectDesignChangeSheetChange = function () {
+                var selectvalue = $("#design_change_sheet").val();
 
-                if (productioncompany == "外协单位")
+                if (selectvalue == "技术部下发了设计变更单")
                 {
                     $("#divOutsourcingcompany").attr("style", "display:'';");
 //                    $("label[for='outsourcingcompany']").attr("style", "display:'';");
@@ -529,6 +892,81 @@
 //                    $("#outsourcingcompany").attr("style", "display:none;");
                     $("#outsourcingcompany").val("");
                     $("#outsourcingcompany_id").val(0);
+                }
+            }
+
+            selectExtraAdditionalReasonChange = function () {
+                var selectvalue = $("#extra_additional_reason").val();
+
+                $("#div_associatedapprovals").attr("style", "display:none;");
+
+                if (selectvalue == "外协加工厂加工结构件漏件，需现场加工制作")
+                {
+                    $("#div_associatedapprovals").attr("style", "display:'';");
+                }
+                else if (selectvalue == "外协加工厂加工结构件散件发货，需现场额外加工造成增补")
+                {
+                    $("#div_associatedapprovals").attr("style", "display:'';");
+                }
+                else if (selectvalue == "外协加工厂加工结构件发货运输造成损坏，需现场修复")
+                {
+                    $("#div_associatedapprovals").attr("style", "display:'';");
+                }
+                else if (selectvalue == "供应商提供的设备不能满足现场要求或无法安装，需现场修正")
+                {
+                    $("#div_associatedapprovals").attr("style", "display:'';");
+                }
+                else if (selectvalue == "供应商提供的设备中漏发配件，需现场加工制作")
+                {
+                    $("#div_associatedapprovals").attr("style", "display:'';");
+                }
+                else if (selectvalue == "供应商提供的设备运输损坏，需要现场修正")
+                {
+                    $("#div_associatedapprovals").attr("style", "display:'';");
+                }
+            }
+
+            selectCoordinateAdditionalReasonChange = function () {
+                var selectvalue = $("#coordinate_additional_reason").val();
+
+                $("#div_associatedapprovals").attr("style", "display:none;");
+
+                if (selectvalue == "供应商提供的设备不能满足现场运行，调试或168中拆卸安装修复所产生的工作量")
+                {
+                    $("#div_associatedapprovals").attr("style", "display:'';");
+                }
+                else if (selectvalue == "因供应商提供设备或材料质量问题造成售后，从而产生安装队的工作量")
+                {
+                    $("#div_associatedapprovals").attr("style", "display:'';");
+                }
+            }
+
+            selectAdditionalContentChange = function () {
+                var selectvalue = $("#additional_content").val();
+
+                $("#material_detail").attr("style", "display:none;");
+                $("#humanday_detail").attr("style", "display:none;");
+                $("#crane_detail").attr("style", "display:none;");
+
+                if (selectvalue == "仅材料费用")
+                {
+                    $("#material_detail").attr("style", "display:'';");
+                }
+                else if (selectvalue == "材料费用+人工费用")
+                {
+                    $("#material_detail").attr("style", "display:'';");
+                    $("#humanday_detail").attr("style", "display:'';");
+                }
+                else if (selectvalue == "材料费用+吊机费用")
+                {
+                    $("#material_detail").attr("style", "display:'';");
+                    $("#crane_detail").attr("style", "display:'';");
+                }
+                else if (selectvalue == "材料费用+人工费用+吊机费用")
+                {
+                    $("#material_detail").attr("style", "display:'';");
+                    $("#humanday_detail").attr("style", "display:'';");
+                    $("#crane_detail").attr("style", "display:'';");
                 }
             }
 

@@ -121,7 +121,7 @@
 				</a>
 			</div>
 			<div class="btn-group" role="group">
-				<a href="{{ url('/approval/customerdeduction/mcreate') }}" class="btn btn-default btn-lg rightMenu">
+				<a href="{{ url('/approval/epcsecening/mcreate') }}" class="btn btn-default btn-lg rightMenu">
 					<i class="icon iconfont btn-menu-2 color-grey icon-dingding"></i>
 					<span class="labble">EPC-安装队现场增补</span>
 				</a>
