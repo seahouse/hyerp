@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use PHPExcel_Cell_DataType;
 
 class ConstructionbidinformationController extends Controller
 {
@@ -213,9 +214,9 @@ class ConstructionbidinformationController extends Controller
                     $constructionbidinformationitem->value = doubleval($constructionbidinformation_item->value);
                     $constructionbidinformationitem->multiple = doubleval($constructionbidinformation_item->multiple);
                     $constructionbidinformationitem->unit = $constructionbidinformation_item->unit;
-                    $constructionbidinformationitem->remark = $constructionbidinformation_item->remark;
+                    // $constructionbidinformationitem->remark = $constructionbidinformation_item->remark;
                     $constructionbidinformationitem->material_fee = empty($constructionbidinformation_item->material_fee) ? 0 : $constructionbidinformation_item->material_fee;
-                    $constructionbidinformationitem->install_fee = empty($constructionbidinformation_item->install_fee) ?  : $constructionbidinformation_item->install_fee;
+                    $constructionbidinformationitem->install_fee = empty($constructionbidinformation_item->install_fee) ?: $constructionbidinformation_item->install_fee;
                     $constructionbidinformationitem->save();
                 }
             }
@@ -518,7 +519,8 @@ class ConstructionbidinformationController extends Controller
                     $sheet->setCellValue('E' . $row, $constructionbidinformationitem->value);
                     $sheet->setCellValue('F' . $row, $constructionbidinformationitem->multiple);
                     //                        $sheet->setCellValue('G' . $row, $constructionbidinformationitem->unit);
-                    $sheet->setCellValue('H' . $row, $constructionbidinformationitem->remark);
+                    // $sheet->setCellValue('H' . $row, $constructionbidinformationitem->remark);
+                    $sheet->setCellValueExplicit('H' . $row, "=E{$row} * F{$row}", PHPExcel_Cell_DataType::TYPE_FORMULA);
                     $unitprice = 0.0;
                     $unit = '';
                     $constructionbidinformationfield = Constructionbidinformationfield::where('name', $constructionbidinformationitem->key)->where('projecttype', $projecttype)->first();
@@ -679,22 +681,22 @@ class ConstructionbidinformationController extends Controller
      */
     public function export(Request $request)
     {
-//        Log::info($request->all());
+        //        Log::info($request->all());
         $filename = 'Shigongbiao';
-//        $filename = iconv("UTF-8","GBK//IGNORE", '中标信息');
+        //        $filename = iconv("UTF-8","GBK//IGNORE", '中标信息');
         Log::info('export 1');
-        Excel::create($filename, function($excel) use ($request) {
-            $excel->sheet('Sheet1', function($sheet) use ($request) {
+        Excel::create($filename, function ($excel) use ($request) {
+            $excel->sheet('Sheet1', function ($sheet) use ($request) {
                 $query = Constructionbidinformationfield::orderBy('sort');
-//                $query = Biddinginformationdefinefield::where(function ($query) {
-//                    $query->where('exceltype', '项目明细')
-//                        ->orWhere('exceltype', '汇总明细');
-//                });
-//                if ($request->has('projecttypes_export') && !empty($request->input('projecttypes_export')))
-//                {
-//                    $projecttypes = explode(',', $request->input('projecttypes_export'));
-//                    $query->whereIn('projecttype', $projecttypes);
-//                }
+                //                $query = Biddinginformationdefinefield::where(function ($query) {
+                //                    $query->where('exceltype', '项目明细')
+                //                        ->orWhere('exceltype', '汇总明细');
+                //                });
+                //                if ($request->has('projecttypes_export') && !empty($request->input('projecttypes_export')))
+                //                {
+                //                    $projecttypes = explode(',', $request->input('projecttypes_export'));
+                //                    $query->whereIn('projecttype', $projecttypes);
+                //                }
                 $constructionbidinformationfields = $query->get();
                 $data = [];
                 array_push($data, '编号');
@@ -709,8 +711,7 @@ class ConstructionbidinformationController extends Controller
                 array_push($data, '华星总吨位');
                 array_push($data, '投标人总吨位');
                 array_push($data, '总面积');
-                foreach ($constructionbidinformationfields as $constructionbidinformationfield)
-                {
+                foreach ($constructionbidinformationfields as $constructionbidinformationfield) {
                     array_push($data, $constructionbidinformationfield->name);
                 }
                 $sheet->appendRow($data);
@@ -718,8 +719,7 @@ class ConstructionbidinformationController extends Controller
 
                 $query = $this->searchrequest($request);
                 $query->chunk(100, function ($constructionbidinformations) use ($sheet, $constructionbidinformationfields, &$rowCol) {
-                    foreach ($constructionbidinformations as $constructionbidinformation)
-                    {
+                    foreach ($constructionbidinformations as $constructionbidinformation) {
                         $data = [];
                         $comments = [];
                         array_push($data, $constructionbidinformation->number);
@@ -728,24 +728,20 @@ class ConstructionbidinformationController extends Controller
 
                         // 增加执行成本和总钢耗
                         $bExist = false;
-                        if (isset($constructionbidinformation->sohead_id) && $constructionbidinformation->sohead_id > 0)
-                        {
+                        if (isset($constructionbidinformation->sohead_id) && $constructionbidinformation->sohead_id > 0) {
                             $sohead = Salesorder_hxold::find($constructionbidinformation->sohead_id);
-                            if (isset($sohead))
-                            {
+                            if (isset($sohead)) {
                                 array_push($data, $sohead->projectjc);
                                 array_push($data, isset($sohead->project) ? $sohead->project->name : '');
                                 array_push($data, $sohead->boilerduty);
 
                                 $biddinginformation = $sohead->biddinginformation;
-                                if (isset($biddinginformation))
-                                {
+                                if (isset($biddinginformation)) {
                                     if (null != $biddinginformation->biddinginformationitems->where('key', '工艺')->first())
                                         array_push($data, $biddinginformation->biddinginformationitems->where('key', '工艺')->first()->value);
                                     else
                                         array_push($data, '');
-                                }
-                                else
+                                } else
                                     array_push($data, '');
 
                                 $pohead_amount_total = $sohead->poheads->sum('amount');
@@ -755,11 +751,11 @@ class ConstructionbidinformationController extends Controller
                                 $sohead_poheadtaxamountby7550 = array_first($sohead->getPoheadTaxAmountBy7550())->poheadTaxAmountBy7550;
                                 $totalpurchaseamount = $pohead_amount_total + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount - $sohead_poheadtaxamountby7550;
 
-                                $warehousecost=array_first($sohead->getwarehouseCost())->warehousecost;
-                                $nowarehousecost=array_first($sohead->getnowarehouseCost())->nowarehousecost;
-                                $nowarehouseamountby7550=array_first($sohead->getnowarehouseamountby7550())->nowarehouseamountby7550;
-                                $nowarehousetaxcost=array_first($sohead->getnowarehousetaxCost())->nowarehousetaxcost;
-                                $warehousetaxcost=array_first($sohead->getwarehousetaxCost())->warehousetaxcost;
+                                $warehousecost = array_first($sohead->getwarehouseCost())->warehousecost;
+                                $nowarehousecost = array_first($sohead->getnowarehouseCost())->nowarehousecost;
+                                $nowarehouseamountby7550 = array_first($sohead->getnowarehouseamountby7550())->nowarehouseamountby7550;
+                                $nowarehousetaxcost = array_first($sohead->getnowarehousetaxCost())->nowarehousetaxcost;
+                                $warehousetaxcost = array_first($sohead->getwarehousetaxCost())->warehousetaxcost;
                                 $totalwarehouseamount = $warehousecost  + $nowarehousecost + $sohead_taxamount + $nowarehouseamountby7550 - $nowarehousetaxcost - $warehousetaxcost;
                                 array_push($data, "采购成本：" . $totalpurchaseamount . "，出库成本：" . $totalwarehouseamount);
                                 array_push($comments, '');
@@ -775,8 +771,7 @@ class ConstructionbidinformationController extends Controller
                                 $bExist = true;
                             }
                         }
-                        if (!$bExist)
-                        {
+                        if (!$bExist) {
                             array_push($data, '');
                             array_push($data, '');
                             array_push($data, '');
@@ -795,23 +790,19 @@ class ConstructionbidinformationController extends Controller
                         $huaxingtonnagetotal = 0.0;
                         $toubiaotonnagetotal = 0.0;
                         $areatotal = 0.0;
-                        foreach ($constructionbidinformationfields as $constructionbidinformationfield)
-                        {
-//                            $constructionbidinformationitem = $constructionbidinformation->biddinginformationitems()->where('key', $biddinginformationdefinefield->name)->first();
+                        foreach ($constructionbidinformationfields as $constructionbidinformationfield) {
+                            //                            $constructionbidinformationitem = $constructionbidinformation->biddinginformationitems()->where('key', $biddinginformationdefinefield->name)->first();
                             $constructionbidinformationitem = Constructionbidinformationitem::where('constructionbidinformation_id', $constructionbidinformation->id)->where('key', $constructionbidinformationfield->name)->first();
                             array_push($data, isset($constructionbidinformationitem) ? $constructionbidinformationitem->value : '');
-//                            array_push($comments, isset($constructionbidinformationitem) ? $constructionbidinformationitem->remark : '');
+                            //                            array_push($comments, isset($constructionbidinformationitem) ? $constructionbidinformationitem->remark : '');
 
-                            if (isset($constructionbidinformationitem))
-                            {
-                                if ($constructionbidinformationfield->unit == '吨')
-                                {
+                            if (isset($constructionbidinformationitem)) {
+                                if ($constructionbidinformationfield->unit == '吨') {
                                     if ($constructionbidinformationitem->purchaser == '华星东方')
                                         $huaxingtonnagetotal += $constructionbidinformationitem->value * $constructionbidinformationitem->multiple;
                                     elseif ($constructionbidinformationitem->purchaser == '投标人')
                                         $toubiaotonnagetotal += $constructionbidinformationitem->value * $constructionbidinformationitem->multiple;
-                                }
-                                elseif ($constructionbidinformationfield->unit == '平方米')
+                                } elseif ($constructionbidinformationfield->unit == '平方米')
                                     $areatotal += $constructionbidinformationitem->value;
                             }
                         }
@@ -820,14 +811,14 @@ class ConstructionbidinformationController extends Controller
                         array_splice($data, 9, 0, $huaxingtonnagetotal);
                         $sheet->appendRow($data);
 
-//                        // 添加批注
-//                        $colIndex = 'A';
-//                        foreach ($comments as $comment)
-//                        {
-//                            if (strlen($comment) > 0)
-//                                $sheet->getComment($colIndex . $rowCol)->getText()->createTextRun($comment);
-//                            $colIndex++;
-//                        }
+                        //                        // 添加批注
+                        //                        $colIndex = 'A';
+                        //                        foreach ($comments as $comment)
+                        //                        {
+                        //                            if (strlen($comment) > 0)
+                        //                                $sheet->getComment($colIndex . $rowCol)->getText()->createTextRun($comment);
+                        //                            $colIndex++;
+                        //                        }
 
                         $rowCol++;
                     }
@@ -836,86 +827,85 @@ class ConstructionbidinformationController extends Controller
                 $sheet->setFreeze($freezeCol . '2');
             });
 
-//            $excel->sheet('汇总表', function($sheet) use ($request) {
-//                $query = Biddinginformationdefinefield::where(function ($query) {
-//                    $query->where('exceltype', '汇总表')
-//                        ->orWhere('exceltype', '汇总明细');
-//                });
-//                if ($request->has('projecttypes_export') && !empty($request->input('projecttypes_export')))
-//                {
-//                    $projecttypes = explode(',', $request->input('projecttypes_export'));
-//                    $query->whereIn('projecttype', $projecttypes);
-//                }
-//                $biddinginformationdefinefields = $query->orderBy('sort')->get();
-//                $data = [];
-//                array_push($data, '编号');
-//                foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
-//                {
-//                    array_push($data, $biddinginformationdefinefield->name);
-//                }
-//                $sheet->appendRow($data);
-//                $rowCol = 2;        // 从第二行开始
-//                $query = $this->searchrequest($request);
-//                $query->chunk(100, function ($biddinginformations) use ($sheet, $biddinginformationdefinefields, &$rowCol) {
-//                    foreach ($biddinginformations as $biddinginformation)
-//                    {
-//                        $data = [];
-//                        $comments = [];
-//                        array_push($data, $biddinginformation->number);
-//                        array_push($comments, '');
-//                        foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
-//                        {
-//                            $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationdefinefield->name)->first();
-//                            array_push($data, isset($biddinginformationitem) ? $biddinginformationitem->value : '');
-//                            array_push($comments, isset($biddinginformationitem) ? $biddinginformationitem->remark : '');
-//                        }
-//                        $sheet->appendRow($data);
-//
-//                        // 添加批注
-//                        $colIndex = 'A';
-//                        foreach ($comments as $comment)
-//                        {
-//                            if (strlen($comment) > 0)
-//                                $sheet->getComment($colIndex . $rowCol)->getText()->createTextRun($comment);
-//                            $colIndex++;
-//                        }
-//                        $rowCol++;
-//                    }
-//                });
-//                $freezeCol = config('custom.bidding.freeze_summary_col', 'B');
-//                $sheet->setFreeze($freezeCol . '2');
-//            });
+            //            $excel->sheet('汇总表', function($sheet) use ($request) {
+            //                $query = Biddinginformationdefinefield::where(function ($query) {
+            //                    $query->where('exceltype', '汇总表')
+            //                        ->orWhere('exceltype', '汇总明细');
+            //                });
+            //                if ($request->has('projecttypes_export') && !empty($request->input('projecttypes_export')))
+            //                {
+            //                    $projecttypes = explode(',', $request->input('projecttypes_export'));
+            //                    $query->whereIn('projecttype', $projecttypes);
+            //                }
+            //                $biddinginformationdefinefields = $query->orderBy('sort')->get();
+            //                $data = [];
+            //                array_push($data, '编号');
+            //                foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+            //                {
+            //                    array_push($data, $biddinginformationdefinefield->name);
+            //                }
+            //                $sheet->appendRow($data);
+            //                $rowCol = 2;        // 从第二行开始
+            //                $query = $this->searchrequest($request);
+            //                $query->chunk(100, function ($biddinginformations) use ($sheet, $biddinginformationdefinefields, &$rowCol) {
+            //                    foreach ($biddinginformations as $biddinginformation)
+            //                    {
+            //                        $data = [];
+            //                        $comments = [];
+            //                        array_push($data, $biddinginformation->number);
+            //                        array_push($comments, '');
+            //                        foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+            //                        {
+            //                            $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationdefinefield->name)->first();
+            //                            array_push($data, isset($biddinginformationitem) ? $biddinginformationitem->value : '');
+            //                            array_push($comments, isset($biddinginformationitem) ? $biddinginformationitem->remark : '');
+            //                        }
+            //                        $sheet->appendRow($data);
+            //
+            //                        // 添加批注
+            //                        $colIndex = 'A';
+            //                        foreach ($comments as $comment)
+            //                        {
+            //                            if (strlen($comment) > 0)
+            //                                $sheet->getComment($colIndex . $rowCol)->getText()->createTextRun($comment);
+            //                            $colIndex++;
+            //                        }
+            //                        $rowCol++;
+            //                    }
+            //                });
+            //                $freezeCol = config('custom.bidding.freeze_summary_col', 'B');
+            //                $sheet->setFreeze($freezeCol . '2');
+            //            });
             Log::info('export 2');
 
-//            // Set the title
-//            $excel->setTitle('Our new awesome title');
-//
-//            // Chain the setters
-//            $excel->setCreator('Maatwebsite')
-//                ->setCompany('Maatwebsite');
-//
-//            // Call them separately
-//            $excel->setDescription('A demonstration to change the file properties');
+            //            // Set the title
+            //            $excel->setTitle('Our new awesome title');
+            //
+            //            // Chain the setters
+            //            $excel->setCreator('Maatwebsite')
+            //                ->setCompany('Maatwebsite');
+            //
+            //            // Call them separately
+            //            $excel->setDescription('A demonstration to change the file properties');
 
         })->store('xlsx', public_path('download/constructionbidinformations'));
 
-//        $newfilename = 'export_' . Carbon::now()->format('YmdHis') . '.xlsx';
-//        Log::info($newfilename);
-//        rename(public_path('download/shipment/Shipments.xlsx'), public_path('download/shipment/' . $newfilename));
+        //        $newfilename = 'export_' . Carbon::now()->format('YmdHis') . '.xlsx';
+        //        Log::info($newfilename);
+        //        rename(public_path('download/shipment/Shipments.xlsx'), public_path('download/shipment/' . $newfilename));
 
-//        Log::info(route('basic.biddinginformations.downloadfile', ['filename' => $filename . '.xlsx']));
+        //        Log::info(route('basic.biddinginformations.downloadfile', ['filename' => $filename . '.xlsx']));
         return route('basic.constructionbidinformations.downloadfile', ['filename' => $filename . '.xlsx']);
-
     }
 
     // https://www.cnblogs.com/cyclzdblog/p/7670695.html
     public function downloadfile($filename)
     {
-//        Log::info('filename: ' . $filename);
-//        $newfilename = substr($filename, 0, strpos($filename, ".")) . Carbon::now()->format('YmdHis') . substr($filename, strpos($filename, "."));
-//        Log::info($newfilename);
-//        rename(public_path('download/shipment/' . $filename), public_path('download/shipment/' . $newfilename));
-//        $file = public_path('download/biddinginformations/' . iconv("GBK//IGNORE","UTF-8", $filename));
+        //        Log::info('filename: ' . $filename);
+        //        $newfilename = substr($filename, 0, strpos($filename, ".")) . Carbon::now()->format('YmdHis') . substr($filename, strpos($filename, "."));
+        //        Log::info($newfilename);
+        //        rename(public_path('download/shipment/' . $filename), public_path('download/shipment/' . $newfilename));
+        //        $file = public_path('download/biddinginformations/' . iconv("GBK//IGNORE","UTF-8", $filename));
         $file = public_path('download/constructionbidinformations/' . $filename);
         Log::info('file path:' . $file);
         return response()->download($file);

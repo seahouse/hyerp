@@ -41,7 +41,7 @@
             {{--<th>三条线</th>--}}
             {{--<th>四条线</th>--}}
             <th>单位</th>
-            <th>备注</th>
+            <!-- <th>备注</th> -->
         </tr>
         </thead>
         <tbody>
@@ -85,9 +85,9 @@
                             {!! Form::text('unit', '-', ['class' => 'form-control', 'readonly']) !!}
                         @endif
                     </td>
-                    <td>
+                    <!-- <td>
                         {!! Form::text('remark', $constructionbidinformationitem->remark, ['class' => 'form-control', 'readonly']) !!}
-                    </td>
+                    </td> -->
                 </div>
             </tr>
         @endforeach

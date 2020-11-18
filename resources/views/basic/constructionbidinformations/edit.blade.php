@@ -65,7 +65,7 @@
             {{--<th>三条线</th>--}}
             {{--<th>四条线</th>--}}
             <th>单位</th>
-            <th>备注</th>
+            <!-- <th>备注</th> -->
             <th>材料费</th>
             <th>安装费</th>
         </tr>
@@ -105,9 +105,9 @@
                     <input type="text" name="unit" readonly value="{{ $constructionbidinformationitem->unit }}" class="form-control">
                     {{-- {!! Form::select('unit', $unitstrList, $constructionbidinformationitem->unit, ['class' => 'form-control']) !!}--}}
                 </td>
-                <td>
+                <!-- <td>
                     {!! Form::text('remark', $constructionbidinformationitem->remark, ['class' => 'form-control']) !!}
-                </td>
+                </td> -->
                 <td>
                     <input type="number" name="material_fee" @if($constructionbidinformationitem->purchaser != "投标人") readonly @endif value="{{ $constructionbidinformationitem->material_fee }}" class="form-control" min="0" step="0.01">
                 </td>
@@ -222,7 +222,7 @@
                 //                    itemObject.value_line3 = trrow.find("input[name='value_line3']").val();
                 //                    itemObject.value_line4 = trrow.find("input[name='value_line4']").val();
                 itemObject.unit = trrow.find("input[name='unit']").val();
-                itemObject.remark = trrow.find("input[name='remark']").val();
+                // itemObject.remark = trrow.find("input[name='remark']").val();
                 itemObject.material_fee = trrow.find("input[name='material_fee']").val();
                 itemObject.install_fee = trrow.find("input[name='install_fee']").val();
 

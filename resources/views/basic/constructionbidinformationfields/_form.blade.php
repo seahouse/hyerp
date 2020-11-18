@@ -34,14 +34,14 @@
 {{--</div>--}}
 
 <div class="form-group">
-    {!! Form::label('unitprice', '华星单价:', ['class' => 'col-sm-2 control-label']) !!}
+    {!! Form::label('unitprice', '华星供货:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
         {!! Form::text('unitprice', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
 
 <div class="form-group">
-    {!! Form::label('unitprice_bidder', '投标人单价:', ['class' => 'col-sm-2 control-label']) !!}
+    {!! Form::label('unitprice_bidder', '投标人供货:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
         {!! Form::text('unitprice_bidder', null, ['class' => 'form-control', $attr]) !!}
     </div>
