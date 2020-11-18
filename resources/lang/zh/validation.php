@@ -103,6 +103,9 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'email' => '电子邮箱',
+        'mobile' => '手机号'
+    ],
 
 ];

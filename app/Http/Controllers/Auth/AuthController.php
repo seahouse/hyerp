@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
+use App\Models\System\Role;
 
 class AuthController extends Controller
 {
@@ -52,6 +54,7 @@ class AuthController extends Controller
     {
         return Validator::make($data, [
             'name' => 'required|max:255',
+            'mobile' => 'required|unique:users',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|confirmed|min:6',
         ]);
@@ -65,11 +68,15 @@ class AuthController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'mobile' => $data['mobile'],
             'password' => bcrypt($data['password']),
         ]);
+
+        $user->roles()->save(Role::where('name', 'supplier')->first());
+        return $user;
     }
 
     //    private function authenticated(Request $request, Authenticatable $user)
@@ -144,6 +151,16 @@ class AuthController extends Controller
         ////        $redirect_uri = urlencode("https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=" . config('custom.dingtalk.appid') . "&response_type=code&scope=snsapi_login&state=STATE&redirect_uri=" .url("/mddauth") . "/");
         ////        return view('auth.login2', compact('redirect_uri'));
         //        return redirect()->intended($this->redirectTo);
+    }
+
+    /**
+     * 检查手机号是否在users表中
+     */
+    public function checkPhoneExist($phone)
+    {
+        $user = User::where('mobile', $phone)->first();
+        $ret = isset($user) ? 'OK' : 'NG';
+        return response()->json(['code' => $ret]);
     }
 
     public function loginbysms(Request $request)

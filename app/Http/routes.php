@@ -875,6 +875,7 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::post('sendsmscode', util\AliyunSMSController::class . '@sendsmscode');
     Route::post('loginbysms', Auth\AuthController::class . '@loginbysms');
+    Route::get('checkphoneexist/{phone}', Auth\AuthController::class . '@checkPhoneExist');
 });
 
 

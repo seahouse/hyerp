@@ -9,10 +9,10 @@
                     <a href="#bypassword" data-toggle="tab">密码登录</a>
                 </li>
                 <li class="{{ old('tab_active')=='1'? 'active' : '' }}">
-                    <a href="#bymessage" data-toggle="tab">短信登录</a>
+                    <a href="#bymessage" data-toggle="tab">短信登录(外部人员)</a>
                 </li>
                 <li>
-                    <a href="#byqr" data-toggle="tab">二维码登录</a>
+                    <a href="#byqr" data-toggle="tab">扫码登录(华星内部人员)</a>
                 </li>
             </ul>
             <div id="myTabContent" class="tab-content">
@@ -208,19 +208,45 @@
     //发送验证码
     function sendCode(obj) {
         var phonenum = $("#phonenum").val();
-        var result = isPhoneNum();
-        if (result) {
-            doPostBack('sendsmscode', {
-                "phonenum": phonenum,
-                "_token": "{{ csrf_token() }}",
-            });
-            addCookie("secondsremained", 60, 60); //添加cookie记录,有效时间60s
-            settime(obj); //开始倒计时
-        }
+        if (!isPhoneNum(phonenum)) return;
+        if (!checkPhoneExist(phonenum)) return;
+        var ret = doPostBack('sendsmscode', {
+            "phonenum": phonenum,
+            "_token": "{{ csrf_token() }}",
+        });
+        if (!ret) return;
+        addCookie("secondsremained", 60, 60); //添加cookie记录,有效时间60s
+        settime(obj); //开始倒计时
+    }
+
+    // 检查手机号是否在users表中
+    function checkPhoneExist(phone) {
+        var ret = false;
+        $.ajax({
+            async: false,
+            cache: false,
+            type: 'GET',
+            url: 'checkphoneexist/' + phone,
+            error: function(data) {
+                console.log(data);
+            },
+            success: function(data) {
+                console.log(data);
+
+                if (data.code == "OK") {
+                    ret = true;
+                } else {
+                    alert('手机号' + phone + '不存在');
+                }
+            }
+        });
+
+        return ret;
     }
 
     //将手机利用ajax提交到后台的发短信接口
     function doPostBack(url, queryParam) {
+        var ret = false;
         $.ajax({
             async: false,
             cache: false,
@@ -235,11 +261,13 @@
 
                 if (data.Code == "OK") {
                     $("#syscode").val(data.vcode);
+                    ret = true;
                 } else {
                     alert(data.Message);
                 }
             }
         });
+        return ret;
     }
 
     //开始倒计时
@@ -263,8 +291,7 @@
     }
 
     //校验手机号是否合法
-    function isPhoneNum() {
-        var phonenum = $("#phonenum").val();
+    function isPhoneNum(phonenum) {
         var myreg = /^(13[0-9]|14[5-9]|15[0-3,5-9]|16[2,5,6,7]|17[0-8]|18[0-9]|19[0-3,5-9])\d{8}$/;
         if (!myreg.test(phonenum)) {
             alert('请输入有效的手机号码！');

@@ -1,0 +1,7 @@
+/config/custom.php
+/vendor
+/*.bat
+/.env - 副本.example
+/.env
+/.vscode
+/.env.pgsql201801011015

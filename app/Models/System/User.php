@@ -19,7 +19,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'dtuserid', 'dept_id', 'position'
+        'name', 'email', 'password', 'dtuserid', 'dept_id', 'position', 'mobile'
     ];
 
     /**
@@ -35,19 +35,19 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class);
     }
-    
+
     public function hasRole($role)
     {
         if (is_string($role)) {
             return $this->roles->contains('name', $role);
         }
-     
-        return !! $role->intersect($this->roles)->count();
+
+        return !!$role->intersect($this->roles)->count();
     }
 
     public function hasPermission($permission)
     {
-//        Log::info($permission);
+        //        Log::info($permission);
         return $this->hasRole($permission->roles);
     }
 
@@ -60,22 +60,26 @@ class User extends Authenticatable
         return $this->hasRole('superadministrator');
     }
 
-    public function dept() {
+    public function dept()
+    {
         return $this->hasOne('App\Models\System\Dept', 'id', 'dept_id');
     }
 
     // 获取“我审批的”报销单
-    public function myapproval() {
+    public function myapproval()
+    {
         return ReimbursementsController::myapproval();
     }
 
     // 获取“我审批的”付款单
-    public function myapproval_paymentrequest() {
+    public function myapproval_paymentrequest()
+    {
         return PaymentrequestsController::myapproval();
     }
 
     // 获取钉钉的用户信息（远程）
-    public function dingtalkGetUser() {
+    public function dingtalkGetUser()
+    {
         if (strlen($this->dtuserid) > 0)
             return DingTalkController::userGet($this->dtuserid);
         else
@@ -83,16 +87,19 @@ class User extends Authenticatable
     }
 
     // 获取钉钉的用户信息（本地）
-    public function dtuser() {
+    public function dtuser()
+    {
         return $this->hasOne('App\Models\System\Dtuser');
     }
 
-    public function dtuser2() {
+    public function dtuser2()
+    {
         return $this->hasOne('App\Models\System\Dtuser2');
     }
 
     // 获取老系统的用户信息
-    public function userold() {
+    public function userold()
+    {
         return $this->hasOne('App\Models\System\Userold');
     }
 }
