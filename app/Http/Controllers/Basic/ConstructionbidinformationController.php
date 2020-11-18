@@ -708,9 +708,18 @@ class ConstructionbidinformationController extends Controller
                 array_push($data, '执行成本（动态计算）');
                 array_push($data, '总纲耗（动态计算）');
                 array_push($data, '开工日期');
+                array_push($data, '吸收塔');
+                array_push($data, '面积');
+                array_push($data, '制浆仓');
+                array_push($data, '干粉仓');
+                array_push($data, '活性炭');
+                array_push($data, '灰库');
+                array_push($data, '水泥仓');
+                array_push($data, '氨水罐');
                 array_push($data, '华星总吨位');
                 array_push($data, '投标人总吨位');
                 array_push($data, '总面积');
+                array_push($data, '施工总价');
                 foreach ($constructionbidinformationfields as $constructionbidinformationfield) {
                     array_push($data, $constructionbidinformationfield->name);
                 }
@@ -768,6 +777,57 @@ class ConstructionbidinformationController extends Controller
                                 array_push($data, Carbon::parse($sohead->startDate)->toDateString());
                                 array_push($comments, '');
 
+                                if (isset($biddinginformation)) {
+                                    if (null != $biddinginformation->biddinginformationitems->where('key', '吸收塔（塔型Niro-Seghers-KS；各20t）')->first())
+                                        array_push($data, $biddinginformation->biddinginformationitems->where('key', '吸收塔（塔型Niro-Seghers-KS；各20t）')->first()->value);
+                                    else
+                                        array_push($data, '');
+
+                                    if (null != $biddinginformation->biddinginformationitems->where('key', '面积')->first())
+                                        array_push($data, $biddinginformation->biddinginformationitems->where('key', '面积')->first()->value);
+                                    else
+                                        array_push($data, '');
+
+                                    if (null != $biddinginformation->biddinginformationitems->where('key', '制浆仓')->first())
+                                        array_push($data, $biddinginformation->biddinginformationitems->where('key', '制浆仓')->first()->value);
+                                    else
+                                        array_push($data, '');
+
+                                    if (null != $biddinginformation->biddinginformationitems->where('key', '干粉仓')->first())
+                                        array_push($data, $biddinginformation->biddinginformationitems->where('key', '干粉仓')->first()->value);
+                                    else
+                                        array_push($data, '');
+
+                                    if (null != $biddinginformation->biddinginformationitems->where('key', '活性炭')->first())
+                                        array_push($data, $biddinginformation->biddinginformationitems->where('key', '活性炭')->first()->value);
+                                    else
+                                        array_push($data, '');
+
+                                    if (null != $biddinginformation->biddinginformationitems->where('key', '灰库')->first())
+                                        array_push($data, $biddinginformation->biddinginformationitems->where('key', '灰库')->first()->value);
+                                    else
+                                        array_push($data, '');
+
+                                    if (null != $biddinginformation->biddinginformationitems->where('key', '水泥仓')->first())
+                                        array_push($data, $biddinginformation->biddinginformationitems->where('key', '水泥仓')->first()->value);
+                                    else
+                                        array_push($data, '');
+
+                                    if (null != $biddinginformation->biddinginformationitems->where('key', '氨水罐')->first())
+                                        array_push($data, $biddinginformation->biddinginformationitems->where('key', '氨水罐')->first()->value);
+                                    else
+                                        array_push($data, '');
+                                } else {
+                                    array_push($data, '');
+                                    array_push($data, '');
+                                    array_push($data, '');
+                                    array_push($data, '');
+                                    array_push($data, '');
+                                    array_push($data, '');
+                                    array_push($data, '');
+                                    array_push($data, '');
+                                }
+
                                 $bExist = true;
                             }
                         }
@@ -785,11 +845,21 @@ class ConstructionbidinformationController extends Controller
 
                             array_push($data, '');
                             array_push($comments, '');
+
+                            array_push($data, '');
+                            array_push($data, '');
+                            array_push($data, '');
+                            array_push($data, '');
+                            array_push($data, '');
+                            array_push($data, '');
+                            array_push($data, '');
+                            array_push($data, '');
                         }
 
                         $huaxingtonnagetotal = 0.0;
                         $toubiaotonnagetotal = 0.0;
                         $areatotal = 0.0;
+                        $amounttotal = 0.0;
                         foreach ($constructionbidinformationfields as $constructionbidinformationfield) {
                             //                            $constructionbidinformationitem = $constructionbidinformation->biddinginformationitems()->where('key', $biddinginformationdefinefield->name)->first();
                             $constructionbidinformationitem = Constructionbidinformationitem::where('constructionbidinformation_id', $constructionbidinformation->id)->where('key', $constructionbidinformationfield->name)->first();
@@ -804,11 +874,19 @@ class ConstructionbidinformationController extends Controller
                                         $toubiaotonnagetotal += $constructionbidinformationitem->value * $constructionbidinformationitem->multiple;
                                 } elseif ($constructionbidinformationfield->unit == '平方米')
                                     $areatotal += $constructionbidinformationitem->value;
+
+                                $unitprice = 0.0;
+                                if ($constructionbidinformationitem->purchaser == '华星东方')
+                                    $unitprice = $constructionbidinformationfield->unitprice;
+                                elseif ($constructionbidinformationitem->purchaser == '投标人')
+                                    $unitprice = $constructionbidinformationfield->unitprice_bidder;
+                                $amounttotal += $unitprice * $constructionbidinformationitem->value * $constructionbidinformationitem->multiple;
                             }
                         }
-                        array_splice($data, 9, 0, $areatotal);  // 在第9个位置插入
-                        array_splice($data, 9, 0, $toubiaotonnagetotal);
-                        array_splice($data, 9, 0, $huaxingtonnagetotal);
+                        array_splice($data, 17, 0, $amounttotal);  // 在第17个位置插入
+                        array_splice($data, 17, 0, $areatotal);
+                        array_splice($data, 17, 0, $toubiaotonnagetotal);
+                        array_splice($data, 17, 0, $huaxingtonnagetotal);
                         $sheet->appendRow($data);
 
                         //                        // 添加批注

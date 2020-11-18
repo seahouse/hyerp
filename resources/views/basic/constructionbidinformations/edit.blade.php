@@ -332,10 +332,10 @@
             objMatrial.attr('readonly', true);
             objInstall.val(0);
             if (purchase == "华星东方") {
-                objValue.val(data.unitprice);
+//                objValue.val(data.unitprice);
                 objMatrial.val(0);
             } else {
-                objValue.val(data.unitprice_bidder);
+//                objValue.val(data.unitprice_bidder);
                 objMatrial.removeAttr('readonly');
 
                 var objMultiple = $(this).parent().parent().find("input[name='multiple']");
