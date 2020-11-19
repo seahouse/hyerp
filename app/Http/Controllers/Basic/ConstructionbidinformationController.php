@@ -6,6 +6,7 @@ use App\Models\Basic\Constructionbidinformation;
 use App\Models\Basic\Constructionbidinformationfield;
 use App\Models\Basic\Constructionbidinformationfieldtype;
 use App\Models\Basic\Constructionbidinformationitem;
+use App\Models\Purchase\Purchaseorder_hxold;
 use App\Models\Sales\Salesorder_hxold;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -718,6 +719,7 @@ class ConstructionbidinformationController extends Controller
                 array_push($data, '执行成本（动态计算）');
                 array_push($data, '总纲耗（动态计算）');
                 array_push($data, '开工日期');
+                array_push($data, '实际采购金额');
                 array_push($data, '吸收塔');
                 array_push($data, '面积');
                 array_push($data, '制浆仓');
@@ -788,6 +790,14 @@ class ConstructionbidinformationController extends Controller
                                 array_push($data, Carbon::parse($sohead->startDate)->toDateString());
                                 array_push($comments, '');
 
+                                // 实际采购金额
+                                $amount_pohead = Purchaseorder_hxold::where('sohead_id', $sohead->id)->where(function ($query) {
+                                    $query->where('productname', 'like', '%钢结构安装%')
+                                        ->orWhere('productname', 'like', '%钢结构制作%');
+                                })->sum('amount');
+                                Log::info($constructionbidinformation->number . ' ' . $amount_pohead);
+                                array_push($data, $amount_pohead);
+
                                 if (isset($biddinginformation)) {
                                     if (null != $biddinginformation->biddinginformationitems->where('key', '吸收塔（塔型Niro-Seghers-KS；各20t）')->first())
                                         array_push($data, $biddinginformation->biddinginformationitems->where('key', '吸收塔（塔型Niro-Seghers-KS；各20t）')->first()->value);
@@ -856,6 +866,7 @@ class ConstructionbidinformationController extends Controller
 
                             array_push($data, '');
                             array_push($comments, '');
+                            array_push($data, '');
 
                             array_push($data, '');
                             array_push($data, '');
@@ -874,7 +885,7 @@ class ConstructionbidinformationController extends Controller
                         $amounttotal = 0.0;
                         foreach ($constructionbidinformationfields as $constructionbidinformationfield) {
                             //                            $constructionbidinformationitem = $constructionbidinformation->biddinginformationitems()->where('key', $biddinginformationdefinefield->name)->first();
-                            $constructionbidinformationitem = Constructionbidinformationitem::where('constructionbidinformation_id', $constructionbidinformation->id)->where('key', $constructionbidinformationfield->name)->first();
+                            $constructionbidinformationitem = Constructionbidinformationitem::where('constructionbidinformation_id', $constructionbidinformation->id)->where('key', $constructionbidinformationfield->name)->where('projecttype', $constructionbidinformationfield->projecttype)->first();
                             array_push($data, isset($constructionbidinformationitem) ? $constructionbidinformationitem->value : '');
                             //                            array_push($comments, isset($constructionbidinformationitem) ? $constructionbidinformationitem->remark : '');
 
@@ -896,21 +907,12 @@ class ConstructionbidinformationController extends Controller
                                 $amounttotal += $unitprice * $constructionbidinformationitem->value * $constructionbidinformationitem->multiple;
                             }
                         }
-                        array_splice($data, 17, 0, $amounttotal);  // 在第17个位置插入
-                        array_splice($data, 17, 0, $tonnagetotal);
-                        array_splice($data, 17, 0, $areatotal);
-                        array_splice($data, 17, 0, $toubiaotonnagetotal);
-                        array_splice($data, 17, 0, $huaxingtonnagetotal);
+                        array_splice($data, 18, 0, $amounttotal);  // 在第17个位置插入
+                        array_splice($data, 18, 0, $tonnagetotal);
+                        array_splice($data, 18, 0, $areatotal);
+                        array_splice($data, 18, 0, $toubiaotonnagetotal);
+                        array_splice($data, 18, 0, $huaxingtonnagetotal);
                         $sheet->appendRow($data);
-
-                        //                        // 添加批注
-                        //                        $colIndex = 'A';
-                        //                        foreach ($comments as $comment)
-                        //                        {
-                        //                            if (strlen($comment) > 0)
-                        //                                $sheet->getComment($colIndex . $rowCol)->getText()->createTextRun($comment);
-                        //                            $colIndex++;
-                        //                        }
 
                         $rowCol++;
                     }

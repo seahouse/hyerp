@@ -14,7 +14,7 @@ class ChangeConstructionbidinformationfieldsTable extends Migration
     public function up()
     {
         Schema::table('constructionbidinformationfields', function (Blueprint $table) {
-            $table->decimal('unitprice_bidder', 8, 2)->default(0);
+            $table->decimal('unitprice_bidder', 12, 2)->default(0);
         });
     }
 
