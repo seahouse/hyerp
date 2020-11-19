@@ -525,7 +525,17 @@ class ConstructionbidinformationController extends Controller
                     $unit = '';
                     $constructionbidinformationfield = Constructionbidinformationfield::where('name', $constructionbidinformationitem->key)->where('projecttype', $projecttype)->first();
                     if (isset($constructionbidinformationfield)) {
-                        $unitprice = $constructionbidinformationfield->unitprice;
+                        switch ($constructionbidinformationitem->purchaser) {
+                            case '华星东方':
+                                $unitprice = $constructionbidinformationfield->unitprice;
+                                break;
+                            case '投标人':
+                                $unitprice = $constructionbidinformationfield->unitprice_bidder;
+                                break;
+                            default:
+                                break;
+                        }
+
                         $unit = $constructionbidinformationfield->unit;
                     }
                     $sheet->setCellValue('I' . $row, $unitprice);
