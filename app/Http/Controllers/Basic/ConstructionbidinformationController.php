@@ -728,6 +728,7 @@ class ConstructionbidinformationController extends Controller
                 array_push($data, '氨水罐');
                 array_push($data, '华星总吨位');
                 array_push($data, '投标人总吨位');
+                array_push($data, '总吨位');
                 array_push($data, '总面积');
                 array_push($data, '施工总价');
                 foreach ($constructionbidinformationfields as $constructionbidinformationfield) {
@@ -868,6 +869,7 @@ class ConstructionbidinformationController extends Controller
 
                         $huaxingtonnagetotal = 0.0;
                         $toubiaotonnagetotal = 0.0;
+                        $tonnagetotal = 0.0;
                         $areatotal = 0.0;
                         $amounttotal = 0.0;
                         foreach ($constructionbidinformationfields as $constructionbidinformationfield) {
@@ -882,6 +884,7 @@ class ConstructionbidinformationController extends Controller
                                         $huaxingtonnagetotal += $constructionbidinformationitem->value * $constructionbidinformationitem->multiple;
                                     elseif ($constructionbidinformationitem->purchaser == '投标人')
                                         $toubiaotonnagetotal += $constructionbidinformationitem->value * $constructionbidinformationitem->multiple;
+                                    $tonnagetotal += $constructionbidinformationitem->value * $constructionbidinformationitem->multiple;
                                 } elseif ($constructionbidinformationfield->unit == '平方米')
                                     $areatotal += $constructionbidinformationitem->value;
 
@@ -894,6 +897,7 @@ class ConstructionbidinformationController extends Controller
                             }
                         }
                         array_splice($data, 17, 0, $amounttotal);  // 在第17个位置插入
+                        array_splice($data, 17, 0, $tonnagetotal);
                         array_splice($data, 17, 0, $areatotal);
                         array_splice($data, 17, 0, $toubiaotonnagetotal);
                         array_splice($data, 17, 0, $huaxingtonnagetotal);
