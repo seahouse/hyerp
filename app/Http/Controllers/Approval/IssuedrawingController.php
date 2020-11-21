@@ -407,7 +407,7 @@ class IssuedrawingController extends Controller
             foreach ($tonnagedetailArray as $tonnagedetaildata) {
                 $tonnagedetaildata['issuedrawing_id'] = $issuedrawing->id;
                 if (strlen($tonnagedetaildata['name']) > 0) {
-                    if ($tonnagedetaildata['tonnage'] > 0.0)
+                    if ($tonnagedetaildata['tonnage'] > 0.0 || $tonnagedetaildata['tonnage'] < 0.0)
                     {
                         $issuedrawingtonnagedetail = Issuedrawingtonnagedetail::create($tonnagedetaildata);
 
