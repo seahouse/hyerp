@@ -2021,14 +2021,14 @@ class DingTalkController extends Controller
                 'name'      => '吨位（吨）',
                 'value'     => $inputs['tonnage'],
             ],
-            [
-                'name'      => '薄板厚度',
-                'value'     => $inputs['sheet_thickness'],
-            ],
-            [
-                'name'      => '型钢厚度',
-                'value'     => $inputs['steel_thickness'],
-            ],
+//            [
+//                'name'      => '薄板厚度',
+//                'value'     => $inputs['sheet_thickness'],
+//            ],
+//            [
+//                'name'      => '型钢厚度',
+//                'value'     => $inputs['steel_thickness'],
+//            ],
             [
                 'name'      => '项目编号',
                 'value'     => $inputs['sohead_number'],
