@@ -75,6 +75,16 @@
                     {!! Form::submit('导出订单数据', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport4']) !!}
                 {!! Form::close() !!}
             </div>
+
+            {{--<div class="row">--}}
+                {{--{!! Form::open(['url' => '/approval/report2/issuedrawingpurchasedetailexport5', 'class' => 'pull-right form-inline', 'id' => 'formExport5']) !!}--}}
+                {{--{!! Form::submit('按工厂统计', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport5']) !!}--}}
+                {{--{!! Form::close() !!}--}}
+
+                {{--{!! Form::open(['url' => '/approval/report2/issuedrawingpurchasedetailexport6', 'class' => 'pull-right form-inline', 'id' => 'formExport6']) !!}--}}
+                {{--{!! Form::submit('按订单统计', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport6']) !!}--}}
+                {{--{!! Form::close() !!}--}}
+            {{--</div>--}}
         </div>
     </div>
 

@@ -2022,6 +2022,14 @@ class DingTalkController extends Controller
                 'value'     => $inputs['tonnage'],
             ],
             [
+                'name'      => '薄板厚度',
+                'value'     => $inputs['sheet_thickness'],
+            ],
+            [
+                'name'      => '型钢厚度',
+                'value'     => $inputs['steel_thickness'],
+            ],
+            [
                 'name'      => '项目编号',
                 'value'     => $inputs['sohead_number'],
             ],
@@ -2075,6 +2083,7 @@ class DingTalkController extends Controller
 //        $form_component_values = '{name:\'测试1\', value:\'aaa\'}';
 //        dd(json_encode($formdata));
         $form_component_values = json_encode($formdata);
+//        dd($formdata);
         Log::info('process_code: ' . $process_code);
         Log::info('originator_user_id: ' . $originator_user_id);
         Log::info('dept_id: ' . $dept_id);
@@ -2104,6 +2113,7 @@ class DingTalkController extends Controller
 //        $form_component_values->ext_value="总天数:1";
         $req->setFormComponentValues("$form_component_values");
         $response = $c->execute($req, $session);
+//        dd($response);
         return json_encode($response);
 
         $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);

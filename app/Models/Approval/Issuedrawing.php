@@ -21,6 +21,8 @@ class Issuedrawing extends Model
         'overview',
         'cabinetname',
         'cabinetquantity',
+        'sheet_thickness',
+        'steel_thickness',
         'tonnage',
         'productioncompany',
         'outsourcingcompany_id',

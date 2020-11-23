@@ -21,6 +21,8 @@ class CreateIssuedrawingsTable extends Migration
             $table->string('overview')->default('');
             $table->string('cabinetname')->default('');             // 柜体名称
             $table->decimal('cabinetquantity', 18, 2)->default(0.0);             // 柜体数量
+            $table->decimal('sheet_thickness')->default(0.0);               // 薄板厚度
+            $table->decimal('steel_thickness')->default(0.0);               // 型钢厚度
             $table->decimal('tonnage', 18, 4)->default(0.0);
             $table->string('productioncompany');
             $table->integer('outsourcingcompany_id')->nullable();

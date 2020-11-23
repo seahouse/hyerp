@@ -204,6 +204,20 @@
         {!! Form::hidden('tonnagedetails_string', null, ['id' => 'tonnagedetails_string']) !!}
 
         <div class="form-group">
+            {!! Form::label('sheet_thickness', '薄板厚度:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::text('sheet_thickness', null, ['class' => 'form-control', $attr]) !!}
+            </div>
+        </div>
+
+        <div class="form-group">
+            {!! Form::label('steel_thickness', '型钢厚度:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::text('steel_thickness', null, ['class' => 'form-control', $attr]) !!}
+            </div>
+        </div>
+
+        <div class="form-group">
             {!! Form::label('tonnage', '吨位（吨）:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
                 {!! Form::text('tonnage', null, ['class' => 'form-control', 'placeholder' => '根据类型吨位自动计算', 'id' => 'amount', $attr, 'readonly']) !!}

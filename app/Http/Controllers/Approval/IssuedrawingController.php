@@ -522,6 +522,7 @@ class IssuedrawingController extends Controller
             $response = DingTalkController::issuedrawing($input);
             //            Log::info($response);
             $responsejson = json_decode($response);
+//            dd($responsejson);
             if ($responsejson->result->ding_open_errcode <> 0) {
                 $issuedrawing->forceDelete();
                 Log::info(json_encode($input));
