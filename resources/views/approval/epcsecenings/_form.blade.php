@@ -182,7 +182,7 @@
 
 
         <div id="material_detail">
-            <p class="bannerTitle">增补所用材料部分（明细<15项）(1)</p>
+            <p class="bannerTitle">增补所用材料部分（明细<15项）(<span class="moreOrder">1</span>)</p>
 
             <div name="container_item">
 
@@ -241,7 +241,7 @@
 
 
 
-            <div id="itemMore">
+            <div class="moreDiv" id="itemMore">
             </div>
             {{--{!! Form::button('+增加明细', ['class' => 'btn btn-sm', 'id' => 'btnAddTravel']) !!}--}}
             <a href="javascript:void(0);" class="bannerTitle addMore" id="btnAddItem">+增加明细</a>
@@ -250,9 +250,9 @@
         </div>
 
         <div id="humanday_detail">
-            <p class="bannerTitle">增补所用人工部分（明细不大于2项）(1)</p>
+            <p class="bannerTitle">增补所用人工部分（明细不大于2项）(<span class="moreOrder">1</span>)</p>
 
-            <div name="container_item_humanday">
+            <div name="container_item">
 
                 <div class="form-group">
                     {!! Form::label('humandays_type', '人工类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
@@ -285,7 +285,7 @@
 
 
 
-            <div id="itemMore_humanday">
+            <div class="moreDiv" id="itemMore_humanday">
             </div>
             {{--{!! Form::button('+增加明细', ['class' => 'btn btn-sm', 'id' => 'btnAddTravel']) !!}--}}
             <a href="javascript:void(0);" class="bannerTitle addMore" id="btnAddItemHumanday">+增加明细</a>
@@ -294,9 +294,9 @@
         </div>
 
         <div id="crane_detail">
-            <p class="bannerTitle">增补所用吊机台班（明细不大于2项）(1)</p>
+            <p class="bannerTitle">增补所用吊机台班（明细不大于2项）(<span class="moreOrder">1</span>)</p>
 
-            <div name="container_item_crane">
+            <div name="container_item">
 
                 <div class="form-group">
                     {!! Form::label('crane_type', '吊机型号:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
@@ -323,7 +323,7 @@
 
 
 
-            <div id="itemMore_crane">
+            <div class="moreDiv" id="itemMore_crane">
             </div>
             {{--{!! Form::button('+增加明细', ['class' => 'btn btn-sm', 'id' => 'btnAddTravel']) !!}--}}
             <a href="javascript:void(0);" class="bannerTitle addMore" id="btnAddItemCrane">+增加明细</a>

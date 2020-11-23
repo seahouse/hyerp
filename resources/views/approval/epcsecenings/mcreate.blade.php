@@ -301,42 +301,161 @@
 	<script type="text/javascript">
 		jQuery(document).ready(function(e) {
             var item_num = 1;
+            var materialContent = $('#material_detail div[name="container_item"]').html();
+            var humandayContent = $('#humanday_detail div[name="container_item"]').html();
+            var craneContent = $('#crane_detail div[name="container_item"]').html();
+            
+            function resetOrder(root) {
+                var num = 2;
+                root.find('.moreOrder').each(function(){
+                    $(this).html(num + '');
+                    num ++;
+                });
+            }
 
-			 $("#btnSubmit").click(function() {
-                 var itemArray = new Array();
+            function recheckAddBtn(root) {
+                var rootId = root.attr('id');
+                var limit = 2;
+                if (rootId == 'material_detail') {
+                    limit = 15;
+                }
+                
+                var size = root.find('div[name="container_item"]').size();
+                if (size >= limit) {
+                    root.find('.addMore').attr('lock', '1').css('color', 'gray');
+                }
+                else {
+                    root.find('.addMore').attr('lock', '0').css('color', 'rgb(71,178,252)');
+                }
+                
+            }
 
-                 $("div[name='container_item']").each(function(i){
-                     var itemObject = new Object();
-                     var container = $(this);
+            $('.addMore').click(function() {
+                if ($(this).attr('lock') == '1') {
+                    return;
+                }
 
-                     itemObject.name = container.find("input[name='cabinet_name']").val();
-                     itemObject.quantity = container.find("input[name='cabinet_quantity']").val();
+                var parent = $(this).parent();
+                var parentId = parent.attr('id');
+                var moreDiv = parent.find('.moreDiv');
+                
+                switch(parentId) {
+                    case 'material_detail':
+                        moreDiv.append('<p class="bannerTitle">增补所用材料部分（明细<15项）(<span class="moreOrder"></span>)&nbsp;<button class="btn btn-sm deleteMore" type="button">删除</button></p>');
+                        moreDiv.append('<div name="container_item">' + materialContent + '</div>');
+                        moreDiv.find('.deleteMore').bind("click", function() {
+                            var current = $(this).parent();
+                            current.next().remove();
+                            current.remove();
+                            resetOrder(moreDiv);
+                            recheckAddBtn(parent);
+                        });
+                        resetOrder(moreDiv);
+                        recheckAddBtn(parent);
+                        break;
+                    case 'humanday_detail':
+                        moreDiv.append('<p class="bannerTitle">增补所用人工部分（明细不大于2项）(<span class="moreOrder"></span>)&nbsp;<button class="btn btn-sm deleteMore" type="button">删除</button></p>');
+                        moreDiv.append('<div name="container_item">' + humandayContent + '</div>');
+                        moreDiv.find('.deleteMore').bind("click", function() {
+                            var current = $(this).parent();
+                            current.next().remove();
+                            current.remove();
+                            resetOrder(moreDiv);
+                            recheckAddBtn(parent);
+                        });
+                        resetOrder(moreDiv);
+                        recheckAddBtn(parent);
+                        break;
+                    case 'crane_detail':
+                        moreDiv.append('<p class="bannerTitle">增补所用吊机台班（明细不大于2项）(<span class="moreOrder"></span>)&nbsp;<button class="btn btn-sm deleteMore" type="button">删除</button></p>');
+                        moreDiv.append('<div name="container_item">' + craneContent + '</div>');
+                        moreDiv.find('.deleteMore').bind("click", function() {
+                            var current = $(this).parent();
+                            current.next().remove();
+                            current.remove();
+                            resetOrder(moreDiv);
+                            recheckAddBtn(parent);
+                        });
+                        resetOrder(moreDiv);
+                        recheckAddBtn(parent);
+                        break;
+                }
+            });
 
-//
-//                     itemObject.unitprice_array = unitpriceArray;
+			true && $("#btnSubmit").click(function() {
+                //  var itemArray = new Array();
 
-                     itemArray.push(itemObject);
+                var arr = [];
+                $('#material_detail div[name="container_item"]').each(function(){
+                    arr.push({
+                        material_type : $(this).find('select[name="material_type"]').val(),
+                        item_id : $(this).find('input[name="item_id"]').val(),
+                        item_spec : $(this).find('input[name="item_spec"]').val(),
+                        unit : $(this).find('input[name="unit"]').val(),
+                        quantity : $(this).find('input[name="quantity"]').val(),
+                        unitprice : $(this).find('input[name="unitprice"]').val(),
+                        remark : $(this).find('textarea[name="remark"]').val()
+                    });
+                });
+                $("#items_string").val(JSON.stringify(arr));
 
-//                    alert(JSON.stringify(itemArray));
-//                    return false;
-//                    alert($("form#formMain").serialize());
-                 });
-                 $("#items_string").val(JSON.stringify(itemArray));
+                arr = [];
+                $('#humanday_detail div[name="container_item"]').each(function(){
+                    arr.push({
+                        humandays_type : $(this).find('input[name="humandays_type"]').val(),
+                        humandays : $(this).find('input[name="humandays"]').val(),
+                        humandays_unitprice : $(this).find('input[name="humandays_unitprice"]').val(),
+                        remark : $(this).find('textarea[name="remark"]').val()
+                    });
+                });
+                $("#items_string_humanday").val(JSON.stringify(arr));
 
-                 var tonnagedetailArray = new Array();
-                 var tonnagedetailcontainer = $("#tonnagedetailcontainer");
-                 tonnagedetailcontainer.find("div[name='div_unitpriceitem']").each(function (i) {
-                     var tonnagedetailObject = new Object();
-                     var unitpriceitemcontainer = $(this);
-                     tonnagedetailObject.name = unitpriceitemcontainer.find("input[name='tonnage']").data("name");
-                     tonnagedetailObject.tonnage = unitpriceitemcontainer.find("input[name='tonnage']").val();
-                     if (tonnagedetailObject.tonnage == "")
-                         tonnagedetailObject.tonnage = 0.0;
-                     tonnagedetailObject.unitprice = 0.0;
-                     tonnagedetailArray.push(tonnagedetailObject);
-                 });
-                 $("#tonnagedetails_string").val(JSON.stringify(tonnagedetailArray));
-//                 return false;
+                arr = [];
+                $('#crane_detail div[name="container_item"]').each(function(){
+                    arr.push({
+                        crane_type : $(this).find('input[name="crane_type"]').val(),
+                        number : $(this).find('input[name="number"]').val(),
+                        unitprice : $(this).find('input[name="unitprice"]').val()
+                    });
+                });
+                $("#items_string_crane").val(JSON.stringify(arr));
+
+
+            
+
+
+
+//                  $("div[name='container_item']").each(function(i){
+//                      var itemObject = new Object();
+//                      var container = $(this);
+
+//                      itemObject.name = container.find("input[name='cabinet_name']").val();
+//                      itemObject.quantity = container.find("input[name='cabinet_quantity']").val();
+
+// //
+// //                     itemObject.unitprice_array = unitpriceArray;
+
+//                      itemArray.push(itemObject);
+
+// //                    alert(JSON.stringify(itemArray));
+// //                    return false;
+// //                    alert($("form#formMain").serialize());
+//                  });
+//                  $("#items_string").val(JSON.stringify(itemArray));
+
+//                 //  var tonnagedetailArray = new Array();
+//                 //  var tonnagedetailcontainer = $("#tonnagedetailcontainer");
+//                 //  tonnagedetailcontainer.find("div[name='div_unitpriceitem']").each(function (i) {
+//                 //      var tonnagedetailObject = new Object();
+//                 //      var unitpriceitemcontainer = $(this);
+//                 //      tonnagedetailObject.name = unitpriceitemcontainer.find("input[name='tonnage']").data("name");
+//                 //      tonnagedetailObject.tonnage = unitpriceitemcontainer.find("input[name='tonnage']").val();
+//                 //      if (tonnagedetailObject.tonnage == "")
+//                 //          tonnagedetailObject.tonnage = 0.0;
+//                 //      tonnagedetailObject.unitprice = 0.0;
+//                 //      tonnagedetailArray.push(tonnagedetailObject);
+//                 //  });
+//                 //  $("#tonnagedetails_string").val(JSON.stringify(tonnagedetailArray));
 
                  $("form#formMain").submit();
 			 });
@@ -783,7 +902,7 @@
                 return false;
             }
 
-            $("#btnAddItem").click(function() {
+            false && $("#btnAddItem").click(function() {
                 item_num++;
                 var btnId = 'btnDeleteItem_' + String(item_num);
                 var divName = 'divClassItem_' + String(item_num);
@@ -808,6 +927,14 @@
                 $("#itemMore").append(itemHtml);
                 addBtnDeleteItemClickEvent(btnId, divName);
             });
+
+            function genMaterialDetailItem () {
+
+            }
+            function genHumanDayItem () {}
+            function genCraneDetailItem () {}
+
+
 
             function addBtnDeleteItemClickEvent(btnId, divName)
             {
