@@ -305,6 +305,10 @@
             var humandayContent = $('#humanday_detail div[name="container_item"]').html();
             var craneContent = $('#crane_detail div[name="container_item"]').html();
             
+            function genID () {
+                return (new Date()).getTime() + '' + Math.round(Math.random() * 1000);
+            }
+
             function resetOrder(root) {
                 var num = 2;
                 root.find('.moreOrder').each(function(){
@@ -341,8 +345,16 @@
                 
                 switch(parentId) {
                     case 'material_detail':
+                        var id = genID();
                         moreDiv.append('<p class="bannerTitle">增补所用材料部分（明细<15项）(<span class="moreOrder"></span>)&nbsp;<button class="btn btn-sm deleteMore" type="button">删除</button></p>');
-                        moreDiv.append('<div name="container_item">' + materialContent + '</div>');
+                        moreDiv.append('<div id="container_item_' + id + '" name="container_item">' + materialContent + '</div>');
+                        var container = moreDiv.find('#container_item_' + id);
+                        container.find('#item_name_1').attr('data-num', id).attr('id', 'item_name_' + id);
+                        container.find('#item_id_1').attr('id', 'item_id_' + id);
+                        container.find('#item_spec_1').attr('id', 'item_spec_' + id);
+                        container.find('#item_type_1').attr('id', 'item_type_' + id);
+                        container.find('#unit_1').attr('id', 'unit_' + id);
+
                         moreDiv.find('.deleteMore').bind("click", function() {
                             var current = $(this).parent();
                             current.next().remove();
@@ -389,6 +401,7 @@
                 $('#material_detail div[name="container_item"]').each(function(){
                     arr.push({
                         material_type : $(this).find('select[name="material_type"]').val(),
+                        item_name : $(this).find('input[name="item_name"]').val(),
                         item_id : $(this).find('input[name="item_id"]').val(),
                         item_spec : $(this).find('input[name="item_spec"]').val(),
                         unit : $(this).find('input[name="unit"]').val(),
