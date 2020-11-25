@@ -31,7 +31,6 @@ class UsersController extends Controller
      */
     public function index()
     {
-        //
         $request = request();
         $key = $request->input('key', '');
         $inputs = $request->all();
@@ -39,13 +38,13 @@ class UsersController extends Controller
             $users = $this->searchrequest($request);
         else
             $users = User::latest('created_at')->paginate(10);
-//        $users = User::latest('created_at')->paginate(10);
+        //        $users = User::latest('created_at')->paginate(10);
 
         if (null !== request('key'))
             return view('system.users.index', compact('users', 'key', 'inputs'));
         else
             return view('system.users.index', compact('users'));
-//        return view('system.users.index', compact('users'));
+        //        return view('system.users.index', compact('users'));
     }
 
     /**
@@ -58,7 +57,7 @@ class UsersController extends Controller
         //
         if (Auth::user()->can('system_user_maintain'))
             return view('system.users.create');
-        else 
+        else
             return '无此操作权限';
     }
 
@@ -71,9 +70,9 @@ class UsersController extends Controller
     public function store(UserRequest $request)
     {
         //
-//         $input = Request::all();
-//         Dept::create($input);
-//         return redirect('system/depts');
+        //         $input = Request::all();
+        //         Dept::create($input);
+        //         return redirect('system/depts');
 
         $data = [
             'name' => $request->input('name'),
@@ -81,8 +80,8 @@ class UsersController extends Controller
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
         ];
-//         return $data;
-        
+        //         return $data;
+
         User::create($data);
         return redirect('system/users');
     }
@@ -106,8 +105,8 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-        //
         $user = User::findOrFail($id);
+        $user->supplier_name = isset($user->supplier) ? $user->supplier->name : '';
         return view('system.users.edit', compact('user'));
     }
 
@@ -135,16 +134,17 @@ class UsersController extends Controller
     {
         //
         $user = User::findOrFail($id);
+        // Log::info($request->all());
         $user->name = $request->input('name');
         // $user->password = bcrypt($request->input('password'));
-		$user->dtuserid = $request->input('dtuserid');
+        $user->dtuserid = $request->input('dtuserid');
         $user->dept_id = $request->input('dept_id');
-        $user->position = $request->input('position');        
+        $user->position = $request->input('position');
+        $user->supplier_id = $request->input('supplier_id');
         $user->update();
 
         $dtuser = $user->dingtalkGetUser();
-        if ($dtuser)
-        {
+        if ($dtuser) {
             // dd($dtuser);
             // $dtuser2 = Dtuser::firstOrCreate(['userid' => $dtuser->userid])
             //     ->update($dtuser);
@@ -178,16 +178,13 @@ class UsersController extends Controller
             // $dtuser2->update($dtuser);
         }
 
-        if ($user)
-        {
-            $sFilename = '';     
-            if (Request::hasFile('avatar'))
-            {
-                dd($request->all());   
+        if ($user) {
+            $sFilename = '';
+            if (Request::hasFile('avatar')) {
+                dd($request->all());
                 $file = $request->file('avatar');
-                $sFilename = $this->saveImg($file);             
-
-            }           
+                $sFilename = $this->saveImg($file);
+            }
 
             $user->avatar = $sFilename;
             $user->update();
@@ -203,8 +200,7 @@ class UsersController extends Controller
         // $dtuser2 = Dtuser::firstOrFail(['userid' => $dtuser->userid]);
         // $dtuser2->user_id       = $user->id;
         $dtuser = DingTalkController::userGet($dtuserid);
-        if ($dtuser)
-        {
+        if ($dtuser) {
             $dtuser2->name          = $dtuser->name;
             if (isset($dtuser->tel))        $dtuser2->tel           = $dtuser->tel;
             if (isset($dtuser->workPlace))  $dtuser2->workPlace     = $dtuser->workPlace;
@@ -240,8 +236,7 @@ class UsersController extends Controller
         else
             $user = User::where('name', $dtuser->name)->first();
 
-        if (!isset($user))
-        {
+        if (!isset($user)) {
             $user = new User;
 
             $pinyins = Pinyin::convert($dtuser->name);
@@ -252,7 +247,7 @@ class UsersController extends Controller
             $user->password     = bcrypt('123456');
         }
         $user->name         = $dtuser->name;
-//        $user->email        = $dtuser->orgEmail;
+        //        $user->email        = $dtuser->orgEmail;
         $user->dtuserid        = $dtuser->userid;
         $user->save();
 
@@ -284,19 +279,17 @@ class UsersController extends Controller
     // 河南华星同步用户信息。通过员工姓名进行对应，需要先在无锡华星中新建账号并设置企业邮箱
     public static function synchronizedtuser2($dtuser)
     {
-        if (isset($dtuser->name) && !empty($dtuser->name))
-        {
+        if (isset($dtuser->name) && !empty($dtuser->name)) {
             $user = User::where('name', $dtuser->name)->first();
-            if (isset($user))
-            {
-//                $user->name         = $dtuser->name;
-//                $user->email        = $dtuser->orgEmail;
-//                $user->dtuserid        = $dtuser->userid;
-//                $user->save();
+            if (isset($user)) {
+                //                $user->name         = $dtuser->name;
+                //                $user->email        = $dtuser->orgEmail;
+                //                $user->dtuserid        = $dtuser->userid;
+                //                $user->save();
 
                 $dtuserlocal = Dtuser2::firstOrNew(['userid' => $dtuser->userid]);
-//            if (!isset($dtuserlocal))
-//                $dtuserlocal = new Dtuser;
+                //            if (!isset($dtuserlocal))
+                //                $dtuserlocal = new Dtuser;
                 $dtuserlocal->user_id       = $user->id;
                 $dtuserlocal->name          = $dtuser->name;
                 $dtuserlocal->tel           = isset($dtuser->tel) ? $dtuser->tel : '';
@@ -327,11 +320,9 @@ class UsersController extends Controller
     public static function destroydtuser($dtuserid)
     {
         $dtuserlocal = Dtuser::where('userid', $dtuserid);
-        if (isset($dtuserlocal))
-        {
+        if (isset($dtuserlocal)) {
             $user = $dtuserlocal->first()->user;
-            if (isset($user))
-            {
+            if (isset($user)) {
                 $user->dtuserid = "";
                 $user->save();
             }
@@ -343,8 +334,7 @@ class UsersController extends Controller
     public static function destroydtuser2($dtuserid)
     {
         $dtuserlocal = Dtuser2::where('userid', $dtuserid);
-        if (isset($dtuserlocal))
-        {
+        if (isset($dtuserlocal)) {
             $dtuserlocal->delete();
         }
     }
@@ -380,13 +370,13 @@ class UsersController extends Controller
         User::destroy($id);
         return redirect('system/users');
     }
-    
+
     public function editrole($id)
     {
         $user = User::findOrFail($id);
         return view('system.users.editrole', compact('user'));
     }
-    
+
     public function updaterole(Request $request, $id)
     {
         $user = User::findOrFail($id);
@@ -394,7 +384,7 @@ class UsersController extends Controller
         if ($role <> null)
             if (!$user->hasRole($role->name))
                 $user->attachRole($role);
-        
+
         return redirect('system/users');
     }
 
@@ -442,7 +432,7 @@ class UsersController extends Controller
     {
         $fileOriginalName = $file->getClientOriginalName();
         $sExtension = substr($fileOriginalName, strrpos($fileOriginalName, '.') + 1);
-        $sFilename = date('YmdHis').rand(100, 200) . '.' . $sExtension;
+        $sFilename = date('YmdHis') . rand(100, 200) . '.' . $sExtension;
         $file->move('images', $sFilename);
         return 'images/' . $sFilename;
     }
@@ -464,26 +454,23 @@ class UsersController extends Controller
     public function updateuserold(Request $request, $id)
     {
         //
-//        dd(Request::all());
+        //        dd(Request::all());
         $user = User::findOrFail($id);
-//        $userold = Userold::firstOrNew(['user_id' => $id]);
+        //        $userold = Userold::firstOrNew(['user_id' => $id]);
         $userold = Userold::where('user_id', $id)->first();
-        if (isset($userold))
-        {
+        if (isset($userold)) {
             $userold->user_hxold_id = Request::input('user_hxold_id');
             $userold->save();
-        }
-        else
-        {
+        } else {
             $userold = new Userold;
             $userold->user_id = $id;
             $userold->user_hxold_id = Request::input('user_hxold_id');
             $userold->save();
         }
-//        dd($userold);
-//        $userold->user_hxold_id = $request->input('user_hxold_id');
-//        $userold->save();
-//        $user->update();
+        //        dd($userold);
+        //        $userold->user_hxold_id = $request->input('user_hxold_id');
+        //        $userold->save();
+        //        $user->update();
         return redirect('system/users');
     }
 
@@ -492,57 +479,47 @@ class UsersController extends Controller
     public function updateuseroldall(Request $request)
     {
         //
-//        dd(Request::all());
+        //        dd(Request::all());
         $users = User::all();
 
-        foreach ($users as $user)
-        {
+        foreach ($users as $user) {
             $userold = Userold::where('user_id', $user->id)->first();
-            if (isset($userold))
-            {
-//                Employee_hxold::where('name', '');
-//                $userold->user_hxold_id = Request::input('user_hxold_id');
-//                $userold->save();
-            }
-            else
-            {
+            if (isset($userold)) {
+                //                Employee_hxold::where('name', '');
+                //                $userold->user_hxold_id = Request::input('user_hxold_id');
+                //                $userold->save();
+            } else {
                 $employeehxold = Employee_hxold::where('name', $user->name)->first();
-                if (isset($employeehxold))
-                {
-//                    dd($employeehxold);
+                if (isset($employeehxold)) {
+                    //                    dd($employeehxold);
 
                     $userold = new Userold;
                     $userold->user_id = $user->id;
                     $userold->user_hxold_id = $employeehxold->id;
                     $userold->save();
                 }
-
             }
         }
-//        dd($users);
+        //        dd($users);
 
-//        dd($userold);
-//        $userold->user_hxold_id = $request->input('user_hxold_id');
-//        $userold->save();
-//        $user->update();
+        //        dd($userold);
+        //        $userold->user_hxold_id = $request->input('user_hxold_id');
+        //        $userold->save();
+        //        $user->update();
         return redirect('system/users');
     }
 
     public static function updateuseroldone($user)
     {
         $userold = Userold::where('user_id', $user->id)->first();
-        if (isset($userold))
-        {
-//                Employee_hxold::where('name', '');
-//                $userold->user_hxold_id = Request::input('user_hxold_id');
-//                $userold->save();
-        }
-        else
-        {
+        if (isset($userold)) {
+            //                Employee_hxold::where('name', '');
+            //                $userold->user_hxold_id = Request::input('user_hxold_id');
+            //                $userold->save();
+        } else {
             $employeehxold = Employee_hxold::where('name', $user->name)->first();
-            if (isset($employeehxold))
-            {
-//                    dd($employeehxold);
+            if (isset($employeehxold)) {
+                //                    dd($employeehxold);
 
                 $userold = new Userold;
                 $userold->user_id = $user->id;
@@ -555,7 +532,7 @@ class UsersController extends Controller
     public function updategoogle2fa(Request $request, $id)
     {
         //
-//        dd(Request::all());
+        //        dd(Request::all());
         $user = User::findOrFail($id);
         $user->google2fa_secret = Request::input('google2fa_secret');
         $user->save();
@@ -568,109 +545,114 @@ class UsersController extends Controller
         $key = Request::input('key');
         $inputs = Request::all();
         $users = $this->searchrequest($request);
-//        $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
-//        $totalamount = Paymentrequest::sum('amount');
+        //        $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
+        //        $totalamount = Paymentrequest::sum('amount');
 
         return view('system.users.index', compact('users', 'key', 'inputs'));
     }
 
     public function searchrequest($request)
     {
-        $inputs = Request::all();
+        // $inputs = Request::all();
         $key = Request::input('key');
-
-//        if (strlen($key) > 0)
-//        {
-//            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
-//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
-//        }
+        $issupplier = Request::input('issupplier');
+        //        if (strlen($key) > 0)
+        //        {
+        //            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+        //            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
+        //        }
 
         $query = User::latest();
 
-        if (strlen($key) > 0)
-        {
-            $query->where(function($query) use ($key) {
+        if (strlen($key) > 0) {
+            $query->where(function ($query) use ($key) {
                 $query->where('name', 'like',  '%' . $key . '%');
             });
         }
 
-//        if ($approvalstatus <> '')
-//        {
-//            if ($approvalstatus == "1")
-//                $query->where('approversetting_id', '>', '0');
-//            else
-//                $query->where('approversetting_id', $approvalstatus);
-//        }
-//
-//        if ($request->has('approvaldatestart') && $request->has('approvaldateend'))
-//        {
-//            $paymentrequestids = DB::table('paymentrequestapprovals')
-//                ->select('paymentrequest_id')
-//                ->groupBy('paymentrequest_id')
-//                ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'::timestamp + interval \'1D\'')
-//                ->pluck('paymentrequest_id');
-//            $query->whereIn('id', $paymentrequestids);
-//
-//
-//
-//
-//        }
+        if ($issupplier) {
+            $query->where(function ($query) {
+                $query->where('supplier_id', '>', 0);
+            });
+        }
 
-//        // paymentmethod
-//        if ($request->has('paymentmethod'))
-//        {
-//            $query->where('paymentmethod', $request->input('paymentmethod'));
-//        }
-//
-//        // payment status
-//        // because need search hxold database, so select this condition last.
-//        if ($request->has('paymentstatus'))
-//        {
-//            $paymentstatus = $request->input('paymentstatus');
-//            if ($paymentstatus == 0)
-//            {
-//                $query->where('approversetting_id', '0');
-//
-//                $paymentrequestids = [];
-//                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
-//                    foreach ($paymentrequests as $paymentrequest) {
-//                        # code...
-//                        if (isset($paymentrequest->purchaseorder_hxold->payments))
-//                        {
-//                            if ($paymentrequest->paymentrequestapprovals->max('created_at') < $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
-//                                array_push($paymentrequestids, $paymentrequest->id);
-//                        }
-//                    }
-//                });
-//
-//                // dd($paymentrequestids);
-//                $query->whereIn('id', $paymentrequestids);
-//
-//            }
-//            elseif ($paymentstatus == -1)
-//            {
-//                $query->where('approversetting_id', '0');
-//
-//                $paymentrequestids = [];
-//                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
-//                    foreach ($paymentrequests as $paymentrequest) {
-//                        # code...
-//                        if (isset($paymentrequest->purchaseorder_hxold->payments))
-//                        {
-//                            if ($paymentrequest->paymentrequestapprovals->max('created_at') > $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
-//                                array_push($paymentrequestids, $paymentrequest->id);
-//                        }
-//                    }
-//                });
-//
-//                $query->whereIn('id', $paymentrequestids);
-//            }
-//        }
+        //        if ($approvalstatus <> '')
+        //        {
+        //            if ($approvalstatus == "1")
+        //                $query->where('approversetting_id', '>', '0');
+        //            else
+        //                $query->where('approversetting_id', $approvalstatus);
+        //        }
+        //
+        //        if ($request->has('approvaldatestart') && $request->has('approvaldateend'))
+        //        {
+        //            $paymentrequestids = DB::table('paymentrequestapprovals')
+        //                ->select('paymentrequest_id')
+        //                ->groupBy('paymentrequest_id')
+        //                ->havingRaw('max(paymentrequestapprovals.created_at) between \'' . $request->input('approvaldatestart') . '\' and \'' . $request->input('approvaldateend') . '\'::timestamp + interval \'1D\'')
+        //                ->pluck('paymentrequest_id');
+        //            $query->whereIn('id', $paymentrequestids);
+        //
+        //
+        //
+        //
+        //        }
+
+        //        // paymentmethod
+        //        if ($request->has('paymentmethod'))
+        //        {
+        //            $query->where('paymentmethod', $request->input('paymentmethod'));
+        //        }
+        //
+        //        // payment status
+        //        // because need search hxold database, so select this condition last.
+        //        if ($request->has('paymentstatus'))
+        //        {
+        //            $paymentstatus = $request->input('paymentstatus');
+        //            if ($paymentstatus == 0)
+        //            {
+        //                $query->where('approversetting_id', '0');
+        //
+        //                $paymentrequestids = [];
+        //                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
+        //                    foreach ($paymentrequests as $paymentrequest) {
+        //                        # code...
+        //                        if (isset($paymentrequest->purchaseorder_hxold->payments))
+        //                        {
+        //                            if ($paymentrequest->paymentrequestapprovals->max('created_at') < $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
+        //                                array_push($paymentrequestids, $paymentrequest->id);
+        //                        }
+        //                    }
+        //                });
+        //
+        //                // dd($paymentrequestids);
+        //                $query->whereIn('id', $paymentrequestids);
+        //
+        //            }
+        //            elseif ($paymentstatus == -1)
+        //            {
+        //                $query->where('approversetting_id', '0');
+        //
+        //                $paymentrequestids = [];
+        //                $query->chunk(100, function($paymentrequests) use(&$paymentrequestids) {
+        //                    foreach ($paymentrequests as $paymentrequest) {
+        //                        # code...
+        //                        if (isset($paymentrequest->purchaseorder_hxold->payments))
+        //                        {
+        //                            if ($paymentrequest->paymentrequestapprovals->max('created_at') > $paymentrequest->purchaseorder_hxold->payments->max('create_date'))
+        //                                array_push($paymentrequestids, $paymentrequest->id);
+        //                        }
+        //                    }
+        //                });
+        //
+        //                $query->whereIn('id', $paymentrequestids);
+        //            }
+        //        }
 
 
         $users = $query->select('users.*')
             ->paginate(10);
-//        dd($paymentrequests);
+        //        dd($paymentrequests);
 
         return $users;
     }
@@ -678,14 +660,14 @@ class UsersController extends Controller
     public function getitemsbykey($key)
     {
         $query = User::latest();
-        $query->where('name', 'like', '%'.$key.'%');
+        $query->where('name', 'like', '%' . $key . '%');
         $users = $query->paginate(20);
-//        $salesorders = Salesorder_hxold::where('custinfo_id', $customerid)
-//            ->where(function ($query) use ($key) {
-//                $query->where('number', 'like', '%'.$key.'%')
-//                    ->orWhere('descrip', 'like', '%'.$key.'%');
-//            })
-//            ->paginate(20);
+        //        $salesorders = Salesorder_hxold::where('custinfo_id', $customerid)
+        //            ->where(function ($query) use ($key) {
+        //                $query->where('number', 'like', '%'.$key.'%')
+        //                    ->orWhere('descrip', 'like', '%'.$key.'%');
+        //            })
+        //            ->paginate(20);
         return $users;
     }
 

@@ -136,7 +136,9 @@ class ViewComposerServiceProvider extends ServiceProvider
             'system.employees.create', 'system.employees.edit',
             'system.users.create', 'system.users.edit', 'approval.approversettings.create', 'approval.approversettings.edit'
         ), function ($view) {
-            $view->with('deptList', \App\Models\System\Dept::orderby('id', 'asc')->lists('name', 'id'));
+            $dept = \App\Models\System\Dept::orderby('id', 'asc')->lists('name', 'id')->toArray();
+            $dept = ['' => ''] + $dept;
+            $view->with('deptList', $dept);
         });
 
         // imageList

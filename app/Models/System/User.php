@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Http\Controllers\Approval\ReimbursementsController;
 use App\Http\Controllers\Approval\PaymentrequestsController;
 use App\Http\Controllers\DingTalkController;
+use App\Models\Purchase\Vendinfo_hxold;
 use Log;
 
 class User extends Authenticatable
@@ -19,7 +20,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'dtuserid', 'dept_id', 'position', 'mobile'
+        'name', 'email', 'password', 'dtuserid', 'dept_id', 'position', 'mobile', 'supplier_id'
     ];
 
     /**
@@ -101,5 +102,15 @@ class User extends Authenticatable
     public function userold()
     {
         return $this->hasOne('App\Models\System\Userold');
+    }
+
+    /**
+     * 关联到旧数据库中的供应商
+     *
+     * @return void
+     */
+    public function supplier()
+    {
+        return $this->hasOne(Vendinfo_hxold::class, 'id', 'supplier_id');
     }
 }
