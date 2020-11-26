@@ -154,7 +154,7 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         }
                     },
-                    source: [{ value: "华星东方", text: "华星东方" }, { value: "投标人", text: "投标人" }],
+                    source: [{ value: "华星东方", text: "华星东方" }, { value: "投标人", text: "投标人" }, { value: "业主方", text: "业主方" }],
                 }
             );
 

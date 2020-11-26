@@ -81,7 +81,7 @@
             </td>
             <div id="div{{ $constructionbidinformationitem->id }}" name="constructionbidinformationitem_container" data-constructionbidinformationitem_id="{{ $constructionbidinformationitem->id }}">
                 <td>
-                    {!! Form::select('purchaser', array(''=>'--请选择--', '华星东方' => '华星东方', '投标人' => '投标人'), $constructionbidinformationitem->purchaser,
+                    {!! Form::select('purchaser', array(''=>'--请选择--', '华星东方' => '华星东方', '投标人' => '投标人', '业主方' => '业主方'), $constructionbidinformationitem->purchaser,
                     ['class' => 'form-control', 'data-price' => $constructionbidinformationitem->constructionbidinformationfield(), 'required']) !!}
                 </td>
                 <td>
