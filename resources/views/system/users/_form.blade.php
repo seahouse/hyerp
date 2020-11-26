@@ -46,8 +46,13 @@
 <div class="form-group">
     {!! Form::label('supplier_name', '供应商:') !!}
 
+    @if (Auth::user()->can('system_user_assignsupplier'))
     {!! Form::text('supplier_name', null, ['class' => 'form-control', 'data-toggle' => 'modal', 'data-target' => '#selectSupplierModal', 'data-id' => 'pohead_id', 'data-soheadid' => 'sohead_id', 'data-poheadamount' => 'pohead_amount']) !!}
     <a href="#" id="clearid">清除供应商</a>
+    @else
+    {!! Form::text('supplier_name', null, ['class' => 'form-control', 'disabled', 'data-toggle' => 'modal', 'data-target' => '#selectSupplierModal', 'data-id' => 'pohead_id', 'data-soheadid' => 'sohead_id', 'data-poheadamount' => 'pohead_amount']) !!}
+    @endif
+
     {!! Form::hidden('supplier_id', null, ['class' => 'btn btn-sm', 'id' => 'supplier_id']) !!}
 </div>
 
