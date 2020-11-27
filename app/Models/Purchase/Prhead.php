@@ -23,26 +23,39 @@ class Prhead extends Model
         'process_instance_id',
     ];
 
-    public function sohead() {
+    public function sohead()
+    {
         return $this->belongsTo(Salesorder_hxold::class);
     }
 
-    public function applicant() {
+    public function applicant()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function pritems() {
+    public function pritems()
+    {
         return $this->hasMany(Pritem::class);
     }
 
-    public function associated_business_id() {
+    public function associated_business_id()
+    {
         $business_id = '';
-        if ($this::getAttribute('approval_type') == 'mcitempurchase')
-        {
+        if ($this::getAttribute('approval_type') == 'mcitempurchase') {
             $item = Mcitempurchase::where('process_instance_id', $this::getAttribute('process_instance_id'))->first();
             if (isset($item))
                 $business_id = $item->business_id;
         }
         return $business_id;
+    }
+
+    /**
+     * 选定的供应商清单
+     *
+     * @return void
+     */
+    public function suppliers()
+    {
+        return $this->hasMany(PrSupplier::class, "prhead_id", "id");
     }
 }

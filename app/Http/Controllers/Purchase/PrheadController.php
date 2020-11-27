@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Purchase;
 
 use App\Models\Purchase\Prhead;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\Purchase\PrSupplier;
+use Illuminate\Support\Facades\DB;
 
 class PrheadController extends Controller
 {
@@ -21,7 +22,7 @@ class PrheadController extends Controller
         $inputs = $request->all();
         $prheads = $this->searchrequest($request)->paginate(10);
 
-//        $prheads = Prhead::latest('created_at')->paginate(10);
+        //        $prheads = Prhead::latest('created_at')->paginate(10);
         return view('purchase.prheads.index', compact('prheads', 'inputs'));
     }
 
@@ -35,31 +36,38 @@ class PrheadController extends Controller
 
     public function searchrequest($request)
     {
-//        dd($request->all());
+        //        dd($request->all());
         $query = Prhead::latest('created_at');
 
-//        if ($request->has('createdatestart') && $request->has('createdateend'))
-//        {
-//            $query->whereRaw("DATEDIFF(DAY, create_time, '" . $request->input('createdatestart') . "') <= 0 and DATEDIFF(DAY, create_time, '" . $request->input('createdateend') . "') >=0");
-//
-//        }
-//
-//        if ($request->has('creator_name'))
-//        {
-//            $query->where('creator_name', $request->input('creator_name'));
-//        }
+        //        if ($request->has('createdatestart') && $request->has('createdateend'))
+        //        {
+        //            $query->whereRaw("DATEDIFF(DAY, create_time, '" . $request->input('createdatestart') . "') <= 0 and DATEDIFF(DAY, create_time, '" . $request->input('createdateend') . "') >=0");
+        //
+        //        }
+        //
+        //        if ($request->has('creator_name'))
+        //        {
+        //            $query->where('creator_name', $request->input('creator_name'));
+        //        }
 
-        if ($request->has('key') && strlen($request->input('key')) > 0)
-        {
-            $query->where('number', 'like', '%'.$request->input('key').'%');
+        if ($request->has('key') && strlen($request->input('key')) > 0) {
+            $query->where('number', 'like', '%' . $request->input('key') . '%');
         }
 
+        $user = Auth::user();
+        if ($user->hasRole('supplier')) {
+            $query->whereExists(function ($query) use ($user) {
+                $query->select(DB::raw(1))
+                    ->from('pr_suppliers')
+                    ->whereRaw('pr_suppliers.prhead_id = prheads.id and pr_suppliers.supplier_id = ' . $user->supplier->supplier_id);
+            });
+        }
+        dump($query);
         return $query;
 
+        //        $items = $query->select('prheads.*');
 
-//        $items = $query->select('prheads.*');
-
-//        return $items;
+        //        return $items;
     }
 
     /**
@@ -102,7 +110,11 @@ class PrheadController extends Controller
      */
     public function edit($id)
     {
-        //
+        $prhead = Prhead::findOrFail($id);
+        $prhead->applicant_name = $prhead->applicant->name;
+        $prhead->sohead_number = $prhead->sohead->number;
+        $prhead->business_id = $prhead->associated_business_id();
+        return view('purchase.prheads.edit', compact('prhead'));
     }
 
     /**
@@ -114,7 +126,23 @@ class PrheadController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // dump($request->all());
+        $chk_suppliers = $request->input('chk_suppliers');
+        $suppliers = $request->input('suppliers');
+
+        DB::transaction(function () use ($chk_suppliers, $suppliers, $id) {
+            $prhead = Prhead::findOrFail($id);
+            $prhead->suppliers()->delete();
+            foreach ($suppliers as $key => $value) {
+                PrSupplier::insert([
+                    'prhead_id' => $id,
+                    'supplier_id' => $value,
+                    'selected' => $chk_suppliers[$key],
+                ]);
+            }
+        });
+
+        return redirect('purchase/prheads');
     }
 
     /**

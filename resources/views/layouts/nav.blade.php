@@ -24,9 +24,9 @@
 
                 @if(Auth::user()->hasRole('supplier'))
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">供应商<span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">客户采购<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">TODO</a></li>
+                        <li><a href="/purchase/prheads">采购申请单</a></li>
                     </ul>
                 </li>
                 @else
