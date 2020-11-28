@@ -459,4 +459,31 @@ class EpcseceningController extends Controller
     {
         //
     }
+
+    public static function updateStatusByProcessInstanceId($processInstanceId, $status)
+    {
+        $epcsecening = Epcsecening::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if (isset($epcsecening))
+        {
+            $epcsecening->status = $status;
+            $epcsecening->save();
+
+//            if ($status == 0)
+//            {
+//                $sohead = Salesorder_hxold_t::find($epcsecening->sohead_id);
+//
+//                $msg = '客户扣款审批单[' . $epcsecening->business_id . ']已通过，扣款金额：' . $epcsecening->amount . "\n";
+//                Salesorder_hxold_t::where('订单ID', $epcsecening->sohead_id)->update(['associated_remark' => $sohead->associated_remark . $msg]);
+//            }
+        }
+    }
+
+    public static function deleteByProcessInstanceId($processInstanceId)
+    {
+        $epcsecening = Epcsecening::where('process_instance_id', $processInstanceId)->firstOrFail();
+        if ($epcsecening)
+        {
+            $epcsecening->forceDelete();
+        }
+    }
 }
