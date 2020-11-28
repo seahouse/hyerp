@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Purchase\PrSupplier;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PrheadController extends Controller
 {
@@ -59,10 +60,10 @@ class PrheadController extends Controller
             $query->whereExists(function ($query) use ($user) {
                 $query->select(DB::raw(1))
                     ->from('pr_suppliers')
-                    ->whereRaw('pr_suppliers.prhead_id = prheads.id and pr_suppliers.supplier_id = ' . $user->supplier->supplier_id);
+                    ->whereRaw('pr_suppliers.prhead_id = prheads.id and pr_suppliers.supplier_id = ' . ($user->supplier_id ? $user->supplier_id : 0));
             });
         }
-        dump($query);
+
         return $query;
 
         //        $items = $query->select('prheads.*');

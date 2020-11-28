@@ -40,9 +40,11 @@
             <th>对应项目</th>
             <th>类型</th>
             <th>对应审批编号</th>
-            <th>供应商</th>
+            @if(!Auth::user()->hasRole('supplier'))
             <th>物料</th>
+            <th>供应商</th>
             <th>操作</th>
+            @endif
         </tr>
     </thead>
     <tbody>
@@ -63,13 +65,14 @@
             <td>
                 {{ $prhead->associated_business_id() }}
             </td>
+            @if(!Auth::user()->hasRole('supplier'))
+            <td>
+                <a href="{{ URL::to('/purchase/pritems/') . '?prhead_id=' . $prhead->id }}" target="_blank">明细</a>
+            </td>
             <td>
                 @foreach($prhead->suppliers as $s)
                 @if($s->selected) &#10004 @endif{{ $s->item->name }}<br>
                 @endforeach
-            </td>
-            <td>
-                <a href="{{ URL::to('/purchase/pritems/') . '?prhead_id=' . $prhead->id }}" target="_blank">明细</a>
             </td>
             <td>
                 <a href="{{ URL::to('/purchase/prtypes/') . '?prhead_id=' . $prhead->id }}" class="btn btn-success btn-sm pull-left">分组</a>
@@ -78,6 +81,7 @@
                 {!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}
                 {!! Form::close() !!}
             </td>
+            @endif
         </tr>
         @endforeach
     </tbody>
