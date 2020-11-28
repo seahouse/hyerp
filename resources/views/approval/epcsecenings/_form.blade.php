@@ -346,7 +346,14 @@
                  <a href="{!! URL($drawingattachment->path) !!}" target="_blank" id="showPaymentnode">{{ $drawingattachment->filename }}</a> <br>
             @endforeach
         @else
-            {!! Form::file('bothsigned[]', ['multiple']) !!}
+            @if (!str_contains(Agent::getUserAgent(), 'DingTalk'))
+                {!! Form::file('bothsigned[]', ['multiple']) !!}
+            @else
+                {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'uploadAttach_bothsigned']) !!}
+                <div id="lblFiles_bothsigned">
+                </div>
+                {!! Form::hidden('files_string_bothsigned', '', ['id' => 'files_string_bothsigned']) !!}
+            @endif
         @endif
     </div>
 </div>
@@ -361,7 +368,14 @@
                             <a href="{!! URL($drawingattachment->path) !!}" target="_blank" id="showPaymentnode">{{ $drawingattachment->filename }}</a> <br>
                         @endforeach
                     @else
-                        {!! Form::file('huaxingworksheet[]', ['multiple']) !!}
+                        @if (!str_contains(Agent::getUserAgent(), 'DingTalk'))
+                            {!! Form::file('huaxingworksheet[]', ['multiple']) !!}
+                        @else
+                            {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'uploadAttach_huaxingworksheet']) !!}
+                            <div id="lblFiles_huaxingworksheet">
+                            </div>
+                            {!! Form::hidden('files_string_huaxingworksheet', '', ['id' => 'files_string_huaxingworksheet']) !!}
+                        @endif
                     @endif
                 </div>
             </div>
@@ -377,7 +391,14 @@
                             <a href="{!! URL($drawingattachment->path) !!}" target="_blank" id="showPaymentnode">{{ $drawingattachment->filename }}</a> <br>
                         @endforeach
                     @else
-                        {!! Form::file('installworksheet[]', ['multiple']) !!}
+                        @if (!str_contains(Agent::getUserAgent(), 'DingTalk'))
+                            {!! Form::file('installworksheet[]', ['multiple']) !!}
+                        @else
+                            {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'uploadAttach_installworksheet']) !!}
+                            <div id="lblFiles_installworksheet">
+                            </div>
+                            {!! Form::hidden('files_string_installworksheet', '', ['id' => 'files_string_installworksheet']) !!}
+                        @endif
                     @endif
                 </div>
             </div>
@@ -387,7 +408,7 @@
     {!! Form::label('beforeimage', '增补之前图片:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
     
     <div class='col-xs-8 col-sm-10'>
-        <div class="row" id="previewimage">
+        <div class="row" id="previewimage_beforeimage">
         </div>
         @if (isset($issuedrawing))
             <div class="row" id="previewimage2">
@@ -400,11 +421,19 @@
                 @endforeach
             </div>
         @else
-            @if (Agent::isDesktop())
+            @if (!str_contains(Agent::getUserAgent(), 'DingTalk'))
                 {!! Form::file('beforeimage[]', ['multiple']) !!}
             @else
-                {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
-            @endif            
+                {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'uploadAttach_beforeimage']) !!}
+                <div id="lblFiles_beforeimage">
+                </div>
+                {!! Form::hidden('files_string_beforeimage', '', ['id' => 'files_string_beforeimage']) !!}
+            @endif
+            {{--@if (Agent::isDesktop())--}}
+                {{--{!! Form::file('beforeimage[]', ['multiple']) !!}--}}
+            {{--@else--}}
+                {{--{!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage_beforeimage']) !!}--}}
+            {{--@endif            --}}
         @endif
 
     </div>
@@ -414,7 +443,7 @@
             {!! Form::label('afterimage', '增补施工后图片:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
             <div class='col-xs-8 col-sm-10'>
-                <div class="row" id="previewimage">
+                <div class="row" id="previewimage_afterimage">
                 </div>
                 @if (isset($issuedrawing))
                     <div class="row" id="previewimage2">
@@ -427,11 +456,20 @@
                         @endforeach
                     </div>
                 @else
-                    @if (Agent::isDesktop())
+                    @if (!str_contains(Agent::getUserAgent(), 'DingTalk'))
                         {!! Form::file('afterimage[]', ['multiple']) !!}
                     @else
-                        {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage']) !!}
+                        {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'uploadAttach_afterimage']) !!}
+                        <div id="lblFiles_afterimage">
+                        </div>
+                        {!! Form::hidden('files_string_afterimage', '', ['id' => 'files_string_afterimage']) !!}
                     @endif
+
+                    {{--@if (Agent::isDesktop())--}}
+                        {{--{!! Form::file('afterimage[]', ['multiple']) !!}--}}
+                    {{--@else--}}
+                        {{--{!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage_afterimage']) !!}--}}
+                    {{--@endif--}}
                 @endif
 
             </div>
@@ -443,7 +481,7 @@
 
                 <div class='col-xs-8 col-sm-10'>
                     {!! Form::button('+', ['class' => 'btn btn-sm', 'data-toggle' => 'modal', 'data-target' => '#selectApprovalModal']) !!}
-                    {!! Form::hidden('associatedapprovals', null, ['class' => 'btn btn-sm']) !!}
+                    {!! Form::hidden('associatedapprovals', '', ['class' => 'btn btn-sm']) !!}
                     <div id="lblAssociatedapprovals">
                     </div>
                 </div>

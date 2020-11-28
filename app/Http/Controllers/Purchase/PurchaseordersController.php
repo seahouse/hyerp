@@ -43,18 +43,25 @@ class PurchaseordersController extends Controller
         return view('purchase.purchaseorders.index_sqd', compact('purchaseorders'));
     }
 
-    public function index_hx()
+    public function index_hx(Request $request)
     {
         //
-        $purchaseorders = Purchaseorder_hxold::where('status', 10)->orderBy('id', 'desc')->paginate(15);
-        return view('purchase.purchaseorders.index_hx', compact('purchaseorders'));
+        $inputs = $request->all();
+        $purchaseorders = $this->searchrequest($request)->paginate(15);
+        return view('purchase.purchaseorders.index_hx', compact('purchaseorders', 'inputs'));
     }
 
     public function search_hx(Request $request)
     {
-        //
-//        dd($request);
+        $inputs = $request->all();
+        $purchaseorders = $this->searchrequest($request)->paginate(15);
+        return view('purchase.purchaseorders.index_hx', compact('purchaseorders', 'inputs'));
+    }
+
+    public function searchrequest($request)
+    {
         $query = Purchaseorder_hxold::orderBy('id', 'desc');
+        $query->where('status', 10);
         $key = $request->input('key');
         if (strlen($key) > 0)
         {
@@ -67,8 +74,7 @@ class PurchaseordersController extends Controller
         if ($request->has('product_name') && strlen($request->input('product_name')))
             $query->where('productname', 'like', '%' . $request->input('product_name') . '%');
 
-        $purchaseorders = $query->paginate(15);
-        return view('purchase.purchaseorders.index_hx', compact('purchaseorders'));
+        return $query;
     }
 
     /**

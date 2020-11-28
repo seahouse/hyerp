@@ -523,13 +523,13 @@ class IssuedrawingController extends Controller
             //            Log::info($response);
             $responsejson = json_decode($response);
 //            dd($responsejson);
-            if ($responsejson->result->ding_open_errcode <> 0) {
+            if ($responsejson->errcode <> 0) {
                 $issuedrawing->forceDelete();
                 Log::info(json_encode($input));
-                dd('钉钉端创建失败: ' . $responsejson->result->error_msg);
+                dd('钉钉端创建失败: ' . $responsejson->errmsg);
             } else {
                 // save process_instance_id and business_id
-                $process_instance_id = $responsejson->result->process_instance_id;
+                $process_instance_id = $responsejson->process_instance_id;
 
                 if ($input['syncdtdesc'] == "许昌")
                     $response = DingTalkController::processinstance_get2($process_instance_id);

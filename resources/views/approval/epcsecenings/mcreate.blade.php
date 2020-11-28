@@ -296,7 +296,8 @@
 
 
 @section('script')
-	<script src="https://g.alicdn.com/ilw/ding/0.7.5/scripts/dingtalk.js"></script>
+	{{--<script src="https://g.alicdn.com/ilw/ding/0.7.5/scripts/dingtalk.js"></script>--}}
+    <script src="https://g.alicdn.com/dingding/dingtalk-jsapi/2.7.13/dingtalk.open.js"></script>
 
 	<script type="text/javascript">
 		jQuery(document).ready(function(e) {
@@ -993,7 +994,7 @@
                     $("#div_design_change_sheet").attr("style", "display:'';");
                     $("#div_installworksheet").attr("style", "display:'';");
                 }
-                else if (selectvalue == "图纸差异增补")
+                else if (selectvalue == "范围外增补")
                 {
                     $("#div_extra_additional_reason").attr("style", "display:'';");
                     $("#div_huaxingworksheet").attr("style", "display:'';");
@@ -1009,7 +1010,7 @@
                     $("#div_design_change_sheet").attr("style", "display:'';");
                     $("#div_huaxingworksheet").attr("style", "display:'';");
                 }
-                else if (selectvalue == "业主合理增补")
+                else if (selectvalue == "配合增补")
                 {
                     $("#div_coordinate_additional_reason").attr("style", "display:'';");
                     $("#div_huaxingworksheet").attr("style", "display:'';");
@@ -1159,7 +1160,7 @@
 
 
 			dd.ready(function() {
-				$("#btnSelectImage").click(function() {
+				$("#btnSelectImage_beforeimage").click(function() {
 					dd.biz.util.uploadImage({
 						multiple: true,
 						max: 5,
@@ -1174,13 +1175,268 @@
 								imageHtml += '</div>';
 								imageHtml += '</div>';
 							}
-							$("#previewimage").empty().append(imageHtml);
+							$("#previewimage_beforeimage").empty().append(imageHtml);
 						},
 						onFail: function(err) {
 							alert('select image failed: ' + JSON.stringify(err));
 						}
 					});
 				});
+
+                // 上传附件
+                $("#uploadAttach_bothsigned").click(function () {
+                    dd.biz.util.uploadAttachment({
+                        {{--image:{multiple:true,compress:false,max:9,spaceId: "{!! array_get($config, 'spaceid') !!}"},--}}
+                        space:{corpId:"{!! array_get($config, 'corpId') !!}",spaceId:"{!! array_get($config, 'spaceid') !!}",isCopy:1 , max:9},
+                        file:{spaceId:"{!! array_get($config, 'spaceid') !!}",max:5},
+                        types:["file","space"],//PC端支持["photo","file","space"]
+                        onSuccess : function(result) {
+                            //onSuccess将在文件上传成功之后调用
+//                            alert(JSON.stringify(result));
+                            $("#files_string_bothsigned").val(JSON.stringify(result.data));
+                            var strhtml = '已上传文件：';
+                            $.each(result.data, function(i, field) {
+                                btnId = 'btnSelectOrder_' + String(i);
+                                strhtml += field.fileName + ",";
+                            });
+                            $("#lblFiles_bothsigned").empty().append(strhtml);
+                            /*
+                             {
+                             type:'', // 用户选择了哪种文件类型 ，image（图片）、file（手机文件）、space（钉盘文件）
+                             data: [
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程.docx",
+                             fileSize: 1024,
+                             fileType: "docx"
+                             },
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程1.pdf",
+                             fileSize: 1024,
+                             fileType: "pdf"
+                             },
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程3.pptx",
+                             fileSize: 1024,
+                             fileType: "pptx"
+                             }
+                             ]
+
+                             }
+                             */
+                        },
+                        onFail : function(err) {}
+                    });
+                });
+
+                // 上传附件
+                $("#uploadAttach_huaxingworksheet").click(function () {
+                    dd.biz.util.uploadAttachment({
+                        {{--image:{multiple:true,compress:false,max:9,spaceId: "{!! array_get($config, 'spaceid') !!}"},--}}
+                        space:{corpId:"{!! array_get($config, 'corpId') !!}",spaceId:"{!! array_get($config, 'spaceid') !!}",isCopy:1 , max:9},
+                        file:{spaceId:"{!! array_get($config, 'spaceid') !!}",max:5},
+                        types:["file","space"],//PC端支持["photo","file","space"]
+                        onSuccess : function(result) {
+                            //onSuccess将在文件上传成功之后调用
+//                            alert(JSON.stringify(result));
+                            $("#files_string_huaxingworksheet").val(JSON.stringify(result.data));
+                            var strhtml = '已上传文件：';
+                            $.each(result.data, function(i, field) {
+                                btnId = 'btnSelectOrder_' + String(i);
+                                strhtml += field.fileName + ",";
+                            });
+                            $("#lblFiles_huaxingworksheet").empty().append(strhtml);
+                            /*
+                             {
+                             type:'', // 用户选择了哪种文件类型 ，image（图片）、file（手机文件）、space（钉盘文件）
+                             data: [
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程.docx",
+                             fileSize: 1024,
+                             fileType: "docx"
+                             },
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程1.pdf",
+                             fileSize: 1024,
+                             fileType: "pdf"
+                             },
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程3.pptx",
+                             fileSize: 1024,
+                             fileType: "pptx"
+                             }
+                             ]
+
+                             }
+                             */
+                        },
+                        onFail : function(err) {}
+                    });
+                });
+
+                // 上传附件
+                $("#uploadAttach_installworksheet").click(function () {
+                    dd.biz.util.uploadAttachment({
+                        {{--image:{multiple:true,compress:false,max:9,spaceId: "{!! array_get($config, 'spaceid') !!}"},--}}
+                        space:{corpId:"{!! array_get($config, 'corpId') !!}",spaceId:"{!! array_get($config, 'spaceid') !!}",isCopy:1 , max:9},
+                        file:{spaceId:"{!! array_get($config, 'spaceid') !!}",max:5},
+                        types:["file","space"],//PC端支持["photo","file","space"]
+                        onSuccess : function(result) {
+                            //onSuccess将在文件上传成功之后调用
+//                            alert(JSON.stringify(result));
+                            $("#files_string_installworksheet").val(JSON.stringify(result.data));
+                            var strhtml = '已上传文件：';
+                            $.each(result.data, function(i, field) {
+                                btnId = 'btnSelectOrder_' + String(i);
+                                strhtml += field.fileName + ",";
+                            });
+                            $("#lblFiles_installworksheet").empty().append(strhtml);
+                            /*
+                             {
+                             type:'', // 用户选择了哪种文件类型 ，image（图片）、file（手机文件）、space（钉盘文件）
+                             data: [
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程.docx",
+                             fileSize: 1024,
+                             fileType: "docx"
+                             },
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程1.pdf",
+                             fileSize: 1024,
+                             fileType: "pdf"
+                             },
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程3.pptx",
+                             fileSize: 1024,
+                             fileType: "pptx"
+                             }
+                             ]
+
+                             }
+                             */
+                        },
+                        onFail : function(err) {}
+                    });
+                });
+
+                // 上传附件
+                $("#uploadAttach_beforeimage").click(function () {
+                    dd.biz.util.uploadAttachment({
+                        {{--image:{multiple:true,compress:false,max:9,spaceId: "{!! array_get($config, 'spaceid') !!}"},--}}
+                        space:{corpId:"{!! array_get($config, 'corpId') !!}",spaceId:"{!! array_get($config, 'spaceid') !!}",isCopy:1 , max:9},
+                        file:{spaceId:"{!! array_get($config, 'spaceid') !!}",max:5},
+                        types:["file","space"],//PC端支持["photo","file","space"]
+                        onSuccess : function(result) {
+                            //onSuccess将在文件上传成功之后调用
+//                            alert(JSON.stringify(result));
+                            $("#files_string_beforeimage").val(JSON.stringify(result.data));
+                            var strhtml = '已上传文件：';
+                            $.each(result.data, function(i, field) {
+                                btnId = 'btnSelectOrder_' + String(i);
+                                strhtml += field.fileName + ",";
+                            });
+                            $("#lblFiles_beforeimage").empty().append(strhtml);
+                            /*
+                             {
+                             type:'', // 用户选择了哪种文件类型 ，image（图片）、file（手机文件）、space（钉盘文件）
+                             data: [
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程.docx",
+                             fileSize: 1024,
+                             fileType: "docx"
+                             },
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程1.pdf",
+                             fileSize: 1024,
+                             fileType: "pdf"
+                             },
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程3.pptx",
+                             fileSize: 1024,
+                             fileType: "pptx"
+                             }
+                             ]
+
+                             }
+                             */
+                        },
+                        onFail : function(err) {}
+                    });
+                });
+
+                // 上传附件
+                $("#uploadAttach_afterimage").click(function () {
+                    dd.biz.util.uploadAttachment({
+                        {{--image:{multiple:true,compress:false,max:9,spaceId: "{!! array_get($config, 'spaceid') !!}"},--}}
+                        space:{corpId:"{!! array_get($config, 'corpId') !!}",spaceId:"{!! array_get($config, 'spaceid') !!}",isCopy:1 , max:9},
+                        file:{spaceId:"{!! array_get($config, 'spaceid') !!}",max:5},
+                        types:["file","space"],//PC端支持["photo","file","space"]
+                        onSuccess : function(result) {
+                            //onSuccess将在文件上传成功之后调用
+//                            alert(JSON.stringify(result));
+                            $("#files_string_afterimage").val(JSON.stringify(result.data));
+                            var strhtml = '已上传文件：';
+                            $.each(result.data, function(i, field) {
+                                btnId = 'btnSelectOrder_' + String(i);
+                                strhtml += field.fileName + ",";
+                            });
+                            $("#lblFiles_afterimage").empty().append(strhtml);
+                            /*
+                             {
+                             type:'', // 用户选择了哪种文件类型 ，image（图片）、file（手机文件）、space（钉盘文件）
+                             data: [
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程.docx",
+                             fileSize: 1024,
+                             fileType: "docx"
+                             },
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程1.pdf",
+                             fileSize: 1024,
+                             fileType: "pdf"
+                             },
+                             {
+                             spaceId: "232323",
+                             fileId: "DzzzzzzNqZY",
+                             fileName: "审批流程3.pptx",
+                             fileSize: 1024,
+                             fileType: "pptx"
+                             }
+                             ]
+
+                             }
+                             */
+                        },
+                        onFail : function(err) {}
+                    });
+                });
 
 				// // 上传附件
 				// $("#btnSelectPaymentnodeattachment").click(function() {

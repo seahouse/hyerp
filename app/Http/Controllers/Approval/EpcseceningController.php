@@ -5,11 +5,16 @@ namespace App\Http\Controllers\Approval;
 use App\Http\Controllers\DingTalkController;
 use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiProcessinstanceCspaceInfoRequest;
+use App\Models\Approval\Epcsecening;
+use App\Models\Approval\Epcseceningattachment;
+use App\Models\Approval\Epcseceningcrane;
+use App\Models\Approval\Epcseceninghumanday;
+use App\Models\Approval\Epcseceningmaterial;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use Auth;
+use Auth, Storage;
 
 class EpcseceningController extends Controller
 {
@@ -60,18 +65,7 @@ class EpcseceningController extends Controller
     public function mstore(Request $request)
     {
         $inputs = $request->all();
-        dd($inputs);
-//        $input['associatedapprovals'] = strlen($input['associatedapprovals']) > 0 ? json_encode(array($input['associatedapprovals'])) : "";
-//        dd($input['associatedapprovals']);
-
-//        $input = array(
-//            '_token' => 'MXvSgAhoJ7JkDQ1f5zJvjbtMzdfZ4pePk9xE74Ud', 'manufacturingcenter' => '无锡制造中心机械车间', 'itemtype' => '消耗品类－如焊条', 'expirationdate' => '2018-04-16',
-//            'project_name' => '厂部管理费用', 'sohead_id' => '7550', 'sohead_number' => 'JS-GC-00E-2016-04-0025', 'issuedrawing_numbers' => '', 'issuedrawing_values' => '', 'item_name' => '保温条',
-//            'item_id' => '14818', 'item_spec' => 'φ32', 'unit' => 'm', 'unitprice' => '', 'quantity' => '12', 'weight' => '',
-//            'items_string' => '[{"item_id":"14806","item_name":"PPR管","item_spec":"φ32","unit":"根","unitprice":0,"quantity":"3","weight":0},{"item_id":"14807","item_name":"PPR内丝直接","item_spec":"φ32 DN15","unit":"只","unitprice":0,"quantity":"5","weight":0},{"item_id":"14808","item_name":"PPR内丝直接","item_spec":"φ32 DN25","unit":"只","unitprice":0,"quantity":"5","weight":0},{"item_id":"14809","item_name":"PPR直接","item_spec":"φ32","unit":"只","unitprice":0,"quantity":"5","weight":0},{"item_id":"14810","item_name":"PPR大小头","item_spec":"φ32xφ22","unit":"只","unitprice":0,"quantity":"5","weight":0},{"item_id":"14811","item_name":"PPR球阀","item_spec":"φ32","unit":"只","unitprice":0,"quantity":"5","weight":0},{"item_id":"14812","item_name":"PPR弯头","item_spec":"","unit":"只","unitprice":0,"quantity":"5","weight":0},{"item_id":"14813","item_name":"PPR三通","item_spec":"φ32","unit":"只","unitprice":0,"quantity":"5","weight":0},{"item_id":"14814","item_name":"PPR三通","item_spec":"φ32xφ22","unit":"只","unitprice":0,"quantity":"5","weight":0},{"item_id":"14817","item_name":"PPR内丝直接","item_spec":"φ22","unit":"只","unitprice":0,"quantity":"5","weight":0},{"item_id":"14816","item_name":"管卡","item_spec":"φ32","unit":"只","unitprice":0,"quantity":"20","weight":0},{"item_id":"14818","item_name":"保温条","item_spec":"φ32","unit":"m","unitprice":0,"quantity":"12","weight":0}]',
-////            'items_string' => '[{"item_id":"14806","item_name":"PPR管","item_spec":"φ32","unit":"根","unitprice":0,"quantity":"3","weight":0},{"item_id":"14807","item_name":"PPR内丝直接","item_spec":"φ32 DN15","unit":"只","unitprice":0,"quantity":"5","weight":0},{"item_id":"14808","item_name":"PPR内丝直接","item_spec":"φ32 DN25","unit":"只","unitprice":0,"quantity":"5","weight":0},{"item_id":"14809","item_name":"PPR直接","item_spec":"φ32","unit":"只","unitprice":0,"quantity":"5","weight":0},{"item_id":"14810","item_name":"PPR大小头","item_spec":"φ32xφ22","unit":"只","unitprice":0,"quantity":"5","weight":0},{"item_id":"14811","item_name":"PPR球阀","item_spec":"φ32","unit":"只","unitprice":0,"quantity":"5","weight":0},{"item_id":"14812","item_name":"PPR弯头","item_spec":"","unit":"只","unitprice":0,"quantity":"5","weight":0},{"item_id":"14813","item_name":"PPR三通","item_spec":"φ32","unit":"只","unitprice":0,"quantity":"5","weight":0},{"item_id":"14814","item_name":"PPR三通","item_spec":"φ32xφ22","unit":"只","unitprice":0,"quantity":"5","weight":0},{"item_id":"14817","item_name":"PPR内丝直接","item_spec":"φ22","unit":"只","unitprice":0,"quantity":"5","weight":0},{"item_id":"14816","item_name":"管卡","item_spec":"φ32","unit":"只","unitprice":0,"quantity":"20","weight":0},{"item_id":"14818","item_name":"保温条","item_spec":"φ32","unit":"m","unitprice":0,"quantity":"12","weight":0}]',
-//            'totalprice' => '0', 'detailuse' => '上述材料问雾化器研发中心用', 'applicant_id' => '38', 'approversetting_id' => '-1', 'images' => array(null),
-//            'approvers' => 'manager1200');
+//        dd($inputs);
 
         $this->validate($request, [
             'sohead_id'                   => 'required|integer|min:1',
@@ -93,30 +87,60 @@ class EpcseceningController extends Controller
         $inputs['applicant_id'] = Auth::user()->id;
 
 
-        $additionsalesorder = Additionsalesorder::create($inputs);
-//        dd($additionsalesorder);
+        $epcsecening = Epcsecening::create($inputs);
+//        dd($epcsecening);
 
-        // create $additionsalesorderitems
-        if (isset($additionsalesorder))
+        // create epcseceningmaterials
+        if (isset($epcsecening))
         {
-            $additionsalesorder_items = json_decode($inputs['items_string']);
-            foreach ($additionsalesorder_items as $value) {
-                if (strlen($value->type) > 0)
+            $epcseceningmaterial_items = json_decode($inputs['items_string']);
+            foreach ($epcseceningmaterial_items as $value) {
+                if ($value->item_id > 0)
                 {
                     $item_array = json_decode(json_encode($value), true);
-                    $item_array['additionsalesorder_id'] = $additionsalesorder->id;
-                    Additionsalesorderitem::create($item_array);
+                    $item_array['epcsecening_id'] = $epcsecening->id;
+                    Epcseceningmaterial::create($item_array);
+                }
+            }
+        }
+
+        // create epcseceninghumandays
+        if (isset($epcsecening))
+        {
+            $epcseceninghumanday_items = json_decode($inputs['items_string_humanday']);
+            foreach ($epcseceninghumanday_items as $value) {
+                if (strlen($value->humandays_type) > 0)
+                {
+                    $item_array = json_decode(json_encode($value), true);
+                    $item_array['epcsecening_id'] = $epcsecening->id;
+                    Epcseceninghumanday::create($item_array);
+                }
+            }
+        }
+
+        // create ecpseceningcranes
+        if (isset($epcsecening))
+        {
+            $epcseceningcrane_items = json_decode($inputs['items_string_crane']);
+            foreach ($epcseceningcrane_items as $value) {
+                if (strlen($value->crane_type) > 0)
+                {
+                    $item_array = json_decode(json_encode($value), true);
+                    $item_array['epcsecening_id'] = $epcsecening->id;
+                    Epcseceningcrane::create($item_array);
                 }
             }
         }
 
         // create files
+
+        // 双方签字的安装队工作量表, bothsigned
         $fileattachments_url = [];
         $fileattachments_url2 = [];
-        if (isset($additionsalesorder))
+        if (isset($epcsecening))
         {
-            $files = array_get($inputs,'files');
-            $destinationPath = 'uploads/approval/additionsalesorder/' . $additionsalesorder->id . '/files/';
+            $files = array_get($inputs,'bothsigned');
+            $destinationPath = 'uploads/approval/epcsecening/' . $epcsecening->id . '/bothsigned/';
             if (isset($files))
             {
                 foreach ($files as $key => $file) {
@@ -132,12 +156,12 @@ class EpcseceningController extends Controller
                         $upload_success = $file->move($destinationPath, $filename);
 
                         // add database record
-                        $additionsalesorderattachment = new Additionsalesorderattachment();
-                        $additionsalesorderattachment->additionsalesorder_id = $additionsalesorder->id;
-                        $additionsalesorderattachment->type = "file";
-                        $additionsalesorderattachment->filename = $originalName;
-                        $additionsalesorderattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
-                        $additionsalesorderattachment->save();
+                        $epcseceningattachment = new Epcseceningattachment();
+                        $epcseceningattachment->epcsecening_id = $epcsecening->id;
+                        $epcseceningattachment->type = "bothsigned";
+                        $epcseceningattachment->filename = $originalName;
+                        $epcseceningattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
+                        $epcseceningattachment->save();
 
                         array_push($fileattachments_url, url($destinationPath . $filename));
                         if (strcasecmp($extension, "pdf") == 0)
@@ -152,12 +176,97 @@ class EpcseceningController extends Controller
             }
         }
 
+        // 华星东方下发的工作联系单：huaxingworksheet
+        $fileattachments_url = [];
+        $fileattachments_url2 = [];
+        if (isset($epcsecening))
+        {
+            $files = array_get($inputs,'huaxingworksheet');
+            $destinationPath = 'uploads/approval/epcsecening/' . $epcsecening->id . '/huaxingworksheet/';
+            if (isset($files))
+            {
+                foreach ($files as $key => $file) {
+                    if ($file)
+                    {
+                        $originalName = $file->getClientOriginalName();         // aa.xlsx
+                        $extension = $file->getClientOriginalExtension();       // .xlsx
+//                    Log::info('extension: ' . $extension);
+                        $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                        Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
+
+                        // $fileName = rand(11111, 99999) . '.' . $extension;
+                        $upload_success = $file->move($destinationPath, $filename);
+
+                        // add database record
+                        $epcseceningattachment = new Epcseceningattachment();
+                        $epcseceningattachment->epcsecening_id = $epcsecening->id;
+                        $epcseceningattachment->type = "huaxingworksheet";
+                        $epcseceningattachment->filename = $originalName;
+                        $epcseceningattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
+                        $epcseceningattachment->save();
+
+                        array_push($fileattachments_url, url($destinationPath . $filename));
+                        if (strcasecmp($extension, "pdf") == 0)
+                            array_push($fileattachments_url2, url('pdfjs/viewer') . "?file=" . "/$destinationPath$filename");
+                        else
+                        {
+                            $filename2 = str_replace(".", "_", $filename);
+                            array_push($fileattachments_url2, url("$destinationPath$filename2"));
+                        }
+                    }
+                }
+            }
+        }
+
+        // 安装队下发的工作联系单：installworksheet
+        $fileattachments_url = [];
+        $fileattachments_url2 = [];
+        if (isset($epcsecening))
+        {
+            $files = array_get($inputs,'installworksheet');
+            $destinationPath = 'uploads/approval/epcsecening/' . $epcsecening->id . '/installworksheet/';
+            if (isset($files))
+            {
+                foreach ($files as $key => $file) {
+                    if ($file)
+                    {
+                        $originalName = $file->getClientOriginalName();         // aa.xlsx
+                        $extension = $file->getClientOriginalExtension();       // .xlsx
+//                    Log::info('extension: ' . $extension);
+                        $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                        Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
+
+                        // $fileName = rand(11111, 99999) . '.' . $extension;
+                        $upload_success = $file->move($destinationPath, $filename);
+
+                        // add database record
+                        $epcseceningattachment = new Epcseceningattachment();
+                        $epcseceningattachment->epcsecening_id = $epcsecening->id;
+                        $epcseceningattachment->type = "installworksheet";
+                        $epcseceningattachment->filename = $originalName;
+                        $epcseceningattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
+                        $epcseceningattachment->save();
+
+                        array_push($fileattachments_url, url($destinationPath . $filename));
+                        if (strcasecmp($extension, "pdf") == 0)
+                            array_push($fileattachments_url2, url('pdfjs/viewer') . "?file=" . "/$destinationPath$filename");
+                        else
+                        {
+                            $filename2 = str_replace(".", "_", $filename);
+                            array_push($fileattachments_url2, url("$destinationPath$filename2"));
+                        }
+                    }
+                }
+            }
+        }
+
+        // 增补之前图片：beforeimage
         $image_urls = [];
         // create images in the desktop
-        if ($additionsalesorder)
+        if ($epcsecening)
         {
-            $files = array_get($inputs,'images');
-            $destinationPath = 'uploads/approval/additionsalesorder/' . $additionsalesorder->id . '/images/';
+            $files = array_get($inputs,'beforeimage');
+            $destinationPath = 'uploads/approval/epcsecening/' . $epcsecening->id . '/beforeimage/';
             if ($files)
             {
                 foreach ($files as $key => $file) {
@@ -174,12 +283,48 @@ class EpcseceningController extends Controller
                         $upload_success = $file->move($destinationPath, $filename);
 
                         // add database record
-                        $additionsalesorderattachment = new Additionsalesorderattachment();
-                        $additionsalesorderattachment->additionsalesorder_id = $additionsalesorder->id;
-                        $additionsalesorderattachment->type = "image";
-                        $additionsalesorderattachment->filename = $originalName;
-                        $additionsalesorderattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
-                        $additionsalesorderattachment->save();
+                        $epcseceningattachment = new Epcseceningattachment();
+                        $epcseceningattachment->epcsecening_id = $epcsecening->id;
+                        $epcseceningattachment->type = "beforeimage";
+                        $epcseceningattachment->filename = $originalName;
+                        $epcseceningattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
+                        $epcseceningattachment->save();
+
+                        array_push($image_urls, url($destinationPath . $filename));
+                    }
+                }
+            }
+        }
+
+        // 增补施工后图片：afterimage
+        $image_urls = [];
+        // create images in the desktop
+        if ($epcsecening)
+        {
+            $files = array_get($inputs,'afterimage');
+            $destinationPath = 'uploads/approval/epcsecening/' . $epcsecening->id . '/afterimage/';
+            if ($files)
+            {
+                foreach ($files as $key => $file) {
+                    if ($file)
+                    {
+                        $originalName = $file->getClientOriginalName();
+                        $extension = $file->getClientOriginalExtension();       // .xlsx
+                        $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                        Storage::put($destinationPath . $filename, file_get_contents($file->getRealPath()));
+
+                        $extension = $file->getClientOriginalExtension();
+                        $filename = date('YmdHis').rand(100, 200) . '.' . $extension;
+                        // $fileName = rand(11111, 99999) . '.' . $extension;
+                        $upload_success = $file->move($destinationPath, $filename);
+
+                        // add database record
+                        $epcseceningattachment = new Epcseceningattachment();
+                        $epcseceningattachment->epcsecening_id = $epcsecening->id;
+                        $epcseceningattachment->type = "afterimage";
+                        $epcseceningattachment->filename = $originalName;
+                        $epcseceningattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
+                        $epcseceningattachment->save();
 
                         array_push($image_urls, url($destinationPath . $filename));
                     }
@@ -188,14 +333,14 @@ class EpcseceningController extends Controller
         }
 
         // create images from dingtalk mobile
-        if ($additionsalesorder)
+        if ($epcsecening)
         {
             $images = array_where($inputs, function($key, $value) {
                 if (substr_compare($key, 'image_', 0, 6) == 0)
                     return $value;
             });
 
-            $destinationPath = 'uploads/approval/additionsalesorder/' . $additionsalesorder->id . '/images/';
+            $destinationPath = 'uploads/approval/epcsecening/' . $epcsecening->id . '/images/';
             foreach ($images as $key => $value) {
                 # code...
 
@@ -204,7 +349,7 @@ class EpcseceningController extends Controller
                 // $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
                 // Storage::disk('local')->put($sFilename, file_get_contents($value));
                 // Storage::move($sFilename, '../abcd.jpg');
-                $dir = 'images/approval/projectsitepurchase/' . $additionsalesorder->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                $dir = 'images/approval/projectsitepurchase/' . $epcsecening->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
                 $parts = explode('/', $dir);
                 $filename = array_pop($parts);
                 $dir = '';
@@ -224,7 +369,7 @@ class EpcseceningController extends Controller
 
                 // add image record
                 $projectsitepurchaseattachment = new Projectsitepurchaseattachment;
-                $projectsitepurchaseattachment->additionsalesorder_id = $additionsalesorder->id;
+                $projectsitepurchaseattachment->additionsalesorder_id = $epcsecening->id;
                 $projectsitepurchaseattachment->type = "image";     // add a '/' in the head.
                 $projectsitepurchaseattachment->path = "/$dir$filename";     // add a '/' in the head.
                 $projectsitepurchaseattachment->save();
@@ -232,20 +377,19 @@ class EpcseceningController extends Controller
                 array_push($image_urls, $value);
             }
         }
-//        dd($additionsalesorder);
+//        dd($epcsecening);
 
-        if (isset($additionsalesorder))
+        if (isset($epcsecening))
         {
-            $inputs['totalamount'] = $additionsalesorder->additionsalesorderitems->sum('amount');
             $inputs['image_urls'] = json_encode($image_urls);
-//            $inputs['approvers'] = $additionsalesorder->approvers();
-            $response = ApprovalController::additionsalesorder($inputs);
+//            $inputs['approvers'] = $epcsecening->approvers();
+            $response = ApprovalController::epcsecening($inputs);
 //            Log::info($response);
 //            dd($response);
             $responsejson = json_decode($response);
             if ($responsejson->errcode <> "0")
             {
-                $additionsalesorder->forceDelete();
+                $epcsecening->forceDelete();
 //                Log::info(json_encode($inputs));
                 dd('钉钉端创建失败: ' . $responsejson->errmsg);
             }
@@ -260,29 +404,9 @@ class EpcseceningController extends Controller
                 if ($responsejson->dingtalk_smartwork_bpms_processinstance_get_response->result->ding_open_errcode == 0)
                     $business_id = $responsejson->dingtalk_smartwork_bpms_processinstance_get_response->result->process_instance->business_id;
 
-                $additionsalesorder->process_instance_id = $process_instance_id;
-                $additionsalesorder->business_id = $business_id;
-                $additionsalesorder->save();
-
-//                // send dingtalk message.
-//                $touser = $mcitempurchase->nextapprover();
-//                if ($touser)
-//                {
-//
-////                    DingTalkController::send_link($touser->dtuserid, '',
-////                        url('mddauth/approval/approval-paymentrequestapprovals-' . $mcitempurchase->id . '-mcreate'), '',
-////                        '供应商付款审批', '来自' . $mcitempurchase->applicant->name . '的付款申请单需要您审批.',
-////                        config('custom.dingtalk.agentidlist.approval'));
-////
-////                    if (Auth::user()->email == "admin@admin.com")
-////                    {
-////                        DingTalkController::send_oa_paymentrequest($touser->dtuserid, '',
-////                            url('mddauth/approval/approval-paymentrequestapprovals-' . $mcitempurchase->id . '-mcreate'), '',
-////                            '供应商付款审批', '来自' . $mcitempurchase->applicant->name . '的付款申请单需要您审批.', $mcitempurchase,
-////                            config('custom.dingtalk.agentidlist.approval'));
-////                    }
-//
-//                }
+                $epcsecening->process_instance_id = $process_instance_id;
+                $epcsecening->business_id = $business_id;
+                $epcsecening->save();
             }
         }
 

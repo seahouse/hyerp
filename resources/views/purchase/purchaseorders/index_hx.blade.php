@@ -219,7 +219,7 @@
         </tbody>
 
     </table>
-    {!! $purchaseorders->render() !!}
+    {!! $purchaseorders->setPath('/purchase/purchaseorders/index_hx')->appends($inputs)->links() !!}
     @else
     <div class="alert alert-warning alert-block">
         <i class="fa fa-warning"></i>

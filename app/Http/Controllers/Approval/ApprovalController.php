@@ -4813,4 +4813,320 @@ class ApprovalController extends Controller
 
         return $response;
     }
+
+    public static function epcsecening($inputs)
+    {
+        $user = Auth::user();
+        $session = DingTalkController::getAccessToken();
+        $timestamp = time('2017-07-19 13:06:00');
+        $format = 'json';
+        $v = '2.0';
+
+        $process_code = config('custom.dingtalk.approval_processcode.epcsecening');
+        $originator_user_id = $user->dtuserid;
+        $departmentList = json_decode($user->dtuser->department);
+        $dept_id = 0;
+        if (count($departmentList) > 0)
+            $dept_id = array_first($departmentList);
+//        $approvers = $inputs['approvers'];
+//        // if originator_user_id in approvers, skip pre approvers
+//        $approver_array = explode(',', $approvers);
+//        if (in_array($originator_user_id, $approver_array))
+//        {
+//            $offset = array_search($originator_user_id, $approver_array);
+//            $approver_array = array_slice($approver_array, $offset+1);
+//            $approvers = implode(",", $approver_array);
+//        }
+//        if ($approvers == "")
+//            $approvers = config('custom.dingtalk.default_approvers');       // wuceshi for test
+
+        $detail_array_material = [];
+        $epcseceningmaterial_items = json_decode($inputs['items_string']);
+        foreach ($epcseceningmaterial_items as $value) {
+            if ($value->item_id > 0)
+            {
+                $item_array = [
+                    [
+                        'name'      => '材料类别',
+                        'value'     => $value->material_type,
+                    ],
+                    [
+                        'name'      => '物品名称',
+                        'value'     => $value->item_name,
+                    ],
+                    [
+                        'name'      => '规格型号',
+                        'value'     => $value->item_spec,
+                    ],
+                    [
+                        'name'      => '计价单位',
+                        'value'     => $value->unit,
+                    ],
+                    [
+                        'name'      => '数量',
+                        'value'     => $value->quantity,
+                    ],
+                    [
+                        'name'      => '单价（元）',
+                        'value'     => $value->unitprice,
+                    ],
+                    [
+                        'name'      => '备注',
+                        'value'     => $value->remark,
+                    ],
+                ];
+                array_push($detail_array_material, $item_array);
+            }
+        }
+
+        $detail_array_humanday = [];
+        $epcseceninghumanday_items = json_decode($inputs['items_string_humanday']);
+        foreach ($epcseceninghumanday_items as $value) {
+            if (strlen($value->humandays_type) > 0)
+            {
+                $item_array = [
+                    [
+                        'name'      => '人工类型',
+                        'value'     => $value->humandays_type,
+                    ],
+                    [
+                        'name'      => '人工数',
+                        'value'     => $value->humandays,
+                    ],
+                    [
+                        'name'      => '人工单价（元）',
+                        'value'     => $value->humandays_unitprice,
+                    ],
+                    [
+                        'name'      => '备注',
+                        'value'     => $value->remark,
+                    ],
+                ];
+                array_push($detail_array_humanday, $item_array);
+            }
+        }
+
+        $detail_array_crane = [];
+        $epcseceningcrane_items = json_decode($inputs['items_string_crane']);
+        foreach ($epcseceningcrane_items as $value) {
+            if (strlen($value->crane_type) > 0)
+            {
+                $item_array = [
+                    [
+                        'name'      => '吊机型号',
+                        'value'     => $value->crane_type,
+                    ],
+                    [
+                        'name'      => '台数班',
+                        'value'     => $value->number,
+                    ],
+                    [
+                        'name'      => '台班单价（元）',
+                        'value'     => $value->unitprice,
+                    ],
+                ];
+                array_push($detail_array_crane, $item_array);
+            }
+        }
+
+        $formdata = [
+            [
+                'name'      => '项目名称',
+                'value'     => $inputs['project_name'],
+            ],
+            [
+                'name'      => '项目编号',
+                'value'     => $inputs['sohead_number'],
+            ],
+            [
+                'name'      => '安装公司全称',
+                'value'     => $inputs['supplier_name'],
+            ],
+            [
+                'name'      => '安装队安装合同ERP编号',
+                'value'     => $inputs['pohead_number'],
+            ],
+            [
+                'name'      => '项目所属销售负责人',
+                'value'     => $inputs['sohead_salesmanager'],
+            ],
+            [
+                'name'      => '增补项所属设计部门',
+                'value'     => $inputs['additional_design_department'],
+            ],
+            [
+                'name'      => '增补项所属来源',
+                'value'     => $inputs['additional_source'],
+            ],
+            [
+                'name'      => '造成增补的责任归集部门',
+                'value'     => $inputs['additional_source_department'],
+            ],
+            [
+                'name'      => '增补原因',
+                'value'     => $inputs['additional_reason'],
+            ],
+            [
+                'name'      => '需要技术部门出图？',
+                'value'     => $inputs['need_issuedrawing'],
+            ],
+            [
+                'name'      => '是否有设计变更单',
+                'value'     => $inputs['design_change_sheet'],
+            ],
+            [
+                'name'      => '增补原因详细说明',
+                'value'     => $inputs['additional_reason_detaildesc'],
+            ],
+            [
+                'name'      => '增补内容包含：',
+                'value'     => $inputs['additional_content'],
+            ],
+            [
+                'name'      => '增补所用材料部分（明细<15项）：',
+                'value'     => json_encode($detail_array_material),
+            ],
+            [
+                'name'      => '增补所用人工部分（明细不大于2项）：',
+                'value'     => json_encode($detail_array_humanday),
+            ],
+            [
+                'name'      => '增补所用吊机台班（明细不大于2项）：',
+                'value'     => json_encode($detail_array_crane),
+            ],
+            [
+                'name'      => '关联扣款审批单',
+                'value'     => $inputs['associatedapprovals'],
+            ],
+        ];
+
+        $additional_reason = $inputs['additional_reason'];
+        if ($additional_reason == '短缺增补')
+        {
+            array_push($formdata,
+                [
+                    'name'      => '短缺增补-补充原因',
+                    'value'     => $inputs['short_additional_reason'],
+                ]);
+            array_push($formdata,
+                [
+                    'name'      => '是否有设计变更单',
+                    'value'     => $inputs['design_change_sheet'],
+                ]);
+        }
+        elseif ($additional_reason == '图纸差异增补')
+        {
+            array_push($formdata,
+                [
+                    'name'      => '图纸差异增补-补充原因',
+                    'value'     => $inputs['drawing_additional_reason'],
+                ]);
+            array_push($formdata,
+                [
+                    'name'      => '是否有设计变更单',
+                    'value'     => $inputs['design_change_sheet'],
+                ]);
+        }
+        elseif ($additional_reason == '范围外增补')
+        {
+            array_push($formdata,
+                [
+                    'name'      => '范围外增补-补充原因',
+                    'value'     => $inputs['extra_additional_reason'],
+                ]);
+        }
+        elseif ($additional_reason == '业主额外增补')
+        {
+            array_push($formdata,
+                [
+                    'name'      => '业主额外增补-补充原因',
+                    'value'     => $inputs['owner_additional_reason'],
+                ]);
+        }
+        elseif ($additional_reason == '业主合理增补')
+        {
+            array_push($formdata,
+                [
+                    'name'      => '业主合理增补-补充原因',
+                    'value'     => $inputs['owner_additional_reasonalreason'],
+                ]);
+            array_push($formdata,
+                [
+                    'name'      => '是否有设计变更单',
+                    'value'     => $inputs['design_change_sheet'],
+                ]);
+        }
+        elseif ($additional_reason == '配合增补')
+        {
+            array_push($formdata,
+                [
+                    'name'      => '配合增补-补充原因',
+                    'value'     => $inputs['coordinate_additional_reason'],
+                ]);
+        }
+
+        if (isset($inputs['files_string_bothsigned']))
+            array_push($formdata,
+                [
+                    'name'      => '双方签字的安装队工作量表',
+                    'value'     => $inputs['files_string_bothsigned'],
+                ]);
+        if (isset($inputs['files_string_huaxingworksheet']))
+            array_push($formdata,
+                [
+                    'name'      => '华星东方下发的工作联系单',
+                    'value'     => $inputs['files_string_huaxingworksheet'],
+                ]);
+        if (isset($inputs['files_string_installworksheet']))
+            array_push($formdata,
+                [
+                    'name'      => '安装队下发的工作联系单',
+                    'value'     => $inputs['files_string_installworksheet'],
+                ]);
+        if (isset($inputs['files_string_beforeimage']))
+            array_push($formdata,
+                [
+                    'name'      => '增补之前图片',
+                    'value'     => $inputs['files_string_beforeimage'],
+                ]);
+        if (isset($inputs['files_string_afterimage']))
+            array_push($formdata,
+                [
+                    'name'      => '增补施工后图片',
+                    'value'     => $inputs['files_string_afterimage'],
+                ]);
+
+        Log::info($detail_array_humanday);
+        Log::info($formdata);
+        $form_component_values = json_encode($formdata);
+//        dd($form_component_values);
+//        Log::info('process_code: ' . $process_code);
+//        Log::info('originator_user_id: ' . $originator_user_id);
+//        Log::info('dept_id: ' . $dept_id);
+//        Log::info('approvers: ' . $approvers);
+//        Log::info('form_component_values: ' . $form_component_values);
+
+//        Log::info(app_path());
+        $c = new DingTalkClient();
+//        $req = new SmartworkBpmsProcessinstanceCreateRequest();
+        $req = new OapiProcessinstanceCreateRequest();
+//        $req->setAgentId("41605932");
+        $req->setProcessCode($process_code);
+        $req->setOriginatorUserId($originator_user_id);
+        $req->setDeptId("$dept_id");
+
+        $req->setFormComponentValues("$form_component_values");
+
+//        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
+        $response = $c->execute($req, $session);
+        Log::info(json_encode($response));
+        return json_encode($response);
+        dd(json_encode($response, JSON_UNESCAPED_UNICODE));
+        return response()->json($response);
+
+//        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+//        $response = HttpDingtalkEco::post("", $params, json_encode($data));
+
+        return $response;
+    }
 }

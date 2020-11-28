@@ -13,6 +13,7 @@ use App\Http\Controllers\Approval\TechpurchaseController;
 use App\Http\Controllers\Approval\VendordeductionController;
 use App\Http\Controllers\util\HttpDingtalkEco;
 use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
+use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiProcessinstanceCreateRequest;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\SmartworkBpmsProcessinstanceCreateRequest;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiMessageCorpconversationAsyncsendV2Request;
 use App\Models\System\User;
@@ -2021,14 +2022,14 @@ class DingTalkController extends Controller
                 'name'      => '吨位（吨）',
                 'value'     => $inputs['tonnage'],
             ],
-//            [
-//                'name'      => '薄板厚度',
-//                'value'     => $inputs['sheet_thickness'],
-//            ],
-//            [
-//                'name'      => '型钢厚度',
-//                'value'     => $inputs['steel_thickness'],
-//            ],
+            [
+                'name'      => '薄板厚度',
+                'value'     => $inputs['sheet_thickness'],
+            ],
+            [
+                'name'      => '型钢厚度',
+                'value'     => $inputs['steel_thickness'],
+            ],
             [
                 'name'      => '项目编号',
                 'value'     => $inputs['sohead_number'],
@@ -2096,9 +2097,22 @@ class DingTalkController extends Controller
         ];
 
         $c = new DingTalkClient();
-        $req = new SmartworkBpmsProcessinstanceCreateRequest();
-//        $req->setAgentId("41605932");
+
+//        $req = new SmartworkBpmsProcessinstanceCreateRequest();
+//        $req->setProcessCode($process_code);
+//        $req->setOriginatorUserId($originator_user_id);
+//        $req->setDeptId("$dept_id");
+//        $req->setApprovers($approvers);
+//        if ($cc_list <> "")
+//        {
+//            $req->setCcList($cc_list);
+//            $req->setCcPosition("FINISH");
+//        }
+//        $req->setFormComponentValues("$form_component_values");
+
+        $req = new OapiProcessinstanceCreateRequest();
         $req->setProcessCode($process_code);
+        $req->setFormComponentValues("$form_component_values");
         $req->setOriginatorUserId($originator_user_id);
         $req->setDeptId("$dept_id");
         $req->setApprovers($approvers);
@@ -2107,11 +2121,7 @@ class DingTalkController extends Controller
             $req->setCcList($cc_list);
             $req->setCcPosition("FINISH");
         }
-//        $form_component_values = new FormComponentValueVo();
-//        $form_component_values->name="请假类型";
-//        $form_component_values->value="事假";
-//        $form_component_values->ext_value="总天数:1";
-        $req->setFormComponentValues("$form_component_values");
+
         $response = $c->execute($req, $session);
 //        dd($response);
         return json_encode($response);
