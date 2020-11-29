@@ -337,7 +337,7 @@ class EpcseceningController extends Controller
         if ($epcsecening)
         {
             $images = array_where($inputs, function($key, $value) {
-                if (substr_compare($key, 'beforeimage_', 0, 6) == 0)
+                if (substr_compare($key, 'beforeimage_', 0, 12) == 0)
                     return $value;
             });
 
@@ -384,7 +384,7 @@ class EpcseceningController extends Controller
         if ($epcsecening)
         {
             $images = array_where($inputs, function($key, $value) {
-                if (substr_compare($key, 'afterimage_', 0, 6) == 0)
+                if (substr_compare($key, 'afterimage_', 0, 12) == 0)
                     return $value;
             });
 
