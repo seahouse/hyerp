@@ -14,11 +14,10 @@
         <thead>
             <tr>
                 <th>名称</th>
-{{--
-                <th>到期日</th>
---}}
                 <th>订购数量</th>
-                <th>单价</th>
+                @can('purchase_purchaseorder_viewamount')
+                    <th>单价</th>
+                @endcan
 {{--
                 <th>运费</th>
                 <th>已收货</th>
@@ -33,17 +32,14 @@
                     <td>
                         {{ $poitem->item->goods_name }}
                     </td>
-{{--
-                    <td>
-                        {{ $poitem->duedate }}
-                    </td>
---}}
                     <td>
                         {{ $poitem->qty }}
                     </td>
-                    <td>
-                        {{ $poitem->unitprice }}
-                    </td>
+                    @can('purchase_purchaseorder_viewamount')
+                        <td>
+                            {{ $poitem->unitprice }}
+                        </td>
+                    @endcan
 {{--
                     <td>
                         {{ $poitem->freight }}

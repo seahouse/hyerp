@@ -19,8 +19,10 @@
                 <th>规格型号</th>
                 <th>单位</th>
                 <th>数量</th>
-                <th>单价</th>
-                <th>合计金额</th>
+                @can('purchase_purchaseorder_viewamount')
+                    <th>单价</th>
+                    <th>合计金额</th>
+                @endcan
                 <th>出库项目</th>
                 <th>操作</th>
             </tr>
@@ -43,12 +45,14 @@
                     <td>
                         {{ $receiptitem->quantity }}
                     </td>
-                    <td>
-                        {{ $receiptitem->unitprice }}
-                    </td>
-                    <td>
-                        {{ $receiptitem->amount }}
-                    </td>
+                    @can('purchase_purchaseorder_viewamount')
+                        <td>
+                            {{ $receiptitem->unitprice }}
+                        </td>
+                        <td>
+                            {{ $receiptitem->amount }}
+                        </td>
+                    @endcan
                     <td>
                         {{ $receiptitem->out_sohead_name }}
                     </td>
