@@ -1252,6 +1252,8 @@ class DingTalkController extends Controller
                         AdditionsalesorderController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.customerdeduction'))
                         CustomerdeductionController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
+                    elseif ($data->processCode == config('custom.dingtalk.approval_processcode.epcsecening'))
+                        EpcseceningController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
                 }
                 elseif ($data->type == "finish" && $data->result == "refuse")
                 {
