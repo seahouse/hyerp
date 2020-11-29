@@ -1171,7 +1171,7 @@
 								imageHtml += '<div class="col-xs-6 col-md-3">';
 								imageHtml += '<div class="thumbnail">';
 								imageHtml += '<img src=' + images[i] + ' />';
-								imageHtml += '<input name="image_' + String(i) + '" value=' + images[i] + ' type="hidden">';
+								imageHtml += '<input name="beforeimage_' + String(i) + '" value=' + images[i] + ' type="hidden">';
 								imageHtml += '</div>';
 								imageHtml += '</div>';
 							}
@@ -1182,6 +1182,29 @@
 						}
 					});
 				});
+
+                $("#btnSelectImage_afterimage").click(function() {
+                    dd.biz.util.uploadImage({
+                        multiple: true,
+                        max: 5,
+                        onSuccess: function(result) {
+                            var images = result;	// result.split(',');
+                            var imageHtml = '';
+                            for (var i in images) {
+                                imageHtml += '<div class="col-xs-6 col-md-3">';
+                                imageHtml += '<div class="thumbnail">';
+                                imageHtml += '<img src=' + images[i] + ' />';
+                                imageHtml += '<input name="afterimage_' + String(i) + '" value=' + images[i] + ' type="hidden">';
+                                imageHtml += '</div>';
+                                imageHtml += '</div>';
+                            }
+                            $("#previewimage_afterimage").empty().append(imageHtml);
+                        },
+                        onFail: function(err) {
+                            alert('select image failed: ' + JSON.stringify(err));
+                        }
+                    });
+                });
 
                 // 上传附件
                 $("#uploadAttach_bothsigned").click(function () {

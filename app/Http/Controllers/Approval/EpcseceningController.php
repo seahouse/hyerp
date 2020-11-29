@@ -261,7 +261,7 @@ class EpcseceningController extends Controller
         }
 
         // 增补之前图片：beforeimage
-        $image_urls = [];
+        $beforeimage_urls = [];
         // create images in the desktop
         if ($epcsecening)
         {
@@ -290,14 +290,14 @@ class EpcseceningController extends Controller
                         $epcseceningattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
                         $epcseceningattachment->save();
 
-                        array_push($image_urls, url($destinationPath . $filename));
+                        array_push($beforeimage_urls, url($destinationPath . $filename));
                     }
                 }
             }
         }
 
         // 增补施工后图片：afterimage
-        $image_urls = [];
+        $afterimage_image_urls = [];
         // create images in the desktop
         if ($epcsecening)
         {
@@ -326,21 +326,22 @@ class EpcseceningController extends Controller
                         $epcseceningattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
                         $epcseceningattachment->save();
 
-                        array_push($image_urls, url($destinationPath . $filename));
+                        array_push($afterimage_image_urls, url($destinationPath . $filename));
                     }
                 }
             }
         }
 
+        // 增补之前图片：beforeimage
         // create images from dingtalk mobile
         if ($epcsecening)
         {
             $images = array_where($inputs, function($key, $value) {
-                if (substr_compare($key, 'image_', 0, 6) == 0)
+                if (substr_compare($key, 'beforeimage_', 0, 6) == 0)
                     return $value;
             });
 
-            $destinationPath = 'uploads/approval/epcsecening/' . $epcsecening->id . '/images/';
+            $destinationPath = 'uploads/approval/epcsecening/' . $epcsecening->id . '/beforeimage/';
             foreach ($images as $key => $value) {
                 # code...
 
@@ -349,7 +350,7 @@ class EpcseceningController extends Controller
                 // $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
                 // Storage::disk('local')->put($sFilename, file_get_contents($value));
                 // Storage::move($sFilename, '../abcd.jpg');
-                $dir = 'images/approval/projectsitepurchase/' . $epcsecening->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                $dir = 'images/approval/epcsecening/' . $epcsecening->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
                 $parts = explode('/', $dir);
                 $filename = array_pop($parts);
                 $dir = '';
@@ -368,20 +369,68 @@ class EpcseceningController extends Controller
 
 
                 // add image record
-                $projectsitepurchaseattachment = new Projectsitepurchaseattachment;
-                $projectsitepurchaseattachment->additionsalesorder_id = $epcsecening->id;
-                $projectsitepurchaseattachment->type = "image";     // add a '/' in the head.
-                $projectsitepurchaseattachment->path = "/$dir$filename";     // add a '/' in the head.
-                $projectsitepurchaseattachment->save();
+                $epcseceningattachment = new Epcseceningattachment();
+                $epcseceningattachment->epcsecening_id = $epcsecening->id;
+                $epcseceningattachment->type = "beforeimage";     // add a '/' in the head.
+                $epcseceningattachment->path = "/$dir$filename";     // add a '/' in the head.
+                $epcseceningattachment->save();
 
-                array_push($image_urls, $value);
+                array_push($beforeimage_urls, $value);
+            }
+        }
+
+        // 增补施工后图片：afterimage
+        // create images from dingtalk mobile
+        if ($epcsecening)
+        {
+            $images = array_where($inputs, function($key, $value) {
+                if (substr_compare($key, 'afterimage_', 0, 6) == 0)
+                    return $value;
+            });
+
+            $destinationPath = 'uploads/approval/epcsecening/' . $epcsecening->id . '/afterimage/';
+            foreach ($images as $key => $value) {
+                # code...
+
+                // save image file.
+                $sExtension = substr($value, strrpos($value, '.') + 1);
+                // $sFilename = 'approval/reimbursement/' . $reimbursement->id .'/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                // Storage::disk('local')->put($sFilename, file_get_contents($value));
+                // Storage::move($sFilename, '../abcd.jpg');
+                $dir = 'images/approval/epcsecening/' . $epcsecening->id . '/' . date('YmdHis').rand(100, 200) . '.' . $sExtension;
+                $parts = explode('/', $dir);
+                $filename = array_pop($parts);
+                $dir = '';
+                foreach ($parts as $part) {
+                    # code...
+                    $dir .= "$part/";
+                    if (!is_dir($dir)) {
+                        mkdir($dir);
+                    }
+                }
+
+//                $originalName = $file->getClientOriginalName();
+                Storage::put($destinationPath . $filename, file_get_contents($value));
+
+                file_put_contents("$dir/$filename", file_get_contents($value));
+
+
+                // add image record
+                $epcseceningattachment = new Epcseceningattachment();
+                $epcseceningattachment->epcsecening_id = $epcsecening->id;
+                $epcseceningattachment->type = "afterimage";     // add a '/' in the head.
+                $epcseceningattachment->path = "/$dir$filename";     // add a '/' in the head.
+                $epcseceningattachment->save();
+
+                array_push($afterimage_image_urls, $value);
             }
         }
 //        dd($epcsecening);
 
         if (isset($epcsecening))
         {
-            $inputs['image_urls'] = json_encode($image_urls);
+            $inputs['beforeimage_urls'] = json_encode($beforeimage_urls);
+            $inputs['afterimage_image_urls'] = json_encode($afterimage_image_urls);
 //            $inputs['approvers'] = $epcsecening->approvers();
             $response = ApprovalController::epcsecening($inputs);
 //            Log::info($response);

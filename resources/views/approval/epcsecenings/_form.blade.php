@@ -360,7 +360,7 @@
 
         <div id="div_huaxingworksheet">
             <div class="form-group">
-                {!! Form::label('huaxingworksheet', '华星东方下发的工作联系单:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                {!! Form::label('huaxingworksheet', '华星东方下发的工作联系单（*）:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
 
                 <div class='col-xs-8 col-sm-10'>
                     @if (isset($issuedrawing))
@@ -421,19 +421,20 @@
                 @endforeach
             </div>
         @else
-            @if (!str_contains(Agent::getUserAgent(), 'DingTalk'))
-                {!! Form::file('beforeimage[]', ['multiple']) !!}
-            @else
-                {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'uploadAttach_beforeimage']) !!}
-                <div id="lblFiles_beforeimage">
-                </div>
-                {!! Form::hidden('files_string_beforeimage', '', ['id' => 'files_string_beforeimage']) !!}
-            @endif
-            {{--@if (Agent::isDesktop())--}}
+            {{--@if (!str_contains(Agent::getUserAgent(), 'DingTalk'))--}}
                 {{--{!! Form::file('beforeimage[]', ['multiple']) !!}--}}
             {{--@else--}}
-                {{--{!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage_beforeimage']) !!}--}}
-            {{--@endif            --}}
+                {{--{!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'uploadAttach_beforeimage']) !!}--}}
+                {{--<div id="lblFiles_beforeimage">--}}
+                {{--</div>--}}
+                {{--{!! Form::hidden('files_string_beforeimage', '', ['id' => 'files_string_beforeimage']) !!}--}}
+            {{--@endif--}}
+
+            @if (Agent::isDesktop())
+                {!! Form::file('beforeimage[]', ['multiple']) !!}
+            @else
+                {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage_beforeimage']) !!}
+            @endif
         @endif
 
     </div>
@@ -456,20 +457,20 @@
                         @endforeach
                     </div>
                 @else
-                    @if (!str_contains(Agent::getUserAgent(), 'DingTalk'))
-                        {!! Form::file('afterimage[]', ['multiple']) !!}
-                    @else
-                        {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'uploadAttach_afterimage']) !!}
-                        <div id="lblFiles_afterimage">
-                        </div>
-                        {!! Form::hidden('files_string_afterimage', '', ['id' => 'files_string_afterimage']) !!}
-                    @endif
-
-                    {{--@if (Agent::isDesktop())--}}
+                    {{--@if (!str_contains(Agent::getUserAgent(), 'DingTalk'))--}}
                         {{--{!! Form::file('afterimage[]', ['multiple']) !!}--}}
                     {{--@else--}}
-                        {{--{!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage_afterimage']) !!}--}}
+                        {{--{!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'uploadAttach_afterimage']) !!}--}}
+                        {{--<div id="lblFiles_afterimage">--}}
+                        {{--</div>--}}
+                        {{--{!! Form::hidden('files_string_afterimage', '', ['id' => 'files_string_afterimage']) !!}--}}
                     {{--@endif--}}
+
+                    @if (Agent::isDesktop())
+                        {!! Form::file('afterimage[]', ['multiple']) !!}
+                    @else
+                        {!! Form::button('+', ['class' => 'btn btn-sm', 'id' => 'btnSelectImage_afterimage']) !!}
+                    @endif
                 @endif
 
             </div>
