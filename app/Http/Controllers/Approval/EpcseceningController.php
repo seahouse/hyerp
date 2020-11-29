@@ -297,7 +297,7 @@ class EpcseceningController extends Controller
         }
 
         // 增补施工后图片：afterimage
-        $afterimage_image_urls = [];
+        $afterimage_urls = [];
         // create images in the desktop
         if ($epcsecening)
         {
@@ -326,7 +326,7 @@ class EpcseceningController extends Controller
                         $epcseceningattachment->path = "/$destinationPath$filename";     // add a '/' in the head.
                         $epcseceningattachment->save();
 
-                        array_push($afterimage_image_urls, url($destinationPath . $filename));
+                        array_push($afterimage_urls, url($destinationPath . $filename));
                     }
                 }
             }
@@ -422,7 +422,7 @@ class EpcseceningController extends Controller
                 $epcseceningattachment->path = "/$dir$filename";     // add a '/' in the head.
                 $epcseceningattachment->save();
 
-                array_push($afterimage_image_urls, $value);
+                array_push($afterimage_urls, $value);
             }
         }
 //        dd($epcsecening);
@@ -430,7 +430,7 @@ class EpcseceningController extends Controller
         if (isset($epcsecening))
         {
             $inputs['beforeimage_urls'] = json_encode($beforeimage_urls);
-            $inputs['afterimage_image_urls'] = json_encode($afterimage_image_urls);
+            $inputs['afterimage_urls'] = json_encode($afterimage_urls);
 //            $inputs['approvers'] = $epcsecening->approvers();
             $response = ApprovalController::epcsecening($inputs);
 //            Log::info($response);

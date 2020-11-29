@@ -5083,17 +5083,17 @@ class ApprovalController extends Controller
                     'name'      => '安装队下发的工作联系单',
                     'value'     => $inputs['files_string_installworksheet'],
                 ]);
-        if (isset($inputs['files_string_beforeimage']))
+        if (isset($inputs['beforeimage_urls']))
             array_push($formdata,
                 [
                     'name'      => '增补之前图片',
-                    'value'     => $inputs['files_string_beforeimage'],
+                    'value'     => $inputs['beforeimage_urls'],
                 ]);
-        if (isset($inputs['files_string_afterimage']))
+        if (isset($inputs['afterimage_urls']))
             array_push($formdata,
                 [
                     'name'      => '增补施工后图片',
-                    'value'     => $inputs['files_string_afterimage'],
+                    'value'     => $inputs['afterimage_urls'],
                 ]);
 
         Log::info($detail_array_humanday);
