@@ -204,7 +204,7 @@
         {!! Form::hidden('tonnagedetails_string', null, ['id' => 'tonnagedetails_string']) !!}
 
         <div class="form-group">
-            {!! Form::label('sheet_thickness', '薄板厚度:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            {!! Form::label('sheet_thickness', '薄板漆膜厚度:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
                 {!! Form::text('sheet_thickness', null, ['class' => 'form-control', $attr]) !!}
             </div>

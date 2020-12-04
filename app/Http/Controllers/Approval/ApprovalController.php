@@ -2286,6 +2286,57 @@ class ApprovalController extends Controller
                             $totaltonnage = $items[0]->heights / 1000.0;
                         array_push($data, $totaltonnage);
                         $sheet->appendRow($data);
+
+                        $data = ['外协单位'];
+                        $totaltonnage = 0.0;
+                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '外协单位');
+                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                        foreach ($issuedrawingsArray as $value)
+                        {
+                            $totaltonnage += $value['tonnage'];
+                        }
+                        array_push($data, $totaltonnage);
+                        $totaltonnage = '-';
+//                        $param = "@warehouse_number='003',@orderid=" . $sohead->id;
+//                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
+//                        if (count($items) > 0 && isset($items[0]))
+//                            $totaltonnage = $items[0]->heights / 1000.0;
+                        array_push($data, $totaltonnage);
+                        $sheet->appendRow($data);
+
+                        $data = ['无锡电气生产部'];
+                        $totaltonnage = 0.0;
+                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '无锡电气生产部');
+                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                        foreach ($issuedrawingsArray as $value)
+                        {
+                            $totaltonnage += $value['tonnage'];
+                        }
+                        array_push($data, $totaltonnage);
+                        $totaltonnage = '-';
+//                        $param = "@warehouse_number='003',@orderid=" . $sohead->id;
+//                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
+//                        if (count($items) > 0 && isset($items[0]))
+//                            $totaltonnage = $items[0]->heights / 1000.0;
+                        array_push($data, $totaltonnage);
+                        $sheet->appendRow($data);
+
+                        $data = ['中易新材料'];
+                        $totaltonnage = 0.0;
+                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '中易新材料');
+                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                        foreach ($issuedrawingsArray as $value)
+                        {
+                            $totaltonnage += $value['tonnage'];
+                        }
+                        array_push($data, $totaltonnage);
+                        $totaltonnage = '-';
+//                        $param = "@warehouse_number='003',@orderid=" . $sohead->id;
+//                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
+//                        if (count($items) > 0 && isset($items[0]))
+//                            $totaltonnage = $items[0]->heights / 1000.0;
+                        array_push($data, $totaltonnage);
+                        $sheet->appendRow($data);
                     });
 
                     $sheetname = "无锡生产中心下图明细";
