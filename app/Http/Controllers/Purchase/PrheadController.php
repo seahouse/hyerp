@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Purchase\PrSupplier;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class PrheadController extends Controller
 {
@@ -156,6 +157,60 @@ class PrheadController extends Controller
     {
         //
         Prhead::destroy($id);
+        return redirect('purchase/prheads');
+    }
+
+    /**
+     * 供应商报价页面
+     * @param int $id
+     */
+    public function quote($id)
+    {
+        $prhead = Prhead::findOrFail($id);
+        // 申请人
+        $prhead->applicant_name = $prhead->applicant->name;
+        // $prhead->sohead_number = $prhead->sohead->number;
+        $prhead->business_id = $prhead->associated_business_id();
+
+        $pr_supplier = $prhead->pr_supplier(Auth::user()->supplier_id);
+        $prhead->amount = $pr_supplier ? $pr_supplier->amount : 0;
+        return view('purchase.prheads.quote', compact('prhead'));
+    }
+
+    /**
+     * 提交报价
+     */
+    public function updatequote(Request $request, $id)
+    {
+        $supplier_id = Auth::user()->supplier_id;
+        $pr_supplier = PrSupplier::where('prhead_id', $id)->where('supplier_id', $supplier_id)->first();
+
+        $amount = $request->get('amount');
+        $destinationPath = "uploads/purchase/quote/{$id}/files/";
+        Storage::deleteDirectory($destinationPath);
+        $files = $request->file('files');
+        // dump($files);
+        $attachments = [];
+        if ($files) {
+            foreach ($files as $file) {
+                if ($file) {
+                    // $originalName = $file->getClientOriginalName();
+                    $extension = $file->getClientOriginalExtension();       // .xlsx
+                    $filename = date('YmdHis') . rand(100, 200) . '.' . $extension;
+                    // Log::info($destinationPath . $originalName);
+                    $name = $destinationPath . $filename;
+                    Storage::put($name, file_get_contents($file->getRealPath()));
+
+                    array_push($attachments, ['path' => $name]);
+                }
+            }
+        }
+
+        $pr_supplier->amount = $amount;
+        $pr_supplier->attachments = json_encode($attachments);
+        // dump($pr_supplier);
+        // dd($attachments);
+        $pr_supplier->save();
         return redirect('purchase/prheads');
     }
 }

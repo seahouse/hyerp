@@ -404,6 +404,10 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
     // 采购申请单
     Route::group(['prefix' => 'prheads'], function () {
         Route::post('search', 'PrheadController@search');
+
+        // 供应商报价
+        Route::get('{id}/quote', 'PrheadController@quote');
+        Route::post('updatequote/{id}', 'PrheadController@updatequote');
     });
     Route::resource('prheads', 'PrheadController');
     // 采购申请单明细

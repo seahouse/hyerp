@@ -38,13 +38,13 @@
             <th>编号</th>
             <th>申请人</th>
             <th>对应项目</th>
+            @if(!Auth::user()->hasRole('supplier'))
             <th>类型</th>
             <th>对应审批编号</th>
-            @if(!Auth::user()->hasRole('supplier'))
             <th>物料</th>
             <th>供应商</th>
-            <th>操作</th>
             @endif
+            <th>操作</th>
         </tr>
     </thead>
     <tbody>
@@ -59,13 +59,13 @@
             <td>
                 {{ $prhead->sohead->number . '!' . $prhead->sohead->descrip }}
             </td>
+            @if(!Auth::user()->hasRole('supplier'))
             <td>
                 {{ $prhead->type }}
             </td>
             <td>
                 {{ $prhead->associated_business_id() }}
             </td>
-            @if(!Auth::user()->hasRole('supplier'))
             <td>
                 <a href="{{ URL::to('/purchase/pritems/') . '?prhead_id=' . $prhead->id }}" target="_blank">明细</a>
             </td>
@@ -74,14 +74,18 @@
                 @if($s->selected) &#10004 @endif{{ $s->item->name }}<br>
                 @endforeach
             </td>
+            @endif
             <td>
+                @if(Auth::user()->hasRole('supplier'))
+                <a href="{{ URL::to('/purchase/prheads/') . '/' . $prhead->id . '/quote' }}" class="btn btn-success btn-sm pull-left">报价</a>
+                @else
                 <a href="{{ URL::to('/purchase/prtypes/') . '?prhead_id=' . $prhead->id }}" class="btn btn-success btn-sm pull-left">分组</a>
                 <a href="{{ URL::to('/purchase/prheads/') . '/' . $prhead->id . '/edit' }}" class="btn btn-success btn-sm pull-left">供应商管理</a>
                 {!! Form::open(array('route' => array('purchase.prheads.destroy', $prhead->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
                 {!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}
                 {!! Form::close() !!}
+                @endif
             </td>
-            @endif
         </tr>
         @endforeach
     </tbody>

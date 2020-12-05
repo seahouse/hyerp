@@ -58,4 +58,9 @@ class Prhead extends Model
     {
         return $this->hasMany(PrSupplier::class, "prhead_id", "id");
     }
+
+    public function pr_supplier($supplier_id)
+    {
+        return $this->suppliers->where('supplier_id', $supplier_id)->first();
+    }
 }
