@@ -21,7 +21,7 @@ class CreatePrSuppliersTable extends Migration
             $table->integer('supplier_id')->comment('供应商ID');
             $table->boolean('selected')->default(false)->comment('圈定');
             $table->decimal('amount')->nullable()->comment('总报价');
-            $table->string('unit')->default('RMB');
+            $table->string('unit')->default('CNY');
             $table->string('attachments', 4000)->nullable();
             $table->timestamps();
 
