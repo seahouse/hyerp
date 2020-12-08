@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Purchase;
 
- use App\Models\Purchase\Poheadquote_hx;
- use App\Models\Purchase\Poheadtaxrateass_hxold;
- use App\Models\Purchase\Purchaseorder_hx;
- use App\Models\Sales\Salesorder_hxold;
- use Illuminate\Http\Request;
+use App\Models\Purchase\Poheadquote_hx;
+use App\Models\Purchase\Poheadtaxrateass_hxold;
+use App\Models\Purchase\Purchaseorder_hx;
+use App\Models\Sales\Salesorder_hxold;
+use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -20,7 +20,7 @@ use App\Models\Purchase\Poitem;
 use App\Models\Purchase\Poitem_hxold;
 use Carbon\Carbon;
 use App\Inventory\Recvitem;
-
+use Illuminate\Support\Facades\DB;
 
 class PurchaseordersController extends Controller
 {
@@ -63,8 +63,7 @@ class PurchaseordersController extends Controller
         $query = Purchaseorder_hxold::orderBy('id', 'desc');
         $query->where('status', 10);
         $key = $request->input('key');
-        if (strlen($key) > 0)
-        {
+        if (strlen($key) > 0) {
             $query->where('number', 'like', '%' . $key . '%');
         }
         if ($request->has('supplier_name') && strlen($request->input('supplier_name')))
@@ -82,19 +81,19 @@ class PurchaseordersController extends Controller
      *
      * @return Response
      */
-    public function getitemsbyorderkey($key, $supplierid=0)
+    public function getitemsbyorderkey($key, $supplierid = 0)
     {
         //
         $purchaseorders = Purchaseorder_hxold::where('vendinfo_id', $supplierid)
             ->where(function ($query) use ($key) {
-                $query->where('number', 'like', '%'.$key.'%')
-                    ->orWhere('descrip', 'like', '%'.$key.'%');
+                $query->where('number', 'like', '%' . $key . '%')
+                    ->orWhere('descrip', 'like', '%' . $key . '%');
             })
-            ->paginate(20); 
+            ->paginate(20);
         return $purchaseorders;
     }
 
-    public function getitemsbyorderkey_simple($key, $supplierid=0)
+    public function getitemsbyorderkey_simple($key, $supplierid = 0)
     {
         //
         $query = Purchaseorder_hxold_simple::orderBy('id', 'desc');
@@ -102,8 +101,8 @@ class PurchaseordersController extends Controller
             $query->where('vendinfo_id', $supplierid);
         if (strlen($key) > 0)
             $query->where(function ($query) use ($key) {
-                $query->where('number', 'like', '%'.$key.'%')
-                    ->orWhere('descrip', 'like', '%'.$key.'%');
+                $query->where('number', 'like', '%' . $key . '%')
+                    ->orWhere('descrip', 'like', '%' . $key . '%');
             });
         $purchaseorders = $query->paginate(100);
         return $purchaseorders;
@@ -163,23 +162,21 @@ class PurchaseordersController extends Controller
         $input['编号数字'] = Purchaseorder_hx::where('编号年份', Carbon::today()->year)->max('编号数字');
         $input['编号数字'] += 1;
         $input['编号商品名称'] = "spmc";
-        if ($input['采购订单状态'] == 20)
-        {
+        if ($input['采购订单状态'] == 20) {
             $input['修造或工程'] = "QT";
             $input['采购订单编号'] = "QT-" . $input['编号商品名称'] . "-" . Carbon::today()->year . "-" . Carbon::today()->format("m") . "-" . $input['编号数字'];
         }
 
         $sohead = Salesorder_hxold::find($input['对应项目ID']);
-        if (isset($sohead))
-        {
+        if (isset($sohead)) {
             $input['项目名称'] = $sohead->number . "|" . $sohead->custinfo_name . "|" . $sohead->descrip . "|" . $sohead->amount;
         }
 
-//        dd($input);
+        //        dd($input);
         Purchaseorder_hx::create($input);
-//        Purchaseorder_hxold::create($input);
-//        Purchaseorder::create($input);
-//        return redirect('purchase/purchaseorders');
+        //        Purchaseorder_hxold::create($input);
+        //        Purchaseorder::create($input);
+        //        return redirect('purchase/purchaseorders');
     }
 
     /**
@@ -242,7 +239,7 @@ class PurchaseordersController extends Controller
         Purchaseorder::destroy($id);
         return redirect('purchase/purchaseorders');
     }
-    
+
     public function detail($id)
     {
         $poitems = Poitem::latest('created_at')->where('pohead_id', $id)->paginate(10);
@@ -254,22 +251,20 @@ class PurchaseordersController extends Controller
         $poitems = Poitem_hxold::where('pohead_id', $id)->orderBy('id')->paginate(10);
         return view('purchase.poitems_hxold.index', compact('poitems', 'id'));
     }
-    
+
     public function receiving($id)
     {
         $poitems = Purchaseorder::find($id)->poitems;
-        foreach ($poitems as $poitem)
-        {
+        foreach ($poitems as $poitem) {
             $forQtyReceive = $poitem->qty_ordered - $poitem->qty_received;
-            if ($forQtyReceive > 0.0)
-            {
+            if ($forQtyReceive > 0.0) {
                 $itemsite = $poitem->itemsite;
                 if ($itemsite == null)
                     return $poitem->item->item_number . '无库存记录';
-        
-//                 if ($itemsite->qtyonhand < $forQtyReceive)
-//                     return $soitem->item->item_number . ', 库存已不够，无法发货。';
-        
+
+                //                 if ($itemsite->qtyonhand < $forQtyReceive)
+                //                     return $soitem->item->item_number . ', 库存已不够，无法发货。';
+
                 // create receive record
                 $data = [
                     'orderitem_id' => $poitem->id,
@@ -277,11 +272,11 @@ class PurchaseordersController extends Controller
                     'recvdate' => Carbon::now(),
                 ];
                 Recvitem::create($data);
-        
+
                 // update soitem qtyshipped
                 $poitem->qty_received = $poitem->qty_received + $forQtyReceive;
                 $poitem->save();
-        
+
                 // update itemsite qtyonhand
                 $itemsite->qtyonhand = $itemsite->qtyonhand + $forQtyReceive;
                 $itemsite->save();
@@ -303,7 +298,7 @@ class PurchaseordersController extends Controller
         //         $itemsite = $poitem->itemsite;
         //         if ($itemsite == null)
         //             return $poitem->item->item_number . '无库存记录';
-        
+
         //         // create receive record
         //         $data = [
         //             'orderitem_id' => $poitem->id,
@@ -311,17 +306,29 @@ class PurchaseordersController extends Controller
         //             'recvdate' => Carbon::now(),
         //         ];
         //         Recvitem::create($data);
-        
+
         //         // update soitem qtyshipped
         //         $poitem->qty_received = $poitem->qty_received + $forQtyReceive;
         //         $poitem->save();
-        
+
         //         // update itemsite qtyonhand
         //         $itemsite->qtyonhand = $itemsite->qtyonhand + $forQtyReceive;
         //         $itemsite->save();
         //     }
         // }
         return view('purchase.receiptorders.index', compact('receiptorders'));
+    }
+
+    /**
+     * 入库信息列表
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function mreceiptorders($id)
+    {
+        $receiptorders = Purchaseorder_hxold::find($id)->receiptorders;
+        return view('purchase.receiptorders.mindex', compact('receiptorders'));
     }
 
     // 收货单
@@ -337,7 +344,7 @@ class PurchaseordersController extends Controller
     public function receiptorders_hx($id)
     {
         $receiptorders = Purchaseorder_hxold::find($id)->receiptorders;
-//        dd($receiptorders);
+        //        dd($receiptorders);
         return view('purchase.receiptorders.index_hx', compact('receiptorders'));
     }
 
@@ -352,6 +359,20 @@ class PurchaseordersController extends Controller
         //
         $purchaseorder = Purchaseorder_hxold::findOrFail($id);
         return view('purchase.arrivaltickets.create', compact('purchaseorder'));
+    }
+
+    /**
+     * 所有到票记录
+     *
+     * @param [type] $id
+     * @return void
+     */
+    public function arrivaltickets($id)
+    {
+        // 用Model方式取出数据的列名是乱码，故使用这种纯sql的方式
+        $tickets = DB::connection('sqlsrv')->select('select [发票号码] as no, [到票金额] as amount, cast([到票日期] as date) date, [收票人] as recipient, [到票说明] as remark  from V到票明细 where [所属采购订单ID] = ?', [$id]);
+        // dd($tickets);
+        return view('purchase.arrivaltickets.mindex', compact('tickets'));
     }
 
     // 供应商报价

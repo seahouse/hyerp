@@ -421,16 +421,20 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         Route::get('detail_hxold', 'PurchaseordersController@detail_hxold');
         Route::get('receiving', 'PurchaseordersController@receiving');
         Route::get('receiptorders', 'PurchaseordersController@receiptorders');
+        Route::get('mreceiptorders', 'PurchaseordersController@mreceiptorders');
         Route::get('poitems', 'PurchaseordersController@poitems');
         Route::get('receiptorders_hx', 'PurchaseordersController@receiptorders_hx');
         Route::get('edit_hx', 'PurchaseordersController@edit_hx');
         Route::patch('update_hx', 'PurchaseordersController@update_hx');
         Route::get('getpoheadtaxrateass_hx', 'PurchaseordersController@getpoheadtaxrateass_hx');
         Route::get('arrivalticket', 'PurchaseordersController@arrivalticket');
+        // 显示采购订单的所有到票记录
+        Route::get('arrivaltickets', 'PurchaseordersController@arrivaltickets');
         Route::get('supplierquotes', 'PurchaseordersController@supplierquotes');
     });
     Route::group(['prefix' => 'purchaseorders/{purchaseorder}/payments'], function () {
         Route::get('/', 'PaymentsController@index');
+        Route::get('mindex', 'PaymentsController@mindex');
         Route::get('create', 'PaymentsController@create');
         Route::post('store', 'PaymentsController@store');
         Route::delete('destroy/{payment}', 'PaymentsController@destroy');

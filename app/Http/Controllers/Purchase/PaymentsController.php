@@ -28,6 +28,13 @@ class PaymentsController extends Controller
         return view('purchase.payments.index', compact('payments'));
     }
 
+    public function mindex($poheadId)
+    {
+        //
+        $payments = Payment::where('pohead_id', $poheadId)->paginate(10);
+        return view('purchase.payments.mindex', compact('payments'));
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -61,12 +68,12 @@ class PaymentsController extends Controller
         $priceTotal = 0.0;
         foreach ($poitems as $poitem)
             $priceTotal += $poitem->unitprice * $poitem->qty_ordered;
-        
+
         $pricePaied = Payment::where('pohead_id', $poheadId)->sum('amount');
-        
+
         if ($priceTotal <= $pricePaied)
             return '已完成付款';
-        
+
         $input = Request::all();
         Payment::create($input);
         return redirect('purchase/purchaseorders/' . $poheadId . '/payments');
@@ -96,8 +103,7 @@ class PaymentsController extends Controller
         // 如果供应商不存在，则创建
         $vendorname = $input['SupplierName'];
         $vendinfo = Vendinfo::firstOrNew(['name' => $vendorname]);
-        if (!$vendinfo->number)
-        {
+        if (!$vendinfo->number) {
             $vendinfo->number = $vendorname;
             $vendinfo->name = $vendorname;
             $vendinfo->save();
@@ -106,8 +112,7 @@ class PaymentsController extends Controller
         // 如果采购订单不存在，则根据客户名称和工程名称添加新订单
         $projectname = $input['ProjectName'];
         $purchaseorder = Purchaseorder::firstOrNew(['descrip' => $projectname]);
-        if (!$purchaseorder->number)
-        {
+        if (!$purchaseorder->number) {
             $purchaseorder->number = $projectname;
             $purchaseorder->descrip = $projectname;
             $purchaseorder->vendinfo_id = $vendinfo->id;
@@ -126,18 +131,18 @@ class PaymentsController extends Controller
             'Description' => 'SUCCESS.'
         ];
         return json_encode($return);
-        
+
         // $purchaseorder = Purchaseorder::findOrFail($poheadId);
         // $poitems = $purchaseorder->poitems;
         // $priceTotal = 0.0;
         // foreach ($poitems as $poitem)
         //     $priceTotal += $poitem->unitprice * $poitem->qty_ordered;
-        
+
         // $pricePaied = Payment::where('pohead_id', $poheadId)->sum('amount');
-        
+
         // if ($priceTotal <= $pricePaied)
         //     return '已完成付款';
-        
+
         // $input = Request::all();
         // Payment::create($input);
         // return redirect('purchase/purchaseorders/' . $poheadId . '/payments');
