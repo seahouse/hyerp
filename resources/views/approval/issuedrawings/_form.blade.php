@@ -204,14 +204,14 @@
         {!! Form::hidden('tonnagedetails_string', null, ['id' => 'tonnagedetails_string']) !!}
 
         <div class="form-group">
-            {!! Form::label('sheet_thickness', '薄板漆膜厚度:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            {!! Form::label('sheet_thickness', '薄板漆膜厚度:（注：该厚度不含面漆）', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
                 {!! Form::text('sheet_thickness', null, ['class' => 'form-control', $attr]) !!}
             </div>
         </div>
 
         <div class="form-group">
-            {!! Form::label('steel_thickness', '型钢厚度:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            {!! Form::label('steel_thickness', '型钢厚度:（注：该厚度不含面漆）', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
                 {!! Form::text('steel_thickness', null, ['class' => 'form-control', $attr]) !!}
             </div>

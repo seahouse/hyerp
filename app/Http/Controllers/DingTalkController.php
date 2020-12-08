@@ -2032,6 +2032,10 @@ class DingTalkController extends Controller
                 'value'     => $inputs['tonnage'],
             ],
             [
+                'name'      => '油漆吨位明细',
+                'value'     => $inputs['paintthicknesstonnagedetails'],
+            ],
+            [
                 'name'      => '薄板漆膜厚度',
                 'value'     => $inputs['sheet_thickness'],
             ],

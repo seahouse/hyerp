@@ -402,6 +402,10 @@ class IssuedrawingController extends Controller
         $totalprice = 0.0;
         $totaltonnage = 0.0;
         $dtunitpricedetail = [];
+        $paintthickness_1 = 0.0;        // 薄板漆膜厚度
+        $paintthickness_2 = 0.0;        // 焊接漆膜厚度
+        $paintthickness_3 = 0.0;        // 不锈钢漆膜厚度
+        $paintthickness_4 = 0.0;        // 栓接漆膜厚度
         if (isset($issuedrawing)) {
             $tonnagedetailArray = json_decode($request->input('tonnagedetails_string'), true);
             foreach ($tonnagedetailArray as $tonnagedetaildata) {
@@ -417,12 +421,46 @@ class IssuedrawingController extends Controller
                             $totalprice += $price;
                             $totaltonnage += $issuedrawingtonnagedetail->tonnage;
                             array_push($dtunitpricedetail, $issuedrawingtonnagedetail->name . ':' . $issuedrawingtonnagedetail->tonnage . '吨*' . $issuedrawingtonnagedetail->unitprice . '元=' . $price . '元');
+
+                            switch ($issuedrawingtonnagedetail->name)
+                            {
+                                case 'KS套筒':
+                                case 'KS蜗壳':
+                                case '风栅套筒':
+                                case '灰斗箱体':
+                                case '上箱体':
+                                case '尼鲁蜗壳':
+                                case '希格斯蜗壳':
+                                case 'GGH':
+                                case 'SGH':
+                                case 'VOC':
+                                    $paintthickness_1 += $issuedrawingtonnagedetail->tonnage;
+                                    break;
+                                case '焊接钢架':
+                                case '滑动支架':
+                                case '包装支架':
+                                    $paintthickness_2 += $issuedrawingtonnagedetail->tonnage;
+                                    break;
+                                case '不锈钢罐':
+                                    $paintthickness_3 += $issuedrawingtonnagedetail->tonnage;
+                                    break;
+                                case '螺栓钢架':
+                                    $paintthickness_4 += $issuedrawingtonnagedetail->tonnage;
+                                    break;
+                            }
                         }
                     }
                 }
             }
             $input['tonnage'] = $totaltonnage;
             $input['tonnagedetails'] = implode("\n", $dtunitpricedetail);
+
+            $paintthicknesstonnagedetail = [];
+            if ($paintthickness_1 > 0.0) array_push($paintthicknesstonnagedetail, '薄板漆膜厚度' . $paintthickness_1 . '吨');
+            if ($paintthickness_2 > 0.0) array_push($paintthicknesstonnagedetail, '焊接漆膜厚度' . $paintthickness_2 . '吨');
+            if ($paintthickness_3 > 0.0) array_push($paintthicknesstonnagedetail, '不锈钢漆膜厚度' . $paintthickness_3 . '吨');
+            if ($paintthickness_4 > 0.0) array_push($paintthicknesstonnagedetail, '栓接漆膜厚度' . $paintthickness_4 . '吨');
+            $input['paintthicknesstonnagedetails'] = implode("\n", $paintthicknesstonnagedetail);
             $issuedrawing->update(['tonnage' => $totaltonnage]);
         }
 
