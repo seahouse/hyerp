@@ -43,11 +43,24 @@ class ApprovalreportsController extends Controller
 // group by m
 // order by m
 
-        $paymentrequests = DB::table('paymentrequests')
-        	->select(DB::raw('to_char(created_at, \'MM\') as m, sum (amount)'))
-        	->groupBy('m')
-        	->orderBy('m')
-        	->get();
+        // pgsql
+//        $paymentrequests = DB::table('paymentrequests')
+//        	->select(DB::raw('to_char(created_at, \'MM\') as m, sum (amount)'))
+//        	->groupBy('m')
+//        	->orderBy('m')
+//        	->get();
+
+        // sqlsrv
+//        $paymentrequests = DB::connection('sqlsrv2')->select(DB::raw('select month(created_at) as m, sum (amount) as sum from paymentrequests group by month(created_at) order by month(created_at) asc'));
+//            ->groupByRaw('month(created_at)')
+//            ->orderBy('month(created_at)')
+//            ->get();
+//        $paymentrequests = DB::table('paymentrequests')
+//            ->select(DB::raw('month(created_at) as m, sum (amount) from paymentrequests group by month(created_at) order by month(created_at) asc'))
+////            ->groupByRaw('month(created_at)')
+////            ->orderBy('month(created_at)')
+//            ->get();
+
         // dd($paymentrequests);
         // dd(serialize(array_pluck($paymentrequests, 'm')));
         	// dd(implode(',',array_pluck($paymentrequests, 'm')));

@@ -16,7 +16,7 @@
         <tr>
             <th>付款金额</th>
             <th>付款日期</th>
-            <th>说明</th>
+            {{--<th>说明</th>--}}
             <th>操作</th>
         </tr>
     </thead>
@@ -27,11 +27,11 @@
                 {{ $payment->amount }}
             </td>
             <td>
-                {{ $payment->paydate }}
+                {{ \Carbon\Carbon::parse($payment->payment_date)->toDateString()  }}
             </td>
-            <td>
-                {{ $payment->notes }}
-            </td>
+            {{--<td>--}}
+                {{--{{ $payment->notes }}--}}
+            {{--</td>--}}
             <td>
                 {{-- <a href="{{ URL::to('/system/userroles/'.$userrole->id.'/edit') }}" class="btn btn-success btn-sm pull-left">编辑</a> --}}
                 {!! Form::open(array('url' => '/purchase/purchaseorders/' . $payment->pohead_id . '/payments/destroy/' . $payment->id, 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}

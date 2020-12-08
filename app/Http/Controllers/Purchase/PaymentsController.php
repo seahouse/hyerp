@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Purchase;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Purchase\Payment;
+use App\Models\Purchase\Payment_hxold;
 use App\Models\Purchase\Purchaseorder;
 use App\Http\Requests\Purchase\PaymentRequest;
 use Request;
@@ -31,7 +32,7 @@ class PaymentsController extends Controller
     public function mindex($poheadId)
     {
         //
-        $payments = Payment::where('pohead_id', $poheadId)->paginate(10);
+        $payments = Payment_hxold::where('pohead_id', $poheadId)->paginate(10);
         return view('purchase.payments.mindex', compact('payments'));
     }
 

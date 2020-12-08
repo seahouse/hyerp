@@ -23,7 +23,7 @@
 <div class="form-group">
     {!! Form::label('收票人', '经办人:', ['class' => 'col-sm-2 control-label']) !!}
     <div class='col-sm-10'>
-    {!! Form::select('收票人', $userList_hxold, null, ['class' => 'form-control']) !!}
+    {!! Form::select('收票人ID', $userList_hxold, null, ['class' => 'form-control']) !!}
     </div>
 </div>
 
