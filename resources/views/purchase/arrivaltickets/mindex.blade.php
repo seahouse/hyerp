@@ -27,7 +27,7 @@
                 {{ $ticket->amount }}
             </td>
             <td>
-                {{ $ticket->date }}
+                {{ \Carbon\Carbon::parse($ticket->date)->toDateString() }}
             </td>
             <td>
                 {{ $ticket->recipient }}

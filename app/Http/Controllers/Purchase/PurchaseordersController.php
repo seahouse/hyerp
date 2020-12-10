@@ -362,15 +362,17 @@ class PurchaseordersController extends Controller
     }
 
     /**
-     * 所有到票记录
+     * 所有到票记录（财务发票+未转化的采购发票）
      *
      * @param [type] $id
      * @return void
      */
     public function arrivaltickets($id)
     {
-        // 用Model方式取出数据的列名是乱码，故使用这种纯sql的方式
-        $tickets = DB::connection('sqlsrv')->select('select [发票号码] as no, [到票金额] as amount, cast([到票日期] as date) date, [收票人] as recipient, [到票说明] as remark  from V到票明细 where [所属采购订单ID] = ?', [$id]);
+        // type为1时表示采购录入，还未转化为财务发票
+        $first = DB::connection('sqlsrv')->table('vpurchasetickets')->where('type', 1)->where('pohead_id', $id)->select(DB::raw('number, amount, date, operator_name, remark'));
+        $tickets = DB::connection('sqlsrv')->table('V到票明细')->where('所属采购订单ID', $id)->select(DB::raw("[发票号码] as no, [到票金额] as amount, [到票日期] date, [收票人] as recipient, [到票说明] as remark"))
+            ->unionAll($first)->orderBy('no')->get();
         // dd($tickets);
         return view('purchase.arrivaltickets.mindex', compact('tickets'));
     }
