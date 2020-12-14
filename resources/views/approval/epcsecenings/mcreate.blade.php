@@ -332,7 +332,6 @@
                 else {
                     root.find('.addMore').attr('lock', '0').css('color', 'rgb(71,178,252)');
                 }
-                
             }
 
             $('.addMore').click(function() {

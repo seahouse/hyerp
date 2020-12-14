@@ -21,6 +21,7 @@ use App\Models\Purchase\Poitem_hxold;
 use Carbon\Carbon;
 use App\Inventory\Recvitem;
 use Illuminate\Support\Facades\DB;
+use Auth;
 
 class PurchaseordersController extends Controller
 {
@@ -72,6 +73,19 @@ class PurchaseordersController extends Controller
             $query->where('sohead_descrip', 'like', '%' . $request->input('project_name') . '%');
         if ($request->has('product_name') && strlen($request->input('product_name')))
             $query->where('productname', 'like', '%' . $request->input('product_name') . '%');
+
+        // 仅查看与自己相关的采购订单
+        if (Auth::user()->cannot('purchase_purchaseorders_viewall'))
+        {
+            $userold = Auth::user()->userold;
+            $query->where(function ($query) use ($userold) {
+                $query->where('sohead_projectengineer_id', $userold->user_hxold_id)
+                    ->orWhere('sohead_salesmanager_id', $userold->user_hxold_id)
+                    ->orWhere('sohead_designer_id', $userold->user_hxold_id)
+                    ->orWhere('sohead_elec_designer_id', $userold->user_hxold_id)
+                    ->orWhere('applicant_id', $userold->user_hxold_id);
+            });
+        }
 
         return $query;
     }

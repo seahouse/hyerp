@@ -2167,7 +2167,6 @@ class DingTalkController extends Controller
         $response = HttpDingtalkEco::post("",
             $params, json_encode($data));
         return $response;
-
     }
 
     public static function processinstance_get2($process_instance_id)
