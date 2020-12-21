@@ -428,15 +428,21 @@ class IssuedrawingController extends Controller
                                 case 'KS蜗壳':
                                 case '风栅套筒':
                                 case '灰斗箱体':
+                                case '焊接钢架':
+                                case '灰斗箱体':
+                                case '平台爬梯':
+                                case '吸收塔':
+                                case '进风烟道':
                                 case '上箱体':
                                 case '尼鲁蜗壳':
                                 case '希格斯蜗壳':
                                 case 'GGH':
                                 case 'SGH':
                                 case 'VOC':
+                                case '栓接钢架':
+                                case 'SCR反应器':
                                     $paintthickness_1 += $issuedrawingtonnagedetail->tonnage;
                                     break;
-                                case '焊接钢架':
                                 case '滑动支架':
                                 case '包装支架':
                                     $paintthickness_2 += $issuedrawingtonnagedetail->tonnage;
@@ -444,9 +450,9 @@ class IssuedrawingController extends Controller
                                 case '不锈钢罐':
                                     $paintthickness_3 += $issuedrawingtonnagedetail->tonnage;
                                     break;
-                                case '螺栓钢架':
-                                    $paintthickness_4 += $issuedrawingtonnagedetail->tonnage;
-                                    break;
+//                                case '螺栓钢架':
+//                                    $paintthickness_4 += $issuedrawingtonnagedetail->tonnage;
+//                                    break;
                             }
                         }
                     }
