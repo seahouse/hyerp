@@ -135,9 +135,13 @@
             {!! Form::text('number', null, ['class' => 'form-control','placeholder'=>'出库单号', 'id' => 'number']) !!}
         @endif
 
-        {{-- {!! $report->condition !!}--}}
-
-        {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
+        <?php $showSearch = true; ?>
+        @if ($report->name == "in_split_out_bynumber_008" && @cannot('inventory_out_splitoutbynumber008'))
+            <?php $showSearch = false; ?>
+        @endif
+        @if ($showSearch)
+            {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
+        @ednfi
     </div>
     {!! Form::close() !!}
 </div>
