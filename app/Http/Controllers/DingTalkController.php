@@ -2040,7 +2040,7 @@ class DingTalkController extends Controller
                 'value'     => $inputs['sheet_thickness'],
             ],
             [
-                'name'      => '型钢厚度（不含现场面漆厚度）',
+                'name'      => '型钢和平台扶梯漆膜厚度（不含现场面漆厚度）',
                 'value'     => $inputs['steel_thickness'],
             ],
             [
