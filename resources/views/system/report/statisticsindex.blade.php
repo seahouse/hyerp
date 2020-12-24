@@ -136,8 +136,10 @@
         @endif
 
         <?php $showSearch = true; ?>
-        @if ($report->name == "in_split_out_bynumber_008" && @cannot('inventory_out_splitoutbynumber008'))
+        @if ($report->name == "in_split_out_bynumber_008")
+            @cannot('inventory_out_splitoutbynumber008')
             <?php $showSearch = false; ?>
+            @endcan
         @endif
         @if ($showSearch)
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
