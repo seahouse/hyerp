@@ -141,7 +141,7 @@
         @endif
         @if ($showSearch)
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
-        @ednfi
+        @endif
     </div>
     {!! Form::close() !!}
 </div>
