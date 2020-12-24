@@ -131,6 +131,8 @@
         <input type="number" id="year_begin" name="year_begin" class="form-control" min="{{ $year_arr['min'] }}" max="{{ $year_arr['max'] }}" @if(isset($input['year_begin'])) value="{{ $input['year_begin'] }}" @endif>
         <span>-</span>
         <input type="number" id="year_end" name="year_end" class="form-control" min="{{ $year_arr['min'] }}" max="{{ $year_arr['max'] }}" @if(isset($input['year_end'])) value="{{ $input['year_end'] }}" @endif>
+        @elseif ($report->name == "in_split_out_bynumber_008")
+            {!! Form::text('number', null, ['class' => 'form-control','placeholder'=>'出库单号', 'id' => 'number']) !!}
         @endif
 
         {{-- {!! $report->condition !!}--}}
@@ -153,10 +155,14 @@
 @can('inventory_out_detail')
 <?php $hasright = true; ?>
 @endcan
-@elseif ($report->name == "in_in_detail")
-@can('inventory_in_detail')
+@elseif ($report->name == "in_split_out_bynumber_008")
+@can('inventory_out_splitoutbynumber008')
 <?php $hasright = true; ?>
 @endcan
+@elseif ($report->name == "in_in_detail")
+    @can('inventory_in_detail')
+        <?php $hasright = true; ?>
+    @endcan
 @else
 @if (Auth::user()->isSuperAdmin())
 <?php $hasright = true; ?>
