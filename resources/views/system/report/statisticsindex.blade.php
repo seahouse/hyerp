@@ -40,6 +40,7 @@
         {!! Form::select('arrivalstatus', array(0 => '未到货', 1 => '部分到货', 2 => '全部到货'), null, ['class' => 'form-control', 'placeholder' => '--到货状态--']) !!}
         {!! Form::select('paidstatus', array(0 => '未付款', 1 => '部分付款', 2 => '全部付款'), null, ['class' => 'form-control', 'placeholder' => '--付款状态--']) !!}
         {!! Form::select('ticketedstatus', array(0 => '未开票', 1 => '部分开票', 2 => '全部开票'), null, ['class' => 'form-control', 'placeholder' => '--开票状态--']) !!}
+        {!! Form::text('goods_name', null, ['class' => 'form-control', 'placeholder' => '商品名称']) !!}
         @elseif ($report->name == "in_batch")
         {!! Form::text('batch', null, ['class' => 'form-control', 'placeholder' => '批号']) !!}
         @elseif ($report->name == "so_cost_statistics")
@@ -132,17 +133,17 @@
         <span>-</span>
         <input type="number" id="year_end" name="year_end" class="form-control" min="{{ $year_arr['min'] }}" max="{{ $year_arr['max'] }}" @if(isset($input['year_end'])) value="{{ $input['year_end'] }}" @endif>
         @elseif ($report->name == "in_split_out_bynumber_008")
-            {!! Form::text('number', null, ['class' => 'form-control','placeholder'=>'出库单号', 'id' => 'number']) !!}
+        {!! Form::text('number', null, ['class' => 'form-control','placeholder'=>'出库单号', 'id' => 'number']) !!}
         @endif
 
         <?php $showSearch = true; ?>
         @if ($report->name == "in_split_out_bynumber_008")
-            @cannot('inventory_out_splitoutbynumber008')
-            <?php $showSearch = false; ?>
-            @endcan
+        @cannot('inventory_out_splitoutbynumber008')
+        <?php $showSearch = false; ?>
+        @endcan
         @endif
         @if ($showSearch)
-            {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
+        {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
         @endif
     </div>
     {!! Form::close() !!}
@@ -166,9 +167,9 @@
 <?php $hasright = true; ?>
 @endcan
 @elseif ($report->name == "in_in_detail")
-    @can('inventory_in_detail')
-        <?php $hasright = true; ?>
-    @endcan
+@can('inventory_in_detail')
+<?php $hasright = true; ?>
+@endcan
 @else
 @if (Auth::user()->isSuperAdmin())
 <?php $hasright = true; ?>
