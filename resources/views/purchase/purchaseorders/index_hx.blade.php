@@ -101,7 +101,11 @@
                         @endif
                     </td>
                     <td>
-                        {{ $purchaseorder->sohead->projectjc }}
+                        @if (isset($purchaseorder->sohead))
+                            {{ $purchaseorder->sohead->projectjc }}
+                        @else
+                            -
+                        @endif
                     </td>
                     <td>
                         {{ $purchaseorder->arrival_percent }}

@@ -16,5 +16,6 @@ class Salesorder_hxold_t extends Model
     protected $fillable = [
         'purchasereminderactive',
         'associated_remark',
+        'othercostpercent',
     ];
 }

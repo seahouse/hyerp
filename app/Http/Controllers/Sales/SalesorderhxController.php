@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Sales;
 use App\Models\Sales\Dwgbom_hx;
 use App\Models\Sales\Dwgbomitems_hx;
 use App\Models\Sales\Salesorder_hxold;
+use App\Models\Sales\Salesorder_hxold_t;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Artisan;
-use Datatables, Log;
+use Datatables, Log, Excel;
 
 class SalesorderhxController extends Controller
 {
@@ -243,5 +244,65 @@ class SalesorderhxController extends Controller
 //            })
             ->make(true);
 
+    }
+
+    public function importothercostpercent()
+    {
+        //
+        return view('sales.salesorderhx.importothercostpercent');
+    }
+
+    public function importothercostpercentstore(Request $request)
+    {
+        //
+        $this->validate($request, [
+//            'salary_date'       => 'required',
+//            'itemtype'                    => 'required',
+//            'expirationdate'             => 'required',
+//            'sohead_id'                   => 'required|integer|min:1',
+//            'items_string'               => 'required',
+//            'detailuse'               => 'required',
+        ]);
+
+        $file = $request->file('file');
+//        dd($file->getRealPath());
+//        $file = array_get($input,'file');
+//        dd($file->public_path());
+//        Log::info($request->getSession().getServletContext()->getReadPath("/xx"));
+
+
+        // !! set config/excel.php
+        // 'force_sheets_collection' => true,   // !!
+        Log::info('import start.');
+//        Excel::filter('chunk')->load($file->getRealPath())->chunk(250, function($results)
+//        {
+//            foreach($results as $row)
+//            {
+//                // do stuff
+//            }
+//        });
+//        return redirect('basic/biddinginformations');
+
+        Excel::load($file->getRealPath(), function ($reader) {
+            $reader->each(function ($sheet) {
+                $sheet->each(function ($row) {
+                    $row->each(function ($cell) {
+                        $items = explode("\t", $cell);
+                        if (count($items) == 3)
+                        {
+//                            $sohead = Salesorder_hxold_t::find($items[0]);
+//                            $sohead->othercostpercent = $items[2];
+//                            $sohead->save();
+                            Salesorder_hxold_t::where('订单ID', $items[0])
+                                ->update(['othercostpercent' => $items[2]]);
+//                            $sohead = Salesorder_hxold_t::find($items[0]);
+                        }
+                    });
+                });
+            });
+        });
+        Log::info('import end.');
+        dd('导入完成。');
+        return redirect('basic/biddinginformations');
     }
 }

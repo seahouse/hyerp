@@ -5,13 +5,12 @@
 @section('main')
     @can('sales_salesorder_view')
     <div class="panel-heading">
-        <div class="panel-title">销售 -- 销售订单
-            {{--
-            <div class="pull-right">
-                <a href="{{ URL::to('sales/salesreps') }}" class="btn btn-sm btn-success">{{'销售代表管理'}}</a>
-                <a href="{{ URL::to('sales/terms') }}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> {{'付款条款管理', [], 'layouts'}}</a>
-            </div>
-            --}}
+        <div class="panel-title">
+            {{--<a href="{{ URL::to('sales/salesreps') }}" class="btn btn-sm btn-success">{{'销售代表管理'}}</a>--}}
+            {{--<a href="{{ URL::to('sales/terms') }}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> {{'付款条款管理', [], 'layouts'}}</a>--}}
+            @if (Auth::user()->isSuperAdmin())
+                <a href="{{ url('sales/salesorderhx/importothercostpercent') }}" class="btn btn-sm btn-success">工程采购及差旅合计比例</a>
+            @endif
         </div>
     </div>
     
@@ -23,6 +22,9 @@
         <div class="form-group-sm">
             {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '订单编号、项目名称']) !!}
             {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
+            {{--@if (Auth::user()->isSuperAdmin())--}}
+                {{--{!! Form::button('上传工程采购及差旅合计比例数据', ['class' => 'btn btn-default btn-sm', 'id' => 'btnUploadOtherCostPercent']) !!}--}}
+            {{--@endif--}}
         </div>
         {!! Form::close() !!}
 
@@ -126,13 +128,10 @@
         <script type="text/javascript">
             jQuery(document).ready(function(e) {
 
-
-
 //                console.log(DingTalkPC.ua.isInDingTalk);
                 if (DingTalkPC.ua.isInDingTalk)
                 {
                     $("a").attr("target", "_self");
-
                 }
 
 
