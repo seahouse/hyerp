@@ -7,6 +7,7 @@ use App\Models\Sales\Receiptpayment_hxold;
 use App\Models\System\User;
 use App\Models\System\Userold;
 use Illuminate\Console\Command;
+use App\Models\System\Reminderswitch;
 use Log;
 
 class ReceiptrepeatReminder extends Command
@@ -35,6 +36,8 @@ class ReceiptrepeatReminder extends Command
         parent::__construct();
     }
 
+    const TBL_NAME = 'vreceiptpayment';
+
     /**
      * Execute the console command.
      *
@@ -42,57 +45,87 @@ class ReceiptrepeatReminder extends Command
      */
     public function handle()
     {
-        //
         $receiptpayments = Receiptpayment_hxold::select('sohead_id', 'date', 'amount')->groupBy('sohead_id', 'date', 'amount')->havingRaw('COUNT(*)>1')->get();
-        $msg = '';
-        $this->info(count($receiptpayments));
-        if (count($receiptpayments) > 0)
-        {
-            $msg = '收款重复提醒: ';
-            $this->sendMsg($msg, 494);      // to GuY
+        $this->info("重复数据共有: " . count($receiptpayments));
+
+        // 过滤到不需要提醒的数据
+        $msgToSend = [];
+        foreach ($receiptpayments as $receiptpayment) {
+            $tbl = self::TBL_NAME;
+            $id = $receiptpayment->sohead_id;
+            $type = date('Ymd', strtotime($receiptpayment->date));
+
+            $reminderswitch = Reminderswitch::where('tablename', $tbl)->where('tableid', $id)->where('type', $type)->where('value', '<>', 1)->first();
+            $msg = "{$receiptpayment->sohead->projectjc}({$receiptpayment->sohead->number})在同一天有重复收款, 日期:$type, 金额:$receiptpayment->amount";
+            if (isset($reminderswitch)) {
+                $this->info("忽略 $msg");
+                continue;
+            }
+            $this->info("添加 $msg");
+            array_push($msgToSend, ['table' => $tbl, 'msg' => $msg, 'id' => $id, 'type' => $type]);
         }
-        foreach ($receiptpayments as $receiptpayment)
-        {
-            $msg = $receiptpayment->sohead->projectjc . '(' . $receiptpayment->sohead->number . ')在同一天有重复收款, 日期:' . $receiptpayment->date . ', 金额:' . $receiptpayment->amount;
-            $this->info($msg);
-//            Log::info($receiptpayment->sohead->projectjc . '(' . $receiptpayment->sohead->number . ')在同一天有重复收款, 日期:' . $receiptpayment->date . ', 金额:' . $receiptpayment->amount);
-            $this->sendMsg($msg, 494);      // to GuY
+
+        if (count($msgToSend) == 0) {
+            $this->info('没有消息需要发送');
+            return;
         }
+
+        $this->sendMsg('收款重复提醒: ', 494);
+        foreach ($msgToSend as $value) {
+            $this->sendMsg($value, 494, 1);
+        }
+        $this->info('全部发送完成');
     }
 
-    public function sendMsg($msg, $userid_hxold = 0)
+    /**
+     * $msgType 0:文本消息，1:卡片消息
+     */
+    public function sendMsg($msg, $userid_hxold = 0, $msgType = 0)
     {
-        if ($this->option('debug'))
-        {
-            $touser = User::where('email', $this->argument('useremail'))->first();
-            if (isset($touser))
-            {
-                $data = [
-                    'userid'        => $touser->id,
-                    'msgcontent'    => urlencode($msg) ,
-                ];
-
-                DingTalkController::sendCorpMessageTextReminder(json_encode($data));
-                sleep(1);
-            }
-        }
-        elseif ($userid_hxold > 0)
-        {
+        $usr = null;
+        if ($this->option('debug')) {
+            $usr = User::where('email', $this->argument('useremail'))->first();
+        } elseif ($userid_hxold > 0) {
             $transactor_hxold = Userold::where('user_hxold_id', $userid_hxold)->first();
-            if (isset($transactor_hxold))
-            {
-                $transactor = User::where('id', $transactor_hxold->user_id)->first();
-                if (isset($transactor))
-                {
-                    $data = [
-                        'userid'        => $transactor->id,
-                        'msgcontent'    => urlencode($msg) ,
-                    ];
-//                    Log::info($transactor->name);
-                    DingTalkController::sendCorpMessageTextReminder(json_encode($data));
-                    sleep(1);
-                }
+            if (isset($transactor_hxold)) {
+                $usr = User::where('id', $transactor_hxold->user_id)->first();
             }
         }
+
+        if (!isset($usr)) {
+            $this->info('没有找到用户');
+            return;
+        }
+
+        if ($msgType == 0) {
+            $data = [
+                'userid'        => $usr->id,
+                'msgcontent'    => urlencode($msg),
+            ];
+
+            DingTalkController::sendCorpMessageTextReminder(json_encode($data));
+        } else {
+            $url = "http://www.huaxing-east.cn:2016/mddauth/approval/system-reminderswitches-storebyclick-{$msg['table']}-{$msg['id']}-{$msg['type']}-0";
+            // Log::info($url);
+            $data = [
+                'msgtype'   => 'action_card',
+                'action_card' => [
+                    'title' => '收款重复提醒',
+                    'markdown' => $msg['msg'],
+                    'btn_orientation' => '0',
+                    'btn_json_list' => [
+                        [
+                            'title' => '设置此消息不再提醒',
+                            'action_url' => $url,
+                        ],
+                    ]
+                ],
+            ];
+
+            $agentid = config('custom.dingtalk.agentidlist.erpreminder');
+            $response = DingTalkController::sendActionCardMsg($usr->dtuserid, $agentid, $data);
+            // $this->info($response);
+        }
+        sleep(1);
     }
 }
