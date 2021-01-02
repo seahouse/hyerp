@@ -18,6 +18,7 @@
 			<?php $nowarehouseamountby7550 = 0.0; ?>
 			<?php $warehouseqty = 0.0; ?>
 			<?php $drawingqty = 0.0; ?>
+            <?php $sohead_othercostpercent = 0.0; ?>
 		@foreach($project->soheads as $sohead)
             	<?php $totalamount += $sohead->amount; ?>
             	<?php $sohead_receiptpayments_total += $sohead->receiptpayments->sum('amount'); ?>
@@ -34,6 +35,7 @@
 				<?php $nowarehousetaxcost +=array_first($sohead->getnowarehousetaxCost())->nowarehousetaxcost;?>
 				<?php $warehouseqty +=array_first($sohead->getwarehouseqty())->warehouseqty;?>
 				<?php $drawingqty +=$sohead->Issuedrawings->sum('tonnage');?>
+                <?php $sohead_othercostpercent += $sohead->othercostpercent;?>
 		@endforeach
 			<p>订单总金额：{{ $totalamount }}万</p>
 			<p>订单收款总金额：{{ $sohead_receiptpayments_total }}万
@@ -52,9 +54,10 @@
 			<p>公用订单分摊成本金额：{{ number_format($poheadAmountBy7550 / 10000.0, 4)  }}万</p>
 			<p>税差：{{ number_format(($sohead_taxamount - $sohead_poheadtaxamount) / 10000.0, 4) }}万</p>
 			@if ($totalamount > 0.0)
-				<p>采购成本比例：{{ number_format(($pohead_amount_total + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount) / ($totalamount * 10000.0) * 100.0, 2) }}%
+				<p>采购成本比例：{{ number_format(($pohead_amount_total + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount) / ($totalamount * 10000.0) * 100.0, 2) + $sohead_othercostpercent * 100 }}%
 					(含公摊{{ number_format($poheadAmountBy7550 / ($totalamount * 10000.0) * 100.0, 2) }}%、
-					税差{{ number_format(($sohead_taxamount - $sohead_poheadtaxamount) / ($totalamount * 10000.0) * 100.0, 2) }}%)</p>
+					税差{{ number_format(($sohead_taxamount - $sohead_poheadtaxamount) / ($totalamount * 10000.0) * 100.0, 2) }}%、
+					工程采购及差旅合计比例{{ number_format($sohead_othercostpercent * 100.0, 4) }}%)</p>
 			@else
 				<p>采购成本比例：-</p>
 			@endif

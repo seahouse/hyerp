@@ -9,7 +9,7 @@
             {{--<a href="{{ URL::to('sales/salesreps') }}" class="btn btn-sm btn-success">{{'销售代表管理'}}</a>--}}
             {{--<a href="{{ URL::to('sales/terms') }}" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> {{'付款条款管理', [], 'layouts'}}</a>--}}
             @if (Auth::user()->isSuperAdmin())
-                <a href="{{ url('sales/salesorderhx/importothercostpercent') }}" class="btn btn-sm btn-success">工程采购及差旅合计比例</a>
+                <a href="{{ url('sales/salesorderhx/importothercostpercent') }}" class="btn btn-sm btn-success" target="_blank">工程采购及差旅合计比例</a>
             @endif
         </div>
     </div>

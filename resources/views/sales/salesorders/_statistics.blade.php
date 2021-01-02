@@ -29,9 +29,10 @@
 			<p>公用订单分摊成本金额：{{ number_format($poheadAmountBy7550 / 10000.0, 4)  }}万</p>
 			<p>税差：{{ number_format(($sohead_taxamount - $sohead_poheadtaxamount - $sohead_poheadtaxamountby7550) / 10000.0, 4) }}万（含公摊税差{{ number_format($sohead_poheadtaxamountby7550 / 10000.0, 4) }}万）</p>
 			@if ($sohead->amount > 0.0)
-				<p>采购成本比例：{{ number_format(($pohead_amount_total + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount - $sohead_poheadtaxamountby7550) / ($sohead->amount * 10000.0) * 100.0, 2) }}%
+				<p>采购成本比例：{{ number_format(($pohead_amount_total + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount - $sohead_poheadtaxamountby7550) / ($sohead->amount * 10000.0) * 100.0, 2) + $sohead->othercostpercent * 100}}%
 					(含公摊{{ number_format($poheadAmountBy7550 / ($sohead->amount * 10000.0) * 100.0, 2) }}%、
-					税差{{ number_format(($sohead_taxamount - $sohead_poheadtaxamount - $sohead_poheadtaxamountby7550) / ($sohead->amount * 10000.0) * 100.0, 2) }}%)</p>
+					税差{{ number_format(($sohead_taxamount - $sohead_poheadtaxamount - $sohead_poheadtaxamountby7550) / ($sohead->amount * 10000.0) * 100.0, 2) }}%、
+					工程采购及差旅合计比例{{ number_format($sohead->othercostpercent * 100.0, 4) }}%)</p>
 			@else
 				<p>采购成本比例：-</p>
 			@endif

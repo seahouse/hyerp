@@ -15,6 +15,7 @@
 			<?php $warehousetaxcost = 0.0; ?>
 			<?php $nowarehousecost = 0.0; ?>
 			<?php $nowarehousetaxcost = 0.0; ?>
+            <?php $sohead_othercostpercent = 0.0; ?>
 			@foreach($group->projects as $project)
 				@if (isset($project))
 					@foreach($project->soheads as $sohead)
@@ -31,6 +32,7 @@
 						<?php $warehousetaxcost +=array_first($sohead->getwarehousetaxCost())->warehousetaxcost;?>
 						<?php $nowarehousecost +=array_first($sohead->getnowarehouseCost())->nowarehousecost;?>
 						<?php $nowarehousetaxcost +=array_first($sohead->getnowarehousetaxCost())->nowarehousetaxcost;?>
+                        <?php $sohead_othercostpercent += $sohead->othercostpercent;?>
 					@endforeach
 				@endif
 			@endforeach
@@ -47,9 +49,10 @@
 			<p>公用订单分摊成本金额：{{ number_format($poheadAmountBy7550 / 10000.0, 4)  }}万</p>
 			<p>税差：{{ number_format(($sohead_taxamount - $sohead_poheadtaxamount) / 10000.0, 4) }}万</p>
 			@if ($totalamount > 0.0)
-				<p>采购成本比例：{{ number_format(($pohead_amount_total + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount) / ($totalamount * 10000.0) * 100.0, 2) }}%
+				<p>采购成本比例：{{ number_format(($pohead_amount_total + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount) / ($totalamount * 10000.0) * 100.0, 2) + $sohead_othercostpercent * 100}}%
 					(含公摊{{ number_format($poheadAmountBy7550 / ($totalamount * 10000.0) * 100.0, 2) }}%、
-					税差{{ number_format(($sohead_taxamount - $sohead_poheadtaxamount) / ($totalamount * 10000.0) * 100.0, 2) }}%)</p>
+					税差{{ number_format(($sohead_taxamount - $sohead_poheadtaxamount) / ($totalamount * 10000.0) * 100.0, 2) }}%、
+					工程采购及差旅合计比例{{ number_format($sohead_othercostpercent * 100.0, 4) }}%)</p>
 			@else
 				<p>采购成本比例：-</p>
 			@endif
