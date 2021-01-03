@@ -73,11 +73,12 @@
 				<a href="{{ URL::to('/sales/projects/'.$project->id.'/nowarehousedetailbyproject/') }}" class="btn btn-default btn-sm" target="_blank">无入库明细</a></p>
 			<p>无入库记录物品税额：{{number_format(( $nowarehousetaxcost) / 10000.0, 4)}}万</p>
 			@if ($totalamount > 0.0)
-				<p>出库类成本比例：{{number_format(($warehousecost  + $nowarehousecost + $sohead_taxamount  - $nowarehousetaxcost - $warehousetaxcost) / ($totalamount * 10000.0) * 100.0, 2)}}%</p>
+				<p>出库类成本比例：{{number_format(($warehousecost  + $nowarehousecost + $sohead_taxamount  - $nowarehousetaxcost - $warehousetaxcost) / ($totalamount * 10000.0) * 100.0, 2) + number_format($sohead_othercostpercent * 100.0, 4)}}%</p>
 			@else
-				<p>出库类成本比例：-</p>
+				<p>出库类成本比例：{{ number_format($sohead_othercostpercent * 100.0, 4) }}%</p>
 			@endif
 			<p>理论废料数量：{{number_format(($warehouseqty/1000 - $drawingqty) , 4)}}吨</p>
+			<p>工程采购及差旅合计比例{{ number_format($sohead_othercostpercent * 100.0, 4) }}%</p>
 			<hr style="border-top-color:rgba(0,0,0,1);" >
 			@if (isset($project->group->id))
 				<a href="{{ URL::to('/sales/groups/' . $project->group->id . '/mstatistics') }}" target="_blank" class="btn btn-default btn-sm">备注</a>

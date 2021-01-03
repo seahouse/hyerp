@@ -62,10 +62,11 @@
 			<p>无入库记录合同金额总额：{{number_format($nowarehousecost/ 10000.0, 4)}}万</p>
 			<p>无入库记录物品税差：{{number_format(($sohead_taxamount - $nowarehousetaxcost) / 10000.0, 4)}}万</p>
 			@if ($totalamount > 0.0)
-				<p>出库类成本比例：{{number_format(($warehousecost  + $nowarehousecost + $sohead_taxamount - $nowarehousetaxcost-$warehousetaxcost) / ($totalamount * 10000.0) * 100.0, 2)}}%</p>
+				<p>出库类成本比例：{{number_format(($warehousecost  + $nowarehousecost + $sohead_taxamount - $nowarehousetaxcost-$warehousetaxcost) / ($totalamount * 10000.0) * 100.0, 2) + number_format($sohead_othercostpercent * 100.0, 4)}}%</p>
 			@else
-				<p>出库类成本比例：-</p>
+				<p>出库类成本比例：{{ number_format($sohead_othercostpercent * 100.0, 4) }}%</p>
 			@endif
+			<p>工程采购及差旅合计比例{{ number_format($sohead_othercostpercent * 100.0, 4) }}%</p>
 			<hr style="border-top-color:rgba(0,0,0,1);" >
 			<p>采购订单付款总金额：{{ number_format($pohead_amount_payment_total / 10000.0, 4) }}万</p>
 			<p>采购订单累计付款比例：{{ number_format($pohead_amount_payment_total / $pohead_amount_total * 100.0, 2) }}%</p>

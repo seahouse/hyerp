@@ -283,6 +283,7 @@ class SalesorderhxController extends Controller
 //        });
 //        return redirect('basic/biddinginformations');
 
+        echo "更新了以下内容：</br>";
         Excel::load($file->getRealPath(), function ($reader) {
             $reader->each(function ($sheet) {
                 $sheet->each(function ($row) {
@@ -293,8 +294,11 @@ class SalesorderhxController extends Controller
 //                            $sohead = Salesorder_hxold_t::find($items[0]);
 //                            $sohead->othercostpercent = $items[2];
 //                            $sohead->save();
-                            Salesorder_hxold_t::where('订单ID', $items[0])
-                                ->update(['othercostpercent' => $items[2]]);
+                            if (Salesorder_hxold_t::where('订单ID', $items[0])
+                                ->update(['othercostpercent' => $items[2]]))
+                            {
+                                echo $cell . "</br>";
+                            }
 //                            $sohead = Salesorder_hxold_t::find($items[0]);
                         }
                     });
