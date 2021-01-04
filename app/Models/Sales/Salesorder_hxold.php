@@ -313,6 +313,7 @@ class Salesorder_hxold extends Model
                 $poheadAmountBy7550 = 0.0;
                 $sohead_taxamount = 0.0;
                 $sohead_poheadtaxamount = 0.0;
+                $sohead_poheadtaxamountby7550 = 0.0;
                 $receiptpaymenttotal = 0.0;
                 foreach ($project->soheads as $sohead)
                 {
@@ -321,10 +322,26 @@ class Salesorder_hxold extends Model
                     $poheadAmountBy7550 += array_first($sohead->getPoheadAmountBy7550())->poheadAmountBy7550;
                     $sohead_taxamount += isset($sohead->temTaxamountstatistics->sohead_taxamount) ? $sohead->temTaxamountstatistics->sohead_taxamount : 0.0;
                     $sohead_poheadtaxamount += isset($sohead->temTaxamountstatistics->sohead_poheadtaxamount) ? $sohead->temTaxamountstatistics->sohead_poheadtaxamount : 0.0;
+                    $sohead_poheadtaxamountby7550 += array_first($sohead->getPoheadTaxAmountBy7550())->poheadTaxAmountBy7550;
                     $receiptpaymenttotal += $sohead->receiptpayments->sum('amount');
                 }
-                $poheadcostpercent = ($poheadamounttotal + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount) / ($amount * 10000.0);
-//            $poheadamounpercent = $poheadamounttotal / $amount;
+                $poheadcostpercent = ($poheadamounttotal + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount - $sohead_poheadtaxamountby7550) / ($amount * 10000.0) + $sohead->othercostpercent;
+
+                // 出库成本比例
+                $warehousecost = 0.0;
+                $warehousetaxcost = 0.0;
+                $nowarehousecost = 0.0;
+                $nowarehousetaxcost = 0.0;
+                foreach ($project->soheads as $sohead)
+                {
+                    $warehousecost += array_first($sohead->getwarehouseCost())->warehousecost;
+                    $warehousetaxcost += array_first($sohead->getwarehousetaxCost())->warehousetaxcost;
+                    $nowarehousecost += array_first($sohead->getnowarehouseCost())->nowarehousecost;
+                    $nowarehousetaxcost += array_first($sohead->getnowarehousetaxCost())->nowarehousetaxcost;
+
+                }
+                $warehousecostpercent = ($warehousecost  + $nowarehousecost + $sohead_taxamount  - $nowarehousetaxcost - $warehousetaxcost) / ($sohead->amount * 10000.0)  + $sohead->othercostpercent;
+                $poheadcostpercent = $poheadcostpercent >= $warehousecostpercent ? $poheadcostpercent : $warehousecostpercent;
 
                 if ($receiptpaymenttotal / $amount >= 0.6)
                 {
@@ -357,27 +374,6 @@ class Salesorder_hxold extends Model
                     }
                 }
             }
-
-//            $amount = $this->amount;
-//            $poheadamounttotal = $this->poheads_simple->sum('amount');
-//            $poheadAmountBy7550 = array_first($this->getPoheadAmountBy7550())->poheadAmountBy7550;
-//            $sohead_taxamount = isset($this->temTaxamountstatistics->sohead_taxamount) ? $this->temTaxamountstatistics->sohead_taxamount : 0.0;
-//            $sohead_poheadtaxamount = isset($this->temTaxamountstatistics->sohead_poheadtaxamount) ? $this->temTaxamountstatistics->sohead_poheadtaxamount : 0.0;
-//            $poheadcostpercent = ($poheadamounttotal + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount) / ($amount * 10000.0);
-////            $poheadamounpercent = $poheadamounttotal / $amount;
-//            $receiptpaymenttotal = $this->receiptpayments->sum('amount');
-//            if ($receiptpaymenttotal / $amount >= 0.6)
-//            {
-//                $bonusfactor = $maxbonusfactor;
-//                if ($poheadcostpercent >= 0.5 && $poheadcostpercent < 0.6)
-//                    $bonusfactor = $bonusfactor - $offset;
-//                elseif ($poheadcostpercent >= 0.6 && $poheadcostpercent < 0.7)
-//                    $bonusfactor = $bonusfactor - $offset * 2;
-//                elseif ($poheadcostpercent >= 0.7 && $poheadcostpercent < 0.8)
-//                    $bonusfactor = $bonusfactor - $offset * 3;
-//                elseif ($poheadcostpercent / $amount >= 0.8)
-//                    $bonusfactor = $mixbonusfactor;
-//            }
         }
         return $bonusfactor;
     }
@@ -394,8 +390,17 @@ class Salesorder_hxold extends Model
             $poheadAmountBy7550 = array_first($this->getPoheadAmountBy7550())->poheadAmountBy7550;
             $sohead_taxamount = isset($this->temTaxamountstatistics->sohead_taxamount) ? $this->temTaxamountstatistics->sohead_taxamount : 0.0;
             $sohead_poheadtaxamount = isset($this->temTaxamountstatistics->sohead_poheadtaxamount) ? $this->temTaxamountstatistics->sohead_poheadtaxamount : 0.0;
-            $poheadcostpercent = ($poheadamounttotal + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount) / ($amount * 10000.0);
-//            $poheadamounpercent = $poheadamounttotal / $amount;
+            $sohead_poheadtaxamountby7550 = array_first($this->getPoheadTaxAmountBy7550())->poheadTaxAmountBy7550;
+            $poheadcostpercent = ($poheadamounttotal + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount - $sohead_poheadtaxamountby7550) / ($amount * 10000.0) + $this->othercostpercent;
+
+            // 出库成本比例
+            $warehousecost = array_first($this->getwarehouseCost())->warehousecost;
+            $warehousetaxcost = array_first($this->getwarehousetaxCost())->warehousetaxcost;
+            $nowarehousecost = array_first($this->getnowarehouseCost())->nowarehousecost;
+            $nowarehousetaxcost = array_first($this->getnowarehousetaxCost())->nowarehousetaxcost;
+            $warehousecostpercent = ($warehousecost  + $nowarehousecost + $sohead_taxamount  - $nowarehousetaxcost - $warehousetaxcost) / ($this->amount * 10000.0)  + $this->othercostpercent;
+            $poheadcostpercent = $poheadcostpercent >= $warehousecostpercent ? $poheadcostpercent : $warehousecostpercent;
+
             $receiptpaymenttotal = $this->receiptpayments->sum('amount');
             if ($receiptpaymenttotal / $amount >= 0.6)
             {
