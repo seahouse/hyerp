@@ -5021,10 +5021,10 @@ class ApprovalController extends Controller
                 'name'      => '需要技术部门出图？',
                 'value'     => $inputs['need_issuedrawing'],
             ],
-            [
-                'name'      => '是否有设计变更单',
-                'value'     => $inputs['design_change_sheet'],
-            ],
+//            [
+//                'name'      => '是否有设计变更单',
+//                'value'     => $inputs['design_change_sheet'],
+//            ],
             [
                 'name'      => '增补原因详细说明',
                 'value'     => $inputs['additional_reason_detaildesc'],
