@@ -67,6 +67,8 @@ class PurchaseordersController extends Controller
         if (strlen($key) > 0) {
             $query->where('number', 'like', '%' . $key . '%');
         }
+        if ($request->has('companyname') && strlen($request->input('companyname')))
+            $query->where('companyname', 'like', '%' . $request->input('companyname') . '%');
         if ($request->has('supplier_name') && strlen($request->input('supplier_name')))
             $query->where('supplier_name', 'like', '%' . $request->input('supplier_name') . '%');
         if ($request->has('project_name') && strlen($request->input('project_name')))
@@ -75,8 +77,7 @@ class PurchaseordersController extends Controller
             $query->where('productname', 'like', '%' . $request->input('product_name') . '%');
 
         // 仅查看与自己相关的采购订单
-        if (Auth::user()->cannot('purchase_purchaseorders_viewall'))
-        {
+        if (Auth::user()->cannot('purchase_purchaseorders_viewall')) {
             $userold = Auth::user()->userold;
             $query->where(function ($query) use ($userold) {
                 $query->where('sohead_projectengineer_id', $userold->user_hxold_id)
