@@ -567,10 +567,7 @@ class McitempurchaseController extends Controller
             $mcitempurchase->status = $status;
             $mcitempurchase->save();
 
-            // 先不创建，直接返回，等其他流程做完后再放开
-//            return;
-
-            // 如果是审批完成且通过，则创建老系统中的采购申请单
+            // 如果是审批完成且通过，则创建采购申请单
             if ($status == 0)
             {
                 $cp = 'WX';
