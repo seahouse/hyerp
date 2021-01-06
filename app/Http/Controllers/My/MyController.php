@@ -183,8 +183,8 @@ class MyController extends Controller
     public function indexjsonbyorder(Request $request, $sohead_id = 0, $salesmanager_id = 0)
     {
         $query = Salesorder_hxold::whereRaw('1=1');
-        $query->leftJoin('vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
-        $query->leftJoin('outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
+        $query->leftJoin('hxcrm2016.dbo.vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
+        $query->leftJoin('hxcrm2016.dbo.outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
 
         if ($sohead_id > 0)
             $query->whereRaw('vorder.id=' . $sohead_id);
@@ -196,17 +196,17 @@ class MyController extends Controller
 
         if ($request->has('receivedatestart') && $request->has('receivedateend'))
         {
-            $query->whereRaw("(select SUM(amount) from vreceiptpayment where vreceiptpayment.sohead_id=vorder.id  and vreceiptpayment.date between '" . $request->get('receivedatestart') . "' and '" . $request->get('receivedateend') . "')>0");
+            $query->whereRaw("(select SUM(amount) from hxcrm2016.dbo.vreceiptpayment where vreceiptpayment.sohead_id=vorder.id  and vreceiptpayment.date between '" . $request->get('receivedatestart') . "' and '" . $request->get('receivedateend') . "')>0");
         }
         else
-            $query->whereRaw('(select SUM(amount) from vreceiptpayment where vreceiptpayment.sohead_id=vorder.id)>0');
+            $query->whereRaw('(select SUM(amount) from hxcrm2016.dbo.vreceiptpayment where vreceiptpayment.sohead_id=vorder.id)>0');
 
 
 //        if (isset(Auth::user()->userold))
 //            $query->where('vorder.salesmanager_id', 15);
 
 
-        return Datatables::of($query->select('vorder.*', DB::raw('(select SUM(amount) from vreceiptpayment where sohead_id=vorder.id) as amountperiod'),
+        return Datatables::of($query->select('vorder.*', DB::raw('(select SUM(amount) from hxcrm2016.dbo.vreceiptpayment where sohead_id=vorder.id) as amountperiod'),
             'vcustomer.name as customer_name'))
             ->filter(function ($query) use ($request) {
                 if ($request->has('salesmanager') && strlen($request->get('salesmanager')) > 0) {

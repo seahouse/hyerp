@@ -6,8 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Custinfo_hxold extends Model
 {
-    protected $table = 'vcustomer';
-    protected $connection = 'sqlsrv';
+//    protected $table = 'vcustomer';
+//    protected $connection = 'sqlsrv';
 
     //
     // protected $fillable = [
@@ -16,6 +16,11 @@ class Custinfo_hxold extends Model
     //     'contact_id',
     //     'comments',
     // ];
+
+    public function __construct()
+    {
+        $this->table = config('database.connections.sqlsrv.database') . '.dbo.vorder';
+    }
     
     // public function contact() {
     //     return $this->hasOne('App\Models\Crm\Contact', 'id', 'contact_id');
