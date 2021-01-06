@@ -4,12 +4,12 @@ namespace App\Models\Purchase;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Poitem_hx extends Model
+class Poitem_hx extends \App\Models\HxModel
 {
     //
     protected $table = '采购订单商品';
     public $timestamps = false;
-	protected $connection = 'sqlsrv';
+	protected $old_db = true;
 
     protected $fillable = [
         'order_id',

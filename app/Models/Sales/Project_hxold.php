@@ -4,11 +4,11 @@ namespace App\Models\Sales;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Project_hxold extends Model
+class Project_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'vproject';
-    protected $connection = 'sqlsrv';
+    protected $old_db = true;
 
 
     public function soheads() {

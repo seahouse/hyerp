@@ -4,11 +4,11 @@ namespace App\Models\Purchase;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Arrivalticket_t extends Model
+class Arrivalticket_t extends \App\Models\HxModel
 {
     //
     protected $table = '到票明细';
-    protected $connection = 'sqlsrv';
+    protected $old_db = true;
     public $timestamps = false;
 
     protected $fillable = [

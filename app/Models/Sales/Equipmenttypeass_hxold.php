@@ -4,11 +4,11 @@ namespace App\Models\Sales;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Equipmenttypeass_hxold extends Model
+class Equipmenttypeass_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'equipmenttypeass';
-    protected $connection = 'sqlsrv';
+    protected $old_db = true;
 
     public $timestamps = false;
     public $primaryKey = 'equipmenttypeass_id';

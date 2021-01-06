@@ -4,11 +4,11 @@ namespace App\Models\Purchase;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Purchaseorder_hx extends Model
+class Purchaseorder_hx extends \App\Models\HxModel
 {
     //
     protected $table = '采购订单';
-	protected $connection = 'sqlsrv';
+	protected $old_db = true;
 
     protected $fillable = [
         'purchasecompany_id',

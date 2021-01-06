@@ -4,12 +4,12 @@ namespace App\Models\Inventory;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Rwrecord_hxold2 extends Model
+class Rwrecord_hxold2 extends \App\Models\HxModel
 {
     //receive warehouse
     
     protected $table = 'vrwrecord2';
-	protected $connection = 'sqlsrv';
+	protected $old_db = true;
 
 	public function receiptitems() {
         return $this->hasMany('App\Models\Inventory\Receiptitem_hxold2', 'receipt_id', 'id');

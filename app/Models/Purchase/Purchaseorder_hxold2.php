@@ -4,11 +4,11 @@ namespace App\Models\Purchase;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Purchaseorder_hxold2 extends Model
+class Purchaseorder_hxold2 extends \App\Models\HxModel
 {
     //
     protected $table = 'vpurchaseorder2';
-	protected $connection = 'sqlsrv';
+	protected $old_db = true;
 
 	/**
      * Get the phone record associated with the user.

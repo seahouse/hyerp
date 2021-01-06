@@ -4,11 +4,11 @@ namespace App\Models\System;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Employee_hxold extends Model
+class Employee_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'vemployee';
-    protected $connection = 'sqlsrv';
+    protected $old_db = true;
 
     // protected $fillable = [
     //     'number',

@@ -4,11 +4,11 @@ namespace App\Models\Purchase;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Vendbank_hxold extends Model
+class Vendbank_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'vendbanks';
-    protected $connection = 'sqlsrv';
+    protected $old_db = true;
     // protected $dates = ['created_at', 'updated_at'];
     // protected $dateFormat = 'yyyy-mm-dd hh:mm:ss.000';
 

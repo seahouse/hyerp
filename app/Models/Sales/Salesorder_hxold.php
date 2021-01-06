@@ -4,13 +4,13 @@ namespace App\Models\Sales;
 
 use App\Models\Basic\Biddinginformation;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use DB, Log;
 
-class Salesorder_hxold extends Model
+class Salesorder_hxold extends \App\Models\HxModel
 {
-    // protected $table = 'vorder';
-    // protected $connection = 'sqlsrv';
+    protected $table = 'vorder';
+    protected $old_db = true;
+    // protected $old_db = true;
 
     //
     // protected $fillable = [
@@ -24,11 +24,6 @@ class Salesorder_hxold extends Model
     //     'term_id',
     //     'comments',
     // ];
-
-    public function __construct()
-    {
-        $this->table = config('database.connections.sqlsrv.database') . '.dbo.vorder';
-    }
 
     public function custinfo()
     {
@@ -83,7 +78,7 @@ class Salesorder_hxold extends Model
     // 公用订单的分摊成本金额
     public function getPoheadAmountBy7550()
     {
-        return DB::connection('sqlsrv')->select('select dbo.getPoheadAmountBy7550(' . $this->id . ') as poheadAmountBy7550');
+        return DB::select('select dbo.getPoheadAmountBy7550(' . $this->id . ') as poheadAmountBy7550');
     }
 
     // 获取订单的总人工数
@@ -95,54 +90,54 @@ class Salesorder_hxold extends Model
     // 公用订单的分摊成本金额
     public function getPoheadTaxAmountBy7550()
     {
-        return DB::connection('sqlsrv')->select('select dbo.getPoheadTaxAmountBy7550(' . $this->id . ') as poheadTaxAmountBy7550');
+        return DB::select('select dbo.getPoheadTaxAmountBy7550(' . $this->id . ') as poheadTaxAmountBy7550');
     }
 
     // 出库成本
     public function getwarehouseCost()
     {
-        return DB::connection('sqlsrv')->select('select dbo.getWarehouseAmountByorder(' . $this->id . ') as warehousecost');
+        return DB::select('select dbo.getWarehouseAmountByorder(' . $this->id . ') as warehousecost');
     }
 
     // 出库成本税率
     public function getwarehousetaxCost()
     {
-        return DB::connection('sqlsrv')->select('select dbo.getWarehouseTaxAmountByorder(' . $this->id . ') as warehousetaxcost');
+        return DB::select('select dbo.getWarehouseTaxAmountByorder(' . $this->id . ') as warehousetaxcost');
     }
 
     // 未入库采购合同金额
     public function getnowarehouseCost()
     {
-        return DB::connection('sqlsrv')->select('select dbo.getNoWarehouseAmountByorder(' . $this->id . ') as nowarehousecost');
+        return DB::select('select dbo.getNoWarehouseAmountByorder(' . $this->id . ') as nowarehousecost');
     }
 
     // 未入库税额
     public function getnowarehousetaxCost()
     {
-        return DB::connection('sqlsrv')->select('select dbo.getNoWarehouseTaxAmountByorder(' . $this->id . ') as nowarehousetaxcost');
+        return DB::select('select dbo.getNoWarehouseTaxAmountByorder(' . $this->id . ') as nowarehousetaxcost');
     }
 
     // 厂部采购平摊费用
     public function getnowarehouseamountby7550()
     {
-        return DB::connection('sqlsrv')->select('select dbo.getNoWarehouseAmountBy7550(' . $this->id . ') as nowarehouseamountby7550');
+        return DB::select('select dbo.getNoWarehouseAmountBy7550(' . $this->id . ') as nowarehouseamountby7550');
     }
 
     // 厂部采购平摊费用
     public function getnowarehousetaxamountby7550()
     {
-        return DB::connection('sqlsrv')->select('select dbo.getNoWarehouseTaxAmountBy7550(' . $this->id . ') as nowarehousetaxamountby7550');
+        return DB::select('select dbo.getNoWarehouseTaxAmountBy7550(' . $this->id . ') as nowarehousetaxamountby7550');
     }
     // 出库数量
     public function getwarehouseqty()
     {
-        return DB::connection('sqlsrv')->select('select dbo.getWarehouseQtyByorder(' . $this->id . ') as warehouseqty');
+        return DB::select('select dbo.getWarehouseQtyByorder(' . $this->id . ') as warehouseqty');
     }
 
     // 库存费用
     public function getinventorybyorder()
     {
-        return DB::connection('sqlsrv')->select('select dbo.getInventoryAmountByOrder(' . $this->id . ') as inventoryamount');
+        return DB::select('select dbo.getInventoryAmountByOrder(' . $this->id . ') as inventoryamount');
     }
 
     //下图重量
@@ -444,9 +439,9 @@ class Salesorder_hxold extends Model
     {
         //        return 250;
         if ($this->type == 0)   // 普通订单
-            return DB::connection('sqlsrv')->select('select dbo.getAmountpertenthousandBySohead(' . $this->id . ') as amountpertenthousandbysohead');
+            return DB::select('select dbo.getAmountpertenthousandBySohead(' . $this->id . ') as amountpertenthousandbysohead');
         else       // 配件订单
-            return DB::connection('sqlsrv')->select('select 300 as amountpertenthousandbysohead');
+            return DB::select('select 300 as amountpertenthousandbysohead');
     }
 
     // 技术部人员奖金系数

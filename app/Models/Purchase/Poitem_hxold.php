@@ -4,11 +4,11 @@ namespace App\Models\Purchase;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Poitem_hxold extends Model
+class Poitem_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'vpoitem';
-	protected $connection = 'sqlsrv';
+	protected $old_db = true;
 
 	public function item() {
         return $this->hasOne('App\Models\Product\Itemp_hxold', 'goods_id', 'item_id');

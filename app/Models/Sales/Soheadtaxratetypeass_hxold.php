@@ -4,9 +4,9 @@ namespace App\Models\Sales;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Soheadtaxratetypeass_hxold extends Model
+class Soheadtaxratetypeass_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'soheadtaxratetypeass';
-    protected $connection = 'sqlsrv';
+    protected $old_db = true;
 }

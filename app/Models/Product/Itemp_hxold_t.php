@@ -4,11 +4,11 @@ namespace App\Models\Product;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Itemp_hxold_t extends Model
+class Itemp_hxold_t extends \App\Models\HxModel
 {
     // item model, for purchase, hxold
     protected $table = 'goods';
-	protected $connection = 'sqlsrv';
+	protected $old_db = true;
     public $timestamps = false;
 
 //	public function receiptitems() {

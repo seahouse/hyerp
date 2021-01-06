@@ -9,11 +9,11 @@ use App\Models\Product\Itemp_hxold;
 use App\Models\System\Employee_hxold;
 use Illuminate\Database\Eloquent\Model;
 
-class Purchaseorder_hxold extends Model
+class Purchaseorder_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'vpurchaseorder';
-	protected $connection = 'sqlsrv';
+	protected $old_db = true;
 
 	/**
      * Get the phone record associated with the user.

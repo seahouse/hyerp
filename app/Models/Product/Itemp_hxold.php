@@ -2,18 +2,11 @@
 
 namespace App\Models\Product;
 
-use Illuminate\Database\Eloquent\Model;
-
-class Itemp_hxold extends Model
+class Itemp_hxold extends \App\Models\HxModel
 {
     // item model, for purchase, hxold
-    // protected $table;
-    // protected $connection = 'sqlsrv';
-
-    public function __construct()
-    {
-        $this->table = config('database.connections.sqlsrv.database') . '.dbo.VGoods';
-    }
+    protected $table = "VGoods";
+    protected $old_db = true;
 
     public function receiptitems()
     {

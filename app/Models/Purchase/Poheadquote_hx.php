@@ -4,11 +4,11 @@ namespace App\Models\Purchase;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Poheadquote_hx extends Model
+class Poheadquote_hx extends \App\Models\HxModel
 {
     //
     protected $table = 'poheadquotes';
-    protected $connection = 'sqlsrv';
+    protected $old_db = true;
 
     protected $fillable = [
         'pohead_id',

@@ -4,9 +4,9 @@ namespace App\Models\Sales;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Soheaddocs extends Model
+class Soheaddocs extends \App\Models\HxModel
 {
     //
     protected $table = 'vsoheaddocs';
-    protected $connection = 'sqlsrv';
+    protected $old_db = true;
 }
