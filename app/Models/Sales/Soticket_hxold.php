@@ -8,5 +8,5 @@ class Soticket_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'vsotickets';
-    protected $old_db = true;
+    
 }

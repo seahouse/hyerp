@@ -8,7 +8,7 @@ class Poheadquote_hx extends \App\Models\HxModel
 {
     //
     protected $table = 'poheadquotes';
-    protected $old_db = true;
+    
 
     protected $fillable = [
         'pohead_id',

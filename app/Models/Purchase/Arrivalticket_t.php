@@ -8,7 +8,7 @@ class Arrivalticket_t extends \App\Models\HxModel
 {
     //
     protected $table = '到票明细';
-    protected $old_db = true;
+    
     public $timestamps = false;
 
     protected $fillable = [

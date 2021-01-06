@@ -8,5 +8,5 @@ class Soheadtaxratetypeass_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'soheadtaxratetypeass';
-    protected $old_db = true;
+    
 }

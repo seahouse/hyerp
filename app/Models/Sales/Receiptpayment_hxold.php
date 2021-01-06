@@ -8,7 +8,7 @@ class Receiptpayment_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'vreceiptpayment';
-    protected $old_db = true;
+    
 
     public function sohead() {
         return $this->hasOne('App\Models\Sales\Salesorder_hxold', 'id', 'sohead_id');

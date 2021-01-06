@@ -8,7 +8,7 @@ class Equipmenttypeass_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'equipmenttypeass';
-    protected $old_db = true;
+    
 
     public $timestamps = false;
     public $primaryKey = 'equipmenttypeass_id';

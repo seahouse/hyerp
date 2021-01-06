@@ -8,7 +8,7 @@ class Itemp_hxold_t extends \App\Models\HxModel
 {
     // item model, for purchase, hxold
     protected $table = 'goods';
-	protected $old_db = true;
+	
     public $timestamps = false;
 
 //	public function receiptitems() {

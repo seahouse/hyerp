@@ -8,7 +8,7 @@ class Receiptorder_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'vreceiptorder';
-    protected $old_db = true;
+    
 
     public function receiptitems()
     {

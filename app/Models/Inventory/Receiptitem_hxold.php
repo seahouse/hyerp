@@ -9,7 +9,7 @@ class Receiptitem_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'vreceiptitem';
-    protected $old_db = true;
+    
 
     public function item()
     {

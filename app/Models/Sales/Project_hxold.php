@@ -8,7 +8,7 @@ class Project_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'vproject';
-    protected $old_db = true;
+    
 
 
     public function soheads() {

@@ -8,7 +8,7 @@ class Poheadtaxrateass_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'poheadtaxrateass';
-    protected $old_db = true;
+    
 
     protected $fillable = [
         'name',

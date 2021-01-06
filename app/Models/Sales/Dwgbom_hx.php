@@ -8,5 +8,5 @@ class Dwgbom_hx extends \App\Models\HxModel
 {
     //
     protected $table = 'dwgbom';
-    protected $old_db = true;
+    
 }

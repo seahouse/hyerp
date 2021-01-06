@@ -8,5 +8,5 @@ class Tem_Taxamountstatistics_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'tem_taxamountstatistics';
-    protected $old_db = true;
+    
 }

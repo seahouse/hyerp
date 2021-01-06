@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Salesorder_hxold2 extends \App\Models\HxModel
 {
     protected $table = 'vorder2';
-	protected $old_db = true;
+	
     
     //
     // protected $fillable = [

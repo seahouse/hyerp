@@ -8,7 +8,7 @@ class Receiptitem_hxold2 extends \App\Models\HxModel
 {
     //
     protected $table = 'vreceiptitem2';
-	protected $old_db = true;
+	
 
 	public function item() {
         return $this->hasOne('App\Models\Product\Itemp_hxold2', 'goods_no', 'item_number');

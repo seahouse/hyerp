@@ -8,5 +8,5 @@ class Bonusfactor_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'bonusfactors';
-    protected $old_db = true;
+    
 }

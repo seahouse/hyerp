@@ -8,7 +8,7 @@ class Purchaseorder_hxold_simple extends \App\Models\HxModel
 {
     //
     protected $table = 'vpurchaseorder_simple';
-    protected $old_db = true;
+    
 
     /**
      * Get the phone record associated with the user.

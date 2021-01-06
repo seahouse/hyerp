@@ -9,7 +9,7 @@ class Poitem_hx extends \App\Models\HxModel
     //
     protected $table = '采购订单商品';
     public $timestamps = false;
-	protected $old_db = true;
+	
 
     protected $fillable = [
         'order_id',

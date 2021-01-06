@@ -8,5 +8,5 @@ class Equipmenttype_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'vequipmenttype';
-    protected $old_db = true;
+    
 }

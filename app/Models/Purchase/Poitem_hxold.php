@@ -8,7 +8,7 @@ class Poitem_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'vpoitem';
-	protected $old_db = true;
+	
 
 	public function item() {
         return $this->hasOne('App\Models\Product\Itemp_hxold', 'goods_id', 'item_id');

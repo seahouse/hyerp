@@ -8,5 +8,5 @@ class Unit_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'vunit';
-    protected $old_db = true;
+    
 }

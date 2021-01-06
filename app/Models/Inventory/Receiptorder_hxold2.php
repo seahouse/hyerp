@@ -8,7 +8,7 @@ class Receiptorder_hxold2 extends \App\Models\HxModel
 {
     //
     protected $table = 'vreceiptorder2';
-    protected $old_db = true;
+    
 
     // public function receiptitems() {
     //        return $this->hasMany('App\Models\Inventory\Receiptitem_hxold', 'receipt_id', 'receipt_id');

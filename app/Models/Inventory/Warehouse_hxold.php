@@ -8,5 +8,5 @@ class Warehouse_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'vwarehouse';
-    protected $old_db = true;
+    
 }

@@ -8,7 +8,7 @@ class Bonuspayment_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'bonuspayment';
-    protected $old_db = true;
+    
 
     protected $fillable = [
         'sohead_id',

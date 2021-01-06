@@ -8,7 +8,7 @@ class Employee_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'vemployee';
-    protected $old_db = true;
+    
 
     // protected $fillable = [
     //     'number',

@@ -8,5 +8,5 @@ class Dwgbomitems_hx extends \App\Models\HxModel
 {
     //
     protected $table = 'dwgbomitems';
-    protected $old_db = true;
+    
 }

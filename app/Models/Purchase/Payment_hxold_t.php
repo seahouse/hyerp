@@ -8,7 +8,7 @@ class Payment_hxold_t extends \App\Models\HxModel
 {
     //
     protected $table = '付款明细';
-	protected $old_db = true;
+	
 	public $timestamps = false;
 
 	protected $fillable = [

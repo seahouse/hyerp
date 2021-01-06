@@ -9,8 +9,8 @@ use DB, Log;
 class Salesorder_hxold extends \App\Models\HxModel
 {
     protected $table = 'vorder';
-    protected $old_db = true;
-    // protected $old_db = true;
+    
+    // 
 
     //
     // protected $fillable = [

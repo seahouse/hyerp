@@ -8,7 +8,7 @@ class Biddingproject extends \App\Models\HxModel
 {
     //
     protected $table = 'project';
-    protected $old_db = true;
+    
 
     public function biddinginformation()
     {

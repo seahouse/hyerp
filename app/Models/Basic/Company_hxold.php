@@ -8,5 +8,5 @@ class Company_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'company';
-    protected $old_db = true;
+    
 }

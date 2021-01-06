@@ -6,7 +6,7 @@ class Itemp_hxold extends \App\Models\HxModel
 {
     // item model, for purchase, hxold
     protected $table = "VGoods";
-    protected $old_db = true;
+    
 
     public function receiptitems()
     {
