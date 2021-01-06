@@ -2,23 +2,25 @@
 
 namespace App\Models\Sales;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Basic\Biddinginformation;
 
 class Project_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'vproject';
-    
 
-
-    public function soheads() {
-//        return $this->belongsToMany('App\Models\Sales\Salesorder_hxold', 'projectorders', 'project_id', 'order_id');
-        return $this->hasMany('App\Models\Sales\Salesorder_hxold', 'project_id', 'id');
+    public function soheads()
+    {
+        return $this->hasMany(Salesorder_hxold::class, 'project_id', 'id');
     }
 
-    public function group() {
-        return $this->belongsTo('App\Models\Sales\Group');
+    public function biddinginformations()
+    {
+        return $this->hasManyThrough(Biddinginformation::class, Salesorder_hxold::class, 'project_id', 'sohead_id', 'id');
     }
 
-
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
+    }
 }

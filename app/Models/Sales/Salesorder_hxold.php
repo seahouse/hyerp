@@ -3,14 +3,17 @@
 namespace App\Models\Sales;
 
 use App\Models\Basic\Biddinginformation;
+use App\Models\Purchase\Purchaseorder_hxold;
+use App\Models\Purchase\Purchaseorder_hxold_simple;
+use App\Models\Purchase\Payment_hxold;
+use App\Models\Approval\Issuedrawing;
+use App\Models\Inventory\Shipitem_hxold;
 use Carbon\Carbon;
-use DB, Log;
+use Illuminate\Support\Facades\DB;
 
 class Salesorder_hxold extends \App\Models\HxModel
 {
     protected $table = 'vorder';
-    
-    // 
 
     //
     // protected $fillable = [
@@ -27,9 +30,8 @@ class Salesorder_hxold extends \App\Models\HxModel
 
     public function custinfo()
     {
-        return $this->hasOne('App\Models\Sales\Custinfo_hxold', 'id', 'custinfo_id');
+        return $this->hasOne(Custinfo_hxold::class, 'id', 'custinfo_id');
     }
-
 
     // public function salesrep() {
     //     return $this->hasOne('App\Models\Sales\Salesrep', 'id', 'salesrep_id');
@@ -45,15 +47,17 @@ class Salesorder_hxold extends \App\Models\HxModel
 
     public function poheads()
     {
-        return $this->hasMany('App\Models\Purchase\Purchaseorder_hxold', 'sohead_id', 'id');
+        return $this->hasMany(Purchaseorder_hxold::class, 'sohead_id', 'id');
     }
 
     public function biddinginformations()
     {
-        return $this->hasMany('App\Models\Basic\Biddinginformation', 'sohead_id', 'id');
+        return $this->hasMany(Biddinginformation::class, 'sohead_id', 'id');
     }
 
-    // 投标信息
+    /**
+     * 投标信息
+     */
     public function biddinginformation()
     {
         return $this->hasOne(Biddinginformation::class, 'sohead_id');
@@ -61,110 +65,110 @@ class Salesorder_hxold extends \App\Models\HxModel
 
     public function poheads_simple()
     {
-        return $this->hasMany('App\Models\Purchase\Purchaseorder_hxold_simple', 'sohead_id', 'id');
+        return $this->hasMany(Purchaseorder_hxold_simple::class, 'sohead_id', 'id');
     }
 
     public function receiptpayments()
     {
-        return $this->hasMany('App\Models\Sales\Receiptpayment_hxold', 'sohead_id', 'id');
+        return $this->hasMany(Receiptpayment_hxold::class, 'sohead_id', 'id');
     }
 
     // 此订单的对应的采购订单的对应的付款记录
     public function payments()
     {
-        return $this->hasManyThrough('App\Models\Purchase\Payment_hxold', 'App\Models\Purchase\Purchaseorder_hxold', 'sohead_id', 'pohead_id');
+        return $this->hasManyThrough(Payment_hxold::class, Purchaseorder_hxold::class, 'sohead_id', 'pohead_id');
     }
 
     // 公用订单的分摊成本金额
     public function getPoheadAmountBy7550()
     {
-        return DB::select('select dbo.getPoheadAmountBy7550(' . $this->id . ') as poheadAmountBy7550');
+        return DB::select("select {$this->db_prefix}getPoheadAmountBy7550({$this->id}) as poheadAmountBy7550");
     }
 
     // 获取订单的总人工数
     public function getDtlogHumandays_Xmjlsgrz()
     {
-        return DB::connection('sqlsrv2')->select('select dbo.getDtlogHumandays_Xmjlsgrz(' . $this->id . ') as days');
+        return DB::select("select {$this->db_prefix}getDtlogHumandays_Xmjlsgrz($this->id) as days");
     }
 
     // 公用订单的分摊成本金额
     public function getPoheadTaxAmountBy7550()
     {
-        return DB::select('select dbo.getPoheadTaxAmountBy7550(' . $this->id . ') as poheadTaxAmountBy7550');
+        return DB::select("select {$this->db_prefix}getPoheadTaxAmountBy7550($this->id) as poheadTaxAmountBy7550");
     }
 
     // 出库成本
     public function getwarehouseCost()
     {
-        return DB::select('select dbo.getWarehouseAmountByorder(' . $this->id . ') as warehousecost');
+        return DB::select("select {$this->db_prefix}getWarehouseAmountByorder($this->id) as warehousecost");
     }
 
     // 出库成本税率
     public function getwarehousetaxCost()
     {
-        return DB::select('select dbo.getWarehouseTaxAmountByorder(' . $this->id . ') as warehousetaxcost');
+        return DB::select("select {$this->db_prefix}getWarehouseTaxAmountByorder($this->id) as warehousetaxcost");
     }
 
     // 未入库采购合同金额
     public function getnowarehouseCost()
     {
-        return DB::select('select dbo.getNoWarehouseAmountByorder(' . $this->id . ') as nowarehousecost');
+        return DB::select("select {$this->db_prefix}getNoWarehouseAmountByorder($this->id) as nowarehousecost");
     }
 
     // 未入库税额
     public function getnowarehousetaxCost()
     {
-        return DB::select('select dbo.getNoWarehouseTaxAmountByorder(' . $this->id . ') as nowarehousetaxcost');
+        return DB::select("select {$this->db_prefix}getNoWarehouseTaxAmountByorder($this->id) as nowarehousetaxcost");
     }
 
     // 厂部采购平摊费用
     public function getnowarehouseamountby7550()
     {
-        return DB::select('select dbo.getNoWarehouseAmountBy7550(' . $this->id . ') as nowarehouseamountby7550');
+        return DB::select("select {$this->db_prefix}getNoWarehouseAmountBy7550($this->id) as nowarehouseamountby7550");
     }
 
     // 厂部采购平摊费用
     public function getnowarehousetaxamountby7550()
     {
-        return DB::select('select dbo.getNoWarehouseTaxAmountBy7550(' . $this->id . ') as nowarehousetaxamountby7550');
+        return DB::select("select {$this->db_prefix}getNoWarehouseTaxAmountBy7550($this->id) as nowarehousetaxamountby7550");
     }
     // 出库数量
     public function getwarehouseqty()
     {
-        return DB::select('select dbo.getWarehouseQtyByorder(' . $this->id . ') as warehouseqty');
+        return DB::select("select {$this->db_prefix}getWarehouseQtyByorder($this->id) as warehouseqty");
     }
 
     // 库存费用
     public function getinventorybyorder()
     {
-        return DB::select('select dbo.getInventoryAmountByOrder(' . $this->id . ') as inventoryamount');
+        return DB::select("select {$this->db_prefix}getInventoryAmountByOrder($this->id) as inventoryamount");
     }
 
     //下图重量
     public function issuedrawings()
     {
-        return $this->hasMany('App\Models\Approval\Issuedrawing', 'sohead_id', 'id');
+        return $this->hasMany(Issuedrawing::class, 'sohead_id', 'id');
     }
 
     public function soheadtaxratetypeasses()
     {
-        return $this->hasMany('App\Models\Sales\Soheadtaxratetypeass_hxold', 'sohead_id', 'id');
+        return $this->hasMany(Soheadtaxratetypeass_hxold::class, 'sohead_id', 'id');
     }
 
     // 税率差
     public function temTaxamountstatistics()
     {
-        return $this->hasOne('App\Models\Sales\Tem_Taxamountstatistics_hxold', 'sohead_id', 'id');
+        return $this->hasOne(Tem_Taxamountstatistics_hxold::class, 'sohead_id', 'id');
     }
 
     public function project()
     {
-        return $this->hasOne('App\Models\Sales\Project_hxold', 'id', 'project_id');
+        return $this->hasOne(Project_hxold::class, 'id', 'project_id');
     }
 
     public function equipmenttypes()
     {
-        return $this->belongsToMany('App\Models\Sales\Equipmenttype_hxold', 'equipmenttypeass', 'equipmenttypeass_order_id', 'equipmenttypeass_equipmenttype_id');
+        return $this->belongsToMany(Equipmenttype_hxold::class, 'equipmenttypeass', 'equipmenttypeass_order_id', 'equipmenttypeass_equipmenttype_id');
     }
 
     public function equipmenttypeasses()
@@ -174,13 +178,13 @@ class Salesorder_hxold extends \App\Models\HxModel
 
     public function paywayasses()
     {
-        return $this->hasMany('App\Models\Sales\Paywayass_hxold', 'paywayass_order_id');
+        return $this->hasMany(Paywayass_hxold::class, 'paywayass_order_id');
     }
 
     // 出库明细
     public function shipitems()
     {
-        return $this->hasMany('App\Models\Inventory\Shipitem_hxold', 'sohead_id');
+        return $this->hasMany(Shipitem_hxold::class, 'sohead_id');
     }
 
     // 奖金系数/折扣 如果没有字段值，则根据政策动态生成，不取字段值
@@ -437,9 +441,9 @@ class Salesorder_hxold extends \App\Models\HxModel
     // 奖金比例，根据政策获取，不取字段值
     public function getAmountpertenthousandBySohead()
     {
-        //        return 250;
+        // return 250;
         if ($this->type == 0)   // 普通订单
-            return DB::select('select dbo.getAmountpertenthousandBySohead(' . $this->id . ') as amountpertenthousandbysohead');
+            return DB::select("select {$this->db_prefix}getAmountpertenthousandBySohead($this->id) as amountpertenthousandbysohead");
         else       // 配件订单
             return DB::select('select 300 as amountpertenthousandbysohead');
     }
@@ -452,22 +456,22 @@ class Salesorder_hxold extends \App\Models\HxModel
 
     public function bonuspayments()
     {
-        return $this->hasMany('App\Models\Sales\Bonuspayment_hxold', 'sohead_id', 'id');
+        return $this->hasMany(Bonuspayment_hxold::class, 'sohead_id', 'id');
     }
 
     public function senddetails()
     {
-        return $this->hasMany('App\Models\Sales\Senddetail_hxold', 'sohead_id', 'id');
+        return $this->hasMany(Senddetail_hxold::class, 'sohead_id', 'id');
     }
 
     public function sotickets()
     {
-        return $this->hasMany('App\Models\Sales\Soticket_hxold', 'sohead_id', 'id');
+        return $this->hasMany(Soticket_hxold::class, 'sohead_id', 'id');
     }
 
     public function soheaddocs()
     {
-        return $this->hasMany('App\Models\Sales\Soheaddocs', 'sohead_id', 'id');
+        return $this->hasMany(Soheaddocs::class, 'sohead_id', 'id');
     }
 
     // 是否需要收款：根据约定的付款方式判断是否需要收款

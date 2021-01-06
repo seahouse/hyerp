@@ -14,8 +14,14 @@ class HxModel extends Model
      */
     protected $old_db = true;
 
+    /**
+     * 读取的config(database.hxold_database)
+     */
+    protected $db_prefix;
+
     public function __construct()
     {
-        $this->table = config('database.hxold_database') . $this->table;
+        $this->db_prefix = config('database.hxold_database');
+        $this->table = "{$this->db_prefix}{$this->table}";
     }
 }
