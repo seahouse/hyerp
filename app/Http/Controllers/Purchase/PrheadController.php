@@ -55,6 +55,25 @@ class PrheadController extends Controller
         if ($request->has('key') && strlen($request->input('key')) > 0) {
             $query->where('number', 'like', '%' . $request->input('key') . '%');
         }
+        if ($request->has('projectname') && strlen($request->input('projectname')) > 0) {
+            $query->whereHas('sohead', function ($q) use ($request) {
+                //{{ $prhead->sohead->number . '!' . $prhead->sohead-> }}
+                $tmp = "%{$request->input('projectname')}%";
+                $q->where('number', 'like', $tmp)->orWhere('descrip', 'like', $tmp);
+            });
+        }
+        if ($request->has('productname') && strlen($request->input('productname')) > 0) {
+            $query->whereHas('pritems', function ($q) use ($request) {
+                $q->whereHas('item', function ($q) use ($request) {
+                    $q->where('goods_name', 'like', "%{$request->input('productname')}%");
+                });
+            });
+        }
+        if ($request->has('applicant') && strlen($request->input('applicant')) > 0) {
+            $query->whereHas('applicant', function ($q) use ($request) {
+                $q->where('name', 'like', "%{$request->input('applicant')}%");
+            });
+        }
 
         $user = Auth::user();
         if ($user->hasRole('supplier')) {

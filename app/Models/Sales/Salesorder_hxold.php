@@ -9,9 +9,9 @@ use DB, Log;
 
 class Salesorder_hxold extends Model
 {
-    protected $table = 'vorder';
-	protected $connection = 'sqlsrv';
-    
+    // protected $table = 'vorder';
+    // protected $connection = 'sqlsrv';
+
     //
     // protected $fillable = [
     //     'number',
@@ -24,160 +24,188 @@ class Salesorder_hxold extends Model
     //     'term_id',
     //     'comments',
     // ];
-    
-    public function custinfo() {
+
+    public function __construct()
+    {
+        $this->table = config('database.connections.sqlsrv.database') . '.dbo.vorder';
+    }
+
+    public function custinfo()
+    {
         return $this->hasOne('App\Models\Sales\Custinfo_hxold', 'id', 'custinfo_id');
     }
-    
+
 
     // public function salesrep() {
     //     return $this->hasOne('App\Models\Sales\Salesrep', 'id', 'salesrep_id');
     // }
-    
+
     // public function term() {
     //     return $this->hasOne('App\Sales\Term', 'id', 'term_id');
     // }
-    
+
     // public function soitems() {
     //     return $this->hasMany('App\Models\Sales\Soitem', 'sohead_id');
     // }
 
-    public function poheads() {
+    public function poheads()
+    {
         return $this->hasMany('App\Models\Purchase\Purchaseorder_hxold', 'sohead_id', 'id');
     }
 
-    public function biddinginformations() {
+    public function biddinginformations()
+    {
         return $this->hasMany('App\Models\Basic\Biddinginformation', 'sohead_id', 'id');
     }
 
     // 投标信息
-    public function biddinginformation() {
+    public function biddinginformation()
+    {
         return $this->hasOne(Biddinginformation::class, 'sohead_id');
     }
 
-    public function poheads_simple() {
+    public function poheads_simple()
+    {
         return $this->hasMany('App\Models\Purchase\Purchaseorder_hxold_simple', 'sohead_id', 'id');
     }
 
-    public function receiptpayments() {
+    public function receiptpayments()
+    {
         return $this->hasMany('App\Models\Sales\Receiptpayment_hxold', 'sohead_id', 'id');
     }
 
     // 此订单的对应的采购订单的对应的付款记录
-    public function payments() {
+    public function payments()
+    {
         return $this->hasManyThrough('App\Models\Purchase\Payment_hxold', 'App\Models\Purchase\Purchaseorder_hxold', 'sohead_id', 'pohead_id');
     }
 
     // 公用订单的分摊成本金额
-    public function getPoheadAmountBy7550() {
+    public function getPoheadAmountBy7550()
+    {
         return DB::connection('sqlsrv')->select('select dbo.getPoheadAmountBy7550(' . $this->id . ') as poheadAmountBy7550');
     }
 
     // 获取订单的总人工数
-    public function getDtlogHumandays_Xmjlsgrz() {
+    public function getDtlogHumandays_Xmjlsgrz()
+    {
         return DB::connection('sqlsrv2')->select('select dbo.getDtlogHumandays_Xmjlsgrz(' . $this->id . ') as days');
     }
 
     // 公用订单的分摊成本金额
-    public function getPoheadTaxAmountBy7550() {
+    public function getPoheadTaxAmountBy7550()
+    {
         return DB::connection('sqlsrv')->select('select dbo.getPoheadTaxAmountBy7550(' . $this->id . ') as poheadTaxAmountBy7550');
     }
 
     // 出库成本
-    public function getwarehouseCost() {
+    public function getwarehouseCost()
+    {
         return DB::connection('sqlsrv')->select('select dbo.getWarehouseAmountByorder(' . $this->id . ') as warehousecost');
     }
 
     // 出库成本税率
-    public function getwarehousetaxCost() {
+    public function getwarehousetaxCost()
+    {
         return DB::connection('sqlsrv')->select('select dbo.getWarehouseTaxAmountByorder(' . $this->id . ') as warehousetaxcost');
     }
 
     // 未入库采购合同金额
-    public function getnowarehouseCost() {
+    public function getnowarehouseCost()
+    {
         return DB::connection('sqlsrv')->select('select dbo.getNoWarehouseAmountByorder(' . $this->id . ') as nowarehousecost');
     }
 
     // 未入库税额
-    public function getnowarehousetaxCost() {
+    public function getnowarehousetaxCost()
+    {
         return DB::connection('sqlsrv')->select('select dbo.getNoWarehouseTaxAmountByorder(' . $this->id . ') as nowarehousetaxcost');
     }
 
     // 厂部采购平摊费用
-    public function getnowarehouseamountby7550() {
+    public function getnowarehouseamountby7550()
+    {
         return DB::connection('sqlsrv')->select('select dbo.getNoWarehouseAmountBy7550(' . $this->id . ') as nowarehouseamountby7550');
     }
 
     // 厂部采购平摊费用
-    public function getnowarehousetaxamountby7550() {
+    public function getnowarehousetaxamountby7550()
+    {
         return DB::connection('sqlsrv')->select('select dbo.getNoWarehouseTaxAmountBy7550(' . $this->id . ') as nowarehousetaxamountby7550');
     }
     // 出库数量
-    public function getwarehouseqty() {
+    public function getwarehouseqty()
+    {
         return DB::connection('sqlsrv')->select('select dbo.getWarehouseQtyByorder(' . $this->id . ') as warehouseqty');
     }
 
     // 库存费用
-    public function getinventorybyorder() {
+    public function getinventorybyorder()
+    {
         return DB::connection('sqlsrv')->select('select dbo.getInventoryAmountByOrder(' . $this->id . ') as inventoryamount');
     }
 
     //下图重量
-    public function issuedrawings() {
+    public function issuedrawings()
+    {
         return $this->hasMany('App\Models\Approval\Issuedrawing', 'sohead_id', 'id');
     }
 
-    public function soheadtaxratetypeasses() {
+    public function soheadtaxratetypeasses()
+    {
         return $this->hasMany('App\Models\Sales\Soheadtaxratetypeass_hxold', 'sohead_id', 'id');
     }
 
     // 税率差
-    public function temTaxamountstatistics() {
+    public function temTaxamountstatistics()
+    {
         return $this->hasOne('App\Models\Sales\Tem_Taxamountstatistics_hxold', 'sohead_id', 'id');
     }
 
-    public function project() {
+    public function project()
+    {
         return $this->hasOne('App\Models\Sales\Project_hxold', 'id', 'project_id');
     }
 
-    public function equipmenttypes() {
+    public function equipmenttypes()
+    {
         return $this->belongsToMany('App\Models\Sales\Equipmenttype_hxold', 'equipmenttypeass', 'equipmenttypeass_order_id', 'equipmenttypeass_equipmenttype_id');
     }
 
-    public function equipmenttypeasses() {
+    public function equipmenttypeasses()
+    {
         return $this->hasMany(Equipmenttypeass_hxold::class, 'equipmenttypeass_order_id');
     }
 
-    public function paywayasses() {
+    public function paywayasses()
+    {
         return $this->hasMany('App\Models\Sales\Paywayass_hxold', 'paywayass_order_id');
     }
 
     // 出库明细
-    public function shipitems() {
+    public function shipitems()
+    {
         return $this->hasMany('App\Models\Inventory\Shipitem_hxold', 'sohead_id');
     }
 
     // 奖金系数/折扣 如果没有字段值，则根据政策动态生成，不取字段值
-    public function getBonusfactorByPolicy($date = '') {
-        if (strlen($date) > 0)
-        {
+    public function getBonusfactorByPolicy($date = '')
+    {
+        if (strlen($date) > 0) {
             $bonusfactor_hxold = Bonusfactor_hxold::where('sohead_id', $this->id)->where('date', Carbon::parse($date))->first();
             if ($bonusfactor_hxold)
                 return $bonusfactor_hxold->value;
         }
         if ($this->bonusfactor > 0.0)
             return $this->bonusfactor;
-        
+
         $bonusfactor = 0.0;
         if ($this->type == 0)       // 普通订单
         {
-            foreach ($this->equipmenttypes as $equipmenttype)
-            {
-                if (isset($equipmenttype))
-                {
+            foreach ($this->equipmenttypes as $equipmenttype) {
+                if (isset($equipmenttype)) {
                     $bonusfactortemp = 0.0;
-                    switch ($equipmenttype->id)
-                    {
+                    switch ($equipmenttype->id) {
                         case 1:     // 1
                             $bonusfactortemp = $this->getBonusfactorByReceiptpaymentPercent(0.5, 0.8);
                             break;
@@ -276,19 +304,19 @@ class Salesorder_hxold extends Model
                         $bonusfactor = $bonusfactortemp;
                 }
             }
-        }
-        elseif ($this->type == 1)       // 配件订单
+        } elseif ($this->type == 1)       // 配件订单
         {
             $bonusfactor = $this->getBonusfactorByReceiptpaymentPercent2(0.2, 2);
         }
 
-//        $equipmenttype = $this->equipmenttypes->first();
+        //        $equipmenttype = $this->equipmenttypes->first();
 
-//        dd($this->equipmenttypes->first());
+        //        dd($this->equipmenttypes->first());
         return $bonusfactor;
     }
 
-    private function getBonusfactorByAmount() {
+    private function getBonusfactorByAmount()
+    {
         $bonusfactor = 0.0;
         if ($this->amount < 1000.0)
             $bonusfactor = $this->getBonusfactorByReceiptpaymentPercent(0.2, 0.35);
@@ -303,11 +331,9 @@ class Salesorder_hxold extends Model
     {
         $bonusfactor = $mixbonusfactor;
         $offset = ($maxbonusfactor - $mixbonusfactor) / 4;
-        if ($this->amount > 0.0)
-        {
+        if ($this->amount > 0.0) {
             $project = $this->project;
-            if (isset($project))
-            {
+            if (isset($project)) {
                 $amount = 0.0;
                 $poheadamounttotal = 0.0;
                 $poheadAmountBy7550 = 0.0;
@@ -315,8 +341,7 @@ class Salesorder_hxold extends Model
                 $sohead_poheadtaxamount = 0.0;
                 $sohead_poheadtaxamountby7550 = 0.0;
                 $receiptpaymenttotal = 0.0;
-                foreach ($project->soheads as $sohead)
-                {
+                foreach ($project->soheads as $sohead) {
                     $amount += $sohead->amount;
                     $poheadamounttotal += $sohead->poheads->sum('amount');
                     $poheadAmountBy7550 += array_first($sohead->getPoheadAmountBy7550())->poheadAmountBy7550;
@@ -332,21 +357,17 @@ class Salesorder_hxold extends Model
                 $warehousetaxcost = 0.0;
                 $nowarehousecost = 0.0;
                 $nowarehousetaxcost = 0.0;
-                foreach ($project->soheads as $sohead)
-                {
+                foreach ($project->soheads as $sohead) {
                     $warehousecost += array_first($sohead->getwarehouseCost())->warehousecost;
                     $warehousetaxcost += array_first($sohead->getwarehousetaxCost())->warehousetaxcost;
                     $nowarehousecost += array_first($sohead->getnowarehouseCost())->nowarehousecost;
                     $nowarehousetaxcost += array_first($sohead->getnowarehousetaxCost())->nowarehousetaxcost;
-
                 }
                 $warehousecostpercent = ($warehousecost  + $nowarehousecost + $sohead_taxamount  - $nowarehousetaxcost - $warehousetaxcost) / ($sohead->amount * 10000.0)  + $sohead->othercostpercent;
                 $poheadcostpercent = $poheadcostpercent >= $warehousecostpercent ? $poheadcostpercent : $warehousecostpercent;
 
-                if ($receiptpaymenttotal / $amount >= 0.6)
-                {
-                    if (abs($maxbonusfactor - 0.35) < 0.000001 && abs($mixbonusfactor - 0.1) < 0.000001)
-                    {
+                if ($receiptpaymenttotal / $amount >= 0.6) {
+                    if (abs($maxbonusfactor - 0.35) < 0.000001 && abs($mixbonusfactor - 0.1) < 0.000001) {
                         if ($poheadcostpercent < 0.65)
                             $bonusfactor = 0.35;
                         elseif ($poheadcostpercent >= 0.65 && $poheadcostpercent < 0.7)
@@ -359,9 +380,7 @@ class Salesorder_hxold extends Model
                             $bonusfactor = 0.15;
                         else
                             $bonusfactor = 0.1;
-                    }
-                    else
-                    {
+                    } else {
                         $bonusfactor = $maxbonusfactor;
                         if ($poheadcostpercent >= 0.5 && $poheadcostpercent < 0.6)
                             $bonusfactor = $bonusfactor - $offset;
@@ -383,8 +402,7 @@ class Salesorder_hxold extends Model
     {
         $bonusfactor = $mixbonusfactor;
         $offset = ($maxbonusfactor - $mixbonusfactor) / 6;
-        if ($this->amount > 0.0)
-        {
+        if ($this->amount > 0.0) {
             $amount = $this->amount;
             $poheadamounttotal = $this->poheads_simple->sum('amount') / 10000.0;
             $poheadAmountBy7550 = array_first($this->getPoheadAmountBy7550())->poheadAmountBy7550;
@@ -402,8 +420,7 @@ class Salesorder_hxold extends Model
             $poheadcostpercent = $poheadcostpercent >= $warehousecostpercent ? $poheadcostpercent : $warehousecostpercent;
 
             $receiptpaymenttotal = $this->receiptpayments->sum('amount');
-            if ($receiptpaymenttotal / $amount >= 0.6)
-            {
+            if ($receiptpaymenttotal / $amount >= 0.6) {
                 $bonusfactor = $maxbonusfactor;
                 if ($poheadcostpercent >= 0.3 && $poheadcostpercent < 0.4)
                     $bonusfactor = $bonusfactor - $offset;
@@ -423,8 +440,9 @@ class Salesorder_hxold extends Model
     }
 
     // 奖金比例，根据政策获取，不取字段值
-    public function getAmountpertenthousandBySohead() {
-//        return 250;
+    public function getAmountpertenthousandBySohead()
+    {
+        //        return 250;
         if ($this->type == 0)   // 普通订单
             return DB::connection('sqlsrv')->select('select dbo.getAmountpertenthousandBySohead(' . $this->id . ') as amountpertenthousandbysohead');
         else       // 配件订单
@@ -432,28 +450,34 @@ class Salesorder_hxold extends Model
     }
 
     // 技术部人员奖金系数
-    public function getAmountpertenthousandBySoheadTech() {
+    public function getAmountpertenthousandBySoheadTech()
+    {
         return 25;
     }
 
-    public function bonuspayments() {
+    public function bonuspayments()
+    {
         return $this->hasMany('App\Models\Sales\Bonuspayment_hxold', 'sohead_id', 'id');
     }
 
-    public function senddetails() {
+    public function senddetails()
+    {
         return $this->hasMany('App\Models\Sales\Senddetail_hxold', 'sohead_id', 'id');
     }
 
-    public function sotickets() {
+    public function sotickets()
+    {
         return $this->hasMany('App\Models\Sales\Soticket_hxold', 'sohead_id', 'id');
     }
 
-    public function soheaddocs() {
+    public function soheaddocs()
+    {
         return $this->hasMany('App\Models\Sales\Soheaddocs', 'sohead_id', 'id');
     }
 
     // 是否需要收款：根据约定的付款方式判断是否需要收款
-    public function needreceiptpayment() {
+    public function needreceiptpayment()
+    {
         $soheadAmount = $this->amount;
         $receivedAmount = $this->receiptpayments()->sum('amount');
         $msgList = [];
@@ -462,18 +486,16 @@ class Salesorder_hxold extends Model
         $paywayasses = Paywayass_hxold::where('paywayass_order_id', $this->id)->orderBy('payway_seq')->get();
         $percentSum = 0.0;
         $bWarning = false;
-        foreach ($paywayasses as $paywayass)
-        {
+        foreach ($paywayasses as $paywayass) {
             $paywayId = $paywayass->paywayass_payway_id;
             $percentSum += $paywayass->paywayass_value;
-//                Log::info("percentSum: " . $percentSum);
+            //                Log::info("percentSum: " . $percentSum);
 
             $amountDest = $this->amount * $percentSum;
             $notReceivedAmount = $amountDest - $receivedAmount;
-//                Log::info("notReceivedAmount: " . $notReceivedAmount);
+            //                Log::info("notReceivedAmount: " . $notReceivedAmount);
 
-            switch ($paywayId)
-            {
+            switch ($paywayId) {
                 case 1:         // 预付款: 合同签订后10天
                     $orderDate = Carbon::parse($this->orderdate);
                     if (Carbon::now()->gt($orderDate->addDay(10)))
@@ -487,7 +509,7 @@ class Salesorder_hxold extends Model
                 case 15:        // 设计结束款: 技术部与电气部都已完成
                     // 目前数据库中的电气部似乎都没有显示完成，所以先不考虑电气部的完成情况
                     if ($this->techdept_status == 1 && $this->elecdept_status == 1)
-//                        if ($this->techdept_status == 1)
+                    //                        if ($this->techdept_status == 1)
                     {
                         $bWarning = true;
                     }
@@ -501,16 +523,14 @@ class Salesorder_hxold extends Model
                     break;
                 case 13:        // 部分到货款: 已勾选发货
                 case 5:         // 全部到货款: 已勾选发货
-                    if ($this->delivery_status == 1)
-                    {
+                    if ($this->delivery_status == 1) {
                         $bWarning = true;
                     }
                     break;
                 case 14:            // 安装结束款: 已填写安装日期
                     $installeddate = Carbon::parse($this->installeddate);
                     $baseDate = Carbon::create(1900, 1, 1);
-                    if ($installeddate->gt($baseDate))
-                    {
+                    if ($installeddate->gt($baseDate)) {
                         $bWarning = true;
                     }
                     break;
@@ -518,8 +538,7 @@ class Salesorder_hxold extends Model
                     // Carbon使用方法: https://9iphp.com/web/laravel/php-datetime-package-carbon.html
                     $debugendDate = Carbon::parse($this->debugend_date);
                     $baseDate = Carbon::create(1900, 1, 1);
-                    if ($debugendDate->gt($baseDate))
-                    {
+                    if ($debugendDate->gt($baseDate)) {
                         $bWarning = true;
                     }
                     break;
@@ -539,8 +558,7 @@ class Salesorder_hxold extends Model
                     // Carbon使用方法: https://9iphp.com/web/laravel/php-datetime-package-carbon.html
                     $debugendDate = Carbon::parse($this->debugend_date);
                     $baseDate = Carbon::create(1900, 1, 1);
-                    if ($debugendDate->gt($baseDate))
-                    {
+                    if ($debugendDate->gt($baseDate)) {
                         $bWarning = true;
                     }
                     break;
@@ -566,8 +584,7 @@ class Salesorder_hxold extends Model
                     // Carbon使用方法: https://9iphp.com/web/laravel/php-datetime-package-carbon.html
                     $debugendDate = Carbon::parse($this->debugend_date);
                     $baseDate = Carbon::create(1900, 1, 1);
-                    if ($debugendDate->gt($baseDate) && Carbon::now()->gt($debugendDate->addMonth(12)))
-                    {
+                    if ($debugendDate->gt($baseDate) && Carbon::now()->gt($debugendDate->addMonth(12))) {
                         $bWarning = true;
                     }
                     break;
@@ -575,32 +592,28 @@ class Salesorder_hxold extends Model
                     // Carbon使用方法: https://9iphp.com/web/laravel/php-datetime-package-carbon.html
                     $environmentalProtectionCollectionDate = Carbon::parse($this->environmentalProtectionCollectionDate);
                     $baseDate = Carbon::create(1900, 1, 1);
-                    if ($environmentalProtectionCollectionDate->gt($baseDate) && Carbon::now()->gt($environmentalProtectionCollectionDate))
-                    {
+                    if ($environmentalProtectionCollectionDate->gt($baseDate) && Carbon::now()->gt($environmentalProtectionCollectionDate)) {
                         $bWarning = true;
                     }
                     break;
                 case 10:        // 质保金: 质保金到期日期.  不知道为什么质保金日期在后台里很多订单是 1901-01-01, 而不是 1900
                     $quolityDate = Carbon::parse($this->quolityDate);
                     $baseDate = Carbon::create(1901, 1, 1);
-                    if ($quolityDate->gt($baseDate) && Carbon::now()->gt($quolityDate))
-                    {
+                    if ($quolityDate->gt($baseDate) && Carbon::now()->gt($quolityDate)) {
                         $bWarning = true;
                     }
                     break;
                 case 19:        // 第1年质保金: quolityDate
                     $quolityDate = Carbon::parse($this->quolityDate);
                     $baseDate = Carbon::create(1901, 1, 1);
-                    if ($quolityDate->gt($baseDate) && Carbon::now()->gt($quolityDate->addYear(1)))
-                    {
+                    if ($quolityDate->gt($baseDate) && Carbon::now()->gt($quolityDate->addYear(1))) {
                         $bWarning = true;
                     }
                     break;
                 case 20:        // 第2年质保金: quolityDate
                     $quolityDate = Carbon::parse($this->quolityDate);
                     $baseDate = Carbon::create(1901, 1, 1);
-                    if ($quolityDate->gt($baseDate) && Carbon::now()->gt($quolityDate->addYear(2)))
-                    {
+                    if ($quolityDate->gt($baseDate) && Carbon::now()->gt($quolityDate->addYear(2))) {
                         $bWarning = true;
                     }
                     break;
@@ -610,65 +623,59 @@ class Salesorder_hxold extends Model
                     break;
             }
 
-            if ($bWarning)
-            {
-                if ($notReceivedAmount > $this->amount * 0.01)
-                    ;
+            if ($bWarning) {
+                if ($notReceivedAmount > $this->amount * 0.01);
                 else
                     $bWarning = false;
-//                $notReceiveAmountForWarning = $notReceivedAmount;
-//                $msgTemp = "应收" . $paywayass->payway_name . "款" . $amountDest . "万, " .
-//                    "实收" . $receivedAmount . "万, 未收" . $notReceivedAmount . "万";
-//                $msgTemp = "累计可收" . $amountDest . "万(" . $amountDest / $soheadAmount * 100.0 . "%), " .
-//                    "累计实收" . doubleval($receivedAmount) . "万(" . number_format($receivedAmount / $soheadAmount * 100.0, 2) . "%), " .
-//                    "差" . $notReceivedAmount . "万(" . number_format($notReceivedAmount / $soheadAmount * 100.0, 2) . "%).";
-//                array_push($msgList, $msgTemp);
+                //                $notReceiveAmountForWarning = $notReceivedAmount;
+                //                $msgTemp = "应收" . $paywayass->payway_name . "款" . $amountDest . "万, " .
+                //                    "实收" . $receivedAmount . "万, 未收" . $notReceivedAmount . "万";
+                //                $msgTemp = "累计可收" . $amountDest . "万(" . $amountDest / $soheadAmount * 100.0 . "%), " .
+                //                    "累计实收" . doubleval($receivedAmount) . "万(" . number_format($receivedAmount / $soheadAmount * 100.0, 2) . "%), " .
+                //                    "差" . $notReceivedAmount . "万(" . number_format($notReceivedAmount / $soheadAmount * 100.0, 2) . "%).";
+                //                array_push($msgList, $msgTemp);
             }
         }
 
-//        if (count($msgList) > 0)
-//        {
-//
-//            $msg = ($this->projectjc == "" ? $this->descrip : $this->projectjc) . ", "  .
-//                "合同" . doubleval($soheadAmount) . "万, " . array_pop($msgList) . " \n付款方式: " . $this->paymethod;
-//
-//            $salesmanager_id = $this->salesmanager_id;
-//            if (!array_key_exists($this->salesmanager_id, $receiptPeopleArray))
-//            {
-//                $receiptPeopleArray[$salesmanager_id] = [];
-//                $receiptPeopleArray[$salesmanager_id]['msg'] = [];
-//                $receiptPeopleArray[$salesmanager_id]['total'] = 0.0;
-//            }
-//            array_push($receiptPeopleArray[$this->salesmanager_id]['msg'], ($this->projectjc == "" ? $this->descrip : $this->projectjc) . $notReceiveAmountForWarning . "万元")  ;
-//            $receiptPeopleArray[$salesmanager_id]['total'] += $notReceiveAmountForWarning;
-//
-//            // 向销售经理发送消息
-//            $this->sendMsg($msg, $this->salesmanager_id);
-//            $this->sendMsg($msg, 8);        // to WuHL
-//            $this->sendMsg($msg, 16);       // to LiY
-//        }
+        //        if (count($msgList) > 0)
+        //        {
+        //
+        //            $msg = ($this->projectjc == "" ? $this->descrip : $this->projectjc) . ", "  .
+        //                "合同" . doubleval($soheadAmount) . "万, " . array_pop($msgList) . " \n付款方式: " . $this->paymethod;
+        //
+        //            $salesmanager_id = $this->salesmanager_id;
+        //            if (!array_key_exists($this->salesmanager_id, $receiptPeopleArray))
+        //            {
+        //                $receiptPeopleArray[$salesmanager_id] = [];
+        //                $receiptPeopleArray[$salesmanager_id]['msg'] = [];
+        //                $receiptPeopleArray[$salesmanager_id]['total'] = 0.0;
+        //            }
+        //            array_push($receiptPeopleArray[$this->salesmanager_id]['msg'], ($this->projectjc == "" ? $this->descrip : $this->projectjc) . $notReceiveAmountForWarning . "万元")  ;
+        //            $receiptPeopleArray[$salesmanager_id]['total'] += $notReceiveAmountForWarning;
+        //
+        //            // 向销售经理发送消息
+        //            $this->sendMsg($msg, $this->salesmanager_id);
+        //            $this->sendMsg($msg, 8);        // to WuHL
+        //            $this->sendMsg($msg, 16);       // to LiY
+        //        }
         return $bWarning;
     }
 
     // 集团里所有的订单都垫资
-    public function groupdianziallsohead() {
+    public function groupdianziallsohead()
+    {
         $bRtn = true;
         $project = $this->project;
-        if (isset($project))
-        {
+        if (isset($project)) {
             $group = $project->group;
-            if (isset($group))
-            {
-//            Log::info('Group:' . $group->id);
-                foreach ($group->projects as $project)
-                {
-                    foreach ($project->soheads as $sohead)
-                    {
-//                    Log::info('Sohead:' . $sohead->id);
-//                    Log::info($sohead->receiptpayments->sum('amount') * 10000);
-//                    Log::info($sohead->payments->sum('amount'));
-                        if ($sohead->receiptpayments->sum('amount') * 10000 >= $sohead->payments->sum('amount'))
-                        {
+            if (isset($group)) {
+                //            Log::info('Group:' . $group->id);
+                foreach ($group->projects as $project) {
+                    foreach ($project->soheads as $sohead) {
+                        //                    Log::info('Sohead:' . $sohead->id);
+                        //                    Log::info($sohead->receiptpayments->sum('amount') * 10000);
+                        //                    Log::info($sohead->payments->sum('amount'));
+                        if ($sohead->receiptpayments->sum('amount') * 10000 >= $sohead->payments->sum('amount')) {
                             $bRtn = false;
                             break;
                         }

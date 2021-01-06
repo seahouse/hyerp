@@ -24,6 +24,9 @@
 
         {{--{!! Form::select('paymentstatus', ['0' => '已付款', '-1' => '未付款'], null, ['class' => 'form-control', 'placeholder' => '--付款状态--']); !!}--}}
         {{--{!! Form::select('approvalstatus', ['1' => '审批中', '0' => '已通过', '-2' => '未通过'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']) !!}--}}
+        {!! Form::text('projectname', null, ['class' => 'form-control', 'placeholder' => '对应项目']) !!}
+        {!! Form::text('productname', null, ['class' => 'form-control', 'placeholder' => '商品名称']) !!}
+        {!! Form::text('applicant', null, ['class' => 'form-control', 'placeholder' => '申请人']) !!}
         {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '编号']) !!}
         {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
         {{--<a class="btn btn-default btn-sm" id="btnPrint">打印</a>--}}
