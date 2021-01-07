@@ -201,13 +201,15 @@ class PaymentrequestsController extends Controller
         $query = Paymentrequest::latest('paymentrequests.created_at');
         if (strlen($key) > 0)
         {
-            $query->whereHas('supplier_hxold', function ($query) use ($key) {
-                $query->where('name', 'like', '%'.$key.'%');
-            })
-                ->orWhereHas('purchaseorder_hxold', function ($query) use ($key) {
-                    $query->where('descrip', 'like', '%'.$key.'%');
+            $query->where(function ($query) use ($key) {
+                $query->whereHas('supplier_hxold', function ($query) use ($key) {
+                    $query->where('name', 'like', '%'.$key.'%');
                 })
-                ->orWhere('paymentrequests.descrip', 'like', '%'.$key.'%');
+                    ->orWhereHas('purchaseorder_hxold', function ($query) use ($key) {
+                        $query->where('descrip', 'like', '%'.$key.'%');
+                    })
+                    ->orWhere('paymentrequests.descrip', 'like', '%'.$key.'%');
+            });
 //            $query->where(function($query) use ($supplier_ids, $purchaseorder_ids, $key) {
 //                $query->whereIn('supplier_id', $supplier_ids)
 //                    ->orWhereIn('pohead_id', $purchaseorder_ids)
