@@ -64,9 +64,9 @@ class MyController extends Controller
 //        }
 
         $query = Receiptpayment_hxold::latest('vreceiptpayment.date');
-        $query->leftJoin('vorder', 'vorder.id', '=', 'vreceiptpayment.sohead_id');
-        $query->leftJoin('vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
-        $query->leftJoin('outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
+        $query->leftJoin('hxcrm2016.dbo.vorder', 'vorder.id', '=', 'vreceiptpayment.sohead_id');
+        $query->leftJoin('hxcrm2016.dbo.vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
+        $query->leftJoin('hxcrm2016.dbo.outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
 
 
 

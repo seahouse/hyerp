@@ -201,11 +201,18 @@ class PaymentrequestsController extends Controller
         $query = Paymentrequest::latest('paymentrequests.created_at');
         if (strlen($key) > 0)
         {
-            $query->where(function($query) use ($supplier_ids, $purchaseorder_ids, $key) {
-                $query->whereIn('supplier_id', $supplier_ids)
-                    ->orWhereIn('pohead_id', $purchaseorder_ids)
-                    ->orWhere('paymentrequests.descrip', 'like', '%'.$key.'%');     // 增加 说明 字段的模糊查找
-            });
+            $query->whereHas('supplier_hxold', function ($query) use ($key) {
+                $query->where('name', 'like', '%'.$key.'%');
+            })
+                ->orWhereHas('purchaseorder_hxold', function ($query) use ($key) {
+                    $query->where('descrip', 'like', '%'.$key.'%');
+                })
+                ->orWhere('paymentrequests.descrip', 'like', '%'.$key.'%');
+//            $query->where(function($query) use ($supplier_ids, $purchaseorder_ids, $key) {
+//                $query->whereIn('supplier_id', $supplier_ids)
+//                    ->orWhereIn('pohead_id', $purchaseorder_ids)
+//                    ->orWhere('paymentrequests.descrip', 'like', '%'.$key.'%');     // 增加 说明 字段的模糊查找
+//            });
         }
 
         if ($approvalstatus <> '')
@@ -1455,13 +1462,13 @@ class PaymentrequestsController extends Controller
     {
         $item = Itemp_hxold::where('goods_id', $itemid)->firstOrFail();
         $receiptitems = Receiptitem_hxold::where('item_number', $item->goods_no)
-            ->leftJoin('vgoods', 'vgoods.goods_no', '=', 'vreceiptitem.item_number')
-            ->leftJoin('vrwrecord', 'vrwrecord.id', '=', 'vreceiptitem.receipt_id')
-            ->leftJoin('vwarehouse', 'vwarehouse.number', '=', 'vrwrecord.warehouse_number')
-            ->leftJoin('vsupplier', 'vsupplier.id', '=', 'vrwrecord.supplier_id')
-            ->leftJoin('vreceiptorder', 'vreceiptorder.receipt_id', '=', 'vrwrecord.id')
-            ->leftJoin('vpurchaseorder', 'vpurchaseorder.id', '=', 'vreceiptorder.pohead_id')
-            ->leftJoin('vorder', 'vorder.id', '=', 'vpurchaseorder.sohead_id')->select([
+            ->leftJoin('hxcrm2016.dbo.vgoods', 'vgoods.goods_no', '=', 'vreceiptitem.item_number')
+            ->leftJoin('hxcrm2016.dbo.vrwrecord', 'vrwrecord.id', '=', 'vreceiptitem.receipt_id')
+            ->leftJoin('hxcrm2016.dbo.vwarehouse', 'vwarehouse.number', '=', 'vrwrecord.warehouse_number')
+            ->leftJoin('hxcrm2016.dbo.vsupplier', 'vsupplier.id', '=', 'vrwrecord.supplier_id')
+            ->leftJoin('hxcrm2016.dbo.vreceiptorder', 'vreceiptorder.receipt_id', '=', 'vrwrecord.id')
+            ->leftJoin('hxcrm2016.dbo.vpurchaseorder', 'vpurchaseorder.id', '=', 'vreceiptorder.pohead_id')
+            ->leftJoin('hxcrm2016.dbo.vorder', 'vorder.id', '=', 'vpurchaseorder.sohead_id')->select([
                 'vreceiptitem.quantity',
                 Db::raw('convert(decimal(18,3), vreceiptitem.unitprice * (1+taxrate/100.0)) as unitprice'),
                 'vgoods.goods_unit_name',

@@ -194,7 +194,7 @@ class SalesorderhxController extends Controller
     public function dwgbomjsondetail(Request $request, $id = 0)
     {
         $query = Dwgbomitems_hx::whereRaw('1=1');
-        $query->leftJoin('vgoods', 'vgoods.goods_id', '=', 'dwgbomitems.goods_id');
+        $query->leftJoin('hxcrm2016.dbo.vgoods', 'vgoods.goods_id', '=', 'dwgbomitems.goods_id');
 
         if ($id > 0)
             $query->where('dwgbom_id', $id);

@@ -168,7 +168,7 @@ class Salesorder_hxold extends \App\Models\HxModel
 
     public function equipmenttypes()
     {
-        return $this->belongsToMany(Equipmenttype_hxold::class, 'equipmenttypeass', 'equipmenttypeass_order_id', 'equipmenttypeass_equipmenttype_id');
+        return $this->belongsToMany(Equipmenttype_hxold::class, 'hxcrm2016.dbo.equipmenttypeass', 'equipmenttypeass_order_id', 'equipmenttypeass_equipmenttype_id');
     }
 
     public function equipmenttypeasses()

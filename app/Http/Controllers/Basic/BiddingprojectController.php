@@ -121,7 +121,7 @@ class BiddingprojectController extends Controller
     public function showbiddinginformation($id)
     {
         $inputs = '';
-        $saleorderids = Salesorder_hxold::join('vproject', 'vproject.id', '=', 'project_id')
+        $saleorderids = Salesorder_hxold::join('hxcrm2016.dbo.vproject', 'vproject.id', '=', 'project_id')
             ->where('vproject.id', '=', $id)->pluck('vorder.id');
         $query = Biddinginformation::latest('created_at');
         $query->wherein('sohead_id', $saleorderids);
@@ -177,7 +177,7 @@ class BiddingprojectController extends Controller
                         $sheet->getCell(\PHPExcel_Cell::stringFromColumnIndex($colCol) . $rowCol)->setValue($biddingproject->name);
                         $colCol++;
                         //                        dd($sheet->getCell(\PHPExcel_Cell::stringFromColumnIndex($colCol-1).$rowCol)->getValue());
-                        $saleorderids = Salesorder_hxold::join('vproject', 'vproject.id', '=', 'project_id')
+                        $saleorderids = Salesorder_hxold::join('hxcrm2016.dbo.vproject', 'vproject.id', '=', 'project_id')
                             ->where('vproject.id', '=', $biddingproject->id)->pluck('vorder.id');
                         $query = Biddinginformation::latest('created_at');
                         $query->wherein('sohead_id', $saleorderids);
@@ -296,7 +296,7 @@ class BiddingprojectController extends Controller
                         $sheet->getCell(\PHPExcel_Cell::stringFromColumnIndex($colCol) . $rowCol)->setValue($biddingproject->name);
                         $colCol++;
                         //                        dd($sheet->getCell(\PHPExcel_Cell::stringFromColumnIndex($colCol-1).$rowCol)->getValue());
-                        $saleorderids = Salesorder_hxold::join('vproject', 'vproject.id', '=', 'project_id')
+                        $saleorderids = Salesorder_hxold::join('hxcrm2016.dbo.vproject', 'vproject.id', '=', 'project_id')
                             ->where('vproject.id', '=', $biddingproject->id)->pluck('vorder.id');
                         $query = Biddinginformation::latest('created_at');
                         $query->wherein('sohead_id', $saleorderids);
