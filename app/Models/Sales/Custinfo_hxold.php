@@ -4,9 +4,9 @@ namespace App\Models\Sales;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Custinfo_hxold extends Model
+class Custinfo_hxold extends \App\Models\HxModel
 {
-//    protected $table = 'vcustomer';
+    protected $table = 'vcustomer';
 //    protected $connection = 'sqlsrv';
 
     //
@@ -16,11 +16,7 @@ class Custinfo_hxold extends Model
     //     'contact_id',
     //     'comments',
     // ];
-
-    public function __construct()
-    {
-        $this->table = config('database.connections.sqlsrv.database') . '.dbo.vorder';
-    }
+    
     
     // public function contact() {
     //     return $this->hasOne('App\Models\Crm\Contact', 'id', 'contact_id');
