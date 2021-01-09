@@ -19,9 +19,12 @@ class HxModel extends Model
      */
     protected $db_prefix;
 
-    public function __construct()
+    public function __construct(array $attributes = [])
     {
+        parent::__construct($attributes);
+
         $this->db_prefix = config('database.hxold_database');
         $this->table = "{$this->db_prefix}{$this->table}";
+
     }
 }

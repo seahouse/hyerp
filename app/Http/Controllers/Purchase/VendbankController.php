@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Purchase\Vendbank_hxold;
 use App\Http\Controllers\HelperController;
+use Log;
 
 class VendbankController extends Controller
 {
@@ -123,8 +124,6 @@ class VendbankController extends Controller
         $input = $request->all();
         $input = HelperController::skipEmptyValue($input);
         // dd($input);
-
-        
 
 
 
