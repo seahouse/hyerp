@@ -403,6 +403,7 @@ class AdditionsalesorderController extends Controller
                     $sohead->订单金额 = $amount;
                     $sohead->associated_approval_type = 'additionsalesorder';
                     $sohead->associated_process_instance_id = $processInstanceId;
+                    $sohead->订单备注1 = "关联销售合同增补审批单，单号：" . $additionsalesorder->business_id;      // 销售部备注
                     $sohead->save();
 
                     if (isset($sohead))
