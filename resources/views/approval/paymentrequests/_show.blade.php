@@ -111,7 +111,8 @@
     @yield('for_paymentrequestretractapprovals_create')
 
     <!-- when next approver level is 1 or next approver is nothing, can destory -->
-    @if (Auth::user()->id == $paymentrequest->applicant_id and isset($paymentrequest->approversetting->level) and $paymentrequest->approversetting->level == 1)
+    {{-- 发起人在审批流程走完之前可以撤销，2021/1/12 --}}
+    @if (Auth::user()->id == $paymentrequest->applicant_id && $paymentrequest->status > 0)
          {!! Form::open(array('url' => 'approval/paymentrequests/mdestroy/' . $paymentrequest->id, 'method' => 'delete', 'onsubmit' => 'return confirm("确定撤销此记录?");')) !!}
             {!! Form::submit('撤销', ['class' => 'btn btn-danger btn-sm']) !!}
         {!! Form::close() !!}

@@ -1068,6 +1068,7 @@ class PaymentrequestsController extends Controller
     public function mdestroy($id)
     {
         //
+        Paymentrequest::where('id', $id)->update(['status' => -2]);
         Paymentrequest::destroy($id);
         return redirect('/approval/mindexmy');
     }
