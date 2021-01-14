@@ -21,15 +21,22 @@ use App\Models\Sales\Salesorder_hxold;
 use App\Models\System\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
+use App\Models\Purchase\Vendinfo_hxold;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Approval\Reimbursement;
 use App\Models\Approval\Paymentrequest;
 use App\Models\Approval\Paymentrequestapproval;
-use Auth, DB, Log, Datatables, Excel;
 use Illuminate\Support\Facades\Input;
 use App\Http\Controllers\DingTalkController;
+use App\Models\Purchase\Vendbank_hxold;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Classes\LaravelExcelWorksheet;
+use Yajra\Datatables\Facades\Datatables;
+use Maatwebsite\Excel\Facades\Excel;
+use Maatwebsite\Excel\Writers\LaravelExcelWriter;
 
 class ApprovalController extends Controller
 {
@@ -49,24 +56,21 @@ class ApprovalController extends Controller
 
         $data = [];
         $type = 'projectsitepurchase';
-        if ($request->has('type') && strlen($request->input('type')) > 0)
-        {
+        if ($request->has('type') && strlen($request->input('type')) > 0) {
             $type = $request->input('type');
         }
-        switch ($type)
-        {
+        switch ($type) {
             case 'projectsitepurchase':
                 $query = Projectsitepurchase::where('business_id', $request->input('key'))->orderBy('id', 'desc');
         }
-//        $query = Projectsitepurchase::where('business_id', $key)->orderBy('id', 'desc');
-//        $query->leftJoin('users', 'users.id', '=', 'projectsitepurchases.applicant_id');
-//        $query->leftJoin('hxcrm2016.dbo.vorder', 'vorder.id', '=', 'projectsitepurchases.sohead_id');
-//        $items = $query->select('projectsitepurchases.*', 'users.name as applicant', 'hxcrm2016.dbo.vorder.projectjc', 'hxcrm2016.dbo.vorder.number as sohead_number', 'hxcrm2016.dbo.vorder.salesmanager')->paginate(20);
+        //        $query = Projectsitepurchase::where('business_id', $key)->orderBy('id', 'desc');
+        //        $query->leftJoin('users', 'users.id', '=', 'projectsitepurchases.applicant_id');
+        //        $query->leftJoin('hxcrm2016.dbo.vorder', 'vorder.id', '=', 'projectsitepurchases.sohead_id');
+        //        $items = $query->select('projectsitepurchases.*', 'users.name as applicant', 'hxcrm2016.dbo.vorder.projectjc', 'hxcrm2016.dbo.vorder.number as sohead_number', 'hxcrm2016.dbo.vorder.salesmanager')->paginate(20);
 
-//        $items = $query->paginate(20);
+        //        $items = $query->paginate(20);
         $items = $query->first();
-        if (isset($items))
-        {
+        if (isset($items)) {
             $data['business_id'] = $items->business_id;
             $data['process_instance_id'] = $items->process_instance_id;
             $data['title'] = isset($items->applicant) ? $items->applicant->name . '发起的审批单' : '';
@@ -74,8 +78,8 @@ class ApprovalController extends Controller
         Log::info($data);
 
         return $data;
-//        return response($items)
-//            ->header('Access-Control-Allow-Origin', 'http://www.huaxing-east.cn:2016');
+        //        return response($items)
+        //            ->header('Access-Control-Allow-Origin', 'http://www.huaxing-east.cn:2016');
     }
 
     public function getdtitemsbykey(Request $request)
@@ -83,45 +87,38 @@ class ApprovalController extends Controller
         $msg = '';
 
         $data = [];
-        if (strlen($msg) == 0)
-        {
+        if (strlen($msg) == 0) {
             $business_id = $request->input('key');
-//            Log::info(substr($business_id, 0, 12));
+            //            Log::info(substr($business_id, 0, 12));
             $startTime = Carbon::createFromFormat('YmdHi', substr($business_id, 0, 12));
             $endTime = $startTime->copy()->addMinute();
-//            Log::info($startTime);
-//            Log::info($endTime);
+            //            Log::info($startTime);
+            //            Log::info($endTime);
             $approvaltype = $request->input('type');
             $response = ApprovalController::processinstance_listids($approvaltype, $startTime, $endTime);
             Log::info(json_encode($response));
-            if ($response->result->ding_open_errcode == "0")
-            {
-                if (isset($response->result->result->list))
-                {
-                    foreach ($response->result->result->list->process_instance_top_vo as $item)
-                    {
-                        if ($item->business_id == $business_id)
-                        {
+            if ($response->result->ding_open_errcode == "0") {
+                if (isset($response->result->result->list)) {
+                    foreach ($response->result->result->list->process_instance_top_vo as $item) {
+                        if ($item->business_id == $business_id) {
                             $data['business_id'] = $business_id;
                             $data['process_instance_id'] = "$item->process_instance_id";
                             $data['title'] = "$item->title";
 
-//                        $approvaltype = $request->get('approvaltype');
+                            //                        $approvaltype = $request->get('approvaltype');
                             $formData = [];
                             $user = User::where('dtuserid', $item->originator_userid)->first();
-                            foreach ($item->form_component_values->form_component_value_vo as $formvalue)
-                            {
-//                            Log::info(json_encode($formvalue));
-//                            Log::info($formvalue->name . ": " . $formvalue->value);
+                            foreach ($item->form_component_values->form_component_value_vo as $formvalue) {
+                                //                            Log::info(json_encode($formvalue));
+                                //                            Log::info($formvalue->name . ": " . $formvalue->value);
                                 $formData["$formvalue->name"] = "$formvalue->value";
                             }
                             $data['content'] = array_slice($formData, 0, 3);
                             Log::info($data);
-                            if ($approvaltype == 'issuedrawing')
-                            {
+                            if ($approvaltype == 'issuedrawing') {
                                 //                                Log::info(json_encode($formData));
                                 $input = [];
-//                                Log::info($formData['设计部门']);
+                                //                                Log::info($formData['设计部门']);
                                 $input['designdepartment'] = $formData['设计部门'];
 
                                 $sohead = Salesorder_hxold::where('number', $formData['项目编号'])->first();
@@ -141,33 +138,27 @@ class ApprovalController extends Controller
                                 $input['requestdeliverydate'] = $formData['要求发货日'];
                                 $input['drawingcount'] = $formData['图纸份数（份）'];
                                 $input['remark'] = $formData['备注'];
-                                if (isset($user))
-                                {
+                                if (isset($user)) {
                                     $input['applicant_id'] = $user->id;
-                                }
-                                else
+                                } else
                                     $msg = '发起人不存在，无法继续。';
                                 $input['approversetting_id'] = -1;
-                                if ($item->status == "COMPLETED")
-                                {
+                                if ($item->status == "COMPLETED") {
                                     if ($item->process_instance_result == "agree")
                                         $input['status'] = 0;
                                     else
                                         $input['status'] = -1;
-                                }
-                                else
+                                } else
                                     $msg = '此审批单还未结束，无法继续';
                                 $input['process_instance_id'] = "$item->process_instance_id";
                                 $input['business_id'] = "$item->business_id";
 
-//                                Log::info(json_encode($input));
+                                //                                Log::info(json_encode($input));
 
-                            }
-                            elseif ($approvaltype == 'mcitempurchase')
-                            {
+                            } elseif ($approvaltype == 'mcitempurchase') {
                                 //                                Log::info(json_encode($formData));
                                 $input = [];
-//                                Log::info($formData['设计部门']);
+                                //                                Log::info($formData['设计部门']);
                                 $input['manufacturingcenter'] = $formData['所属制造中心'];
                                 $input['itemtype'] = $formData['申购物品类型'];
                                 $input['expirationdate'] = $formData['要求最晚到货时间'];
@@ -179,36 +170,29 @@ class ApprovalController extends Controller
                                     $msg = '销售订单不存在，无法继续。';
                                 $input['totalprice'] = $formData['总价（元）'];
                                 $input['detailuse'] = $formData['采购物品详细用途'];
-                                if (isset($user))
-                                {
+                                if (isset($user)) {
                                     $input['applicant_id'] = $user->id;
-                                }
-                                else
+                                } else
                                     $msg = '发起人不存在，无法继续。';
                                 $input['approversetting_id'] = -1;
-                                if ($item->status == "COMPLETED")
-                                {
+                                if ($item->status == "COMPLETED") {
                                     if ($item->process_instance_result == "agree")
                                         $input['status'] = 0;
                                     else
                                         $input['status'] = -1;
-                                }
-                                else
+                                } else
                                     $msg = '此审批单还未结束，无法继续';
                                 $input['process_instance_id'] = "$item->process_instance_id";
                                 $input['business_id'] = "$item->business_id";
 
-//                            Log::info(json_encode($input));
-//                            $issuedrawing_numbers = explode(',', $formData['下发图纸审批单号']);
+                                //                            Log::info(json_encode($input));
+                                //                            $issuedrawing_numbers = explode(',', $formData['下发图纸审批单号']);
 
 
 
-                                if (strlen($msg) == 0)
-                                {
+                                if (strlen($msg) == 0) {
                                 }
-                            }
-                            elseif ($approvaltype == 'pppayment')
-                            {
+                            } elseif ($approvaltype == 'pppayment') {
                                 $input = [];
                                 $input['productioncompany'] = $formData['制作公司'];
                                 $input['designdepartment'] = $formData['设计部门'];
@@ -228,43 +212,36 @@ class ApprovalController extends Controller
                                 else
                                     $input['vendbank_id'] = 0;
 
-                                if (isset($user))
-                                {
+                                if (isset($user)) {
                                     $input['applicant_id'] = $user->id;
-                                }
-                                else
+                                } else
                                     $msg = '发起人不存在，无法继续。';
                                 $input['approversetting_id'] = -1;
-                                if ($item->status == "COMPLETED")
-                                {
+                                if ($item->status == "COMPLETED") {
                                     if ($item->process_instance_result == "agree")
                                         $input['status'] = 0;
                                     else
                                         $input['status'] = -1;
-                                }
-                                else
+                                } else
                                     $msg = '此审批单还未结束，无法继续';
                                 $input['process_instance_id'] = "$item->process_instance_id";
                                 $input['business_id'] = "$item->business_id";
 
-//                            Log::info(json_encode($input));
+                                //                            Log::info(json_encode($input));
 
-                                if (strlen($msg) == 0)
-                                {
+                                if (strlen($msg) == 0) {
                                 }
                             }
 
                             break;
-                        }
-                        else
+                        } else
                             continue;
-//                    Log::info(json_encode($item));
+                        //                    Log::info(json_encode($item));
                     }
                 }
-            }
-            else
+            } else
                 $msg = '获取钉钉审批单失败。';
-//            Log::info($response->result->ding_open_errcode);
+            //            Log::info($response->result->ding_open_errcode);
         }
 
         return $data;
@@ -323,7 +300,7 @@ class ApprovalController extends Controller
 
         return $this->searchmindexmy(request());
         // $paymentrequests = PaymentrequestsController::my();
-        
+
         // $dtuser = Auth::user()->dtuser;
 
         // return view('approval.mindexmy', compact('paymentrequests', 'dtuser'));
@@ -332,16 +309,16 @@ class ApprovalController extends Controller
     public function mindexmying()
     {
         //
-//        $inputs = request()->all();
-//
-//        if (!array_key_exists('approvaltype', $inputs))
-//            $inputs['approvaltype'] = '供应商付款';
-//        $approvaltype = $inputs['approvaltype'];
-         return $this->searchmindexmy(request());
-//        $paymentrequests = PaymentrequestsController::mying();
-//
-//
-//        return view('approval.mindexmy', compact('paymentrequests'));
+        //        $inputs = request()->all();
+        //
+        //        if (!array_key_exists('approvaltype', $inputs))
+        //            $inputs['approvaltype'] = '供应商付款';
+        //        $approvaltype = $inputs['approvaltype'];
+        return $this->searchmindexmy(request());
+        //        $paymentrequests = PaymentrequestsController::mying();
+        //
+        //
+        //        return view('approval.mindexmy', compact('paymentrequests'));
     }
 
     /**
@@ -353,10 +330,10 @@ class ApprovalController extends Controller
     {
         //
         // return $this->searchmindexmy(request());
-//        $paymentrequests = PaymentrequestsController::myed();
+        //        $paymentrequests = PaymentrequestsController::myed();
         return $this->searchmindexmyed(request());
 
-//        return view('approval.mindexmy', compact('paymentrequests'));
+        //        return view('approval.mindexmy', compact('paymentrequests'));
     }
 
     /**
@@ -375,13 +352,10 @@ class ApprovalController extends Controller
         $approvaltype = $inputs['approvaltype'];
 
         $items = null;
-        if ($approvaltype == '供应商付款')
-        {
+        if ($approvaltype == '供应商付款') {
             $items = PaymentrequestsController::my($request);
-//            return view('approval.mindexmy', compact('paymentrequests', 'inputs'));
-        }
-        elseif ($approvaltype == '下发图纸')
-        {
+            //            return view('approval.mindexmy', compact('paymentrequests', 'inputs'));
+        } elseif ($approvaltype == '下发图纸') {
             $items = IssuedrawingController::my($request);
             return view('approval.mindexmy', compact('items', 'inputs'));
         }
@@ -399,18 +373,15 @@ class ApprovalController extends Controller
         $approvaltype = $inputs['approvaltype'];
 
         $items = null;
-        if ($approvaltype == '供应商付款')
-        {
+        if ($approvaltype == '供应商付款') {
             $items = PaymentrequestsController::myed($request->input('key'));
-//            return view('approval.mindexmy', compact('paymentrequests', 'inputs'));
-        }
-        elseif ($approvaltype == '下发图纸')
-        {
+            //            return view('approval.mindexmy', compact('paymentrequests', 'inputs'));
+        } elseif ($approvaltype == '下发图纸') {
             $items = IssuedrawingController::myed($request);
         }
         return view('approval.mindexmyed', compact('items', 'inputs'));
     }
-    
+
 
     /**
      * 待我审批的.
@@ -420,8 +391,8 @@ class ApprovalController extends Controller
      */
     public function mindexmyapproval()
     {
-//        $reimbursements = ReimbursementsController::myapproval();
-//        $paymentrequests = PaymentrequestsController::myapproval();
+        //        $reimbursements = ReimbursementsController::myapproval();
+        //        $paymentrequests = PaymentrequestsController::myapproval();
         $request = request();
 
 
@@ -449,7 +420,7 @@ class ApprovalController extends Controller
         // 获取当前登录人员的审批设置中的id
         $user = Auth::user();
         $userid = Auth::user()->id;
-        
+
         // 特殊处理: if WuHL, set it to LiuYJ
         if ($inputs['approvaltype'] == "供应商付款" && Auth::user()->email == "wuhaolun@huaxing-east.com")
             $userid = User::where("email", "liuyujiao@huaxing-east.com")->first()->id;
@@ -470,63 +441,58 @@ class ApprovalController extends Controller
 
         $query = Paymentrequest::latest('created_at');
         $query->whereIn('approversetting_id', $ids_approversetting);
-//        Log::info('ids_approversetting: ' . $ids_approversetting);
+        //        Log::info('ids_approversetting: ' . $ids_approversetting);
 
-        if (strlen($key) > 0)
-        {
+        if (strlen($key) > 0) {
             // 为了加快速度，将查询方式改成 whereRaw
             $query->whereRaw("(supplier_id in (select id from hxcrm2016..vsupplier where name like '%" . $key . "%') or pohead_id in (select id from hxcrm2016..vpurchaseorder where descrip like '%" . $key . "%' or productname like '%" . $key . "%') or paymentrequests.descrip like '%" . $key . "%')");
 
-//            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
-//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
-//                ->where('descrip', 'like', '%'.$key.'%')
-//                ->orWhere('productname', 'like', '%'.$key.'%')
-//                ->pluck('id');
-//            $query->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
-//                $query->whereIn('supplier_id', $supplier_ids)
-//                    ->orWhereIn('pohead_id', $purchaseorder_ids);
-//            });
+            //            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+            //            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+            //                ->where('descrip', 'like', '%'.$key.'%')
+            //                ->orWhere('productname', 'like', '%'.$key.'%')
+            //                ->pluck('id');
+            //            $query->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
+            //                $query->whereIn('supplier_id', $supplier_ids)
+            //                    ->orWhereIn('pohead_id', $purchaseorder_ids);
+            //            });
         }
 
-        if (strlen($paymenttype) > 0)
-        {
+        if (strlen($paymenttype) > 0) {
             $query->where('paymenttype', $paymenttype);
         }
 
-        if (strlen($projectname) > 0)
-        {
+        if (strlen($projectname) > 0) {
             $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
-                ->where('descrip', 'like', '%'.$projectname .'%')
+                ->where('descrip', 'like', '%' . $projectname . '%')
                 ->pluck('id');
             $query->whereIn('pohead_id', $purchaseorder_ids);
         }
 
-        if (strlen($productname) > 0)
-        {
+        if (strlen($productname) > 0) {
             $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
-                ->where('productname', 'like', '%'.$productname .'%')
+                ->where('productname', 'like', '%' . $productname . '%')
                 ->pluck('id');
             $query->whereIn('pohead_id', $purchaseorder_ids);
         }
 
-        if (strlen($suppliername) > 0)
-        {
-            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$suppliername.'%')->pluck('id');
+        if (strlen($suppliername) > 0) {
+            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%' . $suppliername . '%')->pluck('id');
             $query->whereIn('supplier_id', $supplier_ids);
         }
 
         $items = $query->select()->paginate(10);
 
 
-//        return $inputs;
-//        return $paymentrequests->url(1);
-//        return redirect('approval/mindexmyapproval')->with(array_except($inputs, '_token'));
-//        $url = route('approval/mindexmyapproval',['id' => 1] );
-//        dd($url);
-//        return route('/approval/mindexmyapproval', $inputs);
-//        return redirect()->route('approval.mindexmyapproval', $inputs)->with('reimbursements', 'paymentrequests', 'paymentrequestretracts', 'key', 'inputs');
-//        return response()->view('approval.mindexmyapproval' , compact('reimbursements', 'paymentrequests', 'paymentrequestretracts', 'key', 'inputs'))->header('query', http_build_query($inputs));
-        return view('approval.mindexmyapproval' , compact('reimbursements', 'items', 'paymentrequestretracts', 'key', 'inputs'));
+        //        return $inputs;
+        //        return $paymentrequests->url(1);
+        //        return redirect('approval/mindexmyapproval')->with(array_except($inputs, '_token'));
+        //        $url = route('approval/mindexmyapproval',['id' => 1] );
+        //        dd($url);
+        //        return route('/approval/mindexmyapproval', $inputs);
+        //        return redirect()->route('approval.mindexmyapproval', $inputs)->with('reimbursements', 'paymentrequests', 'paymentrequestretracts', 'key', 'inputs');
+        //        return response()->view('approval.mindexmyapproval' , compact('reimbursements', 'paymentrequests', 'paymentrequestretracts', 'key', 'inputs'))->header('query', http_build_query($inputs));
+        return view('approval.mindexmyapproval', compact('reimbursements', 'items', 'paymentrequestretracts', 'key', 'inputs'));
     }
 
     /**
@@ -555,7 +521,7 @@ class ApprovalController extends Controller
         // }
 
         // $reimbursements = Reimbursement::latest('created_at')->whereIn('id', $ids)->paginate(10);
-        
+
         // $ids_paymentrequest = Paymentrequestapproval::where('approver_id', $userid)->select('paymentrequest_id')->distinct()->pluck('paymentrequest_id');
         // $paymentrequests = Paymentrequest::latest('created_at')->whereIn('id', $ids_paymentrequest)->paginate(10);
 
@@ -580,15 +546,12 @@ class ApprovalController extends Controller
         array_push($userids, $userid);
 
         // 特殊处理: if WuHL, set it to LiuYJ
-//        if ($inputs['approvaltype'] == "供应商付款" && Auth::user()->email == "wuhaolun@huaxing-east.com")
-//            $userid = User::where("email", "liuyujiao@huaxing-east.com")->first()->id;
-        if (Auth::user()->email == "wuhaolun@huaxing-east.com")
-        {
+        //        if ($inputs['approvaltype'] == "供应商付款" && Auth::user()->email == "wuhaolun@huaxing-east.com")
+        //            $userid = User::where("email", "liuyujiao@huaxing-east.com")->first()->id;
+        if (Auth::user()->email == "wuhaolun@huaxing-east.com") {
             $userid = User::where("email", "liuyujiao@huaxing-east.com")->first()->id;
             array_push($userids, $userid);
-        }
-        elseif (Auth::user()->email == "liuyujiao@huaxing-east.com")
-        {
+        } elseif (Auth::user()->email == "liuyujiao@huaxing-east.com") {
             $userid = User::where("email", "wuhaolun@huaxing-east.com")->first()->id;
             array_push($userids, $userid);
         }
@@ -599,87 +562,82 @@ class ApprovalController extends Controller
 
 
         // $reimbursements = Reimbursement::latest('created_at')->whereIn('id', $ids)->paginate(10);
-        
+
         $ids_paymentrequest = Paymentrequestapproval::where('approver_id', $userid)->select('paymentrequest_id')->distinct()->pluck('paymentrequest_id');
 
         $query = Paymentrequest::latest('updated_at');
-//        $query->whereIn('id', $ids_paymentrequest);
+        //        $query->whereIn('id', $ids_paymentrequest);
         $query->whereExists(function ($query) use ($userid, $userids) {
             $query->select(DB::raw(1))
                 ->from('paymentrequestapprovals')
                 ->whereRaw('paymentrequestapprovals.approver_id in (' . implode(",", $userids) . ') and paymentrequestapprovals.paymentrequest_id=paymentrequests.id ');
         });
 
-        if (strlen($key) > 0)
-        {
+        if (strlen($key) > 0) {
             // 通过 leftJoin 和 采购订单商品.goods_name 来查找，加快查找速度
-            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%' . $key . '%')->pluck('id');
             $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
                 ->leftJoin('采购订单商品', '采购订单商品.order_id', '=', 'vpurchaseorder.id')
-                ->where('descrip', 'like', '%'.$key.'%')
-                ->orWhere('采购订单商品.goods_name', 'like', '%'.$key.'%')
-//                ->orWhere('productname', 'like', '%'.$key.'%')
+                ->where('descrip', 'like', '%' . $key . '%')
+                ->orWhere('采购订单商品.goods_name', 'like', '%' . $key . '%')
+                //                ->orWhere('productname', 'like', '%'.$key.'%')
                 ->pluck('vpurchaseorder.id');
             $query->where(function ($query) use ($supplier_ids, $purchaseorder_ids, $key) {
                 $query->whereIn('supplier_id', $supplier_ids)
                     ->orWhereIn('pohead_id', $purchaseorder_ids)
-                    ->orWhere('descrip', 'like', '%'.$key.'%');
+                    ->orWhere('descrip', 'like', '%' . $key . '%');
             });
         }
 
-        if (strlen($paymenttype) > 0)
-        {
+        if (strlen($paymenttype) > 0) {
             $query->where('paymenttype', $paymenttype);
         }
 
-        if (strlen($projectname) > 0)
-        {
+        if (strlen($projectname) > 0) {
             $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
-                ->where('descrip', 'like', '%'.$projectname .'%')
+                ->where('descrip', 'like', '%' . $projectname . '%')
                 ->pluck('id');
             $query->whereIn('pohead_id', $purchaseorder_ids);
         }
 
-        if (strlen($productname) > 0)
-        {
+        if (strlen($productname) > 0) {
             $query->leftJoin('hxcrm2016.dbo.vpurchaseorder', 'hxcrm2016.dbo.vpurchaseorder.id', '=', 'paymentrequests.pohead_id')
                 ->leftJoin('hxcrm2016.dbo.采购订单商品', '采购订单商品.order_id', '=', 'vpurchaseorder.id')
-                ->where('采购订单商品.goods_name', 'like', '%'.$productname.'%');
-//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
-//                ->leftJoin('采购订单商品', '采购订单商品.order_id', '=', 'vpurchaseorder.id')
-//                ->where('采购订单商品.goods_name', 'like', '%'.$key.'%')
-////                ->where('productname', 'like', '%'.$productname .'%')
-//                ->pluck('vpurchaseorder.id');
-//            $query->whereIn('pohead_id', $purchaseorder_ids);
+                ->where('采购订单商品.goods_name', 'like', '%' . $productname . '%');
+            //            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+            //                ->leftJoin('采购订单商品', '采购订单商品.order_id', '=', 'vpurchaseorder.id')
+            //                ->where('采购订单商品.goods_name', 'like', '%'.$key.'%')
+            ////                ->where('productname', 'like', '%'.$productname .'%')
+            //                ->pluck('vpurchaseorder.id');
+            //            $query->whereIn('pohead_id', $purchaseorder_ids);
         }
 
-        if (strlen($suppliername) > 0)
-        {
-            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$suppliername.'%')->pluck('id');
+        if (strlen($suppliername) > 0) {
+            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%' . $suppliername . '%')->pluck('id');
             $query->whereIn('supplier_id', $supplier_ids);
         }
 
         $items = $query->select('paymentrequests.*')->distinct()->paginate(10);
 
-//        if ('' == $key)
-//            $paymentrequests = Paymentrequest::latest('created_at')->whereIn('id', $ids_paymentrequest)->paginate(10);
-//        else
-//        {
-//            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
-//            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
-//                ->where('descrip', 'like', '%'.$key.'%')
-//                ->orWhere('productname', 'like', '%'.$key.'%')
-//                ->pluck('id');
-//
-//            $paymentrequests = Paymentrequest::latest('created_at')
-//                ->whereIn('id', $ids_paymentrequest)
-//                ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
-//                    $query->whereIn('supplier_id', $supplier_ids)
-//                        ->orWhereIn('pohead_id', $purchaseorder_ids);
-//                })
-//                ->select('paymentrequests.*')
-//                ->paginate(10);
-//        }
+        //        if ('' == $key)
+        //            $paymentrequests = Paymentrequest::latest('created_at')->whereIn('id', $ids_paymentrequest)->paginate(10);
+        //        else
+        //        {
+        //            $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
+        //            $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')
+        //                ->where('descrip', 'like', '%'.$key.'%')
+        //                ->orWhere('productname', 'like', '%'.$key.'%')
+        //                ->pluck('id');
+        //
+        //            $paymentrequests = Paymentrequest::latest('created_at')
+        //                ->whereIn('id', $ids_paymentrequest)
+        //                ->where(function ($query) use ($supplier_ids, $purchaseorder_ids) {
+        //                    $query->whereIn('supplier_id', $supplier_ids)
+        //                        ->orWhereIn('pohead_id', $purchaseorder_ids);
+        //                })
+        //                ->select('paymentrequests.*')
+        //                ->paginate(10);
+        //        }
 
         return view('approval.mindexmyapprovaled', compact('reimbursements', 'items', 'inputs'));
     }
@@ -767,8 +725,7 @@ class ApprovalController extends Controller
         $format = 'json';
         $v = '2.0';
 
-        if ($inputs['syncdtdesc'] == "许昌")
-        {
+        if ($inputs['syncdtdesc'] == "许昌") {
             $session = DingTalkController::getAccessToken_appkey();
             $process_code = config('custom.dingtalk.hx_henan.approval_processcode.mcitempurchase');
             $originator_user_id = $user->dtuser2->userid;
@@ -776,9 +733,7 @@ class ApprovalController extends Controller
             $cc_list = config('custom.dingtalk.hx_henan.approversettings.mcitempurchase.cc_list.' . $inputs['manufacturingcenter']);
             if (strlen($cc_list) == 0)
                 $cc_list = config('custom.dingtalk.hx_henan.approversettings.mcitempurchase.cc_list.default');
-        }
-        else
-        {
+        } else {
             $session = DingTalkController::getAccessToken();
             $process_code = config('custom.dingtalk.approval_processcode.mcitempurchase');
             $originator_user_id = $user->dtuserid;
@@ -787,18 +742,17 @@ class ApprovalController extends Controller
             if (strlen($cc_list) == 0)
                 $cc_list = config('custom.dingtalk.approversettings.mcitempurchase.cc_list.default');
         }
-//        $process_code = 'PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2';    // huaxing
+        //        $process_code = 'PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2';    // huaxing
         $dept_id = 0;
         if (count($departmentList) > 0)
             $dept_id = array_first($departmentList);
         $approvers = $inputs['approvers'];
-//        $approvers = $user->dtuserid;
+        //        $approvers = $user->dtuserid;
         // if originator_user_id in approvers, skip pre approvers
         $approver_array = explode(',', $approvers);
-        if (in_array($originator_user_id, $approver_array))
-        {
+        if (in_array($originator_user_id, $approver_array)) {
             $offset = array_search($originator_user_id, $approver_array);
-            $approver_array = array_slice($approver_array, $offset+1);
+            $approver_array = array_slice($approver_array, $offset + 1);
             $approvers = implode(",", $approver_array);
         }
         if ($approvers == "")
@@ -807,8 +761,7 @@ class ApprovalController extends Controller
         $detail_array = [];
         $mcitempurchase_items = json_decode($inputs['items_string']);
         foreach ($mcitempurchase_items as $value) {
-            if ($value->item_id > 0)
-            {
+            if ($value->item_id > 0) {
                 $item_array = [
                     [
                         'name'      => '物品名称',
@@ -913,45 +866,53 @@ class ApprovalController extends Controller
             ],
         ];
         $form_component_values = json_encode($formdata);
-//        $form_component_values = str_replace('#', '%23', $form_component_values);
-//        $form_component_values = str_replace(' ', '%20', $form_component_values);
-//        dd(json_decode(json_decode($form_component_values)[9]->value));
-//        Log::info('process_code: ' . $process_code);
-//        Log::info('originator_user_id: ' . $originator_user_id);
-//        Log::info('dept_id: ' . $dept_id);
-//        Log::info('approvers: ' . $approvers);
-//        Log::info('form_component_values: ' . $form_component_values);
-        $params = compact('method', 'session', 'v', 'format',
-            'process_code', 'originator_user_id', 'dept_id', 'approvers', 'form_component_values');
+        //        $form_component_values = str_replace('#', '%23', $form_component_values);
+        //        $form_component_values = str_replace(' ', '%20', $form_component_values);
+        //        dd(json_decode(json_decode($form_component_values)[9]->value));
+        //        Log::info('process_code: ' . $process_code);
+        //        Log::info('originator_user_id: ' . $originator_user_id);
+        //        Log::info('dept_id: ' . $dept_id);
+        //        Log::info('approvers: ' . $approvers);
+        //        Log::info('form_component_values: ' . $form_component_values);
+        $params = compact(
+            'method',
+            'session',
+            'v',
+            'format',
+            'process_code',
+            'originator_user_id',
+            'dept_id',
+            'approvers',
+            'form_component_values'
+        );
         $data = [
-//            'form_component_values' => $form_component_values,
+            //            'form_component_values' => $form_component_values,
         ];
 
-//        Log::info(app_path());
+        //        Log::info(app_path());
         $c = new DingTalkClient();
         $req = new SmartworkBpmsProcessinstanceCreateRequest();
-//        $req->setAgentId("41605932");
+        //        $req->setAgentId("41605932");
         $req->setProcessCode($process_code);
         $req->setOriginatorUserId($originator_user_id);
         $req->setDeptId("$dept_id");
         $req->setApprovers($approvers);
-        if ($cc_list <> "")
-        {
+        if ($cc_list <> "") {
             $req->setCcList($cc_list);
             $req->setCcPosition("FINISH");
         }
-//        $form_component_values = new FormComponentValueVo();
-//        $form_component_values->name="请假类型";
-//        $form_component_values->value="事假";
-//        $form_component_values->ext_value="总天数:1";
+        //        $form_component_values = new FormComponentValueVo();
+        //        $form_component_values->name="请假类型";
+        //        $form_component_values->value="事假";
+        //        $form_component_values->ext_value="总天数:1";
         $req->setFormComponentValues("$form_component_values");
         $response = $c->execute($req, $session);
         return json_encode($response);
         dd(json_encode($response, JSON_UNESCAPED_UNICODE));
         return response()->json($response);
 
-//        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
-//        $response = HttpDingtalkEco::post("", $params, json_encode($data));
+        //        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+        //        $response = HttpDingtalkEco::post("", $params, json_encode($data));
 
         return $response;
     }
@@ -960,12 +921,12 @@ class ApprovalController extends Controller
     {
         $user = Auth::user();
         $method = 'dingtalk.smartwork.bpms.processinstance.create';
-//        $session = '';
+        //        $session = '';
         if ($inputs['syncdtdesc'] == "许昌")
             $session = DingTalkController::getAccessToken_appkey();
         else
             $session = DingTalkController::getAccessToken();
-//        $timestamp = time('2017-07-19 13:06:00');
+        //        $timestamp = time('2017-07-19 13:06:00');
         $format = 'json';
         $v = '2.0';
 
@@ -973,30 +934,26 @@ class ApprovalController extends Controller
             $process_code = config('custom.dingtalk.hx_henan.approval_processcode.pppayment');
         else
             $process_code = config('custom.dingtalk.approval_processcode.pppayment');
-        if ($inputs['syncdtdesc'] == "许昌")
-        {
+        if ($inputs['syncdtdesc'] == "许昌") {
             $originator_user_id = $user->dtuser2->userid;
             $departmentList = json_decode($user->dtuser2->department);
-        }
-        else
-        {
+        } else {
             $originator_user_id = $user->dtuserid;
             $departmentList = json_decode($user->dtuser->department);
         }
         $dept_id = 0;
         if (count($departmentList) > 0)
             $dept_id = array_first($departmentList);
-//        if ($inputs['syncdtdesc'] == "许昌")
-//            $approvers = "04090710367573";
-//        else
-//            $approvers = $inputs['approvers'];
+        //        if ($inputs['syncdtdesc'] == "许昌")
+        //            $approvers = "04090710367573";
+        //        else
+        //            $approvers = $inputs['approvers'];
         $approvers = $inputs['approvers'];
         // if originator_user_id in approvers, skip pre approvers
         $approver_array = explode(',', $approvers);
-        if (in_array($originator_user_id, $approver_array))
-        {
+        if (in_array($originator_user_id, $approver_array)) {
             $offset = array_search($originator_user_id, $approver_array);
-            $approver_array = array_slice($approver_array, $offset+1);
+            $approver_array = array_slice($approver_array, $offset + 1);
             $approvers = implode(",", $approver_array);
         }
         if ($approvers == "")
@@ -1005,8 +962,7 @@ class ApprovalController extends Controller
         $detail_array = [];
         $mcitempurchase_items = json_decode($inputs['items_string']);
         foreach ($mcitempurchase_items as $value) {
-            if ($value->sohead_id > 0)
-            {
+            if ($value->sohead_id > 0) {
                 $item_array = [
                     [
                         'name'      => '所属项目编号',
@@ -1103,57 +1059,62 @@ class ApprovalController extends Controller
             ],
         ];
         $form_component_values = json_encode($formdata);
-//        $form_component_values = str_replace('#', '%23', $form_component_values);
-//        $form_component_values = str_replace(' ', '%20', $form_component_values);
-//        dd(json_decode(json_decode($form_component_values)[9]->value));
-//        Log::info('process_code: ' . $process_code);
-//        Log::info('originator_user_id: ' . $originator_user_id);
-//        Log::info('dept_id: ' . $dept_id);
-//        Log::info('approvers: ' . $approvers);
+        //        $form_component_values = str_replace('#', '%23', $form_component_values);
+        //        $form_component_values = str_replace(' ', '%20', $form_component_values);
+        //        dd(json_decode(json_decode($form_component_values)[9]->value));
+        //        Log::info('process_code: ' . $process_code);
+        //        Log::info('originator_user_id: ' . $originator_user_id);
+        //        Log::info('dept_id: ' . $dept_id);
+        //        Log::info('approvers: ' . $approvers);
         Log::info('form_component_values: ' . $form_component_values);
-        $params = compact('method', 'session', 'v', 'format',
-            'process_code', 'originator_user_id', 'dept_id', 'approvers', 'form_component_values');
+        $params = compact(
+            'method',
+            'session',
+            'v',
+            'format',
+            'process_code',
+            'originator_user_id',
+            'dept_id',
+            'approvers',
+            'form_component_values'
+        );
         $data = [
-//            'form_component_values' => $form_component_values,
+            //            'form_component_values' => $form_component_values,
         ];
 
-//        Log::info(app_path());
+        //        Log::info(app_path());
         $c = new DingTalkClient();
         $req = new SmartworkBpmsProcessinstanceCreateRequest();
-//        $req->setAgentId("41605932");
+        //        $req->setAgentId("41605932");
         $req->setProcessCode($process_code);
         $req->setOriginatorUserId($originator_user_id);
         $req->setDeptId("$dept_id");
         $req->setApprovers($approvers);
-        if ($inputs['syncdtdesc'] == "许昌")
-        {
+        if ($inputs['syncdtdesc'] == "许昌") {
             $cc_list = config('custom.dingtalk.hx_henan.approversettings.pppayment.cc_list.' . $inputs['productioncompany']);
             if (strlen($cc_list) == 0)
                 $cc_list = config('custom.dingtalk.hx_henan.approversettings.pppayment.cc_list.default');
-        }
-        else
-        {
+        } else {
             $cc_list = config('custom.dingtalk.approversettings.pppayment.cc_list.' . $inputs['productioncompany']);
             if (strlen($cc_list) == 0)
                 $cc_list = config('custom.dingtalk.approversettings.pppayment.cc_list.default');
         }
-        if ($cc_list <> "")
-        {
+        if ($cc_list <> "") {
             $req->setCcList($cc_list);
             $req->setCcPosition("FINISH");
         }
-//        $form_component_values = new FormComponentValueVo();
-//        $form_component_values->name="请假类型";
-//        $form_component_values->value="事假";
-//        $form_component_values->ext_value="总天数:1";
+        //        $form_component_values = new FormComponentValueVo();
+        //        $form_component_values->name="请假类型";
+        //        $form_component_values->value="事假";
+        //        $form_component_values->ext_value="总天数:1";
         $req->setFormComponentValues("$form_component_values");
         $response = $c->execute($req, $session);
         return json_encode($response);
         dd(json_encode($response, JSON_UNESCAPED_UNICODE));
         return response()->json($response);
 
-//        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
-//        $response = HttpDingtalkEco::post("", $params, json_encode($data));
+        //        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+        //        $response = HttpDingtalkEco::post("", $params, json_encode($data));
 
         return $response;
     }
@@ -1178,14 +1139,12 @@ class ApprovalController extends Controller
         if (strlen($factory) > 0)
             $query->where('productioncompany', 'like', '%' . $factory . '%');
 
-        if ($project_id > 0)
-        {
+        if ($project_id > 0) {
             $sohead_ids = Salesorder_hxold::where('project_id', $project_id)->pluck('id');
             $query->whereIn('sohead_id', $sohead_ids);
         }
 
-        if ($request->has('project_id'))
-        {
+        if ($request->has('project_id')) {
             $sohead_ids = Salesorder_hxold::where('project_id', $request->get('project_id'))->pluck('id');
             $query->whereIn('sohead_id', $sohead_ids);
         }
@@ -1196,10 +1155,10 @@ class ApprovalController extends Controller
 
         $query->leftJoin('users', 'users.id', '=', 'issuedrawings.applicant_id');
 
-//        $query->leftJoin('vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
-//        $query->leftJoin('outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
+        //        $query->leftJoin('vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
+        //        $query->leftJoin('outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
 
-//        $query->whereRaw('vreceiptpayment.date between \'2018/1/1\' and \'2018/8/1\'');
+        //        $query->whereRaw('vreceiptpayment.date between \'2018/1/1\' and \'2018/8/1\'');
 
 
 
@@ -1212,19 +1171,19 @@ class ApprovalController extends Controller
                 $keyword = $request->get('search')['value'];
                 $query->whereRaw('users.name like \'%' . $keyword . '%\'');
             })
-//            ->editColumn('created_at1', '{{ substr($created_at, 0, 10) }}' )
-//            ->filter(function ($query) use ($request) {
-//                if ($request->has('issuedrawingdatestart') && $request->has('issuedrawingdateend')) {
-//                    $query->whereRaw('issuedrawings.created_at between \'' . $request->get('issuedrawingdatestart') . '\' and \'' . $request->get('issuedrawingdateend') . '\'');
-//                }
-//            })
-//            ->addColumn('applicant', function (Issuedrawing $issuedrawing) {
-//                return $issuedrawing->applicant->name;
-//            })
-//            ->addColumn('bonus', function (Receiptpayment_hxold $receiptpayment) {
-//                return $receiptpayment->amount * $receiptpayment->sohead->getBonusfactorByPolicy() * array_first($receiptpayment->sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
-//            })
-//                ->orderColumn('created_at')
+            //            ->editColumn('created_at1', '{{ substr($created_at, 0, 10) }}' )
+            //            ->filter(function ($query) use ($request) {
+            //                if ($request->has('issuedrawingdatestart') && $request->has('issuedrawingdateend')) {
+            //                    $query->whereRaw('issuedrawings.created_at between \'' . $request->get('issuedrawingdatestart') . '\' and \'' . $request->get('issuedrawingdateend') . '\'');
+            //                }
+            //            })
+            //            ->addColumn('applicant', function (Issuedrawing $issuedrawing) {
+            //                return $issuedrawing->applicant->name;
+            //            })
+            //            ->addColumn('bonus', function (Receiptpayment_hxold $receiptpayment) {
+            //                return $receiptpayment->amount * $receiptpayment->sohead->getBonusfactorByPolicy() * array_first($receiptpayment->sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+            //            })
+            //                ->orderColumn('created_at')
             ->make(true);
     }
 
@@ -1238,40 +1197,38 @@ class ApprovalController extends Controller
             $query->where('sohead_id', $sohead_id);
         elseif (strlen($factory) > 0)
             $query->where('manufacturingcenter', 'like', '%' . $factory . '%');
-        elseif ($project_id > 0)
-        {
+        elseif ($project_id > 0) {
             $sohead_ids = Salesorder_hxold::where('project_id', $project_id)->pluck('id');
             $query->whereIn('sohead_id', $sohead_ids);
         }
 
-        if ($request->has('project_id'))
-        {
+        if ($request->has('project_id')) {
             $sohead_ids = Salesorder_hxold::where('project_id', $request->get('project_id'))->pluck('id');
             $query->whereIn('sohead_id', $sohead_ids);
         }
 
-//        $query->leftJoin('vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
-//        $query->leftJoin('outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
+        //        $query->leftJoin('vcustomer', 'vcustomer.id', '=', 'vorder.custinfo_id');
+        //        $query->leftJoin('outsourcingpercent', 'outsourcingpercent.order_number', '=', 'vorder.number');
 
-//        $query->whereRaw('vreceiptpayment.date between \'2018/1/1\' and \'2018/8/1\'');
+        //        $query->whereRaw('vreceiptpayment.date between \'2018/1/1\' and \'2018/8/1\'');
 
 
-//        $items = $query->select('vorder.*',
-//            'vcustomer.name as customer_name')
-//            ->paginate(10);
+        //        $items = $query->select('vorder.*',
+        //            'vcustomer.name as customer_name')
+        //            ->paginate(10);
 
         return Datatables::of($query->select('mcitempurchases.*', Db::raw('convert(varchar(100), mcitempurchases.created_at, 23) as created_date')))
-//            ->filter(function ($query) use ($request) {
-//                if ($request->has('receivedatestart') && $request->has('receivedateend')) {
-//                    $query->whereRaw('vreceiptpayment.date between \'' . $request->get('receivedatestart') . '\' and \'' . $request->get('receivedateend') . '\'');
-//                }
-//            })
+            //            ->filter(function ($query) use ($request) {
+            //                if ($request->has('receivedatestart') && $request->has('receivedateend')) {
+            //                    $query->whereRaw('vreceiptpayment.date between \'' . $request->get('receivedatestart') . '\' and \'' . $request->get('receivedateend') . '\'');
+            //                }
+            //            })
             ->addColumn('totalweight', function (Mcitempurchase $mcitempurchase) {
                 return $mcitempurchase->mcitempurchaseitems->sum('weight');
             })
-//            ->addColumn('bonus', function (Receiptpayment_hxold $receiptpayment) {
-//                return $receiptpayment->amount * $receiptpayment->sohead->getBonusfactorByPolicy() * array_first($receiptpayment->sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
-//            })
+            //            ->addColumn('bonus', function (Receiptpayment_hxold $receiptpayment) {
+            //                return $receiptpayment->amount * $receiptpayment->sohead->getBonusfactorByPolicy() * array_first($receiptpayment->sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+            //            })
             ->make(true);
     }
 
@@ -1280,41 +1237,42 @@ class ApprovalController extends Controller
         $query = Pppaymentitem::whereRaw('1=1');
         $query->leftJoin('pppayments', 'pppaymentitems.pppayment_id', '=', 'pppayments.id');
         $query->where('pppayments.status', 0);
-//        $query->where('status', 0);
-//        if ($request->has('sohead_id'))
-//            $query->where('sohead_id', $request->get('sohead_id'));
+        //        $query->where('status', 0);
+        //        if ($request->has('sohead_id'))
+        //            $query->where('sohead_id', $request->get('sohead_id'));
 
-        if ($request->has('project_id'))
-        {
+        if ($request->has('project_id')) {
             $sohead_ids = Salesorder_hxold::where('project_id', $request->get('project_id'))->pluck('id');
             $query->whereIn('pppaymentitems.sohead_id', $sohead_ids);
         }
 
-//        $items = $query->select('vorder.*',
-//            'vcustomer.name as customer_name')
-//            ->paginate(10);
+        //        $items = $query->select('vorder.*',
+        //            'vcustomer.name as customer_name')
+        //            ->paginate(10);
 
-        return Datatables::of($query->select('pppaymentitems.*', Db::raw('convert(varchar(100), pppaymentitems.created_at, 23) as created_date'),
-                'pppayments.productioncompany', 'pppayments.paymentdate'))
+        return Datatables::of($query->select(
+            'pppaymentitems.*',
+            Db::raw('convert(varchar(100), pppaymentitems.created_at, 23) as created_date'),
+            'pppayments.productioncompany',
+            'pppayments.paymentdate'
+        ))
             ->filter(function ($query) use ($request, $sohead_id, $factory, $project_id) {
                 if ($request->has('sohead_id')) {
                     $query->where('pppaymentitems.sohead_id', $request->get('sohead_id'));
-                }
-                elseif ($sohead_id > 0)
+                } elseif ($sohead_id > 0)
                     $query->where('pppaymentitems.sohead_id', $sohead_id);
                 elseif (strlen($factory) > 0)
                     $query->where('pppayments.productioncompany', 'like', '%' . $factory . '%');
-                elseif ($project_id > 0)
-                {
+                elseif ($project_id > 0) {
                     $sohead_ids = Salesorder_hxold::where('project_id', $project_id)->pluck('id');
                     $query->whereIn('pppaymentitems.sohead_id', $sohead_ids);
                 }
             })
-//            ->addColumn('tonnage_paowan', function (Pppayment $pppayment) {
-//                return $pppayment->pppaymentitems->where('type', '抛丸')->sum(function ($pppaymentitem) {
-//                    return $pppaymentitem->pppaymentitemunitprices->sum('tonnage');
-//                });
-//            })
+            //            ->addColumn('tonnage_paowan', function (Pppayment $pppayment) {
+            //                return $pppayment->pppaymentitems->where('type', '抛丸')->sum(function ($pppaymentitem) {
+            //                    return $pppaymentitem->pppaymentitemunitprices->sum('tonnage');
+            //                });
+            //            })
             ->addColumn('tonnage_paowan', function (Pppaymentitem $pppaymentitem) {
                 return $pppaymentitem->type == "抛丸" ? $pppaymentitem->pppaymentitemunitprices->sum('tonnage') : 0.0;
             })
@@ -1333,9 +1291,9 @@ class ApprovalController extends Controller
             ->addColumn('applicant', function (Pppaymentitem $pppaymentitem) {
                 return $pppaymentitem->pppayment->applicant->name;
             })
-//            ->addColumn('bonus', function (Receiptpayment_hxold $receiptpayment) {
-//                return $receiptpayment->amount * $receiptpayment->sohead->getBonusfactorByPolicy() * array_first($receiptpayment->sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
-//            })
+            //            ->addColumn('bonus', function (Receiptpayment_hxold $receiptpayment) {
+            //                return $receiptpayment->amount * $receiptpayment->sohead->getBonusfactorByPolicy() * array_first($receiptpayment->sohead->getAmountpertenthousandBySohead())->amountpertenthousandbysohead;
+            //            })
             ->make(true);
     }
 
@@ -1348,27 +1306,25 @@ class ApprovalController extends Controller
     {
         //
         $filename = "下图申购结算明细报表_按订单";
-//        if ($request->has('sohead_id'))
-//        {
-//            $sohead = Salesorder_hxold::find($request->get('sohead_id'));
-//            if ($sohead)
-//                $filename = $sohead->projectjc;
-//        }
-        Excel::create($filename, function($excel) use ($request, $filename) {
+        //        if ($request->has('sohead_id'))
+        //        {
+        //            $sohead = Salesorder_hxold::find($request->get('sohead_id'));
+        //            if ($sohead)
+        //                $filename = $sohead->projectjc;
+        //        }
+        Excel::create($filename, function ($excel) use ($request, $filename) {
             $sohead_ids = [];
             if ($request->has('sohead_id') && $request->get('sohead_id') > 0)
                 array_push($sohead_ids, $request->get('sohead_id'));
-            else
-            {
+            else {
                 $sohead_ids = Issuedrawing::where('status', 0)->distinct()->pluck('sohead_id');
             }
-            foreach ($sohead_ids as $sohead_id)
-            {
+            foreach ($sohead_ids as $sohead_id) {
                 $sheetname = "Sheetname" . $sohead_id;
                 $sohead = Salesorder_hxold::find($sohead_id);
                 if ($sohead)
                     $sheetname = $sohead->projectjc;
-                $excel->sheet($sheetname, function($sheet) use ($request, $sohead_id) {
+                $excel->sheet($sheetname, function ($sheet) use ($request, $sohead_id) {
                     // Sheet manipulation
                     $data = [];
                     $tonnagetotal_issuedrawing = 0.0;
@@ -1382,14 +1338,13 @@ class ApprovalController extends Controller
                     $tonnagetotal_in = 0.0;
 
                     $issuedrawings = $this->issuedrawingjson($request, $sohead_id);
-//                dd($issuedrawings->getData(true));
-//                dd(json_decode($issuedrawings) );
+                    //                dd($issuedrawings->getData(true));
+                    //                dd(json_decode($issuedrawings) );
                     $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                    foreach ($issuedrawingsArray as $value)
-                    {
+                    foreach ($issuedrawingsArray as $value) {
                         $temp = [];
                         $temp['下图日期']          = $value['created_date'];
-                        $temp['下图吨数']                = (double)$value['tonnage'];
+                        $temp['下图吨数']                = (float)$value['tonnage'];
                         $temp['下图申请人']              = $value['applicant'];
                         $temp['下图制作公司']     = $value['productioncompany'];
                         $temp['下图概述']               = $value['overview'];
@@ -1415,17 +1370,13 @@ class ApprovalController extends Controller
                     $mcitempurchases = $this->mcitempurchasejson($request, $sohead_id);
                     $mcitempurchasesArray = $mcitempurchases->getData(true)["data"];
                     $data_size = count($data);
-                    foreach ($mcitempurchasesArray as $key => $value)
-                    {
-                        if ($data_size > $key)
-                        {
+                    foreach ($mcitempurchasesArray as $key => $value) {
+                        if ($data_size > $key) {
                             $data[$key]['申购日期']          = $value['created_date'];
                             $data[$key]['申购制造中心']  = $value['manufacturingcenter'];
                             $data[$key]['申购重量']           = $value['totalweight'];
                             $data[$key]['申购用途']             = $value['detailuse'];
-                        }
-                        else
-                        {
+                        } else {
                             $temp = [];
                             $temp['下图日期']          = '';
                             $temp['下图吨数']                = '';
@@ -1455,10 +1406,8 @@ class ApprovalController extends Controller
                     $pppayments = $this->pppaymentjson($request, $sohead_id);
                     $pppaymentsArray = $pppayments->getData(true)["data"];
                     $data_size = count($data);
-                    foreach ($pppaymentsArray as $key => $value)
-                    {
-                        if ($data_size > $key)
-                        {
+                    foreach ($pppaymentsArray as $key => $value) {
+                        if ($data_size > $key) {
                             $data[$key]['结算日期']           = $value['created_date'];
                             $data[$key]['抛丸']         = $value['tonnage_paowan'];
                             $data[$key]['油漆']          = $value['tonnage_youqi'];
@@ -1469,9 +1418,7 @@ class ApprovalController extends Controller
                             $data[$key]['结算支付日期']             = $value['paymentdate'];
                             $data[$key]['结算申请人']               = $value['applicant'];
                             $data[$key]['结算吨位']                 = $value['tonnage'];
-                        }
-                        else
-                        {
+                        } else {
                             $temp = [];
                             $temp['下图日期']          = '';
                             $temp['下图吨数']                = '';
@@ -1495,28 +1442,28 @@ class ApprovalController extends Controller
                             $temp['结算申请人']                = $value['applicant'];
                             $temp['结算吨位']                  = $value['tonnage'];
 
-//                            $temp = [];
-//                            $temp['issuedrawing.created_date']          = '';
-//                            $temp['issuedrawing.tonnage']                = '';
-//                            $temp['issuedrawing.applicant']              = '';
-//                            $temp['issuedrawing.productioncompany']     = '';
-//                            $temp['issuedrawing.overview']               = '';
-//
-//                            $temp['mcitempurchase.created_date']         = '';
-//                            $temp['mcitempurchase.manufacturingcenter'] = '';
-//                            $temp['mcitempurchase.totalweight']          = '';
-//                            $temp['mcitempurchase.detailuse']            = '';
-//
-//                            $temp['pppayment.created_date']             = $value['created_date'];
-//                            $temp['pppayment.tonnage_paowan']           = $value['tonnage_paowan'];
-//                            $temp['pppayment.tonnage_youqi']            = $value['tonnage_youqi'];
-//                            $temp['pppayment.tonnage_rengong']          = $value['tonnage_rengong'];
-//                            $temp['pppayment.tonnage_maohan']           = $value['tonnage_maohan'];
-//                            $temp['pppayment.productioncompany']        = $value['productioncompany'];
-//                            $temp['pppayment.productionoverview']       = $value['productionoverview'];
-//                            $temp['pppayment.paymentdate']              = $value['paymentdate'];
-//                            $temp['pppayment.applicant']                = $value['applicant'];
-//                            $temp['pppayment.tonnage']                  = $value['tonnage'];
+                            //                            $temp = [];
+                            //                            $temp['issuedrawing.created_date']          = '';
+                            //                            $temp['issuedrawing.tonnage']                = '';
+                            //                            $temp['issuedrawing.applicant']              = '';
+                            //                            $temp['issuedrawing.productioncompany']     = '';
+                            //                            $temp['issuedrawing.overview']               = '';
+                            //
+                            //                            $temp['mcitempurchase.created_date']         = '';
+                            //                            $temp['mcitempurchase.manufacturingcenter'] = '';
+                            //                            $temp['mcitempurchase.totalweight']          = '';
+                            //                            $temp['mcitempurchase.detailuse']            = '';
+                            //
+                            //                            $temp['pppayment.created_date']             = $value['created_date'];
+                            //                            $temp['pppayment.tonnage_paowan']           = $value['tonnage_paowan'];
+                            //                            $temp['pppayment.tonnage_youqi']            = $value['tonnage_youqi'];
+                            //                            $temp['pppayment.tonnage_rengong']          = $value['tonnage_rengong'];
+                            //                            $temp['pppayment.tonnage_maohan']           = $value['tonnage_maohan'];
+                            //                            $temp['pppayment.productioncompany']        = $value['productioncompany'];
+                            //                            $temp['pppayment.productionoverview']       = $value['productionoverview'];
+                            //                            $temp['pppayment.paymentdate']              = $value['paymentdate'];
+                            //                            $temp['pppayment.applicant']                = $value['applicant'];
+                            //                            $temp['pppayment.tonnage']                  = $value['tonnage'];
 
                             array_push($data, $temp);
                         }
@@ -1535,19 +1482,20 @@ class ApprovalController extends Controller
                     $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
                     if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
                         $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+                    //                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
 
-//                dd($data);
+                    //                dd($data);
                     $sheet->freezeFirstRow();
                     $sheet->fromArray($data);
 
                     $totalrowcolor = "#00FF00";       // green
                     if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
                         $totalrowcolor = "#FF0000"; // red
-                    $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+                    $sheet->appendRow([
+                        $tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
                         $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
                         "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-                        ]);
+                    ]);
                     $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
                         $row->setBackground($totalrowcolor);
                     });
@@ -1562,7 +1510,7 @@ class ApprovalController extends Controller
                 ->setCompany('Huaxing East');
 
             // Call them separately
-//            $excel->setDescription('A demonstration to change the file properties');
+            //            $excel->setDescription('A demonstration to change the file properties');
 
         })->export('xlsx');
 
@@ -1593,18 +1541,17 @@ class ApprovalController extends Controller
     {
         //
         $filename = "下图申购结算明细报表_按工厂";
-        Excel::create($filename, function($excel) use ($request, $filename) {
+        Excel::create($filename, function ($excel) use ($request, $filename) {
             $factoryList = ['无锡', '泰州', '胶州'];
-//            $factoryList['无锡'] = [
-//                'issuedrawing' => ['无锡电气生产部', '无锡生产中心', '无锡制造中心'],
-//                'mcitempurchase' => ['']
-//            ];
-//            $factoryList['泰州'] = ['泰州生产中心'];
-//            $factoryList['胶州'] = ['胶州生产中心'];
-            foreach ($factoryList as $key => $factory)
-            {
+            //            $factoryList['无锡'] = [
+            //                'issuedrawing' => ['无锡电气生产部', '无锡生产中心', '无锡制造中心'],
+            //                'mcitempurchase' => ['']
+            //            ];
+            //            $factoryList['泰州'] = ['泰州生产中心'];
+            //            $factoryList['胶州'] = ['胶州生产中心'];
+            foreach ($factoryList as $key => $factory) {
                 $sheetname = $factory;
-                $excel->sheet($sheetname, function($sheet) use ($request, $factory) {
+                $excel->sheet($sheetname, function ($sheet) use ($request, $factory) {
                     // Sheet manipulation
                     $data = [];
                     $tonnagetotal_issuedrawing = 0.0;
@@ -1617,8 +1564,7 @@ class ApprovalController extends Controller
 
                     $issuedrawings = $this->issuedrawingjson($request, 0, $factory);
                     $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                    foreach ($issuedrawingsArray as $value)
-                    {
+                    foreach ($issuedrawingsArray as $value) {
                         $temp = [];
                         $temp['下图日期']          = $value['created_date'];
                         $temp['下图吨数']                = $value['tonnage'];
@@ -1647,17 +1593,13 @@ class ApprovalController extends Controller
                     $mcitempurchases = $this->mcitempurchasejson($request, 0, $factory);
                     $mcitempurchasesArray = $mcitempurchases->getData(true)["data"];
                     $data_size = count($data);
-                    foreach ($mcitempurchasesArray as $key => $value)
-                    {
-                        if ($data_size > $key)
-                        {
+                    foreach ($mcitempurchasesArray as $key => $value) {
+                        if ($data_size > $key) {
                             $data[$key]['申购日期']          = $value['created_date'];
                             $data[$key]['申购制造中心']  = $value['manufacturingcenter'];
                             $data[$key]['申购重量']           = $value['totalweight'];
                             $data[$key]['申购用途']             = $value['detailuse'];
-                        }
-                        else
-                        {
+                        } else {
                             $temp = [];
                             $temp['下图日期']          = '';
                             $temp['下图吨数']                = '';
@@ -1687,10 +1629,8 @@ class ApprovalController extends Controller
                     $pppayments = $this->pppaymentjson($request, 0, $factory);
                     $pppaymentsArray = $pppayments->getData(true)["data"];
                     $data_size = count($data);
-                    foreach ($pppaymentsArray as $key => $value)
-                    {
-                        if ($data_size > $key)
-                        {
+                    foreach ($pppaymentsArray as $key => $value) {
+                        if ($data_size > $key) {
                             $data[$key]['结算日期']           = $value['created_date'];
                             $data[$key]['抛丸']         = $value['tonnage_paowan'];
                             $data[$key]['油漆']          = $value['tonnage_youqi'];
@@ -1701,9 +1641,7 @@ class ApprovalController extends Controller
                             $data[$key]['结算支付日期']             = $value['paymentdate'];
                             $data[$key]['结算申请人']               = $value['applicant'];
                             $data[$key]['结算吨位']                 = $value['tonnage'];
-                        }
-                        else
-                        {
+                        } else {
                             $temp = [];
                             $temp['下图日期']          = '';
                             $temp['下图吨数']                = '';
@@ -1740,7 +1678,8 @@ class ApprovalController extends Controller
                     $totalrowcolor = "#00FF00";       // green
                     if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
                         $totalrowcolor = "#FF0000"; // red
-                    $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+                    $sheet->appendRow([
+                        $tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
                         $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）"
                     ]);
                     $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
@@ -1757,7 +1696,7 @@ class ApprovalController extends Controller
                 ->setCompany('Huaxing East');
 
             // Call them separately
-//            $excel->setDescription('A demonstration to change the file properties');
+            //            $excel->setDescription('A demonstration to change the file properties');
 
         })->export('xlsx');
     }
@@ -1766,26 +1705,24 @@ class ApprovalController extends Controller
     {
         //
         $filename = "下图申购结算明细报表_按项目";
-        Excel::create($filename, function($excel) use ($request, $filename) {
+        Excel::create($filename, function ($excel) use ($request, $filename) {
             $project_ids = [];
             $sohead_ids = Issuedrawing::where('status', 0)->distinct()->pluck('sohead_id');
             if ($request->has('project_id'))
                 array_push($project_ids, $request->get('project_id'));
-            else
-            {
-//                $sohead_ids = Issuedrawing::where('status', 0)->distinct()->pluck('sohead_id');
+            else {
+                //                $sohead_ids = Issuedrawing::where('status', 0)->distinct()->pluck('sohead_id');
                 $project_ids = Salesorder_hxold::whereIn('id', $sohead_ids)->distinct()->pluck('project_id');
             }
-//            $project_ids = Salesorder_hxold::whereIn('id', $sohead_ids)->distinct()->pluck('project_id');
-            foreach ($project_ids as $project_id)
-            {
+            //            $project_ids = Salesorder_hxold::whereIn('id', $sohead_ids)->distinct()->pluck('project_id');
+            foreach ($project_ids as $project_id) {
                 $sheetname = "Sheetname" . $project_id;
                 $project = Project_hxold::find($project_id);
                 if ($project)
                     $sheetname = $project->name;
                 else
                     continue;
-                $excel->sheet($sheetname, function($sheet) use ($request, $project_id) {
+                $excel->sheet($sheetname, function ($sheet) use ($request, $project_id) {
                     // Sheet manipulation
                     $data = [];
                     $tonnagetotal_issuedrawing = 0.0;
@@ -1795,19 +1732,18 @@ class ApprovalController extends Controller
                     $tonnagetotal_pppayment_youqi = 0.0;
                     $tonnagetotal_pppayment_rengong = 0.0;
                     $tonnagetotal_pppayment_maohan = 0.0;
-                    $tonnagetotal_pppayment_waixieyouqi=0.0;
+                    $tonnagetotal_pppayment_waixieyouqi = 0.0;
                     $tonnagetotal_out = 0.0;
                     $tonnagetotal_in = 0.0;
 
                     $issuedrawings = $this->issuedrawingjson($request, 0, '', $project_id);
-//                dd($issuedrawings->getData(true));
-//                dd(json_decode($issuedrawings) );
+                    //                dd($issuedrawings->getData(true));
+                    //                dd(json_decode($issuedrawings) );
                     $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                    foreach ($issuedrawingsArray as $value)
-                    {
+                    foreach ($issuedrawingsArray as $value) {
                         $temp = [];
                         $temp['下图日期']          = $value['created_date'];
-                        $temp['下图吨数']                = (double)$value['tonnage'];
+                        $temp['下图吨数']                = (float)$value['tonnage'];
                         $temp['下图申请人']              = $value['applicant'];
                         $temp['下图制作公司']     = $value['productioncompany'];
                         $temp['下图概述']               = $value['overview'];
@@ -1834,17 +1770,13 @@ class ApprovalController extends Controller
                     $mcitempurchases = $this->mcitempurchasejson($request, 0, '', $project_id);
                     $mcitempurchasesArray = $mcitempurchases->getData(true)["data"];
                     $data_size = count($data);
-                    foreach ($mcitempurchasesArray as $key => $value)
-                    {
-                        if ($data_size > $key)
-                        {
+                    foreach ($mcitempurchasesArray as $key => $value) {
+                        if ($data_size > $key) {
                             $data[$key]['申购日期']          = $value['created_date'];
                             $data[$key]['申购制造中心']  = $value['manufacturingcenter'];
                             $data[$key]['申购重量']           = $value['totalweight'];
                             $data[$key]['申购用途']             = $value['detailuse'];
-                        }
-                        else
-                        {
+                        } else {
                             $temp = [];
                             $temp['下图日期']          = '';
                             $temp['下图吨数']                = '';
@@ -1875,10 +1807,8 @@ class ApprovalController extends Controller
                     $pppayments = $this->pppaymentjson($request, 0, '', $project_id);
                     $pppaymentsArray = $pppayments->getData(true)["data"];
                     $data_size = count($data);
-                    foreach ($pppaymentsArray as $key => $value)
-                    {
-                        if ($data_size > $key)
-                        {
+                    foreach ($pppaymentsArray as $key => $value) {
+                        if ($data_size > $key) {
                             $data[$key]['结算日期']           = $value['created_date'];
                             $data[$key]['抛丸']         = $value['tonnage_paowan'];
                             $data[$key]['油漆']          = $value['tonnage_youqi'];
@@ -1890,9 +1820,7 @@ class ApprovalController extends Controller
                             $data[$key]['结算支付日期']             = $value['paymentdate'];
                             $data[$key]['结算申请人']               = $value['applicant'];
                             $data[$key]['结算吨位']                 = $value['tonnage'];
-                        }
-                        else
-                        {
+                        } else {
                             $temp = [];
                             $temp['下图日期']          = '';
                             $temp['下图吨数']                = '';
@@ -1934,15 +1862,16 @@ class ApprovalController extends Controller
                     if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
                         $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
 
-//                    dd($data);
+                    //                    dd($data);
                     $sheet->freezeFirstRow();
                     $sheet->fromArray($data);
 
                     $totalrowcolor = "#00FF00";       // green
                     if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
                         $totalrowcolor = "#FF0000"; // red
-                    $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-                        $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan ."，外协油漆" . $tonnagetotal_pppayment_waixieyouqi . "）",
+                    $sheet->appendRow([
+                        $tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+                        $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "，外协油漆" . $tonnagetotal_pppayment_waixieyouqi . "）",
                         "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
                     ]);
                     $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
@@ -1951,15 +1880,16 @@ class ApprovalController extends Controller
                 });
             }
 
-            $excel->sheet('总表', function($sheet) use ($request, $project_ids) {
+            $excel->sheet('总表', function ($sheet) use ($request, $project_ids) {
                 // Sheet manipulation
                 $data = [];
 
-                $sheet->appendRow(["", "年份", "下图", "下图（无锡）", "下图（泰州）", "下图（胶州）", "下图（郎溪）", "采购", "结算抛丸", "结算油漆", "结算人工", "结算铆焊","结算外协油漆", "总领用", "无锡原料仓出库", "泰州原料仓出库", "胶州原料仓一厂出库", "胶州原料仓二厂出库", "郎溪原料仓出库",
-                    "采购入库", "无锡原料仓入库", "泰州原料仓入库", "胶州原料仓一厂入库", "胶州原料仓二厂入库", "郎溪原料仓入库"]);
+                $sheet->appendRow([
+                    "", "年份", "下图", "下图（无锡）", "下图（泰州）", "下图（胶州）", "下图（郎溪）", "采购", "结算抛丸", "结算油漆", "结算人工", "结算铆焊", "结算外协油漆", "总领用", "无锡原料仓出库", "泰州原料仓出库", "胶州原料仓一厂出库", "胶州原料仓二厂出库", "郎溪原料仓出库",
+                    "采购入库", "无锡原料仓入库", "泰州原料仓入库", "胶州原料仓一厂入库", "胶州原料仓二厂入库", "郎溪原料仓入库"
+                ]);
 
-                foreach ($project_ids as $project_id)
-                {
+                foreach ($project_ids as $project_id) {
                     $project = Project_hxold::find($project_id);
                     if (!isset($project))
                         continue;
@@ -1993,44 +1923,37 @@ class ApprovalController extends Controller
 
                     $issuedrawings = $this->issuedrawingjson($request, 0, '', $project_id);
                     $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                    foreach ($issuedrawingsArray as $value)
-                    {
+                    foreach ($issuedrawingsArray as $value) {
                         $tonnagetotal_issuedrawing += $value['tonnage'];
                     }
                     $issuedrawings = $this->issuedrawingjson($request, 0, '无锡生产中心', $project_id);
                     $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                    foreach ($issuedrawingsArray as $value)
-                    {
+                    foreach ($issuedrawingsArray as $value) {
                         $tonnagetotal_issuedrawing_wx += $value['tonnage'];
                     }
                     $issuedrawings = $this->issuedrawingjson($request, 0, '泰州生产中心', $project_id);
                     $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                    foreach ($issuedrawingsArray as $value)
-                    {
+                    foreach ($issuedrawingsArray as $value) {
                         $tonnagetotal_issuedrawing_tz += $value['tonnage'];
                     }
                     $issuedrawings = $this->issuedrawingjson($request, 0, '胶州生产中心', $project_id);
                     $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                    foreach ($issuedrawingsArray as $value)
-                    {
+                    foreach ($issuedrawingsArray as $value) {
                         $tonnagetotal_issuedrawing_jz += $value['tonnage'];
                     }
                     $issuedrawings = $this->issuedrawingjson($request, 0, '郎溪生产中心', $project_id);
                     $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                    foreach ($issuedrawingsArray as $value)
-                    {
+                    foreach ($issuedrawingsArray as $value) {
                         $tonnagetotal_issuedrawing_lx += $value['tonnage'];
                     }
                     $mcitempurchases = $this->mcitempurchasejson($request, 0, '', $project_id);
                     $mcitempurchasesArray = $mcitempurchases->getData(true)["data"];
-                    foreach ($mcitempurchasesArray as $key => $value)
-                    {
+                    foreach ($mcitempurchasesArray as $key => $value) {
                         $tonnagetotal_mcitempurchase += $value['totalweight'];
                     }
                     $pppayments = $this->pppaymentjson($request, 0, '', $project_id);
                     $pppaymentsArray = $pppayments->getData(true)["data"];
-                    foreach ($pppaymentsArray as $key => $value)
-                    {
+                    foreach ($pppaymentsArray as $key => $value) {
                         $tonnagetotal_pppayment += $value['tonnage'];
                         $tonnagetotal_pppayment_paowan += $value['tonnage_paowan'];
                         $tonnagetotal_pppayment_youqi += $value['tonnage_youqi'];
@@ -2106,17 +2029,18 @@ class ApprovalController extends Controller
                     if (count($year) > 0)
                         $year = $year[0];
 
-//                    $totalrowcolor = "#00FF00";       // green
-//                    if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
-//                        $totalrowcolor = "#FF0000"; // red
-                    $sheet->appendRow([$project->name, $year, $tonnagetotal_issuedrawing, $tonnagetotal_issuedrawing_wx, $tonnagetotal_issuedrawing_tz, $tonnagetotal_issuedrawing_jz, $tonnagetotal_issuedrawing_lx, $tonnagetotal_mcitempurchase, $tonnagetotal_pppayment_paowan, $tonnagetotal_pppayment_youqi, $tonnagetotal_pppayment_rengong, $tonnagetotal_pppayment_maohan,$tonnagetotal_pppayment_waixieyouqi,
+                    //                    $totalrowcolor = "#00FF00";       // green
+                    //                    if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
+                    //                        $totalrowcolor = "#FF0000"; // red
+                    $sheet->appendRow([
+                        $project->name, $year, $tonnagetotal_issuedrawing, $tonnagetotal_issuedrawing_wx, $tonnagetotal_issuedrawing_tz, $tonnagetotal_issuedrawing_jz, $tonnagetotal_issuedrawing_lx, $tonnagetotal_mcitempurchase, $tonnagetotal_pppayment_paowan, $tonnagetotal_pppayment_youqi, $tonnagetotal_pppayment_rengong, $tonnagetotal_pppayment_maohan, $tonnagetotal_pppayment_waixieyouqi,
                         $tonnagetotal_out, $tonnagetotal_out_wxylc, $tonnagetotal_out_tzylc, $tonnagetotal_out_jzylc1, $tonnagetotal_out_jzylc2, $tonnagetotal_out_lxylc,
                         $tonnagetotal_in, $tonnagetotal_in_wxylc, $tonnagetotal_in_tzylc, $tonnagetotal_in_jzylc1, $tonnagetotal_in_jzylc2, $tonnagetotal_in_lxylc
                     ]);
-//                    $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-//                        $row->setBackground($totalrowcolor);
-//                    });
-//                    break;
+                    //                    $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+                    //                        $row->setBackground($totalrowcolor);
+                    //                    });
+                    //                    break;
                 }
 
                 $param = "@orderid=7550";
@@ -2159,7 +2083,8 @@ class ApprovalController extends Controller
                 if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
                     $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
 
-                $sheet->appendRow(["厂部管理费用", "", "", "", "", "", "", "", "", "", "", "",
+                $sheet->appendRow([
+                    "厂部管理费用", "", "", "", "", "", "", "", "", "", "", "",
                     $tonnagetotal_out, $tonnagetotal_out_wxylc, $tonnagetotal_out_tzylc, $tonnagetotal_out_jzylc1, $tonnagetotal_out_jzylc2, $tonnagetotal_out_lxylc, $tonnagetotal_in
                 ]);
             });
@@ -2172,7 +2097,7 @@ class ApprovalController extends Controller
                 ->setCompany('Huaxing East');
 
             // Call them separately
-//            $excel->setDescription('A demonstration to change the file properties');
+            //            $excel->setDescription('A demonstration to change the file properties');
 
         })->export('xlsx');
     }
@@ -2180,23 +2105,20 @@ class ApprovalController extends Controller
     public function issuedrawingpurchasedetailexport4(Request $request)
     {
         //
-        if ($request->has('key') && strlen($request->input('key')) > 0)
-        {
+        if ($request->has('key') && strlen($request->input('key')) > 0) {
             $sohead = Salesorder_hxold::where('number', $request->input('key'))->first();
-            if (isset($sohead))
-            {
+            if (isset($sohead)) {
                 $filename = "下图申购结算报表_" . $request->input('key');
-                Excel::create($filename, function($excel) use ($request, $sohead) {
+                Excel::create($filename, function ($excel) use ($request, $sohead) {
                     $sheetname = "总表";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                    $excel->sheet($sheetname, function ($sheet) use ($request, $sohead) {
                         $sheet->appendRow(["制造中心", "下图重量", "出库重量"]);
 
                         $data = ['无锡生产中心'];
                         $totaltonnage = 0.0;
                         $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '无锡生产中心');
                         $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
+                        foreach ($issuedrawingsArray as $value) {
                             $totaltonnage += $value['tonnage'];
                         }
                         array_push($data, $totaltonnage);
@@ -2213,14 +2135,12 @@ class ApprovalController extends Controller
                         $totaltonnage = 0.0;
                         $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '郎溪生产中心');
                         $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
+                        foreach ($issuedrawingsArray as $value) {
                             $totaltonnage += $value['tonnage'];
                         }
                         $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '宣城子公司');
                         $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
+                        foreach ($issuedrawingsArray as $value) {
                             $totaltonnage += $value['tonnage'];
                         }
                         array_push($data, $totaltonnage);
@@ -2236,8 +2156,7 @@ class ApprovalController extends Controller
                         $totaltonnage = 0.0;
                         $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '许昌子公司');
                         $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
+                        foreach ($issuedrawingsArray as $value) {
                             $totaltonnage += $value['tonnage'];
                         }
                         array_push($data, $totaltonnage);
@@ -2253,8 +2172,7 @@ class ApprovalController extends Controller
                         $totaltonnage = 0.0;
                         $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '胶州生产中心');
                         $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
+                        foreach ($issuedrawingsArray as $value) {
                             $totaltonnage += $value['tonnage'];
                         }
                         array_push($data, $totaltonnage);
@@ -2274,8 +2192,7 @@ class ApprovalController extends Controller
                         $totaltonnage = 0.0;
                         $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '泰州生产中心');
                         $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
+                        foreach ($issuedrawingsArray as $value) {
                             $totaltonnage += $value['tonnage'];
                         }
                         array_push($data, $totaltonnage);
@@ -2291,16 +2208,15 @@ class ApprovalController extends Controller
                         $totaltonnage = 0.0;
                         $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '外协单位');
                         $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
+                        foreach ($issuedrawingsArray as $value) {
                             $totaltonnage += $value['tonnage'];
                         }
                         array_push($data, $totaltonnage);
                         $totaltonnage = '-';
-//                        $param = "@warehouse_number='003',@orderid=" . $sohead->id;
-//                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
-//                        if (count($items) > 0 && isset($items[0]))
-//                            $totaltonnage = $items[0]->heights / 1000.0;
+                        //                        $param = "@warehouse_number='003',@orderid=" . $sohead->id;
+                        //                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
+                        //                        if (count($items) > 0 && isset($items[0]))
+                        //                            $totaltonnage = $items[0]->heights / 1000.0;
                         array_push($data, $totaltonnage);
                         $sheet->appendRow($data);
 
@@ -2308,16 +2224,15 @@ class ApprovalController extends Controller
                         $totaltonnage = 0.0;
                         $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '无锡电气生产部');
                         $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
+                        foreach ($issuedrawingsArray as $value) {
                             $totaltonnage += $value['tonnage'];
                         }
                         array_push($data, $totaltonnage);
                         $totaltonnage = '-';
-//                        $param = "@warehouse_number='003',@orderid=" . $sohead->id;
-//                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
-//                        if (count($items) > 0 && isset($items[0]))
-//                            $totaltonnage = $items[0]->heights / 1000.0;
+                        //                        $param = "@warehouse_number='003',@orderid=" . $sohead->id;
+                        //                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
+                        //                        if (count($items) > 0 && isset($items[0]))
+                        //                            $totaltonnage = $items[0]->heights / 1000.0;
                         array_push($data, $totaltonnage);
                         $sheet->appendRow($data);
 
@@ -2325,22 +2240,21 @@ class ApprovalController extends Controller
                         $totaltonnage = 0.0;
                         $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '中易新材料');
                         $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
+                        foreach ($issuedrawingsArray as $value) {
                             $totaltonnage += $value['tonnage'];
                         }
                         array_push($data, $totaltonnage);
                         $totaltonnage = '-';
-//                        $param = "@warehouse_number='003',@orderid=" . $sohead->id;
-//                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
-//                        if (count($items) > 0 && isset($items[0]))
-//                            $totaltonnage = $items[0]->heights / 1000.0;
+                        //                        $param = "@warehouse_number='003',@orderid=" . $sohead->id;
+                        //                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
+                        //                        if (count($items) > 0 && isset($items[0]))
+                        //                            $totaltonnage = $items[0]->heights / 1000.0;
                         array_push($data, $totaltonnage);
                         $sheet->appendRow($data);
                     });
 
                     $sheetname = "无锡生产中心下图明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                    $excel->sheet($sheetname, function ($sheet) use ($request, $sohead) {
                         // Sheet manipulation
                         $data = [];
                         $tonnagetotal_issuedrawing = 0.0;
@@ -2348,14 +2262,13 @@ class ApprovalController extends Controller
                         $tonnagetotal_pppayment = 0.0;
 
                         $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '无锡生产中心');
-//                dd($issuedrawings->getData(true)["data"]);
-//                dd(json_decode($issuedrawings) );
+                        //                dd($issuedrawings->getData(true)["data"]);
+                        //                dd(json_decode($issuedrawings) );
                         $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
+                        foreach ($issuedrawingsArray as $value) {
                             $temp = [];
                             $temp['下图日期']          = $value['created_date'];
-                            $temp['下图吨数']                = (double)$value['tonnage'];
+                            $temp['下图吨数']                = (float)$value['tonnage'];
                             $temp['下图申请人']              = $value['applicant'];
                             $temp['下图制作公司']     = $value['productioncompany'];
                             $temp['下图概述']               = $value['overview'];
@@ -2372,26 +2285,26 @@ class ApprovalController extends Controller
                         $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
                         if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
                             $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+                        //                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
 
-//                dd($data);
+                        //                dd($data);
                         $sheet->freezeFirstRow();
                         $sheet->fromArray($data);
 
                         $totalrowcolor = "#00FF00";       // green
                         if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
                             $totalrowcolor = "#FF0000"; // red
-//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-//                        ]);
-//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-//                            $row->setBackground($totalrowcolor);
-//                        });
+                        //                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+                        //                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+                        //                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+                        //                        ]);
+                        //                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+                        //                            $row->setBackground($totalrowcolor);
+                        //                        });
                     });
 
                     $sheetname = "郎溪生产中心下图明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                    $excel->sheet($sheetname, function ($sheet) use ($request, $sohead) {
                         // Sheet manipulation
                         $data = [];
                         $tonnagetotal_issuedrawing = 0.0;
@@ -2405,14 +2318,13 @@ class ApprovalController extends Controller
                         $tonnagetotal_in = 0.0;
 
                         $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '郎溪生产中心');
-//                dd($issuedrawings->getData(true)["data"]);
-//                dd(json_decode($issuedrawings) );
+                        //                dd($issuedrawings->getData(true)["data"]);
+                        //                dd(json_decode($issuedrawings) );
                         $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
+                        foreach ($issuedrawingsArray as $value) {
                             $temp = [];
                             $temp['下图日期']          = $value['created_date'];
-                            $temp['下图吨数']                = (double)$value['tonnage'];
+                            $temp['下图吨数']                = (float)$value['tonnage'];
                             $temp['下图申请人']              = $value['applicant'];
                             $temp['下图制作公司']     = $value['productioncompany'];
                             $temp['下图概述']               = $value['overview'];
@@ -2429,26 +2341,26 @@ class ApprovalController extends Controller
                         $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
                         if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
                             $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+                        //                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
 
-//                dd($data);
+                        //                dd($data);
                         $sheet->freezeFirstRow();
                         $sheet->fromArray($data);
 
                         $totalrowcolor = "#00FF00";       // green
                         if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
                             $totalrowcolor = "#FF0000"; // red
-//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-//                        ]);
-//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-//                            $row->setBackground($totalrowcolor);
-//                        });
+                        //                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+                        //                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+                        //                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+                        //                        ]);
+                        //                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+                        //                            $row->setBackground($totalrowcolor);
+                        //                        });
                     });
 
                     $sheetname = "宣城子公司下图明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                    $excel->sheet($sheetname, function ($sheet) use ($request, $sohead) {
                         // Sheet manipulation
                         $data = [];
                         $tonnagetotal_issuedrawing = 0.0;
@@ -2462,14 +2374,13 @@ class ApprovalController extends Controller
                         $tonnagetotal_in = 0.0;
 
                         $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '宣城子公司');
-//                dd($issuedrawings->getData(true)["data"]);
-//                dd(json_decode($issuedrawings) );
+                        //                dd($issuedrawings->getData(true)["data"]);
+                        //                dd(json_decode($issuedrawings) );
                         $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
+                        foreach ($issuedrawingsArray as $value) {
                             $temp = [];
                             $temp['下图日期']          = $value['created_date'];
-                            $temp['下图吨数']                = (double)$value['tonnage'];
+                            $temp['下图吨数']                = (float)$value['tonnage'];
                             $temp['下图申请人']              = $value['applicant'];
                             $temp['下图制作公司']     = $value['productioncompany'];
                             $temp['下图概述']               = $value['overview'];
@@ -2486,26 +2397,26 @@ class ApprovalController extends Controller
                         $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
                         if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
                             $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+                        //                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
 
-//                dd($data);
+                        //                dd($data);
                         $sheet->freezeFirstRow();
                         $sheet->fromArray($data);
 
                         $totalrowcolor = "#00FF00";       // green
                         if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
                             $totalrowcolor = "#FF0000"; // red
-//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-//                        ]);
-//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-//                            $row->setBackground($totalrowcolor);
-//                        });
+                        //                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+                        //                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+                        //                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+                        //                        ]);
+                        //                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+                        //                            $row->setBackground($totalrowcolor);
+                        //                        });
                     });
 
                     $sheetname = "许昌子公司下图明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                    $excel->sheet($sheetname, function ($sheet) use ($request, $sohead) {
                         // Sheet manipulation
                         $data = [];
                         $tonnagetotal_issuedrawing = 0.0;
@@ -2519,14 +2430,13 @@ class ApprovalController extends Controller
                         $tonnagetotal_in = 0.0;
 
                         $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '许昌子公司');
-//                dd($issuedrawings->getData(true)["data"]);
-//                dd(json_decode($issuedrawings) );
+                        //                dd($issuedrawings->getData(true)["data"]);
+                        //                dd(json_decode($issuedrawings) );
                         $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
+                        foreach ($issuedrawingsArray as $value) {
                             $temp = [];
                             $temp['下图日期']          = $value['created_date'];
-                            $temp['下图吨数']                = (double)$value['tonnage'];
+                            $temp['下图吨数']                = (float)$value['tonnage'];
                             $temp['下图申请人']              = $value['applicant'];
                             $temp['下图制作公司']     = $value['productioncompany'];
                             $temp['下图概述']               = $value['overview'];
@@ -2543,26 +2453,26 @@ class ApprovalController extends Controller
                         $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
                         if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
                             $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+                        //                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
 
-//                dd($data);
+                        //                dd($data);
                         $sheet->freezeFirstRow();
                         $sheet->fromArray($data);
 
                         $totalrowcolor = "#00FF00";       // green
                         if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
                             $totalrowcolor = "#FF0000"; // red
-//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-//                        ]);
-//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-//                            $row->setBackground($totalrowcolor);
-//                        });
+                        //                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+                        //                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+                        //                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+                        //                        ]);
+                        //                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+                        //                            $row->setBackground($totalrowcolor);
+                        //                        });
                     });
 
                     $sheetname = "外协单位下图明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                    $excel->sheet($sheetname, function ($sheet) use ($request, $sohead) {
                         // Sheet manipulation
                         $data = [];
                         $tonnagetotal_issuedrawing = 0.0;
@@ -2570,14 +2480,13 @@ class ApprovalController extends Controller
                         $tonnagetotal_pppayment = 0.0;
 
                         $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '外协单位');
-//                dd($issuedrawings->getData(true)["data"]);
-//                dd(json_decode($issuedrawings) );
+                        //                dd($issuedrawings->getData(true)["data"]);
+                        //                dd(json_decode($issuedrawings) );
                         $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
+                        foreach ($issuedrawingsArray as $value) {
                             $temp = [];
                             $temp['下图日期']          = $value['created_date'];
-                            $temp['下图吨数']                = (double)$value['tonnage'];
+                            $temp['下图吨数']                = (float)$value['tonnage'];
                             $temp['下图申请人']              = $value['applicant'];
                             $temp['下图制作公司']     = $value['productioncompany'];
                             $temp['下图概述']               = $value['overview'];
@@ -2594,26 +2503,26 @@ class ApprovalController extends Controller
                         $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
                         if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
                             $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+                        //                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
 
-//                dd($data);
+                        //                dd($data);
                         $sheet->freezeFirstRow();
                         $sheet->fromArray($data);
 
                         $totalrowcolor = "#00FF00";       // green
                         if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
                             $totalrowcolor = "#FF0000"; // red
-//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-//                        ]);
-//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-//                            $row->setBackground($totalrowcolor);
-//                        });
+                        //                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+                        //                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+                        //                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+                        //                        ]);
+                        //                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+                        //                            $row->setBackground($totalrowcolor);
+                        //                        });
                     });
 
                     $sheetname = "胶州生产中心下图明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                    $excel->sheet($sheetname, function ($sheet) use ($request, $sohead) {
                         // Sheet manipulation
                         $data = [];
                         $tonnagetotal_issuedrawing = 0.0;
@@ -2621,14 +2530,13 @@ class ApprovalController extends Controller
                         $tonnagetotal_pppayment = 0.0;
 
                         $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '胶州生产中心');
-//                dd($issuedrawings->getData(true)["data"]);
-//                dd(json_decode($issuedrawings) );
+                        //                dd($issuedrawings->getData(true)["data"]);
+                        //                dd(json_decode($issuedrawings) );
                         $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
+                        foreach ($issuedrawingsArray as $value) {
                             $temp = [];
                             $temp['下图日期']          = $value['created_date'];
-                            $temp['下图吨数']                = (double)$value['tonnage'];
+                            $temp['下图吨数']                = (float)$value['tonnage'];
                             $temp['下图申请人']              = $value['applicant'];
                             $temp['下图制作公司']     = $value['productioncompany'];
                             $temp['下图概述']               = $value['overview'];
@@ -2645,26 +2553,26 @@ class ApprovalController extends Controller
                         $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
                         if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
                             $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+                        //                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
 
-//                dd($data);
+                        //                dd($data);
                         $sheet->freezeFirstRow();
                         $sheet->fromArray($data);
 
                         $totalrowcolor = "#00FF00";       // green
                         if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
                             $totalrowcolor = "#FF0000"; // red
-//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-//                        ]);
-//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-//                            $row->setBackground($totalrowcolor);
-//                        });
+                        //                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+                        //                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+                        //                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+                        //                        ]);
+                        //                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+                        //                            $row->setBackground($totalrowcolor);
+                        //                        });
                     });
 
                     $sheetname = "苏州生产中心下图明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                    $excel->sheet($sheetname, function ($sheet) use ($request, $sohead) {
                         // Sheet manipulation
                         $data = [];
                         $tonnagetotal_issuedrawing = 0.0;
@@ -2672,14 +2580,13 @@ class ApprovalController extends Controller
                         $tonnagetotal_pppayment = 0.0;
 
                         $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '苏州生产中心');
-//                dd($issuedrawings->getData(true)["data"]);
-//                dd(json_decode($issuedrawings) );
+                        //                dd($issuedrawings->getData(true)["data"]);
+                        //                dd(json_decode($issuedrawings) );
                         $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
+                        foreach ($issuedrawingsArray as $value) {
                             $temp = [];
                             $temp['下图日期']          = $value['created_date'];
-                            $temp['下图吨数']                = (double)$value['tonnage'];
+                            $temp['下图吨数']                = (float)$value['tonnage'];
                             $temp['下图申请人']              = $value['applicant'];
                             $temp['下图制作公司']     = $value['productioncompany'];
                             $temp['下图概述']               = $value['overview'];
@@ -2696,26 +2603,26 @@ class ApprovalController extends Controller
                         $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
                         if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
                             $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+                        //                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
 
-//                dd($data);
+                        //                dd($data);
                         $sheet->freezeFirstRow();
                         $sheet->fromArray($data);
 
                         $totalrowcolor = "#00FF00";       // green
                         if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
                             $totalrowcolor = "#FF0000"; // red
-//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-//                        ]);
-//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-//                            $row->setBackground($totalrowcolor);
-//                        });
+                        //                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+                        //                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+                        //                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+                        //                        ]);
+                        //                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+                        //                            $row->setBackground($totalrowcolor);
+                        //                        });
                     });
 
                     $sheetname = "泰州生产中心下图明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                    $excel->sheet($sheetname, function ($sheet) use ($request, $sohead) {
                         // Sheet manipulation
                         $data = [];
                         $tonnagetotal_issuedrawing = 0.0;
@@ -2723,14 +2630,13 @@ class ApprovalController extends Controller
                         $tonnagetotal_pppayment = 0.0;
 
                         $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '泰州生产中心');
-//                dd($issuedrawings->getData(true)["data"]);
-//                dd(json_decode($issuedrawings) );
+                        //                dd($issuedrawings->getData(true)["data"]);
+                        //                dd(json_decode($issuedrawings) );
                         $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
+                        foreach ($issuedrawingsArray as $value) {
                             $temp = [];
                             $temp['下图日期']          = $value['created_date'];
-                            $temp['下图吨数']                = (double)$value['tonnage'];
+                            $temp['下图吨数']                = (float)$value['tonnage'];
                             $temp['下图申请人']              = $value['applicant'];
                             $temp['下图制作公司']     = $value['productioncompany'];
                             $temp['下图概述']               = $value['overview'];
@@ -2747,875 +2653,194 @@ class ApprovalController extends Controller
                         $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
                         if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
                             $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+                        //                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
 
-//                dd($data);
+                        //                dd($data);
                         $sheet->freezeFirstRow();
                         $sheet->fromArray($data);
 
                         $totalrowcolor = "#00FF00";       // green
                         if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
                             $totalrowcolor = "#FF0000"; // red
-//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-//                        ]);
-//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-//                            $row->setBackground($totalrowcolor);
-//                        });
+                        //                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+                        //                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+                        //                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+                        //                        ]);
+                        //                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+                        //                            $row->setBackground($totalrowcolor);
+                        //                        });
                     });
 
-//                    $sheetname = "下图明细";
-//                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
-//                        // Sheet manipulation
-//                        $data = [];
-//                        $tonnagetotal_issuedrawing = 0.0;
-//                        $tonnagetotal_mcitempurchase = 0.0;
-//                        $tonnagetotal_pppayment = 0.0;
-//
-//                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id);
-////                dd($issuedrawings->getData(true)["data"]);
-////                dd(json_decode($issuedrawings) );
-//                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-//                        foreach ($issuedrawingsArray as $value)
-//                        {
-//                            $temp = [];
-//                            $temp['下图日期']          = $value['created_date'];
-//                            $temp['下图吨数']                = (double)$value['tonnage'];
-//                            $temp['下图申请人']              = $value['applicant'];
-//                            $temp['下图制作公司']     = $value['productioncompany'];
-//                            $temp['下图概述']               = $value['overview'];
-//
-//                            array_push($data, $temp);
-//                            $tonnagetotal_issuedrawing += $value['tonnage'];
-//                        }
-//
-//                        $param = "@orderid=" . $sohead->id;
-//                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
-//                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
-//                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
-//
-//                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
-//                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
-//                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-////                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
-//
-////                dd($data);
-//                        $sheet->freezeFirstRow();
-//                        $sheet->fromArray($data);
-//
-//                        $totalrowcolor = "#00FF00";       // green
-//                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
-//                            $totalrowcolor = "#FF0000"; // red
-////                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-////                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-////                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-////                        ]);
-////                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-////                            $row->setBackground($totalrowcolor);
-////                        });
-//                    });
+                    //                    $sheetname = "下图明细";
+                    //                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                    //                        // Sheet manipulation
+                    //                        $data = [];
+                    //                        $tonnagetotal_issuedrawing = 0.0;
+                    //                        $tonnagetotal_mcitempurchase = 0.0;
+                    //                        $tonnagetotal_pppayment = 0.0;
+                    //
+                    //                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id);
+                    ////                dd($issuedrawings->getData(true)["data"]);
+                    ////                dd(json_decode($issuedrawings) );
+                    //                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
+                    //                        foreach ($issuedrawingsArray as $value)
+                    //                        {
+                    //                            $temp = [];
+                    //                            $temp['下图日期']          = $value['created_date'];
+                    //                            $temp['下图吨数']                = (double)$value['tonnage'];
+                    //                            $temp['下图申请人']              = $value['applicant'];
+                    //                            $temp['下图制作公司']     = $value['productioncompany'];
+                    //                            $temp['下图概述']               = $value['overview'];
+                    //
+                    //                            array_push($data, $temp);
+                    //                            $tonnagetotal_issuedrawing += $value['tonnage'];
+                    //                        }
+                    //
+                    //                        $param = "@orderid=" . $sohead->id;
+                    //                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
+                    //                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
+                    //                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
+                    //
+                    //                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
+                    //                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
+                    //                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
+                    ////                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
+                    //
+                    ////                dd($data);
+                    //                        $sheet->freezeFirstRow();
+                    //                        $sheet->fromArray($data);
+                    //
+                    //                        $totalrowcolor = "#00FF00";       // green
+                    //                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
+                    //                            $totalrowcolor = "#FF0000"; // red
+                    ////                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
+                    ////                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
+                    ////                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
+                    ////                        ]);
+                    ////                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
+                    ////                            $row->setBackground($totalrowcolor);
+                    ////                        });
+                    //                    });
 
                     $sheetname = "无锡生产中心出库明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                    $excel->sheet($sheetname, function ($sheet) use ($request, $sohead) {
                         $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
 
                         $param = "@orderid=" . $sohead->id . ", @warehouse_number='001'";       // 无锡原材料仓
                         $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
                         $dataArray = json_decode(json_encode($sohead_outitems), true);
-                        foreach ($dataArray as $value)
-                        {
-//                            dd($value);
+                        foreach ($dataArray as $value) {
+                            //                            dd($value);
                             $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
                         }
                     });
 
                     $sheetname = "宣城子公司出库明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                    $excel->sheet($sheetname, function ($sheet) use ($request, $sohead) {
                         $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
 
                         $param = "@orderid=" . $sohead->id . ", @warehouse_number='010'";       // 郎溪原材料仓
                         $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
                         $dataArray = json_decode(json_encode($sohead_outitems), true);
-                        foreach ($dataArray as $value)
-                        {
-//                            dd($value);
+                        foreach ($dataArray as $value) {
+                            //                            dd($value);
                             $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
                         }
                     });
 
                     $sheetname = "许昌子公司出库明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                    $excel->sheet($sheetname, function ($sheet) use ($request, $sohead) {
                         $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
 
                         $param = "@orderid=" . $sohead->id . ", @warehouse_number='012'";       // 许昌原材料仓
                         $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
                         $dataArray = json_decode(json_encode($sohead_outitems), true);
-                        foreach ($dataArray as $value)
-                        {
-//                            dd($value);
+                        foreach ($dataArray as $value) {
+                            //                            dd($value);
                             $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
                         }
                     });
 
                     $sheetname = "胶州生产中心出库明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                    $excel->sheet($sheetname, function ($sheet) use ($request, $sohead) {
                         $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
 
                         $param = "@orderid=" . $sohead->id . ", @warehouse_number='004'";       // 胶州原材料仓
                         $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
                         $dataArray = json_decode(json_encode($sohead_outitems), true);
-                        foreach ($dataArray as $value)
-                        {
+                        foreach ($dataArray as $value) {
                             $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
                         }
 
                         $param = "@orderid=" . $sohead->id . ", @warehouse_number='008'";       // 胶州原材料二仓
                         $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
                         $dataArray = json_decode(json_encode($sohead_outitems), true);
-                        foreach ($dataArray as $value)
-                        {
+                        foreach ($dataArray as $value) {
                             $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
                         }
                     });
 
                     $sheetname = "泰州生产中心出库明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                    $excel->sheet($sheetname, function ($sheet) use ($request, $sohead) {
                         $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
 
                         $param = "@orderid=" . $sohead->id . ", @warehouse_number='003'";       // 泰州原材料仓
                         $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
                         $dataArray = json_decode(json_encode($sohead_outitems), true);
-                        foreach ($dataArray as $value)
-                        {
+                        foreach ($dataArray as $value) {
                             $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
                         }
                     });
 
-//                    $sheetname = "出库明细";
-//                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
-//                        $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
-//
-//                        $param = "@orderid=" . $sohead->id;
-//                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
-//                        $dataArray = json_decode(json_encode($sohead_outitems), true);
-//                        foreach ($dataArray as $value)
-//                        {
-////                            dd($value);
-//                            $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
-//                        }
-//                    });
+                    //                    $sheetname = "出库明细";
+                    //                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
+                    //                        $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
+                    //
+                    //                        $param = "@orderid=" . $sohead->id;
+                    //                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
+                    //                        $dataArray = json_decode(json_encode($sohead_outitems), true);
+                    //                        foreach ($dataArray as $value)
+                    //                        {
+                    ////                            dd($value);
+                    //                            $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
+                    //                        }
+                    //                    });
 
                     // Set the title
-//                    $excel->setTitle($filename);
+                    //                    $excel->setTitle($filename);
 
                     // Chain the setters
                     $excel->setCreator('HXERP')
                         ->setCompany('Huaxing East');
 
                     // Call them separately
-//            $excel->setDescription('A demonstration to change the file properties');
+                    //            $excel->setDescription('A demonstration to change the file properties');
 
                 })->export('xlsx');
-            }
-            else
+            } else
                 dd('未找到对应的订单。');
         }
     }
 
+    /**
+     * 统计铆焊
+     */
     public function issuedrawingpurchasedetailexport5(Request $request)
     {
-        //
-        if ($request->has('key') && strlen($request->input('key')) > 0)
-        {
-            $sohead = Salesorder_hxold::where('number', $request->input('key'))->first();
-            if (isset($sohead))
-            {
-                $filename = "下图申购结算报表_" . $request->input('key');
-                Excel::create($filename, function($excel) use ($request, $sohead) {
-                    $sheetname = "总表";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
-                        $sheet->appendRow(["制造中心", "下图重量", "出库重量"]);
-
-                        $data = ['无锡生产中心'];
-                        $totaltonnage = 0.0;
-                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '无锡生产中心');
-                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
-                            $totaltonnage += $value['tonnage'];
-                        }
-                        array_push($data, $totaltonnage);
-                        $totaltonnage = 0.0;
-                        $param = "@warehouse_number='001',@orderid=" . $sohead->id;
-                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
-                        if (count($items) > 0 && isset($items[0]))
-                            $totaltonnage = $items[0]->heights / 1000.0;
-                        array_push($data, $totaltonnage);
-                        array_push($data, '不含无锡原料2、3库');
-                        $sheet->appendRow($data);
-
-                        $data = ['郎溪生产中心'];
-                        $totaltonnage = 0.0;
-                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '郎溪生产中心');
-                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
-                            $totaltonnage += $value['tonnage'];
-                        }
-                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '宣城子公司');
-                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
-                            $totaltonnage += $value['tonnage'];
-                        }
-                        array_push($data, $totaltonnage);
-                        $totaltonnage = 0.0;
-                        $param = "@warehouse_number='010',@orderid=" . $sohead->id;
-                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
-                        if (count($items) > 0 && isset($items[0]))
-                            $totaltonnage = $items[0]->heights / 1000.0;
-                        array_push($data, $totaltonnage);
-                        $sheet->appendRow($data);
-
-                        $data = ['许昌子公司'];
-                        $totaltonnage = 0.0;
-                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '许昌子公司');
-                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
-                            $totaltonnage += $value['tonnage'];
-                        }
-                        array_push($data, $totaltonnage);
-                        $totaltonnage = 0.0;
-                        $param = "@warehouse_number='012',@orderid=" . $sohead->id;
-                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
-                        if (count($items) > 0 && isset($items[0]))
-                            $totaltonnage = $items[0]->heights / 1000.0;
-                        array_push($data, $totaltonnage);
-                        $sheet->appendRow($data);
-
-                        $data = ['胶州生产中心'];
-                        $totaltonnage = 0.0;
-                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '胶州生产中心');
-                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
-                            $totaltonnage += $value['tonnage'];
-                        }
-                        array_push($data, $totaltonnage);
-                        $totaltonnage = 0.0;
-                        $param = "@warehouse_number='004',@orderid=" . $sohead->id;
-                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
-                        if (count($items) > 0 && isset($items[0]))
-                            $totaltonnage = $items[0]->heights / 1000.0;
-                        $param = "@warehouse_number='008',@orderid=" . $sohead->id;
-                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
-                        if (count($items) > 0 && isset($items[0]))
-                            $totaltonnage += $items[0]->heights / 1000.0;
-                        array_push($data, $totaltonnage);
-                        $sheet->appendRow($data);
-
-                        $data = ['泰州生产中心'];
-                        $totaltonnage = 0.0;
-                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '泰州生产中心');
-                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
-                            $totaltonnage += $value['tonnage'];
-                        }
-                        array_push($data, $totaltonnage);
-                        $totaltonnage = 0.0;
-                        $param = "@warehouse_number='003',@orderid=" . $sohead->id;
-                        $items = DB::connection('sqlsrv')->select(' pGetOrderOutHeightByWarehouse ' . $param);
-                        if (count($items) > 0 && isset($items[0]))
-                            $totaltonnage = $items[0]->heights / 1000.0;
-                        array_push($data, $totaltonnage);
-                        $sheet->appendRow($data);
-                    });
-
-                    $sheetname = "无锡生产中心下图明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
-                        // Sheet manipulation
-                        $data = [];
-                        $tonnagetotal_issuedrawing = 0.0;
-                        $tonnagetotal_mcitempurchase = 0.0;
-                        $tonnagetotal_pppayment = 0.0;
-
-                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '无锡生产中心');
-//                dd($issuedrawings->getData(true)["data"]);
-//                dd(json_decode($issuedrawings) );
-                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
-                            $temp = [];
-                            $temp['下图日期']          = $value['created_date'];
-                            $temp['下图吨数']                = (double)$value['tonnage'];
-                            $temp['下图申请人']              = $value['applicant'];
-                            $temp['下图制作公司']     = $value['productioncompany'];
-                            $temp['下图概述']               = $value['overview'];
-
-                            array_push($data, $temp);
-                            $tonnagetotal_issuedrawing += $value['tonnage'];
-                        }
-
-                        $param = "@orderid=" . $sohead->id;
-                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
-                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
-                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
-
-                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
-                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
-                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
-
-//                dd($data);
-                        $sheet->freezeFirstRow();
-                        $sheet->fromArray($data);
-
-                        $totalrowcolor = "#00FF00";       // green
-                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
-                            $totalrowcolor = "#FF0000"; // red
-//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-//                        ]);
-//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-//                            $row->setBackground($totalrowcolor);
-//                        });
-                    });
-
-                    $sheetname = "郎溪生产中心下图明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
-                        // Sheet manipulation
-                        $data = [];
-                        $tonnagetotal_issuedrawing = 0.0;
-                        $tonnagetotal_mcitempurchase = 0.0;
-                        $tonnagetotal_pppayment = 0.0;
-                        $tonnagetotal_pppayment_paowan = 0.0;
-                        $tonnagetotal_pppayment_youqi = 0.0;
-                        $tonnagetotal_pppayment_rengong = 0.0;
-                        $tonnagetotal_pppayment_maohan = 0.0;
-                        $tonnagetotal_out = 0.0;
-                        $tonnagetotal_in = 0.0;
-
-                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '郎溪生产中心');
-//                dd($issuedrawings->getData(true)["data"]);
-//                dd(json_decode($issuedrawings) );
-                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
-                            $temp = [];
-                            $temp['下图日期']          = $value['created_date'];
-                            $temp['下图吨数']                = (double)$value['tonnage'];
-                            $temp['下图申请人']              = $value['applicant'];
-                            $temp['下图制作公司']     = $value['productioncompany'];
-                            $temp['下图概述']               = $value['overview'];
-
-                            array_push($data, $temp);
-                            $tonnagetotal_issuedrawing += $value['tonnage'];
-                        }
-
-                        $param = "@orderid=" . $sohead->id;
-                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
-                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
-                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
-
-                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
-                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
-                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
-
-//                dd($data);
-                        $sheet->freezeFirstRow();
-                        $sheet->fromArray($data);
-
-                        $totalrowcolor = "#00FF00";       // green
-                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
-                            $totalrowcolor = "#FF0000"; // red
-//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-//                        ]);
-//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-//                            $row->setBackground($totalrowcolor);
-//                        });
-                    });
-
-                    $sheetname = "宣城子公司下图明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
-                        // Sheet manipulation
-                        $data = [];
-                        $tonnagetotal_issuedrawing = 0.0;
-                        $tonnagetotal_mcitempurchase = 0.0;
-                        $tonnagetotal_pppayment = 0.0;
-                        $tonnagetotal_pppayment_paowan = 0.0;
-                        $tonnagetotal_pppayment_youqi = 0.0;
-                        $tonnagetotal_pppayment_rengong = 0.0;
-                        $tonnagetotal_pppayment_maohan = 0.0;
-                        $tonnagetotal_out = 0.0;
-                        $tonnagetotal_in = 0.0;
-
-                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '宣城子公司');
-//                dd($issuedrawings->getData(true)["data"]);
-//                dd(json_decode($issuedrawings) );
-                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
-                            $temp = [];
-                            $temp['下图日期']          = $value['created_date'];
-                            $temp['下图吨数']                = (double)$value['tonnage'];
-                            $temp['下图申请人']              = $value['applicant'];
-                            $temp['下图制作公司']     = $value['productioncompany'];
-                            $temp['下图概述']               = $value['overview'];
-
-                            array_push($data, $temp);
-                            $tonnagetotal_issuedrawing += $value['tonnage'];
-                        }
-
-                        $param = "@orderid=" . $sohead->id;
-                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
-                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
-                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
-
-                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
-                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
-                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
-
-//                dd($data);
-                        $sheet->freezeFirstRow();
-                        $sheet->fromArray($data);
-
-                        $totalrowcolor = "#00FF00";       // green
-                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
-                            $totalrowcolor = "#FF0000"; // red
-//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-//                        ]);
-//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-//                            $row->setBackground($totalrowcolor);
-//                        });
-                    });
-
-                    $sheetname = "许昌子公司下图明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
-                        // Sheet manipulation
-                        $data = [];
-                        $tonnagetotal_issuedrawing = 0.0;
-                        $tonnagetotal_mcitempurchase = 0.0;
-                        $tonnagetotal_pppayment = 0.0;
-                        $tonnagetotal_pppayment_paowan = 0.0;
-                        $tonnagetotal_pppayment_youqi = 0.0;
-                        $tonnagetotal_pppayment_rengong = 0.0;
-                        $tonnagetotal_pppayment_maohan = 0.0;
-                        $tonnagetotal_out = 0.0;
-                        $tonnagetotal_in = 0.0;
-
-                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '许昌子公司');
-//                dd($issuedrawings->getData(true)["data"]);
-//                dd(json_decode($issuedrawings) );
-                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
-                            $temp = [];
-                            $temp['下图日期']          = $value['created_date'];
-                            $temp['下图吨数']                = (double)$value['tonnage'];
-                            $temp['下图申请人']              = $value['applicant'];
-                            $temp['下图制作公司']     = $value['productioncompany'];
-                            $temp['下图概述']               = $value['overview'];
-
-                            array_push($data, $temp);
-                            $tonnagetotal_issuedrawing += $value['tonnage'];
-                        }
-
-                        $param = "@orderid=" . $sohead->id;
-                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
-                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
-                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
-
-                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
-                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
-                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
-
-//                dd($data);
-                        $sheet->freezeFirstRow();
-                        $sheet->fromArray($data);
-
-                        $totalrowcolor = "#00FF00";       // green
-                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
-                            $totalrowcolor = "#FF0000"; // red
-//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-//                        ]);
-//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-//                            $row->setBackground($totalrowcolor);
-//                        });
-                    });
-
-                    $sheetname = "外协单位下图明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
-                        // Sheet manipulation
-                        $data = [];
-                        $tonnagetotal_issuedrawing = 0.0;
-                        $tonnagetotal_mcitempurchase = 0.0;
-                        $tonnagetotal_pppayment = 0.0;
-
-                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '外协单位');
-//                dd($issuedrawings->getData(true)["data"]);
-//                dd(json_decode($issuedrawings) );
-                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
-                            $temp = [];
-                            $temp['下图日期']          = $value['created_date'];
-                            $temp['下图吨数']                = (double)$value['tonnage'];
-                            $temp['下图申请人']              = $value['applicant'];
-                            $temp['下图制作公司']     = $value['productioncompany'];
-                            $temp['下图概述']               = $value['overview'];
-
-                            array_push($data, $temp);
-                            $tonnagetotal_issuedrawing += $value['tonnage'];
-                        }
-
-                        $param = "@orderid=" . $sohead->id;
-                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
-                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
-                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
-
-                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
-                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
-                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
-
-//                dd($data);
-                        $sheet->freezeFirstRow();
-                        $sheet->fromArray($data);
-
-                        $totalrowcolor = "#00FF00";       // green
-                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
-                            $totalrowcolor = "#FF0000"; // red
-//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-//                        ]);
-//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-//                            $row->setBackground($totalrowcolor);
-//                        });
-                    });
-
-                    $sheetname = "胶州生产中心下图明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
-                        // Sheet manipulation
-                        $data = [];
-                        $tonnagetotal_issuedrawing = 0.0;
-                        $tonnagetotal_mcitempurchase = 0.0;
-                        $tonnagetotal_pppayment = 0.0;
-
-                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '胶州生产中心');
-//                dd($issuedrawings->getData(true)["data"]);
-//                dd(json_decode($issuedrawings) );
-                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
-                            $temp = [];
-                            $temp['下图日期']          = $value['created_date'];
-                            $temp['下图吨数']                = (double)$value['tonnage'];
-                            $temp['下图申请人']              = $value['applicant'];
-                            $temp['下图制作公司']     = $value['productioncompany'];
-                            $temp['下图概述']               = $value['overview'];
-
-                            array_push($data, $temp);
-                            $tonnagetotal_issuedrawing += $value['tonnage'];
-                        }
-
-                        $param = "@orderid=" . $sohead->id;
-                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
-                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
-                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
-
-                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
-                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
-                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
-
-//                dd($data);
-                        $sheet->freezeFirstRow();
-                        $sheet->fromArray($data);
-
-                        $totalrowcolor = "#00FF00";       // green
-                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
-                            $totalrowcolor = "#FF0000"; // red
-//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-//                        ]);
-//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-//                            $row->setBackground($totalrowcolor);
-//                        });
-                    });
-
-                    $sheetname = "苏州生产中心下图明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
-                        // Sheet manipulation
-                        $data = [];
-                        $tonnagetotal_issuedrawing = 0.0;
-                        $tonnagetotal_mcitempurchase = 0.0;
-                        $tonnagetotal_pppayment = 0.0;
-
-                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '苏州生产中心');
-//                dd($issuedrawings->getData(true)["data"]);
-//                dd(json_decode($issuedrawings) );
-                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
-                            $temp = [];
-                            $temp['下图日期']          = $value['created_date'];
-                            $temp['下图吨数']                = (double)$value['tonnage'];
-                            $temp['下图申请人']              = $value['applicant'];
-                            $temp['下图制作公司']     = $value['productioncompany'];
-                            $temp['下图概述']               = $value['overview'];
-
-                            array_push($data, $temp);
-                            $tonnagetotal_issuedrawing += $value['tonnage'];
-                        }
-
-                        $param = "@orderid=" . $sohead->id;
-                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
-                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
-                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
-
-                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
-                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
-                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
-
-//                dd($data);
-                        $sheet->freezeFirstRow();
-                        $sheet->fromArray($data);
-
-                        $totalrowcolor = "#00FF00";       // green
-                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
-                            $totalrowcolor = "#FF0000"; // red
-//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-//                        ]);
-//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-//                            $row->setBackground($totalrowcolor);
-//                        });
-                    });
-
-                    $sheetname = "泰州生产中心下图明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
-                        // Sheet manipulation
-                        $data = [];
-                        $tonnagetotal_issuedrawing = 0.0;
-                        $tonnagetotal_mcitempurchase = 0.0;
-                        $tonnagetotal_pppayment = 0.0;
-
-                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id, '泰州生产中心');
-//                dd($issuedrawings->getData(true)["data"]);
-//                dd(json_decode($issuedrawings) );
-                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-                        foreach ($issuedrawingsArray as $value)
-                        {
-                            $temp = [];
-                            $temp['下图日期']          = $value['created_date'];
-                            $temp['下图吨数']                = (double)$value['tonnage'];
-                            $temp['下图申请人']              = $value['applicant'];
-                            $temp['下图制作公司']     = $value['productioncompany'];
-                            $temp['下图概述']               = $value['overview'];
-
-                            array_push($data, $temp);
-                            $tonnagetotal_issuedrawing += $value['tonnage'];
-                        }
-
-                        $param = "@orderid=" . $sohead->id;
-                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
-                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
-                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
-
-                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
-                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
-                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-//                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
-
-//                dd($data);
-                        $sheet->freezeFirstRow();
-                        $sheet->fromArray($data);
-
-                        $totalrowcolor = "#00FF00";       // green
-                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
-                            $totalrowcolor = "#FF0000"; // red
-//                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-//                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-//                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-//                        ]);
-//                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-//                            $row->setBackground($totalrowcolor);
-//                        });
-                    });
-
-//                    $sheetname = "下图明细";
-//                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
-//                        // Sheet manipulation
-//                        $data = [];
-//                        $tonnagetotal_issuedrawing = 0.0;
-//                        $tonnagetotal_mcitempurchase = 0.0;
-//                        $tonnagetotal_pppayment = 0.0;
-//
-//                        $issuedrawings = $this->issuedrawingjson($request, $sohead->id);
-////                dd($issuedrawings->getData(true)["data"]);
-////                dd(json_decode($issuedrawings) );
-//                        $issuedrawingsArray = $issuedrawings->getData(true)["data"];
-//                        foreach ($issuedrawingsArray as $value)
-//                        {
-//                            $temp = [];
-//                            $temp['下图日期']          = $value['created_date'];
-//                            $temp['下图吨数']                = (double)$value['tonnage'];
-//                            $temp['下图申请人']              = $value['applicant'];
-//                            $temp['下图制作公司']     = $value['productioncompany'];
-//                            $temp['下图概述']               = $value['overview'];
-//
-//                            array_push($data, $temp);
-//                            $tonnagetotal_issuedrawing += $value['tonnage'];
-//                        }
-//
-//                        $param = "@orderid=" . $sohead->id;
-//                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight ' . $param);
-//                        if (count($sohead_outitems) > 0 && isset($sohead_outitems[0]))
-//                            $tonnagetotal_out = $sohead_outitems[0]->heights / 1000.0;
-//
-//                        $sohead_initems = DB::connection('sqlsrv')->select(' pGetOrderInHeight ' . $param);
-//                        if (count($sohead_initems) > 0 && isset($sohead_initems[0]))
-//                            $tonnagetotal_in = $sohead_initems[0]->heights / 1000.0;
-////                    $sohead_outitems = json_decode(json_encode($sohead_outitems), true);
-//
-////                dd($data);
-//                        $sheet->freezeFirstRow();
-//                        $sheet->fromArray($data);
-//
-//                        $totalrowcolor = "#00FF00";       // green
-//                        if ($tonnagetotal_issuedrawing < $tonnagetotal_mcitempurchase || $tonnagetotal_issuedrawing < $tonnagetotal_pppayment)
-//                            $totalrowcolor = "#FF0000"; // red
-////                        $sheet->appendRow([$tonnagetotal_issuedrawing, $tonnagetotal_mcitempurchase,
-////                            $tonnagetotal_pppayment . "（其中抛丸" . $tonnagetotal_pppayment_paowan . "，油漆" . $tonnagetotal_pppayment_youqi . "，人工" . $tonnagetotal_pppayment_rengong . "，铆焊" . $tonnagetotal_pppayment_maohan . "）",
-////                            "领用" . $tonnagetotal_out, "入库" . $tonnagetotal_in
-////                        ]);
-////                        $sheet->row(count($data) + 2, function ($row) use ($totalrowcolor) {
-////                            $row->setBackground($totalrowcolor);
-////                        });
-//                    });
-
-                    $sheetname = "无锡生产中心出库明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
-                        $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
-
-                        $param = "@orderid=" . $sohead->id . ", @warehouse_number='001'";       // 无锡原材料仓
-                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
-                        $dataArray = json_decode(json_encode($sohead_outitems), true);
-                        foreach ($dataArray as $value)
-                        {
-//                            dd($value);
-                            $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
-                        }
-                    });
-
-                    $sheetname = "宣城子公司出库明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
-                        $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
-
-                        $param = "@orderid=" . $sohead->id . ", @warehouse_number='010'";       // 郎溪原材料仓
-                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
-                        $dataArray = json_decode(json_encode($sohead_outitems), true);
-                        foreach ($dataArray as $value)
-                        {
-//                            dd($value);
-                            $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
-                        }
-                    });
-
-                    $sheetname = "许昌子公司出库明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
-                        $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
-
-                        $param = "@orderid=" . $sohead->id . ", @warehouse_number='012'";       // 许昌原材料仓
-                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
-                        $dataArray = json_decode(json_encode($sohead_outitems), true);
-                        foreach ($dataArray as $value)
-                        {
-//                            dd($value);
-                            $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
-                        }
-                    });
-
-                    $sheetname = "胶州生产中心出库明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
-                        $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
-
-                        $param = "@orderid=" . $sohead->id . ", @warehouse_number='004'";       // 胶州原材料仓
-                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
-                        $dataArray = json_decode(json_encode($sohead_outitems), true);
-                        foreach ($dataArray as $value)
-                        {
-                            $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
-                        }
-
-                        $param = "@orderid=" . $sohead->id . ", @warehouse_number='008'";       // 胶州原材料二仓
-                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
-                        $dataArray = json_decode(json_encode($sohead_outitems), true);
-                        foreach ($dataArray as $value)
-                        {
-                            $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
-                        }
-                    });
-
-                    $sheetname = "泰州生产中心出库明细";
-                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
-                        $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
-
-                        $param = "@orderid=" . $sohead->id . ", @warehouse_number='003'";       // 泰州原材料仓
-                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
-                        $dataArray = json_decode(json_encode($sohead_outitems), true);
-                        foreach ($dataArray as $value)
-                        {
-                            $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
-                        }
-                    });
-
-//                    $sheetname = "出库明细";
-//                    $excel->sheet($sheetname, function($sheet) use ($request, $sohead) {
-//                        $sheet->appendRow(["单号", "物料编号", "物料名称", "型号", "单位", "数量", "批号", "仓库名称", "出库日期"]);
-//
-//                        $param = "@orderid=" . $sohead->id;
-//                        $sohead_outitems = DB::connection('sqlsrv')->select(' pGetOrderOutHeight_detail ' . $param);
-//                        $dataArray = json_decode(json_encode($sohead_outitems), true);
-//                        foreach ($dataArray as $value)
-//                        {
-////                            dd($value);
-//                            $sheet->appendRow([$value['out_number'], $value['goods_no'], $value['goods_name'], $value['goods_spec'], $value['unit_name'], $value['height'], $value['batch'], $value['warehouse_name'], $value['record_date']]);
-//                        }
-//                    });
-
-                    // Set the title
-//                    $excel->setTitle($filename);
-
-                    // Chain the setters
-                    $excel->setCreator('HXERP')
-                        ->setCompany('Huaxing East');
-
-                    // Call them separately
-//            $excel->setDescription('A demonstration to change the file properties');
-
-                })->export('xlsx');
-            }
-            else
-                dd('未找到对应的订单。');
-        }
+        $arr = array_keys(config('custom.dingtalk.approversettings.pppayment.pricedetail.铆焊'));
+        $ret = DB::select('EXEC pIssueDrawingSum ?', [join(',', $arr)]);
+        $name = '下图申购铆焊报表';
+        Excel::create($name, function (LaravelExcelWriter $excel) use ($ret, $name) {
+            $excel->sheet('汇总', function (LaravelExcelWorksheet $sheet) use ($ret) {
+                $sheet->freezeFirstRow();
+                $sheet->appendRow(['订单号', '加工名称', '下图吨位', '结算铆焊吨位', '结算铆焊金额', '工厂', '订单']);
+                $sheet->rows(array_map(function ($row) {
+                    return array_values((array)$row);
+                }, $ret));
+
+                $sheet->setAutoFilter("A1:G1");
+            })->setTitle($name)->setCreator('HXERP')->setCompany('Huaxing East');;
+        })->export('xlsx');
     }
 
     public static function processinstance_listids_issuedrawing($startTime, $endTime)
@@ -3623,7 +2848,7 @@ class ApprovalController extends Controller
         $user = Auth::user();
         $method = 'dingtalk.smartwork.bpms.processinstance.create';
         $session = DingTalkController::getAccessToken();
-//        $timestamp = time('2017-07-19 13:06:00');
+        //        $timestamp = time('2017-07-19 13:06:00');
         $format = 'json';
         $v = '2.0';
 
@@ -3634,31 +2859,29 @@ class ApprovalController extends Controller
         if (count($departmentList) > 0)
             $dept_id = array_first($departmentList);
 
-//        $form_component_values = str_replace('#', '%23', $form_component_values);
-//        $form_component_values = str_replace(' ', '%20', $form_component_values);
-//        dd(json_decode(json_decode($form_component_values)[9]->value));
-//        Log::info('process_code: ' . $process_code);
+        //        $form_component_values = str_replace('#', '%23', $form_component_values);
+        //        $form_component_values = str_replace(' ', '%20', $form_component_values);
+        //        dd(json_decode(json_decode($form_component_values)[9]->value));
+        //        Log::info('process_code: ' . $process_code);
 
         $startTime = $startTime->timestamp * 1000;
         $endTime = $endTime->timestamp * 1000;
 
-//        Log::info($startTime);
-//        Log::info($endTime);
+        //        Log::info($startTime);
+        //        Log::info($endTime);
         $c = new DingTalkClient();
         $req = new SmartworkBpmsProcessinstanceListRequest();
         $req->setProcessCode($process_code);
         $req->setStartTime("$startTime");
         $req->setEndTime("$endTime");
-//        $req->setSize(10);
+        //        $req->setSize(10);
 
         $response = $c->execute($req, $session);
-//        Log::info(json_encode($response));
+        //        Log::info(json_encode($response));
         return $response;
-//        return json_encode($response);
+        //        return json_encode($response);
         dd(json_encode($response, JSON_UNESCAPED_UNICODE));
         return response()->json($response);
-
-
     }
 
     public static function processinstance_listids($approvaltype, $startTime, $endTime)
@@ -3666,37 +2889,36 @@ class ApprovalController extends Controller
         $user = Auth::user();
         $method = 'dingtalk.smartwork.bpms.processinstance.create';
         $session = DingTalkController::getAccessToken();
-//        $timestamp = time('2017-07-19 13:06:00');
+        //        $timestamp = time('2017-07-19 13:06:00');
         $format = 'json';
         $v = '2.0';
 
         $process_code = config('custom.dingtalk.approval_processcode.' . $approvaltype);
-//        $originator_user_id = $user->dtuserid;
-//        $departmentList = json_decode($user->dtuser->department);
-//        $dept_id = 0;
-//        if (count($departmentList) > 0)
-//            $dept_id = array_first($departmentList);
+        //        $originator_user_id = $user->dtuserid;
+        //        $departmentList = json_decode($user->dtuser->department);
+        //        $dept_id = 0;
+        //        if (count($departmentList) > 0)
+        //            $dept_id = array_first($departmentList);
 
 
         $startTime = $startTime->timestamp * 1000;
         $endTime = $endTime->timestamp * 1000;
 
-//        Log::info($startTime);
-//        Log::info($endTime);
+        //        Log::info($startTime);
+        //        Log::info($endTime);
         $c = new DingTalkClient();
         $req = new SmartworkBpmsProcessinstanceListRequest();
         $req->setProcessCode($process_code);
         $req->setStartTime("$startTime");
         $req->setEndTime("$endTime");
-//        $req->setSize(10);
+        //        $req->setSize(10);
 
         $response = $c->execute($req, $session);
-//        Log::info(json_encode($response));
+        //        Log::info(json_encode($response));
         return $response;
-//        return json_encode($response);
+        //        return json_encode($response);
         dd(json_encode($response, JSON_UNESCAPED_UNICODE));
         return response()->json($response);
-
     }
 
     public static function projectsitepurchase($inputs)
@@ -3715,13 +2937,12 @@ class ApprovalController extends Controller
         if (count($departmentList) > 0)
             $dept_id = array_first($departmentList);
         $approvers = $inputs['approvers'];
-//        $approvers = $user->dtuserid;
+        //        $approvers = $user->dtuserid;
         // if originator_user_id in approvers, skip pre approvers
         $approver_array = explode(',', $approvers);
-        if (in_array($originator_user_id, $approver_array))
-        {
+        if (in_array($originator_user_id, $approver_array)) {
             $offset = array_search($originator_user_id, $approver_array);
-            $approver_array = array_slice($approver_array, $offset+1);
+            $approver_array = array_slice($approver_array, $offset + 1);
             $approvers = implode(",", $approver_array);
         }
         if ($approvers == "")
@@ -3730,8 +2951,7 @@ class ApprovalController extends Controller
         $detail_array = [];
         $projectsitepurchase_items = json_decode($inputs['items_string']);
         foreach ($projectsitepurchase_items as $value) {
-            if ($value->item_id > 0)
-            {
+            if ($value->item_id > 0) {
                 $item_array = [
                     [
                         'name'      => '物品名称',
@@ -3826,10 +3046,10 @@ class ApprovalController extends Controller
                 'name'      => '交通或运费（元）',
                 'value'     => $inputs['freight'],
             ],
-//            [
-//                'name'      => '合计总金额',
-//                'value'     => $inputs['totalprice'],
-//            ],
+            //            [
+            //                'name'      => '合计总金额',
+            //                'value'     => $inputs['totalprice'],
+            //            ],
             [
                 'name'      => '支付方式',
                 'value'     => $inputs['paymentmethod'],
@@ -3871,222 +3091,231 @@ class ApprovalController extends Controller
                 'value'     => json_encode($detail_array),
             ],
         ];
-        if (isset($inputs['purchasetype']))
-        {
-            if ($inputs['purchasetype'] != 'EP项目安装队相关费用')
-            {
-                array_push($formdata,
+        if (isset($inputs['purchasetype'])) {
+            if ($inputs['purchasetype'] != 'EP项目安装队相关费用') {
+                array_push(
+                    $formdata,
                     [
                         'name'      => '采购原因',
                         'value'     => $inputs['purchasereason'],
-                    ]);
+                    ]
+                );
             }
         }
 
         $form_component_values = json_encode($formdata);
-//        dd($form_component_values);
-//        Log::info('process_code: ' . $process_code);
-//        Log::info('originator_user_id: ' . $originator_user_id);
-//        Log::info('dept_id: ' . $dept_id);
-//        Log::info('approvers: ' . $approvers);
-//        Log::info('form_component_values: ' . $form_component_values);
-        $params = compact('method', 'session', 'v', 'format',
-            'process_code', 'originator_user_id', 'dept_id', 'approvers', 'form_component_values');
+        //        dd($form_component_values);
+        //        Log::info('process_code: ' . $process_code);
+        //        Log::info('originator_user_id: ' . $originator_user_id);
+        //        Log::info('dept_id: ' . $dept_id);
+        //        Log::info('approvers: ' . $approvers);
+        //        Log::info('form_component_values: ' . $form_component_values);
+        $params = compact(
+            'method',
+            'session',
+            'v',
+            'format',
+            'process_code',
+            'originator_user_id',
+            'dept_id',
+            'approvers',
+            'form_component_values'
+        );
         $data = [
-//            'form_component_values' => $form_component_values,
+            //            'form_component_values' => $form_component_values,
         ];
 
-//        Log::info(app_path());
+        //        Log::info(app_path());
         $c = new DingTalkClient();
-//        $req = new SmartworkBpmsProcessinstanceCreateRequest();
+        //        $req = new SmartworkBpmsProcessinstanceCreateRequest();
         $req = new OapiProcessinstanceCreateRequest();
-//        $req->setAgentId("41605932");
+        //        $req->setAgentId("41605932");
         $req->setProcessCode($process_code);
         $req->setOriginatorUserId($originator_user_id);
         $req->setDeptId("$dept_id");
-//        $req->setApprovers($approvers);
-//        $cc_list = config('custom.dingtalk.approversettings.projectsitepurchase.cc_list.' . $inputs['purchasetype']);
-//        if (strlen($cc_list) == 0)
-//            $cc_list = config('custom.dingtalk.approversettings.projectsitepurchase.cc_list.default', '');
-//        if ($cc_list <> "")
-//        {
-//            $req->setCcList($cc_list);
-//            $req->setCcPosition("FINISH");
-//        }
+        //        $req->setApprovers($approvers);
+        //        $cc_list = config('custom.dingtalk.approversettings.projectsitepurchase.cc_list.' . $inputs['purchasetype']);
+        //        if (strlen($cc_list) == 0)
+        //            $cc_list = config('custom.dingtalk.approversettings.projectsitepurchase.cc_list.default', '');
+        //        if ($cc_list <> "")
+        //        {
+        //            $req->setCcList($cc_list);
+        //            $req->setCcPosition("FINISH");
+        //        }
         $req->setFormComponentValues("$form_component_values");
 
-//        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
+        //        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
         $response = $c->execute($req, $session);
         Log::info(json_encode($response));
         return json_encode($response);
         dd(json_encode($response, JSON_UNESCAPED_UNICODE));
         return response()->json($response);
 
-//        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
-//        $response = HttpDingtalkEco::post("", $params, json_encode($data));
+        //        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+        //        $response = HttpDingtalkEco::post("", $params, json_encode($data));
 
         return $response;
     }
 
-//    public static function vendordeduction($inputs)
-//    {
-//        $user = Auth::user();
-//        $method = 'dingtalk.smartwork.bpms.processinstance.create';
-//        $session = DingTalkController::getAccessToken();
-//        $timestamp = time('2017-07-19 13:06:00');
-//        $format = 'json';
-//        $v = '2.0';
-//
-//        $process_code = config('custom.dingtalk.approval_processcode.vendordeduction');
-//        $originator_user_id = $user->dtuserid;
-//        $departmentList = json_decode($user->dtuser->department);
-//        $dept_id = 0;
-//        if (count($departmentList) > 0)
-//            $dept_id = array_first($departmentList);
-//        $approvers = $inputs['approvers'];
-//        // if originator_user_id in approvers, skip pre approvers
-//        $approver_array = explode(',', $approvers);
-//        if (in_array($originator_user_id, $approver_array))
-//        {
-//            $offset = array_search($originator_user_id, $approver_array);
-//            $approver_array = array_slice($approver_array, $offset+1);
-//            $approvers = implode(",", $approver_array);
-//        }
-//        if ($approvers == "")
-//            $approvers = config('custom.dingtalk.default_approvers');
-//
-//        $detail_array = [];
-//        $vendordeduction_items = json_decode($inputs['items_string']);
-//        $totalprice = 0.0;
-//        foreach ($vendordeduction_items as $value) {
-//            if (strlen($value->itemname) > 0)
-//            {
-//                $item_array = [
-//                    [
-//                        'name'      => '设备名称',
-//                        'value'     => $value->itemname,
-//                    ],
-//                    [
-//                        'name'      => '规格',
-//                        'value'     => $value->itemspec,
-//                    ],
-//                    [
-//                        'name'      => '单位',
-//                        'value'     => $value->itemunit,
-//                    ],
-//                    [
-//                        'name'      => '数量',
-//                        'value'     => $value->quantity,
-//                    ],
-//                    [
-//                        'name'      => '单价',
-//                        'value'     => $value->unitprice,
-//                    ],
-//                    [
-//                        'name'      => '总额（元）',
-//                        'value'     => $value->quantity * $value->unitprice,
-//                    ],
-//                ];
-//                array_push($detail_array, $item_array);
-//                $totalprice += $value->quantity * $value->unitprice;
-//            }
-//        }
-//        $formdata = [
-//            [
-//                'name'      => '本次扣款所属项目名称',
-//                'value'     => $inputs['pohead_descrip'],
-//            ],
-//            [
-//                'name'      => '本次扣款所属项目编号',
-//                'value'     => $inputs['sohead_number'],
-//            ],
-//            [
-//                'name'      => '本次扣款外协合同编号',
-//                'value'     => $inputs['pohead_number'],
-//            ],
-//            [
-//                'name'      => '外协单位名称',
-//                'value'     => $inputs['vendor_name'],
-//            ],
-//            [
-//                'name'      => '外协单位所属种类',
-//                'value'     => $inputs['outsourcingtype'],
-//            ],
-//            [
-//                'name'      => '工艺主设部门',
-//                'value'     => $inputs['techdepart'],
-//            ],
-//            [
-//                'name'      => '扣款问题发生地',
-//                'value'     => $inputs['problemlocation'],
-//            ],
-//            [
-//                'name'      => '扣款原因',
-//                'value'     => $inputs['reason'],
-//            ],
-//            [
-//                'name'      => '申请扣款总金额（元）',
-//                'value'     => $totalprice,
-//            ],
-//            [
-//                'name'      => '备注',
-//                'value'     => $inputs['remark'],
-//            ],
-//            [
-//                'name'      => '供应商盖章或签字确认的文件',
-//                'value'     => $inputs['fileattachments_url'],
-//            ],
-//            [
-//                'name'      => '供应商确认的或执行通知义务的截图',
-//                'value'     => $inputs['image_urls'],
-//            ],
-//            [
-//                'name'      => '明细',
-//                'value'     => json_encode($detail_array),
-//            ],
-//        ];
-//        $form_component_values = json_encode($formdata);
-////        dd(json_decode(json_decode($form_component_values)[9]->value));
-////        Log::info('process_code: ' . $process_code);
-////        Log::info('originator_user_id: ' . $originator_user_id);
-////        Log::info('dept_id: ' . $dept_id);
-////        Log::info('approvers: ' . $approvers);
-////        Log::info('form_component_values: ' . $form_component_values);
-//        $params = compact('method', 'session', 'v', 'format',
-//            'process_code', 'originator_user_id', 'dept_id', 'approvers', 'form_component_values');
-//        $data = [
-////            'form_component_values' => $form_component_values,
-//        ];
-//
-////        Log::info(app_path());
-//        $c = new DingTalkClient();
-//        $req = new SmartworkBpmsProcessinstanceCreateRequest();
-////        $req->setAgentId("41605932");
-//        $req->setProcessCode($process_code);
-//        $req->setOriginatorUserId($originator_user_id);
-//        $req->setDeptId("$dept_id");
-//        $req->setApprovers($approvers);
-//        $cc_list = config('custom.dingtalk.approversettings.vendordeduction.cc_list.default');
-//        if (strlen($cc_list) == 0)
-//            $cc_list = config('custom.dingtalk.approversettings.vendordeduction.cc_list.default', '');
-//        if ($cc_list <> "")
-//        {
-//            $req->setCcList($cc_list);
-//            $req->setCcPosition("FINISH");
-//        }
-//        $req->setFormComponentValues("$form_component_values");
-//
-////        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
-//        $response = $c->execute($req, $session);
-//        return json_encode($response);
-//        dd(json_encode($response, JSON_UNESCAPED_UNICODE));
-//        return response()->json($response);
-//
-////        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
-////        $response = HttpDingtalkEco::post("", $params, json_encode($data));
-//
-//        return $response;
-//    }
+    //    public static function vendordeduction($inputs)
+    //    {
+    //        $user = Auth::user();
+    //        $method = 'dingtalk.smartwork.bpms.processinstance.create';
+    //        $session = DingTalkController::getAccessToken();
+    //        $timestamp = time('2017-07-19 13:06:00');
+    //        $format = 'json';
+    //        $v = '2.0';
+    //
+    //        $process_code = config('custom.dingtalk.approval_processcode.vendordeduction');
+    //        $originator_user_id = $user->dtuserid;
+    //        $departmentList = json_decode($user->dtuser->department);
+    //        $dept_id = 0;
+    //        if (count($departmentList) > 0)
+    //            $dept_id = array_first($departmentList);
+    //        $approvers = $inputs['approvers'];
+    //        // if originator_user_id in approvers, skip pre approvers
+    //        $approver_array = explode(',', $approvers);
+    //        if (in_array($originator_user_id, $approver_array))
+    //        {
+    //            $offset = array_search($originator_user_id, $approver_array);
+    //            $approver_array = array_slice($approver_array, $offset+1);
+    //            $approvers = implode(",", $approver_array);
+    //        }
+    //        if ($approvers == "")
+    //            $approvers = config('custom.dingtalk.default_approvers');
+    //
+    //        $detail_array = [];
+    //        $vendordeduction_items = json_decode($inputs['items_string']);
+    //        $totalprice = 0.0;
+    //        foreach ($vendordeduction_items as $value) {
+    //            if (strlen($value->itemname) > 0)
+    //            {
+    //                $item_array = [
+    //                    [
+    //                        'name'      => '设备名称',
+    //                        'value'     => $value->itemname,
+    //                    ],
+    //                    [
+    //                        'name'      => '规格',
+    //                        'value'     => $value->itemspec,
+    //                    ],
+    //                    [
+    //                        'name'      => '单位',
+    //                        'value'     => $value->itemunit,
+    //                    ],
+    //                    [
+    //                        'name'      => '数量',
+    //                        'value'     => $value->quantity,
+    //                    ],
+    //                    [
+    //                        'name'      => '单价',
+    //                        'value'     => $value->unitprice,
+    //                    ],
+    //                    [
+    //                        'name'      => '总额（元）',
+    //                        'value'     => $value->quantity * $value->unitprice,
+    //                    ],
+    //                ];
+    //                array_push($detail_array, $item_array);
+    //                $totalprice += $value->quantity * $value->unitprice;
+    //            }
+    //        }
+    //        $formdata = [
+    //            [
+    //                'name'      => '本次扣款所属项目名称',
+    //                'value'     => $inputs['pohead_descrip'],
+    //            ],
+    //            [
+    //                'name'      => '本次扣款所属项目编号',
+    //                'value'     => $inputs['sohead_number'],
+    //            ],
+    //            [
+    //                'name'      => '本次扣款外协合同编号',
+    //                'value'     => $inputs['pohead_number'],
+    //            ],
+    //            [
+    //                'name'      => '外协单位名称',
+    //                'value'     => $inputs['vendor_name'],
+    //            ],
+    //            [
+    //                'name'      => '外协单位所属种类',
+    //                'value'     => $inputs['outsourcingtype'],
+    //            ],
+    //            [
+    //                'name'      => '工艺主设部门',
+    //                'value'     => $inputs['techdepart'],
+    //            ],
+    //            [
+    //                'name'      => '扣款问题发生地',
+    //                'value'     => $inputs['problemlocation'],
+    //            ],
+    //            [
+    //                'name'      => '扣款原因',
+    //                'value'     => $inputs['reason'],
+    //            ],
+    //            [
+    //                'name'      => '申请扣款总金额（元）',
+    //                'value'     => $totalprice,
+    //            ],
+    //            [
+    //                'name'      => '备注',
+    //                'value'     => $inputs['remark'],
+    //            ],
+    //            [
+    //                'name'      => '供应商盖章或签字确认的文件',
+    //                'value'     => $inputs['fileattachments_url'],
+    //            ],
+    //            [
+    //                'name'      => '供应商确认的或执行通知义务的截图',
+    //                'value'     => $inputs['image_urls'],
+    //            ],
+    //            [
+    //                'name'      => '明细',
+    //                'value'     => json_encode($detail_array),
+    //            ],
+    //        ];
+    //        $form_component_values = json_encode($formdata);
+    ////        dd(json_decode(json_decode($form_component_values)[9]->value));
+    ////        Log::info('process_code: ' . $process_code);
+    ////        Log::info('originator_user_id: ' . $originator_user_id);
+    ////        Log::info('dept_id: ' . $dept_id);
+    ////        Log::info('approvers: ' . $approvers);
+    ////        Log::info('form_component_values: ' . $form_component_values);
+    //        $params = compact('method', 'session', 'v', 'format',
+    //            'process_code', 'originator_user_id', 'dept_id', 'approvers', 'form_component_values');
+    //        $data = [
+    ////            'form_component_values' => $form_component_values,
+    //        ];
+    //
+    ////        Log::info(app_path());
+    //        $c = new DingTalkClient();
+    //        $req = new SmartworkBpmsProcessinstanceCreateRequest();
+    ////        $req->setAgentId("41605932");
+    //        $req->setProcessCode($process_code);
+    //        $req->setOriginatorUserId($originator_user_id);
+    //        $req->setDeptId("$dept_id");
+    //        $req->setApprovers($approvers);
+    //        $cc_list = config('custom.dingtalk.approversettings.vendordeduction.cc_list.default');
+    //        if (strlen($cc_list) == 0)
+    //            $cc_list = config('custom.dingtalk.approversettings.vendordeduction.cc_list.default', '');
+    //        if ($cc_list <> "")
+    //        {
+    //            $req->setCcList($cc_list);
+    //            $req->setCcPosition("FINISH");
+    //        }
+    //        $req->setFormComponentValues("$form_component_values");
+    //
+    ////        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
+    //        $response = $c->execute($req, $session);
+    //        return json_encode($response);
+    //        dd(json_encode($response, JSON_UNESCAPED_UNICODE));
+    //        return response()->json($response);
+    //
+    ////        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+    ////        $response = HttpDingtalkEco::post("", $params, json_encode($data));
+    //
+    //        return $response;
+    //    }
 
     public static function vendordeduction($inputs)
     {
@@ -4106,10 +3335,9 @@ class ApprovalController extends Controller
         $approvers = $inputs['approvers'];
         // if originator_user_id in approvers, skip pre approvers
         $approver_array = explode(',', $approvers);
-        if (in_array($originator_user_id, $approver_array))
-        {
+        if (in_array($originator_user_id, $approver_array)) {
             $offset = array_search($originator_user_id, $approver_array);
-            $approver_array = array_slice($approver_array, $offset+1);
+            $approver_array = array_slice($approver_array, $offset + 1);
             $approvers = implode(",", $approver_array);
         }
         if ($approvers == "")
@@ -4119,8 +3347,7 @@ class ApprovalController extends Controller
         $vendordeduction_items = json_decode($inputs['items_string']);
         $totalprice = 0.0;
         foreach ($vendordeduction_items as $value) {
-            if (strlen($value->itemname) > 0)
-            {
+            if (strlen($value->itemname) > 0) {
                 $item_array = [
                     [
                         'name'      => '名称',
@@ -4192,10 +3419,10 @@ class ApprovalController extends Controller
                 'name'      => '备注',
                 'value'     => $inputs['remark'],
             ],
-//            [
-//                'name'      => '供应商盖章或签字确认的文件',
-//                'value'     => $inputs['fileattachments_url'],
-//            ],
+            //            [
+            //                'name'      => '供应商盖章或签字确认的文件',
+            //                'value'     => $inputs['fileattachments_url'],
+            //            ],
             [
                 'name'      => '供应商盖章或签字确认的文件',
                 'value'     => $inputs['files_string'],
@@ -4214,45 +3441,54 @@ class ApprovalController extends Controller
             ],
         ];
         $form_component_values = json_encode($formdata);
-//        dd(json_decode(json_decode($form_component_values)[9]->value));
-//        Log::info('process_code: ' . $process_code);
-//        Log::info('originator_user_id: ' . $originator_user_id);
-//        Log::info('dept_id: ' . $dept_id);
-//        Log::info('approvers: ' . $approvers);
-//        Log::info('form_component_values: ' . $form_component_values);
-        $params = compact('method', 'session', 'v', 'format',
-            'process_code', 'originator_user_id', 'dept_id', 'approvers', 'form_component_values');
+        //        dd(json_decode(json_decode($form_component_values)[9]->value));
+        //        Log::info('process_code: ' . $process_code);
+        //        Log::info('originator_user_id: ' . $originator_user_id);
+        //        Log::info('dept_id: ' . $dept_id);
+        //        Log::info('approvers: ' . $approvers);
+        //        Log::info('form_component_values: ' . $form_component_values);
+        $params = compact(
+            'method',
+            'session',
+            'v',
+            'format',
+            'process_code',
+            'originator_user_id',
+            'dept_id',
+            'approvers',
+            'form_component_values'
+        );
         $data = [
-//            'form_component_values' => $form_component_values,
+            //            'form_component_values' => $form_component_values,
         ];
 
-//        Log::info(app_path());
+        //        Log::info(app_path());
         $c = new DingTalkClient();
         $req = new OapiProcessinstanceCreateRequest();
-//        $req->setAgentId("41605932");
+        //        $req->setAgentId("41605932");
         $req->setProcessCode($process_code);
         $req->setOriginatorUserId($originator_user_id);
         $req->setDeptId("$dept_id");
-//        $req->setApprovers($approvers);
-//        $cc_list = config('custom.dingtalk.approversettings.vendordeduction.cc_list.default');
-//        if (strlen($cc_list) == 0)
-//            $cc_list = config('custom.dingtalk.approversettings.vendordeduction.cc_list.default', '');
-//        if ($cc_list <> "")
-//        {
-//            $req->setCcList($cc_list);
-//            $req->setCcPosition("FINISH");
-//        }
+        //        $req->setApprovers($approvers);
+        //        $cc_list = config('custom.dingtalk.approversettings.vendordeduction.cc_list.default');
+        //        if (strlen($cc_list) == 0)
+        //            $cc_list = config('custom.dingtalk.approversettings.vendordeduction.cc_list.default', '');
+        //        if ($cc_list <> "")
+        //        {
+        //            $req->setCcList($cc_list);
+        //            $req->setCcPosition("FINISH");
+        //        }
         $req->setFormComponentValues("$form_component_values");
 
-//        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
+        //        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
         $response = $c->execute($req, $session);
-//        Log::info(json_encode($response));
+        //        Log::info(json_encode($response));
         return json_encode($response);
         dd(json_encode($response, JSON_UNESCAPED_UNICODE));
         return response()->json($response);
 
-//        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
-//        $response = HttpDingtalkEco::post("", $params, json_encode($data));
+        //        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+        //        $response = HttpDingtalkEco::post("", $params, json_encode($data));
 
         return $response;
     }
@@ -4272,24 +3508,23 @@ class ApprovalController extends Controller
         $dept_id = 0;
         if (count($departmentList) > 0)
             $dept_id = array_first($departmentList);
-//        $approvers = $inputs['approvers'];
-//        // if originator_user_id in approvers, skip pre approvers
-//        $approver_array = explode(',', $approvers);
-//        if (in_array($originator_user_id, $approver_array))
-//        {
-//            $offset = array_search($originator_user_id, $approver_array);
-//            $approver_array = array_slice($approver_array, $offset+1);
-//            $approvers = implode(",", $approver_array);
-//        }
-//        if ($approvers == "")
-//            $approvers = config('custom.dingtalk.default_approvers');
+        //        $approvers = $inputs['approvers'];
+        //        // if originator_user_id in approvers, skip pre approvers
+        //        $approver_array = explode(',', $approvers);
+        //        if (in_array($originator_user_id, $approver_array))
+        //        {
+        //            $offset = array_search($originator_user_id, $approver_array);
+        //            $approver_array = array_slice($approver_array, $offset+1);
+        //            $approvers = implode(",", $approver_array);
+        //        }
+        //        if ($approvers == "")
+        //            $approvers = config('custom.dingtalk.default_approvers');
 
         $detail_array = [];
         $vendordeduction_items = json_decode($inputs['items_string']);
         $totalprice = 0.0;
         foreach ($vendordeduction_items as $value) {
-            if (strlen($value->item_name) > 0)
-            {
+            if (strlen($value->item_name) > 0) {
                 $item_array = [
                     [
                         'name'      => '商品类别',
@@ -4307,10 +3542,10 @@ class ApprovalController extends Controller
                         'name'      => '数量',
                         'value'     => $value->quantity,
                     ],
-//                    [
-//                        'name'      => '单价',
-//                        'value'     => $value->unitprice,
-//                    ],
+                    //                    [
+                    //                        'name'      => '单价',
+                    //                        'value'     => $value->unitprice,
+                    //                    ],
                     [
                         'name'      => '单位',
                         'value'     => $value->unit,
@@ -4321,7 +3556,7 @@ class ApprovalController extends Controller
                     ],
                 ];
                 array_push($detail_array, $item_array);
-//                $totalprice += $value->quantity * $value->unitprice;
+                //                $totalprice += $value->quantity * $value->unitprice;
             }
         }
         $formdata = [
@@ -4349,71 +3584,80 @@ class ApprovalController extends Controller
                 'name'      => '订单所属销售经理',
                 'value'     => $inputs['sohead_salesmanager'],
             ],
-//            [
-//                'name'      => '备注',
-//                'value'     => $inputs['remark'],
-//            ],
-//            [
-//                'name'      => '供应商盖章或签字确认的文件',
-//                'value'     => $inputs['fileattachments_url'],
-//            ],
+            //            [
+            //                'name'      => '备注',
+            //                'value'     => $inputs['remark'],
+            //            ],
+            //            [
+            //                'name'      => '供应商盖章或签字确认的文件',
+            //                'value'     => $inputs['fileattachments_url'],
+            //            ],
             [
                 'name'      => '上传技术规范书',
                 'value'     => $inputs['files_string'],
             ],
-//            [
-//                'name'      => '供应商确认的或执行通知义务的截图',
-//                'value'     => $inputs['image_urls'],
-//            ],
-//            [
-//                'name'      => '关联增补审批单',
-//                'value'     => $inputs['associatedapprovals'],
-//            ],
+            //            [
+            //                'name'      => '供应商确认的或执行通知义务的截图',
+            //                'value'     => $inputs['image_urls'],
+            //            ],
+            //            [
+            //                'name'      => '关联增补审批单',
+            //                'value'     => $inputs['associatedapprovals'],
+            //            ],
             [
                 'name'      => '采购明细',
                 'value'     => json_encode($detail_array),
             ],
         ];
         $form_component_values = json_encode($formdata);
-//        dd(json_decode(json_decode($form_component_values)[9]->value));
-//        Log::info('process_code: ' . $process_code);
-//        Log::info('originator_user_id: ' . $originator_user_id);
-//        Log::info('dept_id: ' . $dept_id);
-//        Log::info('approvers: ' . $approvers);
-//        Log::info('form_component_values: ' . $form_component_values);
-        $params = compact('method', 'session', 'v', 'format',
-            'process_code', 'originator_user_id', 'dept_id', 'approvers', 'form_component_values');
+        //        dd(json_decode(json_decode($form_component_values)[9]->value));
+        //        Log::info('process_code: ' . $process_code);
+        //        Log::info('originator_user_id: ' . $originator_user_id);
+        //        Log::info('dept_id: ' . $dept_id);
+        //        Log::info('approvers: ' . $approvers);
+        //        Log::info('form_component_values: ' . $form_component_values);
+        $params = compact(
+            'method',
+            'session',
+            'v',
+            'format',
+            'process_code',
+            'originator_user_id',
+            'dept_id',
+            'approvers',
+            'form_component_values'
+        );
         $data = [
-//            'form_component_values' => $form_component_values,
+            //            'form_component_values' => $form_component_values,
         ];
 
-//        Log::info(app_path());
+        //        Log::info(app_path());
         $c = new DingTalkClient();
         $req = new OapiProcessinstanceCreateRequest();
-//        $req->setAgentId("41605932");
+        //        $req->setAgentId("41605932");
         $req->setProcessCode($process_code);
         $req->setOriginatorUserId($originator_user_id);
         $req->setDeptId("$dept_id");
-//        $req->setApprovers($approvers);
-//        $cc_list = config('custom.dingtalk.approversettings.vendordeduction.cc_list.default');
-//        if (strlen($cc_list) == 0)
-//            $cc_list = config('custom.dingtalk.approversettings.vendordeduction.cc_list.default', '');
-//        if ($cc_list <> "")
-//        {
-//            $req->setCcList($cc_list);
-//            $req->setCcPosition("FINISH");
-//        }
+        //        $req->setApprovers($approvers);
+        //        $cc_list = config('custom.dingtalk.approversettings.vendordeduction.cc_list.default');
+        //        if (strlen($cc_list) == 0)
+        //            $cc_list = config('custom.dingtalk.approversettings.vendordeduction.cc_list.default', '');
+        //        if ($cc_list <> "")
+        //        {
+        //            $req->setCcList($cc_list);
+        //            $req->setCcPosition("FINISH");
+        //        }
         $req->setFormComponentValues("$form_component_values");
 
-//        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
+        //        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
         $response = $c->execute($req, $session);
-//        Log::info(json_encode($response));
+        //        Log::info(json_encode($response));
         return json_encode($response);
         dd(json_encode($response, JSON_UNESCAPED_UNICODE));
         return response()->json($response);
 
-//        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
-//        $response = HttpDingtalkEco::post("", $params, json_encode($data));
+        //        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+        //        $response = HttpDingtalkEco::post("", $params, json_encode($data));
 
         return $response;
     }
@@ -4432,17 +3676,17 @@ class ApprovalController extends Controller
         $dept_id = 0;
         if (count($departmentList) > 0)
             $dept_id = array_first($departmentList);
-//        $approvers = $inputs['approvers'];
-//        // if originator_user_id in approvers, skip pre approvers
-//        $approver_array = explode(',', $approvers);
-//        if (in_array($originator_user_id, $approver_array))
-//        {
-//            $offset = array_search($originator_user_id, $approver_array);
-//            $approver_array = array_slice($approver_array, $offset+1);
-//            $approvers = implode(",", $approver_array);
-//        }
-//        if ($approvers == "")
-//            $approvers = config('custom.dingtalk.default_approvers');       // wuceshi for test
+        //        $approvers = $inputs['approvers'];
+        //        // if originator_user_id in approvers, skip pre approvers
+        //        $approver_array = explode(',', $approvers);
+        //        if (in_array($originator_user_id, $approver_array))
+        //        {
+        //            $offset = array_search($originator_user_id, $approver_array);
+        //            $approver_array = array_slice($approver_array, $offset+1);
+        //            $approvers = implode(",", $approver_array);
+        //        }
+        //        if ($approvers == "")
+        //            $approvers = config('custom.dingtalk.default_approvers');       // wuceshi for test
 
         $formdata = [
             [
@@ -4517,26 +3761,26 @@ class ApprovalController extends Controller
                 'name'      => '开户行及帐号',
                 'value'     => $inputs['supplier_bank'] . ',' . $inputs['supplier_bankaccountnumber'],
             ],
-//            [
-//                'name'      => '交通或运费（元）',
-//                'value'     => $inputs['freight'],
-//            ],
-//            [
-//                'name'      => '支付方式',
-//                'value'     => $inputs['paymentmethod'],
-//            ],
-//            [
-//                'name'      => '发票情况',
-//                'value'     => $inputs['invoicesituation'],
-//            ],
-//            [
-//                'name'      => '公司名称',
-//                'value'     => $inputs['companyname'],
-//            ],
-//            [
-//                'name'      => '联系人',
-//                'value'     => $inputs['contact'],
-//            ],
+            //            [
+            //                'name'      => '交通或运费（元）',
+            //                'value'     => $inputs['freight'],
+            //            ],
+            //            [
+            //                'name'      => '支付方式',
+            //                'value'     => $inputs['paymentmethod'],
+            //            ],
+            //            [
+            //                'name'      => '发票情况',
+            //                'value'     => $inputs['invoicesituation'],
+            //            ],
+            //            [
+            //                'name'      => '公司名称',
+            //                'value'     => $inputs['companyname'],
+            //            ],
+            //            [
+            //                'name'      => '联系人',
+            //                'value'     => $inputs['contact'],
+            //            ],
             [
                 'name'      => '图片',
                 'value'     => $inputs['image_urls'],
@@ -4551,33 +3795,33 @@ class ApprovalController extends Controller
             ],
         ];
         $form_component_values = json_encode($formdata);
-//        dd($form_component_values);
-//        Log::info('process_code: ' . $process_code);
-//        Log::info('originator_user_id: ' . $originator_user_id);
-//        Log::info('dept_id: ' . $dept_id);
-//        Log::info('approvers: ' . $approvers);
-//        Log::info('form_component_values: ' . $form_component_values);
+        //        dd($form_component_values);
+        //        Log::info('process_code: ' . $process_code);
+        //        Log::info('originator_user_id: ' . $originator_user_id);
+        //        Log::info('dept_id: ' . $dept_id);
+        //        Log::info('approvers: ' . $approvers);
+        //        Log::info('form_component_values: ' . $form_component_values);
 
-//        Log::info(app_path());
+        //        Log::info(app_path());
         $c = new DingTalkClient();
-//        $req = new SmartworkBpmsProcessinstanceCreateRequest();
+        //        $req = new SmartworkBpmsProcessinstanceCreateRequest();
         $req = new OapiProcessinstanceCreateRequest();
-//        $req->setAgentId("41605932");
+        //        $req->setAgentId("41605932");
         $req->setProcessCode($process_code);
         $req->setOriginatorUserId($originator_user_id);
         $req->setDeptId("$dept_id");
 
         $req->setFormComponentValues("$form_component_values");
 
-//        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
+        //        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
         $response = $c->execute($req, $session);
         Log::info(json_encode($response));
         return json_encode($response);
         dd(json_encode($response, JSON_UNESCAPED_UNICODE));
         return response()->json($response);
 
-//        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
-//        $response = HttpDingtalkEco::post("", $params, json_encode($data));
+        //        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+        //        $response = HttpDingtalkEco::post("", $params, json_encode($data));
 
         return $response;
     }
@@ -4596,25 +3840,24 @@ class ApprovalController extends Controller
         $dept_id = 0;
         if (count($departmentList) > 0)
             $dept_id = array_first($departmentList);
-//        $approvers = $inputs['approvers'];
-//        // if originator_user_id in approvers, skip pre approvers
-//        $approver_array = explode(',', $approvers);
-//        if (in_array($originator_user_id, $approver_array))
-//        {
-//            $offset = array_search($originator_user_id, $approver_array);
-//            $approver_array = array_slice($approver_array, $offset+1);
-//            $approvers = implode(",", $approver_array);
-//        }
-//        if ($approvers == "")
-//            $approvers = config('custom.dingtalk.default_approvers');       // wuceshi for test
+        //        $approvers = $inputs['approvers'];
+        //        // if originator_user_id in approvers, skip pre approvers
+        //        $approver_array = explode(',', $approvers);
+        //        if (in_array($originator_user_id, $approver_array))
+        //        {
+        //            $offset = array_search($originator_user_id, $approver_array);
+        //            $approver_array = array_slice($approver_array, $offset+1);
+        //            $approvers = implode(",", $approver_array);
+        //        }
+        //        if ($approvers == "")
+        //            $approvers = config('custom.dingtalk.default_approvers');       // wuceshi for test
 
         $detail_array = [];
         $additionsalesorder_items = json_decode($inputs['items_string']);
         $totalamount = 0.0;
         foreach ($additionsalesorder_items as $value) {
-            if (strlen($value->type) > 0)
-            {
-//                Log::info(json_encode($value));
+            if (strlen($value->type) > 0) {
+                //                Log::info(json_encode($value));
                 $item_array = [
                     [
                         'name'      => '增补内容',
@@ -4671,18 +3914,18 @@ class ApprovalController extends Controller
                 'name'      => '备注',
                 'value'     => $inputs['remark'],
             ],
-//            [
-//                'name'      => '付款方式',
-//                'value'     => $inputs['paymentmethod'],
-//            ],
-//            [
-//                'name'      => '支付单位全称',
-//                'value'     => $inputs['supplier_name'],
-//            ],
-//            [
-//                'name'      => '开户行及帐号',
-//                'value'     => $inputs['supplier_bank'] . ',' . $inputs['supplier_bankaccountnumber'],
-//            ],
+            //            [
+            //                'name'      => '付款方式',
+            //                'value'     => $inputs['paymentmethod'],
+            //            ],
+            //            [
+            //                'name'      => '支付单位全称',
+            //                'value'     => $inputs['supplier_name'],
+            //            ],
+            //            [
+            //                'name'      => '开户行及帐号',
+            //                'value'     => $inputs['supplier_bank'] . ',' . $inputs['supplier_bankaccountnumber'],
+            //            ],
             [
                 'name'      => '签增单上传',
                 'value'     => $inputs['files_string'],
@@ -4695,39 +3938,39 @@ class ApprovalController extends Controller
                 'name'      => '增补内容明细',
                 'value'     => json_encode($detail_array),
             ],
-//            [
-//                'name'      => '关联《工程采购》审批单',
-//                'value'     => $inputs['associated_approval_projectpurchase'],
-//            ],
+            //            [
+            //                'name'      => '关联《工程采购》审批单',
+            //                'value'     => $inputs['associated_approval_projectpurchase'],
+            //            ],
         ];
         $form_component_values = json_encode($formdata);
-//        dd($form_component_values);
-//        Log::info('process_code: ' . $process_code);
-//        Log::info('originator_user_id: ' . $originator_user_id);
-//        Log::info('dept_id: ' . $dept_id);
-//        Log::info('approvers: ' . $approvers);
-//        Log::info('form_component_values: ' . $form_component_values);
+        //        dd($form_component_values);
+        //        Log::info('process_code: ' . $process_code);
+        //        Log::info('originator_user_id: ' . $originator_user_id);
+        //        Log::info('dept_id: ' . $dept_id);
+        //        Log::info('approvers: ' . $approvers);
+        //        Log::info('form_component_values: ' . $form_component_values);
 
-//        Log::info(app_path());
+        //        Log::info(app_path());
         $c = new DingTalkClient();
-//        $req = new SmartworkBpmsProcessinstanceCreateRequest();
+        //        $req = new SmartworkBpmsProcessinstanceCreateRequest();
         $req = new OapiProcessinstanceCreateRequest();
-//        $req->setAgentId("41605932");
+        //        $req->setAgentId("41605932");
         $req->setProcessCode($process_code);
         $req->setOriginatorUserId($originator_user_id);
         $req->setDeptId("$dept_id");
 
         $req->setFormComponentValues("$form_component_values");
 
-//        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
+        //        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
         $response = $c->execute($req, $session);
         Log::info(json_encode($response));
         return json_encode($response);
         dd(json_encode($response, JSON_UNESCAPED_UNICODE));
         return response()->json($response);
 
-//        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
-//        $response = HttpDingtalkEco::post("", $params, json_encode($data));
+        //        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+        //        $response = HttpDingtalkEco::post("", $params, json_encode($data));
 
         return $response;
     }
@@ -4746,50 +3989,50 @@ class ApprovalController extends Controller
         $dept_id = 0;
         if (count($departmentList) > 0)
             $dept_id = array_first($departmentList);
-//        $approvers = $inputs['approvers'];
-//        // if originator_user_id in approvers, skip pre approvers
-//        $approver_array = explode(',', $approvers);
-//        if (in_array($originator_user_id, $approver_array))
-//        {
-//            $offset = array_search($originator_user_id, $approver_array);
-//            $approver_array = array_slice($approver_array, $offset+1);
-//            $approvers = implode(",", $approver_array);
-//        }
-//        if ($approvers == "")
-//            $approvers = config('custom.dingtalk.default_approvers');       // wuceshi for test
+        //        $approvers = $inputs['approvers'];
+        //        // if originator_user_id in approvers, skip pre approvers
+        //        $approver_array = explode(',', $approvers);
+        //        if (in_array($originator_user_id, $approver_array))
+        //        {
+        //            $offset = array_search($originator_user_id, $approver_array);
+        //            $approver_array = array_slice($approver_array, $offset+1);
+        //            $approvers = implode(",", $approver_array);
+        //        }
+        //        if ($approvers == "")
+        //            $approvers = config('custom.dingtalk.default_approvers');       // wuceshi for test
 
-//        $detail_array = [];
-//        $additionsalesorder_items = json_decode($inputs['items_string']);
-//        $totalamount = 0.0;
-//        foreach ($additionsalesorder_items as $value) {
-//            if (strlen($value->type) > 0)
-//            {
-//                $item_array = [
-//                    [
-//                        'name'      => '增补内容',
-//                        'value'     => $value->type,
-//                    ],
-//                    [
-//                        'name'      => '其他类别补充说明',
-//                        'value'     => $value->otherremark,
-//                    ],
-//                    [
-//                        'name'      => '单位',
-//                        'value'     => $value->unit,
-//                    ],
-//                    [
-//                        'name'      => '数量',
-//                        'value'     => $value->quantity,
-//                    ],
-//                    [
-//                        'name'      => '此项增补金额（元）',
-//                        'value'     => $value->amount,
-//                    ],
-//                ];
-//                array_push($detail_array, $item_array);
-//                $totalamount += $value->amount;
-//            }
-//        }
+        //        $detail_array = [];
+        //        $additionsalesorder_items = json_decode($inputs['items_string']);
+        //        $totalamount = 0.0;
+        //        foreach ($additionsalesorder_items as $value) {
+        //            if (strlen($value->type) > 0)
+        //            {
+        //                $item_array = [
+        //                    [
+        //                        'name'      => '增补内容',
+        //                        'value'     => $value->type,
+        //                    ],
+        //                    [
+        //                        'name'      => '其他类别补充说明',
+        //                        'value'     => $value->otherremark,
+        //                    ],
+        //                    [
+        //                        'name'      => '单位',
+        //                        'value'     => $value->unit,
+        //                    ],
+        //                    [
+        //                        'name'      => '数量',
+        //                        'value'     => $value->quantity,
+        //                    ],
+        //                    [
+        //                        'name'      => '此项增补金额（元）',
+        //                        'value'     => $value->amount,
+        //                    ],
+        //                ];
+        //                array_push($detail_array, $item_array);
+        //                $totalamount += $value->amount;
+        //            }
+        //        }
 
         $formdata = [
             [
@@ -4816,10 +4059,10 @@ class ApprovalController extends Controller
                 'name'      => '扣款金额（元）',
                 'value'     => $inputs['amount'],
             ],
-//            [
-//                'name'      => '备注',
-//                'value'     => $inputs['remark'],
-//            ],
+            //            [
+            //                'name'      => '备注',
+            //                'value'     => $inputs['remark'],
+            //            ],
             [
                 'name'      => '附件',
                 'value'     => $inputs['files_string'],
@@ -4828,39 +4071,39 @@ class ApprovalController extends Controller
                 'name'      => '图片',
                 'value'     => $inputs['image_urls'],
             ],
-//            [
-//                'name'      => '增补内容明细',
-//                'value'     => json_encode($detail_array),
-//            ],
+            //            [
+            //                'name'      => '增补内容明细',
+            //                'value'     => json_encode($detail_array),
+            //            ],
         ];
         $form_component_values = json_encode($formdata);
-//        dd($form_component_values);
-//        Log::info('process_code: ' . $process_code);
-//        Log::info('originator_user_id: ' . $originator_user_id);
-//        Log::info('dept_id: ' . $dept_id);
-//        Log::info('approvers: ' . $approvers);
-//        Log::info('form_component_values: ' . $form_component_values);
+        //        dd($form_component_values);
+        //        Log::info('process_code: ' . $process_code);
+        //        Log::info('originator_user_id: ' . $originator_user_id);
+        //        Log::info('dept_id: ' . $dept_id);
+        //        Log::info('approvers: ' . $approvers);
+        //        Log::info('form_component_values: ' . $form_component_values);
 
-//        Log::info(app_path());
+        //        Log::info(app_path());
         $c = new DingTalkClient();
-//        $req = new SmartworkBpmsProcessinstanceCreateRequest();
+        //        $req = new SmartworkBpmsProcessinstanceCreateRequest();
         $req = new OapiProcessinstanceCreateRequest();
-//        $req->setAgentId("41605932");
+        //        $req->setAgentId("41605932");
         $req->setProcessCode($process_code);
         $req->setOriginatorUserId($originator_user_id);
         $req->setDeptId("$dept_id");
 
         $req->setFormComponentValues("$form_component_values");
 
-//        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
+        //        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
         $response = $c->execute($req, $session);
         Log::info(json_encode($response));
         return json_encode($response);
         dd(json_encode($response, JSON_UNESCAPED_UNICODE));
         return response()->json($response);
 
-//        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
-//        $response = HttpDingtalkEco::post("", $params, json_encode($data));
+        //        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+        //        $response = HttpDingtalkEco::post("", $params, json_encode($data));
 
         return $response;
     }
@@ -4879,23 +4122,22 @@ class ApprovalController extends Controller
         $dept_id = 0;
         if (count($departmentList) > 0)
             $dept_id = array_first($departmentList);
-//        $approvers = $inputs['approvers'];
-//        // if originator_user_id in approvers, skip pre approvers
-//        $approver_array = explode(',', $approvers);
-//        if (in_array($originator_user_id, $approver_array))
-//        {
-//            $offset = array_search($originator_user_id, $approver_array);
-//            $approver_array = array_slice($approver_array, $offset+1);
-//            $approvers = implode(",", $approver_array);
-//        }
-//        if ($approvers == "")
-//            $approvers = config('custom.dingtalk.default_approvers');       // wuceshi for test
+        //        $approvers = $inputs['approvers'];
+        //        // if originator_user_id in approvers, skip pre approvers
+        //        $approver_array = explode(',', $approvers);
+        //        if (in_array($originator_user_id, $approver_array))
+        //        {
+        //            $offset = array_search($originator_user_id, $approver_array);
+        //            $approver_array = array_slice($approver_array, $offset+1);
+        //            $approvers = implode(",", $approver_array);
+        //        }
+        //        if ($approvers == "")
+        //            $approvers = config('custom.dingtalk.default_approvers');       // wuceshi for test
 
         $detail_array_material = [];
         $epcseceningmaterial_items = json_decode($inputs['items_string']);
         foreach ($epcseceningmaterial_items as $value) {
-            if ($value->item_id > 0)
-            {
+            if ($value->item_id > 0) {
                 $item_array = [
                     [
                         'name'      => '材料类别',
@@ -4933,8 +4175,7 @@ class ApprovalController extends Controller
         $detail_array_humanday = [];
         $epcseceninghumanday_items = json_decode($inputs['items_string_humanday']);
         foreach ($epcseceninghumanday_items as $value) {
-            if (strlen($value->humandays_type) > 0)
-            {
+            if (strlen($value->humandays_type) > 0) {
                 $item_array = [
                     [
                         'name'      => '人工类型',
@@ -4960,8 +4201,7 @@ class ApprovalController extends Controller
         $detail_array_crane = [];
         $epcseceningcrane_items = json_decode($inputs['items_string_crane']);
         foreach ($epcseceningcrane_items as $value) {
-            if (strlen($value->crane_type) > 0)
-            {
+            if (strlen($value->crane_type) > 0) {
                 $item_array = [
                     [
                         'name'      => '吊机型号',
@@ -5021,10 +4261,10 @@ class ApprovalController extends Controller
                 'name'      => '需要技术部门出图？',
                 'value'     => $inputs['need_issuedrawing'],
             ],
-//            [
-//                'name'      => '是否有设计变更单',
-//                'value'     => $inputs['design_change_sheet'],
-//            ],
+            //            [
+            //                'name'      => '是否有设计变更单',
+            //                'value'     => $inputs['design_change_sheet'],
+            //            ],
             [
                 'name'      => '增补原因详细说明',
                 'value'     => $inputs['additional_reason_detaildesc'],
@@ -5052,131 +4292,148 @@ class ApprovalController extends Controller
         ];
 
         $additional_reason = $inputs['additional_reason'];
-        if ($additional_reason == '短缺增补')
-        {
-            array_push($formdata,
+        if ($additional_reason == '短缺增补') {
+            array_push(
+                $formdata,
                 [
                     'name'      => '短缺增补-补充原因',
                     'value'     => $inputs['short_additional_reason'],
-                ]);
-            array_push($formdata,
+                ]
+            );
+            array_push(
+                $formdata,
                 [
                     'name'      => '是否有设计变更单',
                     'value'     => $inputs['design_change_sheet'],
-                ]);
-        }
-        elseif ($additional_reason == '图纸差异增补')
-        {
-            array_push($formdata,
+                ]
+            );
+        } elseif ($additional_reason == '图纸差异增补') {
+            array_push(
+                $formdata,
                 [
                     'name'      => '图纸差异增补-补充原因',
                     'value'     => $inputs['drawing_additional_reason'],
-                ]);
-            array_push($formdata,
+                ]
+            );
+            array_push(
+                $formdata,
                 [
                     'name'      => '是否有设计变更单',
                     'value'     => $inputs['design_change_sheet'],
-                ]);
-        }
-        elseif ($additional_reason == '范围外增补')
-        {
-            array_push($formdata,
+                ]
+            );
+        } elseif ($additional_reason == '范围外增补') {
+            array_push(
+                $formdata,
                 [
                     'name'      => '范围外增补-补充原因',
                     'value'     => $inputs['extra_additional_reason'],
-                ]);
-        }
-        elseif ($additional_reason == '业主额外增补')
-        {
-            array_push($formdata,
+                ]
+            );
+        } elseif ($additional_reason == '业主额外增补') {
+            array_push(
+                $formdata,
                 [
                     'name'      => '业主额外增补-补充原因',
                     'value'     => $inputs['owner_additional_reason'],
-                ]);
-        }
-        elseif ($additional_reason == '业主合理增补')
-        {
-            array_push($formdata,
+                ]
+            );
+        } elseif ($additional_reason == '业主合理增补') {
+            array_push(
+                $formdata,
                 [
                     'name'      => '业主合理增补-补充原因',
                     'value'     => $inputs['owner_additional_reasonalreason'],
-                ]);
-            array_push($formdata,
+                ]
+            );
+            array_push(
+                $formdata,
                 [
                     'name'      => '是否有设计变更单',
                     'value'     => $inputs['design_change_sheet'],
-                ]);
-        }
-        elseif ($additional_reason == '配合增补')
-        {
-            array_push($formdata,
+                ]
+            );
+        } elseif ($additional_reason == '配合增补') {
+            array_push(
+                $formdata,
                 [
                     'name'      => '配合增补-补充原因',
                     'value'     => $inputs['coordinate_additional_reason'],
-                ]);
+                ]
+            );
         }
 
         if (isset($inputs['files_string_bothsigned']))
-            array_push($formdata,
+            array_push(
+                $formdata,
                 [
                     'name'      => '双方签字的安装队工作量表',
                     'value'     => $inputs['files_string_bothsigned'],
-                ]);
+                ]
+            );
         if (isset($inputs['files_string_huaxingworksheet']))
-            array_push($formdata,
+            array_push(
+                $formdata,
                 [
                     'name'      => '华星东方下发的工作联系单',
                     'value'     => $inputs['files_string_huaxingworksheet'],
-                ]);
+                ]
+            );
         if (isset($inputs['files_string_installworksheet']))
-            array_push($formdata,
+            array_push(
+                $formdata,
                 [
                     'name'      => '安装队下发的工作联系单',
                     'value'     => $inputs['files_string_installworksheet'],
-                ]);
+                ]
+            );
         if (isset($inputs['beforeimage_urls']))
-            array_push($formdata,
+            array_push(
+                $formdata,
                 [
                     'name'      => '增补之前图片',
                     'value'     => $inputs['beforeimage_urls'],
-                ]);
+                ]
+            );
         if (isset($inputs['afterimage_urls']))
-            array_push($formdata,
+            array_push(
+                $formdata,
                 [
                     'name'      => '增补施工后图片',
                     'value'     => $inputs['afterimage_urls'],
-                ]);
+                ]
+            );
 
         Log::info($detail_array_humanday);
         Log::info($formdata);
         $form_component_values = json_encode($formdata);
-//        dd($form_component_values);
-//        Log::info('process_code: ' . $process_code);
-//        Log::info('originator_user_id: ' . $originator_user_id);
-//        Log::info('dept_id: ' . $dept_id);
-//        Log::info('approvers: ' . $approvers);
-//        Log::info('form_component_values: ' . $form_component_values);
+        //        dd($form_component_values);
+        //        Log::info('process_code: ' . $process_code);
+        //        Log::info('originator_user_id: ' . $originator_user_id);
+        //        Log::info('dept_id: ' . $dept_id);
+        //        Log::info('approvers: ' . $approvers);
+        //        Log::info('form_component_values: ' . $form_component_values);
 
-//        Log::info(app_path());
+        //        Log::info(app_path());
         $c = new DingTalkClient();
-//        $req = new SmartworkBpmsProcessinstanceCreateRequest();
+        //        $req = new SmartworkBpmsProcessinstanceCreateRequest();
         $req = new OapiProcessinstanceCreateRequest();
-//        $req->setAgentId("41605932");
+        //        $req->setAgentId("41605932");
         $req->setProcessCode($process_code);
         $req->setOriginatorUserId($originator_user_id);
         $req->setDeptId("$dept_id");
 
         $req->setFormComponentValues("$form_component_values");
 
-//        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
+        //        Log::info($originator_user_id . "\t" . $approvers . "\t" . $cc_list . "\t" . $dept_id);
         $response = $c->execute($req, $session);
         Log::info(json_encode($response));
         return json_encode($response);
         dd(json_encode($response, JSON_UNESCAPED_UNICODE));
         return response()->json($response);
 
-//        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
-//        $response = HttpDingtalkEco::post("", $params, json_encode($data));
+        //        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+        //        $response = HttpDingtalkEco::post("", $params, json_encode($data));
 
         return $response;
     }
