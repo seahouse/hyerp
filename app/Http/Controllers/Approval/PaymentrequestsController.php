@@ -53,17 +53,12 @@ class PaymentrequestsController extends Controller
         $paymentstatus = $request->input('paymentstatus');
         $inputs = $request->all();
         $items = $this->searchrequest($request);
-        // 临时去掉汇总，由于数据太大，获取数据失败。后面重新实现获取汇总值
         $totalamount = 0.0;
-//        $totalamount = $items->get()->sum('amount');
-//        $totalamount = Paymentrequest::sum('amount');
-        $paymentrequests = $items->paginate(10);
+        $totalamount = $items->sum('amount');
+        $paymentrequests = $items->latest('created_at')->paginate(10);
         $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
 
 //        return view('approval.paymentrequests.index');
-
-        // if ($request->has('key'))
-        // use request('key') for null compare, not $request->has('key')
 
         if (null !== request('key'))        
         {
@@ -92,11 +87,6 @@ class PaymentrequestsController extends Controller
 
     public function search(Request $request)
     {
-        // dd(substr($request->header('referer'), strlen($request->header('origin'))));
-        // dd($request->header('origin'));
-        // dd($request->header('referer'));
-        // dd($request->server('HTTP_REFERER'));
-
         // $key = $request->input('key');
         // $approvalstatus = $request->input('approvalstatus');
 
@@ -131,9 +121,9 @@ class PaymentrequestsController extends Controller
         $paymentstatus = $request->input('paymentstatus');
         $inputs = $request->all();
         $items = $this->searchrequest($request);
-        $totalamount = $items->get()->sum('amount');
+        $totalamount = $items->sum('amount');
 //        $totalamount = Paymentrequest::sum('amount');
-        $paymentrequests = $items->paginate(10);
+        $paymentrequests = $items->latest('created_at')->paginate(10);
         $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
 //        $totalamount = Paymentrequest::sum('amount');
 
@@ -187,9 +177,7 @@ class PaymentrequestsController extends Controller
     public function searchrequest($request)
     {
         $key = $request->input('key');
-        $approvalstatus = $request->input('approvalstatus');        
-//        dd($key);
-//        dd($request->all());
+        $approvalstatus = $request->input('approvalstatus');
         $supplier_ids = [];
         $purchaseorder_ids = [];
         if (strlen($key) > 0)
@@ -197,8 +185,8 @@ class PaymentrequestsController extends Controller
             $supplier_ids = DB::connection('sqlsrv')->table('vsupplier')->where('name', 'like', '%'.$key.'%')->pluck('id');
             $purchaseorder_ids = DB::connection('sqlsrv')->table('vpurchaseorder')->where('descrip', 'like', '%'.$key.'%')->pluck('id');
         }
-//        dd($purchaseorder_ids);
-        $query = Paymentrequest::latest('paymentrequests.created_at');
+        $query = Paymentrequest::whereRaw('1=1');
+//        $query = Paymentrequest::latest('paymentrequests.created_at');
         if (strlen($key) > 0)
         {
             $query->where(function ($query) use ($key) {
