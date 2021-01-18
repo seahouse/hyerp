@@ -54,7 +54,7 @@ class PaymentrequestsController extends Controller
         $inputs = $request->all();
         $items = $this->searchrequest($request);
         $totalamount = 0.0;
-        $totalamount = $items->sum('amount');
+        $totalamount = $items->sum('paymentrequests.amount');
         $paymentrequests = $items->latest('created_at')->paginate(10);
         $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();
 
@@ -121,7 +121,7 @@ class PaymentrequestsController extends Controller
         $paymentstatus = $request->input('paymentstatus');
         $inputs = $request->all();
         $items = $this->searchrequest($request);
-        $totalamount = $items->sum('amount');
+        $totalamount = $items->sum('paymentrequests.amount');
 //        $totalamount = Paymentrequest::sum('amount');
         $paymentrequests = $items->latest('created_at')->paginate(10);
         $purchaseorders = Purchaseorder_hxold::whereIn('id', $paymentrequests->pluck('pohead_id'))->get();

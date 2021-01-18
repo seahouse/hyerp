@@ -34,26 +34,25 @@ class CorporatepaymentController extends Controller
     public function index()
     {
         //
-        $client = new DingTalkClient();
-        $req = new OapiProcessinstanceGetRequest();
-        $req->setProcessInstanceId('f808e9fb-0197-44ba-b12b-32d2a5ae2875');
-        $accessToken = DingTalkController::getAccessToken();
-        $response = $client->execute($req, $accessToken);
-        $response = json_decode(json_encode($response, JSON_UNESCAPED_UNICODE));
-//        dd($response->errcode);
-        $operation_records = $response->process_instance->operation_records->operation_records_vo;
-//        dd($operation_records);
-        $dtuser_whl = Dtuser::where('user_id', 2)->first();
-        foreach ($operation_records as $operation_record)
-        {
-            if ($operation_record->operation_type == 'ADD_REMARK')
-            {
-                dd($operation_record);
-            }
-        }
-        dd($response->process_instance->operation_records);
-        dd(json_encode($response, JSON_UNESCAPED_UNICODE));
-//        $this->updateStatusByProcessInstanceId('56d181f9-d9bd-42f3-8385-dfa4b1c061de', 0);
+//        $client = new DingTalkClient();
+//        $req = new OapiProcessinstanceGetRequest();
+//        $req->setProcessInstanceId('f808e9fb-0197-44ba-b12b-32d2a5ae2875');
+//        $accessToken = DingTalkController::getAccessToken();
+//        $response = $client->execute($req, $accessToken);
+//        $response = json_decode(json_encode($response, JSON_UNESCAPED_UNICODE));
+//        $operation_records = $response->process_instance->operation_records->operation_records_vo;
+//        $dtuser_whl = Dtuser::where('user_id', 2)->first();
+//        foreach ($operation_records as $operation_record)
+//        {
+//            if ($operation_record->operation_type == 'ADD_REMARK')
+//            {
+//                dd($operation_record);
+//            }
+//        }
+//        dd($response->process_instance->operation_records);
+//        dd(json_encode($response, JSON_UNESCAPED_UNICODE));
+
+        $this->updateStatusByProcessInstanceId('4612d80f-d818-4f59-a3b9-8b22f25bbedc', 0);
     }
 
     /**
@@ -412,18 +411,6 @@ class CorporatepaymentController extends Controller
             $corporatepayment->status = $status;
             $corporatepayment->save();
 
-//            $techpurchaseattachment_techspecification = $corporatepayment->techpurchaseattachments->where('type', 'techspecification')->first();
-//            $dir = config('custom.hxold.purchase_techspecification_dir') . "12345" . "/";
-//            if (!is_dir($dir)) {
-//                mkdir($dir);
-//            }
-//            copy(public_path($techpurchaseattachment_techspecification->path), $dir . $techpurchaseattachment_techspecification->filename);
-//            dd(public_path($techpurchaseattachment_techspecification->path));
-//            dd(base_path(Storage::url($techpurchaseattachment_techspecification->path)));
-//            dd(Storage::get($techpurchaseattachment_techspecification->path));
-//            dd($corporatepayment->techpurchaseattachments->where('type', 'techspecification')->first());
-//            dd('aaa');
-
             // 如果是审批完成且通过，则创建付款审批单
             if ($status == 0)
             {
@@ -674,20 +661,21 @@ class CorporatepaymentController extends Controller
                         {
                             Log::info($resp->msg . ": " . $resp->sub_msg);
                         }
-                    }
 
-//                                // 拷贝“技术规范书”到对应的ERP目录下
-//                                if (isset($techpurchaseattachment_techspecification))
-//                                {
-//                                    // 将中文的字段名称转换后使用
-//                                    $pohead_id_key = iconv("UTF-8","GBK//IGNORE", '采购订单ID');
-//                                    $dir = config('custom.hxold.purchase_techspecification_dir') . $pohead->$pohead_id_key . "/";
-//                                    if (!is_dir($dir)) {
-//                                        mkdir($dir);
-//                                    }
-//                                    $dest = iconv("UTF-8","GBK//IGNORE", $dir . $techpurchaseattachment_techspecification->filename);
-//                                    copy(public_path($techpurchaseattachment_techspecification->path), $dest);
-//                                }
+                        // send message to applicant
+                        $applicant = $corporatepayment->applicant;
+                        if (isset($applicant)) {
+                            $msg = "你发起的对公账户付款审批单已经审批通过，开始进入付款审批流程。对公付款审批单号：" . $corporatepayment->business_id . "，下一个审批人：" . $touser->name . "。";
+                            if (isset($touser)) {
+                                $data = [
+                                    'userid' => $applicant->id,
+                                    'msgcontent' => urlencode($msg),
+                                ];
+
+                                $response = DingTalkController::sendCorpMessageTextReminder(json_encode($data));
+                            }
+                        }
+                    }
                 }
 
             }

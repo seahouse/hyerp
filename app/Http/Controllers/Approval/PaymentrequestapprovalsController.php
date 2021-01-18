@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Approval;
 
 use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\CorpMessageCorpconversationAsyncsendRequest;
+use App\Models\Approval\Corporatepayment;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -196,12 +197,6 @@ class PaymentrequestapprovalsController extends Controller
             $req->setToAllUser("false");
             $req->setMsgcontent("$msgcontent");
             $resp = $c->execute($req, $access_token);
-
-//            DingTalkController::send_link($touser->dtuserid, '',
-//                url('mddauth/approval/approval-paymentrequestapprovals-' . $paymentrequest->id . '-mcreate'), '',
-//                '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单需要您审批.',
-//                config('custom.dingtalk.agentidlist.approval'));
-
         }
 
         if ($paymentrequestapproval)
@@ -216,10 +211,6 @@ class PaymentrequestapprovalsController extends Controller
             if ($paymentrequest->approversetting_id <= 0)
             {
                 $str_result = $paymentrequest->approversetting_id == 0 ? '已通过' : '未通过';
-//                DingTalkController::send_link(config('custom.dingtalk.approversettings.paymentrequest.cc_list'), '',
-//                    url('mddauth/approval/approval-paymentrequests-' . $paymentrequest->id . ''), '',
-//                    '供应商付款审批', '来自' . $paymentrequest->applicant->name . '的付款申请单已经审批通过.',
-//                    config('custom.dingtalk.agentidlist.approval'));
 
                 $data = [
                     [
@@ -247,10 +238,6 @@ class PaymentrequestapprovalsController extends Controller
                         'value' => isset($paymentrequest->purchaseorder_hxold->productname) ? $paymentrequest->purchaseorder_hxold->productname : '',
                     ],
                 ];
-//                DingTalkController::send_oa(config('custom.dingtalk.approversettings.paymentrequest.cc_list'), '',
-//                    url('mddauth/approval/approval-paymentrequests-' . $paymentrequest->id . ''), '',
-//                    '', $paymentrequest->applicant->name . '提交的供应商付款审批已通过，抄送给你，请知晓。',
-//                    $data, config('custom.dingtalk.agentidlist.approval'));
 
                 $msgcontent_data = [
                     'message_url' => url('mddauth/approval/approval-paymentrequests-' . $paymentrequest->id . ''),
@@ -281,6 +268,30 @@ class PaymentrequestapprovalsController extends Controller
                 $req->setUseridList($paymentrequest->applicant->dtuserid);
                 $resp = $c->execute($req, $access_token);
                 Log::info(json_encode($resp));
+            }
+            else
+            {
+                // 如果是对公付款生成的审批单，向对公付款发起人发送过程消息
+                if (isset($paymentrequest->associated_approval_type) && $paymentrequest->associated_approval_type == 'corporatepayment')
+                {
+                    $corporatepayment = Corporatepayment::where('process_instance_id', $paymentrequest->associated_process_instance_id)->first();
+                    if (isset($corporatepayment))
+                    {
+                        $applicant = $corporatepayment->applicant;
+                        if (isset($applicant)) {
+                            $msg = "你发起的对公账户付款审批单正在执行付款审批流程。对公付款审批单号：" . $corporatepayment->business_id . "，审批结果：" . ($paymentrequestapproval->status == 0 ? "通过" : "未通过") .
+                                "，审批意见：" . $paymentrequestapproval->description . "，下一个审批人：" . $touser->name . "。";
+                            if (isset($touser)) {
+                                $data = [
+                                    'userid' => $applicant->id,
+                                    'msgcontent' => urlencode($msg),
+                                ];
+
+                                $response = DingTalkController::sendCorpMessageTextReminder(json_encode($data));
+                            }
+                        }
+                    }
+                }
             }
         }
 
