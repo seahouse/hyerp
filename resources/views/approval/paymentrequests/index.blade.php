@@ -235,14 +235,7 @@
 
 
     @if (isset($key))
-        {!! $paymentrequests->setPath('/approval/paymentrequests')->appends([
-            'key' => $key, 
-            'approvalstatus' => $inputs['approvalstatus'], 
-            'paymentstatus' => $inputs['paymentstatus'],
-            'approvaldatestart' => $inputs['approvaldatestart'],
-            'approvaldateend' => $inputs['approvaldateend'],
-            'paymentmethod' => $inputs['paymentmethod']
-        ])->links() !!}
+        {!! $paymentrequests->setPath('/approval/paymentrequests')->appends($inputs)->links() !!}
     @else
         {!! $paymentrequests->setPath('/approval/paymentrequests')->links() !!}
     @endif
