@@ -292,10 +292,13 @@ class Salesorder_hxold extends \App\Models\HxModel
                         case 32:     // 29
                             $bonusfactortemp = $this->getBonusfactorByAmount();
                             break;
-                        case 33:     // 30
+                        case 39:     // 30
                             $bonusfactortemp = $this->getBonusfactorByAmount();
                             break;
-                        case 34:     // 31
+                        case 33:     // 31
+                            $bonusfactortemp = $this->getBonusfactorByAmount();
+                            break;
+                        case 34:     // 32
                             $bonusfactortemp = $this->getBonusfactorByAmount();
                             break;
                     }
