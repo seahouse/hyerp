@@ -284,6 +284,15 @@ class ViewComposerServiceProvider extends ServiceProvider
             $view->with('company_all_list', \App\Models\Basic\Company_hxold::orderby('id', 'asc')->lists('name', 'id'));
         });
 
+        // factory_list
+        view()->composer(array(
+            'approval.issuedrawings.mcreate', 'approval.issuedrawings.show', 'approval.pppayments.mcreate', 'approval.pppayments.show',
+            'approval.techpurchases.mcreate',
+            'approval.paymentrequests.index', 'approval.projectsitepurchases.mcreate', 'approval.projectsitepurchases.show'
+        ), function ($view) {
+            $view->with('factory_list', \App\Models\Basic\Factory_hxold::orderby('id', 'asc')->lists('name', 'id'));
+        });
+
         // manufacturingcenter_list
         view()->composer(array(
             'approval.mcitempurchases.mcreate', 'approval.mcitempurchases.show', 'approval.techpurchases.mcreate',
