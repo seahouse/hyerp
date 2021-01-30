@@ -231,6 +231,8 @@
             var item_num = 1;
 
 			 $("#btnSubmit").click(function() {
+                 $("#materialsupplier").val($("#materialsupplier_id").find("option:selected").text());
+
                  var itemArray = new Array();
 
                  $("div[name='container_item']").each(function(i){
@@ -559,26 +561,25 @@
             }
 
             selectProductioncompanyChange = function () {
-                var productioncompany = $("#productioncompany").val();
+                var productioncompany = $("#productioncompany_id").find("option:selected").text();
+                $("#productioncompany").val(productioncompany);
+//                var productioncompany = $("#productioncompany").val();
 
                 if (productioncompany == "外协单位")
                 {
                     $("#divOutsourcingcompany").attr("style", "display:'';");
-//                    $("label[for='outsourcingcompany']").attr("style", "display:'';");
-//                    $("#outsourcingcompany").attr("style", "display:'';");
                 }
                 else
                 {
                     $("#divOutsourcingcompany").attr("style", "display:none;");
-//                    $("label[for='outsourcingcompany']").attr("style", "display:none;");
-//                    $("#outsourcingcompany").attr("style", "display:none;");
                     $("#outsourcingcompany").val("");
                     $("#outsourcingcompany_id").val(0);
                 }
             }
 
             selectTypeChange = function (num) {
-                var productioncompany = $("#productioncompany").val();
+                var productioncompany = $("#productioncompany_id").find("option:selected").text();
+//                var productioncompany = $("#productioncompany").val();
                 console.log(productioncompany);
                 var strhtml = '';
                 var strhtml2 = '';

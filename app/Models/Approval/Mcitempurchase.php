@@ -14,6 +14,7 @@ class Mcitempurchase extends Model
 
     protected $fillable = [
         'manufacturingcenter',
+        'manufacturingcenter_id',
         'itemtype',
         'expirationdate',
         'sohead_id',

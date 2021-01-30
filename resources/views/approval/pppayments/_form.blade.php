@@ -1,12 +1,19 @@
 <div class="reimb"><div class="form-d">
 
-<div class="form-group">
-    {!! Form::label('productioncompany', '制作公司:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-    {!! Form::select('productioncompany', array('宣城分公司' => '宣城分公司', '许昌子公司' => '许昌子公司', '中易新材料' => '中易新材料'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable, 'id' => 'productioncompany']) !!}
-    </div>
-</div>
+        <div class="form-group">
+            {!! Form::label('productioncompany_id', '制作公司:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::select('productioncompany_id', $companyList, null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                {!! Form::hidden('productioncompany', null, ['class' => 'btn btn-sm', 'id' => 'productioncompany']) !!}
+            </div>
+        </div>
 
+{{--<div class="form-group">--}}
+    {{--{!! Form::label('productioncompany', '制作公司:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
+    {{--<div class='col-xs-8 col-sm-10'>--}}
+    {{--{!! Form::select('productioncompany', array('宣城分公司' => '宣城分公司', '许昌子公司' => '许昌子公司', '中易新材料' => '中易新材料'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable, 'id' => 'productioncompany']) !!}--}}
+    {{--</div>--}}
+{{--</div>--}}
 
         <div class="form-group">
             {!! Form::label('designdepartment', '设计部门:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}

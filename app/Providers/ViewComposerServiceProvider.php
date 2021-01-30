@@ -269,10 +269,29 @@ class ViewComposerServiceProvider extends ServiceProvider
 
         // companyList
         view()->composer(array(
+            'approval.issuedrawings.mcreate', 'approval.issuedrawings.show', 'approval.pppayments.mcreate', 'approval.pppayments.show',
+            'approval.techpurchases.mcreate',
+            'approval.paymentrequests.index', 'approval.projectsitepurchases.mcreate', 'approval.projectsitepurchases.show'
+        ), function ($view) {
+            $view->with('companyList', \App\Models\Basic\Company_hxold::where('type', 1)->orderby('id', 'asc')->lists('name', 'id'));
+        });
+
+        // company_all_list
+        view()->composer(array(
             'approval.issuedrawings.mcreate', 'approval.issuedrawings.show', 'approval.techpurchases.mcreate',
             'approval.paymentrequests.index', 'approval.projectsitepurchases.mcreate', 'approval.projectsitepurchases.show'
         ), function ($view) {
-            $view->with('companyList', \App\Models\Basic\Company_hxold::orderby('id', 'asc')->lists('name', 'id'));
+            $view->with('company_all_list', \App\Models\Basic\Company_hxold::orderby('id', 'asc')->lists('name', 'id'));
+        });
+
+        // manufacturingcenter_list
+        view()->composer(array(
+            'approval.mcitempurchases.mcreate', 'approval.mcitempurchases.show', 'approval.techpurchases.mcreate',
+            'approval.paymentrequests.index', 'approval.projectsitepurchases.mcreate', 'approval.projectsitepurchases.show'
+        ), function ($view) {
+            $view->with('manufacturingcenter_list',
+
+                \App\Models\Basic\Manufacturingcenter_hxold_view::orderby('id', 'asc')->lists('fullname', 'id'));
         });
 
         view()->composer(array(

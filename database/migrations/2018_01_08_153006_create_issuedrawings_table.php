@@ -24,9 +24,11 @@ class CreateIssuedrawingsTable extends Migration
             $table->decimal('sheet_thickness')->default(0.0);               // 薄板厚度
             $table->decimal('steel_thickness')->default(0.0);               // 型钢厚度
             $table->decimal('tonnage', 18, 4)->default(0.0);
-            $table->string('productioncompany');
+            $table->string('productioncompany');                            // 原字段
+            $table->integer('productioncompany_id')->nullable();            // 制作公司id，新加字段，2021/1/30，统一公司
             $table->integer('outsourcingcompany_id')->nullable();
-            $table->string('materialsupplier');
+            $table->string('materialsupplier');                             // 原字段
+            $table->integer('materialsupplier_id')->nullable();             // 材料供应方，新加字段，2021/1/30，统一公司
             $table->integer('drawingchecker_id');
             $table->date('requestdeliverydate');
             $table->smallInteger('bolt')->default(0);               // 是否栓接

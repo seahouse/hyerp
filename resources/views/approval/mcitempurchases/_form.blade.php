@@ -1,11 +1,19 @@
 <div class="reimb"><div class="form-d">
 
-<div class="form-group">
-    {!! Form::label('manufacturingcenter', '所属制造中心:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
-    <div class='col-xs-8 col-sm-10'>
-    {!! Form::select('manufacturingcenter', array('无锡制造中心机械车间' => '无锡制造中心机械车间', '无锡制造中心电气车间' => '无锡制造中心电气车间', '宣城制造中心' => '宣城制造中心','许昌制造中心'=>'许昌制造中心','中易新材料' => '中易新材料'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
-    </div>
-</div>
+        <div class="form-group">
+            {!! Form::label('manufacturingcenter_id', '所属制造中心:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+            <div class='col-xs-8 col-sm-10'>
+                {!! Form::select('manufacturingcenter_id', $manufacturingcenter_list, null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                {!! Form::hidden('manufacturingcenter', null, ['class' => 'btn btn-sm', 'id' => 'manufacturingcenter']) !!}
+            </div>
+        </div>
+
+{{--<div class="form-group">--}}
+    {{--{!! Form::label('manufacturingcenter', '所属制造中心:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
+    {{--<div class='col-xs-8 col-sm-10'>--}}
+    {{--{!! Form::select('manufacturingcenter', array('无锡制造中心机械车间' => '无锡制造中心机械车间', '无锡制造中心电气车间' => '无锡制造中心电气车间', '宣城制造中心' => '宣城制造中心','许昌制造中心'=>'许昌制造中心','中易新材料' => '中易新材料'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}--}}
+    {{--</div>--}}
+{{--</div>--}}
 
 
         <div class="form-group">

@@ -14,6 +14,7 @@ class Pppayment extends Model
 
     protected $fillable = [
         'productioncompany',
+        'productioncompany_id',
         'designdepartment',
         'paymentreason',
         'invoicingsituation',

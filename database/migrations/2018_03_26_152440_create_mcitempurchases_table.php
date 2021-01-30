@@ -17,6 +17,7 @@ class CreateMcitempurchasesTable extends Migration
             $table->increments('id');
 
             $table->string('manufacturingcenter');
+            $table->integer('manufacturingcenter_id')->nullable();          // 新增字段，2020/1/30
             $table->string('itemtype');
             $table->date('expirationdate');
             $table->integer('sohead_id');

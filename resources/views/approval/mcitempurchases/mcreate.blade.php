@@ -199,6 +199,7 @@
             var item_num = 1;
 
 			 $("#btnSubmit").click(function() {
+                 $("#manufacturingcenter").val($("#manufacturingcenter_id").find("option:selected").text());
                  var itemArray = new Array();
 
                 $("div[name='container_item']").each(function(i){

@@ -298,8 +298,8 @@
             var item_num = 1;
 
 			 $("#btnSubmit").click(function() {
+                 $("#productioncompany").val($("#productioncompany_id").find("option:selected").text());
                  var itemArray = new Array();
-
 
                 $("div[name='container_item']").each(function(i){
                     var itemObject = new Object();
@@ -858,8 +858,8 @@
             }
 
             selectTypeChange = function (num) {
-                var productioncompany = $("#productioncompany").val();
-//                $("#pppaymentitemtypecontainer_1" + String(num)).empty();
+                var productioncompany = $("#productioncompany_id").find("option:selected").text();
+//                var productioncompany = $("#productioncompany").val();
                 var strhtml = '';
                 var strhtml2 = '';
                 var selecttype = $("#type_" + String(num));

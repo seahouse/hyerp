@@ -292,10 +292,7 @@ class IssuedrawingController extends Controller
     {
         //
         $input = $request->all();
-        //        dd($input->file('image_file'));
-        //        dd($input);
-        //        $tonnagedetailArray = json_decode($request->input('tonnagedetails_string'), true);
-        //        dd($tonnagedetailArray);
+//        dd($input);
 
         $this->validate($request, [
             'designdepartment'      => 'required',
@@ -556,6 +553,7 @@ class IssuedrawingController extends Controller
 
             $input['image_urls'] = json_encode($image_urls);
             $input['approvers'] = $issuedrawing->approvers();
+            Log::info($input['approvers']);
             if ($input['approvers'] == "")
                 $input['approvers'] = config('custom.dingtalk.default_approvers');       // wuceshi for test
             //            $input['cabinet'] = $input['cabinetname'] . ":" . $input['cabinetquantity'];

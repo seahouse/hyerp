@@ -17,6 +17,7 @@ class CreatePppaymentsTable extends Migration
             $table->increments('id');
 
             $table->string('productioncompany');
+            $table->integer('productioncompany_id')->nullable();          // 新增字段，2020/1/30
             $table->string('designdepartment');
             $table->string('paymentreason')->default('');
 //            $table->date('expirationdate');

@@ -25,6 +25,7 @@ class Issuedrawing extends Model
         'steel_thickness',
         'tonnage',
         'productioncompany',
+        'productioncompany_id',
         'outsourcingcompany_id',
         'materialsupplier',
         'drawingchecker_id',
