@@ -6,6 +6,8 @@ use App\Models\Purchase\Prhead;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\Approval\Mcitempurchase;
+use App\Models\Approval\Techpurchase;
 use App\Models\Purchase\PrSupplier;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -23,17 +25,19 @@ class PrheadController extends Controller
         //
         $inputs = $request->all();
         $prheads = $this->searchrequest($request)->paginate(10);
+        $purchase_types = Prhead::select('type')->distinct()->pluck('type', 'type');
 
         //        $prheads = Prhead::latest('created_at')->paginate(10);
-        return view('purchase.prheads.index', compact('prheads', 'inputs'));
+        return view('purchase.prheads.index', compact('prheads', 'inputs', 'purchase_types'));
     }
 
     public function search(Request $request)
     {
         $inputs = $request->all();
         $prheads = $this->searchrequest($request)->paginate(15);
+        $purchase_types = Prhead::select('type')->distinct()->pluck('type', 'type');
 
-        return view('purchase.prheads.index', compact('prheads', 'inputs'));
+        return view('purchase.prheads.index', compact('prheads', 'inputs', 'purchase_types'));
     }
 
     public function searchrequest($request)
@@ -51,7 +55,19 @@ class PrheadController extends Controller
         //        {
         //            $query->where('creator_name', $request->input('creator_name'));
         //        }
+        // 根据采购类型查询
+        if ($request->has('purchase_type') && strlen($request->input('purchase_type')) > 0) {
+            $query->where('type', $request->input('purchase_type'));
+        }
+        // 根据审批单号查询
+        if ($request->has('business_id') && strlen($request->input('business_id')) > 0) {
+            $business_id = '%' . $request->input('business_id') . '%';
 
+            $ids = Mcitempurchase::where('business_id', 'like', $business_id)->select('process_instance_id')
+                ->union(Techpurchase::where('business_id', 'like', $business_id)->select('process_instance_id'))->get();
+
+            $query->whereIn('process_instance_id', $ids);
+        }
         if ($request->has('key') && strlen($request->input('key')) > 0) {
             $query->where('number', 'like', '%' . $request->input('key') . '%');
         }
