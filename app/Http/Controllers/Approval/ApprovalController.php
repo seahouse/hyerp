@@ -1010,7 +1010,11 @@ class ApprovalController extends Controller
         }
         $formdata = [
             [
-                'name'      => '制作公司',
+                'name'      => '承揽公司',
+                'value'     => $inputs['contracting_company'],
+            ],
+            [
+                'name'      => '生产工厂',
                 'value'     => $inputs['productioncompany'],
             ],
             [
