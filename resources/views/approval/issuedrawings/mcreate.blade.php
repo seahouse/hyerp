@@ -568,12 +568,26 @@
                 if (productioncompany == "外协单位")
                 {
                     $("#divOutsourcingcompany").attr("style", "display:'';");
+                    $("#divManufacturingcenter").attr("style", "display:none;");
+                    $("#divManufacturingcenter").val("");
+                    $("#divManufacturingcenter_id").val(0);
                 }
                 else
                 {
                     $("#divOutsourcingcompany").attr("style", "display:none;");
                     $("#outsourcingcompany").val("");
                     $("#outsourcingcompany_id").val(0);
+                    $("#divManufacturingcenter").attr("style", "display:'';");
+
+//                    console.log($("#productioncompany_id").val());
+                    $.get("{{ url('basic/manufacturingcenters/getitemsbycompany') }}" + "?company_id=" + $("#productioncompany_id").val(), {},  function (data) {
+                        //
+                        var strhtml = '<option selected="selected" value="">--请选择--</option>';
+                        $.each(data, function($key, $value) {
+                            strhtml += '<option value="' + $key + '">' + $value + '</option>';
+                        });
+                        $("#manufacturingcenter_id").empty().append(strhtml);
+                    });
                 }
             }
 

@@ -232,6 +232,16 @@
             </div>
         </div>
 
+        <div id="divManufacturingcenter">
+            <div class="form-group">
+                {!! Form::label('manufacturingcenter_id', '制造中心:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+                <div class='col-xs-8 col-sm-10'>
+                    {!! Form::select('manufacturingcenter_id', array(), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+{{--                    {!! Form::hidden('manufacturingcenter', null, ['class' => 'btn btn-sm', 'id' => 'productioncompany']) !!}--}}
+                </div>
+            </div>
+        </div>
+
         {{--<div class="form-group">--}}
             {{--{!! Form::label('productioncompany', '制作公司:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}--}}
             {{--<div class='col-xs-8 col-sm-10'>--}}

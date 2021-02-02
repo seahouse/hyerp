@@ -295,7 +295,7 @@ class ViewComposerServiceProvider extends ServiceProvider
 
         // manufacturingcenter_list
         view()->composer(array(
-            'approval.mcitempurchases.mcreate', 'approval.mcitempurchases.show', 'approval.techpurchases.mcreate',
+            'approval.issuedrawings.mcreate', 'approval.issuedrawings.show', 'approval.mcitempurchases.mcreate', 'approval.mcitempurchases.show', 'approval.techpurchases.mcreate',
             'approval.paymentrequests.index', 'approval.projectsitepurchases.mcreate', 'approval.projectsitepurchases.show'
         ), function ($view) {
             $view->with('manufacturingcenter_list',

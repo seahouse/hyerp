@@ -254,6 +254,11 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
         Route::delete('deletebiddinginformation/{id}', 'BiddingprojectController@deletebiddinginformation')->name('basic.biddingprojects.deletebiddinginformation');
     });
     Route::resource('biddingprojects', 'BiddingprojectController');
+
+    Route::group(['prefix' => 'manufacturingcenters'], function () {
+        Route::get('getitemsbycompany', 'ManufacturingcenterController@getitemsbycompany');
+    });
+    Route::resource('manufacturingcenters', 'ManufacturingcenterController');
 });
 
 Route::group(['prefix' => 'product', 'namespace' => 'Product', 'middleware' => ['web', 'auth']], function () {

@@ -2052,6 +2052,10 @@ class DingTalkController extends Controller
                 'value'     => $inputs['productioncompany'],
             ],
             [
+                'name'      => '制造中心',
+                'value'     => $inputs['manufacturingcenter'],
+            ],
+            [
                 'name'      => '外协单位',
                 'value'     => $inputs['outsourcingcompany'],
             ],
