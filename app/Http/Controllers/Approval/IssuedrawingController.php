@@ -12,6 +12,7 @@ use App\Models\Approval\Issuedrawingmodifyweightlog;
 use App\Models\Approval\Issuedrawingtonnagedetail;
 use App\Models\Basic\Company_hxold;
 use App\Models\Basic\Manufacturingcenter_hxold;
+use App\Models\Basic\Manufacturingcenter_hxold_view;
 use App\Models\System\Operationlog;
 use Illuminate\Http\Request;
 
@@ -339,6 +340,12 @@ class IssuedrawingController extends Controller
             $input['approversetting_id'] = -1;
 
         $input['tonnage'] = 0.0;
+
+        $input['manufacturingcenter'] = "";
+        $manufacturingcenter = Manufacturingcenter_hxold_view::find($input['manufacturingcenter_id']);
+        if (isset($manufacturingcenter))
+            $input['manufacturingcenter'] = $manufacturingcenter->fullname;
+
         $issuedrawing = Issuedrawing::create($input);
 
         // create drawingattachments
@@ -562,11 +569,6 @@ class IssuedrawingController extends Controller
                 $input['bolt_str'] = '是';
             else
                 $input['bolt_str'] = '否';
-
-            $input['manufacturingcenter'] = "";
-            $manufacturingcenter = Manufacturingcenter_hxold::find($input['manufacturingcenter_id']);
-            if (isset($manufacturingcenter))
-                $input['manufacturingcenter'] = $manufacturingcenter->name;
 
             $response = DingTalkController::issuedrawing($input);
             //            Log::info($response);

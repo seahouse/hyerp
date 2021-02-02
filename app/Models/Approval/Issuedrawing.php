@@ -26,6 +26,8 @@ class Issuedrawing extends Model
         'tonnage',
         'productioncompany',
         'productioncompany_id',
+        'manufacturingcenter_id',
+        'manufacturingcenter',
         'outsourcingcompany_id',
         'materialsupplier',
         'drawingchecker_id',
@@ -159,8 +161,8 @@ class Issuedrawing extends Model
                         }
                         elseif ($approversetting->level == 4)
                         {
-                            $productioncompany = $this::getAttribute('productioncompany');
-                            $dtuserid = config('custom.dingtalk.hx_henan.approversettings.issuedrawing.level4.' . $productioncompany, '');
+                            $manufacturingcenter = $this::getAttribute('manufacturingcenter');
+                            $dtuserid = config('custom.dingtalk.hx_henan.approversettings.issuedrawing.level4.' . $manufacturingcenter, '');
                             if (strlen($dtuserid) > 0)
                             {
                                 $dtuser = Dtuser::where('userid', $dtuserid)->firstOrFail();
@@ -264,8 +266,8 @@ class Issuedrawing extends Model
                         }
                         elseif ($approversetting->level == 4)
                         {
-                            $productioncompany = $this::getAttribute('productioncompany');
-                            $dtuserid = config('custom.dingtalk.approversettings.issuedrawing.level4.' . $productioncompany, '');
+                            $manufacturingcenter = $this::getAttribute('manufacturingcenter');
+                            $dtuserid = config('custom.dingtalk.approversettings.issuedrawing.level4.' . $manufacturingcenter, '');
                             if (strlen($dtuserid) > 0)
                             {
                                 $dtuser = Dtuser::where('userid', $dtuserid)->firstOrFail();

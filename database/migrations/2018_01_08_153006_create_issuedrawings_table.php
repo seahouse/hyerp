@@ -30,6 +30,7 @@ class CreateIssuedrawingsTable extends Migration
             $table->string('materialsupplier');                             // 原字段
             $table->integer('materialsupplier_id')->nullable();             // 材料供应方，新加字段，2021/1/30，统一公司
             $table->integer('manufacturingcenter_id')->nullable();             // 制造中心，新加字段，2020/2/2
+            $table->string('manufacturingcenter');                          // 制造中心，新加字段，2020/2/2
             $table->integer('drawingchecker_id');
             $table->date('requestdeliverydate');
             $table->smallInteger('bolt')->default(0);               // 是否栓接

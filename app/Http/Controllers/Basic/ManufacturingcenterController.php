@@ -92,7 +92,7 @@ class ManufacturingcenterController extends Controller
         $items = [];
         if ($request->has('company_id'))
         {
-            $items = Manufacturingcenter_hxold_view::where('company_id', $request->input('company_id'))->pluck('name', 'id');
+            $items = Manufacturingcenter_hxold_view::where('company_id', $request->input('company_id'))->pluck('fullname', 'id');
         }
 
         return $items;
