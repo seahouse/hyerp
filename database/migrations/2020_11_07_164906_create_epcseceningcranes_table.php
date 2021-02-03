@@ -17,7 +17,7 @@ class CreateEpcseceningcranesTable extends Migration
 
             $table->integer('epcsecening_id')->unsigned();
             $table->string('crane_type');
-            $table->integer('number')->default(0);
+            $table->decimal('number')->default(0);
             $table->decimal('unitprice')->default(0);
 //            $table->decimal('totalprice',8,2);
 
