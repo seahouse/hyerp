@@ -57,9 +57,8 @@
     </div>
     --}}
     {!! Form::close() !!}
-
-    {{-- 临时处理：wuhaolun也可以进行审批，加快审批进度。将来要把wuhaolun1@huaxing-east.com改回wuhaolun@huaxing-east.com --}}
-    @if ($inputs['approvaltype'] == "供应商付款" && Auth::user()->email == "wuhaolun1@huaxing-east.com")
+    
+    @if ($inputs['approvaltype'] == "供应商付款" && Auth::user()->email == "wuhaolun@huaxing-east.com")
         @include('approval._list',
             [
                 'href_pre' => '/approval/reimbursementapprovals/', 'href_suffix' => '',
