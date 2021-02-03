@@ -56,7 +56,7 @@ class PaymentrequestapprovalsController extends Controller
             return "此审批单无下一个审批人";
 
         // 临时处理，wuhaol可以审批，不受权限控制：Auth::user()->email <> "wuhaolun1@huaxing-east.com", 2020/2/3
-        if ($touser && $touser->id != Auth::user()->id && Auth::user()->email <> "wuhaolun1@huaxing-east.com")
+        if ($touser && $touser->id != Auth::user()->id && Auth::user()->email <> "wuhaolun@huaxing-east.com")
             return "您无权限审批此审批单";
 
         $agent = new Agent();
