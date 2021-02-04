@@ -58,9 +58,7 @@
     --}}
     {!! Form::close() !!}
 
-    {{--临时处理，将wuhaolun加入审批权限，wuhaolun@huaxing-east.com -> wuhaolun1@huaxing-east.com
-    另外，PaymentrequestapprovalsController里的mcreate 也做了权限控制调整。--}}
-    @if ($inputs['approvaltype'] == "供应商付款" && Auth::user()->email == "wuhaolun1@huaxing-east.com")
+    @if ($inputs['approvaltype'] == "供应商付款" && Auth::user()->email == "wuhaolun@huaxing-east.com")
         @include('approval._list',
             [
                 'href_pre' => '/approval/reimbursementapprovals/', 'href_suffix' => '',
