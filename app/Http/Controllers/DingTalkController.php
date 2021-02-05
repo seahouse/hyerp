@@ -21,12 +21,14 @@ use App\Models\System\User;
 use App\Models\System\Userold;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
-use Cache;
-use DB, Auth, Config, Log;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Jenssegers\Agent\Agent;
 use App\Http\Controllers\util\Http;
 use App\Http\Controllers\crypto\DingtalkCrypt;
@@ -51,8 +53,9 @@ class DingTalkController extends Controller
     // const corpid = 'ding6ed55e00b5328f39';
     // const corpsecret = 'gdQvzBl7IW5f3YUSMIkfEIsivOVn8lcXUL_i1BIJvbP4kPJh8SU8B8JuNe8U9JIo';
 
-    public static function getAccessToken() {
-        $accessToken = Cache::remember('access_token', 7200/60 - 5, function() {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
+    public static function getAccessToken()
+    {
+        $accessToken = Cache::remember('access_token', 7200 / 60 - 5, function () {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
             $url = 'https://oapi.dingtalk.com/gettoken';
             $corpid = config('custom.dingtalk.corpid');
             $corpsecret = config('custom.dingtalk.corpsecret');
@@ -65,13 +68,14 @@ class DingTalkController extends Controller
         return $accessToken;
     }
 
-    public static function getAccessToken_appkey($agentname = 'approval') {
-        $accessToken = Cache::remember('access_token_appkey', 7200/60 - 5, function() use ($agentname) {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
+    public static function getAccessToken_appkey($agentname = 'approval')
+    {
+        $accessToken = Cache::remember('access_token_appkey', 7200 / 60 - 5, function () use ($agentname) {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
             $url = 'https://oapi.dingtalk.com/gettoken';
             $appkey = config('custom.dingtalk.hx_henan.apps.' . $agentname . '.appkey');
             $appsecret = config('custom.dingtalk.hx_henan.apps.' . $agentname . '.appsecret');
-//            $corpid = config('custom.dingtalk.corpid');
-//            $corpsecret = config('custom.dingtalk.corpsecret');
+            //            $corpid = config('custom.dingtalk.corpid');
+            //            $corpsecret = config('custom.dingtalk.corpsecret');
             $params = compact('appkey', 'appsecret');
             // $reply = $this->get($url, $params);
             $reply = self::get($url, $params);
@@ -81,8 +85,9 @@ class DingTalkController extends Controller
         return $accessToken;
     }
 
-    public static function getAccessToken_suite() {
-        $accessToken = Cache::remember('access_token_suite', 7200/60 - 5, function() {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
+    public static function getAccessToken_suite()
+    {
+        $accessToken = Cache::remember('access_token_suite', 7200 / 60 - 5, function () {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
             // signature=kKlP1QmmXXX&timestamp=1527130370219&suiteTicket=xxx&accessKey=suitezmpdnvsw4xxxxx
             $url = 'https://oapi.dingtalk.com/service/get_corp_token';
             $timestamp = time();
@@ -91,10 +96,10 @@ class DingTalkController extends Controller
             $suitesecret = 'yfjcsow8AozeUIGyb23xzAFilCz-Jgm6ylQDiQ7JnE6fpU74k4uYycpEay458RV6';
             $signature = hash_hmac('sha256', $str, $suitesecret, true);
             Log::info('str: ' . $str);
-            Log::info('signature'. $signature);
+            Log::info('signature' . $signature);
             $accessKey = 'suiteuvrgsabybcf6vo1h';
-//            $corpid = config('custom.dingtalk.corpid');
-//            $corpsecret = config('custom.dingtalk.corpsecret');
+            //            $corpid = config('custom.dingtalk.corpid');
+            //            $corpsecret = config('custom.dingtalk.corpsecret');
             $url .= '?signature=' . $signature . '&timestamp=' . $timestamp . '&suiteTicket=' . $suiteTicket . '&accessKey=' . $accessKey;
             $auth_corpid = config('custom.dingtalk.corpid');
             $params = compact('auth_corpid');
@@ -107,8 +112,9 @@ class DingTalkController extends Controller
         return $accessToken;
     }
 
-    public static function getTokenSns() {
-        $accessToken = Cache::remember('access_token_sns', 7200/60 - 5, function() {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
+    public static function getTokenSns()
+    {
+        $accessToken = Cache::remember('access_token_sns', 7200 / 60 - 5, function () {        // 减少5分钟来确保不会因为与钉钉存在时间差而导致的问题
             $url = 'https://oapi.dingtalk.com/sns/gettoken';
             $appid = config('custom.dingtalk.appid');
             $appsecret = config('custom.dingtalk.appsecret');
@@ -123,7 +129,7 @@ class DingTalkController extends Controller
 
     public static function getTicket($access_token)
     {
-        $ticket = Cache::remember('ticket', 7200/60 - 5, function() use($access_token) {
+        $ticket = Cache::remember('ticket', 7200 / 60 - 5, function () use ($access_token) {
             $url = 'https://oapi.dingtalk.com/get_jsapi_ticket';
             $params = compact('access_token');
             $reply = self::get($url, $params);
@@ -136,34 +142,34 @@ class DingTalkController extends Controller
     public static function sign($ticket, $nonceStr, $timeStamp, $url)
     {
         $rawstring = 'jsapi_ticket=' . $ticket .
-                     '&noncestr=' . $nonceStr .
-                     '&timestamp=' . $timeStamp .
-                     '&url=' . $url;
-        $signature = sha1($rawstring);    
-        
+            '&noncestr=' . $nonceStr .
+            '&timestamp=' . $timeStamp .
+            '&url=' . $url;
+        $signature = sha1($rawstring);
+
         return $signature;
     }
 
     public static function getconfig($agentid = '')
     {
-//         Cache::flush();
+        //         Cache::flush();
         $nonceStr = str_random(32);
         $timeStamp = time();
         $url = urldecode(request()->fullurl());
-//        $url = request()->url();
-//        if (request()->getQueryString() <> '')
-//            $url .= urldecode('?' . request()->getQueryString());
-//        Log::info(request()->url());
-//        Log::info(urldecode(request()->getQueryString()));
-//        Log::info(request()->query());
-//        Log::info(http_build_query(request()->query()));
-//        Log::info($url);
+        //        $url = request()->url();
+        //        if (request()->getQueryString() <> '')
+        //            $url .= urldecode('?' . request()->getQueryString());
+        //        Log::info(request()->url());
+        //        Log::info(urldecode(request()->getQueryString()));
+        //        Log::info(request()->query());
+        //        Log::info(http_build_query(request()->query()));
+        //        Log::info($url);
         $corpAccessToken = self::getAccessToken();
         $ticket = self::getTicket($corpAccessToken);
         $signature = self::sign($ticket, $nonceStr, $timeStamp, $url);
         if ($agentid == '')
             $agentid = config('custom.dingtalk.agentidlist.' . self::$APPNAME);
-//        Log::info($agentid);
+        //        Log::info($agentid);
 
         $config = array(
             'url' => $url,
@@ -172,7 +178,7 @@ class DingTalkController extends Controller
             'corpId' => config('custom.dingtalk.corpid'),
             'signature' => $signature,
             'ticket' => $ticket,
-//            'agentId' => config('custom.dingtalk.agentidlist.' . self::$APPNAME),       // such as: config('custom.dingtalk.agentidlist.approval')      // request('app')
+            //            'agentId' => config('custom.dingtalk.agentidlist.' . self::$APPNAME),       // such as: config('custom.dingtalk.agentidlist.approval')      // request('app')
             'agentId' => $agentid,
             'appname' => self::$APPNAME,
             'session' => $corpAccessToken,
@@ -185,19 +191,19 @@ class DingTalkController extends Controller
 
     public static function getconfig2($agentname = 'approval')
     {
-//         Cache::flush();
+        //         Cache::flush();
         $nonceStr = str_random(32);
         $timeStamp = time();
         $url = urldecode(request()->fullurl());
-//        $url = request()->url();
-//        if (request()->getQueryString() <> '')
-//            $url .= urldecode('?' . request()->getQueryString());
-//        Log::info(request()->url());
-//        Log::info(urldecode(request()->getQueryString()));
-//        Log::info(request()->query());
-//        Log::info(http_build_query(request()->query()));
-//        Log::info($url);
-//        $corpAccessToken = self::getAccessToken_suite();
+        //        $url = request()->url();
+        //        if (request()->getQueryString() <> '')
+        //            $url .= urldecode('?' . request()->getQueryString());
+        //        Log::info(request()->url());
+        //        Log::info(urldecode(request()->getQueryString()));
+        //        Log::info(request()->query());
+        //        Log::info(http_build_query(request()->query()));
+        //        Log::info($url);
+        //        $corpAccessToken = self::getAccessToken_suite();
         $corpAccessToken = self::getAccessToken_appkey($agentname);
         Log::info('token_appkey: ' . $corpAccessToken);
         $ticket = self::getTicket($corpAccessToken);
@@ -205,7 +211,7 @@ class DingTalkController extends Controller
         $signature = self::sign($ticket, $nonceStr, $timeStamp, $url);
         Log::info('signature: ' . $signature);
         $agentid = config('custom.dingtalk.hx_henan.apps.' . $agentname . '.agentid');
-//        Log::info($agentid);
+        //        Log::info($agentid);
 
         $config = array(
             'url' => $url,
@@ -214,7 +220,7 @@ class DingTalkController extends Controller
             'corpId' => config('custom.dingtalk.hx_henan.corpid'),
             'signature' => $signature,
             'ticket' => $ticket,
-//            'agentId' => config('custom.dingtalk.agentidlist.' . self::$APPNAME),       // such as: config('custom.dingtalk.agentidlist.approval')      // request('app')
+            //            'agentId' => config('custom.dingtalk.agentidlist.' . self::$APPNAME),       // such as: config('custom.dingtalk.agentidlist.approval')      // request('app')
             'agentId' => $agentid,
             'appname' => self::$APPNAME,
         );
@@ -246,13 +252,11 @@ class DingTalkController extends Controller
         // get erp user info and set session userid
         $user_erp = DB::table('users')->where('dtuserid', $userInfo->userid)->first();
         $userid_erp = -1;
-        if (!is_null($user_erp))
-        {
+        if (!is_null($user_erp)) {
             $userid_erp = $user_erp->id;
             session()->put('userid', $userid_erp);
             // login 
-            if (!Auth::check())
-            {
+            if (!Auth::check()) {
                 Auth::loginUsingId($userid_erp);
             }
         }
@@ -285,13 +289,11 @@ class DingTalkController extends Controller
         // get erp user info and set session userid
         $user_erp = DB::table('dtuser2s')->where('userid', $userInfo->userid)->first();
         $userid_erp = -1;
-        if (!is_null($user_erp))
-        {
+        if (!is_null($user_erp)) {
             $userid_erp = $user_erp->user_id;
             session()->put('userid', $userid_erp);
             // login
-            if (!Auth::check())
-            {
+            if (!Auth::check()) {
                 Auth::loginUsingId($userid_erp);
             }
         }
@@ -319,51 +321,53 @@ class DingTalkController extends Controller
         $access_token = self::getTokenSns();
 
         $data = ['tmp_auth_code' => $code];
-        $response = Http::post("/sns/get_persistent_code",
-            array("access_token" => $access_token), json_encode($data));
-//        return $response;
+        $response = Http::post(
+            "/sns/get_persistent_code",
+            array("access_token" => $access_token),
+            json_encode($data)
+        );
+        //        return $response;
         $openid = $response->openid;
         $persistent_code = $response->persistent_code;
 
         $data = ['openid' => $openid, 'persistent_code' => $persistent_code];
-        $response = Http::post("/sns/get_sns_token",
-            array("access_token" => $access_token), json_encode($data));
-//        return $response;
+        $response = Http::post(
+            "/sns/get_sns_token",
+            array("access_token" => $access_token),
+            json_encode($data)
+        );
+        //        return $response;
         $sns_token = $response->sns_token;
 
         // Get user info
         $url = 'https://oapi.dingtalk.com/sns/getuserinfo';
         $params = compact('sns_token');
         $userInfo = $this->get($url, $params);
-//        Log::info(json_encode($userInfo));
+        //        Log::info(json_encode($userInfo));
 
         // get erp user info and set session userid
-//        $user_erp = DB::table('users')->where('dtuserid', $userInfo->user_info->dingId)->first();
+        //        $user_erp = DB::table('users')->where('dtuserid', $userInfo->user_info->dingId)->first();
         $dtuser = DB::table('dtusers')->where('dingId', $userInfo->user_info->dingId)->first();
         $userid_erp = -1;
-        if (isset($dtuser))
-        {
+        if (isset($dtuser)) {
             $userid_erp = $dtuser->user_id;
             session()->put('userid', $userid_erp);
             // login
-            if (!Auth::check())
-            {
+            if (!Auth::check()) {
                 Auth::loginUsingId($userid_erp);
-            }
-            else
-            {
+            } else {
                 Auth::logout();
                 Auth::loginUsingId($userid_erp);
             }
         }
 
         $user = [
-//            'deviceId' => $userInfo->deviceId,
-//            'errcode' => $userInfo->errcode,
-//            'errmsg' => $userInfo->errmsg,
-//            'is_sys' => $userInfo->is_sys,
-//            'sys_level' => $userInfo->sys_level,
-//            'userid' => $userInfo->userid,
+            //            'deviceId' => $userInfo->deviceId,
+            //            'errcode' => $userInfo->errcode,
+            //            'errmsg' => $userInfo->errmsg,
+            //            'is_sys' => $userInfo->is_sys,
+            //            'sys_level' => $userInfo->sys_level,
+            //            'userid' => $userInfo->userid,
             'userid_erp' => $userid_erp,
         ];
         return response()->json($user);
@@ -376,37 +380,41 @@ class DingTalkController extends Controller
         $access_token = self::getTokenSns();
 
         $data = ['tmp_auth_code' => $code];
-        $response = Http::post("/sns/get_persistent_code",
-            array("access_token" => $access_token), json_encode($data));
-//        return $response;
+        $response = Http::post(
+            "/sns/get_persistent_code",
+            array("access_token" => $access_token),
+            json_encode($data)
+        );
+        //        return $response;
         $openid = $response->openid;
         $persistent_code = $response->persistent_code;
 
         $data = ['openid' => $openid, 'persistent_code' => $persistent_code];
-        $response = Http::post("/sns/get_sns_token",
-            array("access_token" => $access_token), json_encode($data));
-//        return $response;
+        $response = Http::post(
+            "/sns/get_sns_token",
+            array("access_token" => $access_token),
+            json_encode($data)
+        );
+        //        return $response;
         $sns_token = $response->sns_token;
 
         // Get user info
         $url = 'https://oapi.dingtalk.com/sns/getuserinfo';
         $params = compact('sns_token');
         $userInfo = $this->get($url, $params);
-//        Log::info(json_encode($userInfo));
+        //        Log::info(json_encode($userInfo));
 
         // get erp user info and set session userid
-//        $user_erp = DB::table('users')->where('dtuserid', $userInfo->user_info->dingId)->first();
+        //        $user_erp = DB::table('users')->where('dtuserid', $userInfo->user_info->dingId)->first();
         $dtuser = DB::table('dtusers')->where('dingId', $userInfo->user_info->dingId)->first();
         $userid_erp = -1;
-        if (isset($dtuser))
-        {
+        if (isset($dtuser)) {
             $userold = DB::table('userolds')->where('user_id', $dtuser->user_id)->first();
-            if (isset($userold))
-            {
+            if (isset($userold)) {
                 $userid_erp = $userold->user_hxold_id;
             }
-//            $userid_erp = $dtuser->user_id;
-//            session()->put('userid', $userid_erp);
+            //            $userid_erp = $dtuser->user_id;
+            //            session()->put('userid', $userid_erp);
         }
 
         $data = [
@@ -475,12 +483,11 @@ class DingTalkController extends Controller
     //     return self::post($url, $params, json_encode($data), false);
     //     // return self::post($url, $params);
     // }
-    
+
     public function index()
     {
-
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
@@ -490,7 +497,7 @@ class DingTalkController extends Controller
     {
         //
     }
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -501,7 +508,7 @@ class DingTalkController extends Controller
     {
         //
     }
-    
+
     /**
      * Display the specified resource.
      *
@@ -512,7 +519,7 @@ class DingTalkController extends Controller
     {
         //
     }
-    
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -523,7 +530,7 @@ class DingTalkController extends Controller
     {
         //
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
@@ -535,7 +542,7 @@ class DingTalkController extends Controller
     {
         //
     }
-    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -546,7 +553,7 @@ class DingTalkController extends Controller
     {
         //
     }
-    
+
     private static function get($url, $params)
     {
         $response = \Httpful\Request::get($url . '?' . http_build_query($params))->send();
@@ -561,7 +568,7 @@ class DingTalkController extends Controller
         }
         return $response->body;
     }
-    
+
     public static function post($url, $params, $data, $handlererr = true)
     {
         $response = \Httpful\Request::post($url . '?' . http_build_query($params))
@@ -574,11 +581,10 @@ class DingTalkController extends Controller
         if (!$response->hasBody()) {
             throw new \Exception("No response body.");
         }
-        if ($handlererr)
-        {
+        if ($handlererr) {
             if ($response->body->errcode != 0) {
                 throw new \Exception($response->body->errmsg);
-            }            
+            }
         }
 
         return $response->body;
@@ -639,7 +645,7 @@ class DingTalkController extends Controller
         // $response = self::send2($access_token, $data);
 
         $response = DingTalkController::post($url, $params, json_encode($data), false);
-//        dd($response);
+        //        dd($response);
         // Log::info($response->errmsg);
         // Log::info($response->invaliduser);
         // Log::info($response->forbiddenUserId);
@@ -655,8 +661,7 @@ class DingTalkController extends Controller
     public static function send_oa_paymentrequest($touser, $toparty, $messageUrl, $picUrl, $title, $text, $paymentrequest, $agentid = '')
     {
         $form = [];
-        if (Auth::user()->email == "admin@admin.com")
-        {
+        if (Auth::user()->email == "admin@admin.com") {
             $form = [
                 [
                     'key' => '金额:',
@@ -710,8 +715,11 @@ class DingTalkController extends Controller
 
     public static function send2($accessToken, $opt)
     {
-        $response = Http::post("/message/send",
-            array("access_token" => $accessToken), json_encode($opt));
+        $response = Http::post(
+            "/message/send",
+            array("access_token" => $accessToken),
+            json_encode($opt)
+        );
         return $response;
     }
 
@@ -730,31 +738,40 @@ class DingTalkController extends Controller
 
         $json = json_decode($strJson);
         $user = User::where('id', $json->userid)->first();
-        if (isset($user))
-        {
+        if (isset($user)) {
             $userid_list = $user->dtuserid;
             $msgcontent = '{"content":"' . $json->msgcontent . '"}';
         }
 
-//        // sent to wuceshi for test
-//        if (strlen($userid_list) > 0)
-//            $userid_list .= ",04090710367573";
+        //        // sent to wuceshi for test
+        //        if (strlen($userid_list) > 0)
+        //            $userid_list .= ",04090710367573";
 
 
-        $params = compact('method', 'session', 'v', 'format',
-            'msgtype', 'agent_id', 'userid_list', 'msgcontent');
+        $params = compact(
+            'method',
+            'session',
+            'v',
+            'format',
+            'msgtype',
+            'agent_id',
+            'userid_list',
+            'msgcontent'
+        );
         $data = [
-//            'content' => $strJson
+            //            'content' => $strJson
         ];
-//        dd($params);
-//        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
-//        dd($response);
+        //        dd($params);
+        //        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+        //        dd($response);
 
-        $response = HttpDingtalkEco::post("",
-            $params, json_encode($data));
+        $response = HttpDingtalkEco::post(
+            "",
+            $params,
+            json_encode($data)
+        );
         return $response;
         return response()->json($response);
-
     }
 
     public static function sendCorpMessageTextReminder($strJson)
@@ -772,24 +789,34 @@ class DingTalkController extends Controller
 
         $json = json_decode($strJson);
         $user = User::where('id', $json->userid)->first();
-        if (isset($user))
-        {
+        if (isset($user)) {
             $userid_list = $user->dtuserid;
             $msgcontent = '{"content":"' . $json->msgcontent . '"}';
         }
 
-//        // sent to wuceshi for test
-//        if (strlen($userid_list) > 0)
-//            $userid_list .= ",04090710367573";
+        //        // sent to wuceshi for test
+        //        if (strlen($userid_list) > 0)
+        //            $userid_list .= ",04090710367573";
 
-        $params = compact('method', 'session', 'v', 'format',
-            'msgtype', 'agent_id', 'userid_list', 'msgcontent');
+        $params = compact(
+            'method',
+            'session',
+            'v',
+            'format',
+            'msgtype',
+            'agent_id',
+            'userid_list',
+            'msgcontent'
+        );
         $data = [
-//            'content' => $strJson
+            //            'content' => $strJson
         ];
 
-        $response = HttpDingtalkEco::post("",
-            $params, json_encode($data));
+        $response = HttpDingtalkEco::post(
+            "",
+            $params,
+            json_encode($data)
+        );
         return $response;
         return response()->json($response);
     }
@@ -798,9 +825,9 @@ class DingTalkController extends Controller
     {
         $method = 'dingtalk.corp.message.corpconversation.asyncsend';
         $session = self::getAccessToken();
-//        $timestamp = date('Y-m-d h:i:s');
-//        $timestamp = Carbon::now()->toDateTimeString();
-//        dd($timestamp . ' ' . $session);
+        //        $timestamp = date('Y-m-d h:i:s');
+        //        $timestamp = Carbon::now()->toDateTimeString();
+        //        dd($timestamp . ' ' . $session);
         $format = 'json';
         $v = '2.0';
 
@@ -812,30 +839,25 @@ class DingTalkController extends Controller
 
         $json = json_decode($strJson);
         $userold = Userold::where('user_hxold_id', $json->userid)->first();
-        if (isset($userold))
-        {
+        if (isset($userold)) {
             $user = User::where('id', $userold->user_id)->first();
-            if (isset($user))
-            {
+            if (isset($user)) {
                 $userid_list = $user->dtuserid;
                 $dtuser = self::userGet($user->dtuserid);
                 $jsonIsLeaderInDepts = $dtuser->isLeaderInDepts;
-//                dd($dtuser->department[0]);
-                if (!strpos($jsonIsLeaderInDepts, "true"))
-                {
-                    $userListResponse = Http::get("/user/list",
-                        array("access_token" => $session, 'department_id' => $dtuser->department[0]));
+                //                dd($dtuser->department[0]);
+                if (!strpos($jsonIsLeaderInDepts, "true")) {
+                    $userListResponse = Http::get(
+                        "/user/list",
+                        array("access_token" => $session, 'department_id' => $dtuser->department[0])
+                    );
                     $userlist = $userListResponse->userlist;
-                    foreach ($userlist as $user)
-                    {
+                    foreach ($userlist as $user) {
                         if ($user->isLeader == "true")
                             $userid_list .= "," . $user->userid;
-                        else
-                            ;
+                        else;
                     }
-                }
-                else
-                {
+                } else {
                     //
                     $uplevelusers = config('custom.dingtalk.uplevel.' . $user->userid);
                     if (strlen($uplevelusers) > 0)
@@ -850,21 +872,32 @@ class DingTalkController extends Controller
         if (strlen($userid_list) > 0)
             $userid_list .= ",04090710367573";
 
-//        $userid_list = 'manager1200';
-//        $msgcontent = '{"content":' . $strJson . '}';
-//        $msgcontent = '{"content":"张三的请假申请9"}';
+        //        $userid_list = 'manager1200';
+        //        $msgcontent = '{"content":' . $strJson . '}';
+        //        $msgcontent = '{"content":"张三的请假申请9"}';
 
-        $params = compact('method', 'session', 'v', 'format',
-            'msgtype', 'agent_id', 'userid_list', 'msgcontent');
+        $params = compact(
+            'method',
+            'session',
+            'v',
+            'format',
+            'msgtype',
+            'agent_id',
+            'userid_list',
+            'msgcontent'
+        );
         $data = [
-//            'content' => $strJson
+            //            'content' => $strJson
         ];
-//        dd($params);
-//        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
-//        dd($response);
+        //        dd($params);
+        //        $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
+        //        dd($response);
 
-        $response = HttpDingtalkEco::post("",
-            $params, json_encode($data));
+        $response = HttpDingtalkEco::post(
+            "",
+            $params,
+            json_encode($data)
+        );
         return response()->json($response);
 
         return "";
@@ -877,25 +910,25 @@ class DingTalkController extends Controller
         $req->setUseridList($useridList);
         $req->setAgentId($agentid);
 
-//        Log::info(url('mddauth'));
-//        $data = [
-//            'msgtype'   => 'action_card',
-//            'action_card' => [
-//                'title' => '是透出到会话列表和通知的文案',
-//                'markdown'  => '支持markdown格式的正文内容',
-//                'btn_orientation' => '1',
-//                'btn_json_list' => [
-//                    [
-//                        'title' => '一个按钮',
-//                        'action_url' => 'http://www.huaxing-east.cn:2016/mddauth/approval/sales/salesorders/',
-//                    ],
-//                    [
-//                        'title' => '两个按钮',
-//                        'action_url' => 'https://www.tmall.com',
-//                    ],
-//                ]
-//            ],
-//        ];
+        //        Log::info(url('mddauth'));
+        //        $data = [
+        //            'msgtype'   => 'action_card',
+        //            'action_card' => [
+        //                'title' => '是透出到会话列表和通知的文案',
+        //                'markdown'  => '支持markdown格式的正文内容',
+        //                'btn_orientation' => '1',
+        //                'btn_json_list' => [
+        //                    [
+        //                        'title' => '一个按钮',
+        //                        'action_url' => 'http://www.huaxing-east.cn:2016/mddauth/approval/sales/salesorders/',
+        //                    ],
+        //                    [
+        //                        'title' => '两个按钮',
+        //                        'action_url' => 'https://www.tmall.com',
+        //                    ],
+        //                ]
+        //            ],
+        //        ];
         Log::info(json_encode($data));
         $req->setMsg(json_encode($data));
 
@@ -905,35 +938,35 @@ class DingTalkController extends Controller
         return $response;
 
 
-//        $method = 'dingtalk.corp.message.corpconversation.asyncsend';
-//        $session = self::getAccessToken();
-//        $format = 'json';
-//        $v = '2.0';
-//
-//        $msgtype = 'text';
-//        $agent_id = config('custom.dingtalk.agentidlist.erpreminder');
-//
-//        $userid_list = '';
-//        $msgcontent = '';
-//
-//        $json = json_decode($strJson);
-//        $user = User::where('id', $json->userid)->first();
-//        if (isset($user))
-//        {
-//            $userid_list = $user->dtuserid;
-//            $msgcontent = '{"content":"' . $json->msgcontent . '"}';
-//        }
-//
-//
-//        $params = compact('method', 'session', 'v', 'format',
-//            'msgtype', 'agent_id', 'userid_list', 'msgcontent');
-//        $data = [
-//        ];
-//
-//        $response = HttpDingtalkEco::post("",
-//            $params, json_encode($data));
-//        return $response;
-//        return response()->json($response);
+        //        $method = 'dingtalk.corp.message.corpconversation.asyncsend';
+        //        $session = self::getAccessToken();
+        //        $format = 'json';
+        //        $v = '2.0';
+        //
+        //        $msgtype = 'text';
+        //        $agent_id = config('custom.dingtalk.agentidlist.erpreminder');
+        //
+        //        $userid_list = '';
+        //        $msgcontent = '';
+        //
+        //        $json = json_decode($strJson);
+        //        $user = User::where('id', $json->userid)->first();
+        //        if (isset($user))
+        //        {
+        //            $userid_list = $user->dtuserid;
+        //            $msgcontent = '{"content":"' . $json->msgcontent . '"}';
+        //        }
+        //
+        //
+        //        $params = compact('method', 'session', 'v', 'format',
+        //            'msgtype', 'agent_id', 'userid_list', 'msgcontent');
+        //        $data = [
+        //        ];
+        //
+        //        $response = HttpDingtalkEco::post("",
+        //            $params, json_encode($data));
+        //        return $response;
+        //        return response()->json($response);
     }
 
     public static function sendWorkNotificationMessage($useridList, $agentid, $msg)
@@ -946,7 +979,7 @@ class DingTalkController extends Controller
 
         $session = self::getAccessToken();
         $response = $c->execute($req, $session);
-//        Log::info(json_encode($response));
+        //        Log::info(json_encode($response));
         return $response;
     }
 
@@ -961,11 +994,11 @@ class DingTalkController extends Controller
             'call_back_tag' => ['user_add_org', 'user_modify_org', 'user_leave_org', 'bpms_task_change', 'bpms_instance_change'],
             'token' => config('custom.dingtalk.TOKEN'),
             'aes_key' => config('custom.dingtalk.ENCODING_AES_KEY'),
-//            'url' => 'http://139.224.8.136:81/dingtalk/receive'
+            //            'url' => 'http://139.224.8.136:81/dingtalk/receive'
             'url' => url('dingtalk/receive')
-//             'url' => 'http://www.huaxing-east.cn:2016/dingtalk/receive'
-//             'url' => 'http://hyerp.ricki.cn/dingtalk/receive'
-//             'url' => 'http://139.224.8.136:81/dingtalk/receive'
+            //             'url' => 'http://www.huaxing-east.cn:2016/dingtalk/receive'
+            //             'url' => 'http://hyerp.ricki.cn/dingtalk/receive'
+            //             'url' => 'http://139.224.8.136:81/dingtalk/receive'
         ];
         // dd($data);
 
@@ -984,11 +1017,11 @@ class DingTalkController extends Controller
             'call_back_tag' => ['user_add_org', 'user_modify_org', 'user_leave_org', 'bpms_task_change', 'bpms_instance_change'],
             'token' => config('custom.dingtalk.TOKEN'),
             'aes_key' => config('custom.dingtalk.ENCODING_AES_KEY'),
-//            'url' => 'http://139.224.8.136:81/dingtalk/receive'
+            //            'url' => 'http://139.224.8.136:81/dingtalk/receive'
             'url' => url('dingtalk/receive2')
-//             'url' => 'http://www.huaxing-east.cn:2016/dingtalk/receive'
-//             'url' => 'http://hyerp.ricki.cn/dingtalk/receive'
-//             'url' => 'http://139.224.8.136:81/dingtalk/receive'
+            //             'url' => 'http://www.huaxing-east.cn:2016/dingtalk/receive'
+            //             'url' => 'http://hyerp.ricki.cn/dingtalk/receive'
+            //             'url' => 'http://139.224.8.136:81/dingtalk/receive'
         ];
         // dd($data);
 
@@ -1016,8 +1049,11 @@ class DingTalkController extends Controller
 
     public static function register_call_back($accessToken, $data)
     {
-        $response = Http::post("/call_back/register_call_back",
-            array("access_token" => $accessToken), json_encode($data));
+        $response = Http::post(
+            "/call_back/register_call_back",
+            array("access_token" => $accessToken),
+            json_encode($data)
+        );
         return $response;
     }
 
@@ -1025,8 +1061,10 @@ class DingTalkController extends Controller
     {
         $access_token = self::getAccessToken();
 
-        $response = Http::get("/call_back/delete_call_back",
-            array("access_token" => $access_token));
+        $response = Http::get(
+            "/call_back/delete_call_back",
+            array("access_token" => $access_token)
+        );
         // dd(response()->json($response));
         $data = [
             'errcode' => $response->errcode,
@@ -1041,28 +1079,30 @@ class DingTalkController extends Controller
      */
     public function synchronizeusers()
     {
-//        Cache::flush();
+        //        Cache::flush();
         $access_token = self::getAccessToken();
 
-        $response = Http::get("/department/list",
-            array("access_token" => $access_token));
+        $response = Http::get(
+            "/department/list",
+            array("access_token" => $access_token)
+        );
         $departments = $response->department;
-        foreach ($departments as $department)
-        {
+        foreach ($departments as $department) {
             echo  $department->name . "</br>";
             $access_token = self::getAccessToken();
-            $response = Http::get("/user/list",
-                array("access_token" => $access_token, 'department_id' => $department->id));
+            $response = Http::get(
+                "/user/list",
+                array("access_token" => $access_token, 'department_id' => $department->id)
+            );
             $userlist = $response->userlist;
-            foreach ($userlist as $user)
-            {
+            foreach ($userlist as $user) {
                 echo '<li> ' . $user->name  . ' ' . $user->userid . ' ' . (isset($user->orgEmail) ? $user->orgEmail : '') . '</li>';
-//                if (isset($user->orgEmail) && !empty($user->orgEmail))
-                    UsersController::synchronizedtuser($user);
+                //                if (isset($user->orgEmail) && !empty($user->orgEmail))
+                UsersController::synchronizedtuser($user);
             }
         }
         dd($departments);
-//        dd(response()->json($response));
+        //        dd(response()->json($response));
         $data = [
             'errcode' => $response->errcode,
             'errmsg' => $response->errmsg
@@ -1077,14 +1117,16 @@ class DingTalkController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public static function userGet($userid) {
+    public static function userGet($userid)
+    {
         $url = 'https://oapi.dingtalk.com/user/get';
         $access_token = self::getAccessToken();
         $params = compact('access_token', 'userid');
         return self::get($url, $params);
     }
 
-    public static function userGet2($userid) {
+    public static function userGet2($userid)
+    {
         $url = 'https://oapi.dingtalk.com/user/get';
         $access_token = self::getAccessToken_appkey();
         $params = compact('access_token', 'userid');
@@ -1097,7 +1139,7 @@ class DingTalkController extends Controller
         $timeStamp = $_GET["timestamp"];
         $nonce = $_GET["nonce"];
         $postdata = file_get_contents("php://input");
-        $postList = json_decode($postdata,true);
+        $postList = json_decode($postdata, true);
         $encrypt = $postList['encrypt'];
         $crypt = new DingtalkCrypt(config('custom.dingtalk.TOKEN'), config('custom.dingtalk.ENCODING_AES_KEY'), config('custom.dingtalk.corpid'));
         // Log::info("ENCODING_AES_KEY: " . config('custom.dingtalk.ENCODING_AES_KEY'));
@@ -1105,53 +1147,41 @@ class DingTalkController extends Controller
         $msg = "";
         $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
         Log::info("msg: " . $msg);
-//        Log::info("errCode: " . $errCode);
+        //        Log::info("errCode: " . $errCode);
 
-        if ($errCode != 0)
-        {
+        if ($errCode != 0) {
             Log::info(json_encode($_GET) . "  ERR:" . $errCode);
-            
+
             /**
              * 创建套件时检测回调地址有效性，使用CREATE_SUITE_KEY作为SuiteKey
              */
             $crypt = new DingtalkCrypt(config('custom.dingtalk.TOKEN'), config('custom.dingtalk.ENCODING_AES_KEY'), '');
             $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
-            if ($errCode == 0)
-            {
+            if ($errCode == 0) {
                 Log::info("DECRYPT CREATE SUITE MSG SUCCESS " . json_encode($_GET) . "  " . $msg);
                 $eventMsg = json_decode($msg);
                 $eventType = $eventMsg->EventType;
-                if ("check_create_suite_url" === $eventType)
-                {
+                if ("check_create_suite_url" === $eventType) {
                     $random = $eventMsg->Random;
                     $testSuiteKey = $eventMsg->TestSuiteKey;
-                    
+
                     $encryptMsg = "";
                     $errCode = $crypt->EncryptMsg($random, $timeStamp, $nonce, $encryptMsg);
-                    if ($errCode == 0) 
-                    {
+                    if ($errCode == 0) {
                         Log::info("CREATE SUITE URL RESPONSE: " . $encryptMsg);
                         echo $encryptMsg;
                         // return $encryptMsg;
-                    } 
-                    else 
-                    {
+                    } else {
                         Log::info("CREATE SUITE URL RESPONSE ERR: " . $errCode);
                     }
-                }
-                else
-                {
+                } else {
                     //should never happened
                 }
-            }
-            else 
-            {
+            } else {
                 Log::error(json_encode($_GET) . "CREATE SUITE ERR:" . $errCode);
             }
             return;
-        }
-        else
-        {
+        } else {
             /**
              * 套件创建成功后的回调推送
              */
@@ -1161,15 +1191,13 @@ class DingTalkController extends Controller
             /**
              * 套件ticket
              */
-            if ("suite_ticket" === $eventType)
-            {
+            if ("suite_ticket" === $eventType) {
                 Cache::setSuiteTicket($eventMsg->SuiteTicket);
             }
             /**
              * 临时授权码
              */
-            else if ("tmp_auth_code" === $eventType)
-            {
+            else if ("tmp_auth_code" === $eventType) {
                 $tmpAuthCode = $eventMsg->AuthCode;
                 Activate::autoActivateSuite($tmpAuthCode);
             }
@@ -1185,9 +1213,7 @@ class DingTalkController extends Controller
             org_dept_modify ： 通讯录企业部门修改
             org_dept_remove ： 通讯录企业部门删除
             org_remove ： 企业被解散
-            */
-            else if ("user_add_org" === $eventType)
-            {
+            */ else if ("user_add_org" === $eventType) {
                 Log::info(json_encode($_GET) . "  Info:user_add_org");
                 //handle auth change event
                 $data = json_decode($msg);
@@ -1198,10 +1224,7 @@ class DingTalkController extends Controller
                     Log::info("user: " . json_encode($user));
                     UsersController::synchronizedtuser($user);
                 }
-
-            }
-            else if ("user_modify_org" === $eventType)
-            {
+            } else if ("user_modify_org" === $eventType) {
                 Log::error(json_encode($_GET) . "  Info:user_modify_org");
                 //handle auth change event
                 $data = json_decode($msg);
@@ -1211,29 +1234,24 @@ class DingTalkController extends Controller
                     $user = self::userGet($userid);
                     Log::info("user: " . json_encode($user));
                     UsersController::synchronizedtuser($user);
-//                    UsersController::updatedtuser($userid);
+                    //                    UsersController::updatedtuser($userid);
                 }
-            }
-            else if ("user_leave_org" === $eventType)
-            {
+            } else if ("user_leave_org" === $eventType) {
                 Log::error(json_encode($_GET) . "  ERR:user_leave_org");
                 // delete dtuser
                 $data = json_decode($msg);
                 foreach ($data->UserId as $userid) {
                     # code...
                     Log::info("user id: " . $userid);
-//                    $user = self::userGet($userid);
-//                    Log::info("user: " . json_encode($user));
+                    //                    $user = self::userGet($userid);
+                    //                    Log::info("user: " . json_encode($user));
                     UsersController::destroydtuser($userid);
                 }
-            }
-            else if ("bpms_instance_change" === $eventType)
-            {
-//                Log::info(json_encode($_GET) . "  INFO:bpms_instance_change");
+            } else if ("bpms_instance_change" === $eventType) {
+                //                Log::info(json_encode($_GET) . "  INFO:bpms_instance_change");
                 $data = json_decode($msg);
-//                Log::info("bpms_instance_change: " . $msg);
-                if ($data->type == "finish" && $data->result == "agree")
-                {
+                //                Log::info("bpms_instance_change: " . $msg);
+                if ($data->type == "finish" && $data->result == "agree") {
                     if ($data->processCode == "PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2")
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
@@ -1254,9 +1272,7 @@ class DingTalkController extends Controller
                         CustomerdeductionController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.epcsecening'))
                         EpcseceningController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
-                }
-                elseif ($data->type == "finish" && $data->result == "refuse")
-                {
+                } elseif ($data->type == "finish" && $data->result == "refuse") {
                     if ($data->processCode == "PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2")
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
@@ -1277,9 +1293,7 @@ class DingTalkController extends Controller
                         CustomerdeductionController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.epcsecening'))
                         EpcseceningController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
-                }
-                elseif ($data->type == "terminate")
-                {
+                } elseif ($data->type == "terminate") {
                     if ($data->processCode == "PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2")
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
@@ -1300,9 +1314,7 @@ class DingTalkController extends Controller
                         CustomerdeductionController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.epcsecening'))
                         EpcseceningController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
-                }
-                elseif ($data->type == "delete")
-                {
+                } elseif ($data->type == "delete") {
                     if ($data->processCode == "PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2")
                         IssuedrawingController::deleteByProcessInstanceId($data->processInstanceId);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.mcitempurchase'))
@@ -1324,9 +1336,7 @@ class DingTalkController extends Controller
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.customerdeduction'))
                         EpcseceningController::deleteByProcessInstanceId($data->processInstanceId);
                 }
-            }
-            else if ("bpms_task_change" === $eventType)
-            {
+            } else if ("bpms_task_change" === $eventType) {
                 Log::info(json_encode($_GET) . "  INFO:bpms_task_change");
                 $data = json_decode($msg);
                 Log::info("bpms_task_change: " . $msg);
@@ -1334,52 +1344,41 @@ class DingTalkController extends Controller
             /**
              * 应用被解除授权的时候，需要删除相应企业的存储信息
              */
-            else if ("suite_relieve" === $eventType)
-            {
+            else if ("suite_relieve" === $eventType) {
                 $corpid = $eventMsg->AuthCorpId;
                 // ISVService::removeCorpInfo($corpid);
                 //handle auth change event
-            }else if ("change_auth" === $eventType)
-             {
-                 //handle auth change event
-             }
+            } else if ("change_auth" === $eventType) {
+                //handle auth change event
+            }
             /**
              * 回调地址更新
              */
-            else if ("check_update_suite_url" === $eventType)
-            {
+            else if ("check_update_suite_url" === $eventType) {
                 $random = $eventMsg->Random;
                 $testSuiteKey = $eventMsg->TestSuiteKey;
-                
+
                 $encryptMsg = "";
                 $errCode = $crypt->EncryptMsg($random, $timeStamp, $nonce, $encryptMsg);
-                if ($errCode == 0) 
-                {
+                if ($errCode == 0) {
                     Log::info("UPDATE SUITE URL RESPONSE: " . $encryptMsg);
                     echo $encryptMsg;
                     return $encryptMsg;
-                } 
-                else 
-                {
+                } else {
                     Log::error("UPDATE SUITE URL RESPONSE ERR: " . $errCode);
                 }
-            }
-            else
-            {
+            } else {
                 //should never happen
             }
-            
+
             $res = "success";
             $encryptMsg = "";
             $errCode = $crypt->EncryptMsg($res, $timeStamp, $nonce, $encryptMsg);
-            if ($errCode == 0) 
-            {
+            if ($errCode == 0) {
                 Log::info("RESPONSE: " . $encryptMsg);
                 echo $encryptMsg;
                 // return $encryptMsg;
-            } 
-            else 
-            {
+            } else {
                 Log::error("RESPONSE ERR: " . $errCode);
             }
         }
@@ -1391,7 +1390,7 @@ class DingTalkController extends Controller
         $timeStamp = $_GET["timestamp"];
         $nonce = $_GET["nonce"];
         $postdata = file_get_contents("php://input");
-        $postList = json_decode($postdata,true);
+        $postList = json_decode($postdata, true);
         $encrypt = $postList['encrypt'];
         $crypt = new DingtalkCrypt(config('custom.dingtalk.TOKEN'), config('custom.dingtalk.ENCODING_AES_KEY'), config('custom.dingtalk.hx_henan.corpid'));
         // Log::info("ENCODING_AES_KEY: " . config('custom.dingtalk.ENCODING_AES_KEY'));
@@ -1399,10 +1398,9 @@ class DingTalkController extends Controller
         $msg = "";
         $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
         Log::info("msg: " . $msg);
-//        Log::info("errCode: " . $errCode);
+        //        Log::info("errCode: " . $errCode);
 
-        if ($errCode != 0)
-        {
+        if ($errCode != 0) {
             Log::info(json_encode($_GET) . "  ERR:" . $errCode);
 
             /**
@@ -1410,42 +1408,31 @@ class DingTalkController extends Controller
              */
             $crypt = new DingtalkCrypt(config('custom.dingtalk.TOKEN'), config('custom.dingtalk.ENCODING_AES_KEY'), '');
             $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
-            if ($errCode == 0)
-            {
+            if ($errCode == 0) {
                 Log::info("DECRYPT CREATE SUITE MSG SUCCESS " . json_encode($_GET) . "  " . $msg);
                 $eventMsg = json_decode($msg);
                 $eventType = $eventMsg->EventType;
-                if ("check_create_suite_url" === $eventType)
-                {
+                if ("check_create_suite_url" === $eventType) {
                     $random = $eventMsg->Random;
                     $testSuiteKey = $eventMsg->TestSuiteKey;
 
                     $encryptMsg = "";
                     $errCode = $crypt->EncryptMsg($random, $timeStamp, $nonce, $encryptMsg);
-                    if ($errCode == 0)
-                    {
+                    if ($errCode == 0) {
                         Log::info("CREATE SUITE URL RESPONSE: " . $encryptMsg);
                         echo $encryptMsg;
                         // return $encryptMsg;
-                    }
-                    else
-                    {
+                    } else {
                         Log::info("CREATE SUITE URL RESPONSE ERR: " . $errCode);
                     }
-                }
-                else
-                {
+                } else {
                     //should never happened
                 }
-            }
-            else
-            {
+            } else {
                 Log::error(json_encode($_GET) . "CREATE SUITE ERR:" . $errCode);
             }
             return;
-        }
-        else
-        {
+        } else {
             /**
              * 套件创建成功后的回调推送
              */
@@ -1455,15 +1442,13 @@ class DingTalkController extends Controller
             /**
              * 套件ticket
              */
-            if ("suite_ticket" === $eventType)
-            {
+            if ("suite_ticket" === $eventType) {
                 Cache::setSuiteTicket($eventMsg->SuiteTicket);
             }
             /**
              * 临时授权码
              */
-            else if ("tmp_auth_code" === $eventType)
-            {
+            else if ("tmp_auth_code" === $eventType) {
                 $tmpAuthCode = $eventMsg->AuthCode;
                 Activate::autoActivateSuite($tmpAuthCode);
             }
@@ -1479,8 +1464,7 @@ class DingTalkController extends Controller
             org_dept_modify ： 通讯录企业部门修改
             org_dept_remove ： 通讯录企业部门删除
             org_remove ： 企业被解散
-            */
-            else if ("user_add_org" === $eventType)     // 河南华星
+            */ else if ("user_add_org" === $eventType)     // 河南华星
             {
                 Log::info(json_encode($_GET) . "  Info:user_add_org");
                 //handle auth change event
@@ -1492,9 +1476,7 @@ class DingTalkController extends Controller
                     Log::info("user: " . json_encode($user));
                     UsersController::synchronizedtuser2($user);
                 }
-            }
-            else if ("user_modify_org" === $eventType)
-            {
+            } else if ("user_modify_org" === $eventType) {
                 Log::error(json_encode($_GET) . "  Info:user_modify_org");
                 //handle auth change event
                 $data = json_decode($msg);
@@ -1504,29 +1486,24 @@ class DingTalkController extends Controller
                     $user = self::userGet2($userid);
                     Log::info("user: " . json_encode($user));
                     UsersController::synchronizedtuser2($user);
-//                    UsersController::updatedtuser($userid);
+                    //                    UsersController::updatedtuser($userid);
                 }
-            }
-            else if ("user_leave_org" === $eventType)
-            {
+            } else if ("user_leave_org" === $eventType) {
                 Log::error(json_encode($_GET) . "  ERR:user_leave_org");
                 // delete dtuser
                 $data = json_decode($msg);
                 foreach ($data->UserId as $userid) {
                     # code...
                     Log::info("user id: " . $userid);
-//                    $user = self::userGet($userid);
-//                    Log::info("user: " . json_encode($user));
+                    //                    $user = self::userGet($userid);
+                    //                    Log::info("user: " . json_encode($user));
                     UsersController::destroydtuser2($userid);
                 }
-            }
-            else if ("bpms_instance_change" === $eventType)
-            {
-//                Log::info(json_encode($_GET) . "  INFO:bpms_instance_change");
+            } else if ("bpms_instance_change" === $eventType) {
+                //                Log::info(json_encode($_GET) . "  INFO:bpms_instance_change");
                 $data = json_decode($msg);
                 Log::info("bpms_instance_change: " . $msg);
-                if ($data->type == "finish" && $data->result == "agree")
-                {
+                if ($data->type == "finish" && $data->result == "agree") {
                     if ($data->processCode == "RPOC-9794564E-DD4B-41BB-ABD7-1F514756FE2F")
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
                     elseif ($data->processCode == config('custom.dingtalk.hx_henan.approval_processcode.mcitempurchase'))
@@ -1537,9 +1514,7 @@ class DingTalkController extends Controller
                         ProjectsitepurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.vendordeduction'))
                         VendordeductionController::updateStatusByProcessInstanceId($data->processInstanceId, 0);
-                }
-                elseif ($data->type == "finish" && $data->result == "refuse")
-                {
+                } elseif ($data->type == "finish" && $data->result == "refuse") {
                     if ($data->processCode == "RPOC-9794564E-DD4B-41BB-ABD7-1F514756FE2F")
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
                     elseif ($data->processCode == config('custom.dingtalk.hx_henan.approval_processcode.mcitempurchase'))
@@ -1550,9 +1525,7 @@ class DingTalkController extends Controller
                         ProjectsitepurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.vendordeduction'))
                         VendordeductionController::updateStatusByProcessInstanceId($data->processInstanceId, -1);
-                }
-                elseif ($data->type == "terminate")
-                {
+                } elseif ($data->type == "terminate") {
                     if ($data->processCode == "RPOC-9794564E-DD4B-41BB-ABD7-1F514756FE2F")
                         IssuedrawingController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
                     elseif ($data->processCode == config('custom.dingtalk.hx_henan.approval_processcode.mcitempurchase'))
@@ -1563,9 +1536,7 @@ class DingTalkController extends Controller
                         ProjectsitepurchaseController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.vendordeduction'))
                         VendordeductionController::updateStatusByProcessInstanceId($data->processInstanceId, -2);
-                }
-                elseif ($data->type == "delete")
-                {
+                } elseif ($data->type == "delete") {
                     if ($data->processCode == "RPOC-9794564E-DD4B-41BB-ABD7-1F514756FE2F")
                         IssuedrawingController::deleteByProcessInstanceId($data->processInstanceId);
                     elseif ($data->processCode == config('custom.dingtalk.hx_henan.approval_processcode.mcitempurchase'))
@@ -1577,9 +1548,7 @@ class DingTalkController extends Controller
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.vendordeduction'))
                         VendordeductionController::deleteByProcessInstanceId($data->processInstanceId);
                 }
-            }
-            else if ("bpms_task_change" === $eventType)
-            {
+            } else if ("bpms_task_change" === $eventType) {
                 Log::info(json_encode($_GET) . "  INFO:bpms_task_change");
                 $data = json_decode($msg);
                 Log::info("bpms_task_change: " . $msg);
@@ -1587,52 +1556,41 @@ class DingTalkController extends Controller
             /**
              * 应用被解除授权的时候，需要删除相应企业的存储信息
              */
-            else if ("suite_relieve" === $eventType)
-            {
+            else if ("suite_relieve" === $eventType) {
                 $corpid = $eventMsg->AuthCorpId;
                 // ISVService::removeCorpInfo($corpid);
                 //handle auth change event
-            }else if ("change_auth" === $eventType)
-            {
+            } else if ("change_auth" === $eventType) {
                 //handle auth change event
             }
             /**
              * 回调地址更新
              */
-            else if ("check_update_suite_url" === $eventType)
-            {
+            else if ("check_update_suite_url" === $eventType) {
                 $random = $eventMsg->Random;
                 $testSuiteKey = $eventMsg->TestSuiteKey;
 
                 $encryptMsg = "";
                 $errCode = $crypt->EncryptMsg($random, $timeStamp, $nonce, $encryptMsg);
-                if ($errCode == 0)
-                {
+                if ($errCode == 0) {
                     Log::info("UPDATE SUITE URL RESPONSE: " . $encryptMsg);
                     echo $encryptMsg;
                     return $encryptMsg;
-                }
-                else
-                {
+                } else {
                     Log::error("UPDATE SUITE URL RESPONSE ERR: " . $errCode);
                 }
-            }
-            else
-            {
+            } else {
                 //should never happen
             }
 
             $res = "success";
             $encryptMsg = "";
             $errCode = $crypt->EncryptMsg($res, $timeStamp, $nonce, $encryptMsg);
-            if ($errCode == 0)
-            {
+            if ($errCode == 0) {
                 Log::info("RESPONSE: " . $encryptMsg);
                 echo $encryptMsg;
                 // return $encryptMsg;
-            }
-            else
-            {
+            } else {
                 Log::error("RESPONSE ERR: " . $errCode);
             }
         }
@@ -1645,7 +1603,7 @@ class DingTalkController extends Controller
         $timeStamp = $_GET["timestamp"];
         $nonce = $_GET["nonce"];
         $postdata = file_get_contents("php://input");
-        $postList = json_decode($postdata,true);
+        $postList = json_decode($postdata, true);
         $encrypt = $postList['encrypt'];
         $crypt = new DingtalkCrypt(config('custom.dingtalk.TOKEN'), config('custom.dingtalk.ENCODING_AES_KEY'), config('custom.dingtalk.corpid'));
         // Log::info("ENCODING_AES_KEY: " . config('custom.dingtalk.ENCODING_AES_KEY'));
@@ -1653,10 +1611,9 @@ class DingTalkController extends Controller
         $msg = "";
         $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
         Log::info("msg: " . $msg);
-//        Log::info("errCode: " . $errCode);
+        //        Log::info("errCode: " . $errCode);
 
-        if ($errCode != 0)
-        {
+        if ($errCode != 0) {
             Log::info(json_encode($_GET) . "  ERR:" . $errCode);
 
             /**
@@ -1664,42 +1621,31 @@ class DingTalkController extends Controller
              */
             $crypt = new DingtalkCrypt(config('custom.dingtalk.TOKEN'), config('custom.dingtalk.ENCODING_AES_KEY'), '');
             $errCode = $crypt->DecryptMsg($signature, $timeStamp, $nonce, $encrypt, $msg);
-            if ($errCode == 0)
-            {
+            if ($errCode == 0) {
                 Log::info("DECRYPT CREATE SUITE MSG SUCCESS " . json_encode($_GET) . "  " . $msg);
                 $eventMsg = json_decode($msg);
                 $eventType = $eventMsg->EventType;
-                if ("check_create_suite_url" === $eventType)
-                {
+                if ("check_create_suite_url" === $eventType) {
                     $random = $eventMsg->Random;
                     $testSuiteKey = $eventMsg->TestSuiteKey;
 
                     $encryptMsg = "";
                     $errCode = $crypt->EncryptMsg($random, $timeStamp, $nonce, $encryptMsg);
-                    if ($errCode == 0)
-                    {
+                    if ($errCode == 0) {
                         Log::info("CREATE SUITE URL RESPONSE: " . $encryptMsg);
                         echo $encryptMsg;
                         // return $encryptMsg;
-                    }
-                    else
-                    {
+                    } else {
                         Log::info("CREATE SUITE URL RESPONSE ERR: " . $errCode);
                     }
-                }
-                else
-                {
+                } else {
                     //should never happened
                 }
-            }
-            else
-            {
+            } else {
                 Log::error(json_encode($_GET) . "CREATE SUITE ERR:" . $errCode);
             }
             return;
-        }
-        else
-        {
+        } else {
             /**
              * 套件创建成功后的回调推送
              */
@@ -1709,15 +1655,13 @@ class DingTalkController extends Controller
             /**
              * 套件ticket
              */
-            if ("suite_ticket" === $eventType)
-            {
+            if ("suite_ticket" === $eventType) {
                 Cache::setSuiteTicket($eventMsg->SuiteTicket);
             }
             /**
              * 临时授权码
              */
-            else if ("tmp_auth_code" === $eventType)
-            {
+            else if ("tmp_auth_code" === $eventType) {
                 $tmpAuthCode = $eventMsg->AuthCode;
                 Activate::autoActivateSuite($tmpAuthCode);
             }
@@ -1733,94 +1677,77 @@ class DingTalkController extends Controller
             org_dept_modify ： 通讯录企业部门修改
             org_dept_remove ： 通讯录企业部门删除
             org_remove ： 企业被解散
-            */
-            else if ("bpms_task_change" === $eventType)
-            {
+            */ else if ("bpms_task_change" === $eventType) {
                 Log::info(json_encode($_GET) . "  Info:bpms_task_change");
                 //handle auth change event
                 $data = json_decode($msg);
-//                foreach ($data->UserId as $userid) {
-//                    # code...
-//                    Log::info("user id: " . $userid);
-//                    $user = self::userGet($userid);
-//                    Log::info("user: " . json_encode($user));
-//                    UsersController::synchronizedtuser($user);
-//                }
+                //                foreach ($data->UserId as $userid) {
+                //                    # code...
+                //                    Log::info("user id: " . $userid);
+                //                    $user = self::userGet($userid);
+                //                    Log::info("user: " . json_encode($user));
+                //                    UsersController::synchronizedtuser($user);
+                //                }
 
-            }
-            else if ("bpms_instance_change" === $eventType)
-            {
+            } else if ("bpms_instance_change" === $eventType) {
                 Log::error(json_encode($_GET) . "  Info:bpms_instance_change");
                 //handle auth change event
                 $data = json_decode($msg);
-//                foreach ($data->UserId as $userid) {
-//                    # code...
-//                    Log::info("user id: " . $userid);
-//                    $user = self::userGet($userid);
-//                    Log::info("user: " . json_encode($user));
-//                    UsersController::synchronizedtuser($user);
-////                    UsersController::updatedtuser($userid);
-//                }
-            }
-            else if ("user_leave_org" === $eventType)
-            {
+                //                foreach ($data->UserId as $userid) {
+                //                    # code...
+                //                    Log::info("user id: " . $userid);
+                //                    $user = self::userGet($userid);
+                //                    Log::info("user: " . json_encode($user));
+                //                    UsersController::synchronizedtuser($user);
+                ////                    UsersController::updatedtuser($userid);
+                //                }
+            } else if ("user_leave_org" === $eventType) {
                 Log::error(json_encode($_GET) . "  ERR:user_leave_org");
                 // delete dtuser
                 $data = json_decode($msg);
-//                foreach ($data->UserId as $userid) {
-//                    Log::info("user id: " . $userid);
-//                    UsersController::destroydtuser($userid);
-//                }
+                //                foreach ($data->UserId as $userid) {
+                //                    Log::info("user id: " . $userid);
+                //                    UsersController::destroydtuser($userid);
+                //                }
             }
             /**
              * 应用被解除授权的时候，需要删除相应企业的存储信息
              */
-            else if ("suite_relieve" === $eventType)
-            {
+            else if ("suite_relieve" === $eventType) {
                 $corpid = $eventMsg->AuthCorpId;
                 // ISVService::removeCorpInfo($corpid);
                 //handle auth change event
-            }else if ("change_auth" === $eventType)
-            {
+            } else if ("change_auth" === $eventType) {
                 //handle auth change event
             }
             /**
              * 回调地址更新
              */
-            else if ("check_update_suite_url" === $eventType)
-            {
+            else if ("check_update_suite_url" === $eventType) {
                 $random = $eventMsg->Random;
                 $testSuiteKey = $eventMsg->TestSuiteKey;
 
                 $encryptMsg = "";
                 $errCode = $crypt->EncryptMsg($random, $timeStamp, $nonce, $encryptMsg);
-                if ($errCode == 0)
-                {
+                if ($errCode == 0) {
                     Log::info("UPDATE SUITE URL RESPONSE: " . $encryptMsg);
                     echo $encryptMsg;
                     return $encryptMsg;
-                }
-                else
-                {
+                } else {
                     Log::error("UPDATE SUITE URL RESPONSE ERR: " . $errCode);
                 }
-            }
-            else
-            {
+            } else {
                 //should never happen
             }
 
             $res = "success";
             $encryptMsg = "";
             $errCode = $crypt->EncryptMsg($res, $timeStamp, $nonce, $encryptMsg);
-            if ($errCode == 0)
-            {
+            if ($errCode == 0) {
                 Log::info("RESPONSE: " . $encryptMsg);
                 echo $encryptMsg;
                 // return $encryptMsg;
-            }
-            else
-            {
+            } else {
                 Log::error("RESPONSE ERR: " . $errCode);
             }
         }
@@ -1838,18 +1765,21 @@ class DingTalkController extends Controller
             // 'url' => 'http://hyerp.ricki.cn/dingtalk/receive'
         ];
 
-        $response = Http::post("/chat/create",
-            array("access_token" => $access_token), json_encode($data));
+        $response = Http::post(
+            "/chat/create",
+            array("access_token" => $access_token),
+            json_encode($data)
+        );
         return json_encode($response);
     }
 
     public static function send_to_conversation(Request $request)
     {
-//         dd('send_to_conversation');
+        //         dd('send_to_conversation');
         $access_token = self::getAccessToken();
         $paymentrequestid = $request->input('id', -1);
         $paymentrequest = Paymentrequest::findOrFail($paymentrequestid);
-//        dd("审批日期: " . $paymentrequest->created_at . ", 客户: " . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : "") . ", 金额: " . $paymentrequest->amount);
+        //        dd("审批日期: " . $paymentrequest->created_at . ", 客户: " . (isset($paymentrequest->supplier_hxold->name) ? $paymentrequest->supplier_hxold->name : "") . ", 金额: " . $paymentrequest->amount);
         $data = [
             'sender' => Auth::user()->dtuser->userid,
             'cid' => $request->input('cid'),
@@ -1859,30 +1789,33 @@ class DingTalkController extends Controller
             ]
         ];
 
-        $response = Http::post("/message/send_to_conversation",
-            array("access_token" => $access_token), json_encode($data));
+        $response = Http::post(
+            "/message/send_to_conversation",
+            array("access_token" => $access_token),
+            json_encode($data)
+        );
         return json_encode($response);
     }
 
     public static function googleauthenticator(Google2FA $google2fa)
     {
-//        $ga = new GA();
-//        $secret = $ga->createSecret();
-//        echo "Secret is: ".$secret."\n\n";
+        //        $ga = new GA();
+        //        $secret = $ga->createSecret();
+        //        echo "Secret is: ".$secret."\n\n";
 
-//        $google2fa = new Google2FA();
-//        return $google2fa->generateSecretKey();
+        //        $google2fa = new Google2FA();
+        //        return $google2fa->generateSecretKey();
 
-//        return $google2fa->generateSecretKey();
+        //        return $google2fa->generateSecretKey();
 
         return Google2FA::generateSecretKey();
     }
 
     public function routerrest()
     {
-//        $response = Http::post("/message/send_to_conversation",
-//            array("access_token" => $access_token), json_encode($data));
-//        return json_encode($response);
+        //        $response = Http::post("/message/send_to_conversation",
+        //            array("access_token" => $access_token), json_encode($data));
+        //        return json_encode($response);
 
         $method = 'dingtalk.smartwork.bpms.processinstance.create';
         $session = self::getAccessToken();
@@ -1904,12 +1837,21 @@ class DingTalkController extends Controller
                 'value'     => 'bbb',
             ],
         ];
-//        $form_component_values = '{name:\'测试1\', value:\'aaa\'}';
+        //        $form_component_values = '{name:\'测试1\', value:\'aaa\'}';
         $form_component_values = json_encode($formdata);
-        $params = compact('method', 'session', 'v', 'format',
-            'process_code', 'originator_user_id', 'dept_id', 'approvers', 'form_component_values');
+        $params = compact(
+            'method',
+            'session',
+            'v',
+            'format',
+            'process_code',
+            'originator_user_id',
+            'dept_id',
+            'approvers',
+            'form_component_values'
+        );
         $data = [
-//            'process_code' => '001'
+            //            'process_code' => '001'
         ];
         $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
         dd($response);
@@ -1925,14 +1867,21 @@ class DingTalkController extends Controller
 
         $process_code = 'PROC-EF6YRO35P2-7MPMNW3BNO0R8DKYN8GX1-2EACCA5J-6';
         $start_time = 1502323200000;
-//        $originator_user_id = 'manager1200';
-//        $dept_id = 6643803;
-//        $approvers = 'manager1200';
-//        $form_component_values = '{name:\'测试1\', value:\'aaa\'}';
-        $params = compact('method', 'session', 'timestamp', 'v', 'format',
-            'process_code', 'start_time');
+        //        $originator_user_id = 'manager1200';
+        //        $dept_id = 6643803;
+        //        $approvers = 'manager1200';
+        //        $form_component_values = '{name:\'测试1\', value:\'aaa\'}';
+        $params = compact(
+            'method',
+            'session',
+            'timestamp',
+            'v',
+            'format',
+            'process_code',
+            'start_time'
+        );
         $data = [
-//            'process_code' => '001'
+            //            'process_code' => '001'
         ];
         $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
         dd($response);
@@ -1944,8 +1893,7 @@ class DingTalkController extends Controller
         $method = 'dingtalk.smartwork.bpms.processinstance.create';
         $format = 'json';
         $v = '2.0';
-        if ($inputs['syncdtdesc'] == "许昌")
-        {
+        if ($inputs['syncdtdesc'] == "许昌") {
             $session = self::getAccessToken_appkey();
             $process_code = config('custom.dingtalk.hx_henan.approval_processcode.issuedrawing');
             $originator_user_id = $user->dtuser2->userid;
@@ -1953,9 +1901,7 @@ class DingTalkController extends Controller
             $cc_list = config('custom.dingtalk.hx_henan.approversettings.issuedrawing.cc_list.' . $inputs['productioncompany']);
             $cc_list_default = config('custom.dingtalk.hx_henan.approversettings.issuedrawing.cc_list.default');
             $cc_list_designdepartment = config('custom.dingtalk.hx_henan.approversettings.issuedrawing.cc_list.designdepartment.' . $inputs['designdepartment']);
-        }
-        else
-        {
+        } else {
             $session = self::getAccessToken();
             $process_code = config('custom.dingtalk.approval_processcode.issuedrawing');
             $originator_user_id = $user->dtuserid;
@@ -1964,10 +1910,10 @@ class DingTalkController extends Controller
             $cc_list_default = config('custom.dingtalk.approversettings.issuedrawing.cc_list.default');
             $cc_list_designdepartment = config('custom.dingtalk.approversettings.issuedrawing.cc_list.designdepartment.' . $inputs['designdepartment']);
         }
-//        $session = self::getAccessToken();
+        //        $session = self::getAccessToken();
 
-//        $process_code = 'PROC-EF6YJDXRN2-V88CLW5WMN8R63JUE7XW3-M0DE5SQI-2K';    // huaxing
-//        $process_code = 'PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2';    // huaxing
+        //        $process_code = 'PROC-EF6YJDXRN2-V88CLW5WMN8R63JUE7XW3-M0DE5SQI-2K';    // huaxing
+        //        $process_code = 'PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2';    // huaxing
         $dept_id = 0;
         if (count($departmentList) > 0)
             $dept_id = array_first($departmentList);
@@ -1975,19 +1921,18 @@ class DingTalkController extends Controller
         $cc_list .= empty($cc_list) ? $cc_list_default : '';
         $cc_list .= empty($cc_list) ? $cc_list_designdepartment : ',' . $cc_list_designdepartment;
         $cc_position = "FINISH";
-//        if (strlen($cc_list) == 0)
-//            $cc_list = config('custom.dingtalk.approversettings.mcitempurchase.cc_list.default');
-//        if ($cc_list <> "")
-//        {
-//            $req->setCcList($cc_list);
-//            $req->setCcPosition("FINISH");
-//        }
+        //        if (strlen($cc_list) == 0)
+        //            $cc_list = config('custom.dingtalk.approversettings.mcitempurchase.cc_list.default');
+        //        if ($cc_list <> "")
+        //        {
+        //            $req->setCcList($cc_list);
+        //            $req->setCcPosition("FINISH");
+        //        }
 
         $detail_array = [];
         $issuedrawingcabinet_items = json_decode($inputs['items_string']);
         foreach ($issuedrawingcabinet_items as $value) {
-            if (strlen($value->name) > 0)
-            {
+            if (strlen($value->name) > 0) {
                 $item_array = [
                     [
                         'name'      => '名称',
@@ -2082,12 +2027,12 @@ class DingTalkController extends Controller
             [
                 'name'      => '附件地址',
                 'value'     => $inputs['drawingattachments_url'],
-//                'value'     => '<a href="http://www.huaxing-east.cn:2016/uploads/approval/issuedrawing/52/drawingattachments/20180218232347132.pdf">aaa</a>',
+                //                'value'     => '<a href="http://www.huaxing-east.cn:2016/uploads/approval/issuedrawing/52/drawingattachments/20180218232347132.pdf">aaa</a>',
             ],
             [
                 'name'      => '备注',
                 'value'     => $inputs['remark'],
-//                'value'     => '<a href="http://www.huaxing-east.cn:2016/uploads/approval/issuedrawing/52/drawingattachments/20180218232347132.pdf">aaa</a>',
+                //                'value'     => '<a href="http://www.huaxing-east.cn:2016/uploads/approval/issuedrawing/52/drawingattachments/20180218232347132.pdf">aaa</a>',
             ],
             [
                 'name'      => '图纸签收回执',
@@ -2098,34 +2043,45 @@ class DingTalkController extends Controller
                 'value'     => $inputs['associatedapprovals'],
             ],
         ];
-//        $form_component_values = '{name:\'测试1\', value:\'aaa\'}';
-//        dd(json_encode($formdata));
+        //        $form_component_values = '{name:\'测试1\', value:\'aaa\'}';
+        //        dd(json_encode($formdata));
         $form_component_values = json_encode($formdata);
-//        dd($formdata);
+        //        dd($formdata);
         Log::info('process_code: ' . $process_code);
         Log::info('originator_user_id: ' . $originator_user_id);
         Log::info('dept_id: ' . $dept_id);
         Log::info('approvers: ' . $approvers);
         Log::info('cc_list: ' . $cc_list);
-        $params = compact('method', 'session', 'v', 'format',
-            'process_code', 'originator_user_id', 'dept_id', 'approvers', 'cc_list', 'cc_position', 'form_component_values');
+        $params = compact(
+            'method',
+            'session',
+            'v',
+            'format',
+            'process_code',
+            'originator_user_id',
+            'dept_id',
+            'approvers',
+            'cc_list',
+            'cc_position',
+            'form_component_values'
+        );
         $data = [
-//            'process_code' => '001'
+            //            'process_code' => '001'
         ];
 
         $c = new DingTalkClient();
 
-//        $req = new SmartworkBpmsProcessinstanceCreateRequest();
-//        $req->setProcessCode($process_code);
-//        $req->setOriginatorUserId($originator_user_id);
-//        $req->setDeptId("$dept_id");
-//        $req->setApprovers($approvers);
-//        if ($cc_list <> "")
-//        {
-//            $req->setCcList($cc_list);
-//            $req->setCcPosition("FINISH");
-//        }
-//        $req->setFormComponentValues("$form_component_values");
+        //        $req = new SmartworkBpmsProcessinstanceCreateRequest();
+        //        $req->setProcessCode($process_code);
+        //        $req->setOriginatorUserId($originator_user_id);
+        //        $req->setDeptId("$dept_id");
+        //        $req->setApprovers($approvers);
+        //        if ($cc_list <> "")
+        //        {
+        //            $req->setCcList($cc_list);
+        //            $req->setCcPosition("FINISH");
+        //        }
+        //        $req->setFormComponentValues("$form_component_values");
 
         $req = new OapiProcessinstanceCreateRequest();
         $req->setProcessCode($process_code);
@@ -2133,14 +2089,13 @@ class DingTalkController extends Controller
         $req->setOriginatorUserId($originator_user_id);
         $req->setDeptId("$dept_id");
         $req->setApprovers($approvers);
-        if ($cc_list <> "")
-        {
+        if ($cc_list <> "") {
             $req->setCcList($cc_list);
             $req->setCcPosition("FINISH");
         }
 
         $response = $c->execute($req, $session);
-//        dd($response);
+        //        dd($response);
         return json_encode($response);
 
         $response = DingTalkController::post('https://eco.taobao.com/router/rest', $params, json_encode($data), false);
@@ -2155,21 +2110,29 @@ class DingTalkController extends Controller
         $format = 'json';
         $v = '2.0';
 
-//        $process_code = 'PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2';    // huaxing
-//        $originator_user_id = $user->dtuserid;
-//        $departmentList = json_decode($user->dtuser->department);
-//        $dept_id = 0;
-//        if (count($departmentList) > 0)
-//            $dept_id = array_first($departmentList);
+        //        $process_code = 'PROC-FF6YT8E1N2-TTFRATBAPC9QE86BLRWM1-SUHHCXBJ-2';    // huaxing
+        //        $originator_user_id = $user->dtuserid;
+        //        $departmentList = json_decode($user->dtuser->department);
+        //        $dept_id = 0;
+        //        if (count($departmentList) > 0)
+        //            $dept_id = array_first($departmentList);
 
-        $params = compact('method', 'session', 'v', 'format',
-            'process_instance_id');
+        $params = compact(
+            'method',
+            'session',
+            'v',
+            'format',
+            'process_instance_id'
+        );
         $data = [
-//            'process_instance_id' => $process_instance_id,
+            //            'process_instance_id' => $process_instance_id,
         ];
-//        Log::info(json_encode($data));
-        $response = HttpDingtalkEco::post("",
-            $params, json_encode($data));
+        //        Log::info(json_encode($data));
+        $response = HttpDingtalkEco::post(
+            "",
+            $params,
+            json_encode($data)
+        );
         return $response;
     }
 
@@ -2181,14 +2144,22 @@ class DingTalkController extends Controller
         $format = 'json';
         $v = '2.0';
 
-        $params = compact('method', 'session', 'v', 'format',
-            'process_instance_id');
+        $params = compact(
+            'method',
+            'session',
+            'v',
+            'format',
+            'process_instance_id'
+        );
         $data = [
-//            'process_instance_id' => $process_instance_id,
+            //            'process_instance_id' => $process_instance_id,
         ];
-//        Log::info(json_encode($data));
-        $response = HttpDingtalkEco::post("",
-            $params, json_encode($data));
+        //        Log::info(json_encode($data));
+        $response = HttpDingtalkEco::post(
+            "",
+            $params,
+            json_encode($data)
+        );
         return $response;
     }
 }
