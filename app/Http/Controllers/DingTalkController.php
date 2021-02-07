@@ -34,6 +34,8 @@ use App\Http\Controllers\util\Http;
 use App\Http\Controllers\crypto\DingtalkCrypt;
 use App\Http\Controllers\System\UsersController;
 use App\Models\Approval\Paymentrequest;
+use App\Models\System\Dept;
+use App\Models\System\Role;
 use GA;
 //use PragmaRX\Google2FA\Google2FA;
 //use PragmaRX\Google2FA\Contracts\Google2FA;
@@ -1082,19 +1084,33 @@ class DingTalkController extends Controller
         //        Cache::flush();
         $access_token = self::getAccessToken();
 
+        // 获取部门清单，然后根据部门获取用户
         $response = Http::get(
             "/department/list",
             array("access_token" => $access_token)
         );
         $departments = $response->department;
+        // Log::info($departments);
+
         foreach ($departments as $department) {
             echo  $department->name . "</br>";
+
+            // 保存部门信息
+            Dept::updateOrInsert(['id' => $department->id], [
+                'name' => $department->name,
+                'auto_add_user' => $department->autoAddUser,
+                'create_dept_group' => $department->createDeptGroup,
+                'ext' => isset($department->ext) ? $department->ext : null,
+                'parent_id' => isset($department->parentid) ? $department->parentid : null
+            ]);
+
             $access_token = self::getAccessToken();
             $response = Http::get(
                 "/user/list",
                 array("access_token" => $access_token, 'department_id' => $department->id)
             );
             $userlist = $response->userlist;
+            // Log::info($userlist);
             foreach ($userlist as $user) {
                 echo '<li> ' . $user->name  . ' ' . $user->userid . ' ' . (isset($user->orgEmail) ? $user->orgEmail : '') . '</li>';
                 //                if (isset($user->orgEmail) && !empty($user->orgEmail))
@@ -1109,6 +1125,28 @@ class DingTalkController extends Controller
         ];
         // dd(json_encode($data));
         return response()->json($data);
+    }
+
+    public function synchronizeRoles()
+    {
+        $access_token = self::getAccessToken();
+
+        $response = Http::get(
+            "/topapi/role/list",
+            array("access_token" => $access_token)
+        );
+        $groups = $response->result->list;
+        // Log::info($groups);
+
+        foreach ($groups as $group) {
+            $group_id = $group->groupId;
+            Role::updateOrInsert(['id' => $group_id], ['name' => $group->name]);
+
+            foreach ($group->roles as $role) {
+                Role::updateOrInsert(['id' => $role->id], ['name' => $role->name, 'parent_id' => $group_id]);
+            }
+        }
+        echo 'ok';
     }
 
     /**
