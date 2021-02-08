@@ -15,8 +15,7 @@ class ChangeDeptsTable extends Migration
     public function up()
     {
         Schema::table('depts', function (Blueprint $table) {
-            // 需手动将id列修改为如下规则
-            // $table->integer('id')->unique();
+            $table->integer('dtid')->nullable();
             $table->boolean('auto_add_user')->nullable();
             $table->boolean('create_dept_group')->nullable();
             $table->json('ext')->nullable();
@@ -34,6 +33,7 @@ class ChangeDeptsTable extends Migration
         Schema::table(
             'depts',
             function (Blueprint $table) {
+                $table->dropColumn('dtid');
                 $table->dropColumn('auto_add_user');
                 $table->dropColumn('create_dept_group');
                 $table->dropColumn('ext');

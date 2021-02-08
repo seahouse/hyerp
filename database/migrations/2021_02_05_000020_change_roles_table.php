@@ -14,8 +14,7 @@ class ChangeRolesTable extends Migration
     public function up()
     {
         Schema::table('roles', function (Blueprint $table) {
-            // 需手动将id列修改为如下规则
-            // $table->integer('id')->unique();
+            $table->integer('dtid')->nullable();
             $table->integer('parent_id')->nullable();
         });
     }
@@ -28,6 +27,7 @@ class ChangeRolesTable extends Migration
     public function down()
     {
         Schema::table('roles', function (Blueprint $table) {
+            $table->dropColumn('dtid');
             $table->dropColumn('parent_id');
         });
     }

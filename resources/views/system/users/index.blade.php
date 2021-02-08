@@ -77,10 +77,6 @@
     {!! Form::submit('设置与老系统的对应关系', ['class' => 'btn btn-default btn-sm']) !!}
     {!! Form::close() !!}
 
-    {!! Form::open(['url' => url('/system/roles/sync'), 'class' => 'pull-right']) !!}
-    {!! Form::submit('同步钉钉角色', ['class' => 'btn btn-default btn-sm']) !!}
-    {!! Form::close() !!}
-
     {!! Form::open(['url' => url('/dingtalk/synchronizeusers'), 'class' => 'pull-right']) !!}
     {!! Form::submit('同步钉钉人员到本地用户', ['class' => 'btn btn-default btn-sm']) !!}
     {!! Form::close() !!}

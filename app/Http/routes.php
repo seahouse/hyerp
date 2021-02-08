@@ -36,7 +36,6 @@ Route::get('app2', function () {
     return view('app2');
 });
 
-Route::post('system/roles/sync', 'DingTalkController@synchronizeRoles');
 Route::post('dingtalk/receive', 'DingTalkController@receive');
 Route::get('dingtalk/receive', 'DingTalkController@receive');
 Route::post('dingtalk/receive2', 'DingTalkController@receive2');

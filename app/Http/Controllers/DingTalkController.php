@@ -1096,7 +1096,7 @@ class DingTalkController extends Controller
             echo  $department->name . "</br>";
 
             // 保存部门信息
-            Dept::updateOrInsert(['id' => $department->id], [
+            Dept::updateOrInsert(['dtid' => $department->id], [
                 'name' => $department->name,
                 'auto_add_user' => $department->autoAddUser,
                 'create_dept_group' => $department->createDeptGroup,
@@ -1140,10 +1140,10 @@ class DingTalkController extends Controller
 
         foreach ($groups as $group) {
             $group_id = $group->groupId;
-            Role::updateOrInsert(['id' => $group_id], ['name' => $group->name]);
+            Role::updateOrInsert(['dtid' => $group_id], ['name' => $group->name]);
 
             foreach ($group->roles as $role) {
-                Role::updateOrInsert(['id' => $role->id], ['name' => $role->name, 'parent_id' => $group_id]);
+                Role::updateOrInsert(['dtid' => $role->id], ['name' => $role->name, 'parent_id' => $group_id]);
             }
         }
         echo 'ok';
