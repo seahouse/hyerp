@@ -196,7 +196,7 @@
                     {!! Form::open(['url' => 'basic/constructionbidinformations/resetfieldtype', 'id' => 'frmResetfieldtype']) !!}
                     <div class="form-group">
                         {!! Form::select('selectprojecttypes', array('SDA半干法系统' => 'SDA半干法系统', '湿法系统' => '湿法系统', 'SNCR系统' => 'SNCR系统', 'SCR系统' => 'SCR系统', '飞灰输送系统' => '飞灰输送系统',
-                            '灰库系统' => '灰库系统', '稳定化系统' => '稳定化系统', 'CFB系统' => 'CFB系统', '固定喷雾系统' => '固定喷雾系统', '公用系统' => '公用系统'), null,
+                            '灰库系统' => '灰库系统', '稳定化系统' => '稳定化系统', 'CFB系统' => 'CFB系统', '固定喷雾系统' => '固定喷雾系统', '现场实测数据' => '现场实测数据', '公用系统' => '公用系统'), null,
                             ['class' => 'form-control selectpicker', 'multiple']) !!}
                         {!! Form::hidden('projecttypes', null, []) !!}
                         {!! Form::hidden('biddinginformation_id', null, ['class' => 'form-control']) !!}
