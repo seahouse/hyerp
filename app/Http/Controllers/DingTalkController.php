@@ -35,7 +35,9 @@ use App\Http\Controllers\crypto\DingtalkCrypt;
 use App\Http\Controllers\System\UsersController;
 use App\Models\Approval\Paymentrequest;
 use App\Models\System\Dept;
+use App\Models\System\Dtuser;
 use App\Models\System\Role;
+use App\Models\System\Userrole;
 use GA;
 //use PragmaRX\Google2FA\Google2FA;
 //use PragmaRX\Google2FA\Contracts\Google2FA;
@@ -1081,6 +1083,9 @@ class DingTalkController extends Controller
      */
     public function synchronizeusers()
     {
+        // 同步所有角色
+        $this->synchronizeRoles();
+
         //        Cache::flush();
         $access_token = self::getAccessToken();
 
@@ -1091,7 +1096,7 @@ class DingTalkController extends Controller
         );
         $departments = $response->department;
         // Log::info($departments);
-
+        echo ('<hr>');
         foreach ($departments as $department) {
             echo  $department->name . "</br>";
 
@@ -1115,8 +1120,29 @@ class DingTalkController extends Controller
                 echo '<li> ' . $user->name  . ' ' . $user->userid . ' ' . (isset($user->orgEmail) ? $user->orgEmail : '') . '</li>';
                 //                if (isset($user->orgEmail) && !empty($user->orgEmail))
                 UsersController::synchronizedtuser($user);
+
+                $access_token = self::getAccessToken();
+                $response = Http::get(
+                    "/topapi/v2/user/get",
+                    array("access_token" => $access_token, 'userid' => $user->userid)
+                );
+
+                // 根据钉钉的id获取用户
+                $user = Dtuser::where('userid', $user->userid)->first();
+
+                // 获取用户的roles
+                if (isset($response->result->role_list)) {
+                    $roles = $response->result->role_list;
+                    Log::info($roles);
+                    foreach ($roles as $role) {
+                        echo ("--- {$role->group_name} {$role->id} {$role->name}<br>");
+                        $role = Role::where('dtid', $role->id)->first();
+                        Userrole::firstOrCreate(['user_id' => $user->user_id, 'role_id' => $role->id]);
+                    }
+                }
             }
         }
+
         dd($departments);
         //        dd(response()->json($response));
         $data = [
@@ -1140,13 +1166,14 @@ class DingTalkController extends Controller
 
         foreach ($groups as $group) {
             $group_id = $group->groupId;
+            echo ($group_id . ' ' . $group->name);
             Role::updateOrInsert(['dtid' => $group_id], ['name' => $group->name]);
 
             foreach ($group->roles as $role) {
+                echo ("<li>{$role->id} {$role->name}</li>");
                 Role::updateOrInsert(['dtid' => $role->id], ['name' => $role->name, 'parent_id' => $group_id]);
             }
         }
-        echo 'ok';
     }
 
     /**
