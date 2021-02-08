@@ -11,6 +11,7 @@ use App\Models\Approval\Epcseceningattachment;
 use App\Models\Approval\Epcseceningcrane;
 use App\Models\Approval\Epcseceninghumanday;
 use App\Models\Approval\Epcseceningmaterial;
+use App\Models\System\Dtuser;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -601,11 +602,11 @@ class EpcseceningController extends Controller
     public static function export_wlhremark()
     {
         Epcsecening::where('status', 0)->chunk(200, function ($epcsecenings) {
-            $remark = '';
             $client = new DingTalkClient();
             $req = new OapiProcessinstanceGetRequest();
             foreach ($epcsecenings as $epcsecening)
             {
+                $remark = '';
                 $req->setProcessInstanceId($epcsecening->process_instance_id);
                 $accessToken = DingTalkController::getAccessToken();
                 $response = $client->execute($req, $accessToken);
