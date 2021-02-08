@@ -702,6 +702,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     Route::group(['prefix' => 'epcsecening'], function () {
         Route::get('mcreate', 'EpcseceningController@mcreate');
         Route::post('mstore', 'EpcseceningController@mstore');
+        Route::post('export_wlhremark', 'EpcseceningController@export_wlhremark');
     });
     Route::resource('epcsecening', 'EpcseceningController');
 

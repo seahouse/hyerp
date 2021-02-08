@@ -157,6 +157,9 @@
                         @can('approval_projectsitepurchase_view')
                         <li><a href="/approval/projectsitepurchases">工程采购</a></li>
                         @endcan
+                            @can('approval_epcsecening_view')
+                                <li><a href="/approval/epcsecening">EPC-安装队现场增补</a></li>
+                            @endcan
                         @can('approval_synchronize')
                         <li><a href="/approval/synchronize">审批同步（钉钉）</a></li>
                         @endcan

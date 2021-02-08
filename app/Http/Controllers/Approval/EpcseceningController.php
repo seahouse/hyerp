@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Approval;
 use App\Http\Controllers\DingTalkController;
 use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiProcessinstanceCspaceInfoRequest;
+use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiProcessinstanceGetRequest;
 use App\Models\Approval\Epcsecening;
 use App\Models\Approval\Epcseceningattachment;
 use App\Models\Approval\Epcseceningcrane;
@@ -26,6 +27,67 @@ class EpcseceningController extends Controller
     public function index()
     {
         //
+        $request = request();
+        $inputs = $request->all();
+        $epcsecenings = $this->searchrequest($request)->paginate(15);
+
+        return view('approval.epcsecenings.index', compact('epcsecenings', 'inputs'));
+    }
+
+    public function searchrequest($request)
+    {
+        $query = Epcsecening::latest();
+
+        if ($request->has('createdatestart') && $request->has('createdateend'))
+        {
+            $query->whereRaw("DATEDIFF(DAY, create_time, '" . $request->input('createdatestart') . "') <= 0 and DATEDIFF(DAY, create_time, '" . $request->input('createdateend') . "') >=0");
+
+        }
+
+        if ($request->has('creator_name'))
+        {
+            $query->where('creator_name', $request->input('creator_name'));
+        }
+
+        if ($request->has('key') && strlen($request->input('key')) > 0)
+        {
+            $query->whereExists(function ($query) use ($request) {
+                $query->select(DB::raw(1))
+                    ->from('biddinginformationitems')
+                    ->whereRaw('biddinginformationitems.biddinginformation_id=biddinginformations.id and biddinginformationitems.value like \'%' . $request->input('key') . '%\'');
+            });
+        }
+
+
+        // xmjlsgrz_project_id
+        if ($request->has('xmjlsgrz_project_id') && $request->input('xmjlsgrz_project_id') > 0)
+        {
+            $soheadids = Salesorder_hxold::where('project_id', $request->input('xmjlsgrz_project_id'))->pluck('id');
+//            dd($soheadids);
+            $query->whereIn('xmjlsgrz_sohead_id', $soheadids);
+        }
+
+        // other
+        if ($request->has('other'))
+        {
+            if ($request->input('other') == 'xmjlsgrz_sohead_id_undefined')
+            {
+                $query->where(function ($query) {
+                    $query->whereNull('xmjlsgrz_sohead_id')
+                        ->orWhere('xmjlsgrz_sohead_id', '<', 1);
+                });
+            }
+            elseif ($request->input('other') == 'btn_xmjlsgrz_peoplecount_undefined')
+            {
+                $xmjlsgrz_peoplecount_keys = config('custom.dingtalk.dtlogs.peoplecount_keys.xmjlsgrz');
+                Log::info('(select SUM(convert(int, value)) from dtlogitems	where dtlogs.id=dtlogitems.dtlog_id and value not like \'%[^0-9]%\' and dtlogitems.[key] in (\'' . implode(",", $xmjlsgrz_peoplecount_keys) . '\')) is null');
+                $query->whereRaw('(select SUM(convert(int, value)) from dtlogitems	where dtlogs.id=dtlogitems.dtlog_id and value not like \'%[^0-9]%\' and dtlogitems.[key] in (\'' . implode("','", $xmjlsgrz_peoplecount_keys) . '\')) is null');
+            }
+        }
+
+        $items = $query->select('epcsecenings.*');
+
+        return $items;
     }
 
     /**
@@ -534,5 +596,42 @@ class EpcseceningController extends Controller
         {
             $epcsecening->forceDelete();
         }
+    }
+
+    public static function export_wlhremark()
+    {
+        Epcsecening::where('status', 0)->chunk(200, function ($epcsecenings) {
+            $remark = '';
+            $client = new DingTalkClient();
+            $req = new OapiProcessinstanceGetRequest();
+            foreach ($epcsecenings as $epcsecening)
+            {
+                $req->setProcessInstanceId($epcsecening->process_instance_id);
+                $accessToken = DingTalkController::getAccessToken();
+                $response = $client->execute($req, $accessToken);
+                $response = json_decode(json_encode($response, JSON_UNESCAPED_UNICODE));
+                if ($response->errcode == "0")
+                {
+                    $operation_records = $response->process_instance->operation_records->operation_records_vo;
+                    $dtuser_whl = Dtuser::where('user_id', 2)->first();
+                    if (isset($dtuser_whl))
+                    {
+                        foreach ($operation_records as $operation_record)
+                        {
+                            if ($operation_record->operation_type == 'ADD_REMARK' && $operation_record->userid == $dtuser_whl->userid)
+                            {
+                                $remark = $operation_record->remark;
+                            }
+                        }
+                        if (strlen($remark) > 0)
+                        {
+                            $epcsecening->remark_whl = $remark;
+                            $epcsecening->save();
+                        }
+                    }
+                }
+            }
+        });
+        dd("导出完成。");
     }
 }

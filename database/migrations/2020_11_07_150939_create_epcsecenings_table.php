@@ -35,6 +35,7 @@ class CreateEpcseceningsTable extends Migration
             $table->string('additional_content');
             $table->string('associated_approval_vendordeduction')->nullable();
             $table->string('associated_approval_designchangenotice')->nullable();
+            $table->string('remark_whl')->nullable();               // wuhaolun的评论
 
             $table->integer('applicant_id');
             $table->integer('status')->default(1);              // 状态：1表示初始开始状态, 0表示已结束（同意）, -1表示结束（拒绝）,-2表示已撤销

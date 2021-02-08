@@ -1,11 +1,11 @@
 @extends('navbarerp')
 
-@section('title', '下发图纸审批单列表')
+@section('title', 'EPC-安装队现场增补')
 
 @section('main')
 @can('approval_issuedrawing_view')
     <div class="panel-heading">
-        <div class="panel-title">审批 -- 下发图纸
+        <div class="panel-title">审批 -- EPC-安装队现场增补
 {{--            <div class="pull-right">
                 <a href="{{ URL::to('product/itemclasses') }}" target="_blank" class="btn btn-sm btn-success">{{'物料类型管理'}}</a>
                 <a href="{{ URL::to('product/characteristics') }}" target="_blank" class="btn btn-sm btn-success">{{'物料属性管理'}}</a>
@@ -19,32 +19,30 @@
 --}}
 
         @if (Auth::user()->email === "admin@admin.com")
-        <form class="pull-right" action="/approval/paymentrequests/export" method="post">
-            {!! csrf_field() !!}
-            <div class="pull-right">
-                <button type="submit" class="btn btn-default btn-sm">导出</button>
-            </div>
-        </form>
+            <form class="pull-right" action="/approval/epcsecening/export_wlhremark" method="post">
+                {!! csrf_field() !!}
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-default btn-sm">导出吴总评论</button>
+                </div>
+            </form>
+
+        {{--<form class="pull-right" action="/approval/paymentrequests/export" method="post">--}}
+            {{--{!! csrf_field() !!}--}}
+            {{--<div class="pull-right">--}}
+                {{--<button type="submit" class="btn btn-default btn-sm">导出</button>--}}
+            {{--</div>--}}
+        {{--</form>--}}
         @endif
 
 
         {!! Form::open(['url' => '/approval/issuedrawing/search', 'class' => 'pull-right form-inline']) !!}
             <div class="form-group-sm">
-                {{--
-                {!! Form::label('approvaldatelabel', '审批时间:', ['class' => 'control-label']); !!}
-                {!! Form::date('approvaldatestart', null, ['class' => 'form-control']); !!}
-                {!! Form::label('approvaldatelabelto', '-', ['class' => 'control-label']); !!}
-                {!! Form::date('approvaldateend', null, ['class' => 'form-control']); !!}
+                {{--{!! Form::label('sohead_name', '订单', ['class' => 'control-label']) !!}--}}
+                {{--{!! Form::select('sohead_name', $soheadList_hxold, null, ['class' => 'form-control', 'id' => 'select_sohead']) !!}--}}
+                {{--{!! Form::hidden('sohead_id', null, ['id' => 'sohead_id']) !!}--}}
 
-                {!! Form::select('paymentmethod', ['支票' => '支票', '贷记' => '贷记', '电汇' => '电汇', '汇票' => '汇票', '现金' => '现金', '银行卡' => '银行卡', '其他' => '其他'], null, ['class' => 'form-control', 'placeholder' => '--付款方式--']) !!}
-
-                --}}
-                {!! Form::label('sohead_name', '订单', ['class' => 'control-label']) !!}
-                {!! Form::select('sohead_name', $soheadList_hxold, null, ['class' => 'form-control', 'id' => 'select_sohead']) !!}
-                {!! Form::hidden('sohead_id', null, ['id' => 'sohead_id']) !!}
-
-                {!! Form::select('status', ['1' => '审批中', '0' => '已通过', '-1' => '已拒绝', '-2' => '已撤回'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']) !!}
-                {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '审批编号, 订单编号']) !!}
+                {{--{!! Form::select('status', ['1' => '审批中', '0' => '已通过', '-1' => '已拒绝', '-2' => '已撤回'], null, ['class' => 'form-control', 'placeholder' => '--审批状态--']) !!}--}}
+                {{--{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '审批编号, 订单编号']) !!}--}}
                 {!! Form::submit('查找', ['class' => 'btn btn-default btn-sm']) !!}
             </div>
         {!! Form::close() !!}
@@ -52,19 +50,19 @@
 
     </div>
 
-    @if ($issuedrawings->count())
+    @if ($epcsecenings->count())
 
     <table id="userDataTable" class="table table-striped table-hover table-condensed">
         <thead>
             <tr>
                 <th>申请日期</th>
-                <th>编号</th>
-                <th>吨数</th>
-                <th>制作公司</th>
-                <th>制作概述</th>
-                @if (Agent::isDesktop())
-                <th>对应项目</th>
-                @endif
+                <th>审批编号</th>
+                <th>增补项所属设计部门</th>
+                <th>增补内容</th>
+                {{--<th>制作概述</th>--}}
+                {{--@if (Agent::isDesktop())--}}
+                {{--<th>对应项目</th>--}}
+                {{--@endif--}}
 
                 <th>申请人</th>
                 <th>审批状态</th>
@@ -76,43 +74,39 @@
         </thead>
 
         <tbody>
-            @foreach($issuedrawings as $issuedrawing)
+            @foreach($epcsecenings as $epcsecening)
                 <tr>
                     <td>
-                        @if (Agent::isDesktop() && (Auth::user()->email == "wangai@huaxing-east.com" || Auth::user()->email == "shenhaixia@huaxing-east.com"))
-                            <a href="{{ url('/approval/issuedrawing/' . $issuedrawing->id . '/printpage') }}" target="_blank">{{ $issuedrawing->created_at }}</a>
-                        @else
-                            <a href="{{ url('/approval/issuedrawing', $issuedrawing->id) }}" target="_blank">{{ $issuedrawing->created_at }}</a>
-                        @endif
+                        {{ $epcsecening->created_at }}
                     </td>
                     <td>
-                        {{ $issuedrawing->business_id }}
+                        {{ $epcsecening->business_id }}
                     </td>
                     <td>
-                        {{ $issuedrawing->tonnage }}
+                        {{ $epcsecening->additional_design_department }}
                     </td>
                     <td>
-                        {{ $issuedrawing->productioncompany }}
+                        {{ $epcsecening->additional_content }}
                     </td>
-                    <td title="{{ $issuedrawing->overview }}">
-                        {{ str_limit($issuedrawing->overview, 40) }}
-                    </td>
-                    @if (Agent::isDesktop())
-                        <td title="@if (isset($issuedrawing->sohead_hxold->descrip)) {{ $issuedrawing->sohead_hxold->descrip }} @else @endif">
-                            @if (isset($issuedrawing->sohead_hxold->projectjc)) {{ str_limit($issuedrawing->sohead_hxold->projectjc, 40) }} @else @endif
-                        </td>
-                    @endif
+                    {{--<td title="{{ $epcsecening->overview }}">--}}
+                        {{--{{ str_limit($epcsecening->overview, 40) }}--}}
+                    {{--</td>--}}
+                    {{--@if (Agent::isDesktop())--}}
+                        {{--<td title="@if (isset($epcsecening->sohead_hxold->descrip)) {{ $epcsecening->sohead_hxold->descrip }} @else @endif">--}}
+                            {{--@if (isset($epcsecening->sohead_hxold->projectjc)) {{ str_limit($epcsecening->sohead_hxold->projectjc, 40) }} @else @endif--}}
+                        {{--</td>--}}
+                    {{--@endif--}}
                     <td>
-                        {{ isset($issuedrawing->applicant->name) ? $issuedrawing->applicant->name : '' }}
+                        {{ isset($epcsecening->applicant->name) ? $epcsecening->applicant->name : '' }}
                     </td>
                     <td>
-                        @if ($issuedrawing->status == 1)
+                        @if ($epcsecening->status == 1)
                             <div class="text-primary">审批中</div>
-                        @elseif ($issuedrawing->status == 0)
+                        @elseif ($epcsecening->status == 0)
                             <div class="text-success">已通过</div>
-                        @elseif ($issuedrawing->status == -1)
+                        @elseif ($epcsecening->status == -1)
                             <div class="text-warning">已拒绝</div>
-                        @elseif ($issuedrawing->status == -2)
+                        @elseif ($epcsecening->status == -2)
                             <div class="text-danger">已撤回</div>
                         @else
                             <div class="text-danger">--</div>
@@ -120,74 +114,28 @@
                     </td>
                     @if (Agent::isDesktop())
                         <td>
-                            @can('approval_issuedrawing_modifyweight')
-                                <a href="{{ url('/approval/issuedrawing/' . $issuedrawing->id . '/modifyweight') }}" target="_blank" class="btn btn-success btn-sm pull-left
-                        @if ($issuedrawing->status == 0)
-                                @else
-                                        disabled
-                                @endif
-                                        ">修改重量</a>
-                            @endcan
-
-                            @can('approval_issuedrawing_delete')
-                                {{--
-                        {!! Form::open(array('route' => array('approval.issuedrawing.destroy', $issuedrawing->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
-                            {!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}
-                        {!! Form::close() !!}
-                        --}}
-                            @endcan
-
+                            {{--@can('approval_issuedrawing_modifyweight')--}}
+                                {{--<a href="{{ url('/approval/issuedrawing/' . $epcsecening->id . '/modifyweight') }}" target="_blank" class="btn btn-success btn-sm pull-left--}}
+                        {{--@if ($epcsecening->status == 0)--}}
+                                {{--@else--}}
+                                        {{--disabled--}}
+                                {{--@endif--}}
+                                        {{--">修改重量</a>--}}
+                            {{--@endcan--}}
                         </td>
                     @endif
                 </tr>
             @endforeach
 
-            <tr class="info">
-                <td>合计</td>
-                <td></td>
-                <td>{{ $issuedrawings->sum('tonnage') }}</td>
-                <td></td>
-                <td></td>
-@if (Agent::isDesktop())
-                <td></td>
-@endif
-                <td></td>
-                <td></td>
-                @if (Agent::isDesktop())
-                    <td></td>
-                @endif
-            </tr>
-
-@if (Auth::user()->email == "admin@admin.com")
-            <tr class="success">
-                <td>汇总</td>
-                <td></td>
-                <td>
-                <td></td>
-                <td></td>
-                @if (isset($totalamount))
-                    {{ $totalamount }}
-                @endif
-                </td>
-@if (Agent::isDesktop())
-                <td></td>
-@endif
-                <td></td>
-                <td></td>
-                @if (Agent::isDesktop())
-                    <td></td>
-                @endif
-            </tr>
-@endif
         </tbody>
 
     </table>
 
 
     @if (isset($key))
-        {!! $issuedrawings->setPath('/approval/issuedrawing')->appends($inputs)->links() !!}
+        {!! $epcsecenings->setPath('/approval/epcsecening')->appends($inputs)->links() !!}
     @else
-        {!! $issuedrawings->setPath('/approval/issuedrawing')->links() !!}
+        {!! $epcsecenings->setPath('/approval/epcsecening')->links() !!}
     @endif
 
 
