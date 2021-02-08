@@ -619,13 +619,14 @@ class EpcseceningController extends Controller
                     {
                         foreach ($operation_records as $operation_record)
                         {
-                            if ($operation_record->operation_type == 'ADD_REMARK' && $operation_record->userid == $dtuser_whl->userid)
+                            if (($operation_record->operation_type == 'ADD_REMARK' || $operation_record->operation_type == 'AGREE') && $operation_record->userid == $dtuser_whl->userid && isset($operation_record->remark))
                             {
                                 $remark = $operation_record->remark;
                             }
                         }
                         if (strlen($remark) > 0)
                         {
+                            Log::info($epcsecening->process_instance_id . "\t" . $epcsecening->business_id . "\t" . $remark);
                             $epcsecening->remark_whl = $remark;
                             $epcsecening->save();
                         }
