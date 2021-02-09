@@ -3436,7 +3436,7 @@ class ApprovalController extends Controller
                 'value'     => $inputs['image_urls'],
             ],
             [
-                'name'      => '关联增补审批单',
+                'name'      => '关联相关审批单',
                 'value'     => $inputs['associatedapprovals'],
             ],
             [

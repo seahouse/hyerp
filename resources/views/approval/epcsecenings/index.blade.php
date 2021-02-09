@@ -18,7 +18,7 @@
         <a href="{{ URL::to('approval/items/create') }}" class="btn btn-sm btn-success">新建</a>
 --}}
 
-        @if (Auth::user()->email === "admin@admin.com")
+        @if (Auth::user()->isSuperAdmin())
             <form class="pull-right" action="/approval/epcsecening/export_wlhremark" method="post">
                 {!! csrf_field() !!}
                 <div class="pull-right">

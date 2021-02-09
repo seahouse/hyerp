@@ -619,7 +619,7 @@ class EpcseceningController extends Controller
                     {
                         foreach ($operation_records as $operation_record)
                         {
-                            if (($operation_record->operation_type == 'ADD_REMARK' || $operation_record->operation_type == 'AGREE') && $operation_record->userid == $dtuser_whl->userid && isset($operation_record->remark))
+                            if (($operation_record->operation_type == 'ADD_REMARK' || $operation_record->operation_type == 'EXECUTE_TASK_NORMAL') && $operation_record->userid == $dtuser_whl->userid && isset($operation_record->remark))
                             {
                                 $remark = $operation_record->remark;
                             }
