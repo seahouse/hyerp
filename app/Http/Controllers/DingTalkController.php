@@ -1215,7 +1215,7 @@ class DingTalkController extends Controller
      * @param string $access_token
      * @return \Illuminate\Http\Response
      */
-    public static function roleGet($roleId, $access_token = self::getAccessToken())
+    public static function roleGet($roleId, $access_token)
     {
         $url = 'https://oapi.dingtalk.com/topapi/role/getrole';
         $params = compact('access_token', 'roleId');
@@ -1478,7 +1478,7 @@ class DingTalkController extends Controller
                 $data = json_decode($msg);
                 foreach ($data->LabelIdList as $roleId) {
                     Log::info("role id: " . $roleId);
-                    $role = self::roleGet($roleId);
+                    $role = self::roleGet($roleId, self::getAccessToken());
                     Log::info("role: " . json_encode($role));
                     Role::updateOrInsert(['dtid' => $roleId], ['name' => $role->role->name, 'parent_id' => $role->role->groupId]);
                 }
