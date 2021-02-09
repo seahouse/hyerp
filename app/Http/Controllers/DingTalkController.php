@@ -987,6 +987,11 @@ class DingTalkController extends Controller
         return $response;
     }
 
+    /**
+     * 注册的回调的信息种类
+     */
+    const REG_CALLBACK_TAG = ['user_add_org', 'user_modify_org', 'user_leave_org', 'bpms_task_change', 'bpms_instance_change', 'label_user_change', 'label_conf_add', 'label_conf_del', 'label_conf_modify'];
+
     public static function register_call_back_user()
     {
         // Cache::flush();
@@ -995,7 +1000,7 @@ class DingTalkController extends Controller
 
         // self::$ENCODING_AES_KEY = str_random(43);
         $data = [
-            'call_back_tag' => ['user_add_org', 'user_modify_org', 'user_leave_org', 'bpms_task_change', 'bpms_instance_change'],
+            'call_back_tag' => static::REG_CALLBACK_TAG,
             'token' => config('custom.dingtalk.TOKEN'),
             'aes_key' => config('custom.dingtalk.ENCODING_AES_KEY'),
             //            'url' => 'http://139.224.8.136:81/dingtalk/receive'
@@ -1018,7 +1023,7 @@ class DingTalkController extends Controller
 
         // self::$ENCODING_AES_KEY = str_random(43);
         $data = [
-            'call_back_tag' => ['user_add_org', 'user_modify_org', 'user_leave_org', 'bpms_task_change', 'bpms_instance_change'],
+            'call_back_tag' => static::REG_CALLBACK_TAG,
             'token' => config('custom.dingtalk.TOKEN'),
             'aes_key' => config('custom.dingtalk.ENCODING_AES_KEY'),
             //            'url' => 'http://139.224.8.136:81/dingtalk/receive'
@@ -1153,6 +1158,11 @@ class DingTalkController extends Controller
         return response()->json($data);
     }
 
+    /**
+     * 同步角色清单
+     *
+     * @return void
+     */
     public function synchronizeRoles()
     {
         $access_token = self::getAccessToken();
@@ -1167,7 +1177,7 @@ class DingTalkController extends Controller
         foreach ($groups as $group) {
             $group_id = $group->groupId;
             echo ($group_id . ' ' . $group->name);
-            Role::updateOrInsert(['dtid' => $group_id], ['name' => $group->name]);
+            Role::updateOrInsert(['dtid' => $group_id], ['name' => $group->name, 'parent_id' => -1]);
 
             foreach ($group->roles as $role) {
                 echo ("<li>{$role->id} {$role->name}</li>");
@@ -1195,6 +1205,20 @@ class DingTalkController extends Controller
         $url = 'https://oapi.dingtalk.com/user/get';
         $access_token = self::getAccessToken_appkey();
         $params = compact('access_token', 'userid');
+        return self::get($url, $params);
+    }
+
+    /**
+     * API获取角色详情
+     *
+     * @param int $roleId
+     * @param string $access_token
+     * @return \Illuminate\Http\Response
+     */
+    public static function roleGet($roleId, $access_token = self::getAccessToken())
+    {
+        $url = 'https://oapi.dingtalk.com/topapi/role/getrole';
+        $params = compact('access_token', 'roleId');
         return self::get($url, $params);
     }
 
@@ -1432,8 +1456,45 @@ class DingTalkController extends Controller
                 } else {
                     Log::error("UPDATE SUITE URL RESPONSE ERR: " . $errCode);
                 }
+            } elseif ("label_user_change" === $eventType) {
+                // https://ding-doc.dingtalk.com/document/app/tvgq1n/title-yo1-r3w-kg8
+                // 员工角色信息发生变更
+                Log::info(json_encode($_GET) . "  Info:{$eventType}");
+                $data = json_decode($msg);
+                foreach ($data->UserIdList as $userid) {
+                    Log::info("user id: " . $userid);
+                    $user = Dtuser::where('userid', $userid)->first();
+                    Log::info("user: " . json_encode($user));
+                    Userrole::where('user_id', $user->user_id)->delete();
+                    foreach ($data->LabelIdList as $role) {
+                        $role = Role::where('dtid', $role->id)->first();
+                        Userrole::firstOrCreate(['user_id' => $user->user_id, 'role_id' => $role->id]);
+                    }
+                }
+            } elseif (in_array($eventType, ["label_conf_add", "label_conf_modify"])) {
+                // 增加角色或者角色组/修改角色或者角色组
+                Log::info(json_encode($_GET) . "  Info:{$eventType}");
+
+                $data = json_decode($msg);
+                foreach ($data->LabelIdList as $roleId) {
+                    Log::info("role id: " . $roleId);
+                    $role = self::roleGet($roleId);
+                    Log::info("role: " . json_encode($role));
+                    Role::updateOrInsert(['dtid' => $roleId], ['name' => $role->role->name, 'parent_id' => $role->role->groupId]);
+                }
+            } elseif ("label_conf_del" === $eventType) {
+                // 删除角色或者角色组
+                Log::info(json_encode($_GET) . "  Info:{$eventType}");
+
+                $data = json_decode($msg);
+                foreach ($data->LabelIdList as $roleId) {
+                    Log::info("role id: " . $roleId);
+                    $role = Role::where('dtit', $roleId)->first();
+                    Userrole::where('rold_id', $role->id)->delete();
+                    $role->delete();
+                }
             } else {
-                //should never happen
+                Log::error("未实现的回调事件:{$eventType}");
             }
 
             $res = "success";
@@ -1644,8 +1705,45 @@ class DingTalkController extends Controller
                 } else {
                     Log::error("UPDATE SUITE URL RESPONSE ERR: " . $errCode);
                 }
+            } elseif ("label_user_change" === $eventType) {
+                // https://ding-doc.dingtalk.com/document/app/tvgq1n/title-yo1-r3w-kg8
+                // 员工角色信息发生变更
+                Log::info(json_encode($_GET) . "  Info:{$eventType}");
+                $data = json_decode($msg);
+                foreach ($data->UserIdList as $userid) {
+                    Log::info("user id: " . $userid);
+                    $user = Dtuser::where('userid', $userid)->first();
+                    Log::info("user: " . json_encode($user));
+                    Userrole::where('user_id', $user->user_id)->delete();
+                    foreach ($data->LabelIdList as $role) {
+                        $role = Role::where('dtid', $role->id)->first();
+                        Userrole::firstOrCreate(['user_id' => $user->user_id, 'role_id' => $role->id]);
+                    }
+                }
+            } elseif (in_array($eventType, ["label_conf_add", "label_conf_modify"])) {
+                // 增加角色或者角色组/修改角色或者角色组
+                Log::info(json_encode($_GET) . "  Info:{$eventType}");
+
+                $data = json_decode($msg);
+                foreach ($data->LabelIdList as $roleId) {
+                    Log::info("role id: " . $roleId);
+                    $role = self::roleGet($roleId, self::getAccessToken_appkey());
+                    Log::info("role: " . json_encode($role));
+                    Role::updateOrInsert(['dtid' => $roleId], ['name' => $role->role->name, 'parent_id' => $role->role->groupId]);
+                }
+            } elseif ("label_conf_del" === $eventType) {
+                // 删除角色或者角色组
+                Log::info(json_encode($_GET) . "  Info:{$eventType}");
+
+                $data = json_decode($msg);
+                foreach ($data->LabelIdList as $roleId) {
+                    Log::info("role id: " . $roleId);
+                    $role = Role::where('dtit', $roleId)->first();
+                    Userrole::where('rold_id', $role->id)->delete();
+                    $role->delete();
+                }
             } else {
-                //should never happen
+                Log::error("未实现的回调事件:{$eventType}");
             }
 
             $res = "success";
