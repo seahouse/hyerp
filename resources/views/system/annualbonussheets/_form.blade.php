@@ -47,6 +47,15 @@
 </div>
 @endif
 
+@if (isset($annualbonussheet) && $annualbonussheet->performance_salary != 0)
+    <div class="form-group">
+        {!! Form::label('performance_salary', '绩效工资:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+        <div class='col-xs-8 col-sm-10'>
+            {!! Form::text('performance_salary', null, ['class' => 'form-control', $attr]) !!}
+        </div>
+    </div>
+@endif
+
 @if (isset($annualbonussheet) && $annualbonussheet->yearend_bonus != 0)
 <div class="form-group">
     {!! Form::label('yearend_bonus', '年终奖金:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
@@ -126,6 +135,15 @@
         {!! Form::text('totalamount', null, ['class' => 'form-control', $attr]) !!}
     </div>
 </div>
+@endif
+
+@if (isset($annualbonussheet) && $annualbonussheet->borrow_wages != 0)
+    <div class="form-group">
+        {!! Form::label('borrow_wages', '借款扣回:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
+        <div class='col-xs-8 col-sm-10'>
+            {!! Form::text('borrow_wages', null, ['class' => 'form-control', $attr]) !!}
+        </div>
+    </div>
 @endif
 
 @if (isset($annualbonussheet) && $annualbonussheet->individualincometax_amount != 0)

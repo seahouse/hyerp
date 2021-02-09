@@ -35,7 +35,7 @@ class AnnualbonussheetController extends Controller
     {
         $key = $request->input('key');
         $inputs = $request->all();
-        $salarysheets = $this->searchrequest($request)->paginate(15);
+        $annualbonussheets = $this->searchrequest($request)->paginate(15);
 
         return view('system.annualbonussheets.index', compact('annualbonussheets', 'key', 'inputs', 'purchaseorders', 'totalamount'));
     }
@@ -185,7 +185,7 @@ class AnnualbonussheetController extends Controller
 //                        $input = array_values($row->toArray());
                         $input = $row->all();
 //                        dd($input);
-                        if (count($input) >= 17)
+                        if (count($input) >= 19)
                         {
                             if (!empty($input['姓名']))
                             {
@@ -203,6 +203,7 @@ class AnnualbonussheetController extends Controller
                                     $data['salaryincrease']       = isset($input['增长工资']) ? $input['增长工资'] : 0.0;
                                     $data['months']            = isset($input['月份']) ? $input['月份'] : 0.0;
                                     $data['yearend_salary']        = isset($input['年终工资']) ? $input['年终工资'] : 0.0;
+                                    $data['performance_salary']        = isset($input['绩效工资']) ? $input['绩效工资'] : 0.0;
                                     $data['yearend_bonus'] = isset($input['年终奖金']) ? $input['年终奖金'] : 0.0;
                                     $data['duty_subsidy']             = isset($input['职务补贴']) ? $input['职务补贴'] : 0.0;
                                     $data['duty_allowance']       = isset($input['职称津贴']) ? $input['职称津贴'] : 0.0;
@@ -212,6 +213,7 @@ class AnnualbonussheetController extends Controller
                                     $data['amount']       = isset($input['发放金额']) ? $input['发放金额'] : 0.0;
                                     $data['goodemployee_amount']     = isset($input['优秀员工']) ? $input['优秀员工'] : 0.0;
                                     $data['totalamount']           = isset($input['合计']) ? $input['合计'] : 0.0;
+                                    $data['borrow_wages']           = isset($input['借款扣回']) ? $input['借款扣回'] : 0.0;
                                     $data['individualincometax_amount'] = isset($input['个税']) ? $input['个税'] : 0.0;
                                     $data['actual_amount'] = isset($input['实际发放']) ? $input['实际发放'] : 0.0;
                                     $data['remark']                    = isset($input['备注']) ? $input['备注'] : '';
@@ -227,6 +229,7 @@ class AnnualbonussheetController extends Controller
                                     $annualbonussheet->salaryincrease           = isset($input['增长工资']) ? $input['增长工资'] : 0.0;
                                     $annualbonussheet->months               = isset($input['月份']) ? $input['月份'] : 0.0;
                                     $annualbonussheet->yearend_salary            = isset($input['年终工资']) ? $input['年终工资'] : 0.0;
+                                    $annualbonussheet->performance_salary            = isset($input['绩效工资']) ? $input['绩效工资'] : 0.0;
                                     $annualbonussheet->yearend_bonus = isset($input['年终奖金']) ? $input['年终奖金'] : 0.0;
                                     $annualbonussheet->duty_subsidy                = isset($input['职务补贴']) ? $input['职务补贴'] : 0.0;
                                     $annualbonussheet->duty_allowance        = isset($input['职称津贴']) ? $input['职称津贴'] : 0.0;
@@ -236,6 +239,7 @@ class AnnualbonussheetController extends Controller
                                     $annualbonussheet->amount           = isset($input['发放金额']) ? $input['发放金额'] : 0.0;
                                     $annualbonussheet->goodemployee_amount         = isset($input['优秀员工']) ? $input['优秀员工'] : 0.0;
                                     $annualbonussheet->totalamount              = isset($input['合计']) ? $input['合计'] : 0.0;
+                                    $annualbonussheet->borrow_wages              = isset($input['借款扣回']) ? $input['借款扣回'] : 0.0;
                                     $annualbonussheet->individualincometax_amount = isset($input['个税']) ? $input['个税'] : 0.0;
                                     $annualbonussheet->actual_amount = isset($input['实际发放']) ? $input['实际发放'] : 0.0;
                                     $annualbonussheet->remark                    = isset($input['备注']) ? $input['备注'] : '';

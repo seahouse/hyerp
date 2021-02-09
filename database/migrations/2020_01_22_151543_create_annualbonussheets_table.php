@@ -22,6 +22,7 @@ class CreateAnnualbonussheetsTable extends Migration
             $table->decimal('salaryincrease')->default(0.0);                           // 增长工资
             $table->decimal('months')->default(0.0);                                    // 月份（月数）
             $table->decimal('yearend_salary')->default(0.0);                            // 年终工资
+            $table->decimal('performance_salary')->default(0.0);                        // 绩效工资
             $table->decimal('yearend_bonus')->default(0.0);                             // 年终奖金
             $table->decimal('duty_subsidy')->default(0.0);                              // 职务补贴
             $table->decimal('duty_allowance')->default(0.0);                           // 职称津贴
@@ -31,6 +32,7 @@ class CreateAnnualbonussheetsTable extends Migration
             $table->decimal('amount')->default(0.0);                                    // 发放金额
             $table->decimal('goodemployee_amount')->default(0.0);                      // 优秀员工
             $table->decimal('totalamount')->default(0.0);                               // 合计
+            $table->decimal('borrow_wages')->default(0.0);                               // 借款扣回
             $table->decimal('individualincometax_amount')->default(0.0);                // 个税
             $table->decimal('actual_amount')->default(0.0);                             // 实际发放
             $table->string('remark')->default('');                                        // 备注
