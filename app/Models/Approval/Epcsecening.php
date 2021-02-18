@@ -32,6 +32,7 @@ class Epcsecening extends Model
         'associated_approval_vendordeduction',
         'associated_approval_designchangenotice',
         'remark_whl',
+        'amount_whl',
         'applicant_id',
         'status',
         'process_instance_id',

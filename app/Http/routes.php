@@ -703,6 +703,8 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::get('mcreate', 'EpcseceningController@mcreate');
         Route::post('mstore', 'EpcseceningController@mstore');
         Route::post('export_wlhremark', 'EpcseceningController@export_wlhremark');
+        Route::get('edittable', 'EpcseceningController@edittable');
+        Route::post('updateedittable', 'EpcseceningController@updateedittable');
     });
     Route::resource('epcsecening', 'EpcseceningController');
 

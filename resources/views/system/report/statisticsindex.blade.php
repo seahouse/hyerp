@@ -170,6 +170,10 @@
 @can('inventory_in_detail')
 <?php $hasright = true; ?>
 @endcan
+@elseif ($report->name == "ap_epcsecening_statistics")
+    @can('approval_epcsecening_statistics')
+        <?php $hasright = true; ?>
+    @endcan
 @else
 @if (Auth::user()->isSuperAdmin())
 <?php $hasright = true; ?>

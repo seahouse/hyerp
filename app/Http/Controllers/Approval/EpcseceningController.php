@@ -628,6 +628,14 @@ class EpcseceningController extends Controller
                         {
                             Log::info($epcsecening->process_instance_id . "\t" . $epcsecening->business_id . "\t" . $remark);
                             $epcsecening->remark_whl = $remark;
+
+                            $pattern = '/同意增补：(\d+(.\d+))元/';
+                            if (preg_match($pattern, $remark, $matches))
+                            {
+//                                dd($matches);
+                                if (!isset($epcsecening->amount_whl))
+                                    $epcsecening->amount_whl = $matches[1];
+                            }
                             $epcsecening->save();
                         }
                     }
@@ -635,5 +643,27 @@ class EpcseceningController extends Controller
             }
         });
         dd("导出完成。");
+    }
+
+    public function edittable()
+    {
+        $request = request();
+        $inputs = $request->all();
+        $epcsecenings = $this->searchrequest($request)->paginate(15);
+        return view('approval.epcsecenings.edittable', compact('epcsecenings', 'inputs'));
+    }
+
+    public function updateedittable(Request $request)
+    {
+//        Log::info($request->all());
+//        $inputs = $request->all();
+//        dd($inputs);
+        $id = $request->get('pk');
+        $epcsecening = Epcsecening::findOrFail($id);
+//        $name = $request->get('name');
+        $value = $request->get('value');
+        $epcsecening->amount_whl = $value;
+        $epcsecening->save();
+        return 'success';
     }
 }

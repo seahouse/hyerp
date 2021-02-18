@@ -3,14 +3,14 @@
 @section('title', 'EPC-安装队现场增补')
 
 @section('main')
-@can('approval_issuedrawing_view')
+@can('approval_epcsecening_view')
     <div class="panel-heading">
-        <div class="panel-title">审批 -- EPC-安装队现场增补
-{{--            <div class="pull-right">
-                <a href="{{ URL::to('product/itemclasses') }}" target="_blank" class="btn btn-sm btn-success">{{'物料类型管理'}}</a>
-                <a href="{{ URL::to('product/characteristics') }}" target="_blank" class="btn btn-sm btn-success">{{'物料属性管理'}}</a>
-            </div> --}}
-        </div>
+        {{--<div class="panel-title">--}}
+        {{--</div>--}}
+
+        @if (Auth::user()->isSuperAdmin())
+            <a href="{{ url('approval/epcsecening/edittable') }}" class="btn btn-sm btn-success" target="_blank">高级编辑</a>
+        @endif
     </div>
     
     <div class="panel-body">
