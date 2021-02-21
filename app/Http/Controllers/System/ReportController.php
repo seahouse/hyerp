@@ -38,7 +38,10 @@ class ReportController extends Controller
         {
             $query->where(function ($query) {
                 if (Gate::allows('system_report_so_projectengineeringlist_statistics'))
-                    $query->where('name', 'so_projectengineeringlist_statistics');
+                    $query->orWhere('name', 'so_projectengineeringlist_statistics');
+
+                if (Gate::allows('approval_epcsecening_statistics'))
+                    $query->orWhere('name', 'ap_epcsecening_statistics');
             });
         }
 
