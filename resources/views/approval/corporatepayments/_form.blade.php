@@ -94,6 +94,7 @@
                     @else
                         {!! Form::text('pohead_number', $project_name, ['class' => 'form-control', $attr, 'data-toggle' => 'modal', 'data-target' => '#selectPoheadModal', 'data-name' => 'project_name_1']) !!}
                         {!! Form::hidden('pohead_id', 0, ['class' => 'btn btn-sm', 'id' => 'pohead_id']) !!}
+                        {!! Form::hidden('pohead_amount', 0, ['class' => 'btn btn-sm', 'id' => 'pohead_amount']) !!}
                     @endif
                 </div>
             </div>
@@ -137,7 +138,7 @@
             <div class="form-group">
                 {!! Form::label('amountpercent', '本次付款比例（%）:', ['class' => 'col-xs-4 col-sm-2 control-label' ]) !!}
                 <div class='col-xs-8 col-sm-10'>
-                    {!! Form::text('amountpercent', null, ['class' => 'form-control', 'placeholder' => '请输入', $attr]) !!}
+                    {!! Form::text('amountpercent', null, ['class' => 'form-control', 'placeholder' => '请输入', 'readonly', $attr]) !!}
                 </div>
             </div>
         </div>

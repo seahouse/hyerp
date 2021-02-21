@@ -441,12 +441,13 @@ class CorporatepaymentController extends Controller
 
                 // 金额
                 $amount = $corporatepayment->amount;
-                if ($corporatepayment->amounttype == '安装合同安装费付款（ERP）')
-                {
-                    $pohead = $corporatepayment->pohead;
-                    if (isset($pohead))
-                        $amount = $pohead->amount * $corporatepayment->amountpercent / 100;
-                }
+                // 注释：直接采用实际输入的金额，2021/2/21
+//                if ($corporatepayment->amounttype == '安装合同安装费付款（ERP）')
+//                {
+//                    $pohead = $corporatepayment->pohead;
+//                    if (isset($pohead))
+//                        $amount = $pohead->amount * $corporatepayment->amountpercent / 100;
+//                }
 
                 // 备注
                 $remark = '';

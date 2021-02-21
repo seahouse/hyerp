@@ -552,6 +552,7 @@
                     $('#selectPoheadModal').modal('toggle');
                     $("#pohead_number").val(field.number);
                     $("#pohead_id").val(field.id);
+                    $("#pohead_amount").val(field.amount);
                     $("#pohead_supplier_name").val(field.supplier_name);
                     var ticketedpercent = 0;
                     var paidpercent = 0;
@@ -566,15 +567,13 @@
             }
 
 
-
-
 			// show amount percent when blur
 			$("#amount").blur(function() {
 				if ($("#pohead_amount").val() > 0.0 && $("#amount").val() > 0.0)
 				{
 					var percent = $("#amount").val() / $("#pohead_amount").val() * 100;
 					var percent_str = percent.toFixed(2);
-					$("#amount_percent").html(percent_str + "%");
+					$("#amountpercent").val(percent_str);
 				}
 			});
 
@@ -833,7 +832,7 @@
                     $("#divAssociatedapprovals").attr("style", "display:block;");
                     $("#divPaidpercent").attr("style", "display:none;");
                     $("#divAmountpercent").attr("style", "display:none;");
-                    $("#divAmount").attr("style", "display:block;");
+//                    $("#divAmount").attr("style", "display:block;");
                 }
                 else
                 {
@@ -841,9 +840,10 @@
                     $("#divAssociatedapprovals").attr("style", "display:none;");
                     $("#divPaidpercent").attr("style", "display:block;");
                     $("#divAmountpercent").attr("style", "display:block;");
-                    $("#divAmount").attr("style", "display:none;");
+//                    $("#divAmount").attr("style", "display:none;");
                 }
             }
+
 
 			dd.config({
 			    agentId: '{!! array_get($config, 'agentId') !!}', // 必填，微应用ID

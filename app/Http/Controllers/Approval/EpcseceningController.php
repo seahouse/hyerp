@@ -649,7 +649,7 @@ class EpcseceningController extends Controller
     {
         $request = request();
         $inputs = $request->all();
-        $epcsecenings = $this->searchrequest($request)->paginate(15);
+        $epcsecenings = $this->searchrequest($request)->where('status', 0)->paginate(15);
         return view('approval.epcsecenings.edittable', compact('epcsecenings', 'inputs'));
     }
 
