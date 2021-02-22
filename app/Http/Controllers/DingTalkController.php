@@ -1466,8 +1466,8 @@ class DingTalkController extends Controller
                     $user = Dtuser::where('userid', $userid)->first();
                     Log::info("user: " . json_encode($user));
                     Userrole::where('user_id', $user->user_id)->delete();
-                    foreach ($data->LabelIdList as $role) {
-                        $role = Role::where('dtid', $role->id)->first();
+                    foreach ($data->LabelIdList as $role_id) {
+                        $role = Role::where('dtid', $role_id)->first();
                         Userrole::firstOrCreate(['user_id' => $user->user_id, 'role_id' => $role->id]);
                     }
                 }
