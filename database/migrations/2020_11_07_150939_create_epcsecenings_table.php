@@ -35,7 +35,7 @@ class CreateEpcseceningsTable extends Migration
             $table->string('additional_content');
             $table->string('associated_approval_vendordeduction')->nullable();
             $table->string('associated_approval_designchangenotice')->nullable();
-            $table->string('remark_whl')->nullable();               // wuhaolun的评论
+            $table->string('remark_whl', 500)->nullable();               // wuhaolun的评论
             $table->decimal('amount_whl')->nullable();               // wuhaolun的最后定价
 
             $table->integer('applicant_id');

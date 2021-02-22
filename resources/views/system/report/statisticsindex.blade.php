@@ -134,6 +134,10 @@
         <input type="number" id="year_end" name="year_end" class="form-control" min="{{ $year_arr['min'] }}" max="{{ $year_arr['max'] }}" @if(isset($input['year_end'])) value="{{ $input['year_end'] }}" @endif>
         @elseif ($report->name == "in_split_out_bynumber_008")
         {!! Form::text('number', null, ['class' => 'form-control','placeholder'=>'出库单号', 'id' => 'number']) !!}
+        @elseif ($report->name == "ap_epcsecening_statistics")
+            {!! Form::label('sohead_name', '订单', ['class' => 'control-label']) !!}
+            {!! Form::select('sohead_name', $soheadList_hxold, null, ['class' => 'form-control', 'id' => 'select_sohead']) !!}
+            {!! Form::hidden('sohead_id', null, ['id' => 'sohead_id']) !!}
         @endif
 
         <?php $showSearch = true; ?>

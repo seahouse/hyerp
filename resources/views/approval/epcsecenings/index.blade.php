@@ -58,11 +58,9 @@
                 <th>申请日期</th>
                 <th>审批编号</th>
                 <th>增补项所属设计部门</th>
+                <th>造成增补的责任归集部门</th>
                 <th>增补内容</th>
-                {{--<th>制作概述</th>--}}
-                {{--@if (Agent::isDesktop())--}}
-                {{--<th>对应项目</th>--}}
-                {{--@endif--}}
+                <th>增补原因详细说明</th>
 
                 <th>申请人</th>
                 <th>审批状态</th>
@@ -86,16 +84,14 @@
                         {{ $epcsecening->additional_design_department }}
                     </td>
                     <td>
+                        {{ $epcsecening->additional_source_department }}
+                    </td>
+                    <td>
                         {{ $epcsecening->additional_content }}
                     </td>
-                    {{--<td title="{{ $epcsecening->overview }}">--}}
-                        {{--{{ str_limit($epcsecening->overview, 40) }}--}}
-                    {{--</td>--}}
-                    {{--@if (Agent::isDesktop())--}}
-                        {{--<td title="@if (isset($epcsecening->sohead_hxold->descrip)) {{ $epcsecening->sohead_hxold->descrip }} @else @endif">--}}
-                            {{--@if (isset($epcsecening->sohead_hxold->projectjc)) {{ str_limit($epcsecening->sohead_hxold->projectjc, 40) }} @else @endif--}}
-                        {{--</td>--}}
-                    {{--@endif--}}
+                    <td title="{{ $epcsecening->additional_reason_detaildesc }}">
+                        {{ str_limit($epcsecening->additional_reason_detaildesc) }}
+                    </td>
                     <td>
                         {{ isset($epcsecening->applicant->name) ? $epcsecening->applicant->name : '' }}
                     </td>

@@ -38,7 +38,9 @@
                 <th>申请日期</th>
                 <th>审批编号</th>
                 <th>增补项所属设计部门</th>
+                <th>造成增补的责任归集部门</th>
                 <th>增补内容</th>
+                <th>增补原因详细说明</th>
 
                 <th>申请人</th>
                 <th>审批状态</th>
@@ -59,7 +61,13 @@
                         {{ $epcsecening->additional_design_department }}
                     </td>
                     <td>
+                        {{ $epcsecening->additional_source_department }}
+                    </td>
+                    <td>
                         {{ $epcsecening->additional_content }}
+                    </td>
+                    <td title="{{ $epcsecening->additional_reason_detaildesc }}">
+                        {{ str_limit($epcsecening->additional_reason_detaildesc, 50) }}
                     </td>
                     <td>
                         {{ isset($epcsecening->applicant->name) ? $epcsecening->applicant->name : '' }}
