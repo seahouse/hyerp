@@ -990,7 +990,20 @@ class DingTalkController extends Controller
     /**
      * 注册的回调的信息种类
      */
-    const REG_CALLBACK_TAG = ['user_add_org', 'user_modify_org', 'user_leave_org', 'bpms_task_change', 'bpms_instance_change', 'label_user_change', 'label_conf_add', 'label_conf_del', 'label_conf_modify'];
+    const REG_CALLBACK_TAG = [
+        'user_add_org',             // 通讯录用户增加
+        'user_modify_org',          // 通讯录用户更改
+        'user_leave_org',           // 通讯录用户离职
+        'bpms_task_change',
+        'bpms_instance_change',
+        'org_dept_create',          // 通讯录企业部门创建
+        'org_dept_modify',          // 通讯录企业部门修改
+        'org_dept_remove',          // 通讯录企业部门删除
+        'label_user_change',        // 员工角色信息发生变更
+        'label_conf_add',           // 增加角色或者角色组
+        'label_conf_del',           // 删除角色或者角色组
+        'label_conf_modify'         // 修改角色或者角色组
+    ];
 
     public static function register_call_back_user()
     {
@@ -1222,6 +1235,20 @@ class DingTalkController extends Controller
         return self::get($url, $params);
     }
 
+    /**
+     * API获取部门详情
+     *
+     * @param int $dept_id
+     * @param string $access_token
+     * @return \Illuminate\Http\Response
+     */
+    public static function deptGet($dept_id, $access_token)
+    {
+        $url = 'https://oapi.dingtalk.com/topapi/v2/department/get';
+        $params = compact('access_token', 'dept_id');
+        return self::get($url, $params);
+    }
+
     public function receive()
     {
         $signature = $_GET["signature"];
@@ -1286,23 +1313,10 @@ class DingTalkController extends Controller
             /**
              * 临时授权码
              */
-            else if ("tmp_auth_code" === $eventType) {
+            elseif ("tmp_auth_code" === $eventType) {
                 $tmpAuthCode = $eventMsg->AuthCode;
                 Activate::autoActivateSuite($tmpAuthCode);
-            }
-            /**
-             * 授权变更事件
-             */
-            /*user_add_org : 通讯录用户增加
-            user_modify_org : 通讯录用户更改
-            user_leave_org : 通讯录用户离职
-            org_admin_add ：通讯录用户被设为管理员
-            org_admin_remove ：通讯录用户被取消设置管理员
-            org_dept_create ： 通讯录企业部门创建
-            org_dept_modify ： 通讯录企业部门修改
-            org_dept_remove ： 通讯录企业部门删除
-            org_remove ： 企业被解散
-            */ else if ("user_add_org" === $eventType) {
+            } elseif ("user_add_org" === $eventType) {
                 Log::info(json_encode($_GET) . "  Info:user_add_org");
                 //handle auth change event
                 $data = json_decode($msg);
@@ -1313,7 +1327,7 @@ class DingTalkController extends Controller
                     Log::info("user: " . json_encode($user));
                     UsersController::synchronizedtuser($user);
                 }
-            } else if ("user_modify_org" === $eventType) {
+            } elseif ("user_modify_org" === $eventType) {
                 Log::error(json_encode($_GET) . "  Info:user_modify_org");
                 //handle auth change event
                 $data = json_decode($msg);
@@ -1325,7 +1339,7 @@ class DingTalkController extends Controller
                     UsersController::synchronizedtuser($user);
                     //                    UsersController::updatedtuser($userid);
                 }
-            } else if ("user_leave_org" === $eventType) {
+            } elseif ("user_leave_org" === $eventType) {
                 Log::error(json_encode($_GET) . "  ERR:user_leave_org");
                 // delete dtuser
                 $data = json_decode($msg);
@@ -1336,7 +1350,7 @@ class DingTalkController extends Controller
                     //                    Log::info("user: " . json_encode($user));
                     UsersController::destroydtuser($userid);
                 }
-            } else if ("bpms_instance_change" === $eventType) {
+            } elseif ("bpms_instance_change" === $eventType) {
                 //                Log::info(json_encode($_GET) . "  INFO:bpms_instance_change");
                 $data = json_decode($msg);
                 //                Log::info("bpms_instance_change: " . $msg);
@@ -1425,7 +1439,7 @@ class DingTalkController extends Controller
                     elseif ($data->processCode == config('custom.dingtalk.approval_processcode.customerdeduction'))
                         EpcseceningController::deleteByProcessInstanceId($data->processInstanceId);
                 }
-            } else if ("bpms_task_change" === $eventType) {
+            } elseif ("bpms_task_change" === $eventType) {
                 Log::info(json_encode($_GET) . "  INFO:bpms_task_change");
                 $data = json_decode($msg);
                 Log::info("bpms_task_change: " . $msg);
@@ -1433,17 +1447,17 @@ class DingTalkController extends Controller
             /**
              * 应用被解除授权的时候，需要删除相应企业的存储信息
              */
-            else if ("suite_relieve" === $eventType) {
+            elseif ("suite_relieve" === $eventType) {
                 $corpid = $eventMsg->AuthCorpId;
                 // ISVService::removeCorpInfo($corpid);
                 //handle auth change event
-            } else if ("change_auth" === $eventType) {
+            } elseif ("change_auth" === $eventType) {
                 //handle auth change event
             }
             /**
              * 回调地址更新
              */
-            else if ("check_update_suite_url" === $eventType) {
+            elseif ("check_update_suite_url" === $eventType) {
                 $random = $eventMsg->Random;
                 $testSuiteKey = $eventMsg->TestSuiteKey;
 
@@ -1456,6 +1470,28 @@ class DingTalkController extends Controller
                 } else {
                     Log::error("UPDATE SUITE URL RESPONSE ERR: " . $errCode);
                 }
+            } elseif (in_array($eventType, ["org_dept_create", "org_dept_modify"])) {
+                // 通讯录企业部门创建/通讯录企业部门修改
+                $data = json_decode($msg);
+                foreach ($data->DeptId as $deptId) {
+                    $dept = self::deptGet($deptId, self::getAccessToken());
+                    Log::info("dept: " . json_encode($dept));
+                    $dept = $dept->result;
+                    Dept::updateOrInsert(['dtid' => $dept->dept_id], [
+                        'name' => $dept->name,
+                        'auto_add_user' => $dept->auto_add_user,
+                        'create_dept_group' => $dept->create_dept_group,
+                        'ext' => isset($dept->ext) ? $dept->ext : null,
+                        'parent_id' => isset($dept->parent_id) ? $dept->parent_id : null
+                    ]);
+                }
+            } elseif ('org_dept_remove' === $eventType) {
+                // 通讯录企业部门删除
+                $data = json_decode($msg);
+                foreach ($data->DeptId as $deptId) {
+                    Log::info("remove dept: " . $deptId);
+                    Dept::where('dtid', $deptId)->delete();
+                }
             } elseif ("label_user_change" === $eventType) {
                 // https://ding-doc.dingtalk.com/document/app/tvgq1n/title-yo1-r3w-kg8
                 // 员工角色信息发生变更
@@ -1465,10 +1501,22 @@ class DingTalkController extends Controller
                     Log::info("user id: " . $userid);
                     $user = Dtuser::where('userid', $userid)->first();
                     Log::info("user: " . json_encode($user));
-                    Userrole::where('user_id', $user->user_id)->delete();
-                    foreach ($data->LabelIdList as $role_id) {
-                        $role = Role::where('dtid', $role_id)->first();
-                        Userrole::firstOrCreate(['user_id' => $user->user_id, 'role_id' => $role->id]);
+                    switch ($data->action) {
+                        case 'add':
+                        case 'modify':
+                            foreach ($data->LabelIdList as $role_id) {
+                                $role = Role::where('dtid', $role_id)->first();
+                                Userrole::firstOrCreate(['user_id' => $user->user_id, 'role_id' => $role->id]);
+                            }
+                            break;
+                        case 'del':
+                            foreach ($data->LabelIdList as $role_id) {
+                                $role = Role::where('dtid', $role_id)->first();
+                                Userrole::where('user_id', $user->user_id)->where('role_id', $role->id)->delete();
+                            }
+                            break;
+                        default:
+                            break;
                     }
                 }
             } elseif (in_array($eventType, ["label_conf_add", "label_conf_modify"])) {
@@ -1489,7 +1537,7 @@ class DingTalkController extends Controller
                 $data = json_decode($msg);
                 foreach ($data->LabelIdList as $roleId) {
                     Log::info("role id: " . $roleId);
-                    $role = Role::where('dtit', $roleId)->first();
+                    $role = Role::where('dtid', $roleId)->first();
                     Userrole::where('rold_id', $role->id)->delete();
                     $role->delete();
                 }
@@ -1714,7 +1762,7 @@ class DingTalkController extends Controller
                     Log::info("user id: " . $userid);
                     $user = Dtuser::where('userid', $userid)->first();
                     Log::info("user: " . json_encode($user));
-                    Userrole::where('user_id', $user->user_id)->delete();
+                    // Userrole::where('user_id', $user->user_id)->delete();
                     foreach ($data->LabelIdList as $role) {
                         $role = Role::where('dtid', $role->id)->first();
                         Userrole::firstOrCreate(['user_id' => $user->user_id, 'role_id' => $role->id]);
