@@ -1503,13 +1503,12 @@ class DingTalkController extends Controller
                     Log::info("user: " . json_encode($user));
                     switch ($data->action) {
                         case 'add':
-                        case 'modify':
                             foreach ($data->LabelIdList as $role_id) {
                                 $role = Role::where('dtid', $role_id)->first();
                                 Userrole::firstOrCreate(['user_id' => $user->user_id, 'role_id' => $role->id]);
                             }
                             break;
-                        case 'del':
+                        case 'remove':
                             foreach ($data->LabelIdList as $role_id) {
                                 $role = Role::where('dtid', $role_id)->first();
                                 Userrole::where('user_id', $user->user_id)->where('role_id', $role->id)->delete();
@@ -1538,7 +1537,7 @@ class DingTalkController extends Controller
                 foreach ($data->LabelIdList as $roleId) {
                     Log::info("role id: " . $roleId);
                     $role = Role::where('dtid', $roleId)->first();
-                    Userrole::where('rold_id', $role->id)->delete();
+                    Userrole::where('role_id', $role->id)->delete();
                     $role->delete();
                 }
             } else {
