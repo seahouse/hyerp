@@ -86,6 +86,7 @@
                 @else
                 <a href="{{ URL::to('/purchase/prtypes/') . '?prhead_id=' . $prhead->id }}" class="btn btn-success btn-sm pull-left">分组</a>
                 <a href="{{ URL::to('/purchase/prheads/') . '/' . $prhead->id . '/edit' }}" class="btn btn-success btn-sm pull-left">供应商管理</a>
+                <a href="{{ URL::to('/purchase/prheads/') . '/' . $prhead->id . '/export' }}" class="btn btn-success btn-sm pull-left">下载询价表</a>
                 {!! Form::open(array('route' => array('purchase.prheads.destroy', $prhead->id), 'method' => 'delete', 'onsubmit' => 'return confirm("确定删除此记录?");')) !!}
                 {!! Form::submit('删除', ['class' => 'btn btn-danger btn-sm']) !!}
                 {!! Form::close() !!}

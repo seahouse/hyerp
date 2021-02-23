@@ -12,6 +12,7 @@ use App\Models\Purchase\PrSupplier;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PrheadController extends Controller
 {
@@ -247,5 +248,40 @@ class PrheadController extends Controller
         // dd($attachments);
         $pr_supplier->save();
         return redirect('purchase/prheads');
+    }
+
+    /**
+     * 导出询价表
+     */
+    public function export($id)
+    {
+        $prhead = Prhead::find($id);
+        // $filename = $prhead->sohead->projectcj . '采购申请单';
+        $filename = 'purchase_form';
+        Excel::create($filename, function ($excel) use ($prhead) {
+            $excel->sheet('清单', function ($sheet) use ($prhead) {
+                $sheet->appendRow(['序号', '名称', '规格型号', '尺寸', '数量', '重量', '备注', '材质', '编号']);
+                $row = 1;
+
+                foreach ($prhead->pritems as $item) {
+                    $sheet->appendRow([
+                        $row,
+                        $item->item->goods_name,
+                        $item->item->goods_spec,
+                        null,
+                        $item->quantity,
+                        null,
+                        null,
+                        null,
+                        $item->prhead->number
+                    ]);
+                    $row++;
+                }
+            });
+        })->store('xlsx', public_path('download/prhead'));
+        $file = public_path('download/prhead/' . $filename . '.xlsx');
+        Log::info('file path:' . $file);
+
+        return response()->download($file);
     }
 }

@@ -413,6 +413,8 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
 
         // 供应商报价
         Route::get('{id}/quote', 'PrheadController@quote');
+        // 下载询价表
+        Route::get('{id}/export', 'PrheadController@export');
         Route::post('updatequote/{id}', 'PrheadController@updatequote');
     });
     Route::resource('prheads', 'PrheadController');
