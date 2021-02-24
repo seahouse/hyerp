@@ -256,11 +256,11 @@ class PrheadController extends Controller
     public function export($id)
     {
         $prhead = Prhead::find($id);
-        // $filename = $prhead->sohead->projectcj . '采购申请单';
         $filename = 'purchase_form';
+        $filename2 = $prhead->sohead->projectcj . "采购清单" . '.xlsx';
         Excel::create($filename, function ($excel) use ($prhead) {
             $excel->sheet('清单', function ($sheet) use ($prhead) {
-                $sheet->appendRow(['序号', '名称', '规格型号', '尺寸', '数量', '重量', '备注', '材质', '编号']);
+                $sheet->appendRow(['序号', '名称', '规格型号', '尺寸', '单位', '数量', '重量', '备注', '材质']);
                 $row = 1;
 
                 foreach ($prhead->pritems as $item) {
@@ -269,19 +269,37 @@ class PrheadController extends Controller
                         $item->item->goods_name,
                         $item->item->goods_spec,
                         null,
+                        $item->item->goods_unit_name,
                         $item->quantity,
                         null,
                         null,
                         null,
-                        $item->prhead->number
                     ]);
                     $row++;
                 }
+
+                // 增加一个空行
+                $sheet->appendRow([
+                    null,
+                ]);
+
+                // 增加对应的审批编号数据
+                $sheet->appendRow([
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    '编号：' . $prhead->associated_business_id(),
+                    null,
+                ]);
             });
         })->store('xlsx', public_path('download/prhead'));
         $file = public_path('download/prhead/' . $filename . '.xlsx');
         Log::info('file path:' . $file);
 
-        return response()->download($file);
+        return response()->download($file, $filename2);
     }
 }
