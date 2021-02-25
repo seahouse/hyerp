@@ -2,6 +2,8 @@
 
 namespace App\Models\Approval;
 
+use App\Models\Sales\Salesorder_hxold;
+use App\Models\System\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -38,4 +40,12 @@ class Epcsecening extends Model
         'process_instance_id',
         'business_id',
     ];
+
+    public function sohead() {
+        return $this->belongsTo(Salesorder_hxold::class);
+    }
+
+    public function applicant() {
+        return $this->belongsTo(User::class);
+    }
 }

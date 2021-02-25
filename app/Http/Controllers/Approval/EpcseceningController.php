@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Approval;
 
 use App\Http\Controllers\DingTalkController;
 use App\Http\Controllers\util\taobaosdk\dingtalk\DingTalkClient;
+use App\Http\Controllers\util\taobaosdk\dingtalk\request\CorpMessageCorpconversationAsyncsendRequest;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiProcessinstanceCspaceInfoRequest;
 use App\Http\Controllers\util\taobaosdk\dingtalk\request\OapiProcessinstanceGetRequest;
 use App\Models\Approval\Epcsecening;
@@ -12,6 +13,7 @@ use App\Models\Approval\Epcseceningcrane;
 use App\Models\Approval\Epcseceninghumanday;
 use App\Models\Approval\Epcseceningmaterial;
 use App\Models\System\Dtuser;
+use App\Models\System\User;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -580,13 +582,63 @@ class EpcseceningController extends Controller
             $epcsecening->status = $status;
             $epcsecening->save();
 
-//            if ($status == 0)
-//            {
-//                $sohead = Salesorder_hxold_t::find($epcsecening->sohead_id);
-//
-//                $msg = '客户扣款审批单[' . $epcsecening->business_id . ']已通过，扣款金额：' . $epcsecening->amount . "\n";
-//                Salesorder_hxold_t::where('订单ID', $epcsecening->sohead_id)->update(['associated_remark' => $sohead->associated_remark . $msg]);
-//            }
+            if ($status == 0)
+            {
+//                $user_whl = User::where('email', 'wuhaolun@huaxing-east.com')->first();
+                $user_whl = User::where('email', 'liangyi')->first();
+                if (isset($user_whl))
+                {
+                    $data = [
+                        [
+                            'key' => '审批编号:',
+                            'value' => $epcsecening->business_id,
+                        ],
+                        [
+                            'key' => '增补项所属设计部门:',
+                            'value' => $epcsecening->additional_design_department,
+                        ],
+                        [
+                            'key' => '造成增补的责任归集部门:',
+                            'value' => $epcsecening->additional_source_department,
+                        ],
+                        [
+                            'key' => '发起人:',
+                            'value' => $epcsecening->applicant->name,
+                        ],
+                    ];
+
+                    $msgcontent_data = [
+                        'message_url' => url('mddauth/approval/approval-epcsecening-' . $epcsecening->id . '-meditamount'),
+                        'pc_message_url' => '',
+                        'head' => [
+                            'bgcolor' => 'FFBBBBBB',
+                            'text' => $epcsecening->applicant->name . '提交的EPC-安装队现场增补审批单已审批通过'
+                        ],
+                        'body' => [
+                            'title' => '点此可进入查看内容和设置定价。',
+                            'form' => $data
+                        ]
+                    ];
+                    $msgcontent = json_encode($msgcontent_data);
+
+                    $c = new DingTalkClient;
+                    $req = new CorpMessageCorpconversationAsyncsendRequest;
+
+                    $access_token = DingTalkController::getAccessToken();
+                    $req->setAgentId(config('custom.dingtalk.agentidlist.approval'));
+                    $req->setUseridList($user_whl->dtuserid);
+
+                    $req->setMsgtype("oa");
+                    //                $req->setDeptIdList("");
+                    $req->setToAllUser("false");
+                    $req->setMsgcontent("$msgcontent");
+                    $resp = $c->execute($req, $access_token);
+                    Log::info(json_encode($resp));
+                    if ($resp->code != "0") {
+                        Log::info($resp->msg . ": " . $resp->sub_msg);
+                    }
+                }
+            }
         }
     }
 
@@ -665,5 +717,25 @@ class EpcseceningController extends Controller
         $epcsecening->amount_whl = $value;
         $epcsecening->save();
         return 'success';
+    }
+
+    public function meditamount($id)
+    {
+        //
+        $epcsecening = Epcsecening::findOrFail($id);
+        return view('approval.epcsecenings.meditamount', compact('epcsecening'));
+    }
+
+    public function updateamount(Request $request, $id)
+    {
+        //
+        $epcsecening = Epcsecening::findOrFail($id);
+        if ($request->has('amount_whl'))
+        {
+            $epcsecening->amount_whl = $request->input('amount_whl');
+            $epcsecening->save();
+            dd('设置成功。');
+        }
+        dd('设置失败。');
     }
 }

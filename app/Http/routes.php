@@ -707,6 +707,8 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
         Route::post('export_wlhremark', 'EpcseceningController@export_wlhremark');
         Route::get('edittable', 'EpcseceningController@edittable');
         Route::post('updateedittable', 'EpcseceningController@updateedittable');
+        Route::get('{id}/meditamount', 'EpcseceningController@meditamount');
+        Route::post('{id}/updateamount', 'EpcseceningController@updateamount');
     });
     Route::resource('epcsecening', 'EpcseceningController');
 
