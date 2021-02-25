@@ -58,10 +58,14 @@ class IssuedrawingController extends Controller
         }
     }
 
-    public function getitemsbysoheadid($sohead_id)
+    public function getitemsbysoheadid($sohead_id, $key = '')
     {
         //
-        $issuedrawings = Issuedrawing::where('sohead_id', $sohead_id)
+        $query = Issuedrawing::where('sohead_id', $sohead_id);
+        if (strlen($key) > 0)
+            $query->where('business_id', $key);
+
+        $issuedrawings = $query
             ->paginate(50);
         return $issuedrawings;
     }

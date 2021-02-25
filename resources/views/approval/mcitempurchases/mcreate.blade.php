@@ -87,9 +87,9 @@
 			</div>
 			<div class="modal-body">
 				<div class="input-group">
-					{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '', 'id' => 'keyDrawingchecker']) !!}
+					{!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '', 'id' => 'keyIssueDrawing']) !!}
 					<span class="input-group-btn">
-                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchDrawingchecker']) !!}
+                   		{!! Form::button('查找', ['class' => 'btn btn-default btn-sm', 'id' => 'btnSearchIssueDrawing']) !!}
                    	</span>
 				</div>
 				{!! Form::hidden('name', null, ['id' => 'name']) !!}
@@ -301,28 +301,29 @@
 				modal.find('#poheadamount').val(text.data('poheadamount'));
 			});
 
-			$("#btnSearchDrawingchecker").click(function() {
-				if ($("#keyDrawingchecker").val() == "") {
+			$("#btnSearchIssueDrawing").click(function() {
+				if ($("#keyIssueDrawing").val() == "") {
 					alert('请输入关键字');
 					return;
 				}
 				$.ajax({
 					type: "GET",
-					url: "{!! url('/system/users/getitemsbykey/') !!}" + "/" + $("#keyDrawingchecker").val(),
+					url: "{!! url('/approval/issuedrawing/getitemsbysoheadid/') !!}"  + "/" + $("#sohead_id").val() + "/" + $("#keyIssueDrawing").val(),
 					success: function(result) {
 						var strhtml = '';
 						$.each(result.data, function(i, field) {
-							btnId = 'btnSelectDrawingchecker_' + String(i);
-							strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.name + "</h4></button>"
+							btnId = 'btnSelectIssueDrawing_' + String(i);
+//							strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.name + "</h4></button>"
+                            strhtml += '<label class="list-group-item"><input type="checkbox" name="check_issuedrawing" value="' + field.id + '" data-number="' + field.business_id + '">' + field.business_id + '</label>';
 						});
 						if (strhtml == '')
 							strhtml = '无记录。';
 						$("#listissuedrawings").empty().append(strhtml);
 
-						$.each(result.data, function(i, field) {
-							btnId = 'btnSelectDrawingchecker_' + String(i);
-							addBtnClickEvent(btnId, field);
-						});
+//						$.each(result.data, function(i, field) {
+//							btnId = 'btnSelectIssueDrawing_' + String(i);
+//							addBtnClickEvent(btnId, field);
+//						});
 					},
 					error: function(xhr, ajaxOptions, thrownError) {
 						alert('error');

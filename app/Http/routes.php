@@ -584,7 +584,7 @@ Route::group(['prefix' => 'approval', 'namespace' => 'Approval', 'middleware' =>
     });
     Route::resource('paymentrequests', 'PaymentrequestsController');
     Route::group(['prefix' => 'issuedrawing'], function () {
-        Route::get('getitemsbysoheadid/{sohead_id}', 'IssuedrawingController@getitemsbysoheadid');
+        Route::get('getitemsbysoheadid/{sohead_id}/{key?}', 'IssuedrawingController@getitemsbysoheadid');
         Route::get('mcreate', 'IssuedrawingController@mcreate');
         Route::post('mstore', 'IssuedrawingController@mstore');
         Route::get('{id}/modifyweight', 'IssuedrawingController@modifyweight');
