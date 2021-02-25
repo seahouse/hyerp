@@ -16,7 +16,11 @@ class CreateRolesAndPermissionsTables extends Migration
         // Create table for storing roles
         Schema::create('roles', function (Blueprint $table) {
             $table->increments('id')->unique();
-            $table->string('name')->unique();
+
+            // 后面扩展了钉钉的角色，存在层级关系，可能有名称重复的情况，2021/2/25
+            $table->string('name');
+//            $table->string('name')->unique();
+
             $table->string('display_name')->nullable();
             $table->string('description')->nullable();
             $table->timestamps();

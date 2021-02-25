@@ -268,7 +268,7 @@ class UsersController extends Controller
         $dtuserlocal->isLeaderInDepts = isset($dtuser->isLeaderInDepts) ? $dtuser->isLeaderInDepts : '';
         $dtuserlocal->isHide        = $dtuser->isHide;
         $dtuserlocal->department    = json_encode($dtuser->department);           // 是个数组，暂不考虑
-        $dtuserlocal->position      = $dtuser->position;
+        $dtuserlocal->position      = isset($dtuser->position) ? $dtuser->position : '';
         $dtuserlocal->avatar        = $dtuser->avatar;
         $dtuserlocal->jobnumber     = isset($dtuser->jobnumber) ? $dtuser->jobnumber : '';
         $dtuserlocal->save();
