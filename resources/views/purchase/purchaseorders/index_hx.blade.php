@@ -54,6 +54,7 @@
             @can('purchase_purchaseorder_viewamount')
             <th>合同金额</th>
             <th>扣款金额</th>
+            <th>扣款已入账</th>
             @endcan
             <th>采购公司</th>
             <th>供应商</th>
@@ -94,6 +95,7 @@
                     })
                 }}
             </td>
+            <td>入账</td>
             @endcan
             <td>{{ str_limit($purchaseorder->companyname, 14) }}</td>
             <td title="@if (isset($purchaseorder->vendinfo)) {{ $purchaseorder->vendinfo->name }} @endif">
@@ -184,6 +186,10 @@
                 @endcan
                 @if ($can_payment)
                 <a href="{{ URL::to('/purchase/purchaseorders/' . $purchaseorder->id . '/payments/create_hxold') }}" class="btn btn-success btn-sm pull-left">付款</a>
+                @endif
+
+                @if ($can_arrivalticket)
+                <a href="{{ URL::to('/purchase/purchaseorders/' . $purchaseorder->id . '/vouchers/create') }}" class="btn btn-success btn-sm pull-left">扣款入账</a>
                 @endif
 
                 {{--

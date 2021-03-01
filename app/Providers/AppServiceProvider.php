@@ -2,36 +2,13 @@
 
 namespace App\Providers;
 
+use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\ServiceProvider;
-use DB, Log;
-use App\Models\Product\Item;
-use App\Models\Product\Itemclass;
-use App\Models\Product\Itemclass_hxold;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        //
-//        DB::listen(function ($query) {
-//            Log::info($query->sql);
-//        });
-
-//        DB::connection('sqlsrv')->listen(function ($query) {
-//            Log::info($query->sql);
-//        });
-
-//        Itemclass_hxold::saved(function ($itemclass) {
-//            Log::info('itemclass saved.');
-//            return true;
-//        });
-    }
-
     /**
      * Register any application services.
      *
@@ -39,6 +16,19 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+    }
+
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        DB::listen(function (QueryExecuted $query) {
+            $sql = str_replace('?', "'%s'", $query->sql);
+            $log = count($query->bindings) > 0 ? vsprintf($sql, $query->bindings) : $sql;
+            Log::info($log);
+        });
     }
 }

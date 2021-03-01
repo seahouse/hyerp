@@ -439,6 +439,9 @@ Route::group(['prefix' => 'purchase', 'namespace' => 'Purchase', 'middleware' =>
         // 显示采购订单的所有到票记录
         Route::get('arrivaltickets', 'PurchaseordersController@arrivaltickets');
         Route::get('supplierquotes', 'PurchaseordersController@supplierquotes');
+
+        // 扣款凭证
+        Route::resource('vouchers', 'VoucherController');
     });
     Route::group(['prefix' => 'purchaseorders/{purchaseorder}/payments'], function () {
         Route::get('/', 'PaymentsController@index');
