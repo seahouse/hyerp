@@ -5,7 +5,7 @@
 <hr />
 
 <form action="{{ '/purchase/purchaseorders/' . $purchaseorder->id . '/vouchers' }}" method="post">
-    @csrf
+    {!! csrf_field() !!}
 
     @include('purchase.vouchers._form', ['submitButtonText' => '添加'])
 </form>

@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Models\Purchase\Voucher;
 use App\Models\Purchase\Purchaseorder;
 use App\Models\Purchase\Purchaseorder_hxold;
+use Illuminate\Support\Facades\Auth;
 
 class VoucherController extends Controller
 {
@@ -43,8 +44,19 @@ class VoucherController extends Controller
      */
     public function store($poheadId, Request $request)
     {
-        dump($poheadId);
-        dd($request);
+        $this->validate($request, ['voucher_no' => 'required|unique:vouchers'], ['voucher_no.unique' => '凭证号需唯一']);
+
+        $v = new Voucher();
+        $v->ref_id = $poheadId;
+        $v->ref_type = 'PO';
+        $v->voucher_no = $request->get('voucher_no');
+        $v->amount = $request->get('amount');
+        $v->post_date = $request->get('post_date');
+        $v->remark = $request->get('remark');
+        $v->creator = Auth::user()->id;
+        $v->save();
+
+        return redirect("/purchase/purchaseorders/$poheadId/vouchers");
     }
 
     /**
@@ -53,9 +65,10 @@ class VoucherController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($poheadId, $id)
     {
-        //
+        $voucher = Voucher::find($id);
+        return view('purchase.vouchers.show', compact('voucher'));
     }
 
     /**
@@ -64,9 +77,10 @@ class VoucherController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($poheadId, $id)
     {
-        //
+        $voucher = Voucher::find($id);
+        return view('purchase.vouchers.edit', compact('voucher'));
     }
 
     /**
@@ -76,9 +90,17 @@ class VoucherController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $poheadId, $id)
     {
-        //
+        $this->validate($request, ['voucher_no' => "required|unique:vouchers,voucher_no,$id"], ['voucher_no.unique' => '凭证号需唯一']);
+        $voucher = Voucher::find($id);
+        $voucher->voucher_no = $request->get('voucher_no');
+        $voucher->amount = $request->get('amount');
+        $voucher->post_date = $request->get('post_date');
+        $voucher->remark = $request->get('remark');
+        $voucher->updater = Auth::user()->id;
+        $voucher->save();
+        return redirect(route('purchase.purchaseorders.{id}.vouchers.index', ['id' => $poheadId]));
     }
 
     /**
@@ -87,8 +109,9 @@ class VoucherController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($poheadId, $id)
     {
-        //
+        Voucher::destroy($id);
+        return back();
     }
 }
