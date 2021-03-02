@@ -584,8 +584,8 @@ class EpcseceningController extends Controller
 
             if ($status == 0)
             {
-//                $user_whl = User::where('email', 'wuhaolun@huaxing-east.com')->first();
-                $user_whl = User::where('email', 'liangyi')->first();
+                $user_whl = User::where('email', 'wuhaolun@huaxing-east.com')->first();
+//                $user_whl = User::where('email', 'liangyi')->first();
                 if (isset($user_whl))
                 {
                     $data = [
