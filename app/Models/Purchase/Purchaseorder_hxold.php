@@ -13,9 +13,9 @@ class Purchaseorder_hxold extends \App\Models\HxModel
 {
     //
     protected $table = 'vpurchaseorder';
-	
 
-	/**
+
+    /**
      * Get the phone record associated with the user.
      */
     public function payments()
@@ -23,41 +23,58 @@ class Purchaseorder_hxold extends \App\Models\HxModel
         return $this->hasMany('App\Models\Purchase\Payment_hxold', 'pohead_id', 'id');
     }
 
-    public function sohead() {
+    public function sohead()
+    {
         return $this->hasOne('App\Models\Sales\Salesorder_hxold', 'id', 'sohead_id');
     }
 
-    public function poitems() {
+    public function poitems()
+    {
         return $this->hasMany('App\Models\Purchase\Poitem_hxold', 'pohead_id', 'id');
     }
 
-    public function receiptorders() {
+    public function receiptorders()
+    {
         return $this->hasMany('App\Models\Inventory\Receiptorder_hxold', 'pohead_id', 'id');
     }
 
-    public function vendinfo() {
+    public function vendinfo()
+    {
         return $this->hasOne('App\Models\Purchase\Vendinfo_hxold', 'id', 'vendinfo_id');
     }
 
-    public function applicant() {
+    public function applicant()
+    {
         return $this->belongsTo(Employee_hxold::class);
     }
 
-    public function operator() {
+    public function operator()
+    {
         return $this->belongsTo(Employee_hxold::class);
     }
 
-    public function vendordeductionitems() {
+    public function vendordeductionitems()
+    {
         return $this->hasManyThrough(Vendordeductionitem::class, Vendordeduction::class, 'pohead_id');
     }
 
     // 采购部录入的到票记录
-    public function purchasetickets() {
+    public function purchasetickets()
+    {
         return $this->hasMany(Purchaseticket_hxold::class, 'pohead_id');
     }
 
     // 对公付款审批单
-    public function corporatepayments() {
+    public function corporatepayments()
+    {
         return $this->hasMany(Corporatepayment::class, 'pohead_id');
+    }
+
+    /**
+     * 扣款
+     */
+    public function deductVouchers()
+    {
+        return $this->hasMany(Voucher::class, 'ref_id', 'id')->where('ref_type', 'PO');
     }
 }

@@ -16,6 +16,7 @@ class CreateVouchersTable extends Migration
         Schema::create('vouchers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('voucher_no')->comment('到账凭证单号')->unique();
+            $table->decimal('amount')->comment('金额');
             $table->date('post_date')->useCurrent()->comment('到账日期');
             $table->string('remark')->comment('备注')->nullable();
             $table->string('ref_id')->comment('采购订单ID')->nullable();

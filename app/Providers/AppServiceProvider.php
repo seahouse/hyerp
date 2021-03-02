@@ -25,10 +25,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        DB::listen(function (QueryExecuted $query) {
-            $sql = str_replace('?', "'%s'", $query->sql);
-            $log = count($query->bindings) > 0 ? vsprintf($sql, $query->bindings) : $sql;
-            Log::info($log);
-        });
+        // DB::listen(function (QueryExecuted $query) {
+        //     $sql = str_replace('?', "'%s'", $query->sql);
+        //     $log = count($query->bindings) > 0 ? vsprintf($sql, $query->bindings) : $sql;
+        //     Log::info($log);
+        // });
     }
 }

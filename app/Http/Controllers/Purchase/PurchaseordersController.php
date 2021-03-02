@@ -7,21 +7,17 @@ use App\Models\Purchase\Poheadtaxrateass_hxold;
 use App\Models\Purchase\Purchaseorder_hx;
 use App\Models\Sales\Salesorder_hxold;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use App\Models\Purchase\Purchaseorder;
 use App\Models\Purchase\Purchaseorder_hxold;
 use App\Models\Purchase\Purchaseorder_hxold_simple;
 use App\Http\Requests\Purchase\PurchaseorderRequest;
-//use Request;
 use App\Models\Purchase\Poitem;
 use App\Models\Purchase\Poitem_hxold;
 use Carbon\Carbon;
 use App\Inventory\Recvitem;
 use Illuminate\Support\Facades\DB;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class PurchaseordersController extends Controller
 {

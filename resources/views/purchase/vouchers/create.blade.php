@@ -4,9 +4,11 @@
 <h1>添加供应商扣款到账凭证</h1>
 <hr />
 
-{!! Form::open(['url' => 'purchase/vouchers']) !!}
-@include('purchase.vouchers._form', ['submitButtonText' => '添加'])
-{!! Form::close() !!}
+<form action="{{ '/purchase/purchaseorders/' . $purchaseorder->id . '/vouchers' }}" method="post">
+    @csrf
+
+    @include('purchase.vouchers._form', ['submitButtonText' => '添加'])
+</form>
 
 @include('errors.list')
 @stop

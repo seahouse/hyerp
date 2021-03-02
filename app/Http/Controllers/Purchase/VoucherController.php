@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests;
 use App\Models\Purchase\Voucher;
 use App\Models\Purchase\Purchaseorder;
+use App\Models\Purchase\Purchaseorder_hxold;
 
 class VoucherController extends Controller
 {
@@ -17,9 +18,9 @@ class VoucherController extends Controller
      */
     public function index($poheadId)
     {
-        // dd($poheadId);
+        $purchaseorder = Purchaseorder_hxold::findOrFail($poheadId);
         $vouchers = Voucher::where('ref_id', $poheadId)->where('ref_type', 'PO')->paginate(10);
-        return view('purchase.vouchers.index', compact('vouchers'));
+        return view('purchase.vouchers.index', compact('vouchers', 'purchaseorder'));
     }
 
     /**
@@ -29,8 +30,8 @@ class VoucherController extends Controller
      */
     public function create($poheadId)
     {
-        $purchaseorder = Purchaseorder::findOrFail($poheadId);
-        dd($purchaseorder);
+        $purchaseorder = Purchaseorder_hxold::findOrFail($poheadId);
+        // dd($purchaseorder);
         return view('purchase.vouchers.create', compact('purchaseorder'));
     }
 
@@ -40,9 +41,10 @@ class VoucherController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store($poheadId, Request $request)
     {
-        //
+        dump($poheadId);
+        dd($request);
     }
 
     /**

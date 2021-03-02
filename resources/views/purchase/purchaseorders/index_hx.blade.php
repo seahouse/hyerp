@@ -95,7 +95,7 @@
                     })
                 }}
             </td>
-            <td>入账</td>
+            <td><a href="{{ $purchaseorder->id }}/vouchers" target="_blank">{{ $purchaseorder->deductVouchers->sum(function ($v){ return $v->amount; }) }}</a></td>
             @endcan
             <td>{{ str_limit($purchaseorder->companyname, 14) }}</td>
             <td title="@if (isset($purchaseorder->vendinfo)) {{ $purchaseorder->vendinfo->name }} @endif">
