@@ -90,7 +90,7 @@
             </td>
             <td>
                 {{
-                    $purchaseorder->vendordeductionitems->sum(function ($vendordeductionitem) {
+                    $purchaseorder->vendordeductionitems()->where('vendordeductions.status', 0)->get()->sum(function ($vendordeductionitem) {
                         return $vendordeductionitem->quantity * $vendordeductionitem->unitprice;
                     })
                 }}

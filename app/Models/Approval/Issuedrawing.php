@@ -301,6 +301,7 @@ class Issuedrawing extends Model
                     array_push($approverArray, $user->dtuserid);
             }
 //        dd($approverArray);
+            $approverArray = array_unique($approverArray);  // 去掉重复的审批人员
             $approvers = implode(',', $approverArray);
         }
         return $approvers;
