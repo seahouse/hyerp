@@ -12,6 +12,7 @@ use App\Models\Approval\Epcseceningattachment;
 use App\Models\Approval\Epcseceningcrane;
 use App\Models\Approval\Epcseceninghumanday;
 use App\Models\Approval\Epcseceningmaterial;
+use App\Models\Approval\Epcseceningoptrecord;
 use App\Models\System\Dtuser;
 use App\Models\System\User;
 use Illuminate\Http\Request;
@@ -30,6 +31,9 @@ class EpcseceningController extends Controller
     public function index()
     {
         //
+//        self::updateStatusByProcessInstanceId('c907f3e2-e879-4117-8164-979517626557', 0);
+//        return;
+
         $request = request();
         $inputs = $request->all();
         $epcsecenings = $this->searchrequest($request)->paginate(15);
@@ -584,6 +588,51 @@ class EpcseceningController extends Controller
 
             if ($status == 0)
             {
+                // 下载操作记录
+                Epcseceningoptrecord::where('epcsecening_id', $epcsecening->id)->delete();
+
+                $client = new DingTalkClient();
+                $req = new OapiProcessinstanceGetRequest();
+                $req->setProcessInstanceId($epcsecening->process_instance_id);
+                $accessToken = DingTalkController::getAccessToken();
+                $response = $client->execute($req, $accessToken);
+                $response = json_decode(json_encode($response, JSON_UNESCAPED_UNICODE));
+                if ($response->errcode == "0")
+                {
+                    $remark = '';
+                    $dtuser_whl = Dtuser::where('user_id', 2)->first();
+
+                    $operation_records = $response->process_instance->operation_records->operation_records_vo;
+                    foreach ($operation_records as $operation_record)
+                    {
+                        $item_array = json_decode(json_encode($operation_record), true);
+                        $item_array['epcsecening_id'] = $epcsecening->id;
+                        Epcseceningoptrecord::create($item_array);
+
+                        if (isset($dtuser_whl))
+                        {
+                            if (($operation_record->operation_type == 'ADD_REMARK' || $operation_record->operation_type == 'EXECUTE_TASK_NORMAL') && $operation_record->userid == $dtuser_whl->userid && isset($operation_record->remark))
+                            {
+                                $remark = $operation_record->remark;
+                            }
+                        }
+                    }
+                    if (strlen($remark) > 0)
+                    {
+                        Log::info($epcsecening->process_instance_id . "\t" . $epcsecening->business_id . "\t" . $remark);
+                        $epcsecening->remark_whl = $remark;
+
+                        $pattern = '/同意增补：(\d+(.\d+))元/';
+                        if (preg_match($pattern, $remark, $matches))
+                        {
+                            if (!isset($epcsecening->amount_whl))
+                                $epcsecening->amount_whl = $matches[1];
+                        }
+                        $epcsecening->save();
+                    }
+                }
+
+                // 发送修改定价通知
                 if (env('APP_DEBUG', true))
                     $user_whl = User::where('email', 'liangyi')->first();
                 else

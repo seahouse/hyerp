@@ -48,4 +48,8 @@ class Epcsecening extends Model
     public function applicant() {
         return $this->belongsTo(User::class);
     }
+
+    public function epcseceningoptrecords() {
+        return $this->hasMany(Epcseceningoptrecord::class);
+    }
 }
