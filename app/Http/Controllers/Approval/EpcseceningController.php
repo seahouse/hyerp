@@ -607,6 +607,10 @@ class EpcseceningController extends Controller
                     {
                         $item_array = json_decode(json_encode($operation_record), true);
                         $item_array['epcsecening_id'] = $epcsecening->id;
+                        if (isset($operation_record->remark) && is_array($item_array['remark']))
+                        {
+                            $item_array['remark'] = json_encode($operation_record->remark);
+                        }
                         Epcseceningoptrecord::create($item_array);
 
                         if (isset($dtuser_whl))
