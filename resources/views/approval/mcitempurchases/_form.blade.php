@@ -19,7 +19,7 @@
         <div class="form-group">
             {!! Form::label('itemtype', '申购物品类型:', ['class' => 'col-xs-4 col-sm-2 control-label']) !!}
             <div class='col-xs-8 col-sm-10'>
-                {!! Form::select('itemtype', array('材料类' => '材料类', '消耗品类－如焊条' => '消耗品类－如焊条', '电气元件类' => '电气元件类', '工具类' => '工具类', '设备类' => '设备类', '劳保用品类' => '劳保用品类', '办公用品类' => '办公用品类'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
+                {!! Form::select('itemtype', array('材料类' => '材料类', '消耗品类－如焊条' => '消耗品类－如焊条', '电气元件类' => '电气元件类', '工具类' => '工具类', '设备类' => '设备类', '劳保用品类' => '劳保用品类', '办公用品类' => '办公用品类', '外加工类' => '外加工类'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', $attr, $attrdisable]) !!}
             </div>
         </div>
 
