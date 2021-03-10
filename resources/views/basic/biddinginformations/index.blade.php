@@ -50,8 +50,10 @@
                     {!! Form::hidden('projecttypes_export', null, []) !!}
 
                     {!! Form::button('导出', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport']) !!}
+                    @if (Auth::user()->email == 'admin@admin.com')
+                        {!! Form::button('导出（不带实际数据）', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport2']) !!}
+                    @endif
                     {{--                {!! Form::button('清空数据（慎用！）', ['class' => 'btn btn-default btn-sm', 'id' => 'btnClear']) !!}--}}
-                    {{--<a href="{{ url('basic/biddinginformations/export') }}" class="btn btn-sm btn-success">测试导出</a>--}}
                 </div>
                 {!! Form::close() !!}
                 </p>
@@ -305,6 +307,24 @@
                 $.ajax({
                     type: "POST",
                     url: "{!! url('basic/biddinginformations/export') !!}",
+                    data : $('#frmExport').serialize(),
+                    success: function(result) {
+                        location.href = result;
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert(JSON.stringify(xhr));
+                    }
+                });
+            });
+
+            // 导出不带实际数据的Excel
+            $("#btnExport2").click(function() {
+                $("input[name='projecttypes_export']").val($("select[name='selectprojecttypes_export']").val());
+//                $("form#frmExport").submit();
+
+                $.ajax({
+                    type: "POST",
+                    url: "{!! url('basic/biddinginformations/export2') !!}",
                     data : $('#frmExport').serialize(),
                     success: function(result) {
                         location.href = result;

@@ -186,7 +186,8 @@ Route::group(['prefix' => 'basic', 'namespace' => 'Basic', 'middleware' => ['web
         Route::get('import', 'BiddinginformationController@import');
         Route::post('importstore', 'BiddinginformationController@importstore');
         Route::any('export', 'BiddinginformationController@export');
-        Route::get('downloadfile/{filename}', 'BiddinginformationController@downloadfile')->name('basic.biddinginformations.downloadfile');
+        Route::get('downloadfile/{filename}/{newfilename?}', 'BiddinginformationController@downloadfile')->name('basic.biddinginformations.downloadfile');
+        Route::any('export2', 'BiddinginformationController@export2');
         Route::post('clear', 'BiddinginformationController@clear');
         Route::get('exportword/{id}', 'BiddinginformationController@exportword');
         Route::get('xyexportword/{id}', 'BiddinginformationController@xyexportword');

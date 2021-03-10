@@ -382,7 +382,14 @@
                         console.log(result);
                         $.each(result.data, function(i, field) {
                             btnId = 'btnSelectApproval_' + String(i);
-                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "'>" + "<h4>" + field.business_id + "</h4><p>提交人：" + field.applicant + "，项目简称：" + field.projectjc + "，项目订单编号：" + field.sohead_number + "</p></button>"
+                            var status = '<font color="green">已通过。</font>';
+                            var btnstatus = '';
+                            if (field.status != 0)
+                            {
+                                status = '<font color="red">还未通过，不可选择。</font>';
+                                btnstatus = ' disabled="disabled"';
+                            }
+                            strhtml += "<button type='button' class='list-group-item' id='" + btnId + "' " + btnstatus + ">" + "<h4>" + field.business_id + "</h4><p>提交人：" + field.applicant + "，项目简称：" + field.projectjc + "，项目订单编号：" + field.sohead_number + "<br>状态：" + status +"</p></button>"
                         });
                         if (strhtml == '')
                             strhtml = '无记录。';
