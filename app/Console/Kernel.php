@@ -34,6 +34,7 @@ class Kernel extends ConsoleKernel
         Commands\SitehoursReminder::class,
         Commands\ProjectpurchaseReminder::class,
         Commands\RequestpayoutToPaymentrequestSync::class,
+        Commands\PurchaserequestReminder::class,
     ];
 
     /**

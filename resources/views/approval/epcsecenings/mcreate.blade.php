@@ -232,7 +232,7 @@
             <div class="modal-body">
                 <div class="input-group" style="width:100%;">
                     <div class='col-xs-4 col-sm-4' style="padding:5px;">
-                        {!! Form::select('type', array('customerdeduction' => '供应商扣款'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'id' => 'approvaltype']) !!}
+                        {!! Form::select('type', array('vendordeduction' => '供应商扣款'), null, ['class' => 'form-control', 'placeholder' => '--请选择--', 'id' => 'approvaltype']) !!}
                     </div>
                     <div class='col-xs-6 col-sm-6' style="padding:5px;">
                         {!! Form::text('key', null, ['class' => 'form-control', 'placeholder' => '审批单号', 'id' => 'keyProjectpurchase']) !!}

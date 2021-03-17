@@ -784,36 +784,38 @@ class BiddinginformationController extends Controller
                     $projecttypes = explode(',', $request->input('projecttypes_export'));
                     $query->whereIn('projecttype', $projecttypes);
                 }
-                $biddinginformationdefinefields = $query->orderBy('sort')->pluck('name');
+                $biddinginformationdefinefields = $query->orderBy('sort')->get();
+//                $biddinginformationdefinefields = Biddinginformationdefinefield::where('exceltype', '项目明细')->orWhere('exceltype', '汇总明细')->orderBy('sort')->get();
                 $data = [];
                 array_push($data, '编号');
                 array_push($data, '执行成本（动态计算）');
                 array_push($data, '总纲耗（动态计算）');
                 array_push($data, '开工日期');
-                foreach ($biddinginformationdefinefields as $biddinginformationdefinefield) {
-                    array_push($data, $biddinginformationdefinefield);
+                foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+                {
+                    array_push($data, $biddinginformationdefinefield->name);
                 }
                 $sheet->appendRow($data);
                 $rowCol = 2;        // 从第二行开始
 
-                // $query = $this->searchrequest($request);
-                $query = DB::table('biddinginformations')->latest()->select('id', 'number', 'sohead_id')->addSelect(DB::raw("
-                    (SELECT SUM(AMOUNT) FROM [hxcrm2016].[dbo].[vpurchaseorder] A WHERE A.[sohead_id] = biddinginformations.sohead_id)
-                    + hxcrm2016.dbo.getPoheadAmountBy7550(biddinginformations.sohead_id)
-                    + (SELECT sohead_taxamount - sohead_poheadtaxamount FROM [hxcrm2016].[dbo].[tem_taxamountstatistics]
-                        WHERE [hxcrm2016].[dbo].[tem_taxamountstatistics].[sohead_id] = biddinginformations.sohead_id) 
-                    - hxcrm2016.dbo.getPoheadTaxAmountBy7550(biddinginformations.sohead_id) purchase_cost, 
-                    hxcrm2016.dbo.getWarehouseAmountByorder(biddinginformations.sohead_id)
-                    + hxcrm2016.dbo.getNoWarehouseAmountByorder(biddinginformations.sohead_id)
-                    + (SELECT sohead_taxamount FROM [hxcrm2016].[dbo].[tem_taxamountstatistics]
-                        WHERE [hxcrm2016].[dbo].[tem_taxamountstatistics].[sohead_id] = biddinginformations.sohead_id) 
-                    + hxcrm2016.dbo.getNoWarehouseAmountBy7550(biddinginformations.sohead_id)
-                    - hxcrm2016.dbo.getNoWarehouseTaxAmountByorder(biddinginformations.sohead_id)
-                    - hxcrm2016.dbo.getWarehouseTaxAmountByorder(biddinginformations.sohead_id) out_cost, 
-                    (SELECT sum([tonnage]) FROM [issuedrawings] WHERE [issuedrawings].[sohead_id] = biddinginformations.sohead_id
-                        AND [status] = '0' AND [issuedrawings].[deleted_at] IS NULL) tonnage,
-                    (select top 1 startDate from hxcrm2016.dbo.vorder where id = biddinginformations.sohead_id) startDate
-                "));
+                 $query = $this->searchrequest($request);
+//                $query = DB::table('biddinginformations')->latest()->select('id', 'number', 'sohead_id')->addSelect(DB::raw("
+//                    (SELECT SUM(AMOUNT) FROM [hxcrm2016].[dbo].[vpurchaseorder] A WHERE A.[sohead_id] = biddinginformations.sohead_id)
+//                    + hxcrm2016.dbo.getPoheadAmountBy7550(biddinginformations.sohead_id)
+//                    + (SELECT sohead_taxamount - sohead_poheadtaxamount FROM [hxcrm2016].[dbo].[tem_taxamountstatistics]
+//                        WHERE [hxcrm2016].[dbo].[tem_taxamountstatistics].[sohead_id] = biddinginformations.sohead_id)
+//                    - hxcrm2016.dbo.getPoheadTaxAmountBy7550(biddinginformations.sohead_id) purchase_cost,
+//                    hxcrm2016.dbo.getWarehouseAmountByorder(biddinginformations.sohead_id)
+//                    + hxcrm2016.dbo.getNoWarehouseAmountByorder(biddinginformations.sohead_id)
+//                    + (SELECT sohead_taxamount FROM [hxcrm2016].[dbo].[tem_taxamountstatistics]
+//                        WHERE [hxcrm2016].[dbo].[tem_taxamountstatistics].[sohead_id] = biddinginformations.sohead_id)
+//                    + hxcrm2016.dbo.getNoWarehouseAmountBy7550(biddinginformations.sohead_id)
+//                    - hxcrm2016.dbo.getNoWarehouseTaxAmountByorder(biddinginformations.sohead_id)
+//                    - hxcrm2016.dbo.getWarehouseTaxAmountByorder(biddinginformations.sohead_id) out_cost,
+//                    (SELECT sum([tonnage]) FROM [issuedrawings] WHERE [issuedrawings].[sohead_id] = biddinginformations.sohead_id
+//                        AND [status] = '0' AND [issuedrawings].[deleted_at] IS NULL) tonnage,
+//                    (select top 1 startDate from hxcrm2016.dbo.vorder where id = biddinginformations.sohead_id) startDate
+//                "));
                 $query->chunk(100, function ($biddinginformations) use ($sheet, $biddinginformationdefinefields, &$rowCol) {
                     foreach ($biddinginformations as $biddinginformation) {
                         $data = [];
@@ -823,35 +825,37 @@ class BiddinginformationController extends Controller
 
                         // 增加执行成本和总钢耗
                         $bExist = false;
-                        if (isset($biddinginformation->sohead_id) && $biddinginformation->sohead_id > 0) {
-                            // $sohead = Salesorder_hxold::find($biddinginformation->sohead_id);
-                            // if (isset($sohead)) {
-                            //     $pohead_amount_total = $sohead->poheads->sum('amount');
-                            //     $poheadAmountBy7550 = array_first($sohead->getPoheadAmountBy7550())->poheadAmountBy7550;
-                            //     $sohead_taxamount = isset($sohead->temTaxamountstatistics->sohead_taxamount) ? $sohead->temTaxamountstatistics->sohead_taxamount : 0.0;
-                            //     $sohead_poheadtaxamount = isset($sohead->temTaxamountstatistics->sohead_poheadtaxamount) ? $sohead->temTaxamountstatistics->sohead_poheadtaxamount : 0.0;
-                            //     $sohead_poheadtaxamountby7550 = array_first($sohead->getPoheadTaxAmountBy7550())->poheadTaxAmountBy7550;
-                            //     $totalpurchaseamount = $pohead_amount_total + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount - $sohead_poheadtaxamountby7550;
+                        if (isset($biddinginformation->sohead_id) && $biddinginformation->sohead_id > 0)
+                        {
+                            $sohead = Salesorder_hxold::find($biddinginformation->sohead_id);
+                            if (isset($sohead))
+                            {
+                                $pohead_amount_total = $sohead->poheads->sum('amount');
+                                $poheadAmountBy7550 = array_first($sohead->getPoheadAmountBy7550())->poheadAmountBy7550;
+                                $sohead_taxamount = isset($sohead->temTaxamountstatistics->sohead_taxamount) ? $sohead->temTaxamountstatistics->sohead_taxamount : 0.0;
+                                $sohead_poheadtaxamount = isset($sohead->temTaxamountstatistics->sohead_poheadtaxamount) ? $sohead->temTaxamountstatistics->sohead_poheadtaxamount : 0.0;
+                                $sohead_poheadtaxamountby7550 = array_first($sohead->getPoheadTaxAmountBy7550())->poheadTaxAmountBy7550;
+                                $totalpurchaseamount = $pohead_amount_total + $poheadAmountBy7550 + $sohead_taxamount - $sohead_poheadtaxamount - $sohead_poheadtaxamountby7550;
 
-                            //     $warehousecost = array_first($sohead->getwarehouseCost())->warehousecost;
-                            //     $nowarehousecost = array_first($sohead->getnowarehouseCost())->nowarehousecost;
-                            //     $nowarehouseamountby7550 = array_first($sohead->getnowarehouseamountby7550())->nowarehouseamountby7550;
-                            //     $nowarehousetaxcost = array_first($sohead->getnowarehousetaxCost())->nowarehousetaxcost;
-                            //     $warehousetaxcost = array_first($sohead->getwarehousetaxCost())->warehousetaxcost;
-                            //     $totalwarehouseamount = $warehousecost  + $nowarehousecost + $sohead_taxamount + $nowarehouseamountby7550 - $nowarehousetaxcost - $warehousetaxcost;
-                            array_push($data, "采购成本：" . $biddinginformation->purchase_cost . "，出库成本：" . $biddinginformation->out_cost);
-                            array_push($comments, '');
+                                $warehousecost=array_first($sohead->getwarehouseCost())->warehousecost;
+                                $nowarehousecost=array_first($sohead->getnowarehouseCost())->nowarehousecost;
+                                $nowarehouseamountby7550=array_first($sohead->getnowarehouseamountby7550())->nowarehouseamountby7550;
+                                $nowarehousetaxcost=array_first($sohead->getnowarehousetaxCost())->nowarehousetaxcost;
+                                $warehousetaxcost=array_first($sohead->getwarehousetaxCost())->warehousetaxcost;
+                                $totalwarehouseamount = $warehousecost  + $nowarehousecost + $sohead_taxamount + $nowarehouseamountby7550 - $nowarehousetaxcost - $warehousetaxcost;
+                                array_push($data, "采购成本：" . $totalpurchaseamount . "，出库成本：" . $totalwarehouseamount);
+                                array_push($comments, '');
 
-                            // $issuedrawing_tonnage = $sohead->issuedrawings()->where('status', 0)->sum('tonnage');
-                            array_push($data, $biddinginformation->tonnage);
-                            array_push($comments, '');
+                                $issuedrawing_tonnage = $sohead->issuedrawings()->where('status', 0)->sum('tonnage');
+                                array_push($data, $issuedrawing_tonnage);
+                                array_push($comments, '');
 
-                            // 开工日期
-                            array_push($data, Carbon::parse($biddinginformation->startDate)->toDateString());
-                            array_push($comments, '');
+                                // 开工日期
+                                array_push($data, Carbon::parse($sohead->startDate)->toDateString());
+                                array_push($comments, '');
 
-                            $bExist = true;
-                            // }
+                                $bExist = true;
+                            }
                         }
 
                         if (!$bExist) {
@@ -865,14 +869,12 @@ class BiddinginformationController extends Controller
                             array_push($comments, '');
                         }
 
-                        $items = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)
-                            ->whereIn('key', $biddinginformationdefinefields)->select('key', 'value', 'remark')->get();
-                        foreach ($biddinginformationdefinefields as $biddinginformationdefinefield) {
-                            // $biddinginformationitem = $biddinginformation->biddinginformationitems()->where('key', $biddinginformationdefinefield->name)->first();
-                            // $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationdefinefield->name)->first();
-                            $item = $items->where('key', $biddinginformationdefinefield)->first();
-                            array_push($data, isset($item) ? $item->value : '');
-                            array_push($comments, isset($item) ? $item->remark : '');
+                        foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+                        {
+//                            $biddinginformationitem = $biddinginformation->biddinginformationitems()->where('key', $biddinginformationdefinefield->name)->first();
+                            $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationdefinefield->name)->first();
+                            array_push($data, isset($biddinginformationitem) ? $biddinginformationitem->value : '');
+                            array_push($comments, isset($biddinginformationitem) ? $biddinginformationitem->remark : '');
                         }
                         $sheet->appendRow($data);
 
@@ -899,12 +901,13 @@ class BiddinginformationController extends Controller
                     $projecttypes = explode(',', $request->input('projecttypes_export'));
                     $query->whereIn('projecttype', $projecttypes);
                 }
-                $biddinginformationdefinefields = $query->orderBy('sort')->pluck('name');
-                // $biddinginformationdefinefields = Biddinginformationdefinefield::where('exceltype', '汇总表')->orWhere('exceltype', '汇总明细')->orderBy('sort')->get();
+                $biddinginformationdefinefields = $query->orderBy('sort')->get();
+//                $biddinginformationdefinefields = Biddinginformationdefinefield::where('exceltype', '汇总表')->orWhere('exceltype', '汇总明细')->orderBy('sort')->get();
                 $data = [];
                 array_push($data, '编号');
-                foreach ($biddinginformationdefinefields as $biddinginformationdefinefield) {
-                    array_push($data, $biddinginformationdefinefield);
+                foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+                {
+                    array_push($data, $biddinginformationdefinefield->name);
                 }
                 $sheet->appendRow($data);
                 $rowCol = 2;        // 从第二行开始
@@ -915,15 +918,11 @@ class BiddinginformationController extends Controller
                         $comments = [];
                         array_push($data, $biddinginformation->number);
                         array_push($comments, '');
-
-                        $items = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)
-                            ->whereIn('key', $biddinginformationdefinefields)->select('key', 'value', 'remark')->get();
-                        foreach ($biddinginformationdefinefields as $biddinginformationdefinefield) {
-                            // $biddinginformationitem = $biddinginformation->biddinginformationitems()->where('key', $biddinginformationdefinefield->name)->first();
-                            // $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationdefinefield->name)->first();
-                            $item = $items->where('key', $biddinginformationdefinefield)->first();
-                            array_push($data, isset($item) ? $item->value : '');
-                            array_push($comments, isset($item) ? $item->remark : '');
+                        foreach ($biddinginformationdefinefields as $biddinginformationdefinefield)
+                        {
+                            $biddinginformationitem = Biddinginformationitem::where('biddinginformation_id', $biddinginformation->id)->where('key', $biddinginformationdefinefield->name)->first();
+                            array_push($data, isset($biddinginformationitem) ? $biddinginformationitem->value : '');
+                            array_push($comments, isset($biddinginformationitem) ? $biddinginformationitem->remark : '');
                         }
                         $sheet->appendRow($data);
 

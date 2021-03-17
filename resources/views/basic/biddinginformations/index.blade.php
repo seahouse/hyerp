@@ -50,9 +50,7 @@
                     {!! Form::hidden('projecttypes_export', null, []) !!}
 
                     {!! Form::button('导出', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport']) !!}
-                    @if (Auth::user()->email == 'admin@admin.com')
-                        {!! Form::button('导出（不带实际数据）', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport2']) !!}
-                    @endif
+                    {!! Form::button('导出（不带实际数据）', ['class' => 'btn btn-default btn-sm', 'id' => 'btnExport2']) !!}
                     {{--                {!! Form::button('清空数据（慎用！）', ['class' => 'btn btn-default btn-sm', 'id' => 'btnClear']) !!}--}}
                 </div>
                 {!! Form::close() !!}
