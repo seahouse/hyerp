@@ -501,6 +501,7 @@ class EpcseceningController extends Controller
             $inputs['beforeimage_urls'] = json_encode($beforeimage_urls);
             $inputs['afterimage_urls'] = json_encode($afterimage_urls);
 //            $inputs['approvers'] = $epcsecening->approvers();
+            $inputs['associatedapprovals'] = strlen($inputs['associatedapprovals']) > 0 ? json_encode(explode(",", $inputs['associatedapprovals'])) : "";
             $response = ApprovalController::epcsecening($inputs);
 //            Log::info($response);
 //            dd($response);
